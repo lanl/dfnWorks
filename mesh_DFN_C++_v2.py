@@ -261,10 +261,9 @@ def create_parameter_mlgi_file(filename, nPoly):
 		f.write('define / H_SCALE4 / ' + str(3*h) + '\n')
 		f.write('define / H_SCALE5 / ' + str(8*h) + '\n')
 		f.write('define / H_SCALE6 / ' + str(16*h) + '\n')
-		f.write('define / H_PRIME / ' + str(0.5*h) + '\n')
+		f.write('define / H_PRIME / ' + str(0.75*h) + '\n')
 		f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
-		#f.write('define / H_PRIME_M / ' + str(h/40.0) + '\n')
-		f.write('define / H_PRIME_M / ' + str(-0.05*h) + '\n')
+		f.write('define / H_PRIME_M / ' + str(-0.1*h) + '\n')
 		f.write('define / PURTURB / ' + str(3*h) + '\n')
 		f.write('define / PARAM_A / '+str(slope)+'\n')	
 		f.write('define / PARAM_A0 / '+str(refine_dist)+'\n')	
@@ -387,8 +386,8 @@ cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes
 cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
 
 # Massage points based on linear function down to h
-massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
-#massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+#massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 
 # Extrude and excavate the lines of intersection
 cmo / select / mo_line_work 
@@ -609,7 +608,6 @@ finish
 
 	## Write user_functino.lgi file
 	lagrit_input = '''
-#infile PARAM_FILE
 cmo/DELATT/mo_pts/dfield
 compute / distance_field / mo_pts / mo_line_work / dfield
 math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A/
@@ -708,7 +706,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 		N_CPU = nPoly
 
 	fracture_list = range(1,nPoly + 1)
-#
+
 #	queue = mp.Queue()   # reader() reads from queue
 #	queue.put(fracture_list)
 #        print queue
@@ -716,7 +714,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 #		reader_p = mp.Process(target=mesh_fracture, args=((queue),))
 #		reader_p.daemon = True
 #		reader_p.start()        #
-##	
+	
 	pool = mp.Pool(N_CPU)
 	failure =  pool.map(mesh_fracture, fracture_list)
 	pool.close()
@@ -731,15 +729,16 @@ def mesh_fractures_header(nPoly, N_CPU):
 
 	if os.stat("failure.txt").st_size > 0:
 		failure_list = genfromtxt("failure.txt")
-		if len(failure_list) > 1:
+		failure_flag = 1
+		if type(failure_list) is list:
 			failure_list = sort(failure_list)
-		if len(failure_list) > 0:
+		else: 
 			print 'Fractures:', failure_list , 'Failed'
 		print 'Main process exiting.'
 	else:
-		failure_list = []
+		failure_flag = 0
 		print 'Triangulating Polygons: Complete'
-	return len(failure_list)	
+	return failure_flag	
 
 
 def create_merge_poly_files(N_CPU, nPoly, digits):
