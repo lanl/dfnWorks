@@ -385,8 +385,10 @@ smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes 
 cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
-#massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
-massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+
+# Massage points based on linear function down to h
+massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+#massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 
 # Extrude and excavate the lines of intersection
 cmo / select / mo_line_work 
@@ -1053,10 +1055,8 @@ merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
 if production_mode > 0:
 	cleanup_dir()
 
-if(visualMode == 0): 
-	redefine_zones()
-
-
+#if(visualMode == 0): 
+#	redefine_zones()
 
 f = open('finalmesh.txt','w')
 f.write('The final mesh of DFN consists of: \n')
