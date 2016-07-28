@@ -132,33 +132,7 @@ def dump_intersection_avs(i, x, y, z, ii):
 
 	cmd = 'mv ' + filename + ' intersections/'
 	os.system(cmd) 
-#
-#def split_intersection_file(i):
-#
-#	data = genfromtxt(intersection_file, skip_header = 1)
-#	# Find lines in the data for fracture i
-#	locations = where(data[:,3] == i)[0][:]
-#	# Collect the rest of that data	
-#	x = data[locations,0]
-#	y = data[locations,1]
-#	z = data[locations,2]
-#	ii = data[locations,4]
-#	dump_intersection_avs(i, x, y, z, ii)
-#
-#def split_intersection_file_header(intersection_file, nCPU, nPoly):
-#	print "Splitting the Intersection File:", intersection_file 
-#
-#	os.system('rm -rf intersections')
-#	os.mkdir('intersections')
-#	jobnames = range(1, nPoly + 1)
-#	pool = mp.Pool(nCPU)
-#	pool.map(split_intersection_file, jobnames)
-#	pool.close()
-#	pool.join()
-#	pool.terminate()
-#
-#	print "splitting the intersection file: complete\n" 
-#
+
 def split_poly_file(poly_file, nPoly, digits):
 
 	print "Splitting the Polys File:", poly_file
@@ -686,10 +660,18 @@ def mesh_fracture(fracture_id):
 	os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
 
 	elapsed = time.time() - t
-	print '\nFracture ', fracture_id, ' Complete'
+	print 'Fracture ', fracture_id, '\tComplete on ', p.name
 	print 'Time for meshing: %0.2f seconds'%elapsed
 	return failure
 
+def worker(work_queue, done_queue):
+	#try:
+	for fracture_id in iter(work_queue.get, 'STOP'):
+		status_code = mesh_fracture(fracture_id)
+		done_queue.put("%s - Meshing %d returned %d." % (mp.current_process().name, fracture_id, status_code))
+		#except Exception, e:
+		#	done_queue.put("%s failed on %s with: %s" % (current_process().name, fracture_id, e.message))
+	#return True
 
 def mesh_fractures_header(nPoly, N_CPU):
 	
@@ -710,22 +692,36 @@ def mesh_fractures_header(nPoly, N_CPU):
 	if ( N_CPU > nPoly):
 		N_CPU = nPoly
 
+	print 'Meshing using %d CPUS'%N_CPU
+
 	fracture_list = range(1,nPoly + 1)
 
-#	queue = mp.Queue()   # reader() reads from queue
-#	queue.put(fracture_list)
-#        print queue
-#	for i in range(N_CPU):
-#		reader_p = mp.Process(target=mesh_fracture, args=((queue),))
-#		reader_p.daemon = True
-#		reader_p.start()        #
-	
-	pool = mp.Pool(N_CPU)
-	failure =  pool.map(mesh_fracture, fracture_list)
-	pool.close()
-	pool.join()
-	pool.terminate()
+	work_queue = mp.Queue()   # reader() reads from queue
+	done_queue = mp.Queue()   # reader() reads from queue
+	processes = []
 
+	for i in fracture_list:
+		work_queue.put(i)
+
+	for i in xrange(N_CPU):
+		p = mp.Process(target=worker, args=(work_queue,done_queue))
+		p.daemon = True
+		p.start()        #
+		processes.append(p)
+		work_queue.put('STOP')
+	
+	for p in processes:
+		p.join()
+
+	done_queue.put('STOP')
+	
+	
+#	pool = mp.Pool(N_CPU)
+#	failure =  pool.map(mesh_fracture, fracture_list)
+#	pool.close()
+#	pool.join()
+#	pool.terminate()
+#
 	elapsed = time.time() - t_all
 	print 'Total Time to Mesh Network: %0.2f seconds'%elapsed
 	elapsed /= 60.
