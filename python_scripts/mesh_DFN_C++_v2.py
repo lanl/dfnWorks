@@ -261,9 +261,9 @@ def create_parameter_mlgi_file(filename, nPoly):
 		f.write('define / H_SCALE4 / ' + str(3*h) + '\n')
 		f.write('define / H_SCALE5 / ' + str(8*h) + '\n')
 		f.write('define / H_SCALE6 / ' + str(16*h) + '\n')
-		f.write('define / H_PRIME / ' + str(0.75*h) + '\n')
+		f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
 		f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
-		f.write('define / H_PRIME_M / ' + str(-0.1*h) + '\n')
+		f.write('define / H_PRIME_M / ' + str(-0.05*h) + '\n')
 		f.write('define / PURTURB / ' + str(3*h) + '\n')
 		f.write('define / PARAM_A / '+str(slope)+'\n')	
 		f.write('define / PARAM_A0 / '+str(refine_dist)+'\n')	
@@ -348,13 +348,15 @@ rmpoint / compress
 '''	
 		# END: Refine the point distribution
 		#
-	lagrit_input += ''' 
+	lagrit_input += '''
+## Triangulate Fracture without point addition 
 cmo / create / mo_pts / / / triplane 
 copypts / mo_pts / mo_poly_work 
 cmo / select / mo_pts 
 triangulate / counterclockwise 
 
-cmo / setatt / mo_pts / imt / 1 0 0 / 1 
+cmo / setatt / mo_pts / imt / 1 0 0 / ID 
+cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
 resetpts / itp 
 cmo / delete / mo_poly_work 
 
@@ -388,6 +390,7 @@ cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes
 # Massage points based on linear function down to h
 #massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+cmo / DELATT / mo_pts / rf_field_name 
 
 # Extrude and excavate the lines of intersection
 cmo / select / mo_line_work 
@@ -428,10 +431,12 @@ rmpoint / pset,get,pdel / inclusive
 rmpoint / compress  
 copypts / mo_final / mo_line_work  
 
+# 
 cmo / select / mo_final 
 
 cmo / setatt / mo_final / imt / 1 0 0 / ID 
 cmo / setatt / mo_final / itp / 1 0 0 / 0 
+cmo / setatt / mo_final / itetclr / 1 0 0 / ID 
 cmo / printatt / mo_final / -xyz- / minmax 
 trans/ 1 0 0 / zero / xyz 
 cmo / setatt / mo_final / zic / 1 0 0 / 0.0 
@@ -524,7 +529,7 @@ cmo / delete / mo_final_check
 cmo / select / mo_final 
 
 ##### DEBUG
-# dump / avs2 / tmp_mesh_2D.inp / mo_final / 1 1 1 0 
+#dump / avs2 / tmp_mesh_2D.inp / mo_final / 1 1 1 0 
 ##### DEBUG
 # Rotate 
 rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/  
