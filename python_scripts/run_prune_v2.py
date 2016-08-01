@@ -208,7 +208,6 @@ cmo / DELATT / mo / itetclr_save
 cmo / status / brief
 dump / avs2 / %s / mo
 finish
-
 '''%output_file
 
 	lagrit_file = 'prune_dfn.lgi'
@@ -224,24 +223,26 @@ finish
 
 	print backbone, ' nodes mesh output as ', output_file
 
-inflow = 'right.txt'
-outflow = 'left.txt'
-domain = 10
+if __name__ == "__main__":
+	
+	inflow = 'right.txt'
+	outflow = 'left.txt'
+	domain = 10
 
-# Get Number of Fractures
-f = open('params.txt')
-num_frac = int(f.readline())
-f.close()
+	# Get Number of Fractures
+	f = open('params.txt')
+	num_frac = int(f.readline())
+	f.close()
 
-create_adjacency_matrix(num_frac)
-dump_boundary_nodes(domain)
-run_max_flow(inflow, outflow)
-prune_mesh('maxflow.nodes.txt', num_frac)
+	create_adjacency_matrix(num_frac)
+	dump_boundary_nodes(domain)
+	run_max_flow(inflow, outflow)
+	prune_mesh('maxflow.nodes.txt', num_frac)
 
-run_current_flow(inflow, outflow)
-prune_mesh('currentflow.nodes.txt', num_frac)
+	run_current_flow(inflow, outflow)
+	prune_mesh('currentflow.nodes.txt', num_frac)
 
-print 'All Done, Goodbye'
+	print 'All Done, Goodbye'
 
 
 

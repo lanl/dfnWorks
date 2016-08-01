@@ -49,7 +49,7 @@
 #
 # Set up to run triangulation of each fracture polygon in parallel. Set N_CPU to number
 # of jobs to run in parallel.
-#
+
 from string import *
 import os, sys, glob, time
 from numpy import genfromtxt, sort
@@ -58,7 +58,10 @@ sys.path.insert(0,'/home/jhyman/pylagrit/src')
 from pylagrit import PyLaGriT
 import multiprocessing as mp 
 
+
+
 def remove_batch(name):
+	''' This function is used to clean up the directory in batch '''
 	for fl in glob.glob(name):
 		os.remove(fl)	
 
@@ -175,6 +178,7 @@ def split_poly_file(poly_file, nPoly, digits):
 
 	if len(count_list) != nPoly:
 		print 'Something is wrong in split_poly_file'
+		print 'Count list does not equatl number of fractures give in params.txt'
 		print 'Stop to debug'
 
 	nodes_offset = 0
@@ -333,19 +337,16 @@ cmo / setatt / mo_pts / imt / 1 0 0 / ID
 cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
 resetpts / itp 
 cmo / delete / mo_poly_work 
-
 cmo / select / mo_pts 
 
 '''
 	if(visualMode == 0):
 		lagrit_input += '''
 # Creates a Coarse Mesh and then refines it using the distance field from intersections 
-
 massage / H_SCALE6 / 1.e-5 / 1.e-5 
 smooth;recon 0;smooth;recon 0;smooth;recon 0  
 smooth;recon 0;smooth;recon 0;smooth;recon 0 
 		'''
-
 		if numPoints == 4:
 			lagrit_input += '''
 resetpts / itp 
@@ -361,8 +362,7 @@ smooth;recon 0;smooth;recon 0;smooth;recon 0
 cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes 
 cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
 
-# Massage points based on linear function down to h
-#massage2/user_function.lgi/H_SCALE/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+# Massage points based on linear function down to h_prime
 massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 cmo / DELATT / mo_pts / rf_field_name 
 
@@ -380,13 +380,16 @@ read / QUAD_FILE / mo_quad
 		else:
 			lagrit_input += 'cmo / select / mo_quad \n'
 		
-		lagrit_input += ''' 
+		lagrit_input += '''
+# Translate extruced lines of intersectino down slightly to excavate 
+# nearby points from the mesh 
 trans / 1 0 0 / 0. 0. 0. / 0. 0. H_PRIME_M 
 hextotet / 2 / mo_tri / mo_quad 
 cmo / delete / mo_quad 
-
 addmesh / excavate / mo_excavate / mo_pts / mo_tri
-##### DEBUG 
+##### DEBUG #####
+# If meshing fails, uncomment and rerun the script to get tmp meshes, 
+# which are otherwise not output 
 #dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
 #dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
 #dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0
@@ -396,6 +399,7 @@ addmesh / excavate / mo_excavate / mo_pts / mo_tri
 cmo / delete / mo_tri 
 cmo / delete / mo_pts 
 
+# recompute dfield 
 cmo / create / mo_final / / / triplane 
 copypts / mo_final / mo_excavate  
 compute / distance_field / mo_final / mo_line_work / dfield 
@@ -405,13 +409,11 @@ rmpoint / pset,get,pdel / inclusive
 rmpoint / compress  
 copypts / mo_final / mo_line_work  
 
-# 
 cmo / select / mo_final 
-
 cmo / setatt / mo_final / imt / 1 0 0 / ID 
 cmo / setatt / mo_final / itp / 1 0 0 / 0 
 cmo / setatt / mo_final / itetclr / 1 0 0 / ID 
-cmo / printatt / mo_final / -xyz- / minmax 
+# cmo / printatt / mo_final / -xyz- / minmax 
 trans/ 1 0 0 / zero / xyz 
 cmo / setatt / mo_final / zic / 1 0 0 / 0.0 
 cmo / printatt / mo_final / -xyz- / minmax 
@@ -443,29 +445,19 @@ smooth / position / esug / pset get psmooth; recon 0;
 smooth / position / esug / pset get psmooth; recon 0; 
 smooth / position / esug / pset get psmooth; recon 0; 
 
-# nodes for intersection check 
-
 ###########################################
-#
-# Define some variables that change with each input/output file set
+# nodes for Intersection / Mesh Connectivity Check 
 cmo / copy / mo_final_check / mo_final
 #
-############################################
-#
-# Define some variables that are hard wired for this workflow
-#
+# Define variables that are hard wired for this part of the workflow
 define / MO_TRI_MESH_SSINT / mo_tri_tmp_subset
 define / MO_LINE_MESH_SSINT / mo_line_tmp_subset
 define / ATT_ID_INTERSECTION_SSINT / b_a
 define / ATT_ID_SOURCE_SSINT / id_node_global
 define / ATT_ID_SINK_SSINT / id_node_tri
 #
-#
 # Before subsetting the mesh reate a node attribute containing the integer global node number
 cmo / set_id / mo_final_check / node / ATT_ID_SOURCE_SSINT
-
-
-
 #
 # Subset the triangle mesh based on b_a node attribute ne 0
 #
@@ -496,20 +488,19 @@ cmo / modatt / mo_line_work / b_a / ioflag / l
 dump / avs2 / OUTPUT_INTER_ID_SSINT / mo_line_work / 0 0 2 0
 cmo / delete / mo_line_work
 
-
 cmo / delete / mo_final_check
 # nodes for intersection check over
 
 cmo / select / mo_final 
 
 ##### DEBUG
+# write out mesh before it is rotate back into its final location
+# Useful to compare with meshing workflow if something crashes
 #dump / avs2 / tmp_mesh_2D.inp / mo_final / 1 1 1 0 
 ##### DEBUG
-# Rotate 
+# Rotate facture back into original plane 
 rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/  
-
 cmo / printatt / mo_final / -xyz- / minmax 
-
 recon 1 
 
 resetpts / itp 
@@ -537,8 +528,6 @@ cmo / modatt / mo_final / isn1 / ioflag / l
 		lagrit_input += '''
 dump / OUTFILE_AVS / mo_final
 dump / lagrit / OUTFILE_LG / mo_final
-# Dump LaGriT Format in Binary. Read in during merge
-
 ''' 
 	else:
 		lagrit_input += '''
@@ -565,15 +554,14 @@ dump / lagrit/ OUTFILE_LG / mo_final
 '''
 
 	lagrit_input += '''
- 
 quality 
 cmo / delete / mo_final 
 cmo / status / brief 
 finish
- 
 '''
-	for i in range(1,N_CPU+1):
 
+	# Create a different Run file for each CPU
+	for i in range(1,N_CPU+1):
 		file_name = 'mesh_poly_CPU' + str(i) + '.lgi'
 		f = open(file_name, 'w')
 		#Name of parameter Input File
@@ -585,7 +573,7 @@ finish
 		f.flush()
 		f.close()
 
-	## Write user_functino.lgi file
+	## Create user_function.lgi file
 	lagrit_input = '''
 cmo/DELATT/mo_pts/dfield
 compute / distance_field / mo_pts / mo_line_work / dfield
@@ -598,11 +586,10 @@ finish
 	f.write(lagrit_input)
 	f.close()
 
-
 	print 'Writing LaGriT Control Files: Complete'
 
-
 def mesh_fracture(fracture_id):
+	''' Working for Parallized Meshing of Fractures'''
 
 	t = time.time()
 	p = mp.current_process()
@@ -665,13 +652,9 @@ def mesh_fracture(fracture_id):
 	return failure
 
 def worker(work_queue, done_queue):
-	#try:
 	for fracture_id in iter(work_queue.get, 'STOP'):
 		status_code = mesh_fracture(fracture_id)
 		done_queue.put("%s - Meshing %d returned %d." % (mp.current_process().name, fracture_id, status_code))
-		#except Exception, e:
-		#	done_queue.put("%s failed on %s with: %s" % (current_process().name, fracture_id, e.message))
-	#return True
 
 def mesh_fractures_header(nPoly, N_CPU):
 	
@@ -715,18 +698,10 @@ def mesh_fractures_header(nPoly, N_CPU):
 
 	done_queue.put('STOP')
 	
-	
-#	pool = mp.Pool(N_CPU)
-#	failure =  pool.map(mesh_fracture, fracture_list)
-#	pool.close()
-#	pool.join()
-#	pool.terminate()
-#
 	elapsed = time.time() - t_all
 	print 'Total Time to Mesh Network: %0.2f seconds'%elapsed
 	elapsed /= 60.
 	print '--> %0.2f Minutes'%elapsed
-
 
 	if os.stat("failure.txt").st_size > 0:
 		failure_list = genfromtxt("failure.txt")
@@ -749,7 +724,10 @@ def create_merge_poly_files(N_CPU, nPoly, digits):
 	 Then duplicate points are removed from the main mesh using EPS_FILTER 
 	 The points are compressed, and then written in the files full_mesh.gmv, full_mesh.inp, and an FEHM dump is preformed.
 	'''
-	
+
+
+	# This needs to be re-written using PyLaGriT so we can check 
+	# that the number of dudded points is that which we expect
 	print "Writing : merge_poly.lgi"
 
 	part_size = nPoly/N_CPU + 1 ###v number of fractures in each part
@@ -926,23 +904,11 @@ def cleanup_dir():
 	remove_batch("mesh_poly_CPU*")
 	remove_batch("mesh*inp")
 	remove_batch("mesh*lg")
-	# Remove folders containing intersections, parameters, polys, lagrit logs files.
-	# Remove lagrit log outputs
-#	os.remove("logx3dgen")
-#	os.remove("outx3dgen")
-#	os.remove("boundary_top.zone")
-#	os.remove("boundary_bottom.zone")
-#	os.remove("boundary_left_w.zone")
-#	os.remove("boundary_front_s.zone")
-#	os.remove("boundary_right_e.zone")
-#	os.remove("boundary_back_n.zone") 
-	# Move individual gmv, avs into folder 'meshes'
-
 
 def redefine_zones():
 	'''Section 8 : redefine zones 
-	Creates lagrit script to define domain size
-'''
+	Creates lagrit script to define domain size'''
+
 	mo = pl.read('full_mesh.inp')
 	eps = h*10**-4
 	ptop = mo.pset_attribute('zic', mo.zmax - eps, 'gt',name='top')
@@ -978,129 +944,130 @@ def redefine_zones():
 	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone boundary_front_s.zone boundary_right_e.zone   boundary_back_n.zone  > allboundaries.zone ")
 
 ################### MAIN ###############
-print ('='*80)
-os.system("date")
-print '''Python Script to parse DFNGEN output and mesh it using LaGriT 
+if __name__ == "__main__":
+	print ('='*80)
+	os.system("date")
+	print '''Python Script to parse DFNGEN output and mesh it using LaGriT 
 
-Last Update July 11 2016 by Jeffrey Hyman
-EES - 16, LANL
-jhyman@lanl.gov
-'''
+	Last Update August 1 2016 by Jeffrey Hyman
+	EES - 16, LANL
+	jhyman@lanl.gov
+	'''
 
-refine_factor = 1
-N_CPU = 1
+	refine_factor = 1
+	N_CPU = 1
 
-#Production mode "ON" outputs the final results for computation, 
-#cleaning up all the temporary attributes needed during refinement.
-#Note that the visualization mode must be "OFF" in order to run
-#in produciton mode. "dfield" can also be turn ON/OFF. 
-#*1: "ON", *0: "OFF". 
-#dfield = 0
+	#Production mode "ON" outputs the final results for computation, 
+	#cleaning up all the temporary attributes needed during refinement.
+	#Note that the visualization mode must be "OFF" in order to run
+	#in produciton mode. "dfield" can also be turn ON/OFF. 
+	#*1: "ON", *0: "OFF". 
+	#dfield = 0
 
-production_mode = 1
+	production_mode = 1
 
-#python_path = os.environ['python_dfn']
-python_path  = '/scratch/er/dharp/source/epd-7.3-1-rh3-x86_64/bin/python'
-#lagrit_path = os.environ['lagrit_dfn']
-lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
-#connectivity_test = os.environ['connect_test_path']
-connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+	#python_path = os.environ['python_dfn']
+	python_path  = '/scratch/er/dharp/source/epd-7.3-1-rh3-x86_64/bin/python'
+	#lagrit_path = os.environ['lagrit_dfn']
+	lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
+	#connectivity_test = os.environ['connect_test_path']
+	connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 
-pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
+	pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
 
-#Open the file of parameters output from mathematica
-if (len(sys.argv) == 1):
-	filename = 'params.txt'
-	print "Number of CPU's to use (default):", N_CPU
-	print "Reading in file (default):", filename 
+	#Open the file of parameters output from mathematica
+	if (len(sys.argv) == 1):
+		filename = 'params.txt'
+		print "Number of CPU's to use (default):", N_CPU
+		print "Reading in file (default):", filename 
 
-elif (len(sys.argv) == 2):
-	filename = sys.argv[1] 
-	print "Reading in file:", filename 
-	print "Number of CPU's to use (default):", N_CPU
-	
-elif (len(sys.argv) == 3):
-	filename = sys.argv[1] 
-	N_CPU = int(sys.argv[2])
-	print "Reading in file:", filename 
-	print "Number of CPU's to use:", N_CPU
-	
-elif (len(sys.argv) == 4):
-	filename = sys.argv[1] 
-	N_CPU = int(sys.argv[2])
-	refine_factor = int(sys.argv[3])
-	print "Reading in file:", filename
-	print "Number of CPU's to use:", N_CPU
-	print "Mesh Refine Factor:", refine_factor
+	elif (len(sys.argv) == 2):
+		filename = sys.argv[1] 
+		print "Reading in file:", filename 
+		print "Number of CPU's to use (default):", N_CPU
+		
+	elif (len(sys.argv) == 3):
+		filename = sys.argv[1] 
+		N_CPU = int(sys.argv[2])
+		print "Reading in file:", filename 
+		print "Number of CPU's to use:", N_CPU
+		
+	elif (len(sys.argv) == 4):
+		filename = sys.argv[1] 
+		N_CPU = int(sys.argv[2])
+		refine_factor = int(sys.argv[3])
+		print "Reading in file:", filename
+		print "Number of CPU's to use:", N_CPU
+		print "Mesh Refine Factor:", refine_factor
 
-nPoly, digits, h, numPoints, slope, refine_dist, visualMode, poly_file, intersection_file = parse_params_file(filename, refine_factor)
+	nPoly, digits, h, numPoints, slope, refine_dist, visualMode, poly_file, intersection_file = parse_params_file(filename, refine_factor)
 
-split_poly_file(poly_file, nPoly, digits)
+	split_poly_file(poly_file, nPoly, digits)
 
-create_parameter_mlgi_file(filename, nPoly)
+	create_parameter_mlgi_file(filename, nPoly)
 
-create_lagrit_scripts(production_mode, N_CPU, refine_factor)
+	create_lagrit_scripts(production_mode, N_CPU, refine_factor)
 
-failure = mesh_fractures_header(nPoly, N_CPU)
+	failure = mesh_fractures_header(nPoly, N_CPU)
 
-if failure > 0:
-	cleanup_dir()
-	print 'Exiting Program'
-	exit()
+	if failure > 0:
+		cleanup_dir()
+		print 'Exiting Program'
+		exit()
 
-n_jobs = create_merge_poly_files(N_CPU, nPoly, digits)
+	n_jobs = create_merge_poly_files(N_CPU, nPoly, digits)
 
-merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
+	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
 
-if production_mode > 0:
-	cleanup_dir()
+	if production_mode > 0:
+		cleanup_dir()
 
-#if(visualMode == 0): 
-#	redefine_zones()
+	#if(visualMode == 0): 
+	#	redefine_zones()
 
-f = open('finalmesh.txt','w')
-f.write('The final mesh of DFN consists of: \n')
-#ALL DONE!
-if(visualMode == 0): 
-	print "Output files for FEHM calculations are written in :"
-	print "   full_mesh.gmv"
-	print "   full_mesh.inp"
-	print "   tri_fracture.stor"
-	finp=open('full_mesh.inp','r')
-	fstor=open('tri_fracture.stor','r')
-	g = finp.readline()
+	f = open('finalmesh.txt','w')
+	f.write('The final mesh of DFN consists of: \n')
+	#ALL DONE!
+	if(visualMode == 0): 
+		print "Output files for FEHM calculations are written in :"
+		print "   full_mesh.gmv"
+		print "   full_mesh.inp"
+		print "   tri_fracture.stor"
+		finp=open('full_mesh.inp','r')
+		fstor=open('tri_fracture.stor','r')
+		g = finp.readline()
 
-	g = g.split()
+		g = g.split()
 
-	NumElems = int(g.pop(1))
+		NumElems = int(g.pop(1))
 
-	NumIntNodes = int(g.pop(0))
-	f.write(str(NumElems)+' triangular elements; \n')
-	f.write(str(NumIntNodes)+'  nodes / control volume cells; \n')
-	finp.close()
-	fstor.readline()
-	fstor.readline()
-	gs = fstor.readline()
-	gs = gs.split()
-	NumCoeff = int(gs.pop(0))
-	f.write(str(NumCoeff)+' geometrical coefficients / control volume faces. \n')
-	fstor.close()
-else:
-	print "Output files for visualization are written in :"
-	print "   reduced_full_mesh.gmv"
-	print "   reduced_full_mesh.inp"
-	finp=open('reduced_full_mesh.inp','r')
-	g = finp.readline()
+		NumIntNodes = int(g.pop(0))
+		f.write(str(NumElems)+' triangular elements; \n')
+		f.write(str(NumIntNodes)+'  nodes / control volume cells; \n')
+		finp.close()
+		fstor.readline()
+		fstor.readline()
+		gs = fstor.readline()
+		gs = gs.split()
+		NumCoeff = int(gs.pop(0))
+		f.write(str(NumCoeff)+' geometrical coefficients / control volume faces. \n')
+		fstor.close()
+	else:
+		print "Output files for visualization are written in :"
+		print "   reduced_full_mesh.gmv"
+		print "   reduced_full_mesh.inp"
+		finp=open('reduced_full_mesh.inp','r')
+		g = finp.readline()
 
-	g = g.split()
+		g = g.split()
 
-	NumElems = int(g.pop(1))
+		NumElems = int(g.pop(1))
 
-	NumIntNodes = int(g.pop(0))
-	f.write(str(NumElems)+' triangular elements; \n')
-	f.write(str(NumIntNodes)+'  nodes / control volume cells. \n')
-	finp.close()
-	
-f.close()
-os.system("date")
-print ('='*80)
+		NumIntNodes = int(g.pop(0))
+		f.write(str(NumElems)+' triangular elements; \n')
+		f.write(str(NumIntNodes)+'  nodes / control volume cells. \n')
+		finp.close()
+		
+	f.close()
+	os.system("date")
+	print ('='*80)
