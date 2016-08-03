@@ -52,13 +52,11 @@
 
 from string import *
 import os, sys, glob, time
-from numpy import genfromtxt, sort
+from numpy import genfromtxt, sort, sqrt, cos, arcsin
 from shutil import copy, rmtree
 sys.path.insert(0,'/home/jhyman/pylagrit/src')
 from pylagrit import PyLaGriT
 import multiprocessing as mp 
-
-
 
 def remove_batch(name):
 	''' This function is used to clean up the directory in batch '''
@@ -208,6 +206,17 @@ def create_parameter_mlgi_file(filename, nPoly):
 	os.system('rm -rf parameters')
 	os.mkdir('parameters')
 
+	# Extrude and Translate computation
+	# Parameters, delta: buffer zone, amount of h/2 we remove from around line
+	# h_extrude hieght of rectangle extruded from line of intersection
+	# r_radius: Upper bound on radius of circumscribed circle around rectangle
+	# h_trans : amount needed to translate to create delta buffer
+	# It's all trig to work it out! 
+	delta = 0.8
+	h_extrude = 0.5*h # upper limit on spacing of points on interssction line
+	h_radius = sqrt((0.5*h_extrude)**2 + (0.5*h_extrude)**2)
+	h_trans = -0.5*h_extrude + h_radius*cos(arcsin(delta))
+
 	#Go through the list and write out parameter file for each polygon
 	#to be an input file for LaGriT
 	data = genfromtxt(filename, skip_header = 8)
@@ -239,9 +248,12 @@ def create_parameter_mlgi_file(filename, nPoly):
 		f.write('define / H_SCALE4 / ' + str(3*h) + '\n')
 		f.write('define / H_SCALE5 / ' + str(8*h) + '\n')
 		f.write('define / H_SCALE6 / ' + str(16*h) + '\n')
+		f.write('define / H_EXTRUDE / ' + str(h_extrude) + '\n')
+		f.write('define / H_TRANS / ' + str(h_trans) + '\n')
+
 		f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
 		f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
-		f.write('define / H_PRIME_M / ' + str(-0.05*h) + '\n')
+		
 		f.write('define / PURTURB / ' + str(3*h) + '\n')
 		f.write('define / PARAM_A / '+str(slope)+'\n')	
 		f.write('define / PARAM_A0 / '+str(refine_dist)+'\n')	
@@ -369,7 +381,7 @@ cmo / DELATT / mo_pts / rf_field_name
 # Extrude and excavate the lines of intersection
 cmo / select / mo_line_work 
 
-extrude / mo_quad / mo_line_work / const / H_PRIME / volume / 0. 0. 1. 
+extrude / mo_quad / mo_line_work / const / H_EXTRUDE / volume / 0. 0. 1. 
 '''
 		if (production_mode == 0):
 			lagrit_input += '''
@@ -383,7 +395,8 @@ read / QUAD_FILE / mo_quad
 		lagrit_input += '''
 # Translate extruced lines of intersectino down slightly to excavate 
 # nearby points from the mesh 
-trans / 1 0 0 / 0. 0. 0. / 0. 0. H_PRIME_M 
+
+trans / 1 0 0 / 0. 0. 0. / 0. 0. H_TRANS
 hextotet / 2 / mo_tri / mo_quad 
 cmo / delete / mo_quad 
 addmesh / excavate / mo_excavate / mo_pts / mo_tri
@@ -589,11 +602,11 @@ finish
 	print 'Writing LaGriT Control Files: Complete'
 
 def mesh_fracture(fracture_id):
-	''' Working for Parallized Meshing of Fractures'''
+	'''Child Function for Parallized Meshing of Fractures'''
 
 	t = time.time()
 	p = mp.current_process()
-	print 'Fracture ', fracture_id, '\tStarting on ', p.name
+	print 'Fracture ', fracture_id, '\tStarting on ', p.name, '\n' 
 	a, cpu_id = p.name.split("-")
 	cpu_id = int(cpu_id)
 	
@@ -611,7 +624,7 @@ def mesh_fracture(fracture_id):
 	cmd = lagrit_path + ' < mesh_poly_CPU%d.lgi' \
 		 + ' > lagrit_logs/log_lagrit_%d'
 	os.system(cmd%(cpu_id,fracture_id))
-	
+
 	if(visualMode == 0):	
 		cmd_check = connectivity_test + ' intersections_CPU%d.inp' \
 		+ ' id_tri_node_CPU%d.list ' \
@@ -648,14 +661,25 @@ def mesh_fracture(fracture_id):
 
 	elapsed = time.time() - t
 	print 'Fracture ', fracture_id, '\tComplete on ', p.name
-	print 'Time for meshing: %0.2f seconds'%elapsed
-	return failure
+	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
 def worker(work_queue, done_queue):
-	for fracture_id in iter(work_queue.get, 'STOP'):
-		status_code = mesh_fracture(fracture_id)
-		done_queue.put("%s - Meshing %d returned %d." % (mp.current_process().name, fracture_id, status_code))
+	try:
+		for fracture_id in iter(work_queue.get, 'STOP'):
+			mesh_fracture(fracture_id)
+	except: 
+		print('Something went wrong')
+	return True
 
+#def worker(work_queue, done_queue):
+#	try:
+#		for fracture_id in iter(work_queue.get, 'STOP'):
+#			status_code = mesh_fracture(fracture_id)
+#			done_queue.put("%s - Meshing %d returned %d." % (mp.current_process().name, fracture_id, status_code))
+#	except: 
+#		print('Something went wrong')
+#	return True
+#
 def mesh_fractures_header(nPoly, N_CPU):
 	
  
@@ -677,7 +701,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 
 	print 'Meshing using %d CPUS'%N_CPU
 
-	fracture_list = range(1,nPoly + 1)
+	fracture_list = range(1, nPoly + 1)
 
 	work_queue = mp.Queue()   # reader() reads from queue
 	done_queue = mp.Queue()   # reader() reads from queue
@@ -687,7 +711,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 		work_queue.put(i)
 
 	for i in xrange(N_CPU):
-		p = mp.Process(target=worker, args=(work_queue,done_queue))
+		p = mp.Process(target=worker, args= (work_queue, done_queue))
 		p.daemon = True
 		p.start()        #
 		processes.append(p)
