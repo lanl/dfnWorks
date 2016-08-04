@@ -1,0 +1,138 @@
+
+/* ======================== READ ME ====================== */
+
+// Yes, the formatting and values in this input File are bad in a 
+// few places to demonstrate the range of input formating an 
+/* untrustworthy user 
+     may
+      try.  */
+
+/* The ONLY requests are that each parameter name is given its own line,
+   and that you use curly braces {} for lists.  
+   If we want to add capability to string parameters on the same line
+   or use other braces its no problem just let me know. */
+
+stopCondition: 0
+nPoly: 100
+domainSize: {30,40,50}
+numOfLayers: 4   
+
+layers: {0,25} {-40,-24.9} 
+{-100, 12}
+{-10, 12}
+
+h: .000004
+
+outputAllRadii: 1
+outputFinalRadiiPerFamily: 0
+outputAcceptedRadiiPerFamily: 0
+
+forceLargeFractures: 1
+tripleIntersections: 1
+printRejectReasons: 0 
+disableFram: 0
+visualizationMode: 1
+ 
+seed: 921123
+  
+domainSizeIncrease: 
+        {14.9,1,3}
+
+keepOnlyLargestCluster: 0
+ignoreBoundaryFaces: 0           
+boundaryFaces: {1,1,1,1,1,1}                         
+rejectsPerFracture: 100  
+famProb: {.25, .25, .25, .24} 
+insertUserRectanglesFirst: 1
+
+nFamEll: 0
+eLayer: {2,1}
+edistr: {1,1}
+ebetaDistribution: {1,0}      
+e_p32Targets: {.2,.2} 
+easpect: {0.3,1.2}  
+enumPoints: {5, 12}
+
+eAngleOption: 0                            
+etheta: {0, -45} 
+ephi: {0,-0.3}   
+ebeta: {-60}   
+ekappa: {8,-10}                  
+
+eLogMean: {14,10}      // 1           
+esd: {0.1, 1} 
+eLogMin: {10,8}
+eLogMax: {110,12}
+
+emin: {0.3}         // 2    
+emax: {0.93}                     
+ealpha: {0.3} 
+
+eExpMean: {0.2, 4}  // 3
+eExpMin: {2,2} {1}
+eExpMax: {8,8}
+
+econst: {0.09}      // 4
+
+                        
+nFamRect: 0     
+rLayer: {2,1}
+rdistr: {1,2}   
+rbetaDistribution: {1,1}
+r_p32Targets: {.2,.1} 
+raspect: {100,1.2}  
+ 
+rAngleOption: 0     
+rtheta: {90,45} 
+rphi: {0,45}     
+rbeta: {0,0}   
+rkappa: {8,8}  
+
+rLogMean: {1.6}   // 1                
+rsd: {0.1}                           
+rLogMin: {.0000001}
+rLogMax: {10}                      
+
+rmin:  {3}       // 2  
+rmax: {6}   
+ralpha: {2.4}   
+                     
+rExpMean: {2}    // 3
+rExpMin: {2}
+rExpMax: {4}
+
+rconst: {4}     // 4
+               
+
+userEllipsesOnOff: 0                           
+UserEll_Input_File_Path: ./inputFiles/userPolygons/uEllInput.dat
+
+userRectanglesOnOff: 1                           
+UserRect_Input_File_Path: ./latestDesired.txt
+
+userRecByCoord: 0
+RectByCood_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
+
+
+aperture:3  
+ 
+meanAperture:  3   // 1
+stdAperture: 0  
+
+apertureFromTransmissivity: {1.6e-9, 0}   // 2
+    
+constantAperture: 0   // 3
+       
+lengthCorrelatedAperture: {1.3e-7, 0.1}   // 4
+    
+
+permOption: 1  
+constantPermeability: 0//1e-12  
+
+  
+
+
+
+
+
+  
