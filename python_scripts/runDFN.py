@@ -13,6 +13,7 @@ def define_paths():
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
+	os.environ['python3_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/3.4.1.1/bin/python3'
 	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
 	os.environ['connect_test'] = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnworks-main/C_uge_correct/correct_uge' 
@@ -40,12 +41,19 @@ def make_working_directory(jobname):
 		print 'Unknown Response'
 		print 'Exiting Program'
 		exit()	
+def check_input(dfnGen_run_file):
+	
+	copy(dfnGen_run_file, 'input.dat')
+	os.system('ln -s ${PYTHON_SCRIPTS}/parse.py ./parse.py')
+	os.system('ln -s ${PYTHON_SCRIPTS}/inputParser.py ./inputParser.py')
+	os.system('$python3_dfn parse.py input.dat')
+
 
 def dfnGen(jobname, dfnGen_run_file):
 	print '--> Running DFNGEN'	
 	# copy input file into job folder	
-	copy(dfnGen_run_file, jobname)
 	cmd = '${DFNGENC_PATH}/./main '+ dfnGen_run_file + ' ' + jobname 
+	#cmd = '${DFNGENC_PATH}/./main input.dat'
 	os.system(cmd)
 	if os.path.isfile("params.txt") is False:
 		print '--> Generation Failed'
@@ -124,21 +132,23 @@ if __name__ == "__main__":
 
 	define_paths()
 	make_working_directory(jobname)
-	# dfnGen
-	dfnGen(jobname, dfnGen_run_file)
 	os.chdir(jobname)
-	mesh_fractures(nCPU)
-	### dfnFlow
-	uncorrelated_perm(0)
-	preprocess()
-	pflotran(dfnFlow_run_file, nCPU)
-	postprocess()
-	# dfnTrans
-	#dfnTrans(dfnTrans_run_file)
+	# dfnGen
 
-	main_elapsed = time.time() - main_time
-	print jobname, 'Complete'
-	timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-	print(timing) 
+	check_input(dfnGen_run_file)
+#	dfnGen(jobname, dfnGen_run_file)
+#	mesh_fractures(nCPU)
+#	### dfnFlow
+#	uncorrelated_perm(0)
+#	preprocess()
+#	pflotran(dfnFlow_run_file, nCPU)
+#	postprocess()
+#	# dfnTrans
+#	#dfnTrans(dfnTrans_run_file)
+#
+#	main_elapsed = time.time() - main_time
+#	print jobname, 'Complete'
+#	timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
+#	print(timing) 
 
 
