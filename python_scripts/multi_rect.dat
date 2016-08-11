@@ -226,7 +226,7 @@ ephi: {0,0}   /* Ellipse fracture orientation.
                     The angle the projection of the normal onto the x-y plane
                     makes with the x-axis */
 
-ebeta: {0, 0)   /* rotation around the normal vector */
+ebeta: {0, 0}   /* rotation around the normal vector */
 
 
 ekappa: {8,8}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 

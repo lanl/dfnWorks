@@ -447,10 +447,9 @@ class dfnworks(Frozen):
         mat_file = 'materialid.dat'
 	t = time.time()
 	cmd = correct_uge + ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
-	print cmd
 	os.system(cmd)
 	elapsed = time.time() - t
-	print '--> Time for C version of UGE file: ', elapsed
+	print '--> Time for C version of UGE file: ', elapsed, '\n'
 
 	# need number of nodes and mat ID file
 	print('--> Writing HDF5 File')

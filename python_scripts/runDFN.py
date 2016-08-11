@@ -42,7 +42,8 @@ def make_working_directory(jobname):
 		print 'Exiting Program'
 		exit()	
 def check_input(dfnGen_run_file):
-	
+
+	print '--> Checking input file'	
 	copy(dfnGen_run_file, 'input.dat')
 	os.system('ln -s ${PYTHON_SCRIPTS}/parse.py ./parse.py')
 	os.system('ln -s ${PYTHON_SCRIPTS}/inputParser.py ./inputParser.py')
@@ -135,20 +136,20 @@ if __name__ == "__main__":
 	os.chdir(jobname)
 	# dfnGen
 
-	check_input(dfnGen_run_file)
-#	dfnGen(jobname, dfnGen_run_file)
-#	mesh_fractures(nCPU)
-#	### dfnFlow
-#	uncorrelated_perm(0)
-#	preprocess()
-#	pflotran(dfnFlow_run_file, nCPU)
-#	postprocess()
-#	# dfnTrans
-#	#dfnTrans(dfnTrans_run_file)
-#
-#	main_elapsed = time.time() - main_time
-#	print jobname, 'Complete'
-#	timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-#	print(timing) 
+#	check_input(dfnGen_run_file)
+	dfnGen(jobname, dfnGen_run_file)
+	mesh_fractures(nCPU)
+	### dfnFlow
+	uncorrelated_perm(0)
+	preprocess()
+	pflotran(dfnFlow_run_file, nCPU)
+	postprocess()
+	# dfnTrans
+	#dfnTrans(dfnTrans_run_file)
+
+	main_elapsed = time.time() - main_time
+	print jobname, 'Complete'
+	timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
+	print(timing) 
 
 
