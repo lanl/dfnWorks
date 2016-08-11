@@ -114,6 +114,12 @@ def dfnTrans(dfnTrans_run_file):
 	os.system('./DFNTrans')
 
 if __name__ == "__main__":
+	
+	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnworks-main/python_scripts/multi_rect.dat'	
+	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
+	dfnTrans_run_file = '/scratch/nobackup/jhyman/2016-mixing/PTDFN_control.dat'
+
+
 	main_time = time.time()
 	try: 
 		jobname = sys.argv[1]
@@ -121,11 +127,16 @@ if __name__ == "__main__":
 	except:
 		print 'Not enough input parameters'
 		print 'Usage:', sys.argv[0], '[jobname][nCPU]'; sys.exit(1)
+	if len(sys.argv) == 4:
+		dfnGen_run_file = sys.argv[3] 
+	elif len(sys.argv) == 5:
+		dfnGen_run_file = sys.argv[3] 
+		dfnFlow_run_file = sys.argv[4] 
+	elif len(sys.argv) == 6:
+		dfnGen_run_file = sys.argv[3] 
+		dfnFlow_run_file = sys.argv[4] 
+		dfnTrans_run_file = sys.argv[5] 
 
-	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnworks-main/python_scripts/multi_rect.dat'	
-	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
-	dfnTrans_run_file = '/scratch/nobackup/jhyman/2016-mixing/PTDFN_control.dat'
-	
 	print 'Running Job: ', jobname
 	print '--> dfnGen input file: ',dfnGen_run_file
 	print '--> dfnFlow input file: ',dfnFlow_run_file
@@ -139,6 +150,7 @@ if __name__ == "__main__":
 	dfnGen(jobname, dfnGen_run_file)
 	os.chdir(jobname)
 	mesh_fractures(nCPU)
+	exit()
 	### dfnFlow
 	uncorrelated_perm(0)
 	preprocess()
