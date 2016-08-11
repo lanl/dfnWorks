@@ -56,7 +56,7 @@ def dfnGen(jobname, dfnGen_run_file):
 	cmd = '${DFNGENC_PATH}/./main '+ dfnGen_run_file + ' ' + jobname 
 	#cmd = '${DFNGENC_PATH}/./main input.dat'
 	os.system(cmd)
-	if os.path.isfile("params.txt") is False:
+	if os.path.isfile(jobname+"/params.txt") is False:
 		print '--> Generation Failed'
 		print '--> Exiting Program'
 		exit()
@@ -65,9 +65,9 @@ def dfnGen(jobname, dfnGen_run_file):
 
 def mesh_fractures(nCPU):
 	print '--> Meshing Fractures'	
-	copy('/home/jhyman/dfnWorks/dfnworks-main/python_scripts/mesh_DFN_C++_v2.py','.')
-	#cmd = '$python_dfn mesh_DFN_C++_v2.py params.txt ' + str(nCPU) 
-	cmd = '$python_dfn mesh_DFN_C++_v2.py params.txt ' + str(nCPU) + '> meshing_output.txt'
+	copy('/home/jhyman/dfnWorks/dfnworks-main/python_scripts/mesh_DFN_C++_v2.py','./mesh_DFN_C++_v2.py')
+	cmd = '$python_dfn mesh_DFN_C++_v2.py params.txt ' + str(nCPU) 
+	#cmd = '$python_dfn mesh_DFN_C++_v2.py params.txt ' + str(nCPU) + '> meshing_output.txt'
 	os.system(cmd)
 
 def uncorrelated_perm(variance):
@@ -133,11 +133,11 @@ if __name__ == "__main__":
 
 	define_paths()
 	make_working_directory(jobname)
-	os.chdir(jobname)
 	# dfnGen
 
 #	check_input(dfnGen_run_file)
 	dfnGen(jobname, dfnGen_run_file)
+	os.chdir(jobname)
 	mesh_fractures(nCPU)
 	### dfnFlow
 	uncorrelated_perm(0)
