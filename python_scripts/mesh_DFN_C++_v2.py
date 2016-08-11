@@ -841,6 +841,7 @@ resetpts / itp
 boundary_components 
 dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
+dump / lagrit / full_mesh.lg / mo_all
 dump / pflotran / full_mesh / mo_all / nofilter_zero
 dump / stor / tri_fracture / mo_all / ascii
 
@@ -929,6 +930,94 @@ def cleanup_dir():
 	remove_batch("mesh*inp")
 	remove_batch("mesh*lg")
 
+def redefine_zones_old():
+
+	'''Section 8 : redefine zones 
+	Creates lagrit script to define domain size
+'''
+	lagrit_input = '''
+read / lagrit / full_mesh.lg / mo_all / binary 
+cmo / printatt / mo_all / -xyz- / minmax 
+finish
+
+	'''
+	f=open('domainattr.lgi','w')
+	f.write(lagrit_input) 
+	f.flush()
+	f.close()
+	os.system(lagrit_path + " < domainattr.lgi > printxyz.out")
+	# python script to read data from lagrit output file 
+	fil = open('printxyz.out','r')
+	for line in fil:
+		k=line.split()
+		for word in line.split():
+			if word == 'xic':
+				x_min = float(k[1])
+				x_max = float(k[2])
+			if word=='yic':
+				y_min = float(k[1])
+				y_max = float(k[2])
+			if word=='zic':
+				z_min = float(k[1])
+				z_max = float(k[2])
+
+	fil.close()
+	#lagrit scripts to create new zone files: boundary zones
+
+	eps = h*0.001
+	
+	parameters = (x_max - eps, x_min + eps, y_max - eps, \
+			 y_min + eps, z_max - eps, z_min + eps)
+	lagrit_input = '''
+read / gmv / full_mesh.gmv / mo
+define / XMAX / %e 
+define / XMIN / %e 
+define / YMAX / %e 
+define / YMIN / %e 
+define / ZMAX / %e 
+define / ZMIN / %e 
+
+pset / top/ attribute / zic / 1,0,0/ gt /ZMAX 
+pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN 
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
+pset / right_e / attribute/ xic/1,0,0/ gt/XMAX
+pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
+pset/-all-/ zone / boundary / ascii
+finish
+
+'''
+	f=open('bound_zones.lgi','w')
+	f.write(lagrit_input%parameters)
+	f.flush()
+	f.close()
+	os.system(lagrit_path + " < bound_zones.lgi > boundary_output.txt ")
+	os.system("cp boundary_bottom.zone pboundary_bottom.zone")
+	os.system("cp boundary_left_w.zone pboundary_left_w.zone")
+	os.system("cp boundary_front_s.zone pboundary_front_s.zone")
+	os.system("cp boundary_right_e.zone pboundary_right_e.zone")
+	os.system("cp boundary_back_n.zone pboundary_back_n.zone")
+	os.system("cp boundary_top.zone pboundary_top.zone")
+	for i in range(0,2):
+		os.system("sed -i '$d' boundary_top.zone ")
+		os.system("sed -i '$d' boundary_bottom.zone ")
+		os.system("sed -i '$d' boundary_left_w.zone ")
+		os.system("sed -i '$d' boundary_front_s.zone ")
+		os.system("sed -i '$d' boundary_right_e.zone ")
+
+	os.system("sed -i '1d' boundary_bottom.zone ")
+	os.system("sed -i '1d' boundary_left_w.zone ")
+	os.system("sed -i '1d' boundary_front_s.zone ")
+	os.system("sed -i '1d' boundary_right_e.zone ")
+	os.system("sed -i '1d' boundary_back_n.zone ")
+	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone boundary_front_s.zone boundary_right_e.zone   boundary_back_n.zone  > allboundaries.zone ")
+
+
+
+
+
+
+
 def redefine_zones():
 	'''Section 8 : redefine zones 
 	Creates lagrit script to define domain size'''
@@ -990,16 +1079,19 @@ if __name__ == "__main__":
 
 	production_mode = 1
 
-	#python_path = os.environ['python_dfn']
-	python_path  = '/scratch/er/dharp/source/epd-7.3-1-rh3-x86_64/bin/python'
-	#lagrit_path = os.environ['lagrit_dfn']
-	lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
-	#connectivity_test = os.environ['connect_test_path']
-	connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+	try:
+		python_path = os.environ['python_dfn']
+		#python_path  = '/scratch/er/dharp/source/epd-7.3-1-rh3-x86_64/bin/python'
+		lagrit_path = os.environ['lagrit_dfn']
+		#lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
+		connectivity_test = os.environ['connect_test']
+		#connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+		pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
+		#Open the file of parameters output from mathematica
+	except KeyError:
+		print 'Some path variable were not found'
+		sys.exit(1)	
 
-	pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
-
-	#Open the file of parameters output from mathematica
 	if (len(sys.argv) == 1):
 		filename = 'params.txt'
 		print "Number of CPU's to use (default):", N_CPU
@@ -1046,8 +1138,9 @@ if __name__ == "__main__":
 	if production_mode > 0:
 		cleanup_dir()
 
-	#if(visualMode == 0): 
-	#	redefine_zones()
+	if(visualMode == 0): 
+		#redefine_zones()
+		redefine_zones_old()
 
 	f = open('finalmesh.txt','w')
 	f.write('The final mesh of DFN consists of: \n')
