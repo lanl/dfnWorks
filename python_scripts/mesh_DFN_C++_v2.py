@@ -176,7 +176,7 @@ def split_poly_file(poly_file, nPoly, digits):
 
 	if len(count_list) != nPoly:
 		print 'Something is wrong in split_poly_file'
-		print 'Count list does not equatl number of fractures give in params.txt'
+		print 'Count list does not equal number of fractures give in params.txt'
 		print 'Stop to debug'
 
 	nodes_offset = 0
@@ -231,6 +231,7 @@ def create_parameter_mlgi_file(filename, nPoly):
 		x2 = data[i,5]	
 		y2 = data[i,6]	
 		z2 = data[i,7]	
+		family = data[i,8]
 
 		fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
 		f = open(fparameter_name, 'w')
@@ -265,6 +266,7 @@ def create_parameter_mlgi_file(filename, nPoly):
 		f.write('define / X2 / '+str(x2)+'\n')
 		f.write('define / Y2 / '+str(y2)+'\n')
 		f.write('define / Z2 / '+str(z2)+'\n')
+		f.write('define / family / '+str(family)+'\n')
 		f.write('finish \n')
 		f.flush()
 		f.close()
@@ -536,7 +538,11 @@ cmo / DELATT / mo_final / a_b
 cmo / setatt / mo_final / ipolydat / no 
 cmo / modatt / mo_final / icr1 / ioflag / l 
 cmo / modatt / mo_final / isn1 / ioflag / l 
-		
+	
+# Create Family element set
+cmo / addatt / mo_final / family_id / vint / scalar / nelements 
+cmo / setatt / mo_final / family_id / 1 0 0 / family
+	
 '''
 		lagrit_input += '''
 dump / OUTFILE_AVS / mo_final
@@ -554,16 +560,19 @@ cmo / setatt / mo_line_work / itetclr / 1 0 0 / ID
 addmesh / merge / mo_final / mo_pts / mo_line_work 
 cmo / delete / mo_pts 
 cmo / delete / mo_line_work 
+	
+# Create Family element set
+cmo / addatt / mo_final / family_id / vint / scalar / nelements 
+cmo / setatt / mo_final / family_id / 1 0 0 / family
 
 cmo / select / mo_final 
 # Rotate 
 rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/ 
 
 cmo / printatt / mo_final / -xyz- / minmax 
-
 cmo / modatt / mo_final / icr1 / ioflag / l 
 cmo / modatt / mo_final / isn1 / ioflag / l
-dump / lagrit/ OUTFILE_LG / mo_final 
+dump / lagrit / OUTFILE_LG / mo_final 
 '''
 
 	lagrit_input += '''
