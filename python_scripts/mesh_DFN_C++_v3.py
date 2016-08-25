@@ -63,115 +63,32 @@ def remove_batch(name):
 	for fl in glob.glob(name):
 		os.remove(fl)	
 
-def parse_params_file(filename, refine_factor):
+def parse_params_file(filename):
+	
 	''' Read in params.txt file and parse information'''
-
 	print "\nParse Params.txt: Starting"
 	fin = open(filename, 'r')
 	# Line 1 is the number of polygons
 	nPoly = int(fin.readline())
+
 	print "Number of Polygons:", nPoly
 	digits = len(str(nPoly)) ### 
 
 	#Line 2 is the h scale
 	h = float(fin.readline())
 	print "H_SCALE", h
-	if(refine_factor > 1):
-		h = h/float(refine_factor)
-		print "modified H_SCALE", h
 		
-	# Line 3 numberOfPoints in a Polygon
-	numPoints = int(fin.readline())
-	print "Number of Points per polygon", numPoints
-
-	# Line 4 slope is the rate at which the mesh will get coarser in refinement
-	slope = float(fin.readline())
-
-	# Line 5 refine_dist is the distance from the intersections which refinement will be performed
-	refine_dist = float(fin.readline())
-
-	# Line 6 is the visualization mode: '1' is on, '0' is off.
-	visualMode= int(fin.readline())
+	# Line 3 is the visualization mode: '1' is on, '0' is off.
+	visualMode = int(fin.readline())
 	print 'Visual Mode: ', visualMode
-	# Line 7 is the filename of the avs for the polygon
-	poly_file = fin.readline().rstrip()
-	print "Polygon File:", poly_file
-
-	# Line 8 is the filename of the avs for the intersections 
-	intersection_file = fin.readline().rstrip()
-	print "Intersection File:", intersection_file
+	# line 4 dudded points
+	dudded_points = int(f.readline())
+	print "Expected Number of duded points: ", dudded_points
 	fin.close()
 	
 	print "Parse Params.txt: Complete\n"
-	return(nPoly, digits, h, numPoints, slope, refine_dist, visualMode, 
-		poly_file, intersection_file)
-
-def split_poly_file(poly_file, nPoly, digits):
-
-	print "Splitting the Polys File:", poly_file
-	os.system("sed -i 's/\"//g' " + poly_file)
+	return(nPoly, digits, h, numPoints, visualMode, dudded_points)
 	
-	try:
-		rmtree('polys')
-	except OSError:
-		pass
-
-	os.mkdir('polys')
-	f = open(poly_file,'r')
-	first_line = f.readline()
-	first_line = first_line.split()
-	nnodes = int(first_line[0])
-	nelements = int(first_line[1])
-
-	nodes_list = []
-	for i in range(nnodes):
-		nodes_list.append(f.readline())
-	id_list = []
-	for i in range(nelements):
-		this_line = f.readline()
-		this_line = this_line.split()
-		id_list.append(int(this_line[1]))
-	f.close()
-
-	nPoly = id_list[nelements-1]
-	id_start = id_list[0]
-	count_list = []
-	j=1
-	for i in range(nelements):
-		if (id_list[i] == id_start):
-			j = j+1
-		else:
-			count_list.append(j)
-			id_start = id_list[i]
-			j = 2
-	count_list.append(j)
-
-	if len(count_list) != nPoly:
-		print 'Something is wrong in split_poly_file'
-		print 'Count list does not equal number of fractures give in params.txt'
-		print 'Stop to debug'
-
-	nodes_offset = 0
-	for i1 in range(1,nPoly+1):
-		if (nPoly > 1000 and (i1 % 1000) == 0):
-			print 'Splitting file number ' + str(i1)
-		poly_name = 'polys/poly_' + str(i1) + '.inp'
-		i2 = count_list[i1-1]
-		f_out = open(poly_name, 'w')
-		f_out.write(str(i2) + ' ' + str(i2-1) + ' '\
-			+ str(0) + ' ' + str(0) + ' ' + str(0) + '\n')
-		for i3 in range(i2):
-			tmp = str(i3+1) + nodes_list[i3+nodes_offset][nodes_list[i3+nodes_offset].find(' '):]
-			f_out.write(tmp)
-		nodes_offset = nodes_offset + i2
-		for i3 in range(i2-1):
-			tmp = str(i3+1) + ' ' + str(i1) +  ' line ' \
-				+ str(i3+1) + ' ' + str(i3+2) + '\n'
-			f_out.write(tmp)
-		f_out.flush()
-		f_out.close()
-	print "Splitting the Polys File: Complete"
-
 def create_parameter_mlgi_file(filename, nPoly):
 	#Section 2 : Outputs parameteri.mlgi files used in running LaGriT Script
 	print "\nCreating parameteri.mlgi files"
@@ -191,7 +108,7 @@ def create_parameter_mlgi_file(filename, nPoly):
 
 	#Go through the list and write out parameter file for each polygon
 	#to be an input file for LaGriT
-	data = genfromtxt(filename, skip_header = 8)
+	data = genfromtxt('rotate.txt', skip_header = 1)
 	for i in range(nPoly):
 		
 		frac_id = str(int(data[i,0]))
@@ -331,15 +248,18 @@ cmo / select / mo_pts
 # Creates a Coarse Mesh and then refines it using the distance field from intersections 
 massage / H_SCALE6 / 1.e-5 / 1.e-5 
 smooth;recon 0;smooth;recon 0;smooth;recon 0  
-smooth;recon 0;smooth;recon 0;smooth;recon 0 
-		'''
-		if numPoints == 4:
-			lagrit_input += '''
-resetpts / itp 
-pset / p_move / attribute / itp / 1 0 0 / 0 / eq 
-perturb/ pset get p_move / PURTURB PURTURB 0.0
- 
-'''
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
+ 	'''
+#
+#		if numPoints == 4:
+#			lagrit_input += '''
+#resetpts / itp 
+#pset / p_move / attribute / itp / 1 0 0 / 0 / eq 
+#perturb/ pset get p_move / PURTURB PURTURB 0.0
+# 
+#'''
+#
 		lagrit_input += ''' 
 massage / H_SCALE5 / 1.e-5 / 1.e-5 
 smooth;recon 0;smooth;recon 0;smooth;recon 0 
@@ -1084,6 +1004,8 @@ if __name__ == "__main__":
 	jhyman@lanl.gov
 	'''
 
+	slope = 2
+	refine_dist = 0.5
 
 	#Production mode "ON" outputs the final results for computation, 
 	#cleaning up all the temporary attributes needed during refinement.
@@ -1143,9 +1065,7 @@ if __name__ == "__main__":
 		print "Number of CPU's to use:", N_CPU
 		print "Mesh Refine Factor:", refine_factor
 
-	nPoly, digits, h, numPoints, slope, refine_dist, visualMode, poly_file, intersection_file = parse_params_file(filename, refine_factor)
-
-	split_poly_file(poly_file, nPoly, digits)
+	nPoly, digits, h, visualMode, dudded_points  = parse_params_file(filename)
 
 	create_parameter_mlgi_file(filename, nPoly)
 

@@ -106,6 +106,34 @@ def parse_params_file(filename, refine_factor):
 	return(nPoly, digits, h, numPoints, slope, refine_dist, visualMode, 
 		poly_file, intersection_file)
 
+
+def dump_intersection_avs(i, x, y, z, ii):
+
+	filename = 'intersections_'+str(i) +'.inp'
+	f = open(filename,'w+')
+	num_lines = 0 
+	for j in range(len(x) - 1):
+		if ii[j] == ii[j+1]:
+			num_lines += 1
+
+	f.write('%d %d 2 0 0\n'%(len(x),num_lines))
+	for j in range(len(x)):
+		f.write('%d %f %f %f\n'%(j+1, x[j], y[j], z[j]))
+	elem_cnt = 1
+	for j in range(len(x) - 1):
+		if ii[j] == ii[j+1]:
+			f.write('%d %d line %d %d\n'%(elem_cnt,i,j+1,j+2))
+			elem_cnt += 1
+	f.write('2 1 1\n')
+	f.write('a_b, integer\n')
+	f.write('b_a, integer\n')
+	for j in range(len(x)):
+		f.write('%d %d %d\n'%(j+1, i, ii[j]))
+	f.close()
+
+	cmd = 'mv ' + filename + ' intersections/'
+	os.system(cmd) 
+
 def split_poly_file(poly_file, nPoly, digits):
 
 	print "Splitting the Polys File:", poly_file
@@ -641,7 +669,7 @@ def mesh_fracture(fracture_id):
 	os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
 
 	elapsed = time.time() - t
-	print 'Fracture ', fracture_id, 'Complete' 
+	print 'Fracture ', fracture_id, '\tComplete on ', p.name
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
 def worker(work_queue, done_queue):
@@ -652,6 +680,15 @@ def worker(work_queue, done_queue):
 		print('Something went wrong')
 	return True
 
+#def worker(work_queue, done_queue):
+#	try:
+#		for fracture_id in iter(work_queue.get, 'STOP'):
+#			status_code = mesh_fracture(fracture_id)
+#			done_queue.put("%s - Meshing %d returned %d." % (mp.current_process().name, fracture_id, status_code))
+#	except: 
+#		print('Something went wrong')
+#	return True
+#
 def mesh_fractures_header(nPoly, N_CPU):
 	
  
@@ -1036,13 +1073,16 @@ def output_report(visualMode):
 
 	f = open('finalmesh.txt','w')
 	f.write('The final mesh of DFN consists of: \n')
+	#ALL DONE!
 	if(visualMode == 0): 
 		print "Output files for FEHM calculations are written in :"
-		print "--> full_mesh.gmv"
-		print "--> full_mesh.inp"
-		print "--> tri_fracture.stor"
+		print "   full_mesh.gmv"
+		print "   full_mesh.inp"
+		print "   tri_fracture.stor"
+
 
 		finp=open('full_mesh.inp','r')
+		fstor=open('tri_fracture.stor','r')
 		g = finp.readline()
 		g = g.split()
 		NumElems = int(g.pop(1))
@@ -1050,8 +1090,6 @@ def output_report(visualMode):
 		f.write(str(NumElems)+' triangular elements; \n')
 		f.write(str(NumIntNodes)+'  nodes / control volume cells; \n')
 		finp.close()
-		
-		fstor=open('tri_fracture.stor','r')
 		fstor.readline()
 		fstor.readline()
 		gs = fstor.readline()
@@ -1061,19 +1099,24 @@ def output_report(visualMode):
 		fstor.close()
 	else:
 		print "Output files for visualization are written in :"
-		print "--> reduced_full_mesh.gmv"
-		print "--> reduced_full_mesh.inp"
+		print "   reduced_full_mesh.gmv"
+		print "   reduced_full_mesh.inp"
 		finp=open('reduced_full_mesh.inp','r')
 		g = finp.readline()
+
 		g = g.split()
+
 		NumElems = int(g.pop(1))
+
 		NumIntNodes = int(g.pop(0))
 		f.write(str(NumElems)+' triangular elements; \n')
 		f.write(str(NumIntNodes)+'  nodes / control volume cells. \n')
 		finp.close()
 	f.close()
 
-############# MAIN ###############
+
+
+################### MAIN ###############
 if __name__ == "__main__":
 	print ('='*80)
 	os.system("date")
@@ -1093,30 +1136,21 @@ if __name__ == "__main__":
 	#dfield = 0
 
 	production_mode = 1
+
 	refine_factor = 1
 	N_CPU = 1
 	try:
 		python_path = os.environ['python_dfn']
-		#python_path = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
 	except KeyError:
-		print 'python_dfn not defined'
-		sys.exit(1)	
-	try:	
+		print 'python_dfn not defined'	
 		lagrit_path = os.environ['lagrit_dfn']
 		#lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
-	except KeyError:
-		print 'lagrit_dfn undefined'
-		sys.exit(1)	
-	try:	
 		connectivity_test = os.environ['connect_test']
 		#connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
-	except KeyError:
-		print 'connect_test undefined'
-		sys.exit(1)	
-	try:
 		pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
+		#Open the file of parameters output from mathematica
 	except KeyError:
-		print 'PyLaGrit not found'
+		print 'Some path variable were not found'
 		sys.exit(1)	
 
 	if (len(sys.argv) == 1):
@@ -1156,7 +1190,7 @@ if __name__ == "__main__":
 	if failure > 0:
 		cleanup_dir()
 		print 'Exiting Program'
-		sys.exit(1)
+		exit()
 
 	n_jobs = create_merge_poly_files(N_CPU, nPoly, digits)
 
@@ -1168,7 +1202,5 @@ if __name__ == "__main__":
 	if(visualMode == 0): 
 		redefine_zones()
 		#redefine_zones_old()
-	
-	output_report(visualMode)
 	os.system("date")
 	print ('='*80)

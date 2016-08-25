@@ -6,29 +6,41 @@ from networkx.algorithms.flow.preflowpush import *
 import numpy as np
 import os.path
 
-
-def create_adjacency_matrix(num_frac):
-	''' Create adjacency Matrix using intersection files, 
-	Only works for dfnWorks 1.0, needs to rebuilt for 2.0, 
-	but that should dump the adjacency matrix all the time'''
-
-	if os.path.isfile('adjac') == False: 
-
+def create_adjacency_matrix(num_frac, version):
+	''' Create adjacency Matrix using intersection files'''
+	if os.path.isfile('adjac') == False: 	
 		print 'Creating Adjac'
-		A = np.zeros((num_frac,num_frac), dtype=np.int)
-		a = np.genfromtxt('intersections.inp', skip_header = 1)[:,-2] - 1
-		b = np.genfromtxt('intersections.inp', skip_header = 1)[:,-1] - 1
 
-		for i in range(len(a)):
-			A[int(a[i]), int(b[i])] = 1
+		if version < 2:
+			A = np.zeros((num_frac,num_frac), dtype=np.int)
+			a = np.genfromtxt('intersections.inp', skip_header = 1)[:,-2] - 1
+			b = np.genfromtxt('intersections.inp', skip_header = 1)[:,-1] - 1
+
+			for i in range(len(a)):
+				A[int(a[i]), int(b[i])] = 1
+		else:
+			A = np.zeros((num_frac,num_frac), dtype=np.int)
+			for i in range(1, num_frac + 1):
+				filename = 'intersections/intersections_%d.inp'%i
+				fin = open(filename)
+				header = fin.readline()
+				header = header.split()
+				num_points = int(header[0])
+				num_elem = int(header[1])
+				fin.close()
+				skip = 1 + num_points + num_elem + 3
+				b = np.genfromtxt(filename, skip_header = skip)[:,-1] - 1 
+				b = np.unique(b)
+				for j in b:
+					A[i - 1,j] = 1
 
 		f = open('adjac', 'w')
 		for i in range(num_frac):
 			for j in range(num_frac):
 				f.write('%d\n'%A[i,j])
 		f.close()
-		print 'Adjac built'
 
+		print 'Adjac Built'
 
 def dump_boundary_nodes(domain):
 
@@ -99,10 +111,10 @@ dump / avs2 / %s / mo_tag / 0 0 2 0
 def run_max_flow(inflow_nodes, outflow_nodes):
 
 	print 'Running Max Flow'
-	left = np.genfromtxt('top.txt')-1
-	right = np.genfromtxt('bottom.txt')-1
-	inflow = list(left)
-	outflow = list(right)
+	inflow = np.genfromtxt(inflow_nodes) - 1
+	outflow = np.genfromtxt(outflow_nodes) - 1
+	inflow = list(inflow)
+	outflow = list(outflow)
 
 	data = np.genfromtxt('adjac')
 	n = int(np.sqrt(len(data)))
@@ -129,17 +141,19 @@ def run_max_flow(inflow_nodes, outflow_nodes):
 #		print int(n)+1	
 		backbone.append(int(n) +1)
 #	print backbone
-	print 'Number of Fractures in backbone: ', len(backbone)
-	np.savetxt('maxflow.nodes.txt', backbone)
+	print 'Number of Fractures in backbone: %', len(backbone)
+	backbone = np.sort(backbone)
+	np.savetxt('maxflow.nodes.txt', backbone, fmt = '%d')
 	print 'Max Flow Complete'
 
 def run_current_flow(inflow_nodes, outflow_nodes):
 	print 'Running Current Flow'
-	left = np.genfromtxt(inflow_nodes)-1
-	right = np.genfromtxt(outflow_nodes)-1
-	inflow = list(left)
-	outflow = list(right)
-	
+	inflow = np.genfromtxt(inflow_nodes) - 1
+	outflow = np.genfromtxt(outflow_nodes) - 1
+	inflow = list(inflow)
+	outflow = list(outflow)
+
+
 	data = np.genfromtxt('adjac')
 	n = int(np.sqrt(len(data)))
 	A = data.reshape(n,n)
@@ -227,25 +241,22 @@ if __name__ == "__main__":
 	
 	inflow = 'right.txt'
 	outflow = 'left.txt'
-	domain = 10
+	domain = 20 
+	version = 2
 
 	# Get Number of Fractures
 	f = open('params.txt')
 	num_frac = int(f.readline())
 	f.close()
 
-	create_adjacency_matrix(num_frac)
+	create_adjacency_matrix(num_frac, version)
 	dump_boundary_nodes(domain)
 	run_max_flow(inflow, outflow)
-	prune_mesh('maxflow.nodes.txt', num_frac)
+	#prune_mesh('maxflow.nodes.txt', num_frac)
 
-	run_current_flow(inflow, outflow)
-	prune_mesh('currentflow.nodes.txt', num_frac)
+#	run_current_flow(inflow, outflow)
+	#prune_mesh('currentflow.nodes.txt', num_frac)
 
 	print 'All Done, Goodbye'
-
-
-
-
 
 

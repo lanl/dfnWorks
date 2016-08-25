@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 3000 
+nPoly: 10000 
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -26,7 +26,7 @@ outputAllRadii: 0
 
 outputFinalRadiiPerFamily: 0
                       
-domainSize: {10,10,10} 
+domainSize: {20,10,10} 
      /* Mandatory Parameter.
         Creates a domain with dimension x*y*z centered at the origin.*/
 
@@ -54,7 +54,7 @@ h: 0.05
 //==========================================================================//
 /* Fracture Network Parameters:                                             */
 
-tripleIntersections: 1
+tripleIntersections: 0
 /* Options:     0: Off
                 1: On    */
 

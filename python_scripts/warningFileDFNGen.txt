@@ -1,5 +1,0 @@
-WARNING --- No output path has been provided so output will be written to "polishedOutput.txt" in your current working directory.
-WARNING --- "multipleClusters" is not one of the valid parameter names.
-WARNING --- "outputFinalRadii" is not one of the valid parameter names.
-WARNING --- "outputAllAcceptedRadii" is not one of the valid parameter names.
-WARNING --- "outputTriplePts" is not one of the valid parameter names.

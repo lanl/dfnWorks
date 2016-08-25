@@ -371,7 +371,6 @@ class dfnworks(Frozen):
 	# Need to check for full_mesh.uge file
         #if failure:
         #    sys.exit('Failed to run LaGrit to get initial .uge file')
-
 	failure = os.path.isfile(self._uge_file)
 	if failure == False:
             sys.exit('Failed to run LaGrit to get initial .uge file')
@@ -443,7 +442,6 @@ class dfnworks(Frozen):
         if aper_file == '' and self._aper_cell_file == '':
             sys.exit('ERROR: aperture file must be specified!')
 
-
         mat_file = 'materialid.dat'
 	t = time.time()
 	cmd = correct_uge + ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
@@ -454,14 +452,12 @@ class dfnworks(Frozen):
 	# need number of nodes and mat ID file
 	print('--> Writing HDF5 File')
 	materialid = np.genfromtxt(mat_file, skip_header = 3).astype(int)
-	#materialid = np.genfromtxt(material_file).astype(int)
 	materialid = -1 * materialid - 6
 	NumIntNodes = len(materialid)
 
         if perm_file:
             filename = 'dfn_properties.h5'
             h5file = h5py.File(filename, mode='w')
-
             print('--> Beginning writing to HDF5 file')
             print('--> Allocating cell index array')
             iarray = np.zeros(NumIntNodes, '=i4')

@@ -106,73 +106,48 @@ def parse_params_file(filename, refine_factor):
 	return(nPoly, digits, h, numPoints, slope, refine_dist, visualMode, 
 		poly_file, intersection_file)
 
-def split_poly_file(poly_file, nPoly, digits):
 
-	print "Splitting the Polys File:", poly_file
-	os.system("sed -i 's/\"//g' " + poly_file)
-	
-	try:
-		rmtree('polys')
-	except OSError:
-		pass
+def edit_intersection_files(nPoly, keep_list):
 
-	os.mkdir('polys')
-	f = open(poly_file,'r')
-	first_line = f.readline()
-	first_line = first_line.split()
-	nnodes = int(first_line[0])
-	nelements = int(first_line[1])
+	pull_list = list(set(range(1,nPoly+ 1)) - set(keep_list))
+	os.chdir('intersections')
+	for i in keep_list:
+		filename = 'intersections_%d.inp'%i	
+		print '--> Working on: ', filename
+		lagrit_script = 'read / %s / mo1'%filename
+		lagrit_script += '''
+pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
+'''%pull_list[0]	
+		for j in pull_list[1:]:
+			lagrit_script += '''
+pset / prune / attribute / b_a / 1,0,0 / eq / %d
+pset / pset2remove / union / pset2remove, prune
+#rmpoint / pset, get, prune
+pset / prune / delete
+ '''%j
+		lagrit_script += '''
+rmpoint / pset, get, pset2remove 
+rmpoint / compress
 
-	nodes_list = []
-	for i in range(nnodes):
-		nodes_list.append(f.readline())
-	id_list = []
-	for i in range(nelements):
-		this_line = f.readline()
-		this_line = this_line.split()
-		id_list.append(int(this_line[1]))
-	f.close()
+cmo / modatt / mo_line_work / imt / ioflag / l
+cmo / modatt / mo_line_work / itp / ioflag / l
+cmo / modatt / mo_line_work / isn / ioflag / l
+cmo / modatt / mo_line_work / icr / ioflag / l
 
-	nPoly = id_list[nelements-1]
-	id_start = id_list[0]
-	count_list = []
-	j=1
-	for i in range(nelements):
-		if (id_list[i] == id_start):
-			j = j+1
-		else:
-			count_list.append(j)
-			id_start = id_list[i]
-			j = 2
-	count_list.append(j)
+cmo / status / brief
+dump / intersections_%d_prune.inp / mo1
+finish
+'''%i
+		
+		file_name = 'prune_intersection.lgi'
+		f = open(file_name, 'w')
+		f.write(lagrit_script)
+		f.flush()
+		f.close()
+		os.system(lagrit_path +  '< prune_intersection.lgi > out.txt')
+	os.chdir('../prune_network')
 
-	if len(count_list) != nPoly:
-		print 'Something is wrong in split_poly_file'
-		print 'Count list does not equal number of fractures give in params.txt'
-		print 'Stop to debug'
-
-	nodes_offset = 0
-	for i1 in range(1,nPoly+1):
-		if (nPoly > 1000 and (i1 % 1000) == 0):
-			print 'Splitting file number ' + str(i1)
-		poly_name = 'polys/poly_' + str(i1) + '.inp'
-		i2 = count_list[i1-1]
-		f_out = open(poly_name, 'w')
-		f_out.write(str(i2) + ' ' + str(i2-1) + ' '\
-			+ str(0) + ' ' + str(0) + ' ' + str(0) + '\n')
-		for i3 in range(i2):
-			tmp = str(i3+1) + nodes_list[i3+nodes_offset][nodes_list[i3+nodes_offset].find(' '):]
-			f_out.write(tmp)
-		nodes_offset = nodes_offset + i2
-		for i3 in range(i2-1):
-			tmp = str(i3+1) + ' ' + str(i1) +  ' line ' \
-				+ str(i3+1) + ' ' + str(i3+2) + '\n'
-			f_out.write(tmp)
-		f_out.flush()
-		f_out.close()
-	print "Splitting the Polys File: Complete"
-
-def create_parameter_mlgi_file(filename, nPoly):
+def create_parameter_mlgi_file(filename, keep_list):
 	#Section 2 : Outputs parameteri.mlgi files used in running LaGriT Script
 	print "\nCreating parameteri.mlgi files"
 	os.system('rm -rf parameters')
@@ -192,22 +167,23 @@ def create_parameter_mlgi_file(filename, nPoly):
 	#Go through the list and write out parameter file for each polygon
 	#to be an input file for LaGriT
 	data = genfromtxt(filename, skip_header = 8)
-	for i in range(nPoly):
-		
-		frac_id = str(int(data[i,0]))
-		long_name = str(int(data[i,0]))  	
-		theta = data[i,1]	
-		x1 = data[i,2]	
-		y1 = data[i,3]	
-		z1 = data[i,4]	
-		x2 = data[i,5]	
-		y2 = data[i,6]	
-		z2 = data[i,7]	
-		family = data[i,8]
+	for index, i in enumerate(keep_list):
+		ii = i - 1
+		frac_id = str(int(data[ii,0]))
+		long_name = str(int(data[ii,0]))  	
+		theta = data[ii,1]	
+		x1 = data[ii,2]	
+		y1 = data[ii,3]	
+		z1 = data[ii,4]	
+		x2 = data[ii,5]	
+		y2 = data[ii,6]	
+		z2 = data[ii,7]	
+		family = data[ii,8]
 
 		fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
 		f = open(fparameter_name, 'w')
 		f.write('define / ID / ' + frac_id + '\n')
+		f.write('define / ID_index / ' + str(index + 1)+ '\n')
 		f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
 		f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
 		f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
@@ -319,8 +295,9 @@ copypts / mo_pts / mo_poly_work
 cmo / select / mo_pts 
 triangulate / counterclockwise 
 
-cmo / setatt / mo_pts / imt / 1 0 0 / ID 
-cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
+
+
+
 resetpts / itp 
 cmo / delete / mo_poly_work 
 cmo / select / mo_pts 
@@ -397,14 +374,21 @@ rmpoint / compress
 copypts / mo_final / mo_line_work  
 
 cmo / select / mo_final 
-cmo / setatt / mo_final / imt / 1 0 0 / ID 
-cmo / setatt / mo_final / itp / 1 0 0 / 0 
-cmo / setatt / mo_final / itetclr / 1 0 0 / ID 
+cmo / setatt / mo_final / imt / 1 0 0 / ID_index 
+cmo / setatt / mo_final / itetclr / 1 0 0 / ID_index
+
+
+cmo / setatt / mo_final / itp / 1 0 0 / 0
+
+
+
+ 
 # cmo / printatt / mo_final / -xyz- / minmax 
 trans/ 1 0 0 / zero / xyz 
 cmo / setatt / mo_final / zic / 1 0 0 / 0.0 
 cmo / printatt / mo_final / -xyz- / minmax 
 connect 
+
 
 trans / 1 0 0 / original / xyz 
 cmo / printatt / mo_final / -xyz- / minmax 
@@ -515,6 +499,8 @@ cmo / modatt / mo_final / isn1 / ioflag / l
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
 cmo / setatt / mo_final / family_id / 1 0 0 / family
 	
+cmo / addatt / mo_final / itetclr_OG / vint / scalar / nelements
+cmo / setatt / mo_final / itetclr_OG / 1 0 0 / ID
 '''
 		lagrit_input += '''
 dump / OUTFILE_AVS / mo_final
@@ -522,12 +508,17 @@ dump / lagrit / OUTFILE_LG / mo_final
 ''' 
 	else:
 		lagrit_input += '''
-cmo / setatt / mo_pts / imt / 1 0 0 / ID 
-cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
+cmo / setatt / mo_pts / imt / 1 0 0 / ID_index 
+cmo / setatt / mo_pts / itetclr / 1 0 0 / ID_index
+
 resetpts / itp 
 
-cmo / setatt / mo_line_work / imt / 1 0 0 / ID 
-cmo / setatt / mo_line_work / itetclr / 1 0 0 / ID
+cmo / setatt / mo_line_work / imt / 1 0 0 / ID_index 
+cmo / setatt / mo_line_work / itetclr / 1 0 0 / ID_index
+
+cmo / addatt / mo_line_work / itetclr_save / vint / scalar / nelements
+cmo / setatt / mo_line_work / itetclr_save / 1 0 0 / ID
+
 
 addmesh / merge / mo_final / mo_pts / mo_line_work 
 cmo / delete / mo_pts 
@@ -540,6 +531,9 @@ cmo / setatt / mo_final / family_id / 1 0 0 / family
 cmo / select / mo_final 
 # Rotate 
 rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/ 
+
+cmo / setatt / mo_pts / imt / 1 0 0 / ID_index 
+cmo / setatt / mo_pts / itetclr / 1 0 0 / ID_index 
 
 cmo / printatt / mo_final / -xyz- / minmax 
 cmo / modatt / mo_final / icr1 / ioflag / l 
@@ -598,7 +592,7 @@ def mesh_fracture(fracture_id):
 		 + 'parameters_CPU%d.mlgi'
 	os.system(cmd%(fracture_id,cpu_id))
 
-	cmd = 'ln -s intersections/intersections_%d.inp '\
+	cmd = 'ln -s intersections/intersections_%d_prune.inp '\
 		 + 'intersections_CPU%d.inp'
 	os.system(cmd%(fracture_id,cpu_id))
 
@@ -641,7 +635,7 @@ def mesh_fracture(fracture_id):
 	os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
 
 	elapsed = time.time() - t
-	print 'Fracture ', fracture_id, 'Complete' 
+	print 'Fracture ', fracture_id, '\tComplete on ', p.name
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
 def worker(work_queue, done_queue):
@@ -652,7 +646,7 @@ def worker(work_queue, done_queue):
 		print('Something went wrong')
 	return True
 
-def mesh_fractures_header(nPoly, N_CPU):
+def mesh_fractures_header(nPoly,keep_list, N_CPU):
 	
  
 	t_all = time.time()
@@ -668,12 +662,13 @@ def mesh_fractures_header(nPoly, N_CPU):
 	f.close()
 	# If the number of processors is greater than the number of 
 	# polygons, reset N_CPU
-	if ( N_CPU > nPoly):
+	if (N_CPU > nPoly):
 		N_CPU = nPoly
 
 	print 'Meshing using %d CPUS'%N_CPU
 
-	fracture_list = range(1, nPoly + 1)
+	#fracture_list = range(1, nPoly + 1)
+	fracture_list = keep_list	
 
 	work_queue = mp.Queue()   # reader() reads from queue
 	done_queue = mp.Queue()   # reader() reads from queue
@@ -713,7 +708,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 	return failure_flag	
 
 
-def create_merge_poly_files(N_CPU, nPoly, digits):
+def create_merge_poly_files(N_CPU, nPoly, keep_list, digits):
 	'''
 	Section 4 : Create merge_poly file
 	 Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -725,10 +720,15 @@ def create_merge_poly_files(N_CPU, nPoly, digits):
 	# This needs to be re-written using PyLaGriT so we can check 
 	# that the number of dudded points is that which we expect
 	print "Writing : merge_poly.lgi"
-
 	part_size = nPoly/N_CPU + 1 ###v number of fractures in each part
-	endis = range(part_size, nPoly + part_size, part_size) 
-	endis[-1] = nPoly
+	endis = []
+	ii = 0
+	for i in keep_list[:-1]:	
+		ii += 1	
+		if ii == part_size:
+			endis.append(i)
+			ii = 0	
+	endis.append(max(keep_list))
 
 	lagrit_input = '''
 # Change to read LaGriT
@@ -759,9 +759,8 @@ finish \n
 	j = 0 # Counter for cpus 
 	fout = 'merge_poly_part_1.lgi'
 	f = open(fout, 'w')
-	for i in range(1, nPoly + 1):
+	for i in keep_list: 
 		tmp = 'mesh_' + str(i)  + '.lg'
-
 		f.write(lagrit_input%(tmp,i,i,i,i,i))
 		# if i is the last fracture in the cpu set
 		# move to the next cpu set	
@@ -839,6 +838,7 @@ cmo / modatt / mo_all / meshid / ioflag / l
 cmo / modatt / mo_all / id_n_1 / ioflag / l
 cmo / modatt / mo_all / id_n_2 / ioflag / l
 cmo / modatt / mo_all / pt_gtg / ioflag / l
+cmo / modatt / mo_all / itetclr_save / ioflag / l
 dump / avs2 / materialid.dat / mo_all / 0 0 2 0
 '''
 	else:
@@ -860,13 +860,12 @@ finish
 	return len(endis)
 
 
-def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
+def merge_the_meshes(N_CPU, lagrit_path, n_jobs):
 	''' Section 6 : Merge the Meshes
 	 Merges all the meshes together, deletes duplicate points, 
 		dumps the .gmv and fehm files
 	'''
 	print "\nMerging triangulated polygon meshes"
-
 	for j in range(1, n_jobs + 1):
 		pid = os.fork()
 		if pid == 0: # clone a child job
@@ -875,7 +874,6 @@ def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
 			os._exit(0)
 		else:
 			print 'Merging part ', j, ' of ', n_jobs 
-
 	# wait for all child processes to complete
 	j = 0
 	while j < n_jobs:
@@ -884,9 +882,7 @@ def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
 			print 'Process ' + str(j+1) + ' finished'
 			j += 1 
 
-
 	os.system(lagrit_path+' < merge_rmpts.lgi > log_merge_all') # run remove points
-	copy('log_merge_all','lagrit_outputs')
 	print "Merging triangulated polygon meshes: Complete\n"
 
 def cleanup_dir():
@@ -1079,18 +1075,16 @@ if __name__ == "__main__":
 	os.system("date")
 	print '''Python Script to parse DFNGEN output and mesh it using LaGriT 
 
-	Last Update August 1 2016 by Jeffrey Hyman
+	Last Update August 18 2016 by Jeffrey Hyman
 	EES - 16, LANL
 	jhyman@lanl.gov
 	'''
-
 
 	#Production mode "ON" outputs the final results for computation, 
 	#cleaning up all the temporary attributes needed during refinement.
 	#Note that the visualization mode must be "OFF" in order to run
 	#in produciton mode. "dfield" can also be turn ON/OFF. 
 	#*1: "ON", *0: "OFF". 
-	#dfield = 0
 
 	production_mode = 1
 	refine_factor = 1
@@ -1138,30 +1132,36 @@ if __name__ == "__main__":
 	elif (len(sys.argv) == 4):
 		filename = sys.argv[1] 
 		N_CPU = int(sys.argv[2])
-		refine_factor = int(sys.argv[3])
+		keep_file = sys.argv[3]
 		print "Reading in file:", filename
 		print "Number of CPU's to use:", N_CPU
-		print "Mesh Refine Factor:", refine_factor
-
+		print "Keep Files:", keep_file
+ 
+	
 	nPoly, digits, h, numPoints, slope, refine_dist, visualMode, poly_file, intersection_file = parse_params_file(filename, refine_factor)
 
-	split_poly_file(poly_file, nPoly, digits)
+	keep_list = genfromtxt(keep_file, dtype = "int")
 
-	create_parameter_mlgi_file(filename, nPoly)
+	print keep_list
+
+	edit_intersection_files(nPoly, keep_list)
+
+	nPoly = len(keep_list)	
+
+	create_parameter_mlgi_file(filename, keep_list)
 
 	create_lagrit_scripts(production_mode, N_CPU, refine_factor)
 
-	failure = mesh_fractures_header(nPoly, N_CPU)
+	failure = mesh_fractures_header(nPoly, keep_list, N_CPU)
 
 	if failure > 0:
 		cleanup_dir()
 		print 'Exiting Program'
 		sys.exit(1)
 
-	n_jobs = create_merge_poly_files(N_CPU, nPoly, digits)
-
-	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
-
+	n_jobs = create_merge_poly_files(N_CPU, nPoly, keep_list, digits)
+	merge_the_meshes(N_CPU, lagrit_path,  n_jobs)
+	
 	if production_mode > 0:
 		cleanup_dir()
 

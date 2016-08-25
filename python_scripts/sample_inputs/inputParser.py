@@ -15,9 +15,6 @@
 
                                 ## Running Instructions ##
 
-        $ python3 parse.py [name/path of input file]
-        
-        // MAKE SURE YOU USE python 3 !!!
         // output will be written to polishedOutput.txt in your current working directory
          
 """
@@ -87,7 +84,7 @@ def extractParameters(line):
                 comment = line
                 line = line[:line.index("/*")] ## only process text before '/*' comment
                 while "*/" not in comment:
-                        comment = inputIterator.__next__() ## just moves iterator past comment
+                        comment = next(inputIterator) ## just moves iterator past comment
 
         elif "//" in line:
                 line = line[:line.index("//")] ## only process text before '//' comment
@@ -100,14 +97,15 @@ def findVal(line, key):
         line = line[line.index(":") + 1:].strip()
         if line != "" : valHelper(line, valList, key)
 
-        line = extractParameters(inputIterator.__next__())
+        line = extractParameters(next(inputIterator))
         while ':' not in line:
                 line = line.strip()
                 if line != "" :
                         valHelper(line, valList, key)
                 try:
-                        line = extractParameters(inputIterator.__next__())
+                        line = extractParameters(next(inputIterator))
                 except StopIteration:
+			print 'something went wrong'
                         break
         
         if valList == [] and key in mandatory:
