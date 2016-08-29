@@ -45,7 +45,7 @@ params = { 'esd':[],'insertUserRectanglesFirst':[],'keepOnlyLargestCluster':[],'
 'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
-'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[]}
+'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'outputTriplePoints':[]} 
 
 unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -57,17 +57,17 @@ unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFi
 'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
 'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path', 'userRecByCoord',
 'RectByCood_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
-'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures'}
+'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'outputTriplePoints'}
 
 mandatory = {'stopCondition','domainSize','numOfLayers','outputAllRadii', 'outputFinalRadiiPerFamily',
 'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-'userRecByCoord','aperture','permOption', 'forceLargeFractures'}
+'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'outputTriplePoints'}
 
 noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
-'visualizationMode', 'keepOnlyLargestCluster','insertUserRectanglesFirst', 'forceLargeFractures']
+'visualizationMode', 'keepOnlyLargestCluster','insertUserRectanglesFirst', 'forceLargeFractures', 'outputTriplePoints']
 
 examples = {"Flag":"(0 or 1)", "Float":"(0.5, 1.6, 4.0, etc.)" , "Int":"(0,1,2,3,etc.)"}
 
@@ -89,7 +89,7 @@ def extractParameters(line):
                 comment = line
                 line = line[:line.index("/*")] ## only process text before '/*' comment
                 while "*/" not in comment:
-                        comment = inputIterator.__next__() ## just moves iterator past comment
+                        comment = next(inputIterator) ## just moves iterator past comment
 
         elif "//" in line:
                 line = line[:line.index("//")] ## only process text before '//' comment
@@ -102,13 +102,13 @@ def findVal(line, key):
         line = line[line.index(":") + 1:].strip()
         if line != "" : valHelper(line, valList, key)
 
-        line = extractParameters(inputIterator.__next__())
+        line = extractParameters(next(inputIterator))
         while ':' not in line:
                 line = line.strip()
                 if line != "" :
                         valHelper(line, valList, key)
                 try:
-                        line = extractParameters(inputIterator.__next__())
+                        line = extractParameters(next(inputIterator))
                 except StopIteration:
                         break
         
@@ -555,7 +555,7 @@ def h_shapeCheck(aspect, minRadius, num_points=4):
 	## aspect = 1.0 ## param
 	r = minRadius
 
-		## TODO check > 3h 
+	## TODO check > 3h 
 	a = aspect
 	b = 1.0
 
@@ -595,7 +595,6 @@ def comparePtsVSh(prefix, hval):
         if shape == "ellipse":
                 numPointsList = params['enumPoints'][0]
                 
-
         ## indicies for each list as we check for ellipse generating features less than h
         numLog = 0
         numTPL = 0
@@ -604,30 +603,30 @@ def comparePtsVSh(prefix, hval):
         numAspect = 0
 
         for distrib in params[prefix+'distr'][0]:
-                if distrib == '1':
-                        minRad = params[prefix+'LogMin'][0][numLog]
-                        numLog += 1
-                elif distrib == '2':
-                        minRad = params[prefix+'min'][0][numTPL]
-                        numTPL += 1
-                elif distrib == '3':
-                        minRad = params[prefix+'ExpMin'][0][numEXP]
-                        numEXP += 1
-                elif distrib == '4':
-                        minRad = params[prefix+'const'][0][numConst]
-                        numConst += 1  
+                if distrib in [1,2,3,4]:
+			if distrib == 1:
+				minRad = params[prefix+'LogMin'][0][numLog]
+				numLog += 1
+			elif distrib == 2:
+				minRad = params[prefix+'min'][0][numTPL]
+				numTPL += 1
+			elif distrib == 3:
+				minRad = params[prefix+'ExpMin'][0][numEXP]
+				numEXP += 1
+			elif distrib == 4:
+				minRad = params[prefix+'const'][0][numConst]
+				numConst += 1  
+			if shape == "ellipse":
+				hmin = h_shapeCheck(float(aspectList[numAspect]), float(minRad), int(numPointsList[numAspect]))
+			else:
+				hmin = h_shapeCheck(float(aspectList[numAspect]), float(minRad)) ## dont need numPoints for rectangle, default 4
 
-                if shape == "ellipse":
-                        hmin = h_shapeCheck(float(aspectList[numAspect]), float(minRad), int(numPointsList[numAspect]))
-                else: 
-                        hmin = h_shapeCheck(float(aspectList[numAspect]), float(minRad)) ## dont need numPoints for rectangle, default 4
-
-                if hmin < (3 * hval):
-                        error(shape + " family #{} has defined a shape with features too small for meshing. Increase the aspect "\
-                                     "ratio or minimum radius so that no 2 points of the polygon create a line of length less "\
-                                     "than 3h".format(numAspect+1))
-                     
-                numAspect += 1 ## this counts the family number 
+			if hmin < (3 * hval):
+				error(shape + " family #{} has defined a shape with features too small for meshing. Increase the aspect "\
+					     "ratio or minimum radius so that no 2 points of the polygon create a line of length less "\
+					     "than 3h".format(numAspect+1))
+			     
+			numAspect += 1 ## this counts the family number 
 
 def h():
         val = verifyFloat(valueOf('h'), 'h', noNeg=True)
@@ -886,7 +885,7 @@ def checkIOargs(ioPaths):
 
 def parseInput():
         for line in inputIterator:
-                line = extractParameters(line) ## this strips comments 
+                line = extractParameters(line) ## this strips comments
                 if (line != "" and ":" in line):
                         processLine(line)
         needed = [unfound for unfound in unfoundKeys if unfound in mandatory]
@@ -942,7 +941,7 @@ if __name__ == '__main__':
                 inputIterator = iter(reader)
         except FileNotFoundError:
                 error("Check that the path of your input file is valid.")
-                
+       
         parseInput()
         verifyParams()
         writeBack()

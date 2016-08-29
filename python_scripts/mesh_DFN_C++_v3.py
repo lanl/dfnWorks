@@ -8,9 +8,6 @@
 # Default refine_factor: 1
 #
 # Optional Argument List
-# 1 Argument
-# Usage: meshDFN filename
-#		Default file name: params.txt
 # 2 Argument
 # Usage: meshDFN filename N_CPU
 #		Default file name: params.txt
@@ -54,7 +51,7 @@ from string import *
 import os, sys, glob, time
 from numpy import genfromtxt, sort, sqrt, cos, arcsin
 from shutil import copy, rmtree
-sys.path.insert(0,'/home/jhyman/pylagrit/src')
+sys.path.insert(0,os.environ['PYLAGRIT'])
 from pylagrit import PyLaGriT
 import multiprocessing as mp 
 
@@ -63,38 +60,38 @@ def remove_batch(name):
 	for fl in glob.glob(name):
 		os.remove(fl)	
 
-def parse_params_file(filename):
+def parse_params_file():
 	
 	''' Read in params.txt file and parse information'''
 	print "\nParse Params.txt: Starting"
-	fin = open(filename, 'r')
+	fparams = open('params.txt', 'r')
 	# Line 1 is the number of polygons
-	nPoly = int(fin.readline())
+	nPoly = int(fparams.readline())
 
 	print "Number of Polygons:", nPoly
-	digits = len(str(nPoly)) ### 
 
 	#Line 2 is the h scale
-	h = float(fin.readline())
+	h = float(fparams.readline())
 	print "H_SCALE", h
 		
 	# Line 3 is the visualization mode: '1' is on, '0' is off.
-	visualMode = int(fin.readline())
+	visualMode = int(fparams.readline())
 	print 'Visual Mode: ', visualMode
+
 	# line 4 dudded points
-	dudded_points = int(f.readline())
+	dudded_points = int(fparams.readline())
 	print "Expected Number of duded points: ", dudded_points
-	fin.close()
+	fparams.close()
 	
 	print "Parse Params.txt: Complete\n"
-	return(nPoly, digits, h, numPoints, visualMode, dudded_points)
+	return(nPoly, h, visualMode, dudded_points)
 	
-def create_parameter_mlgi_file(filename, nPoly):
+def create_parameter_mlgi_file(nPoly):
+	
 	#Section 2 : Outputs parameteri.mlgi files used in running LaGriT Script
 	print "\nCreating parameteri.mlgi files"
 	os.system('rm -rf parameters')
 	os.mkdir('parameters')
-
 	# Extrude and Translate computation
 	# Parameters, delta: buffer zone, amount of h/2 we remove from around line
 	# h_extrude hieght of rectangle extruded from line of intersection
@@ -108,19 +105,19 @@ def create_parameter_mlgi_file(filename, nPoly):
 
 	#Go through the list and write out parameter file for each polygon
 	#to be an input file for LaGriT
-	data = genfromtxt('rotate.txt', skip_header = 1)
+	data = genfromtxt('poly_info.dat') #, skip_header = 1)
 	for i in range(nPoly):
 		
 		frac_id = str(int(data[i,0]))
 		long_name = str(int(data[i,0]))  	
-		theta = data[i,1]	
-		x1 = data[i,2]	
-		y1 = data[i,3]	
-		z1 = data[i,4]	
-		x2 = data[i,5]	
-		y2 = data[i,6]	
-		z2 = data[i,7]	
-		family = data[i,8]
+		theta = data[i,2]	
+		x1 = data[i,3]	
+		y1 = data[i,4]	
+		z1 = data[i,5]	
+		x2 = data[i,6]	
+		y2 = data[i,7]	
+		z2 = data[i,8]	
+		family = data[i,1]
 
 		fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
 		f = open(fparameter_name, 'w')
@@ -503,8 +500,8 @@ finish
 	print 'Writing LaGriT Control Files: Complete'
 
 def mesh_fracture(fracture_id):
+	
 	'''Child Function for Parallized Meshing of Fractures'''
-
 	t = time.time()
 	p = mp.current_process()
 	print 'Fracture ', fracture_id, '\tStarting on ', p.name, '\n' 
@@ -559,6 +556,8 @@ def mesh_fracture(fracture_id):
 	os.remove('poly_CPU' + str(cpu_id) + '.inp')
 	os.remove('intersections_CPU' + str(cpu_id) + '.inp')
 	os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
+	os.remove('mesh_' + str(fracture_id) + '.inp')
+
 
 	elapsed = time.time() - t
 	print 'Fracture ', fracture_id, 'Complete' 
@@ -569,7 +568,7 @@ def worker(work_queue, done_queue):
 		for fracture_id in iter(work_queue.get, 'STOP'):
 			mesh_fracture(fracture_id)
 	except: 
-		print('Something went wrong')
+		print('Something went wrong on fracture ',fracture_id)
 	return True
 
 def mesh_fractures_header(nPoly, N_CPU):
@@ -633,7 +632,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 	return failure_flag	
 
 
-def create_merge_poly_files(N_CPU, nPoly, digits):
+def create_merge_poly_files(N_CPU, nPoly):
 	'''
 	Section 4 : Create merge_poly file
 	 Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -1003,10 +1002,6 @@ if __name__ == "__main__":
 	EES - 16, LANL
 	jhyman@lanl.gov
 	'''
-
-	slope = 2
-	refine_dist = 0.5
-
 	#Production mode "ON" outputs the final results for computation, 
 	#cleaning up all the temporary attributes needed during refinement.
 	#Note that the visualization mode must be "OFF" in order to run
@@ -1014,9 +1009,13 @@ if __name__ == "__main__":
 	#*1: "ON", *0: "OFF". 
 	#dfield = 0
 
+	slope = 2
+	refine_dist = 0.5
+
 	production_mode = 1
 	refine_factor = 1
-	N_CPU = 1
+	N_CPU = 4
+
 	try:
 		python_path = os.environ['python_dfn']
 		#python_path = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -1042,32 +1041,15 @@ if __name__ == "__main__":
 		sys.exit(1)	
 
 	if (len(sys.argv) == 1):
-		filename = 'params.txt'
 		print "Number of CPU's to use (default):", N_CPU
-		print "Reading in file (default):", filename 
-
+	
 	elif (len(sys.argv) == 2):
-		filename = sys.argv[1] 
-		print "Reading in file:", filename 
-		print "Number of CPU's to use (default):", N_CPU
-		
-	elif (len(sys.argv) == 3):
-		filename = sys.argv[1] 
-		N_CPU = int(sys.argv[2])
-		print "Reading in file:", filename 
+		N_CPU = int(sys.argv[1])
 		print "Number of CPU's to use:", N_CPU
 		
-	elif (len(sys.argv) == 4):
-		filename = sys.argv[1] 
-		N_CPU = int(sys.argv[2])
-		refine_factor = int(sys.argv[3])
-		print "Reading in file:", filename
-		print "Number of CPU's to use:", N_CPU
-		print "Mesh Refine Factor:", refine_factor
+	nPoly, h, visualMode, dudded_points  = parse_params_file()
 
-	nPoly, digits, h, visualMode, dudded_points  = parse_params_file(filename)
-
-	create_parameter_mlgi_file(filename, nPoly)
+	create_parameter_mlgi_file(nPoly)
 
 	create_lagrit_scripts(production_mode, N_CPU, refine_factor)
 
@@ -1078,7 +1060,7 @@ if __name__ == "__main__":
 		print 'Exiting Program'
 		sys.exit(1)
 
-	n_jobs = create_merge_poly_files(N_CPU, nPoly, digits)
+	n_jobs = create_merge_poly_files(N_CPU, nPoly)
 
 	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
 

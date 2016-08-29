@@ -105,7 +105,6 @@ def findVal(line, key):
                 try:
                         line = extractParameters(next(inputIterator))
                 except StopIteration:
-			print 'something went wrong'
                         break
         
         if valList == [] and key in mandatory:
@@ -844,7 +843,7 @@ def writeBack():
              
 if __name__ == '__main__':
         ioPaths = {"input":"", "output":""}
-        checkIOargs(ioPaths)
+	checkIOargs(ioPaths)
         
 	try:
                 reader = open(ioPaths["input"], 'r')
@@ -856,5 +855,4 @@ if __name__ == '__main__':
         parseInput()
         verifyParams()
         writeBack()
-
-
+	print 'Output written into: ', ioPaths["output"] 

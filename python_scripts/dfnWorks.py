@@ -2,6 +2,8 @@ import os, sys, glob, time
 from shutil import copy, rmtree
 from numpy import genfromtxt
 
+from dfnGen import *
+
 def define_paths():
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
@@ -26,64 +28,6 @@ def remove_batch(name):
 	for fl in glob.glob(name):
 		os.remove(fl)	
 
-def make_working_directory(jobname):
-    try:
-        os.mkdir(jobname)
-	os.mkdir(jobname + '/radii')
-	os.mkdir(jobname + '/intersections')
-	os.mkdir(jobname + '/polys')
-    except OSError:
-	print '\nFolder ', jobname, ' exists'
-	keep = raw_input('Do you want to delete it? [yes/no] \n')
-	if keep == 'yes':
-		print 'Deleting', jobname 
-		rmtree(jobname)
-		print 'Creating', jobname 
-		os.mkdir(jobname)	
-		os.mkdir(jobname + '/radii')
-		os.mkdir(jobname + '/intersections')
-		os.mkdir(jobname + '/polys')
-	elif keep == 'no':
-		print 'Exiting Program'
-		exit() 
-	else:
-		print 'Unknown Response'
-		print 'Exiting Program'
-		exit()
-	
-def check_input(dfnGen_run_file):
-
-	print '--> Checking input file'	
-	copy(dfnGen_run_file, './input.dat')
-	try:
-		copy(os.environ['PYTHON_SCRIPTS']+'/parse.py', 'parse.py')
-	except:
-		print '--> parse.py file already exists'
-	os.system('$python_dfn parse.py input.dat input_clean.dat')
-	print '--> Checking input file complete'	
-
-def dfnGen(jobname, dfnGen_run_file):
-	
-	print '--> Running DFNGEN'	
-	# copy input file into job folder	
-	cmd = '${DFNGENC_PATH}/./main  input_clean.dat ' + jobname
-	os.system(cmd)
-	if os.path.isfile(jobname+"/params.txt") is False:
-	#if os.path.isfile("params.txt") is False:
-		print '--> Generation Failed'
-		print '--> Exiting Program'
-		exit()
-	else:
-		print '--> Generation Succeeded'
-
-
-def mesh_fractures(nCPU):
-
-	os.system('pwd')
-	print '--> Meshing Fractures'	
-	copy(os.environ['PYTHON_SCRIPTS']+'/mesh_DFN_C++_v3.py','mesh_DFN_C++_v3.py')
-	os.system('$python_dfn mesh_DFN_C++_v3.py ' + str(nCPU)) 
-	print '--> Meshing Fractures Complete'	
 
 def graph_analysis():
 	print '--> Running Graph Analysis'
@@ -225,15 +169,15 @@ if __name__ == "__main__":
 	print ''
 
 	define_paths()
-	make_working_directory(jobname)
+	#dfnGen_make_working_directory(jobname)
 	os.chdir(jobname)
 	os.system('pwd')
 	# dfnGen
-	check_input(dfnGen_run_file)
+	dfnGen_check_input(dfnGen_run_file)
+	dfnGen_create_network(jobname, dfnGen_run_file)
+	dfnGen_mesh_network(nCPU)
+	dfnGen_output_report()
 
-	dfnGen(jobname, dfnGen_run_file)
-	os.chdir(jobname)
-	mesh_fractures(nCPU)
 	exit()
 	#preprocess()
 	#pflotran(dfnFlow_run_file, nCPU)
