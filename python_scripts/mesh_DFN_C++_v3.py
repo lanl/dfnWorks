@@ -51,7 +51,6 @@ from string import *
 import os, sys, glob, time
 from numpy import genfromtxt, sort, sqrt, cos, arcsin
 from shutil import copy, rmtree
-#sys.path.insert(0,os.environ['PYLAGRIT'])
 from pylagrit import PyLaGriT
 import multiprocessing as mp 
 
@@ -804,9 +803,27 @@ def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
 			j += 1 
 
 
-	os.system(lagrit_path+' < merge_rmpts.lgi > log_merge_all') # run remove points
-	copy('log_merge_all','lagrit_outputs')
+	os.system(lagrit_path+' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
 	print "Merging triangulated polygon meshes: Complete\n"
+
+
+
+def check_dudded_points(dudded):
+	print "Checking that number of Dudded points is correct"
+        datafile = file('log_merge_all.txt')
+        for line in datafile:
+            if 'Dudding' in line:
+		print line
+		break
+	pts = int(line.split()[1])
+	if pts == dudded:
+		print 'Correct Number of points removed'
+		return True
+	else:
+		print 'ERROR! Incorrect Number of points removed'
+		print 'Expected Number ', dudded
+		return False
+	
 
 def cleanup_dir():
 	#########################################
@@ -1063,6 +1080,10 @@ if __name__ == "__main__":
 	n_jobs = create_merge_poly_files(N_CPU, nPoly)
 
 	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
+	
+	if (check_dudded_points(dudded_points) == False):
+		#sys.exit(1)
+		print 'damn'
 
 	if production_mode > 0:
 		cleanup_dir()

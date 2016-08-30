@@ -1,8 +1,6 @@
-""" Functions and Scripts for dfnGen """
-
-__author__ = "Jeffrey Hyman"
-__version__ = "1.0"
-__maintainer__ = "Satish Karra and Jeffrey Hyman"
+__author__ = "Jeffrey Hyman and Satish Karra"
+__version__ = "2.0"
+__maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
 import re, os, sys, glob, time
@@ -68,6 +66,62 @@ class dfnworks(Frozen):
 		print 'dfnGen Complete'
 
 
+	def define_paths(self):
+		os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
+		os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
+		os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
+		
+		os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
+		os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/ParticleTracking'
+		os.environ['PYTHONPATH']='/home/satkarra/src'
+		os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
+
+		# Executables	
+		os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
+		os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
+		os.environ['connect_test'] = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+		os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
+		
+		os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
+
+
+
+	def dfnFlow(self):
+
+		self._inp_file = 'full_mesh.inp'
+		self._perm_file = 'perm.dat'
+		self._aper_file = 'aperture.dat'
+	 	self.lagrit2pflotran()
+				
+		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
+		self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
+		self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
+		self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
+		self.zone2ex(zone_file='pboundary_top.zone',face='top')
+		self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
+		#self.parse_pflotran_vtk()	
+		try: 
+			copy(self._pflotran_file, './')
+			self._local_pflotran_file = self._pflotran_file.split('/')[-1]
+		except:
+			print '\t--> PFLOTRAN input file already exists'
+		self.pflotran()
+		self.parse_pflotran_vtk()		
+		self.pflotran_cleanup()
+
+	def dfnTrans(self):
+		print '--> Running dfnTrans'	
+		try:
+			os.symlink(os.environ['DFNTRANS_PATH']+'/DFNTrans', './DFNTrans')
+		except:
+			print '--> Link to DFNTRANS already exists'
+		try:	
+			copy(self._dfnTrans_file, './PTDFN_control.dat')
+		except:
+			print '--> PTDFN_control.dat file already exists' 
+		os.system('./DFNTrans')
+
+
 	#################### dfnGen Functions ##########################
 	def make_working_directory(self,jobname=''):
 		'''
@@ -97,11 +151,11 @@ class dfnworks(Frozen):
 				os.mkdir(jobname + '/polys')
 			elif keep == 'no':
 				print 'Exiting Program'
-				exit() 
+				sys.exit(1) 
 			else:
 				print 'Unknown Response'
 				print 'Exiting Program'
-				exit()
+				sys.exit(1)
 
 
 
@@ -1521,31 +1575,6 @@ class dfnworks(Frozen):
 
 
 	#################### dfnFlow Functions ##########################
-	def dfnFlow(self):
-
-#
-		self._inp_file = 'full_mesh.inp'
-		self._perm_file = 'perm.dat'
-		self._aper_file = 'aperture.dat'
-	 	self.lagrit2pflotran()
-				
-		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
-		self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
-		self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
-		self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
-		self.zone2ex(zone_file='pboundary_top.zone',face='top')
-		self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
-		#self.parse_pflotran_vtk()	
-		try: 
-			copy(self._pflotran_file, './')
-			self._local_pflotran_file = self._pflotran_file.split('/')[-1]
-		except:
-			print '\t--> PFLOTRAN input file already exists'
-		self.pflotran()
-		self.parse_pflotran_vtk()		
-		self.pflotran_cleanup()
-
-
 	def inp2vtk(self, inp_file=''):
 		import pyvtk as pv
 		"""
@@ -2004,19 +2033,6 @@ class dfnworks(Frozen):
 
 	#################### dfnFlow Functions ##########################
 
-	#################### dfnTrans Functions ##########################
-	def dfnTrans(self):
-		print '--> Running dfnTrans'	
-		try:
-			os.symlink('ln -s ${DFNTRANS_PATH}/DFNTrans .')
-		except:
-			print '\t--> Link to DFNTRANS already exists'
-		try:	
-			copy(self._dfnTrans_run_file, 'PTDFN_control.dat')
-		except:
-			print '\t--> PTDFN_control.dat file already exists' 
-		os.system('./DFNTrans')
-	#################### dfnTrans Functions ##########################
 
 
 

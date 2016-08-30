@@ -1,17 +1,15 @@
-import os, sys, glob, time
-from shutil import copy, rmtree
-from numpy import genfromtxt
-
+import os, sys, time
 from dfnWorks import *
 
 def define_paths():
+	# Set Environment Variables
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
 	
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/ParticleTracking'
-	os.environ['PYTHONPATH']='/home/satkarra/src'
+	#os.environ['PYTHONPATH']='/home/satkarra/src'
 	os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
 
 	# Executables	
@@ -20,11 +18,36 @@ def define_paths():
 	os.environ['connect_test'] = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
 	
-	os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
-
+	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
+	#os.system('module load pylagrit/june_8_2015')
 
 if __name__ == "__main__":
-	
+
+	lanl_statement = '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.0 ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ This program was prepared at Los Alamos National Laboratory (LANL),
+ Earth and Environmental Sciences Division, Computational Earth
+ Science Group (EES-16), Subsurface Flow and Transport Team.
+ All rights in the program are reserved by the DOE and LANL.
+ Permission is granted to the public to copy and use this software
+ without charge, provided that this Notice and any statement of
+ authorship are reproduced on all copies. Neither the U.S. Government
+ nor LANS makes any warranty, express or implied, or assumes
+ any liability or responsibility for the use of this software.
+
+Contact Information : dfnworks@lanl.gov
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
+	print lanl_statement
+	define_paths()
+
+
+	# USER INPUT FILES, ALL PATHS MUST BE VALID	
 	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
 	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
 	dfnTrans_run_file = '/scratch/nobackup/jhyman/2016-mixing/PTDFN_control.dat'
@@ -60,11 +83,10 @@ if __name__ == "__main__":
 	print ''
 
 
-	define_paths()
-
 	dfn.dfnGen()
-	#dfn.dfnFlow()
-#	dfn.dfnTrans()
+	dfn.mesh_network()	
+	dfn.dfnFlow()
+	dfn.dfnTrans()
 
 	main_elapsed = time.time() - main_time
 	print jobname, 'Complete'
