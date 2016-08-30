@@ -9,7 +9,6 @@ def define_paths():
 	
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/ParticleTracking'
-	#os.environ['PYTHONPATH']='/home/satkarra/src'
 	os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
 
 	# Executables	
@@ -19,7 +18,7 @@ def define_paths():
 	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
 	
 	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
-	#os.system('module load pylagrit/june_8_2015')
+	os.system('module load pylagrit/june_8_2015')
 
 if __name__ == "__main__":
 
@@ -49,6 +48,7 @@ Contact Information : dfnworks@lanl.gov
 
 	# USER INPUT FILES, ALL PATHS MUST BE VALID	
 	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
+	#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
 	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
 	dfnTrans_run_file = '/scratch/nobackup/jhyman/2016-mixing/PTDFN_control.dat'
 	
@@ -62,6 +62,7 @@ Contact Information : dfnworks@lanl.gov
 	except:
 		print 'Not enough input parameters'
 		print 'Usage:', sys.argv[0], '[jobname][nCPU]'; sys.exit(1)
+
 	if len(sys.argv) == 4:
 		dfnGen_run_file = sys.argv[3] 
 	elif len(sys.argv) == 5:
@@ -83,10 +84,16 @@ Contact Information : dfnworks@lanl.gov
 	print ''
 
 
-	dfn.dfnGen()
-	dfn.mesh_network()	
-	dfn.dfnFlow()
-	dfn.dfnTrans()
+	#dfn.dfnGen()
+	#dfn.make_working_directory()
+	#dfn.check_input()
+	#dfn.create_network()	
+	os.chdir(dfn._jobname)
+	dfn.output_report()
+	#dfn.mesh_network()
+
+	#dfn.dfnFlow()
+	#dfn.dfnTrans()
 
 	main_elapsed = time.time() - main_time
 	print jobname, 'Complete'

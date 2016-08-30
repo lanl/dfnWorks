@@ -27,7 +27,12 @@ class dfnworks(Frozen):
 	def __init__(self, jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file=''):
 		self._jobname = jobname
 		self._input_file = input_file
+		self._output_file = output_file
+ 
+		self._output_file = self._input_file.split('/')[-1]
 		self._local_input_file = local_input_file
+		self._local_input_file = self._input_file.split('/')[-1]
+		
 		self._pflotran_file = pflotran_file 
 		self._local_pflotran_file = local_pflotran_file 
 		self._dfnTrans_file = dfnTrans_file 
@@ -41,28 +46,22 @@ class dfnworks(Frozen):
 		self._aper_file = aper_file
 		self._perm_cell_file = perm_cell_file
 		self._aper_cell_file = aper_cell_file
+		#self._flow_solver = 'pflotran'
 		self._freeze
 
 	def dfnGen(self):
 	
 		# Create Working directory	
 		self.make_working_directory()
-		# Move into working directory
-		os.chdir(self._jobname)
 	
-		# copy inputfile into working directory
-		copy(self._input_file, './')
-		# parse file name and make local version
-		self._local_input_file = self._input_file.split('/')[-1]
 		# Check input file	
-		self.check_input(self._local_input_file, self._local_input_file[:-4]+'_clean.dat')
-		self._local_input_file = self._local_input_file[:-4]+'_clean.dat'
+		self.check_input()
 	
 		# Create network 	
 		self.create_network()
+		self.output_report()
 		# Mesh Network
 		self.mesh_network()
-		#self.output_report()
 		print 'dfnGen Complete'
 
 
@@ -91,8 +90,8 @@ class dfnworks(Frozen):
 		self._inp_file = 'full_mesh.inp'
 		self._perm_file = 'perm.dat'
 		self._aper_file = 'aperture.dat'
-	 	self.lagrit2pflotran()
-				
+	 	
+		self.lagrit2pflotran()
 		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
 		self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
 		self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
@@ -156,7 +155,7 @@ class dfnworks(Frozen):
 				print 'Unknown Response'
 				print 'Exiting Program'
 				sys.exit(1)
-
+		os.chdir(self._jobname)
 
 
 	def check_input(self,input_file='',output_file=''):
@@ -1084,19 +1083,18 @@ class dfnworks(Frozen):
 					writer.write(param + ': ' + str(valueOf(param, writing=True)) + '\n')              
 			
 
-
-		print '--> Checking input data'
-		print '--> Input Data: ', input_file
-		print '--> Output File: ', output_file		     
-		ioPaths = {"input":"", "output":""}
 		
+
+		print '--> Checking input files'	
+		copy(self._input_file, './')
+		ioPaths = {"input":"", "output":""}
 		try:
-			ioPaths["input"] = input_file
+			ioPaths["input"] = self._local_input_file
 		except IndexError:
 			error("Please provide an input file path as the first command line argument.\n"\
 			      "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
 		try:
-			ioPaths["output"] = output_file
+			ioPaths["output"] = self._local_input_file[:-4]+'_clean.dat'
 		except IndexError:
 			ioPaths["output"] = "polishedOutput.txt"
 			warning("No output path has been provided so output will be written to "\
@@ -1108,6 +1106,9 @@ class dfnworks(Frozen):
 		except FileNotFoundError:
 			error("Check that the path of your input file is valid.")
 	      
+		print '--> Checking input data'
+		print '--> Input Data: ', ioPaths["input"] 
+		print '--> Output File: ',ioPaths["output"] 
  
 		parseInput()
 		verifyParams()
@@ -1119,15 +1120,14 @@ class dfnworks(Frozen):
 		
 		print '--> Running DFNGEN'	
 		# copy input file into job folder	
-		#cmd = '${DFNGENC_PATH}/./main  ' + self._local_input_file + ' ' + self._jobname 
-		os.system(os.environ['DFNGENC_PATH']+'/./main ' + self._local_input_file + ' ' + self._jobname )
-		if os.path.isfile(self._jobname+"/params.txt") is False:
-		#if os.path.isfile("params.txt") is False:
+		os.system(os.environ['DFNGENC_PATH']+'/./main ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+		os.chdir(self._jobname)
+		if os.path.isfile("params.txt") is False:
 			print '--> Generation Failed'
 			print '--> Exiting Program'
 			exit()
 		else:
-			print '--> Generation Succeeded'
+			print '--> Generation Succeeded\n\n'
 
 	def mesh_network(self, ncpu = ''):
 		'''
@@ -1139,7 +1139,7 @@ class dfnworks(Frozen):
 		os.system('$python_dfn dfnGen_meshing.py ' + str(self._ncpu)) 
 		print '--> Meshing Network Complete'	
 
-	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat'):
+	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
 		"""
 		Create PDF report of generator 
 		Notes
@@ -1149,13 +1149,15 @@ class dfnworks(Frozen):
 		4. NOTE future developers of this code should ass functionality for radiiList of size 0. 
 
 		"""
+		print '--> Creating Report of DFN generation'
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
 						       ##   Isolated fracs get removed from DFN and have 'R' at end  
 						       ##   of input file line
 						       ## families['1','2','3' etc] correspond to a polyFam object\
-
-		outputPDF = PdfPages('output_report.pdf') ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
+		output_name = self._output_file[:-4] + '_output_report.pdf'
+		print 'Writing output into: ', output_name
+		outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 		show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
 
 		class polyFam:
@@ -1176,12 +1178,11 @@ class dfnworks(Frozen):
 			       
 
 		## Rejection File line format:   "118424 Short Intersections" --> {"Short Intersections": 118424}
-		def graphRejections(rejectFile):
-			if len(sys.argv) < 5: return ## Dont provide rejection plot if no rejection file
+		def graphRejections():
 			rejects = {}
 			plt.subplots()
 
-			for line in rejectFile:
+			for line in open(rejectFile):
 				num = int(line[:line.index(" ", 0)]) ## number comes before first space in line
 				name = line[line.index(" ", 0) + 1:].strip() ## name comes after first space
 				midSpaceIndex = 1
@@ -1239,8 +1240,8 @@ class dfnworks(Frozen):
 			yUnremoved = []
 			zAll = []
 			zUnremoved = []
-
-			for line in transFile:
+			
+			for line in open(transFile):
 				line = line.split(" ")
 				try:
 					xAll.append(float(line[0]))
@@ -1263,7 +1264,7 @@ class dfnworks(Frozen):
 			possibleParams = ["Mean", "Standard Deviation", "Alpha", "Lambda"]
 			bounds = ["Minimum Radius", "Maximum Radius"]
 
-			for line in famFile:
+			for line in open(famFile):
 				if line.strip() == "":
 					if famObj.distrib == "Constant":
 						famObj.infoStr += "\nConstant distribution, only contains one radius size.\n"\
@@ -1304,7 +1305,7 @@ class dfnworks(Frozen):
 			## Also add each object to global and not Removed if not empty
 			## input file's line format:   xRadius yRadius Family# Removed (Optional)
 
-			for line in radiiFile:
+			for line in open(radiiFile):
 				try:
 					elems = line.split(' ')
 					radius = float(elems[0])
@@ -1563,6 +1564,9 @@ class dfnworks(Frozen):
 			except KeyError: ## throws key error when we've finished the last family number
 				pass
 
+
+		
+		
 		collectFamilyInfo()
 		graphTranslations()
 		graphDistribs()
@@ -2032,9 +2036,6 @@ class dfnworks(Frozen):
 			os.remove(fl)	
 
 	#################### dfnFlow Functions ##########################
-
-
-
 
 
 

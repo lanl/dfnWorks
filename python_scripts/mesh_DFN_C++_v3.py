@@ -813,11 +813,12 @@ def check_dudded_points(dudded):
         datafile = file('log_merge_all.txt')
         for line in datafile:
             if 'Dudding' in line:
+		print 'From LaGriT: '
 		print line
 		break
 	pts = int(line.split()[1])
 	if pts == dudded:
-		print 'Correct Number of points removed'
+		print 'Correct Number of points removed \n'
 		return True
 	else:
 		print 'ERROR! Incorrect Number of points removed'
@@ -1082,8 +1083,8 @@ if __name__ == "__main__":
 	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
 	
 	if (check_dudded_points(dudded_points) == False):
-		#sys.exit(1)
-		print 'damn'
+		cleanup_dir()
+		sys.exit(1)
 
 	if production_mode > 0:
 		cleanup_dir()
