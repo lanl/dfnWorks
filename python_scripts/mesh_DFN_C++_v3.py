@@ -51,7 +51,7 @@ from string import *
 import os, sys, glob, time
 from numpy import genfromtxt, sort, sqrt, cos, arcsin
 from shutil import copy, rmtree
-sys.path.insert(0,os.environ['PYLAGRIT'])
+#sys.path.insert(0,os.environ['PYLAGRIT'])
 from pylagrit import PyLaGriT
 import multiprocessing as mp 
 
