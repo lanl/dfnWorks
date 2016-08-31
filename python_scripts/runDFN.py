@@ -8,7 +8,7 @@ def define_paths():
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
 	
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
-	os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/ParticleTracking'
+	os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0'
 	os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
 
 	# Executables	
@@ -18,7 +18,7 @@ def define_paths():
 	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
 	
 	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
-	os.system('module load pylagrit/june_8_2015')
+	#os.system('module load pylagrit/june_8_2015')
 
 if __name__ == "__main__":
 
@@ -45,12 +45,12 @@ Contact Information : dfnworks@lanl.gov
 	print lanl_statement
 	define_paths()
 
-
 	# USER INPUT FILES, ALL PATHS MUST BE VALID	
-	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
+	#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
 	#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
+	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/4_fracture_test/input_4_fracture.dat'	
 	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
-	dfnTrans_run_file = '/scratch/nobackup/jhyman/2016-mixing/PTDFN_control.dat'
+	dfnTrans_run_file = '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/test/nataliiaTest/PTDFN_control.dat'
 	
 	main_time = time.time()
 	# Command lines: argv[1] = jobname, argv[2] = number of cpus. 
@@ -83,17 +83,16 @@ Contact Information : dfnworks@lanl.gov
 	print '--> dfnTrans input file: ',dfnTrans_run_file
 	print ''
 
-
 	#dfn.dfnGen()
-	#dfn.make_working_directory()
-	#dfn.check_input()
-	#dfn.create_network()	
-	os.chdir(dfn._jobname)
-	dfn.output_report()
-	#dfn.mesh_network()
+	dfn.make_working_directory()
+	dfn.check_input()
+	dfn.create_network()	
+	#dfn.output_report()
+	dfn.mesh_network()
 
-	#dfn.dfnFlow()
-	#dfn.dfnTrans()
+	dfn.dfnFlow()
+	#os.chdir(dfn._jobname)
+	dfn.dfnTrans()
 
 	main_elapsed = time.time() - main_time
 	print jobname, 'Complete'

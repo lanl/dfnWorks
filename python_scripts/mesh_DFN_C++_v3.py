@@ -548,15 +548,23 @@ def mesh_fracture(fracture_id):
 			copy('user_function.lgi', folder +'/')	
 			#raise Exception(-1)
 		os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
+		os.remove('mesh_' + str(fracture_id) + '.inp')
  	else:
 		failure = 0
- 
-	# Remove old links and files
-	os.remove('poly_CPU' + str(cpu_id) + '.inp')
-	os.remove('intersections_CPU' + str(cpu_id) + '.inp')
-	os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
-	os.remove('mesh_' + str(fracture_id) + '.inp')
 
+	# Remove old links and files
+	try:
+		os.remove('poly_CPU' + str(cpu_id) + '.inp')
+	except:
+		print'could not remove poly'
+	try: 
+		os.remove('intersections_CPU' + str(cpu_id) + '.inp')
+	except:
+		print'could not remove intersection'
+	try:
+		os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
+	except:
+		print'could not remove parameters'
 
 	elapsed = time.time() - t
 	print 'Fracture ', fracture_id, 'Complete' 
@@ -1081,10 +1089,10 @@ if __name__ == "__main__":
 	n_jobs = create_merge_poly_files(N_CPU, nPoly)
 
 	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
-	
-	if (check_dudded_points(dudded_points) == False):
-		cleanup_dir()
-		sys.exit(1)
+	if(visualMode == 0):	
+		if (check_dudded_points(dudded_points) == False):
+			cleanup_dir()
+			sys.exit(1)
 
 	if production_mode > 0:
 		cleanup_dir()

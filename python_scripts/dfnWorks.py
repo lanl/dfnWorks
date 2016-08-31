@@ -108,18 +108,25 @@ class dfnworks(Frozen):
 		self.parse_pflotran_vtk()		
 		self.pflotran_cleanup()
 
+
 	def dfnTrans(self):
+		
+		print ('='*80)
+		print '\n'
 		print '--> Running dfnTrans'	
 		try:
 			os.symlink(os.environ['DFNTRANS_PATH']+'/DFNTrans', './DFNTrans')
 		except:
-			print '--> Link to DFNTRANS already exists'
+			print '--> ERROR: Problem creating link to DFNTrans'
 		try:	
 			copy(self._dfnTrans_file, './PTDFN_control.dat')
 		except:
-			print '--> PTDFN_control.dat file already exists' 
-		os.system('./DFNTrans')
-
+			print '--> ERROR: Problem copying PTDFN_control.dat file'
+		failure = os.system('./DFNTrans')
+		if failure == 0:
+			print '--> Running dfnTrans complete'	
+		print ('='*80)
+		print '\n'
 
 	#################### dfnGen Functions ##########################
 	def make_working_directory(self,jobname=''):
@@ -1815,8 +1822,9 @@ class dfnworks(Frozen):
 			    int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
 	def parse_pflotran_vtk(self, grid_vtk_file=''):
+		
 
-
+		print '--> Parsing PFLOTRAN output'
 		if grid_vtk_file:
 		    self._vtk_file = grid_vtk_file
 		else:
@@ -1855,6 +1863,7 @@ class dfnworks(Frozen):
 			for line in pflotran_out:
 			    f.write(line)
 
+		print '--> Parsing PFLOTRAN output complete'
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
 
 		#print('--> Writing pflotran uge file from lagrit')
@@ -2023,8 +2032,9 @@ class dfnworks(Frozen):
 		print '--> Running PFLOTRAN' 
 		cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_pflotran_file
 		os.system(cmd)	
-		print '--> Running PFLOTRAN Complete\n\n' 
-
+		print '--> Running PFLOTRAN Complete'
+		print ('='*80)
+		
 
 	def pflotran_cleanup(self):
 		print '--> Processing PFLOTRAN output' 
