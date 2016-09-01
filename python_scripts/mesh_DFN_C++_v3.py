@@ -546,9 +546,14 @@ def mesh_fracture(fracture_id):
 			copy('parameters_CPU' + str(cpu_id) + '.mlgi', folder +'/')	
 			copy('mesh_poly_CPU' + str(cpu_id) + '.lgi', folder + '/')	
 			copy('user_function.lgi', folder +'/')	
-			#raise Exception(-1)
-		os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
-		os.remove('mesh_' + str(fracture_id) + '.inp')
+		try:
+			os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
+		except: 
+			print 'Could not remove id_tri_node_CPU' + str(cpu_id) + '.list'
+		try:
+			os.remove('mesh_' + str(fracture_id) + '.inp')
+		except:
+			print 'Could not remove mesh' + str(cpu_id) + '.inp'
  	else:
 		failure = 0
 
@@ -556,15 +561,15 @@ def mesh_fracture(fracture_id):
 	try:
 		os.remove('poly_CPU' + str(cpu_id) + '.inp')
 	except:
-		print'could not remove poly'
+		print 'Could not remove poly_CPU' + str(cpu_id) + '.inp'
 	try: 
 		os.remove('intersections_CPU' + str(cpu_id) + '.inp')
 	except:
-		print'could not remove intersection'
+		print 'Could not remove intersections_CPU' + str(cpu_id) + '.inp'
 	try:
 		os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
 	except:
-		print'could not remove parameters'
+		print 'Could not remove parameters_CPU' + str(cpu_id) + '.mlgi'
 
 	elapsed = time.time() - t
 	print 'Fracture ', fracture_id, 'Complete' 
@@ -765,7 +770,15 @@ cmo / modatt / mo_all / meshid / ioflag / l
 cmo / modatt / mo_all / id_n_1 / ioflag / l
 cmo / modatt / mo_all / id_n_2 / ioflag / l
 cmo / modatt / mo_all / pt_gtg / ioflag / l
+cmo / modatt / mo_all / pt_gtg / ioflag / l
+# Dump out Material ID Dat file
 dump / avs2 / materialid.dat / mo_all / 0 0 2 0
+
+cmo / modatt / mo_all / imt1 / ioflag / l
+cmo / modatt / mo_all / family_id / ioflag / l
+cmo / modatt / mo_all / evol_onen / ioflag / l
+# Dump mesh with no attributes for viz
+dump / full_mesh_viz.inp / mo_all
 '''
 	else:
 		lagrit_input += '''
