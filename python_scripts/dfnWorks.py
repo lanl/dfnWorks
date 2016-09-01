@@ -1513,6 +1513,9 @@ class dfnworks(Frozen):
 			unRemovedList = families['notRemoved']
 			minSize = min(allList)
 			maxSize = max(allList)
+			# If constant fracture size, increase max so histogram is not a delta function
+			if minSize == maxSize:
+				maxSize += 1.0
 			twentiethOfWidth = (maxSize - minSize) * 0.05
 			fig, ax = plt.subplots()
 			histCount, bins, patches = plt.hist(allList, bins=numBuckets, color='b', range=(minSize, maxSize), 

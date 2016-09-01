@@ -14,7 +14,7 @@ def define_paths():
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
 	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
-	os.environ['connect_test'] = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+	os.environ['connect_test'] = '/home/jhyman/dfnWorks/dfnWorks-main/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
 	
 	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
@@ -50,6 +50,7 @@ Contact Information : dfnworks@lanl.gov
 	#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
 	dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/4_fracture_test/input_4_fracture.dat'	
 	dfnFlow_run_file = '/scratch/nobackup/jhyman/2016-mixing/dfn_explicit.in'
+	dfnFlow_run_file = '/scratch/fe/jhyman/dfnWorks/2016-marco/fors15_115/dfn_explicit.in'
 	dfnTrans_run_file = '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/test/nataliiaTest/PTDFN_control.dat'
 	
 	main_time = time.time()
@@ -87,11 +88,11 @@ Contact Information : dfnworks@lanl.gov
 	dfn.make_working_directory()
 	dfn.check_input()
 	dfn.create_network()	
-	#dfn.output_report()
+	##dfn.output_report()
+	#os.chdir(dfn._jobname)
 	dfn.mesh_network()
 
 	dfn.dfnFlow()
-	#os.chdir(dfn._jobname)
 	dfn.dfnTrans()
 
 	main_elapsed = time.time() - main_time
