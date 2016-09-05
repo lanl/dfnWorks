@@ -3,7 +3,8 @@ __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
-import re, os, sys, glob, time
+import re, os, sys, glob
+from time import time
 from shutil import copy, rmtree
 import numpy as np
 import scipy
@@ -16,7 +17,8 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
-
+import dfnGen_meshing as mesh
+from pylagrit import PyLaGriT
 
 
 class dfnworks(Frozen):
@@ -24,8 +26,9 @@ class dfnworks(Frozen):
 	Class for DFN Generation and meshing
 	"""
 
-	def __init__(self, jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file=''):
+	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version =''):
 		self._jobname = jobname
+		self._local_jobname = self._jobname.split('/')[-1]
 		self._input_file = input_file
 		self._output_file = output_file
  
@@ -34,7 +37,7 @@ class dfnworks(Frozen):
 		self._local_input_file = self._input_file.split('/')[-1]
 		
 		self._pflotran_file = pflotran_file 
-		self._local_pflotran_file = local_pflotran_file 
+		self._local_pflotran_file = self._pflotran_file.split('/')[-1]
 		self._dfnTrans_file = dfnTrans_file 
 		self._ncpu = ncpu
 
@@ -47,66 +50,71 @@ class dfnworks(Frozen):
 		self._perm_cell_file = perm_cell_file
 		self._aper_cell_file = aper_cell_file
 		#self._flow_solver = 'pflotran'
+		self._dfnTrans_version= 2.0
 		self._freeze
 
 	def dfnGen(self):
-	
-		# Create Working directory	
+		tic_gen = time()
+		# Create Working directory
+		tic = time()
 		self.make_working_directory()
+		self.dumpTime('make_working_directory', time()- tic)	
 	
 		# Check input file	
+		tic = time()
 		self.check_input()
+		self.dumpTime('check_input', time() - tic)	
 	
 		# Create network 	
+		tic = time()
 		self.create_network()
-		self.output_report()
+		self.dumpTime('create_network', time() - tic)	
+		
+		#tic = time()
+		#self.output_report()
+		#self.dumpTime('output_report', time() - tic)	
 		# Mesh Network
+		tic = time()
 		self.mesh_network()
+		self.dumpTime('mesh_network', time() - tic)	
+		print ('='*80)
 		print 'dfnGen Complete'
-
-
-	def define_paths(self):
-		os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
-		os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
-		os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
-		
-		os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
-		os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/ParticleTracking'
-		os.environ['PYTHONPATH']='/home/satkarra/src'
-		os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
-
-		# Executables	
-		os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
-		os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
-		os.environ['connect_test'] = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
-		os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
-		
-		os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
-
-
+		print ('='*80)
+		print ''
+		self.dumpTime('dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
-
+		tic_flow = time()
 		self._inp_file = 'full_mesh.inp'
 		self._perm_file = 'perm.dat'
 		self._aper_file = 'aperture.dat'
-	 	
+	
+		tic = time()
 		self.lagrit2pflotran()
+		self.dumpTime('lagrit2pflotran', time() - tic)	
+	
+		tic = time()
 		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
 		self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
 		self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
 		self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
 		self.zone2ex(zone_file='pboundary_top.zone',face='top')
 		self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
-		#self.parse_pflotran_vtk()	
-		try: 
-			copy(self._pflotran_file, './')
-			self._local_pflotran_file = self._pflotran_file.split('/')[-1]
-		except:
-			print '\t--> PFLOTRAN input file already exists'
+		toc = time() 
+		self.dumpTime('zone2ex', time() - tic)	
+
+		tic = time()	
 		self.pflotran()
+		self.dumpTime('pflotran', time() - tic)	
+
+		tic = time()	
 		self.parse_pflotran_vtk()		
+		self.dumpTime('parse_pflotran_vtk', time() - tic)	
+		
+		tic = time()	
 		self.pflotran_cleanup()
+		self.dumpTime('parse_cleanup', time() - tic)	
+		self.dumpTime('dfnFlow',time() - tic_flow)	
 
 
 	def dfnTrans(self):
@@ -122,11 +130,48 @@ class dfnworks(Frozen):
 			copy(self._dfnTrans_file, './PTDFN_control.dat')
 		except:
 			print '--> ERROR: Problem copying PTDFN_control.dat file'
+		tic = time()	
 		failure = os.system('./DFNTrans')
+		self.dumpTime('dfnTrans', time() - tic)	
 		if failure == 0:
 			print '--> Running dfnTrans complete'	
 		print ('='*80)
 		print '\n'
+	
+	def dumpTime(self, section_name, time):
+
+		if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):	
+			f = open(self._local_jobname+"_run_time.txt", "w")
+			f.write("Runs times for " + self._jobname + "\n")
+		else:	
+			f = open(self._local_jobname+"_run_time.txt", "a")
+		if time < 60.0:
+			line = section_name + " :  %f seconds\n"%time
+		else:
+			line = section_name + " :  %f minutes\n"%(time/60.0)
+		f.write(line)
+		f.close()
+
+	def runTime(self):
+		'''
+		read in run times and print to screen with percentages
+		'''
+		f=open(self._local_jobname+"_run_time.txt").readlines()
+		unit = f[-1].split()[-1]
+		total = float(f[-1].split()[-2])
+		if unit is 'minutes':
+			total *= 60.0
+
+		print 'Runs times for ', f[0]
+		percent = []
+		for i in range(1,len(f)):
+			unit = f[i].split()[-1]
+			time = float(f[i].split()[-2])
+			if unit is 'minutes':
+				time *= 60.0
+			percent = 100.0*(time/total)
+			print f[i], '\t-->Percent of total %0.2f \n'%percent
+
 
 	#################### dfnGen Functions ##########################
 	def make_working_directory(self,jobname=''):
@@ -138,7 +183,6 @@ class dfnworks(Frozen):
 			jobname = self._jobname
 		else:
 			self._jobname = jobname
-
 		try:
 			os.mkdir(jobname)
 			os.mkdir(jobname + '/radii')
@@ -1141,10 +1185,40 @@ class dfnworks(Frozen):
 		Mesh Fracture Network using ncpus and lagrit
 		meshing file is seperate file: dfnGen_meshing.py
 		'''
-		print '--> Meshing Network'	
-		copy(os.environ['PYTHON_SCRIPTS']+'/dfnGen_meshing.py','dfnGen_meshing.py')
-		os.system('$python_dfn dfnGen_meshing.py ' + str(self._ncpu)) 
+		print ('='*80)
+		print '--> Meshing Network'
+		production_mode = 1
+		refine_factor = 1	
+		
+		nPoly, h, visualMode, dudded_points  = mesh.parse_params_file()
+		tic2 = time()
+		mesh.create_parameter_mlgi_file(nPoly, h)
+		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
+		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
+		self.dumpTime('Meshing Fractures', time() - tic2)
+	
+		if failure > 0:
+			mesh.cleanup_dir()
+			print 'Exiting Program'
+			sys.exit(1)
+		tic2 = time()
+		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
+
+		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
+		self.dumpTime('merge_the_mesh', time() - tic2)	
+
+		if(visualMode == 0):	
+			if (mesh.check_dudded_points(dudded_points) == False):
+				cleanup_dir()
+				sys.exit(1)
+		
+		if production_mode > 0:
+			mesh.cleanup_dir()
+		if(visualMode == 0): 
+			mesh.redefine_zones(h)
+		mesh.output_meshing_report(visualMode)
 		print '--> Meshing Network Complete'	
+		print ('='*80)
 
 	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
 		"""
@@ -1982,10 +2056,10 @@ class dfnworks(Frozen):
 		    sys.exit('ERROR: aperture file must be specified!')
 
 		mat_file = 'materialid.dat'
-		t = time.time()
+		t = time()
 		cmd = os.environ['correct_uge_PATH']+ ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
 		os.system(cmd)
-		elapsed = time.time() - t
+		elapsed = time() - t
 		print '--> Time for C version of UGE file: ', elapsed, '\n'
 
 		# need number of nodes and mat ID file
@@ -2032,6 +2106,11 @@ class dfnworks(Frozen):
 	
 	def pflotran(self):
 
+		try: 
+			copy(self._pflotran_file, './')
+		except:
+			print '-->ERROR copying PFLOTRAN input file'
+		print ('='*80)
 		print '--> Running PFLOTRAN' 
 		cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_pflotran_file
 		os.system(cmd)	

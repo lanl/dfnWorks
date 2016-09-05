@@ -85,7 +85,7 @@ def parse_params_file():
 	print "Parse Params.txt: Complete\n"
 	return(nPoly, h, visualMode, dudded_points)
 	
-def create_parameter_mlgi_file(nPoly):
+def create_parameter_mlgi_file(nPoly,h,slope = 2, refine_dist = 0.5):
 	
 	#Section 2 : Outputs parameteri.mlgi files used in running LaGriT Script
 	print "\nCreating parameteri.mlgi files"
@@ -158,7 +158,7 @@ def create_parameter_mlgi_file(nPoly):
 
 	print "Creating parameteri.mlgi files: Complete\n"
 
-def create_lagrit_scripts(production_mode, N_CPU, refine_factor): 
+def create_lagrit_scripts(production_mode, N_CPU, refine_factor, visualMode): 
 
 	#########################################
 	#Section 2 : Creates LaGriT script to be run for each polygon
@@ -498,7 +498,7 @@ finish
 
 	print 'Writing LaGriT Control Files: Complete'
 
-def mesh_fracture(fracture_id):
+def mesh_fracture(fracture_id, visualMode):
 	
 	'''Child Function for Parallized Meshing of Fractures'''
 	t = time.time()
@@ -518,12 +518,12 @@ def mesh_fracture(fracture_id):
 		 + 'intersections_CPU%d.inp'
 	os.system(cmd%(fracture_id,cpu_id))
 
-	cmd = lagrit_path + ' < mesh_poly_CPU%d.lgi' \
+	cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
 		 + ' > lagrit_logs/log_lagrit_%d'
 	os.system(cmd%(cpu_id,fracture_id))
 
-	if(visualMode == 0):	
-		cmd_check = connectivity_test + ' intersections_CPU%d.inp' \
+	if(visualMode == 0):
+		cmd_check = os.environ['connect_test']+ ' intersections_CPU%d.inp' \
 		+ ' id_tri_node_CPU%d.list ' \
 		+ ' mesh_%d.inp'
 		cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id)
@@ -575,16 +575,15 @@ def mesh_fracture(fracture_id):
 	print 'Fracture ', fracture_id, 'Complete' 
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
-def worker(work_queue, done_queue):
+def worker(work_queue, done_queue, visualMode):
 	try:
 		for fracture_id in iter(work_queue.get, 'STOP'):
-			mesh_fracture(fracture_id)
+			mesh_fracture(fracture_id, visualMode)
 	except: 
 		print('Something went wrong on fracture ',fracture_id)
 	return True
 
-def mesh_fractures_header(nPoly, N_CPU):
-	
+def mesh_fractures_header(nPoly, N_CPU, visualMode):
  
 	t_all = time.time()
 	print "\nTriangulate Polygons:", nPoly
@@ -592,7 +591,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 		rmtree('lagrit_logs')
 	except OSError:
 		pass
-	os.system('rm -rf failure*')
+	remove_batch('rm -rf failure*')
 	os.mkdir('lagrit_logs')
 
 	f = open('failure.txt', 'w')
@@ -614,7 +613,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 		work_queue.put(i)
 
 	for i in xrange(N_CPU):
-		p = mp.Process(target=worker, args= (work_queue, done_queue))
+		p = mp.Process(target=worker, args= (work_queue, done_queue, visualMode))
 		p.daemon = True
 		p.start()        #
 		processes.append(p)
@@ -644,7 +643,7 @@ def mesh_fractures_header(nPoly, N_CPU):
 	return failure_flag	
 
 
-def create_merge_poly_files(N_CPU, nPoly):
+def create_merge_poly_files(N_CPU, nPoly, visualMode):
 	'''
 	Section 4 : Create merge_poly file
 	 Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -731,6 +730,7 @@ define / EPS / 1.e-6
 define / EPS_FILTER / 1.e-4 
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
 filter / pset get pinter / EPS_FILTER 
+pset / pinter / delete
 rmpoint / compress 
 # SORT can affect a_b attribute
 sort / mo_all / index / ascending / ikey / imt xic yic zic 
@@ -799,7 +799,7 @@ finish
 	return len(endis)
 
 
-def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
+def merge_the_meshes(nPoly, N_CPU, n_jobs):
 	''' Section 6 : Merge the Meshes
 	 Merges all the meshes together, deletes duplicate points, 
 		dumps the .gmv and fehm files
@@ -809,7 +809,7 @@ def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
 	for j in range(1, n_jobs + 1):
 		pid = os.fork()
 		if pid == 0: # clone a child job
-			cmd = lagrit_path +' < merge_poly_part_%d.lgi > log_merge_poly_part%d' 
+			cmd = os.environ['lagrit_dfn']+' < merge_poly_part_%d.lgi > log_merge_poly_part%d' 
 			os.system(cmd%(j,j))
 			os._exit(0)
 		else:
@@ -824,7 +824,7 @@ def merge_the_meshes(nPoly, N_CPU, lagrit_path, n_jobs):
 			j += 1 
 
 
-	os.system(lagrit_path+' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
+	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
 	print "Merging triangulated polygon meshes: Complete\n"
 
 
@@ -875,7 +875,7 @@ finish
 	f.write(lagrit_input) 
 	f.flush()
 	f.close()
-	os.system(lagrit_path + " < domainattr.lgi > printxyz.out")
+	os.system(os.environ['lagrit_dfn']+ " < domainattr.lgi > printxyz.out")
 	# python script to read data from lagrit output file 
 	fil = open('printxyz.out','r')
 	for line in fil:
@@ -921,7 +921,7 @@ finish
 	f.write(lagrit_input%parameters)
 	f.flush()
 	f.close()
-	os.system(lagrit_path + " < bound_zones.lgi > boundary_output.txt ")
+	os.system(os.environ['lagrit_dfn']+ " < bound_zones.lgi > boundary_output.txt ")
 	os.system("cp boundary_bottom.zone pboundary_bottom.zone")
 	os.system("cp boundary_left_w.zone pboundary_left_w.zone")
 	os.system("cp boundary_front_s.zone pboundary_front_s.zone")
@@ -943,10 +943,11 @@ finish
 	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone boundary_front_s.zone boundary_right_e.zone   boundary_back_n.zone  > allboundaries.zone ")
 
 
-def redefine_zones():
+def redefine_zones(h):
 	'''Section 8 : redefine zones 
 	Creates lagrit script to define domain size'''
 
+	pl = PyLaGriT(lagrit_exe = os.environ['lagrit_dfn'], verbose = False)
 	print '--> Identifying Boundary Nodes'
 	eps = h*10**-3
 	#eps = 0.5*h
@@ -954,15 +955,17 @@ def redefine_zones():
 	mo = pl.read('full_mesh.lg')
 	print '--> Complete'
 	print '--> Tagging Boundary Nodes'
-	
+
+	# Order for psets in terms of cube directions
+	# DO NOT TOUCH THIS!	
 	ptop = mo.pset_attribute('zic', mo.zmax - eps, 'gt',name='top')
 	pbottom = mo.pset_attribute('zic', mo.zmin + eps, 'lt', name = 'bottom')
-
-	pleft_w = mo.pset_attribute('xic', mo.xmax - eps, 'gt', name = 'left_w')
-	pright_e = mo.pset_attribute('xic', mo.xmin + eps, 'lt', name = 'right_e')
-
+	pleft_w = mo.pset_attribute('xic', mo.xmin + eps, 'lt', name = 'left_w')
 	pfront_s = mo.pset_attribute('yic', mo.ymax - eps, 'gt', name = 'front_s')
+	pright_e = mo.pset_attribute('xic', mo.xmax - eps, 'gt', name = 'right_e')
 	pback_n = mo.pset_attribute('yic', mo.ymin + eps, 'lt', name = 'back_n')
+	# DO NOT TOUCH THIS!	
+
 	print'--> Complete'
 
 	print '--> Dumping Boundary Nodes'
@@ -990,7 +993,7 @@ def redefine_zones():
 	os.system("sed -i '1d' boundary_back_n.zone ")
 	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone boundary_front_s.zone boundary_right_e.zone   boundary_back_n.zone  > allboundaries.zone ")
 
-def output_report(visualMode):
+def output_meshing_report(visualMode):
 
 	f = open('finalmesh.txt','w')
 	f.write('The final mesh of DFN consists of: \n')
@@ -1062,19 +1065,13 @@ if __name__ == "__main__":
 		print 'python_dfn not defined'
 		sys.exit(1)	
 	try:	
-		lagrit_path = os.environ['lagrit_dfn']
-		#lagrit_path = '/n/swdev/LAGRIT/bin/lagrit_lin'
-	except KeyError:
-		print 'lagrit_dfn undefined'
-		sys.exit(1)	
-	try:	
 		connectivity_test = os.environ['connect_test']
 		#connectivity_test = '/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	except KeyError:
 		print 'connect_test undefined'
 		sys.exit(1)	
 	try:
-		pl = PyLaGriT(lagrit_exe = lagrit_path, verbose = False)
+		pl = PyLaGriT(lagrit_exe = os.environ['lagrit_dfn'], verbose = False)
 	except KeyError:
 		print 'PyLaGrit not found'
 		sys.exit(1)	
@@ -1085,12 +1082,15 @@ if __name__ == "__main__":
 	elif (len(sys.argv) == 2):
 		N_CPU = int(sys.argv[1])
 		print "Number of CPU's to use:", N_CPU
-		
+	
+
+	## input checking over
+	
 	nPoly, h, visualMode, dudded_points  = parse_params_file()
 
-	create_parameter_mlgi_file(nPoly)
+	create_parameter_mlgi_file(nPoly, h)
 
-	create_lagrit_scripts(production_mode, N_CPU, refine_factor)
+	create_lagrit_scripts(production_mode, N_CPU, refine_factor, visualMode)
 
 	failure = mesh_fractures_header(nPoly, N_CPU)
 
@@ -1099,9 +1099,9 @@ if __name__ == "__main__":
 		print 'Exiting Program'
 		sys.exit(1)
 
-	n_jobs = create_merge_poly_files(N_CPU, nPoly)
+	n_jobs = create_merge_poly_files(N_CPU, nPoly, visualMode)
 
-	merge_the_meshes(nPoly, N_CPU, lagrit_path , n_jobs)
+	merge_the_meshes(nPoly, N_CPU, n_jobs)
 	if(visualMode == 0):	
 		if (check_dudded_points(dudded_points) == False):
 			cleanup_dir()
@@ -1111,9 +1111,9 @@ if __name__ == "__main__":
 		cleanup_dir()
 
 	if(visualMode == 0): 
-		redefine_zones()
+		redefine_zones(h)
 		#redefine_zones_old()
 	
-	output_report(visualMode)
+	output_meshing_report(visualMode)
 	os.system("date")
 	print ('='*80)
