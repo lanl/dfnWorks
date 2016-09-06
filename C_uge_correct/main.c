@@ -70,10 +70,8 @@ FILE *open_file(char *base, char *name, char *fileMode)
         exit(1);
     }
     free(new_name);
-    
     return fp;
 }
-
 
 /*************************************************************\
  * Function:close_file
@@ -191,7 +189,7 @@ void convert_uge(char *uge_in_file, char *uge_out_file, int *matID, int *aper_in
 			printf("Index from matid: %d\n", -1*matID[cell_index-1] -6);
 		}	
 		//fprintf(fid,"%i\t%0.12E\t%0.12E\t%0.12E\t%0.12E\n", cell_index, x, y, z, volume);
-		fprintf(fout,"%i\t%E\t%E\t%E\t%E\n", cell_index, x, y, z, volume);
+		fprintf(fout,"%i\t%0.12E\t%0.12E\t%0.12E\t%0.12E\n", cell_index, x, y, z, volume);
 	}
 	// Read in Number of Connections
 	getline(&buf, &bufsize,  fin);
