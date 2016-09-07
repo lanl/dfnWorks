@@ -70,9 +70,9 @@ class dfnworks(Frozen):
 		self.create_network()
 		self.dumpTime('Function: create_network', time() - tic)	
 		
-		tic = time()
-		self.output_report()
-		self.dumpTime('output_report', time() - tic)	
+		#tic = time()
+		#self.output_report()
+		#self.dumpTime('output_report', time() - tic)	
 		# Mesh Network
 
 		tic = time()
@@ -85,11 +85,8 @@ class dfnworks(Frozen):
 		self.dumpTime('Process: dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
-		
-		# Check if full_mesh.inp exists 
 		tic_flow = time()
-
-			
+	
 		tic = time()
 		self.lagrit2pflotran()
 		self.dumpTime('Function: lagrit2pflotran', time() - tic)	
@@ -192,7 +189,7 @@ class dfnworks(Frozen):
 		except OSError:
 			print '\nFolder ', jobname, ' exists'
 			keep = raw_input('Do you want to delete it? [yes/no] \n')
-			if keep == 'yes' or keep == 'y':
+			if keep == 'yes':
 				print 'Deleting', jobname 
 				rmtree(jobname)
 				print 'Creating', jobname 
@@ -261,7 +258,7 @@ class dfnworks(Frozen):
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease'}
+		'userRecByCoord','aperture','permOption', 'forceLargeFractures'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
@@ -407,7 +404,7 @@ class dfnworks(Frozen):
 			if desiredLength != 0 and len(valList) != desiredLength:
 				return -len(valList)
 			for i, value in enumerate(valList):
-				value = value.strip()
+				value = value.strip() 
 				verifiedVal = verificationFn(value, inList = True)
 				if verifiedVal == None:
 					listType = re.sub('Integer', 'Int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyInt' --> 'Integer'
