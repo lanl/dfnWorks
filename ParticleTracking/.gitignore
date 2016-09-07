@@ -1,0 +1,6 @@
+*.o
+*~
+*.nfs*
+*.swp
+DFNTrans
+
