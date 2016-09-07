@@ -258,7 +258,7 @@ class dfnworks(Frozen):
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease'}
+		'userRecByCoord','aperture','permOption', 'forceLargeFractures'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',

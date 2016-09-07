@@ -86,8 +86,8 @@ print '--> dfnTrans input file: ',dfnTrans_run_file
 print ''
 
 dfn.dfnGen()
-#dfn.dfnFlow()
-#dfn.dfnTrans()
+dfn.dfnFlow()
+dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 print jobname, 'Complete'
