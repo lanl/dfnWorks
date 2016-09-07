@@ -26,7 +26,7 @@ class dfnworks(Frozen):
 	Class for DFN Generation and meshing
 	"""
 
-	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version =''):
+	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='perm.dat', aper_file='aperture.dat',perm_cell_file='',aper_cell_file='', dfnTrans_version =''):
 		self._jobname = jobname
 		self._local_jobname = self._jobname.split('/')[-1]
 		self._input_file = input_file
@@ -58,40 +58,38 @@ class dfnworks(Frozen):
 		# Create Working directory
 		tic = time()
 		self.make_working_directory()
-		self.dumpTime('make_working_directory', time()- tic)	
+		self.dumpTime('Function: make_working_directory', time()- tic)	
 	
 		# Check input file	
 		tic = time()
 		self.check_input()
-		self.dumpTime('check_input', time() - tic)	
+		self.dumpTime('Function: check_input', time() - tic)	
 	
 		# Create network 	
 		tic = time()
 		self.create_network()
-		self.dumpTime('create_network', time() - tic)	
+		self.dumpTime('Function: create_network', time() - tic)	
 		
 		#tic = time()
 		#self.output_report()
 		#self.dumpTime('output_report', time() - tic)	
 		# Mesh Network
+
 		tic = time()
 		self.mesh_network()
-		self.dumpTime('mesh_network', time() - tic)	
+		self.dumpTime('Function: mesh_network', time() - tic)	
 		print ('='*80)
 		print 'dfnGen Complete'
 		print ('='*80)
 		print ''
-		self.dumpTime('dfnGen',time() - tic_gen)	
+		self.dumpTime('Process: dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
 		tic_flow = time()
-		self._inp_file = 'full_mesh.inp'
-		self._perm_file = 'perm.dat'
-		self._aper_file = 'aperture.dat'
 	
 		tic = time()
 		self.lagrit2pflotran()
-		self.dumpTime('lagrit2pflotran', time() - tic)	
+		self.dumpTime('Function: lagrit2pflotran', time() - tic)	
 	
 		tic = time()
 		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
@@ -101,20 +99,20 @@ class dfnworks(Frozen):
 		self.zone2ex(zone_file='pboundary_top.zone',face='top')
 		self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
 		toc = time() 
-		self.dumpTime('zone2ex', time() - tic)	
+		self.dumpTime('Function: zone2ex', time() - tic)	
 
 		tic = time()	
 		self.pflotran()
-		self.dumpTime('pflotran', time() - tic)	
+		self.dumpTime('Function: pflotran', time() - tic)	
 
 		tic = time()	
 		self.parse_pflotran_vtk()		
-		self.dumpTime('parse_pflotran_vtk', time() - tic)	
+		self.dumpTime('Function: parse_pflotran_vtk', time() - tic)	
 		
 		tic = time()	
 		self.pflotran_cleanup()
-		self.dumpTime('parse_cleanup', time() - tic)	
-		self.dumpTime('dfnFlow',time() - tic_flow)	
+		self.dumpTime('Function: parse_cleanup', time() - tic)	
+		self.dumpTime('Process: dfnFlow',time() - tic_flow)	
 
 
 	def dfnTrans(self):
@@ -132,7 +130,7 @@ class dfnworks(Frozen):
 			print '--> ERROR: Problem copying PTDFN_control.dat file'
 		tic = time()	
 		failure = os.system('./DFNTrans')
-		self.dumpTime('dfnTrans', time() - tic)	
+		self.dumpTime('Process: dfnTrans', time() - tic)	
 		if failure == 0:
 			print '--> Running dfnTrans complete'	
 		print ('='*80)
@@ -170,7 +168,7 @@ class dfnworks(Frozen):
 			if unit is 'minutes':
 				time *= 60.0
 			percent = 100.0*(time/total)
-			print f[i], '\t-->Percent of total %0.2f \n'%percent
+			print f[i], '\t--> Percent of total %0.2f \n'%percent
 
 
 	#################### dfnGen Functions ##########################
@@ -1195,7 +1193,8 @@ class dfnworks(Frozen):
 		mesh.create_parameter_mlgi_file(nPoly, h)
 		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
 		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-		self.dumpTime('Meshing Fractures', time() - tic2)
+		
+		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
 		if failure > 0:
 			mesh.cleanup_dir()
@@ -1205,17 +1204,17 @@ class dfnworks(Frozen):
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
 		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
-		self.dumpTime('merge_the_mesh', time() - tic2)	
+		self.dumpTime('Process: Merging the Mesh', time() - tic2)	
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
 				cleanup_dir()
 				sys.exit(1)
-		
 		if production_mode > 0:
 			mesh.cleanup_dir()
 		if(visualMode == 0): 
 			mesh.redefine_zones(h)
+
 		mesh.output_meshing_report(visualMode)
 		print '--> Meshing Network Complete'	
 		print ('='*80)
@@ -1768,7 +1767,6 @@ class dfnworks(Frozen):
 			else:
 			    for j in range(10):
 				Node_array[i * 10 + j] = node_array[j]
-
 		f.close()
 
 		print('--> Finished with zone file')
@@ -1899,7 +1897,6 @@ class dfnworks(Frozen):
 			    int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
 	def parse_pflotran_vtk(self, grid_vtk_file=''):
-		
 
 		print '--> Parsing PFLOTRAN output'
 		if grid_vtk_file:
@@ -1936,15 +1933,13 @@ class dfnworks(Frozen):
 			f.write('\n')
 			f.write('\n')
 			if 'vel' in file:
-			    f.write('POINT_DATA\t' + num_cells + '\n')
+			    f.write('POINT_DATA\t ' + num_cells + '\n')
 			for line in pflotran_out:
 			    f.write(line)
-
 		print '--> Parsing PFLOTRAN output complete'
+
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
-
 		#print('--> Writing pflotran uge file from lagrit')
-
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -1980,7 +1975,7 @@ class dfnworks(Frozen):
 
 		self._uge_file = d + '.uge'
 
-		cmd = os.environ['lagrit_dfn']+ '< %s.lgi' % d + '>lagrit_uge.txt'
+		#cmd = os.environ['lagrit_dfn']+ '< %s.lgi' % d + '>lagrit_uge.txt'
 		#failure = os.system(cmd)
 		# Need to check for full_mesh.uge file
 		#if failure:
@@ -2060,7 +2055,7 @@ class dfnworks(Frozen):
 		cmd = os.environ['correct_uge_PATH']+ ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
 		os.system(cmd)
 		elapsed = time() - t
-		print '--> Time for C version of UGE file: ', elapsed, '\n'
+		print '--> Time elapsed for UGE file conversion: ', elapsed, 'seconds\n'
 
 		# need number of nodes and mat ID file
 		print('--> Writing HDF5 File')
@@ -2126,6 +2121,79 @@ class dfnworks(Frozen):
 			os.remove(fl)	
 		for fl in glob.glob('dfn_explicit-darcyvel*.dat'):
 			os.remove(fl)	
+
+	def uncorrelated(self, sigma):
+		print '--> Creating Uncorrelated Transmissivity Fields'
+		print 'Variance: ', sigma
+		print 'Running un-correlated'
+		x = np.genfromtxt('../aperture.dat', skip_header = 1)
+		n = len(x)
+		b = x[0,-1]
+		n = len(x)
+		T = (b**3)/12.0
+		k = T/b
+
+		perm = np.log(k)*np.ones(n) 
+		perturbation = np.random.normal(0.0, 1.0, n)
+		perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
+
+		aper = (12.0*perm)**0.5
+
+		print '\nPerm Stats'
+		print '\tMean:', np.mean(perm)
+		print '\tMean:', np.mean(np.log(perm))
+		print '\tVariance:',np.var(np.log(perm))
+		print '\tMinimum:',min(perm)
+		print '\tMaximum:',max(perm)
+		print '\tMinimum:',min(np.log(perm))
+		print '\tMaximum:',max(np.log(perm))
+
+
+		print '\nAperture Stats'
+		print '\tMean:', np.mean(aper)
+		print '\tVariance:',np.var(aper)
+		print '\tMinimum:',min(aper)
+		print '\tMaximum:',max(aper)
+
+
+		output_filename = 'aperture_' + str(sigma) + '.dat'
+		f = open(output_filename,'w+')
+		f.write('aperture\n')
+		for i in range(n):
+			f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
+		f.close()
+
+		cmd = 'ln -s ' + output_filename + ' aperture.dat '
+		os.system(cmd)
+
+		output_filename = 'perm_' + str(sigma) + '.dat'
+		f = open(output_filename,'w+')
+		f.write('permeability\n')
+		for i in range(n):
+			f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
+		f.close()
+
+		cmd = 'ln -s ' + output_filename + ' perm.dat '
+		os.system(cmd)
+
+	def create_dfnFlow_links(self):
+		os.symlink('../full_mesh.uge', 'full_mesh.uge')
+		os.symlink('../full_mesh.inp', 'full_mesh.inp')
+		os.symlink('../pboundary_back_n.ex', 'pboundary_back_n.ex')
+		os.symlink('../pboundary_front_s.ex', 'pboundary_front_s.ex')
+		os.symlink('../pboundary_left_w.ex', 'pboundary_left_w.ex')
+		os.symlink('../pboundary_right_e.ex', 'pboundary_right_e.ex')
+		os.symlink('../pboundary_top.ex', 'pboundary_top.ex')
+		os.symlink('../pboundary_bottom.ex', 'pboundary_bottom.ex')
+		os.symlink('../materialid.dat', 'materialid.dat')
+		#os.symlink(self._jobname+'/*ex', './')
+	def create_dfnTrans_links(self):
+		os.symlink('../params.txt', 'params.txt')
+		os.symlink('../allboundaries.zone', 'allboundaries.zone')
+		os.symlink('../tri_fracture.stor', 'tri_fracture.stor')
+		os.symlink('../poly_info.dat','poly_info.dat')
+		#os.symlink(self._jobname+'/*ex', './')
+
 
 	#################### dfnFlow Functions ##########################
 
