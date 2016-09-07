@@ -944,8 +944,10 @@ finish
 
 
 def redefine_zones(h):
-	'''Section 8 : redefine zones 
-	Creates lagrit script to define domain size'''
+	'''
+	Section 8 : redefine zones 
+	runs PyLaGriT to identify boundary nodes
+	'''
 
 	pl = PyLaGriT(lagrit_exe = os.environ['lagrit_dfn'], verbose = False)
 	print '--> Identifying Boundary Nodes'
@@ -972,20 +974,21 @@ def redefine_zones(h):
 	mo.dump_pset('boundary', 'zone')
 	print '--> Complete'
 	
-	# Dylan is going to clean this up.
+	# copies boundary zone files for PFLOTRAN 
 	copy('boundary_bottom.zone','pboundary_bottom.zone')
 	copy('boundary_left_w.zone','pboundary_left_w.zone')
 	copy('boundary_front_s.zone','pboundary_front_s.zone')
 	copy('boundary_right_e.zone','pboundary_right_e.zone')
 	copy('boundary_back_n.zone','pboundary_back_n.zone')
 	copy('boundary_top.zone','pboundary_top.zone')
+	
+	# edits zone files to concatenate for dfnTrans
 	for i in range(2):
 		os.system("sed -i '$d' boundary_top.zone ")
 		os.system("sed -i '$d' boundary_bottom.zone ")
 		os.system("sed -i '$d' boundary_left_w.zone ")
 		os.system("sed -i '$d' boundary_front_s.zone ")
 		os.system("sed -i '$d' boundary_right_e.zone ")
-
 	os.system("sed -i '1d' boundary_bottom.zone ")
 	os.system("sed -i '1d' boundary_left_w.zone ")
 	os.system("sed -i '1d' boundary_front_s.zone ")

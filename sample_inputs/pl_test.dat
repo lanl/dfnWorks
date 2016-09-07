@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 2000 
+nPoly: 10
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -25,7 +25,7 @@ outputAllRadii: 0
 */
 
                       
-domainSize: {20,20,20} 
+domainSize: {5,5,5} 
      /* Mandatory Parameter.
         Creates a domain with dimension x*y*z centered at the origin.*/
 
@@ -261,7 +261,7 @@ econst: {10, 10, 10}  // Constant radius, defined per family
 // NOTE: Number of elements must match number 
 //       of ellipse families (first number in nShape)
 
-emin: {1,1,1,1} // Minimum radius for each ellipse family. 
+emin: {2.5,2.5,2.5,2.5} // Minimum radius for each ellipse family. 
              // For power law distributions. 
 
 emax: {10,10,10,10}  // Maximum radius for each ellipse family.

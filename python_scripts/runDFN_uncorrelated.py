@@ -48,11 +48,10 @@ define_paths()
 
 # USER INPUT FILES, ALL PATHS MUST BE VALID	
 #dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
-#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/1L_network.dat'	
 dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/4_fracture_test/input_4_fracture.dat'	
-dfnFlow_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/4_fracture_test/dfn_explicit.in'	
-dfnTrans_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/4_fracture_test/PTDFN_control.dat'	
+dfnFlow_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/mixing/dfn_explicit_dt.in'	
+dfnTrans_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/mixing/PTDFN_control.dat'	
 
 main_time = time()
 # Command lines: argv[1] = jobname, argv[2] = number of cpus. 
@@ -85,8 +84,27 @@ print '--> dfnFlow input file: ',dfnFlow_run_file
 print '--> dfnTrans input file: ',dfnTrans_run_file
 print ''
 
-dfn.dfnGen()
-dfn.dfnFlow()
+
+#dfn.dfnGen()
+#dfn.dfnFlow()
+#dfn.dfnTrans()
+#dfn.make_working_directory()
+#dfn.check_input()
+#dfn.create_network()	
+#dfn.output_report()
+os.chdir(dfn._jobname)
+#os.mkdir('var_1')
+#os.chdir('var_2')
+os.system('pwd')
+#dfn.uncorrelated(2.0)
+##dfn.dfnFlow()
+#dfn.create_dfnFlow_links()
+#dfn.lagrit2pflotran()
+#dfn.pflotran()
+#dfn.parse_pflotran_vtk()
+#dfn.pflotran_cleanup()
+#os.system('pwd')
+#dfn.create_dfnTrans_links()
 dfn.dfnTrans()
 
 main_elapsed = time() - main_time
