@@ -240,7 +240,7 @@ class dfnworks(Frozen):
 		'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 		'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 		'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
-		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'outputTriplePoints':[]} 
+		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[]} 
 
 		unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -252,17 +252,17 @@ class dfnworks(Frozen):
 		'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
 		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path', 'userRecByCoord',
 		'RectByCood_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
-		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'outputTriplePoints'}
+		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures'}
 
 		mandatory = {'stopCondition','domainSize','numOfLayers','outputAllRadii', 'outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'outputTriplePoints'}
+		'userRecByCoord','aperture','permOption', 'forceLargeFractures'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
-		'visualizationMode', 'keepOnlyLargestCluster','insertUserRectanglesFirst', 'forceLargeFractures', 'outputTriplePoints']
+		'visualizationMode', 'keepOnlyLargestCluster','insertUserRectanglesFirst', 'forceLargeFractures']
 
 		examples = {"Flag":"(0 or 1)", "Float":"(0.5, 1.6, 4.0, etc.)" , "Int":"(0,1,2,3,etc.)"}
 
