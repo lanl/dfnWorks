@@ -6,16 +6,18 @@ def define_paths():
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
-	
+
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
-	os.environ['DFNTRANS_PATH']='/home/jhyman/dfnworks/dfnworks-main/ParticleTracking/'
-	os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnworks/dfnworks-main/python_scripts'
+	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	
+	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +' /ParticleTracking/'
+	
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
 	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
-	os.environ['connect_test'] = '/home/jhyman/dfnworks/dfnworks-main/DFN_Mesh_Connectivity_Test/ConnectivityTest'
-	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/C_uge_correct/correct_uge' 
+	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
 	
 	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
 	#os.system('module load pylagrit/june_8_2015')
@@ -49,15 +51,16 @@ define_paths()
 #dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/1L_network.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
-dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/input_4_fracture.dat'	
+dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/simple_pl/pl_test.dat'	
-dfnFlow_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/simple_pl/dfn_explicit.in'	
-dfnTrans_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/simple_pl/PTDFN_control.dat'	
+dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
+dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
 
 main_time = time()
 # Command lines: argv[1] = jobname, argv[2] = number of cpus. 
 # Command line is overloaded, so argv[3], argv[4], argv[5] 
 # can be dfnGen, dfnFlow, and dfnTrans control files. 
+# They need to be the FULL path name
 try: 
 	jobname = sys.argv[1]
 	ncpu = int(sys.argv[2])
