@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 1000
+nPoly: 1500
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -53,7 +53,7 @@ h: 0.1
 //==========================================================================//
 /* Fracture Network Parameters:                                             */
 
-tripleIntersections: 1
+tripleIntersections: 0
 /* Options:     0: Off
                 1: On    */
 
@@ -73,8 +73,8 @@ visualizationMode:  0
    1: produce only first round of triangulations. In this case no 
    modeling of flow and transport is possible. */ 
 
-seed: 1 
-    //Seed for random generator. 
+seed: 0 
+    //Seed for random generator. 0 = seed off clock 
         
 
 domainSizeIncrease: {5, 5, 5} 
@@ -492,4 +492,7 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 forceLargeFractures: 0
 outputFinalRadiiPerFamily: 0 
 radiiListIncrease: 0.1
+
+
+
 

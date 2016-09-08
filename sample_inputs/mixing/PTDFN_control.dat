@@ -72,7 +72,7 @@ init_partn: 10
      each other on all over in-flow boundary edges ***********************/  
 init_eqd: yes
 //maximum number of particles that user expects on one boundary edge
-init_npart: 10 
+init_npart: 25 
 
 /*** all particles start from the same region at in-flow boundary, in a range  
     {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/
@@ -136,7 +136,7 @@ ControlPlane: yes
 control_out: outcontroldir
 
 /* Delta Control Plane - the distance between control planes */
-delta_Control: 1.0
+delta_Control: 10.0
 
 /* ControlPlane: direction of flow: x-0; y-1; z-2 */
 flowdir: 0
