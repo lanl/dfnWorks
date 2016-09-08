@@ -117,7 +117,6 @@ class dfnworks(Frozen):
 		self.dumpTime('Function: parse_cleanup', time() - tic)	
 		self.dumpTime('Process: dfnFlow',time() - tic_flow)	
 
-
 	def dfnTrans(self):
 		
 		os.chdir(self._jobname)
@@ -1216,6 +1215,7 @@ class dfnworks(Frozen):
 			if (mesh.check_dudded_points(dudded_points) == False):
 				cleanup_dir()
 				sys.exit(1)
+	
 		if production_mode > 0:
 			mesh.cleanup_dir()
 		if(visualMode == 0): 
@@ -1904,7 +1904,6 @@ class dfnworks(Frozen):
 			    int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
 	def parse_pflotran_vtk(self, grid_vtk_file=''):
-		os.chdir(self._jobname)
 		print '--> Parsing PFLOTRAN output'
 		if grid_vtk_file:
 		    self._vtk_file = grid_vtk_file
@@ -1925,7 +1924,7 @@ class dfnworks(Frozen):
 		for file in files:
 		    with open(file, 'r') as f:
 			pflotran_out = f.readlines()[4:]
-		    pflotran_out = [w.replace('CELL_DATA', 'POINT_DATA') for w in pflotran_out]
+		    pflotran_out = [w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out]
 		    header = ['# vtk DataFile Version 2.0\n',
 			      'PFLOTRAN output\n',
 			      'ASCII\n']
@@ -2121,7 +2120,6 @@ class dfnworks(Frozen):
 		
 
 	def pflotran_cleanup(self):
-		os.chdir(self._jobname)
 		print '--> Processing PFLOTRAN output' 
 		os.system('cat dfn_explicit-cellinfo-001-rank*.dat > cellinfo.dat')
 		os.system('cat dfn_explicit-darcyvel-001-rank*.dat > darcyvel.dat') 
