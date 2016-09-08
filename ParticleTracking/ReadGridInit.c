@@ -132,7 +132,7 @@ int nnf=0.0;
 
   for (i=0; i<nfract; i++)
     {
-      printf("%d \n", i);
+      
       fscanf(fpo,"%d %d  %f %f %f %d %f %f %d\n",&nf,&nnf, &fracture[i].theta, 
 	     &fracture[i].nvect_xy[0], &fracture[i].nvect_xy[1], &nnf, 
 	     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1], &nnf);
