@@ -5,6 +5,7 @@
 /**********************  INPUT FILES: grid *****************************/
 /**** input files with grid of DFN, mainly it's output of DFNGen ******/
 param: params.txt
+poly: poly_info.dat
 inp: full_mesh.inp
 stor: tri_fracture.stor
 boundary: allboundaries.zone
@@ -12,15 +13,15 @@ boundary: allboundaries.zone
 out-flow boundaries. Should be consistent with those applied to obtain
 steady state pressure solution (PFLOTRAN)   */
 /*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
-in-flow-boundary: 3 
-out-flow-boundary: 5
+in-flow-boundary: 5 
+out-flow-boundary: 4
 
 
 /**************** INPUT FILES: PFLOTRAN flow solution *******************/
 PFLOTRAN: yes
 PFLOTRAN_vel: darcyvel.dat 
 PFLOTRAN_cell: cellinfo.dat
-PFLOTRAN_uge: lagrit_pflotran_dat/lagrit_pflotran_corrected.uge
+PFLOTRAN_uge: full_mesh_vol_area.uge
 
 /**************** INPUT FILES: FEHM flow solution ***********************/
 /*currently we are using PFLOTRAN , but the code would work with FEHM, too */ 
@@ -29,7 +30,7 @@ FEHM_fin:  tri_frac.fin
 
 /************************  OUTPUT FILES  ********************************/
 /* initial grid info structure output, usefull for debugging */
-out_grid: no
+out_grid: yes
 /* flow field: 3D Darcy velocities: output file has an each nodes position 
 and its Darcy velocity, reconstructed from fluxes */ 
 out_3dflow: no
@@ -42,14 +43,14 @@ out_init: no
 curvature of particles trajectory each segment, from intersection to intersection.
 If it's like a straight line, then the output is less frequent (in case of 
 "out_curv:yes", if "no",  the output file will contain every time step) */
-out_curv: no
+out_curv: yes
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs: no
+out_avs: yes
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no
 
 /************* output directories *************************************/
-out_dir: ptresults1 /* path and name of directory where all the particle 
+out_dir: traj /* path and name of directory where all the particle 
                      tracking results will be written*/
 
 
@@ -64,14 +65,14 @@ out_time: partime
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 
      equidistant from each other ****/
-init_nf: yes
-init_partn: 5
+init_nf: no
+init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
      each other on all over in-flow boundary edges ***********************/  
-init_eqd: no
+init_eqd: yes
 //maximum number of particles that user expects on one boundary edge
-init_npart: 1
+init_npart: 10
 
 /*** all particles start from the same region at in-flow boundary, in a range  
     {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/
@@ -102,8 +103,8 @@ inm_porosity: 0.02
 inm_diffcoeff: 1.0e-12
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
-porosity: 0.25 // porosity 
-density: 997.73  //fluid density
+porosity: 1.0 // porosity 
+density: 997.73  //fluid density 
 satur: 1.0
 thickness: 1.0 //DFN aperture  (used in case of no aperture file provided)
 
@@ -114,9 +115,9 @@ aperture_type: frac //aperture is giving per cell (type "cell")
 aperture_file: aperture.dat
 
 /********************  TIME ********************************************/
-timesteps: 2000000
+timesteps: 200000000
 //units of time (years, days, hours, minutes) 
-time_units:  seconds
+time_units: years
 
 /**** flux weighted particles*/
 /**** in case of random initial positions of particles - it's aperture weighted **/
@@ -135,10 +136,10 @@ ControlPlane: no
 control_out: outcontroldir
 
 /* Delta Control Plane - the distance between control planes */
-delta_Control: 1
+delta_Control: 0.1
 
 /* ControlPlane: direction of flow: x-0; y-1; z-2 */
-flowdir: 1
+flowdir: 2
 
 /**************************************************************************/
 END
