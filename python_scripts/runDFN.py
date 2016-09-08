@@ -10,8 +10,8 @@ def define_paths():
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	
-	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +' /ParticleTracking/'
-	
+	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
+	#os.environ['DFNTRANS_PATH']= '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -48,13 +48,14 @@ os.system("date")
 define_paths()
 
 # USER INPUT FILES, ALL PATHS MUST BE VALID	
-#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/pl_test.dat'	
-#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/1L_network.dat'	
-#dfnGen_run_file = '/home/jhyman/dfnWorks/dfnWorks-main/sample_inputs/multi_rect.dat'	
+#dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/1L_network.dat'	
+#dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/multi_rect.dat'	
 dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
-#dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/simple_pl/pl_test.dat'	
+#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/pl_test.dat'	
 dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
 dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
+
+
 
 main_time = time()
 # Command lines: argv[1] = jobname, argv[2] = number of cpus. 
