@@ -71,7 +71,7 @@ class dfnworks(Frozen):
 		self.dumpTime('Function: create_network', time() - tic)	
 		
 		tic = time()
-		#self.output_report()
+		self.output_report()
 		self.dumpTime('output_report', time() - tic)	
 		# Mesh Network
 
@@ -85,11 +85,11 @@ class dfnworks(Frozen):
 		self.dumpTime('Process: dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
+		os.chdir(self._jobname)
 		
 		# Check if full_mesh.inp exists 
 		tic_flow = time()
 
-			
 		tic = time()
 		self.lagrit2pflotran()
 		self.dumpTime('Function: lagrit2pflotran', time() - tic)	
@@ -120,6 +120,7 @@ class dfnworks(Frozen):
 
 	def dfnTrans(self):
 		
+		os.chdir(self._jobname)
 		print ('='*80)
 		print '\n'
 		print '--> Running dfnTrans'	
@@ -225,7 +226,7 @@ class dfnworks(Frozen):
 					This WILL be processed
 		 
 		"""
-
+		os.chdir(self._jobname)
 		## BIG TODO s -----
 			## ==== Problems ==== ##
 		## 11. Multiple keys on one line
@@ -1170,6 +1171,7 @@ class dfnworks(Frozen):
 
 	def create_network(self):
 		
+		os.chdir(self._jobname)
 		print '--> Running DFNGEN'	
 		# copy input file into job folder	
 		os.system(os.environ['DFNGENC_PATH']+'/./main ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
@@ -1186,6 +1188,7 @@ class dfnworks(Frozen):
 		Mesh Fracture Network using ncpus and lagrit
 		meshing file is seperate file: dfnGen_meshing.py
 		'''
+		os.chdir(self._jobname)
 		print ('='*80)
 		print '--> Meshing Network'
 		production_mode = 1
@@ -1232,6 +1235,7 @@ class dfnworks(Frozen):
 		4. NOTE future developers of this code should ass functionality for radiiList of size 0. 
 
 		"""
+		os.chdir(self._jobname)
 		print '--> Creating Report of DFN generation'
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
@@ -1718,7 +1722,7 @@ class dfnworks(Frozen):
 		vtk.tofile(vtk_file)
 
 	def zone2ex(self, uge_file='', zone_file='', face='', ):
-
+		os.chdir(self._jobname)
 		if self._uge_file:
 		    uge_file = self._uge_file
 		else:
@@ -1900,7 +1904,7 @@ class dfnworks(Frozen):
 			    int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
 	def parse_pflotran_vtk(self, grid_vtk_file=''):
-
+		os.chdir(self._jobname)
 		print '--> Parsing PFLOTRAN output'
 		if grid_vtk_file:
 		    self._vtk_file = grid_vtk_file
@@ -1943,6 +1947,7 @@ class dfnworks(Frozen):
 
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
 		#print('--> Writing pflotran uge file from lagrit')
+		os.chdir(self._jobname)
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -2017,7 +2022,6 @@ class dfnworks(Frozen):
 
 
 	def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
-
 
 		print('--> Perms and Correct Volume Areas')
 
@@ -2103,7 +2107,7 @@ class dfnworks(Frozen):
 		    del perm_list
 	
 	def pflotran(self):
-
+		os.chdir(self._jobname)
 		try: 
 			copy(self._pflotran_file, './')
 		except:
@@ -2117,6 +2121,7 @@ class dfnworks(Frozen):
 		
 
 	def pflotran_cleanup(self):
+		os.chdir(self._jobname)
 		print '--> Processing PFLOTRAN output' 
 		os.system('cat dfn_explicit-cellinfo-001-rank*.dat > cellinfo.dat')
 		os.system('cat dfn_explicit-darcyvel-001-rank*.dat > darcyvel.dat') 
@@ -2181,6 +2186,7 @@ class dfnworks(Frozen):
 
 	def create_dfnFlow_links(self):
 		os.symlink('../full_mesh.uge', 'full_mesh.uge')
+		os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
 		os.symlink('../full_mesh.inp', 'full_mesh.inp')
 		os.symlink('../pboundary_back_n.ex', 'pboundary_back_n.ex')
 		os.symlink('../pboundary_front_s.ex', 'pboundary_front_s.ex')
