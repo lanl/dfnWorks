@@ -34,6 +34,7 @@ void ReadInit()
   
   printf(" Number of fractures in the domain = %d \n", nfract);
  
+  fclose(fpp);
   /********************** opening file an inp file ***************************/
   
   int nn,  j;
@@ -119,25 +120,26 @@ void ReadInit()
  
   printf("\n Memory allocation is done successfully \n");
   /*****************reading the orientation angle and norm components 
-                 of every fracture from params.txt file*************************/
-  int nnf;
-  for (i=0; i<7; i++)
-    {
-      do 
-	cs=fgetc(fpp); 
-      while (cs!='\n');
-   
-    }
+                 of every fracture from poly_info.dat.txt file*************************/
+  
+ inputfile=Control_File("poly:", 5);
+
+  printf("\n OPEN AND READ FILE: %s \n \n", inputfile.filename);
+
+  FILE *fpo=OpenFile (inputfile.filename,"r");
+
+int nnf=0.0;
 
   for (i=0; i<nfract; i++)
     {
-      fscanf(fpp,"%d %f  %f %f %d %f %f %d %d\n",&nf, &fracture[i].theta, 
+      printf("%d \n", i);
+      fscanf(fpo,"%d %d  %f %f %f %d %f %f %d\n",&nf,&nnf, &fracture[i].theta, 
 	     &fracture[i].nvect_xy[0], &fracture[i].nvect_xy[1], &nnf, 
-	     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1],&nnf, &nnf);
+	     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1], &nnf);
      
     }
 
-  fclose(fpp);   
+  fclose(fpo);   
 
   return;
 }

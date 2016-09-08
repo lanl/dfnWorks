@@ -409,7 +409,6 @@ void ParticleTrack ()
 	      ycop=particle3dposit.cord3[1];
 	      zcop=particle3dposit.cord3[2];    
           
-
 	      if (no_out!=1)
                 {
                 
@@ -663,7 +662,7 @@ void ParticleTrack ()
 
 	      int status;
 	      sprintf(filename,"%s/tempdata_%d",maindir,np);
-	     // status = remove(filename);
+	      status = remove(filename);
  
 	      if( status != 0 )
      
