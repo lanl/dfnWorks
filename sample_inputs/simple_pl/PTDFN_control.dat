@@ -43,11 +43,11 @@ out_init: no
 curvature of particles trajectory each segment, from intersection to intersection.
 If it's like a straight line, then the output is less frequent (in case of 
 "out_curv:yes", if "no",  the output file will contain every time step) */
-out_curv: no 
+out_curv: yes 
 /* output into avs file (GMV visualization, Paraview visualization) */
 out_avs: no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
-out_traj: no
+out_traj: yes 
 
 /************* output directories *************************************/
 out_dir: traj /* path and name of directory where all the particle 

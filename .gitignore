@@ -1,0 +1,12 @@
+*.o
+*~
+*.nfs*
+*.swp
+*.pyc
+DFNTrans
+C_uge_correct/correct_uge
+DFN_MESH_Connectivity_Test/ConnectivityTest
+runDFN_mixing.py
+sample_inputs/mixing/
+
+
