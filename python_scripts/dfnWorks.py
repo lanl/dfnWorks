@@ -677,12 +677,23 @@ class dfnworks(Frozen):
 			coordPath = "RectByCood_Input_File_Path"
 			invalid = "\"{}\" is not a valid path."
 
-			if verifyFlag(valueOf(userEs), userEs) == 1 and not os.path.isfile(valueOf(ePath)):
-				error(invalid.format(ePath))
-			if verifyFlag(valueOf(userRs), userRs) == 1 and not os.path.isfile(valueOf(rPath)):
-				error(invalid.format(rPath))
-			if verifyFlag(valueOf(recByCoord), recByCoord) == 1 and not os.path.isfile(valueOf(coordPath)):
-				error(invalid.format(coordPath))    
+			if verifyFlag(valueOf(userEs), userEs) == 1:
+				if not os.path.isfile(valueOf(ePath)):
+					error(invalid.format(ePath))
+				else:
+					copy(valueOf(ePath), self._jobname)
+				
+			if verifyFlag(valueOf(userRs), userRs) == 1:
+				if not os.path.isfile(valueOf(rPath)):
+					error(invalid.format(rPath))
+				else:
+					copy(valueOf(rPath), self._jobname)
+				
+			if verifyFlag(valueOf(recByCoord), recByCoord) == 1:
+				if not os.path.isfile(valueOf(coordPath)):
+					error(invalid.format(coordPath))    
+				else:
+					copy(valueOf(coordPath), self._jobname)
 
 		def aperture():
 			apOption = verifyInt(valueOf('aperture'), 'aperture')
