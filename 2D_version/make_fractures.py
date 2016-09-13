@@ -26,9 +26,6 @@ def sample_location(domain, length, m):
 	y1 = m*(x1 - x0) + y0
 	return (x0,y0,x1,y1)
 
-
-
-
 num_frac = 10
 domain = 2.0
 domainBuffer = 0.5*domain 
@@ -51,10 +48,24 @@ for i in range(num_frac):
 	fractures.append(tmp)
 
 plt.axis([-0.5*domain, 0.5*domain, -0.5*domain, 0.5*domain])
-
 plt.show()
 
-
+print 'Writing out Coordinates'
+f = open('fractures.dat','w+')
+f.write('nRectangles: %d\n'%(num_frac+1))
+f.write('Coordinates:\n')
+coords = '{%f, %f, %f} {%f, %f, %f} {%f, %f, %f} {%f, %f, %f}'
+tmp = coords%(-0.5*domain,-0.5*domain,0,-0.5*domain,0.5*domain,0, \
+	0.5*domain,0.5*domain,0,0.5*domain,-0.5*domain,0)
+f.write('%s\n'%tmp)
+for i in range(num_frac):
+	x0 = fractures[i].x0
+	x1 = fractures[i].x1
+	y0 = fractures[i].y0
+	y1 = fractures[i].y1
+	tmp = coords%(x0,y0,-20,x1,y1,-20,x1,y1,20,x0,y0,20)
+	f.write('%s\n'%tmp)
+f.close()
 
 
 
