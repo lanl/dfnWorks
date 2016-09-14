@@ -1,5 +1,4 @@
 import numpy as np
-from fracture_class import *
 import matplotlib.pylab as plt
 
 class fracture(object):
@@ -26,13 +25,18 @@ def sample_location(domain, length, m):
 	y1 = m*(x1 - x0) + y0
 	return (x0,y0,x1,y1)
 
-num_frac = 10
+num_frac = 100
 domain = 2.0
-domainBuffer = 0.5*domain 
+domainBuffer = 0.5*domain
+d_half  = 0.5*domain
 
 print 'Number of Fractures:', num_frac
 
 fractures = []
+
+xc = []
+yc = []
+
 for i in range(num_frac):
 	tmp = fracture()
 	if i%2 == 0:
@@ -41,8 +45,11 @@ for i in range(num_frac):
 	else:
 		tmp.m = -1
 		tmp.family = 2
-	tmp.length = 2.0
+	tmp.length = 1.0
 	tmp.x0, tmp.y0, tmp.x1, tmp.y1 = sample_location(domain + domainBuffer, tmp.length, tmp.m)
+	
+	xc.append(0.5*(tmp.x0 + tmp.x1))
+	yc.append(0.5*(tmp.y0 + tmp.y1))
 
 	plt.plot([tmp.x0, tmp.x1], [tmp.y0, tmp.y1])
 	fractures.append(tmp)
@@ -50,20 +57,24 @@ for i in range(num_frac):
 plt.axis([-0.5*domain, 0.5*domain, -0.5*domain, 0.5*domain])
 plt.show()
 
+plt.hist(xc)
+plt.hist(yc)
+plt.show()
+
 print 'Writing out Coordinates'
 f = open('fractures.dat','w+')
 f.write('nRectangles: %d\n'%(num_frac+1))
 f.write('Coordinates:\n')
 coords = '{%f, %f, %f} {%f, %f, %f} {%f, %f, %f} {%f, %f, %f}'
-tmp = coords%(-0.5*domain,-0.5*domain,0,-0.5*domain,0.5*domain,0, \
-	0.5*domain,0.5*domain,0,0.5*domain,-0.5*domain,0)
+tmp = coords%(-d_half,-d_half,0,d_half,-d_half,0, \
+	d_half,d_half,0,-d_half,d_half,0)
 f.write('%s\n'%tmp)
 for i in range(num_frac):
 	x0 = fractures[i].x0
 	x1 = fractures[i].x1
 	y0 = fractures[i].y0
 	y1 = fractures[i].y1
-	tmp = coords%(x0,y0,-20,x1,y1,-20,x1,y1,20,x0,y0,20)
+	tmp = coords%(x0,y0,-0.1, x1,y1,-0.1,x1,y1, 0.1,x0,y0,0.1)
 	f.write('%s\n'%tmp)
 f.close()
 
