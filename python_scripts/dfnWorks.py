@@ -1740,8 +1740,8 @@ class dfnworks(Frozen):
 		else:
 		    self._uge_file = uge_file
 
+		
 		uge_file = self._uge_file
-
 		if uge_file == '':
 		    sys.exit('ERROR: Please provide uge filename!')
 		if zone_file == '':
@@ -1753,7 +1753,7 @@ class dfnworks(Frozen):
 		ex_file = zone_file.strip('zone') + 'ex'
 
 		# Opening the input file
-		print('\n--> Opening zone file')
+		print '\n--> Opening zone file: ', zone_file
 		f = open(zone_file, 'r')
 		f.readline()
 		f.readline()
@@ -1959,6 +1959,7 @@ class dfnworks(Frozen):
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
 		#print('--> Writing pflotran uge file from lagrit')
 		os.chdir(self._jobname)
+		os.system('pwd')
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -1979,18 +1980,18 @@ class dfnworks(Frozen):
 		    sys.exit('ERROR: Please provide mesh type!')
 
 		d = inp_file[:-4]
-		d1 = d + '_tet.inp'
-		fid = open('%s.lgi' % d, 'w')  # Open file
-		fid.write('read / avs / ' + inp_file + '/ mo1\n')
-		if hex2tet:
-		    fid.write('create / cmo / cmo_tet\n')
-		    fid.write('grid2grid / hextotet6  /  cmo_tet / mo1\n')
-		    fid.write('dump / avs / ' + '%s' % d1 + ' / cmo_tet \n')  # write avs file
-		    fid.write('dump / pflotran / ' + '%s' % d + ' / cmo_tet / nofilter_zero \n')  # write uge file
-		else:
-		    fid.write('dump / pflotran / ' + '%s' % d + ' / mo1 / nofilter_zero \n')  # write uge file
-		fid.write('finish\n\n')
-		fid.close()
+		#d1 = d + '_tet.inp'
+		#fid = open('%s.lgi' % d, 'w')  # Open file
+		#fid.write('read / avs / ' + inp_file + '/ mo1\n')
+		#if hex2tet:
+		#    fid.write('create / cmo / cmo_tet\n')
+		#    fid.write('grid2grid / hextotet6  /  cmo_tet / mo1\n')
+		#    fid.write('dump / avs / ' + '%s' % d1 + ' / cmo_tet \n')  # write avs file
+		#    fid.write('dump / pflotran / ' + '%s' % d + ' / cmo_tet / nofilter_zero \n')  # write uge file
+		#else:
+		#    fid.write('dump / pflotran / ' + '%s' % d + ' / mo1 / nofilter_zero \n')  # write uge file
+		#fid.write('finish\n\n')
+		#fid.close()
 
 		self._uge_file = d + '.uge'
 
@@ -2033,9 +2034,9 @@ class dfnworks(Frozen):
 
 
 	def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
-
+	
 		print('--> Perms and Correct Volume Areas')
-
+		os.system('pwd')
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -2068,6 +2069,8 @@ class dfnworks(Frozen):
 		if aper_file == '' and self._aper_cell_file == '':
 		    sys.exit('ERROR: aperture file must be specified!')
 
+
+		os.system('pwd')
 		mat_file = 'materialid.dat'
 		t = time()
 		cmd = os.environ['correct_uge_PATH']+ ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
