@@ -243,7 +243,8 @@ class dfnworks(Frozen):
 		'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 		'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 		'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
-		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[]} 
+		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[],
+		'removeFracturesLessThan':[]} 
 
 		unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -255,13 +256,13 @@ class dfnworks(Frozen):
 		'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
 		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path', 'userRecByCoord',
 		'RectByCood_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
-		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease'}
+		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		mandatory = {'stopCondition','domainSize','numOfLayers','outputAllRadii', 'outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease'}
+		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
@@ -1224,7 +1225,7 @@ class dfnworks(Frozen):
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
-				cleanup_dir()
+				mesh.cleanup_dir()
 				sys.exit(1)
 	
 		if production_mode > 0:
