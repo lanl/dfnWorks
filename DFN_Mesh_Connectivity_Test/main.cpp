@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
         node = new Node(triElmts[i].c);
         edgeGraph[index].append(node);
     }
-    
+ 
     //done with tri elmts array
     delete[] triElmts;
 

@@ -15,8 +15,6 @@ LinkedList::~LinkedList() {
     }
 }
 
-
-
 void LinkedList::append(Node* node) {
     if (head == nullptr) {
         head = node;
@@ -38,3 +36,13 @@ Node* LinkedList::find(int id) {
     }
     return curNode;
 }
+
+void LinkedList::printList() {
+    Node* node = head;
+    while (node != nullptr) {
+        std::cout << node->id << "   ";
+        node = node->next;
+    }
+}
+
+

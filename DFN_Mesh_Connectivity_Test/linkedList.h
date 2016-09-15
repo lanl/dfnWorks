@@ -14,6 +14,7 @@ public:
     ~LinkedList();
     void append(Node* node);
     Node* find(int id);
+    void printList();
 };
 
 #endif
