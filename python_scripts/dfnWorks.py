@@ -1225,7 +1225,7 @@ class dfnworks(Frozen):
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
-				cleanup_dir()
+				mesh.cleanup_dir()
 				sys.exit(1)
 	
 		if production_mode > 0:
