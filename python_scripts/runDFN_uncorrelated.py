@@ -6,20 +6,21 @@ def define_paths():
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-for-pflotran'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
+
+	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
+	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnWorks/DFNGen/DFNC++Version'
-	os.environ['DFNTRANS_PATH']='/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0'
-	os.environ['PYTHON_SCRIPTS'] = '/home/jhyman/dfnWorks/dfnWorks-main/python_scripts'
+	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
+	#os.environ['DFNTRANS_PATH']= '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
 	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
-	os.environ['connect_test'] = '/home/jhyman/dfnWorks/dfnWorks-main/DFN_Mesh_Connectivity_Test/ConnectivityTest'
-	os.environ['correct_uge_PATH'] = '/home/jhyman/dfnWorks/dfnWorks-main/C_uge_correct/correct_uge' 
+	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
 	
 	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
 	#os.system('module load pylagrit/june_8_2015')
-
 
 
 lanl_statement = '''
@@ -88,7 +89,7 @@ print ''
 #dfn.dfnGen()
 #dfn.dfnFlow()
 #dfn.dfnTrans()
-#dfn.make_working_directory()
+dfn.make_working_directory()
 #dfn.check_input()
 #dfn.create_network()	
 #dfn.output_report()
@@ -96,15 +97,16 @@ os.chdir(dfn._jobname)
 #os.mkdir('var_1')
 #os.chdir('var_2')
 os.system('pwd')
-#dfn.uncorrelated(2.0)
 ##dfn.dfnFlow()
-#dfn.create_dfnFlow_links()
-#dfn.lagrit2pflotran()
-#dfn.pflotran()
-#dfn.parse_pflotran_vtk()
-#dfn.pflotran_cleanup()
-#os.system('pwd')
-#dfn.create_dfnTrans_links()
+dfn.create_dfnFlow_links()
+dfn.uncorrelated(2.0)
+os.remove('full_mesh_vol_area.uge')
+dfn.lagrit2pflotran()
+dfn.pflotran()
+dfn.parse_pflotran_vtk()
+dfn.pflotran_cleanup()
+os.system('pwd')
+dfn.create_dfnTrans_links()
 dfn.dfnTrans()
 
 main_elapsed = time() - main_time
