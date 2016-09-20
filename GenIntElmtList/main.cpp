@@ -214,7 +214,6 @@ int main(int argc, char **argv) {
     }
     
     for (int i = 0; i < triSize; i++) {
-        file << i+1 << " ";
         if (triElmts[i].onIntersection == true) {
             file << "1\n";
         }
