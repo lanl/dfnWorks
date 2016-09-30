@@ -27,18 +27,21 @@ int main(int argc, char **argv) {
     using namespace std;
 
     //check cmd line args
-    if (argc != 4) {
+    if (argc != 5) {
         cout <<"\nMust inlude cmd line arguments:\n";
         cout << "Arg 1: Path to fracture intersection inp file.\n";
         cout << "Arg 2: Path to intersection node to global node numbers file.\n";
-        cout << "Arg 3: Path to mesh inp file \n\n";
+        cout << "Arg 3: Path to mesh inp file \n";
+        cout << "Arg 4: Path to output filename\n";
+
         exit(1);
     }
 
     #ifdef DEBUG
     cout << "\nIntersections file: " << argv[1] << endl;
     cout << "Global node numbers file: " << argv[2] << endl;
-    cout << "Mesh inp file: " << argv[3] << endl << endl;
+    cout << "Mesh inp file: " << argv[3] << endl;
+    cout << "Output folder: " << argv[4[ << endl << endl;
     #endif
     
     int connSize; //connSize is set in readIntersectionConnectivity()
@@ -93,21 +96,18 @@ int main(int argc, char **argv) {
     for (int i = 0; i < triSize; i++) {
         
         int index = triElmts[i].a - minId;
-        Node* node = new Node(triElmts[i].b);
+        Node* node = new Node(triElmts[i].b, &triElmts[i]);
         edgeGraph[index].append(node);
         
         index = triElmts[i].a - minId;
-        node = new Node(triElmts[i].c);
+        node = new Node(triElmts[i].c, &triElmts[i]);
         edgeGraph[index].append(node);
 
         index = triElmts[i].b - minId;
-        node = new Node(triElmts[i].c);
+        node = new Node(triElmts[i].c, &triElmts[i]);
         edgeGraph[index].append(node);
     }
  
-    //done with tri elmts array
-    delete[] triElmts;
-
     #ifdef CHECKALLNODES
     bool error = false;
     #endif
@@ -146,6 +146,7 @@ int main(int argc, char **argv) {
 //            #endif
             delete[] connections;
             delete[] edgeGraph;
+            delete[] triElmts;
             return 1;
         }
         
@@ -156,22 +157,77 @@ int main(int argc, char **argv) {
         Node* node = edgeGraph[searchIdx].find(searchFor);
         if (node == nullptr) {
             // Clean up
-  			std::cout << "Did not find connection (" << searchIdx+minId << ", " << searchFor << ")\n";
+  			std::cout << "Did not find first element for connection (" << searchIdx+minId << ", " << searchFor << ")\n";
             
             #ifdef CHECKALLNODES
             error = true;
             #else
             delete[] connections;
             delete[] edgeGraph;
+            delete[] triElmts;
             return 1;
             #endif
         }
-    }
+        else {
+            node->tri->onIntersection = true;
+        }
 
+        // There are two entreis for each pair of nodes or a connection. One for each Tri Element
+        // Find the next one and mark it as being on intersection as well.
+        node = node->next;
+        while (node->id != searchFor &&  node != nullptr) {
+            node = node->next;
+        }
+        if (node == nullptr) {
+            // Clean up
+  			std::cout << "Did not find second element for connection (" << searchIdx+minId << ", " << searchFor << ")\n";
+            
+            #ifdef CHECKALLNODES
+            error = true;
+            #else
+            delete[] connections;
+            delete[] edgeGraph;
+            delete[] triElmts;
+            return 1;
+            #endif
+        }
+        else {
+            node->tri->onIntersection = true;
+        }
+
+        
+        
+        
+    }
 //    std::cout<<"Intersection connectivity verified.\n";
     // Clean up
+
+    // Write Tri ELement Data, tags elements on intersection with '1'
+    std::ofstream file;
+    file.open(argv[4], std::ofstream::out | std::ofstream::trunc);
+    if (!file.is_open()) {
+        std::cout << "Error opening file: " << argv[4] << "\n";
+            delete[] connections;
+            delete[] edgeGraph;
+            delete[] triElmts;
+            return 1;
+    }
+    
+    for (int i = 0; i < triSize; i++) {
+        if (triElmts[i].onIntersection == true) {
+            file << "1\n";
+        }
+        else {
+            file << "0\n";
+        }
+    }
+
+    file.close();
+
+
     delete[] connections;
     delete[] edgeGraph;
+    delete[] triElmts;
     
     #ifdef CHECKALLNODES
     if (error == true) {

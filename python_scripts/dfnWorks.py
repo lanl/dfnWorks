@@ -95,12 +95,14 @@ class dfnworks(Frozen):
 		self.dumpTime('Function: lagrit2pflotran', time() - tic)	
 	
 		tic = time()
-		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
-		self.zone2ex(uge_file='full_mesh_vol_area.uge', zone_file='pboundary_front_s.zone',face='south')
-		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_left_w.zone',face='west')
-		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_right_e.zone',face='east')
-		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_top.zone',face='top')
-		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_bottom.zone',face='bottom')
+		#self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
+		#self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
+		#self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
+		#self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
+		#self.zone2ex(zone_file='pboundary_top.zone',face='top')
+		#self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
+		self.zone2ex(zone_file='all')
+
 		toc = time() 
 		self.dumpTime('Function: zone2ex', time() - tic)	
 
@@ -243,7 +245,8 @@ class dfnworks(Frozen):
 		'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 		'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 		'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
-		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 'removeFracturesLessThan':[]} 
+		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 
+		'removeFracturesLessThan':[]} 
 
 		unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -1224,6 +1227,7 @@ class dfnworks(Frozen):
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
+
 				cleanup_dir()
 				#sys.exit(1)
 	
@@ -1732,118 +1736,130 @@ class dfnworks(Frozen):
 				 'Unstructured pflotran grid')
 		vtk.tofile(vtk_file)
 
-	def zone2ex(self, uge_file='', zone_file='', face='', ):
-		os.chdir(self._jobname)
+
+	def zone2ex(self, uge_file='', zone_file='', face=''):
+
+		print ('='*80)
+		print('\n Converting zone files to ex')	
 		if self._uge_file:
 		    uge_file = self._uge_file
 		else:
 		    self._uge_file = uge_file
 
 		uge_file = self._uge_file
-
 		if uge_file == '':
 		    sys.exit('ERROR: Please provide uge filename!')
-		if zone_file == '':
-		    sys.exit('ERROR: Please provide boundary zone filename!')
-		if face == '':
-		    sys.exit('ERROR: Please provide face name among: top, bottom, north, south, east, west !')
-
-		# Ex filename
-		ex_file = zone_file.strip('zone') + 'ex'
-
-		# Opening the input file
-		print('\n--> Opening zone file')
-		f = open(zone_file, 'r')
-		f.readline()
-		f.readline()
-		f.readline()
-
-		# Read number of boundary nodes
-		print('--> Calculating number of nodes')
-		NumNodes = int(f.readline())
-
-		Node_array = np.zeros(NumNodes, 'int')
-
-		# Read the boundary node ids
-		print('--> Reading boundary node ids')
-
-		if (NumNodes < 10):
-		    g = f.readline()
-		    node_array = g.split()
-		    # Convert string to integer array
-		    node_array = [int(id) for id in node_array]
-		    Node_array = np.asarray(node_array)
-		else:
-		    for i in range(NumNodes / 10 + 1):
-			g = f.readline()
-			node_array = g.split()
-			# Convert string to integer array
-			node_array = [int(id) for id in node_array]
-			if (NumNodes - 10 * i < 10):
-			    for j in range(NumNodes % 10):
-				Node_array[i * 10 + j] = node_array[j]
-			else:
-			    for j in range(10):
-				Node_array[i * 10 + j] = node_array[j]
-		f.close()
-
-		print('--> Finished with zone file')
-
 		# Opening uge file
-		print('--> Opening uge file')
-		f = open(uge_file, 'r')
+		print('\n--> Opening uge file')
+		fuge = open(uge_file, 'r')
 
 		# Reading cell ids, cells centers and cell volumes
-		g = f.readline()
-		g = g.split()
-		NumCells = int(g[1])
+		line = fuge.readline()
+		line = line.split()
+		NumCells = int(line[1])
 
 		Cell_id = np.zeros(NumCells, 'int')
 		Cell_coord = np.zeros((NumCells, 3), 'float')
 		Cell_vol = np.zeros(NumCells, 'float')
-		Boundary_cell_area = np.zeros(NumNodes, 'float')
+
 		for cells in range(NumCells):
-		    g = f.readline()
-		    g = g.split()
-		    Cell_id[cells] = int(g.pop(0))
-		    g = [float(id) for id in g]
-		    Cell_vol[cells] = g.pop(3)
-		    Cell_coord[cells] = g
+		    line = fuge.readline()
+		    line = line.split()
+		    Cell_id[cells] = int(line.pop(0))
+		    line = [float(id) for id in line]
+		    Cell_vol[cells] = line.pop(3)
+		    Cell_coord[cells] = line
+		fuge.close()
 
-		f.close()
+		print('--> Finished with uge file\n')
 
-		print('--> Finished with uge file')
+		# loop through zone files
+		if zone_file is 'all':
+			zone_files = ['pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
+					'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
+			face_names = ['south', 'north', 'west', 'east', 'top', 'bottom']
+		else: 
+			if zone_file == '':
+			    sys.exit('ERROR: Please provide boundary zone filename!')
+			if face == '':
+			    sys.exit('ERROR: Please provide face name among: top, bottom, north, south, east, west !')
+			zone_files = [zone_file]
+			face_names = [face]
+			
+		for iface,zone_file in enumerate(zone_files):
+			face = face_names[iface]
+			# Ex filename
+			ex_file = zone_file.strip('zone') + 'ex'
 
-		for i in range(NumNodes):
-		    Boundary_cell_area[i] = 1.e20  # Fix the area to a large number
+			# Opening the input file
+			print '--> Opening zone file: ', zone_file
+			fzone = open(zone_file, 'r')
+			fzone.readline()
+			fzone.readline()
+			fzone.readline()
 
-		print('--> Finished calculating boundary connections')
+			# Read number of boundary nodes
+			print('--> Calculating number of nodes')
+			NumNodes = int(fzone.readline())
+			Node_array = np.zeros(NumNodes, 'int')
+			# Read the boundary node ids
+			print('--> Reading boundary node ids')
 
-		boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
-		epsilon = 1e-0  # Make distance really small
-		if (face == 'top'):
-		    boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
-		elif (face == 'bottom'):
-		    boundary_cell_coord = [[cell[0], cell[1], cell[2] - epsilon] for cell in boundary_cell_coord]
-		elif (face == 'north'):
-		    boundary_cell_coord = [[cell[0], cell[1] + epsilon, cell[2]] for cell in boundary_cell_coord]
-		elif (face == 'south'):
-		    boundary_cell_coord = [[cell[0], cell[1] - epsilon, cell[2]] for cell in boundary_cell_coord]
-		elif (face == 'east'):
-		    boundary_cell_coord = [[cell[0] + epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
-		elif (face == 'west'):
-		    boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
-		else:
-		    sys.exit('ERROR: unknown face. Select one of: top, bottom, east, west, north, south.')
+			if (NumNodes < 10):
+			    g = fzone.readline()
+			    node_array = g.split()
+			    # Convert string to integer array
+			    node_array = [int(id) for id in node_array]
+			    Node_array = np.asarray(node_array)
+			else:
+			    for i in range(NumNodes / 10 + 1):
+				g = fzone.readline()
+				node_array = g.split()
+				# Convert string to integer array
+				node_array = [int(id) for id in node_array]
+				if (NumNodes - 10 * i < 10):
+				    for j in range(NumNodes % 10):
+					Node_array[i * 10 + j] = node_array[j]
+				else:
+				    for j in range(10):
+					Node_array[i * 10 + j] = node_array[j]
+			fzone.close()
+			print('--> Finished with zone file')
 
-		with open(ex_file, 'w') as f:
-		    f.write('CONNECTIONS\t%i\n' % Node_array.size)
-		    for idx, cell in enumerate(boundary_cell_coord):
-			f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
-			    Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
+			Boundary_cell_area = np.zeros(NumNodes, 'float')
+			for i in range(NumNodes):
+			    Boundary_cell_area[i] = 1.e20  # Fix the area to a large number
 
-		print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file)
+			print('--> Finished calculating boundary connections')
 
+			boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
+			epsilon = 1e-0  # Make distance really small
+			if (face == 'top'):
+			    boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
+			elif (face == 'bottom'):
+			    boundary_cell_coord = [[cell[0], cell[1], cell[2] - epsilon] for cell in boundary_cell_coord]
+			elif (face == 'north'):
+			    boundary_cell_coord = [[cell[0], cell[1] + epsilon, cell[2]] for cell in boundary_cell_coord]
+			elif (face == 'south'):
+			    boundary_cell_coord = [[cell[0], cell[1] - epsilon, cell[2]] for cell in boundary_cell_coord]
+			elif (face == 'east'):
+			    boundary_cell_coord = [[cell[0] + epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
+			elif (face == 'west'):
+			    boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
+			else:
+			    sys.exit('ERROR: unknown face. Select one of: top, bottom, east, west, north, south.')
+
+			with open(ex_file, 'w') as f:
+			    f.write('CONNECTIONS\t%i\n' % Node_array.size)
+			    for idx, cell in enumerate(boundary_cell_coord):
+				f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
+				    Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
+
+			print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file)
+			print('\n')
+
+		print('\n Converting zone files to ex complete')	
+		print ('='*80)
 
 	def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
 			     combined_uge_file='combined.uge'):
@@ -1957,7 +1973,6 @@ class dfnworks(Frozen):
 
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
 		#print('--> Writing pflotran uge file from lagrit')
-		os.chdir(self._jobname)
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -1978,18 +1993,18 @@ class dfnworks(Frozen):
 		    sys.exit('ERROR: Please provide mesh type!')
 
 		d = inp_file[:-4]
-		d1 = d + '_tet.inp'
-		fid = open('%s.lgi' % d, 'w')  # Open file
-		fid.write('read / avs / ' + inp_file + '/ mo1\n')
-		if hex2tet:
-		    fid.write('create / cmo / cmo_tet\n')
-		    fid.write('grid2grid / hextotet6  /  cmo_tet / mo1\n')
-		    fid.write('dump / avs / ' + '%s' % d1 + ' / cmo_tet \n')  # write avs file
-		    fid.write('dump / pflotran / ' + '%s' % d + ' / cmo_tet / nofilter_zero \n')  # write uge file
-		else:
-		    fid.write('dump / pflotran / ' + '%s' % d + ' / mo1 / nofilter_zero \n')  # write uge file
-		fid.write('finish\n\n')
-		fid.close()
+		#d1 = d + '_tet.inp'
+		#fid = open('%s.lgi' % d, 'w')  # Open file
+		#fid.write('read / avs / ' + inp_file + '/ mo1\n')
+		#if hex2tet:
+		#    fid.write('create / cmo / cmo_tet\n')
+		#    fid.write('grid2grid / hextotet6  /  cmo_tet / mo1\n')
+		#    fid.write('dump / avs / ' + '%s' % d1 + ' / cmo_tet \n')  # write avs file
+		#    fid.write('dump / pflotran / ' + '%s' % d + ' / cmo_tet / nofilter_zero \n')  # write uge file
+		#else:
+		#    fid.write('dump / pflotran / ' + '%s' % d + ' / mo1 / nofilter_zero \n')  # write uge file
+		#fid.write('finish\n\n')
+		#fid.close()
 
 		self._uge_file = d + '.uge'
 
@@ -2032,9 +2047,9 @@ class dfnworks(Frozen):
 
 
 	def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
-
+	
 		print('--> Perms and Correct Volume Areas')
-
+		os.system('pwd')
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -2067,6 +2082,8 @@ class dfnworks(Frozen):
 		if aper_file == '' and self._aper_cell_file == '':
 		    sys.exit('ERROR: aperture file must be specified!')
 
+
+		os.system('pwd')
 		mat_file = 'materialid.dat'
 		t = time()
 		cmd = os.environ['correct_uge_PATH']+ ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
@@ -2132,11 +2149,16 @@ class dfnworks(Frozen):
 
 	def pflotran_cleanup(self):
 		print '--> Processing PFLOTRAN output' 
-		os.system('cat dfn_explicit-cellinfo-001-rank*.dat > cellinfo.dat')
-		os.system('cat dfn_explicit-darcyvel-001-rank*.dat > darcyvel.dat') 
-		for fl in glob.glob('dfn_explicit-cellinfo*.dat'):
+		
+		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-cellinfo-001-rank*.dat > cellinfo.dat'
+		os.system(cmd)
+
+		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-darcyvel-001-rank*.dat > darcyvel.dat'
+		os.system(cmd)
+
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
 			os.remove(fl)	
-		for fl in glob.glob('dfn_explicit-darcyvel*.dat'):
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
 			os.remove(fl)	
 
 	def uncorrelated(self, sigma):
