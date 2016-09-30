@@ -15,7 +15,8 @@ def define_paths():
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
-	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_lin' 
+	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_ulin3.2'
+
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
 	
@@ -56,7 +57,7 @@ dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/P
 # USER INPUT FILES, ALL PATHS MUST BE VALID	
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/1L_network.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/multi_rect.dat'	
-dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/CGU_networks/pl_test.dat'	
+#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/CGU_networks/pl_test.dat'	
 #dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
 #dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
 
@@ -94,14 +95,17 @@ print '--> dfnFlow input file: ',dfnFlow_run_file
 print '--> dfnTrans input file: ',dfnTrans_run_file
 print ''
 
-dfn.make_working_directory()
-dfn.check_input()
-dfn.create_network()
 
 
-#dfn.dfnGen()
-#dfn.dfnFlow()
-#dfn.dfnTrans()
+
+#dfn.make_working_directory()
+#dfn.check_input()
+#dfn.create_network()
+
+
+dfn.dfnGen()
+dfn.dfnFlow()
+dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 print jobname, 'Complete'

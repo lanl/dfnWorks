@@ -1971,8 +1971,6 @@ class dfnworks(Frozen):
 
 	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
 		#print('--> Writing pflotran uge file from lagrit')
-		os.chdir(self._jobname)
-		os.system('pwd')
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
@@ -2149,11 +2147,16 @@ class dfnworks(Frozen):
 
 	def pflotran_cleanup(self):
 		print '--> Processing PFLOTRAN output' 
-		os.system('cat dfn_explicit-cellinfo-001-rank*.dat > cellinfo.dat')
-		os.system('cat dfn_explicit-darcyvel-001-rank*.dat > darcyvel.dat') 
-		for fl in glob.glob('dfn_explicit-cellinfo*.dat'):
+		
+		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-cellinfo-001-rank*.dat > cellinfo.dat'
+		os.system(cmd)
+
+		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-darcyvel-001-rank*.dat > darcyvel.dat'
+		os.system(cmd)
+
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
 			os.remove(fl)	
-		for fl in glob.glob('dfn_explicit-darcyvel*.dat'):
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
 			os.remove(fl)	
 
 	def uncorrelated(self, sigma):
