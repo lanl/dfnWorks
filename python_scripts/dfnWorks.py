@@ -134,7 +134,7 @@ class dfnworks(Frozen):
 		except:
 			print '--> ERROR: Problem copying PTDFN_control.dat file'
 		tic = time()	
-		failure = os.system('./DFNTrans')
+		failure = os.system('./DFNTrans PTDFN_control.dat')
 		self.dumpTime('Process: dfnTrans', time() - tic)	
 		if failure == 0:
 			print '--> Running dfnTrans complete'	
