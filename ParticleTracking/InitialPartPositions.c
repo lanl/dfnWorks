@@ -20,7 +20,7 @@ int InitPos()
   /***** Function defines initial positions of particles *************/
   /***** Locates parts_fracture number of particles on edge of fracture on flow_in zone
 	 with equal distance between each other *********************/
-   int i, k_current, k_new=0, numbf=1,  frc,firstn,lastn, flag_in=0,parts_fracture;
+  int i, k_current, k_new=0, numbf=1,  frc,firstn,lastn, flag_in=0,parts_fracture;
   struct inpfile initfile;
   double parts_dist=0;
   int  zonenumb_in=0, first_ind=0, last_ind=0;
@@ -29,13 +29,13 @@ int InitPos()
   
    
   /* calculate number of fractures in in-flow boundary face of domain ****/
- // printf("fract %d ", node[nodezonein[0]-1].fracture[0]);
-   for (i=0; i<nzone_in; i++)
+  // printf("fract %d ", node[nodezonein[0]-1].fracture[0]);
+  for (i=0; i<nzone_in; i++)
     {
       
       if ((i>0)&&(node[nodezonein[i]-1].fracture[0]!=node[nodezonein[i-1]-1].fracture[0]))
 	{
-//	printf("fract %d ", node[nodezonein[i]-1].fracture[0]);
+	  //	printf("fract %d ", node[nodezonein[i]-1].fracture[0]);
 	  numbf++;
 	}
     }
@@ -53,14 +53,14 @@ int InitPos()
     {
       
       flag_in=1;
-       flag_w=1; 
+      flag_w=1; 
       initfile = Control_Data("init_partn:",11 );
       parts_fracture=initfile.flag;
       printf("\n  %d  particles per boundary fracture edge \n", parts_fracture);
       npart=(numbf+1)*parts_fracture;
        
  
-       /*  memory allocatation for particle structures */
+      /*  memory allocatation for particle structures */
       particle=(struct contam*) malloc (npart*sizeof(struct contam));
     }
   else
@@ -71,14 +71,14 @@ int InitPos()
 	{
 	  flag_in=2;
 	  flag_w=1;
-     /* second option: calculate total length of boundary edges */
-     /* define the distance between particles and place particles */
-     /* equidistant from each other on all edges */
+	  /* second option: calculate total length of boundary edges */
+	  /* define the distance between particles and place particles */
+	  /* equidistant from each other on all edges */
      
 	  initfile = Control_Data("init_npart:",11 );
 	  parts_fracture=initfile.flag;
 	  npart=(numbf)*parts_fracture*2;
-	   /*  memory allocatation for particle structures */
+	  /*  memory allocatation for particle structures */
 	  particle=(struct contam*) malloc ((npart)*sizeof(struct contam));
 	  // define a distance between particles
      
@@ -107,147 +107,150 @@ int InitPos()
 	}  
       else
 	{
-      initfile=Control_File("init_oneregion:",15);
-      res=strncmp(initfile.filename,"yes",3);
-      if (res==0)
-	{
-	  flag_in=3;
-	  flag_w=1;
-	  /* third option: user specifies a region and all particles start */
-	  /* from the edges that fit inside the region */
+	  initfile=Control_File("init_oneregion:",15);
+	  res=strncmp(initfile.filename,"yes",3);
+	  if (res==0)
+	    {
+	      flag_in=3;
+	      flag_w=1;
+	      /* third option: user specifies a region and all particles start */
+	      /* from the edges that fit inside the region */
 	  
-	  initfile = Control_Data("in_partn:",9 );
-	  npart=initfile.flag;
-	   /*  memory allocatation for particle structures */
-	  particle=(struct contam*) malloc ((npart*2)*sizeof(struct contam));
-	  printf("\n Initially particles have the same starting region \n");
+	      initfile = Control_Data("in_partn:",9 );
+	      npart=initfile.flag;
+	      /*  memory allocatation for particle structures */
+	      particle=(struct contam*) malloc ((npart*2)*sizeof(struct contam));
+	      printf("\n Initially particles have the same starting region \n");
       
-	  initfile = Control_Param("in_xmin:",8 );
-	  ixmin=initfile.param;    
-	  initfile = Control_Param("in_xmax:",8 );
-	  ixmax=initfile.param; 
-	  initfile = Control_Param("in_ymin:",8 );
-	  iymin=initfile.param; 
-	  initfile = Control_Param("in_ymax:",8 );
-	  iymax=initfile.param; 
-	  initfile = Control_Param("in_zmin:",8 );
-	  izmin=initfile.param; 
-	  initfile = Control_Param("in_zmax:",8 );
-	  izmax=initfile.param; 
+	      initfile = Control_Param("in_xmin:",8 );
+	      ixmin=initfile.param;    
+	      initfile = Control_Param("in_xmax:",8 );
+	      ixmax=initfile.param; 
+	      initfile = Control_Param("in_ymin:",8 );
+	      iymin=initfile.param; 
+	      initfile = Control_Param("in_ymax:",8 );
+	      iymax=initfile.param; 
+	      initfile = Control_Param("in_zmin:",8 );
+	      izmin=initfile.param; 
+	      initfile = Control_Param("in_zmax:",8 );
+	      izmax=initfile.param; 
       
-	  initfile = Control_Data("in-flow-boundary:",17 );
-	  zonenumb_in=initfile.flag;
-          /* define coordinations of region according to in-flow zone */
-	  if ((zonenumb_in==1)||(zonenumb_in==2)) 
-	    { 
-	      px[0]=ixmin;
-	      py[0]=iymin;
-	      px[1]=ixmin;
-	      py[1]=iymax;
-	      px[2]=ixmax;
-	      py[2]=iymax;
-	      px[3]=ixmax;
-	      py[3]=iymin;
-	    }
+	      initfile = Control_Data("in-flow-boundary:",17 );
+	      zonenumb_in=initfile.flag;
+	      /* define coordinations of region according to in-flow zone */
+	      if ((zonenumb_in==1)||(zonenumb_in==2)) 
+		{ 
+		  px[0]=ixmin;
+		  py[0]=iymin;
+		  px[1]=ixmin;
+		  py[1]=iymax;
+		  px[2]=ixmax;
+		  py[2]=iymax;
+		  px[3]=ixmax;
+		  py[3]=iymin;
+		}
        
-	  if ((zonenumb_in==3)||(zonenumb_in==5)) 
-	    { 
-	      px[0]=izmin;
-	      py[0]=iymin;
-	      px[1]=izmin;
-	      py[1]=iymax;
-	      px[2]=izmax;
-	      py[2]=iymax;
-	      px[3]=izmax;
-	      py[3]=iymin;
-	    }
+	      if ((zonenumb_in==3)||(zonenumb_in==5)) 
+		{ 
+		  px[0]=izmin;
+		  py[0]=iymin;
+		  px[1]=izmin;
+		  py[1]=iymax;
+		  px[2]=izmax;
+		  py[2]=iymax;
+		  px[3]=izmax;
+		  py[3]=iymin;
+		}
        
-	  if ((zonenumb_in==4)||(zonenumb_in==6)) 
-	    { 
-	      px[0]=ixmin;
-	      py[0]=izmin;
-	      px[1]=ixmin;
-	      py[1]=izmax;
-	      px[2]=ixmax;
-	      py[2]=izmax;
-	      px[3]=ixmax;
-	      py[3]=izmin;
+	      if ((zonenumb_in==4)||(zonenumb_in==6)) 
+		{ 
+		  px[0]=ixmin;
+		  py[0]=izmin;
+		  px[1]=ixmin;
+		  py[1]=izmax;
+		  px[2]=ixmax;
+		  py[2]=izmax;
+		  px[3]=ixmax;
+		  py[3]=izmin;
+		}
 	    }
-	}
-    else
-    {
- // if particles will be set randomly over all fractures surface
-     initfile=Control_File("init_random:",12);
-      res=strncmp(initfile.filename,"yes",3);
-      if (res==0)
-	{
-	  flag_in=4;	
-          initfile = Control_Data("in_randpart:",12 );
-	  npart=initfile.flag;
-	   /*  memory allocatation for particle structures */
-	  particle=(struct contam*) malloc ((npart+1)*sizeof(struct contam));
-	  printf("\n Initially particles will be distributed randomly over all fracture surfaces \n");	  
+	  else
+	    {
+	      // if particles will be set randomly over all fractures surface
+	      initfile=Control_File("init_random:",12);
+	      res=strncmp(initfile.filename,"yes",3);
+	      if (res==0)
+		{
+		  flag_in=4;	
+		  initfile = Control_Data("in_randpart:",12 );
+		  npart=initfile.flag;
+		  /*  memory allocatation for particle structures */
+		  particle=(struct contam*) malloc ((npart+1)*sizeof(struct contam));
+		  printf("\n Initially particles will be distributed randomly over all fracture surfaces \n");	  
 	 
-          double random_number=0, sum_aperture=0.0; 
+		  double random_number=0, sum_aperture=0.0; 
 	  
-	  unsigned int currentcell, k_curr=0;
+		  unsigned int currentcell, k_curr=0;
 	  
        
-	 do
-	   {
+		  do
+		    {
 	   
-	 random_number=drand48();
+		      random_number=drand48();
 	     
-         currentcell=random_number*ncells; 
+		      currentcell=random_number*ncells; 
         
           
-       if ((currentcell!=0) && (((node[cell[currentcell-1].node_ind[0]-1].typeN<200)||(node[cell[currentcell-1].node_ind[0]-1].typeN>250))&& ((node[cell[currentcell-1].node_ind[1]-1].typeN<200)||(node[cell[currentcell-1].node_ind[1]-1].typeN>250)) && ((node[cell[currentcell-1].node_ind[2]-1].typeN<200)||(node[cell[currentcell-1].node_ind[2]-1].typeN>250))))
-    	  {
+		      if ((currentcell!=0) && (((node[cell[currentcell-1].node_ind[0]-1].typeN<200)||(node[cell[currentcell-1].node_ind[0]-1].typeN>250))&& ((node[cell[currentcell-1].node_ind[1]-1].typeN<200)||(node[cell[currentcell-1].node_ind[1]-1].typeN>250)) && ((node[cell[currentcell-1].node_ind[2]-1].typeN<200)||(node[cell[currentcell-1].node_ind[2]-1].typeN>250))))
+			{
     	   
-    	  particle[k_curr].velocity[0]=0.;
-          particle[k_curr].velocity[1]=0.;
-    	  particle[k_curr].fracture=cell[currentcell-1].fracture;
-          particle[k_curr].cell=currentcell;
-     	  particle[k_curr].time=0.0;    
-       	  Moving2Center (k_curr, currentcell);
-       	  int insc;
-       	  insc=InsideCell (currentcell);
-          sum_aperture=sum_aperture+node[cell[currentcell-1].node_ind[0]-1].aperture;
-	    k_curr++;
-	 }
+			  particle[k_curr].velocity[0]=0.;
+			  particle[k_curr].velocity[1]=0.;
+			  particle[k_curr].fracture=cell[currentcell-1].fracture;
+			  particle[k_curr].cell=currentcell;
+			  particle[k_curr].time=0.0;    
+			  Moving2Center (k_curr, currentcell);
+			  int insc;
+			  insc=InsideCell (currentcell);
+			  sum_aperture=sum_aperture+node[cell[currentcell-1].node_ind[0]-1].aperture;
+			  k_curr++;
+			}
 	
-	 }
-	 while(k_curr!=npart);
+		    }
+		  while(k_curr!=npart);
 
 
 	 
-	   k_new=k_curr;
+		  k_new=k_curr;
 
-	   for (i=0; i<npart; i++)
-	      {
-	   particle[i].fl_weight=node[cell[particle[i].cell-1].node_ind[0]-1].aperture/sum_aperture;  
-	      }
-	} //end if flag_in=4
-         else
-         {
-         // if particles are set randomly in rock matrix
-      initfile=Control_File("init_matrix:",12);
-      res=strncmp(initfile.filename,"yes",3);
-      if (res==0)
-	{
-	printf(" Initially particles are placed in rock matrix randomly. ");
-	printf(" The closest cells to initial particles positions "); 
-	printf(" will be set as starting point in DFN. ");
-	  flag_in=5;	
-         InitInMatrix(); 
-         k_new=npart;
-           } //end if/else flag_in=5
+		  for (i=0; i<npart; i++)
+		    {
+		      particle[i].fl_weight=node[cell[particle[i].cell-1].node_ind[0]-1].aperture/sum_aperture;  
+		    }
+		} //end if flag_in=4
+	      else
+		{
+		  // if particles are set randomly in rock matrix
+		  initfile=Control_File_Optional("init_matrix:",12);
+		  if (initfile.flag>0)
+		    {
+		      res=strncmp(initfile.filename,"yes",3);
+		      if (res==0)
+			{
+			  printf(" Initially particles are placed in rock matrix randomly. ");
+			  printf(" The closest cells to initial particles positions "); 
+			  printf(" will be set as starting point in DFN. ");
+			  flag_in=5;	
+			  InitInMatrix(); 
+			  k_new=npart;
+			}
+		    } //end if/else flag_in=5
            
-         } //end if flag_in=4
+		} //end if flag_in=4
          
-      }	//end if/else flag_in=3
+	    }	//end if/else flag_in=3
       
-      } //end if /else flag_in=2
+	} //end if /else flag_in=2
       
     } //end if/else flag_in=1    
            
@@ -279,10 +282,10 @@ int InitPos()
   
   /*** loop on all nodes in zone: define the boundary nodes for each fracture ****/
   k_current=0;
-//  fprintf(inp,"%d\n", nzone_in);
+  //  fprintf(inp,"%d\n", nzone_in);
   for (i=0; i<nzone_in-1; i++)
     {
-//    fprintf(inp, " %d %d %d  %d %d %d\n", i,nodezonein[i], node[nodezonein[i]-1].fracture[0], node[nodezonein[i]-1].fracture[1], firstn, lastn);
+      //    fprintf(inp, " %d %d %d  %d %d %d\n", i,nodezonein[i], node[nodezonein[i]-1].fracture[0], node[nodezonein[i]-1].fracture[1], firstn, lastn);
      
     
       if (node[nodezonein[i]-1].fracture[0]==frc)
@@ -300,7 +303,7 @@ int InitPos()
 		  lastn=nodezonein[i];
 		  last_ind=i;
 		}
-//	  fprintf(inp,"first coord, %d %d\n",firstn, lastn);	
+	      //	  fprintf(inp,"first coord, %d %d\n",firstn, lastn);	
 	    }
 	  else
 	    {
@@ -314,7 +317,7 @@ int InitPos()
 		  lastn=nodezonein[i];
 		  last_ind=i;
 		}  
-//		fprintf(inp,"second coord, %d %d\n",firstn, lastn);	  
+	      //		fprintf(inp,"second coord, %d %d\n",firstn, lastn);	  
 	    }
 	
 
@@ -333,11 +336,11 @@ int InitPos()
 	    {  
 	     
 	      if (flag_in==2)
-	      {
+		{
 	      
-		k_new=InitParticles_eq (k_current, firstn, lastn, parts_dist, first_ind, last_ind);
-//		printf("fract first %d fract last %d number parts %d\n", node[firstn-1].fracture[0], node[lastn-1].fracture[0], k_new);
-	      }
+		  k_new=InitParticles_eq (k_current, firstn, lastn, parts_dist, first_ind, last_ind);
+		  //		printf("fract first %d fract last %d number parts %d\n", node[firstn-1].fracture[0], node[lastn-1].fracture[0], k_new);
+		}
 	      if (flag_in==1)
 		k_new=InitParticles_np (k_current, firstn, lastn, parts_fracture, first_ind, last_ind);
 	      
@@ -348,7 +351,7 @@ int InitPos()
             
 		  double cx1=0, cx2=0, cy1=0, cy2=0;
            
-           /* define ends points of fracture edge, then calculate an intersection with starting region */ 
+		  /* define ends points of fracture edge, then calculate an intersection with starting region */ 
 		  inter_p[frc_count][0]=1e-10;
 		  inter_p[frc_count][1]=1e-10;
 		  inter_p[frc_count][2]=1e-10;
@@ -415,7 +418,7 @@ int InitPos()
 		  double pr1, pr2, pr3, pr4, p_x, p_y;
 		  int ii;
      
-         /* define intersection points of boundary fracture edges and starting region sides*/ 
+		  /* define intersection points of boundary fracture edges and starting region sides*/ 
 		  for (ii=0; ii<4; ii++)
 		    {
 		      int kk;
@@ -457,34 +460,34 @@ int InitPos()
 		} //end of flag
             }
             
-	      if (i<nzone_in-2)
-		{
-		  frc=node[nodezonein[i]-1].fracture[0];
+	  if (i<nzone_in-2)
+	    {
+	      frc=node[nodezonein[i]-1].fracture[0];
          
-		  firstn=nodezonein[i];
-		  first_ind=i;
-		  lastn=nodezonein[i];
-		  last_ind=i;
-//		  fprintf(inp,"p %d %d %d %d\n", i, frc, firstn, lastn); 
-		  if (node[nodezonein[i+1]-1].fracture[0]==frc)
+	      firstn=nodezonein[i];
+	      first_ind=i;
+	      lastn=nodezonein[i];
+	      last_ind=i;
+	      //		  fprintf(inp,"p %d %d %d %d\n", i, frc, firstn, lastn); 
+	      if (node[nodezonein[i+1]-1].fracture[0]==frc)
+		{
+		  if (abs(node[nodezonein[i]-1].coord[0])-abs(node[nodezonein[i+1]-1].coord[0])<1e-10)
+		    {   
+		      firstcoor=1;
+		      secondcoor=2;
+		    } 
+		  else
 		    {
-		      if (abs(node[nodezonein[i]-1].coord[0])-abs(node[nodezonein[i+1]-1].coord[0])<1e-10)
-			{   
-			  firstcoor=1;
-			  secondcoor=2;
-			} 
-		      else
-			{
-			  firstcoor=0;
+		      firstcoor=0;
    
-			  if (abs(node[nodezonein[i]-1].coord[1])-abs(node[nodezonein[i+1]-1].coord[1])<1e-10)
+		      if (abs(node[nodezonein[i]-1].coord[1])-abs(node[nodezonein[i+1]-1].coord[1])<1e-10)
       
-			    secondcoor=2;
-			  else
-			    secondcoor=1;
-			} 
-		    }
+			secondcoor=2;
+		      else
+			secondcoor=1;
+		    } 
 		}
+	    }
 	    
 	   
 	}
@@ -498,7 +501,7 @@ int InitPos()
     } 
   
   /* place particles in starting region: every fracture (or part of fracture 
-  edge will have the same amount of particles */ 
+     edge will have the same amount of particles */ 
   if (flag_in==3)
     {
       for (i=0; i<frc_count; i++)
@@ -511,12 +514,12 @@ int InitPos()
 	}
     }  
  
-// fclose(inp);
+  // fclose(inp);
   if (flag_in==0)
     {
-    printf("\n There is no specified option for particles initial positions! \n");
-    printf("\n Program is terminated. \n");
-    exit(1);
+      printf("\n There is no option specified for particles initial positions! \n");
+      printf("\n Program is terminated. \n");
+      exit(1);
     }
   return k_new;
 }
@@ -568,7 +571,7 @@ int InitParticles_np (int k_current, int firstn, int lastn, int parts_fracture, 
       particle[k_current].velocity[0]=0.;
       particle[k_current].velocity[1]=0.;
       particle[k_current].fracture=node[firstn-1].fracture[0];
-//      printf("%d %d %d %d \n", k_current, firstn, lastn, node[firstn-1].fracture[0]);
+      //      printf("%d %d %d %d \n", k_current, firstn, lastn, node[firstn-1].fracture[0]);
       particle[k_current].intcell=0;
       particle[k_current].time=0.0; 
       if (flag_w==1)
@@ -755,102 +758,102 @@ void FlowInWeight(int numberpart)
   /*** in-flow flux boundary cells ****************************************/
   int ind1=0,ind2=0,ver1=0, ver2=0, ver3=0,incell=0, n1in=0, n2in=0, jj;
   int ins;
-    double sumflux1=0, sumflux2=0, particleflux[numberpart], totalflux=0;
+  double sumflux1=0, sumflux2=0, particleflux[numberpart], totalflux=0;
   for (np=0; np<numberpart; np++) 
-     {
-        ins=0;
-        ins=InitCell();
-        incell=particle[np].cell;
-          if (incell!=0)
+    {
+      ins=0;
+      ins=InitCell();
+      incell=particle[np].cell;
+      if (incell!=0)
         {
-        incell=particle[np].cell;
-        ver1=cell[incell-1].node_ind[0];
-        ver2=cell[incell-1].node_ind[1];
-        ver3=cell[incell-1].node_ind[2];
-        n1in=0;
-        n2in=0;
-        if (node[ver1-1].typeN>=300)
+	  incell=particle[np].cell;
+	  ver1=cell[incell-1].node_ind[0];
+	  ver2=cell[incell-1].node_ind[1];
+	  ver3=cell[incell-1].node_ind[2];
+	  n1in=0;
+	  n2in=0;
+	  if (node[ver1-1].typeN>=300)
             {
-            n1in=ver1;
-            ind1=0;
+	      n1in=ver1;
+	      ind1=0;
             }
-         if (node[ver2-1].typeN>=300)
+	  if (node[ver2-1].typeN>=300)
             {
-             if (n1in==0)
-               {
-               n1in=ver2;
-               ind1=1;
+	      if (n1in==0)
+		{
+		  n1in=ver2;
+		  ind1=1;
                 }  
-               else
+	      else
                 {
-               n2in=ver2;
-               ind2=1;
+		  n2in=ver2;
+		  ind2=1;
                 } 
-                }
-              if (node[ver3-1].typeN>=300)
+	    }
+	  if (node[ver3-1].typeN>=300)
             {
-             if (n1in==0)
-               {
-               n1in=ver3;
-               ind1=2;
+	      if (n1in==0)
+		{
+		  n1in=ver3;
+		  ind1=2;
                 }  
-               else
+	      else
                 {
-               n2in=ver3;
-               ind2=2;
+		  n2in=ver3;
+		  ind2=2;
                 }  
                 
-               }  
-      //         printf("%d %d %d %d \n", np+1, n1in, n2in, incell);
-             if ((n1in!=0) && (n2in!=0))
-               {
-               sumflux1=0;
-               sumflux2=0;
-               for (jj=0; jj<node[n1in-1].numneighb; jj++)
+	    }  
+	  //         printf("%d %d %d %d \n", np+1, n1in, n2in, incell);
+	  if ((n1in!=0) && (n2in!=0))
+	    {
+	      sumflux1=0;
+	      sumflux2=0;
+	      for (jj=0; jj<node[n1in-1].numneighb; jj++)
                   
-                  sumflux1=sumflux1+fabs(node[n1in-1].flux[jj]);
+		sumflux1=sumflux1+fabs(node[n1in-1].flux[jj]);
                
-               for (jj=0; jj<node[n2in-1].numneighb; jj++)
+	      for (jj=0; jj<node[n2in-1].numneighb; jj++)
                   
-                  sumflux2=sumflux2+fabs(node[n2in-1].flux[jj]);
+		sumflux2=sumflux2+fabs(node[n2in-1].flux[jj]);
                   
                
-               particleflux[np]=particle[np].weight[ind1]*sumflux1+particle[np].weight[ind2]*sumflux2;
-               totalflux=totalflux+particleflux[np];   
+	      particleflux[np]=particle[np].weight[ind1]*sumflux1+particle[np].weight[ind2]*sumflux2;
+	      totalflux=totalflux+particleflux[np];   
                   
                   
-  //              printf("%d   %5.12e %5.12e  %5.12e  %5.12e  %5.12e\n", np+1,particle[np].weight[ind1],sumflux1, particle[np].weight[ind2],sumflux2,particleflux[np] );
+	      //              printf("%d   %5.12e %5.12e  %5.12e  %5.12e  %5.12e\n", np+1,particle[np].weight[ind1],sumflux1, particle[np].weight[ind2],sumflux2,particleflux[np] );
                   
-               }   
-               else
-               {
-               int ncent=0;
-               ncent=n1in+n2in;
-               if (ncent!=0)
-                 {
-                 sumflux1=0;
+	    }   
+	  else
+	    {
+	      int ncent=0;
+	      ncent=n1in+n2in;
+	      if (ncent!=0)
+		{
+		  sumflux1=0;
                
-               for (jj=0; jj<node[ncent-1].numneighb; jj++)
+		  for (jj=0; jj<node[ncent-1].numneighb; jj++)
                   
-                  sumflux1=sumflux1+fabs(node[ncent-1].flux[jj]);
+		    sumflux1=sumflux1+fabs(node[ncent-1].flux[jj]);
                
                
-               particleflux[np]=sumflux1;
-               totalflux=totalflux+particleflux[np];   
+		  particleflux[np]=sumflux1;
+		  totalflux=totalflux+particleflux[np];   
                   
                   
-   //             printf("%d   %5.12e \n", np+1,particleflux[np] );
-                 }
-               }
+		  //             printf("%d   %5.12e \n", np+1,particleflux[np] );
+		}
+	    }
                
-     }
-  }
+	}
+    }
   
   for (np=0; np<numberpart; np++) 
-  {
-  particle[np].fl_weight=particleflux[np]/totalflux;
- // printf("%d   %5.12e %5.12e  %5.12e  \n", np+1,particleflux[np], totalflux, particle[np].fl_weight);
-  }
+    {
+      particle[np].fl_weight=particleflux[np]/totalflux;
+      // printf("%d   %5.12e %5.12e  %5.12e  \n", np+1,particleflux[np], totalflux, particle[np].fl_weight);
+    }
   
 
  
@@ -859,7 +862,7 @@ void FlowInWeight(int numberpart)
 //////////////////////////////////////////////////////////////////////////
 void InitInMatrix()
 {
-/**** function read files with data for particles initially placed in rock matrix***/
+  /**** function read files with data for particles initially placed in rock matrix***/
   struct inpfile inputfile;
   
   inputfile = Control_File("inm_coord:",10 );
@@ -875,88 +878,94 @@ void InitInMatrix()
   printf("\n OPEN AND READ FILE: %s \n \n", inputfile.filename);
  
   //FILE *mdf=OpenFile("distance_time.dat","w");
-    int i, ii;
-   unsigned int number, no;
-   char cs;
-   fscanf(mn,"%d  %d %d %d %d \n", &no, &no, &number, &no, &no);
+  int i, ii;
+  unsigned int number, no;
+  char cs;
+  if (fscanf(mn,"%d  %d %d %d %d \n", &no, &no, &number, &no, &no)!=5)
+             printf("error");
    
-   for (i=0; i<(number+1); i++)
-      {
-        do 
+  for (i=0; i<(number+1); i++)
+    {
+      do 
 	cs=fgetc(mn); 
       while (cs!='\n');
-      }
+    }
       
    
- //  if (number !=npart)
- //  {
- //    printf(" The numbers of particles in input files doesn't match. \n");  
- //    printf(" Program is terminated. \n");
- //    exit(1);
- //   }
-      fscanf(mc," %d \n", &npart); 
-	   /*  memory allocatation for particle structures */
+  //  if (number !=npart)
+  //  {
+  //    printf(" The numbers of particles in input files doesn't match. \n");  
+  //    printf(" Program is terminated. \n");
+  //    exit(1);
+  //   }
+          if (fscanf(mc," %d \n", &npart)!=1)
+             printf("error"); 
+
+  /*  memory allocatation for particle structures */
 	    
-	    particle=(struct contam*) malloc ((npart+1)*sizeof(struct contam));
+  particle=(struct contam*) malloc ((npart+1)*sizeof(struct contam));
      
-     double* distance=malloc ((npart+1)*sizeof(double));
-     double xp, yp, zp,  sum_distance=0.0, xp2,yp2,zp2;
+  double* distance=malloc ((npart+1)*sizeof(double));
+  double xp, yp, zp,  sum_distance=0.0, xp2,yp2,zp2;
 	
-      for (ii=0; ii<npart; ii++)
-      {
+  for (ii=0; ii<npart; ii++)
+    {
       
-       fscanf(mn," %d  %d   %d  %d  %d  %d \n", &no, &no, &no, &no, &no, &number);
-       fscanf(mc," %lf %lf %lf \n ", &xp, &yp, &zp);
+      if (fscanf(mn," %d  %d   %d  %d  %d  %d \n", &no, &no, &no, &no, &no, &number)!=6)
+           printf("error");
+
+      if (fscanf(mc," %lf %lf %lf \n ", &xp, &yp, &zp)!=1)
+             printf ("error");
       
       xp2=(node[number-1].coord[0]-xp)*(node[number-1].coord[0]-xp);
       yp2=(node[number-1].coord[1]-yp)*(node[number-1].coord[1]-yp);
       zp2=(node[number-1].coord[2]-zp)*(node[number-1].coord[2]-zp);
-       distance[ii]=sqrt(xp2+yp2+zp2);
+      distance[ii]=sqrt(xp2+yp2+zp2);
       
        		
-          particle[ii].velocity[0]=0.;
-          particle[ii].velocity[1]=0.;
-    	  particle[ii].fracture=node[number-1].fracture[0];
-          particle[ii].cell=0;
-          particle[ii].position[0]=node[number-1].coord_xy[0];
-          particle[ii].position[1]=node[number-1].coord_xy[1];
-     	  particle[ii].time=0.0;    
-       	  // define a time that took for particle to reach fracture from a rock matrix 
-       	   particle[ii].time=TimeFromMatrix(distance[ii]);
-       	   sum_distance=sum_distance+distance[ii];
-   //    	   fprintf(mdf," %5.9e %5.9e \n",distance[ii], particle[ii].time);
-      }	   
+      particle[ii].velocity[0]=0.;
+      particle[ii].velocity[1]=0.;
+      particle[ii].fracture=node[number-1].fracture[0];
+      particle[ii].cell=0;
+      particle[ii].position[0]=node[number-1].coord_xy[0];
+      particle[ii].position[1]=node[number-1].coord_xy[1];
+      particle[ii].time=0.0;    
+      // define a time that took for particle to reach fracture from a rock matrix 
+      particle[ii].time=TimeFromMatrix(distance[ii]);
+      sum_distance=sum_distance+distance[ii];
+      //    	   fprintf(mdf," %5.9e %5.9e \n",distance[ii], particle[ii].time);
+    }	   
   fclose(mc);
   fclose(mn);
-//  fclose(mdf);
+  //  fclose(mdf);
   //define weights according to distance from fracture
   for (i=0; i<npart; i++)
-  {
-  particle[i].fl_weight=distance[i]/sum_distance;
-  }
+    {
+      particle[i].fl_weight=distance[i]/sum_distance;
+    }
   
   free(distance);
-return;
+  return;
 }
 ///////////////////////////////////////////////////////////////////////////
 double TimeFromMatrix(double pdist)
 {
-/* function defines the time that is required for particle to travel from rock 
+  /* function defines the time that is required for particle to travel from rock 
      matrix to fracture. This will be particle's initial time */
-       struct inpfile inputfile;
- double ptime=0.0, ptime1=0.0, ptime2=0.0;
- double randomnumber=0.0;
- randomnumber=drand48();
-// if (randomnumber==1.0)
-//      randomnumber=0.99999; 
+  struct inpfile inputfile;
+  double ptime=0.0, ptime1=0.0, ptime2=0.0;
+  double randomnumber=0.0;
+  randomnumber=drand48();
+  // if (randomnumber==1.0)
+  //      randomnumber=0.99999; 
   double mporosity=0.0;
   double mdiffcoeff=0.0;
   
   inputfile=Control_Param("inm_porosity:",13);
-   mporosity=inputfile.param;
-   inputfile=Control_Param("inm_diffcoeff:",14);
-   mdiffcoeff=inputfile.param;
-//  printf("diff coeff %5.9e porosity %lf \n",mdiffcoeff, mporosity);
+  mporosity=inputfile.param;
+  inputfile=Control_Param("inm_diffcoeff:",14);
+  mdiffcoeff=inputfile.param;
+  //  printf("diff coeff %5.9e porosity %lf \n",mdiffcoeff, mporosity);
   
   double retardation_factor=1.0;
   double inverse_erfc=0.0;
@@ -969,6 +978,6 @@ double TimeFromMatrix(double pdist)
   
         
    
-return ptime;
+  return ptime;
 } 
 //////////////////////////////////////////////////////////////////////////

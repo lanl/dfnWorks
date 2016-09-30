@@ -102,6 +102,7 @@ class dfnworks(Frozen):
 		#self.zone2ex(zone_file='pboundary_top.zone',face='top')
 		#self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
 		self.zone2ex(zone_file='all')
+
 		toc = time() 
 		self.dumpTime('Function: zone2ex', time() - tic)	
 
@@ -1216,8 +1217,8 @@ class dfnworks(Frozen):
 	
 		if failure > 0:
 			mesh.cleanup_dir()
-			print 'Exiting Program'
-			sys.exit(1)
+			#print 'Exiting Program'
+			#sys.exit(1)
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
@@ -1226,8 +1227,9 @@ class dfnworks(Frozen):
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
-				mesh.cleanup_dir()
-				sys.exit(1)
+
+				cleanup_dir()
+				#sys.exit(1)
 	
 		if production_mode > 0:
 			mesh.cleanup_dir()
