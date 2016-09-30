@@ -1,5 +1,7 @@
 import os, sys, time
 from dfnWorks import *
+import dfnGen_meshing as mesh
+
 
 def define_paths():
 	# Set Environment Variables
@@ -7,8 +9,8 @@ def define_paths():
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04/'
 
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
-	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	os.environ['DFNGENC_PATH']='/home/nataliia/DFNGen/DFNC++Version'
+	os.environ['DFNWORKS_PATH'] = '/home/nataliia/gitProjects/dfnworks-main'
 	
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
 	#os.environ['DFNTRANS_PATH']= '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/'
@@ -52,8 +54,12 @@ define_paths()
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/multi_rect.dat'	
 dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
 #dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/pl_test.dat'	
-dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
+#dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'
+dfnFlow_run_file = '/scratch/nobackup/nataliia/ugta/pflot_tb.in'	
 dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
+
+
+
 
 
 
@@ -90,8 +96,19 @@ print '--> dfnTrans input file: ',dfnTrans_run_file
 print ''
 
 dfn.dfnGen()
-dfn.dfnFlow()
-dfn.dfnTrans()
+#dfn.dfnFlow()
+#dfn.dfnTrans()
+#os.chdir(dfn._jobname)
+#mesh.cleanup_dir()
+
+
+# possible commands
+#dfn.make_working_directory()
+#dfn.check_input()
+#dfn.create_network()   
+#dfn.output_report()
+#dfn.dfnFlow()
+#dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 print jobname, 'Complete'

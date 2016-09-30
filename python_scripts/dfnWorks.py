@@ -96,11 +96,11 @@ class dfnworks(Frozen):
 	
 		tic = time()
 		self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
-		self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
-		self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
-		self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
-		self.zone2ex(zone_file='pboundary_top.zone',face='top')
-		self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
+		self.zone2ex(uge_file='full_mesh_vol_area.uge', zone_file='pboundary_front_s.zone',face='south')
+		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_left_w.zone',face='west')
+		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_right_e.zone',face='east')
+		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_top.zone',face='top')
+		self.zone2ex(uge_file='full_mesh_vol_area.uge',zone_file='pboundary_bottom.zone',face='bottom')
 		toc = time() 
 		self.dumpTime('Function: zone2ex', time() - tic)	
 
@@ -243,7 +243,7 @@ class dfnworks(Frozen):
 		'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 		'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 		'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
-		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[]} 
+		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 'removeFracturesLessThan':[]} 
 
 		unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -255,13 +255,13 @@ class dfnworks(Frozen):
 		'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
 		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path', 'userRecByCoord',
 		'RectByCood_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
-		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease'}
+		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		mandatory = {'stopCondition','domainSize','numOfLayers','outputAllRadii', 'outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease'}
+		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
@@ -1214,8 +1214,8 @@ class dfnworks(Frozen):
 	
 		if failure > 0:
 			mesh.cleanup_dir()
-			print 'Exiting Program'
-			sys.exit(1)
+			#print 'Exiting Program'
+			#sys.exit(1)
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
@@ -1225,7 +1225,7 @@ class dfnworks(Frozen):
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
 				cleanup_dir()
-				sys.exit(1)
+				#sys.exit(1)
 	
 		if production_mode > 0:
 			mesh.cleanup_dir()
