@@ -2,11 +2,13 @@
 *~
 *.nfs*
 *.swp
-*.pyc
+python_scripts/*.pyc
 DFNTrans
 C_uge_correct/correct_uge
 DFN_MESH_Connectivity_Test/ConnectivityTest
 runDFN_mixing.py
 sample_inputs/mixing/
-
+python_scripts/runDFN_uncorrelated.py
+python_scripts/runDFN_mixing.py
+python_scripts/jeffrey_scripts
 
