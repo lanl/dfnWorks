@@ -247,16 +247,11 @@ struct posit3d CalculatePosition3D()
       of velocity vectors in 3D domain ***/
 void   Velocity3D()
 {
- char filename[125];
+  char filename[125];
   sprintf(filename,"%s/Velocity3D",maindir); 
   FILE *w3= OpenFile (filename,"w");
-  	printf("\n Output flow field: Darcy velocities on nodes in 3D \n"); 
-  	fprintf(w3," node ID number; X-, Y-, Z- node's location; Vx, Vy, Vz of velocity \n");
-
- sprintf(filename,"%s/Node_Volume_Vel",maindir);
-  FILE *w4= OpenFile (filename,"w");
-   fprintf(w4," node ID, node volume, node fracture, Vx, Vy,Vz \n");
-
+  printf("\n Output flow field: Darcy velocities on nodes in 3D \n"); 
+  fprintf(w3," node ID number; X-, Y-, Z- node's location; Vx, Vy, Vz of velocity \n");
   double cord3[3]={0,0,0};
 
   unsigned int i, j, v;  
@@ -283,9 +278,7 @@ void   Velocity3D()
 	      cord3[1]=node[i].velocity[0][1];
 	      cord3[2]=0;
 	    }
-	  fprintf(w3," %07d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );  
-         fprintf(w4," %07d  %5.8e  %04d   %5.8e   %5.8e   %5.8e\n", i+1, node[i].pvolume, node[i].fracture[0], cord3[0], cord3[1], cord3[2] );
- 
+	  fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );  
 	}             
       else
 	{
@@ -307,8 +300,6 @@ void   Velocity3D()
 		  cord3[2]=0;
 		}
 	      fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );   
-  fprintf(w4," %07d  %5.8e  %04d   %5.8e   %5.8e   %5.8e\n", i+1, node[i].pvolume, node[i].fracture[0], cord3[0], cord3[1], cord3[2] );
-
 	    }
 	}
       if ((node[i].fracture[1]!=0)&&((node[i].typeN==2)||(node[i].typeN==12)))
@@ -339,7 +330,6 @@ void   Velocity3D()
     }
 
   fclose(w3);
-  fclose(w4);
   return;
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -349,7 +339,7 @@ struct posit3d CalculateVelocity3D()
   int j=particle[np].fracture-1;
   struct posit3d particle3dvelocity;
   
- // printf(" fracture %d theat %lf \n", j, fracture[j].theta);
+  // printf(" fracture %d theat %lf \n", j, fracture[j].theta);
   
   if (fracture[j].theta!=0)
     {   
@@ -370,68 +360,68 @@ struct posit3d CalculateVelocity3D()
 ///////////////////////////////////////////////////////////////////////////
 void Coordinations2D ()
 {
-/*** function outputs 2d coordinations of nodes: every fracture into separate file ****/
-/*** the files are used as input to gstat for length correlation of aperture *****/
-printf(" \n Output 2D coordinates of nodes into files \n");
-unsigned int inode, ifract;
-double mincx[nfract], maxcx[nfract], mincy[nfract], maxcy[nfract];
-//first, find min and max of coordinations ofr every fracture
-for (ifract=0; ifract<nfract; ifract++)
-{
-   mincx[ifract]=100000;
-   maxcx[ifract]=-100000;
-   mincy[ifract]=100000;
-   maxcy[ifract]=-100000;
-  for (inode=0; inode<nnodes; inode++)
-   {
-    if (node[inode].fracture[0]==ifract+1)
-      {
-      if (node[inode].coord_xy[0]<mincx[ifract])
-            mincx[ifract]=node[inode].coord_xy[0];
-       if (node[inode].coord_xy[1]<mincy[ifract])
-            mincy[ifract]=node[inode].coord_xy[1];
-       if (node[inode].coord_xy[0]>maxcx[ifract])
-            maxcx[ifract]=node[inode].coord_xy[0];
-       if (node[inode].coord_xy[1]>maxcy[ifract])
-            maxcy[ifract]=node[inode].coord_xy[1];          
-      }
-      else
-      {
-      if (node[inode].fracture[1]==ifract+1)
-      {
-      if (node[inode].coord_xy[3]<mincx[ifract])
-            mincx[ifract]=node[inode].coord_xy[3];
-       if (node[inode].coord_xy[4]<mincy[ifract])
-            mincy[ifract]=node[inode].coord_xy[4];
-       if (node[inode].coord_xy[3]>maxcx[ifract])
-            maxcx[ifract]=node[inode].coord_xy[3];
-       if (node[inode].coord_xy[4]>maxcy[ifract])
-            maxcy[ifract]=node[inode].coord_xy[4];          
-      }
-      }
-   }
-}
-char filename[15];
-double lengthx,lengthy;
-FILE *fr;
-mkdir("Coord2D", 0777);
- for (ifract=0; ifract <nfract; ifract++)
- {
-         sprintf(filename,"Coord2D/coord_%d.dat",ifract+1);
-	 fr = OpenFile(filename,"w");
-	 
-	 lengthx=fabs(maxcx[ifract]-mincx[ifract]);
-	 lengthy=fabs(maxcy[ifract]-mincy[ifract]);
-   
-   for (inode=0; inode<nnodes; inode++)
+  /*** function outputs 2d coordinations of nodes: every fracture into separate file ****/
+  /*** the files are used as input to gstat for length correlation of aperture *****/
+  printf(" \n Output 2D coordinates of nodes into files \n");
+  unsigned int inode, ifract;
+  double mincx[nfract], maxcx[nfract], mincy[nfract], maxcy[nfract];
+  //first, find min and max of coordinations ofr every fracture
+  for (ifract=0; ifract<nfract; ifract++)
     {
-     if (node[inode].fracture[0]==ifract+1)
-      fprintf(fr,"%d   %5.8e    %5.8e   %5.8e    %5.8e  %5.8e\n", inode+1, node[inode].coord_xy[0], node[inode].coord_xy[1], (node[inode].coord_xy[0]-mincx[ifract])/lengthx, (node[inode].coord_xy[1]-mincy[ifract])/lengthy, node[inode].aperture);
-      else
-       if (node[inode].fracture[1]==ifract+1)
-      fprintf(fr,"%d   %5.8e    %5.8e   %5.8e    %5.8e   %5.8e\n", inode+1, node[inode].coord_xy[3], node[inode].coord_xy[4], (node[inode].coord_xy[3]-mincx[ifract])/lengthx, (node[inode].coord_xy[4]-mincy[ifract])/lengthy, node[inode].aperture);
+      mincx[ifract]=100000;
+      maxcx[ifract]=-100000;
+      mincy[ifract]=100000;
+      maxcy[ifract]=-100000;
+      for (inode=0; inode<nnodes; inode++)
+	{
+	  if (node[inode].fracture[0]==ifract+1)
+	    {
+	      if (node[inode].coord_xy[0]<mincx[ifract])
+		mincx[ifract]=node[inode].coord_xy[0];
+	      if (node[inode].coord_xy[1]<mincy[ifract])
+		mincy[ifract]=node[inode].coord_xy[1];
+	      if (node[inode].coord_xy[0]>maxcx[ifract])
+		maxcx[ifract]=node[inode].coord_xy[0];
+	      if (node[inode].coord_xy[1]>maxcy[ifract])
+		maxcy[ifract]=node[inode].coord_xy[1];          
+	    }
+	  else
+	    {
+	      if (node[inode].fracture[1]==ifract+1)
+		{
+		  if (node[inode].coord_xy[3]<mincx[ifract])
+		    mincx[ifract]=node[inode].coord_xy[3];
+		  if (node[inode].coord_xy[4]<mincy[ifract])
+		    mincy[ifract]=node[inode].coord_xy[4];
+		  if (node[inode].coord_xy[3]>maxcx[ifract])
+		    maxcx[ifract]=node[inode].coord_xy[3];
+		  if (node[inode].coord_xy[4]>maxcy[ifract])
+		    maxcy[ifract]=node[inode].coord_xy[4];          
+		}
+	    }
+	}
     }
-   fclose(fr);
- }
-return;
+  char filename[15];
+  double lengthx,lengthy;
+  FILE *fr;
+  mkdir("Coord2D", 0777);
+  for (ifract=0; ifract <nfract; ifract++)
+    {
+      sprintf(filename,"Coord2D/coord_%d.dat",ifract+1);
+      fr = OpenFile(filename,"w");
+	 
+      lengthx=fabs(maxcx[ifract]-mincx[ifract]);
+      lengthy=fabs(maxcy[ifract]-mincy[ifract]);
+   
+      for (inode=0; inode<nnodes; inode++)
+	{
+	  if (node[inode].fracture[0]==ifract+1)
+	    fprintf(fr,"%d   %5.8e    %5.8e   %5.8e    %5.8e  %5.8e\n", inode+1, node[inode].coord_xy[0], node[inode].coord_xy[1], (node[inode].coord_xy[0]-mincx[ifract])/lengthx, (node[inode].coord_xy[1]-mincy[ifract])/lengthy, node[inode].aperture);
+	  else
+	    if (node[inode].fracture[1]==ifract+1)
+	      fprintf(fr,"%d   %5.8e    %5.8e   %5.8e    %5.8e   %5.8e\n", inode+1, node[inode].coord_xy[3], node[inode].coord_xy[4], (node[inode].coord_xy[3]-mincx[ifract])/lengthx, (node[inode].coord_xy[4]-mincy[ifract])/lengthy, node[inode].aperture);
+	}
+      fclose(fr);
+    }
+  return;
 }

@@ -30,11 +30,12 @@ void ReadInit()
 
   FILE *fpp=OpenFile (inputfile.filename,"r");
   
-  fscanf(fpp,"%d\n",&nfract);
+  if (fscanf(fpp,"%d\n",&nfract)!=1)
+    printf("Error");
+
   
   printf(" Number of fractures in the domain = %d \n", nfract);
  
-  fclose(fpp);
   /********************** opening file an inp file ***************************/
   
   int nn,  j;
@@ -45,7 +46,9 @@ void ReadInit()
   
   FILE *fp = OpenFile (inputfile.filename,"r");
  
-  fscanf(fp, "%d %d %d %d %d\n", &nnodes, &ncells, &nn, &nn, &nn ); 
+  if (fscanf(fp, "%d %d %d %d %d\n", &nnodes, &ncells, &nn, &nn, &nn )!=5)
+    printf("Error");
+ 
  
   printf(" Total number of nodes: %d, Total number of elements (triangles): %d\n", nnodes, ncells);
  
@@ -73,7 +76,9 @@ void ReadInit()
    
     }
   int node1;
-  fscanf (fps," %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb );
+  if (fscanf (fps," %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb )!=5)
+    printf("Error");
+
   printf (" Total number of edges in Voronoy polygons = %d, total number of nodes = %d \n", nedges, node1);
   if (node1!=nnodes)
     printf("the number of nodes in inp is not equal to number of nodes in stor file! \n");
@@ -120,27 +125,52 @@ void ReadInit()
  
   printf("\n Memory allocation is done successfully \n");
   /*****************reading the orientation angle and norm components 
-                 of every fracture from poly_info.dat.txt file*************************/
+                 of every fracture from params.txt file*************************/
   
- inputfile=Control_File("poly:", 5);
-
-  printf("\n OPEN AND READ FILE: %s \n \n", inputfile.filename);
-
-  FILE *fpo=OpenFile (inputfile.filename,"r");
-
-int nnf=0.0;
-
-  for (i=0; i<nfract; i++)
+  inputfile=Control_File_Optional("poly:", 5);
+  if (inputfile.flag>0)
     {
-      
-      fscanf(fpo,"%d %d  %f %f %f %d %f %f %d\n",&nf,&nnf, &fracture[i].theta, 
-	     &fracture[i].nvect_xy[0], &fracture[i].nvect_xy[1], &nnf, 
-	     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1], &nnf);
-     
+      printf("\n OPEN AND READ FILE: %s \n \n", inputfile.filename);
+
+      FILE *fpo=OpenFile (inputfile.filename,"r");
+
+      int nnf=0.0;
+
+      for (i=0; i<nfract; i++)
+	{
+
+	  if( fscanf(fpo,"%d %d  %f %f %f %d %f %f %d\n",&nf,&nnf, &fracture[i].theta,
+		     &fracture[i].nvect_xy[0], &fracture[i].nvect_xy[1], &nnf,
+		     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1], &nnf)!=9)
+	    printf("Error");
+
+	}
+
+      fclose(fpo);
     }
+  else
+   
+    {
+      int nnf;
+      for (i=0; i<7; i++)
+	{
+	  do 
+	    cs=fgetc(fpp); 
+	  while (cs!='\n');
+   
+	}
 
-  fclose(fpo);   
-
+      for (i=0; i<nfract; i++)
+	{
+	  if (fscanf(fpp,"%d %f  %f %f %d %f %f %d %d\n",&nf, &fracture[i].theta, 
+		     &fracture[i].nvect_xy[0], &fracture[i].nvect_xy[1], &nnf, 
+		     &fracture[i].nvect_z[0], &fracture[i].nvect_z[1],&nnf, &nnf)!=9)
+	    printf("Error");
+     
+	}
+    }
+  fclose(fpp);   
+   
   return;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,17 +210,19 @@ void  ReadDataFiles ()
    
   printf("\n OPEN AND READ FILE: %s \n ",inputfile.filename);
  
-  fscanf(fp, "%d %d %d %d %d\n", &n1, &n1, &nnv, &ncv, &n1 ); 
+  if (fscanf(fp, "%d %d %d %d %d\n", &n1, &n1, &nnv, &ncv, &n1 )!=5)
+    printf("Error"); 
 
  
   /* read 3D coordinations: x in [0], y in [1], and z in [2] for every node i+1 */ 
 
   for (i=0; i<nnodes; i++)
     {
-      fscanf(fp,"%d  %lf %lf %lf \n", &n1, &node[i].coord[0], &node[i].coord[1], &node[i].coord[2]);
+      if (fscanf(fp,"%d  %lf %lf %lf \n", &n1, &node[i].coord[0], &node[i].coord[1], &node[i].coord[2])!=4)
+	printf("Error");
     }
 
- // printf("\n Nodes 3D coordinations are read  \n"); 
+  // printf("\n Nodes 3D coordinations are read  \n"); 
 
   /* read a connectivity list: number of fracture and 3 node numbers for each cell (triangle) */
  
@@ -201,8 +233,9 @@ void  ReadDataFiles ()
 
   for (i=0; i<ncells; i++)
     {
-      fscanf(fp, "%d  %d  %c %c %c %d %d %d \n", &n1, &cell[i].fracture, 
-	     &c[0],&c[1],&c[2], &cell[i].node_ind[0], &cell[i].node_ind[1], &cell[i].node_ind[2]);
+      if (fscanf(fp, "%d  %d  %c %c %c %d %d %d \n", &n1, &cell[i].fracture, 
+		 &c[0],&c[1],&c[2], &cell[i].node_ind[0], &cell[i].node_ind[1], &cell[i].node_ind[2])!=8)
+	printf("Error");
        
       current_fract=cell[i].fracture;
       if (current_fract!=previous_fract)
@@ -219,14 +252,16 @@ void  ReadDataFiles ()
 
   /* read the next lines, which show node attributes and thier order in next data block */     
  
-  fscanf(fp, "%d", &n1);
+  if (fscanf(fp, "%d", &n1)!=1)
+    printf("Error");
 
   int k=1,imt1_ind=0, itp1_ind=0, ni[nnv];
   char  var_name[20]; 
 
   for (i=0; i<nnv; i++)
     {
-      fscanf(fp, "%d", &ni[i]);
+      if (fscanf(fp, "%d", &ni[i])!=1)
+	printf("Error");
       k=k*ni[i];
     }
 
@@ -236,7 +271,8 @@ void  ReadDataFiles ()
   /* read node's attribute's names and search for imt1 and itp1 */
   for (i=0; i<nnv; i++)
     {
-      fscanf(fp, "%s %s \n", &var_name, &line);
+      if (fscanf(fp, "%s %s \n", var_name, line)!=2)
+	printf("Error");
       int res=strncmp(var_name,"imt1,",5);
       if (res==0) 
 	imt1_ind=i;
@@ -260,7 +296,9 @@ void  ReadDataFiles ()
       node[i].fracture[1]=0;
       for (j=0; j<itp1_ind+2; j++)
 	{
-	  fscanf(fp, "%lf ", &fn);
+	  if (fscanf(fp, "%lf ", &fn)!=1)
+	    printf("Error");              
+
                 
 	  if (j==imt1_ind+1)
             {
@@ -283,7 +321,7 @@ void  ReadDataFiles ()
       while (cs!='\n');
     }
   fracture[nfract-1].lastnode=nnodes;
- // printf(" \n Material types and type of nodes are read \n"); 
+  // printf(" \n Material types and type of nodes are read \n"); 
   fclose(fp) ;
  
 
@@ -305,7 +343,8 @@ void  ReadDataFiles ()
     }
    
   unsigned int  node1;
-  fscanf (fps," %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb );
+  if (fscanf (fps," %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb )!=5)
+    printf("Error");
 
   if (node1!=nnodes)
     printf("the number of nodes in inp file is not equal to number of nodes in stor file! \n");
@@ -316,19 +355,22 @@ void  ReadDataFiles ()
 
   for (i=0; i<nnodes; i++)
     {
-      fscanf(fps,"%lf", &node[i].pvolume);
+      if (fscanf(fps,"%lf", &node[i].pvolume)!=1)
+	printf("Error");
     }
- // printf(" \n Volumes of Voronoi polygons are read \n"); 
+  // printf(" \n Volumes of Voronoi polygons are read \n"); 
 
   /* Read an array with number of neighbors for each node */ 
 
   unsigned int cn,pn;
    
-  fscanf(fps, "%d", &pn);  
+  if (fscanf(fps, "%d", &pn)!=1)
+    printf("Error");  
 
   for (i=0; i<nnodes; i++)
     { 
-      fscanf(fps, "%d", &cn);
+      if (fscanf(fps, "%d", &cn)!=1)
+	printf("Error");
       node[i].numneighb=cn-pn;
       pn=cn;
     }
@@ -339,31 +381,36 @@ void  ReadDataFiles ()
     {
       for (j=0; j<node[i].numneighb; j++)
 	{
-	  fscanf(fps, "%d", &node[i].indnodes[j]);
+	  if (fscanf(fps, "%d", &node[i].indnodes[j])!=1)
+	    printf("Error");
 	} 
     } 
- // printf("  \n Number of neighbors of each node and their indices are read \n ");
+  // printf("  \n Number of neighbors of each node and their indices are read \n ");
 
   /***Read pointers to area cofficients, zeros and diagonal elements in stor file **/
 
   for (i=0; i<nedges; i++)
     {
-      fscanf(fps, "%d",&cn);
+      if (fscanf(fps, "%d",&cn)!=1)
+	printf("Error");
     }
 
   /*read zeros*/
   for (i=0; i<nnodes+1; i++)
     {
-      fscanf(fps, "%d",&cn);
+      if (fscanf(fps, "%d",&cn)!=1)
+	printf("Error");
     }
   /* read diagonal elements*/  
 
   int count=0, count1=0;
        
-  fscanf(fps, "%d", &pn);  
+  if (fscanf(fps, "%d", &pn)!=1)
+    printf("Error");  
   for (i=0; i<nnodes-1; i++)
     { 
-      fscanf(fps, "%d", &cn);
+      if (fscanf(fps, "%d", &cn)!=1)
+	printf("Error");
       count=count+cn-pn;
       count1=count1+node[i].numneighb;
       pn=cn;
@@ -372,41 +419,42 @@ void  ReadDataFiles ()
   
   for (i=0; i<nnodes; i++)
     {
-    node[i].aperture=0.0;
+      node[i].aperture=0.0;
       for (j=0; j<max_neighb; j++)
 	{
 	  if (j<node[i].numneighb)
             {
-	      fscanf(fps, "%lf", &node[i].area[j]);
+	      if (fscanf(fps, "%lf", &node[i].area[j])!=1)
+		printf("Error");
 	       
             }
 	} 
     } 
   fclose(fps);
-/****** reading aperture file **************************/
-/** if no aperture file specified, the aperture of all fractures 
- will be equal to thickness value ***********************/  
-   inputfile=Control_File("aperture:",9);
-   int res;
+  /****** reading aperture file **************************/
+  /** if no aperture file specified, the aperture of all fractures 
+      will be equal to thickness value ***********************/  
+  inputfile=Control_File("aperture:",9);
+  int res;
   res=strncmp(inputfile.filename,"yes",3);
   
   if (res==0)
     {
     
-    ReadAperture();
+      ReadAperture();
     }
-    else
+  else
     { 
-     printf("\n There is no aperture file is defined. All fractures will have constant aperture equal to 'thickness' parameter. \n");
+      printf("\n There is no aperture file is defined. All fractures will have constant aperture equal to 'thickness' parameter. \n");
      
-     for (i=0; i<nnodes; i++)
+      for (i=0; i<nnodes; i++)
    	node[i].aperture=thickness;
-     } 
+    } 
 
   // update cell volumes according to aperture
      
-     for (i=0; i<nnodes; i++)
-   	node[i].pvolume=node[i].pvolume*node[i].aperture;
+  for (i=0; i<nnodes; i++)
+    node[i].pvolume=node[i].pvolume*node[i].aperture;
  
 
   /***** reading the data obtained in flow solution: pressure and mass fluxes ***/
@@ -419,19 +467,19 @@ void  ReadDataFiles ()
   inputfile=Control_File("FEHM:",5);
   res=strncmp(inputfile.filename,"yes",3);
   if (res==0)
-  {
-    ReadFEHMfile(nedges);
-    fehm=1;
-     }
+    {
+      ReadFEHMfile(nedges);
+      fehm=1;
+    }
   else
     {     
       inputfile=Control_File("PFLOTRAN:",9);
       res=strncmp(inputfile.filename,"yes",3);
       if (res==0)
-      {
-	ReadPFLOTRANfile(nedges);
-        pflotran=1;
-      }
+	{
+	  ReadPFLOTRANfile(nedges);
+	  pflotran=1;
+	}
       else
 	{
 	  printf("\n FLOW SOLUTION SOURCE IS NOT DEFINED. Program is terminated. \n");
@@ -558,32 +606,37 @@ void ReadBoundaryNodes()
   zonenumb_out=inputfile.flag;
   
 
-  char zonen_in[10]={0},zonen_out[10]={0}, line[10]={0};
-  int  nzone_out, i, res1, res2, fn, nn, res, nf, flag1=0, flag2=0;
-  fscanf(fpc, "%s \n", &line);
+  char  line[10]={0};
+  int  nzone_out, i,  fn, nn, res, nf, flag1=0, flag2=0;
+  if (fscanf(fpc, "%s \n", line)!=1)
+    printf(" ");
   do
     {
       fn=0;
-      fscanf(fpc," %d  ", &fn);
-      fscanf(fpc," %s ",  &line);
+      if (fscanf(fpc," %d  %s ", &fn, line)!=2)
+	printf(" ");
   
       
       if  (fn==zonenumb_in) 
   
 	{
 	  flag1=1;
-	  fscanf(fpc, " %s ", &line);
-	  fscanf(fpc, " %d", &nzone_in);
+	  if (fscanf(fpc, " %s ", line)!=1)
+	    printf(" ");
+
+	  if (fscanf(fpc, " %d", &nzone_in)!=1)
+	    printf(" ");
 	  /** memory allocation for nodezone_in nodes ******/
 	  nodezonein=(unsigned int*) malloc (nzone_in*sizeof(unsigned int));
 
 	  for (i=0; i<nzone_in; i++)
 	    {
-	      fscanf(fpc," %d ", &nf);
+	      if (fscanf(fpc," %d ", &nf)!=1)
+		printf(" ");
 	      nodezonein[i]=nf;
 
 	      if(node[nodezonein[i]-1].typeN<300)
-	      node[nodezonein[i]-1].typeN=node[nodezonein[i]-1].typeN+300;
+		node[nodezonein[i]-1].typeN=node[nodezonein[i]-1].typeN+300;
 	    }
 	}
       else 
@@ -593,27 +646,34 @@ void ReadBoundaryNodes()
 
 	    {
 	      flag2=1;
-	      fscanf(fpc, "\n %s \n", &line);
-	      fscanf(fpc, " %d\n",&nzone_out);
-          /** memory allocation for nodezoneout nodes ******/
-	  nodezoneout=(unsigned int*) malloc (nzone_out*sizeof(unsigned int));
+	      if (fscanf(fpc, " %s ", line)!=1)
+		printf(" ");
+	      if (fscanf(fpc, " %d",&nzone_out)!=1)
+		printf(" ");
+	      /** memory allocation for nodezoneout nodes ******/
+	      nodezoneout=(unsigned int*) malloc (nzone_out*sizeof(unsigned int));
 	  
 	      for (i=0; i<nzone_out; i++)
 		{
-		  fscanf(fpc," %d ", &nf);
+		  if (fscanf(fpc," %d ", &nf)!=1)
+		    printf(" ");
 		  nodezoneout[i]=nf;
 		  if(node[nodezoneout[i]-1].typeN<200)
-		  node[nodezoneout[i]-1].typeN=node[nodezoneout[i]-1].typeN+200;
+		    node[nodezoneout[i]-1].typeN=node[nodezoneout[i]-1].typeN+200;
 		}
 	    }
 	  else
 	    {
-	      fscanf(fpc, " %s ", &line);
-	      fscanf(fpc, " %d",&nn);
+	      if (fscanf(fpc, " %s  ", line)!=1)
+		printf(" ");
  
+              if (fscanf(fpc, " %d ", &nn)!=1)
+		printf(" ");
+             
 	      for (i=0; i<nn; i++)
 		{
-		  fscanf(fpc," %d ", &nf);
+		  if (fscanf(fpc," %d ", &nf)!=1)
+		    printf(" ");
 		}
 	    }
 	}
@@ -632,52 +692,52 @@ void ReadBoundaryNodes()
   fclose(fpc);
   
   /*** calculate the sum of mass fluxes on inflow boundary and on outflow boundary
-***/
-double density1=0.0;
-inputfile=Control_Param("density:",8);
-   density1=inputfile.param;
-//   printf(" density %lf \n", density1);
-//unsigned int j;
-//double sum_in=0,sumin=0.0;
-//double sum_out=0.,sumout=0.0, areasumin=0.0, areasumout=0.0;
+   ***/
+  double density1=0.0;
+  inputfile=Control_Param("density:",8);
+  density1=inputfile.param;
+  //   printf(" density %lf \n", density1);
+  //unsigned int j;
+  //double sum_in=0,sumin=0.0;
+  //double sum_out=0.,sumout=0.0, areasumin=0.0, areasumout=0.0;
 
-// for (i=0; i<nzone_in; i++)
-// {
- //if (nodezonein[i]==23)
-// for (j=0; j<node[nodezonein[i]-1].numneighb; j++)
- //    {
+  // for (i=0; i<nzone_in; i++)
+  // {
+  //if (nodezonein[i]==23)
+  // for (j=0; j<node[nodezonein[i]-1].numneighb; j++)
+  //    {
      
   
- //    sum_in=sum_in+node[nodezonein[i]-1].flux[j];
- //     areasumin=areasumin+node[nodezonein[i]-1].area[j];
- //     }
- //   }
+  //    sum_in=sum_in+node[nodezonein[i]-1].flux[j];
+  //     areasumin=areasumin+node[nodezonein[i]-1].area[j];
+  //     }
+  //   }
     
- //    printf ("Total in-flow volumetric flux = %12.5e [m^3/s]\n", sum_in);
- //if (areasumin>0)
-// sumin=sum_in/areasumin;
-// else 
- //sumin==0;
+  //    printf ("Total in-flow volumetric flux = %12.5e [m^3/s]\n", sum_in);
+  //if (areasumin>0)
+  // sumin=sum_in/areasumin;
+  // else 
+  //sumin==0;
   //    printf ("Total in-flow flux = %12.5e [m/s]\n", sumin);
      
 
-//for (i=0; i<nzone_out; i++)
-//{
-// for (j=0; j<node[nodezoneout[i]-1].numneighb; j++)
- //{
- //    areasumout=areasumout+node[nodezoneout[i]-1].area[j];
- //     sum_out=sum_out+node[nodezoneout[i]-1].flux[j];
-// }
-//}
-//printf ("Total out-flow volumetric flux = %12.5e [m^3/s]\n", sum_out);
+  //for (i=0; i<nzone_out; i++)
+  //{
+  // for (j=0; j<node[nodezoneout[i]-1].numneighb; j++)
+  //{
+  //    areasumout=areasumout+node[nodezoneout[i]-1].area[j];
+  //     sum_out=sum_out+node[nodezoneout[i]-1].flux[j];
+  // }
+  //}
+  //printf ("Total out-flow volumetric flux = %12.5e [m^3/s]\n", sum_out);
 
-//if (areasumout>0)
-//sumout=sum_out/areasumout;
-//else 
-//sumout=0.0;
-//printf ("Total out-flow flux = %12.5e [m/s]\n", sumout);
+  //if (areasumout>0)
+  //sumout=sum_out/areasumout;
+  //else 
+  //sumout=0.0;
+  //printf ("Total out-flow flux = %12.5e [m/s]\n", sumout);
 
-   /***************************/
+  /***************************/
   
   return;
 }
@@ -701,7 +761,7 @@ void ReadPFLOTRANfile(int nedges)
 {
   /**********Function opens and reads file (PFLOTRAN data )*************/
   struct inpfile inputfile;
-   int n1=0, n2=0,i,n_flux,j,k, res1;
+  int n1=0, n2=0,i,n_flux,j,k, res1;
   char wordc[60];
   int n_area;
   double floatnumber, areavalue;
@@ -721,105 +781,115 @@ void ReadPFLOTRANfile(int nedges)
   double l_dens=0.0;
   double l_area=0.0;
   char cs, csp;
-   n1=0;
-   n2=0;
+  n1=0;
+  n2=0;
   int flag=0;
   n_flux=(nedges-nnodes)/2.;
 
-// check the darcyvel file format;
-   csp=' ';
+  // check the darcyvel file format;
+  csp=' ';
 
  
-     do
-{       
-        cs=fgetc(pf);
-        if ((cs!=' ') && (csp==' '))
-           n2++;
-         csp=cs;
-} 
-     while (cs!='\n');
+  do
+    {       
+      cs=fgetc(pf);
+      if ((cs!=' ') && (csp==' '))
+	n2++;
+      csp=cs;
+    } 
+  while (cs!='\n');
 
-    if (n2>5)
-       flag=1;
- // if the old darcy velocity format is used, the uge file is read for area coefficients
+  if (n2>5)
+    flag=1;
+  // if the old darcy velocity format is used, the uge file is read for area coefficients
  
-     if (flag==0)
-      {
+  if (flag==0)
+    {
       
       /***** reading uge file *********/
       inputfile = Control_File("PFLOTRAN_uge:",13 );
  
-  FILE *pfu= OpenFile (inputfile.filename,"r");
+      FILE *pfu= OpenFile (inputfile.filename,"r");
  
   
   
-  printf("\n PFLOTRAN: OPEN AND READ FILE %s to read area coefficients. \n \n", inputfile.filename);
+      printf("\n PFLOTRAN: OPEN AND READ FILE %s to read area coefficients. \n \n", inputfile.filename);
   
-  fscanf(pfu," %s ",&wordc);
-  fscanf(pfu," %d ",&n1);
+      if (fscanf(pfu," %s ",wordc)!=1)
+	printf("Error");
+      if (fscanf(pfu," %d ",&n1)!=1)
+	printf("Error");
   
-  for (i=0; i<n1; i++)
-  {
-  fscanf(pfu," %d %f %f %f %f ", &n2,  &floatnumber, &floatnumber, &floatnumber, &floatnumber);
-  }
+      for (i=0; i<n1; i++)
+	{
+	  if (fscanf(pfu," %d %lf %lf %lf %lf ", &n2,  &floatnumber, &floatnumber, &floatnumber, &floatnumber)!=5)
+	    printf("Error");
+	}
   
-  fscanf(pfu," %s  %d",&wordc, &n_area);
+      if (fscanf(pfu," %s  %d",wordc, &n_area)!=2)
+	printf("Error");
   
-    res1=strncmp(wordc,"CONNECTIONS",11);
+      res1=strncmp(wordc,"CONNECTIONS",11);
       if (res1!=0)
-      {
-  printf ("\n  CAN'T READ AREA COEFFICIENTS FROM UGE FILE. Program is terminated. \n");
-  exit(1);
-       }
-  n1=0;
-  n2=0;
- for (i=0; i<n_area; i++)
-    {
-      fscanf(pfu," %d  %d  %lf %lf %lf %lf ", &n1, &n2, &floatnumber, &floatnumber, &floatnumber, &areavalue);
+	{
+	  printf ("\n  CAN'T READ AREA COEFFICIENTS FROM UGE FILE. Program is terminated. \n");
+	  exit(1);
+	}
+      n1=0;
+      n2=0;
+      for (i=0; i<n_area; i++)
+	{
+	  if (fscanf(pfu," %d  %d  %lf %lf %lf %lf ", &n1, &n2, &floatnumber, &floatnumber, &floatnumber, &areavalue)!=6)
+	    printf("Error");
      
       
-      for (j=0; j<node[n1-1].numneighb; j++)
-        {
-	  if (node[n1-1].indnodes[j]==n2)
+	  for (j=0; j<node[n1-1].numneighb; j++)
 	    {
-	    length=sqrt(pow(node[n1-1].coord[0]-node[node[n1-1].indnodes[j]-1].coord[0],2)+pow(node[n1-1].coord[1]-node[node[n1-1].indnodes[j]-1].coord[1],2)+pow(node[n1-1].coord[2]-node[node[n1-1].indnodes[j]-1].coord[2],2));
+	      if (node[n1-1].indnodes[j]==n2)
+		{
+		  length=sqrt(pow(node[n1-1].coord[0]-node[node[n1-1].indnodes[j]-1].coord[0],2)+pow(node[n1-1].coord[1]-node[node[n1-1].indnodes[j]-1].coord[1],2)+pow(node[n1-1].coord[2]-node[node[n1-1].indnodes[j]-1].coord[2],2));
 	    
-	      node[n1-1].area[j]=areavalue;
+		  node[n1-1].area[j]=areavalue;
 
   
 	  
-	      for (k=0; k<node[n2-1].numneighb; k++)
-                {
-		  if (node[n2-1].indnodes[k]==n1)
+		  for (k=0; k<node[n2-1].numneighb; k++)
 		    {
+		      if (node[n2-1].indnodes[k]==n1)
+			{
 		    
-		    length=sqrt(pow(node[n2-1].coord[0]-node[node[n2-1].indnodes[k]-1].coord[0],2)+pow(node[n2-1].coord[1]-node[node[n2-1].indnodes[k]-1].coord[1],2)+pow(node[n2-1].coord[2]-node[node[n2-1].indnodes[k]-1].coord[2],2));
+			  length=sqrt(pow(node[n2-1].coord[0]-node[node[n2-1].indnodes[k]-1].coord[0],2)+pow(node[n2-1].coord[1]-node[node[n2-1].indnodes[k]-1].coord[1],2)+pow(node[n2-1].coord[2]-node[node[n2-1].indnodes[k]-1].coord[2],2));
 		    
-		      node[n2-1].area[k]=areavalue;
+			  node[n2-1].area[k]=areavalue;
 
-		      break;
+			  break;
+			}
 		    }
-                }
-	      break;
-	    }
-        } 
-    }
+		  break;
+		}
+	    } 
+	}
   
     
-  fclose(pfu);
+      fclose(pfu);
       
-      }
-     /********************/
+    }
+  /********************/
      
-      n2=0;  
-    rewind(pf);   
+  n2=0;  
+  rewind(pf);   
 
   for (i=0; i<n_flux; i++)
     {
       if (flag==0)
-      fscanf(pf," %d  %d  %lf %lf  ", &n1, &n2, &l_flux, &l_dens);
+	{
+	  if (fscanf(pf," %d  %d  %lf %lf  ", &n1, &n2, &l_flux, &l_dens)!=4)
+	    printf("Error");
+        }
       else
-      fscanf(pf," %d  %d  %lf %lf %lf  ", &n1, &n2, &l_flux, &l_dens, &l_area);
+      
+	if (fscanf(pf," %d  %d  %lf %lf %lf  ", &n1, &n2, &l_flux, &l_dens, &l_area)!=5)
+	  printf("Error");
      
     
       for (j=0; j<node[n1-1].numneighb; j++)
@@ -827,11 +897,11 @@ void ReadPFLOTRANfile(int nedges)
 	  if (node[n1-1].indnodes[j]==n2)
 	    {
 	
-         if (flag!=0)
-            node[n1-1].area[j]=l_area;
+	      if (flag!=0)
+		node[n1-1].area[j]=l_area;
 
 
-	node[n1-1].flux[j]=l_flux*(node[n1-1].area[j]);
+	      node[n1-1].flux[j]=l_flux*(node[n1-1].area[j]);
 
 	     
            
@@ -840,9 +910,9 @@ void ReadPFLOTRANfile(int nedges)
 		  if (node[n2-1].indnodes[k]==n1)
 		    {
                 
-                     if (flag!=0)
-                      node[n2-1].area[k]=l_area;
-		node[n2-1].flux[k]=l_flux*(-1.0)*node[n2-1].area[k];
+		      if (flag!=0)
+			node[n2-1].area[k]=l_area;
+		      node[n2-1].flux[k]=l_flux*(-1.0)*node[n2-1].area[k];
 
 		    
 		      break;
@@ -869,8 +939,8 @@ void ReadPFLOTRANfile(int nedges)
   double maxpr=0.0, minpr=100.0, l_pres=0.0;   
   for (i=0; i<nnodes; i++)
     {
-      fscanf(fp," %d %lf %lf %lf %lf \n", &n1, &l_flux, &l_flux, &l_dens, &l_pres);
-
+      if (fscanf(fp," %d %lf %lf %lf %lf \n", &n1, &l_flux, &l_flux, &l_dens, &l_pres)!=5)
+	printf("Error");
       node[n1-1].pressure=l_pres/pow(10,6);
 
       if (node[n1-1].pressure>maxpr)
@@ -909,7 +979,8 @@ void ReadFEHMfile(int nedges)
     }
 
   /* reading the pressure on nodes , Pressure in MPa units*/    
-  fscanf(fpr, "%s \n",&line);
+  if (fscanf(fpr, "%s \n",line)!=1)
+    printf("Error");
   double maxpr=0.0, minpr=100.0;
     
   int res=strncmp(line,"pressure",8);
@@ -918,7 +989,8 @@ void ReadFEHMfile(int nedges)
       printf(" Reading %s\n",line);
       for (i=0; i<nnodes; i++)
 	{
-	  fscanf(fpr,"%lf",&node[i].pressure);
+	  if (fscanf(fpr,"%lf",&node[i].pressure)!=1)
+	    printf("Error");
 	  if (node[i].pressure>maxpr)
 	    maxpr=node[i].pressure;
 	  if (node[i].pressure<minpr)
@@ -928,7 +1000,8 @@ void ReadFEHMfile(int nedges)
   printf(" MAX pressure %5.8e MIN pressure %5.8e \n", maxpr, minpr);
   /* reading fluxes on edges*/      
 
-  fscanf(fpr, "%s %s\n",&line, &line);
+  if (fscanf(fpr, "%s %s\n",line, line)!=2)
+    printf("Error");
   int res1=strncmp(line,"flux",4);
   if (res1==0) 
     { 
@@ -939,7 +1012,8 @@ void ReadFEHMfile(int nedges)
       printf(" something is wrong with flux reading. please check.\n");
     }
         
-  fscanf(fpr,"%d\n",&i);
+  if (fscanf(fpr,"%d\n",&i)!=1)
+    printf("Error");
       
   if (nedges!=i)
     {
@@ -953,7 +1027,8 @@ void ReadFEHMfile(int nedges)
 	{
 	  if (j<node[i].numneighb)
             {
-	      fscanf(fpr, "%lf", &node[i].flux[j]);
+	      if( fscanf(fpr, "%lf", &node[i].flux[j])!=1)
+		printf("Error");
             }
 	} 
     } 
@@ -968,8 +1043,8 @@ void WritingInit()
   /**** Functions write the data structure of nodes, cells and fractures 
 	into files in ASCII format with explanations
 	(Good for debugging)***************************************/
-   char filename[125];
-   sprintf(filename,"%s/nodes",maindir);     
+  char filename[125];
+  sprintf(filename,"%s/nodes",maindir);     
   FILE *wp = OpenFile (filename,"w");
   printf("\n Output initial data structure  \n");
   /************* output to file node ************************/
@@ -980,14 +1055,14 @@ void WritingInit()
 	      node[i].typeN, node[i].coord[0],node[i].coord[1],node[i].coord[2], node[i].aperture);
       fprintf(wp, " Fracture(s) %d %d \n", node[i].fracture[0], node[i].fracture[1]); 
       if (node[i].fracture[1]==0)
-      fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[0][0],node[i].velocity[0][1] );
+	fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[0][0],node[i].velocity[0][1] );
       else
-       {
-      fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[0][0],node[i].velocity[0][1] );
-      fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[1][0],node[i].velocity[1][1] );
-      fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[2][0],node[i].velocity[2][1] );
-      fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[3][0],node[i].velocity[3][1] );
-       }
+	{
+	  fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[0][0],node[i].velocity[0][1] );
+	  fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[1][0],node[i].velocity[1][1] );
+	  fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[2][0],node[i].velocity[2][1] );
+	  fprintf(wp, " Vx  %5.8e Vy %5.8e \n", node[i].velocity[3][0],node[i].velocity[3][1] );
+	}
       fprintf(wp," Pressure %5.8e,   Volume %5.8e , Connections %d \n", 
 	      node[i].pressure,  node[i].pvolume, node[i].numneighb);
 
@@ -1075,35 +1150,109 @@ struct inpfile Control_File(char fileobject[], int ctr)
 	  returns the file name of the input(or output) file *****/
 { 
    
-  FILE *cf=OpenFile("PTDFN_control.dat","r");
+  FILE *cf=OpenFile(controlfile,"r");
   struct inpfile inputfile;
-  char fileline[ctr];
+  char fileline[120];
+  char* fileend="END";
  
+  int  end=0;
+  inputfile.param=0.0;
   inputfile.flag=-1;
-  int res2=1;
+  int res2=0, res1=0;
   do
     {
-      fscanf(cf,"\n %s",&fileline);
-  
-      int res1=strncmp(fileline,fileobject,ctr);
+      if (fscanf(cf,"\n %s",fileline)!=1)
+	printf("ERROR");
+
+      end=0;
+      res2=String_Compare(fileline, fileend);
+      if (res2==0)
+	end=strlen(fileend);
+
+      res1=String_Compare(fileline,fileobject);
       if (res1==0)
 	{
-	  fscanf(cf,"%s",&inputfile.filename);
-    
+	  if (fscanf(cf,"%s",inputfile.filename)!=1)
+	    printf("Error");
 	  inputfile.flag=1;
-  
-	  break;
+  	  end=strlen(fileend);
 	}
     }    
-  while (res2=strncmp(fileline,"END",3));  
+  while (end!=strlen(fileend));  
+
   if (inputfile.flag<0)
     {
-      printf("\n There is no %s input found in PTDFN_control.dat. Program is terminated. \n", fileobject);   
+      printf("\n There is no %s input found in %s. Program is terminated. \n", fileobject, controlfile);   
       exit(1);
     }
   fclose(cf);
   return inputfile;
 } 
+
+/////////////////////////////////////////////////////////////////////////////
+struct inpfile Control_File_Optional(char fileobject[], int ctr)
+/******** function reads control.dat file;
+          returns the file name of the input(or output) file *****/
+{
+
+  FILE *cf=OpenFile(controlfile,"r");
+  struct inpfile inputfile;
+  char fileline[120];
+  char* fileend="END";
+
+  int  end=0;
+  inputfile.param=0.0;
+  inputfile.flag=-1;
+  int res2=0, res1=0;
+  do
+    {
+      if (fscanf(cf,"\n %s",fileline)!=1)
+	printf("ERROR");
+
+      end=0;
+      res2=String_Compare(fileline, fileend);
+      if (res2==0)
+	end=strlen(fileend);
+
+      res1=String_Compare(fileline,fileobject);
+      if (res1==0)
+        {
+          if (fscanf(cf,"%s",inputfile.filename)!=1)
+	    printf("Error");
+          inputfile.flag=1;
+          end=strlen(fileend);
+        }
+    }
+  while (end!=strlen(fileend));
+
+  fclose(cf);
+  return inputfile;
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+int String_Compare(char string1[], char string2[])
+{
+  int resultc=1, res=0, k=0;
+
+  for (res=0; res<strlen(string2); res++)
+    {
+
+      if (string1[res]!=string2[res])
+	{
+
+          break;
+	}
+      else
+	k++;
+    }
+  if (k==strlen(string2))
+    resultc=0;
+
+  return resultc;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////
 
 struct inpfile Control_Data(char fileobject[], int ctr)
@@ -1111,28 +1260,39 @@ struct inpfile Control_Data(char fileobject[], int ctr)
   /******** function reads control.dat file;
 	    reads the input data parameters *************/
            
-  FILE *cf=OpenFile("PTDFN_control.dat","r");
+  FILE *cf=OpenFile(controlfile,"r");
   struct inpfile inputfile;
-  char fileline[ctr];
- 
+  char fileline[120];
+  int end=0;
+  char* fileend="END";
+
   inputfile.flag=-1;
-  int res2=1;
+  inputfile.param=0.0;
+  int res2=0, res1=0;
   do
     {
-      fscanf(cf,"%s",&fileline);
+      if (fscanf(cf,"%s",fileline)!=1)
+	printf("ERROR");
   
-      int res1=strncmp(fileline,fileobject,ctr);
+      end=0;
+      res2=String_Compare(fileline, fileend);
+      if (res2==0)
+	end=strlen(fileend);     
+
+
+      res1=String_Compare(fileline,fileobject);
       if (res1==0)
 	{
-	  fscanf(cf,"%ld",&inputfile.flag);
-
-	  break;
+	  if (fscanf(cf,"%ld",&inputfile.flag)!=1)
+	    printf("Error");
+          end=strlen(fileend);
+	  
 	}
     }    
-  while (res2=strncmp(fileline,"END",3));  
+  while (end!=strlen(fileend));  
   if (inputfile.flag<0)
     {
-      printf("\n There is no %s input found in PTDFN_control.dat. Program is terminated. \n", fileobject);   
+      printf("\n There is no %s input found in %s. Program is terminated. \n", fileobject, controlfile);   
       exit(1);
     }
   fclose(cf);
@@ -1144,28 +1304,39 @@ struct inpfile Control_Param(char fileobject[], int ctr)
   /******** function reads control.dat file;
 	    reads the input data parameters *************/
            
-  FILE *cf=OpenFile("PTDFN_control.dat","r");
+  FILE *cf=OpenFile(controlfile,"r");
   struct inpfile inputfile;
-  char fileline[ctr];
- 
+  char fileline[120];
+  char* fileend="END";
+  int end=0; 
+  inputfile.param=0.0;
   inputfile.flag=-1;
-  int res2=1;
+
+  int res2=0, res1=0;
   do
     {
-      fscanf(cf,"%s",&fileline);
-  
-      int res1=strncmp(fileline,fileobject,ctr);
+      if (fscanf(cf,"%s",fileline)!=1)
+	printf("ERROR");
+
+      end=0;
+      res2=String_Compare(fileline, fileend);
+      if (res2==0)
+	end=strlen(fileend);
+
+      res1=String_Compare(fileline, fileobject);
       if (res1==0)
 	{
-	  fscanf(cf,"%lf",&inputfile.param);
+	  if (fscanf(cf,"%lf",&inputfile.param)!=1)
+	    printf("Error");
 	  inputfile.flag=1;
-	  break;
+	  end=strlen(fileend);
 	}
-    }    
-  while (res2=strncmp(fileline,"END",3));  
+    }
+  while (end!=strlen(fileend));
+ 
   if (inputfile.flag<0)
     {
-      printf("\n There is no %s input found in PTDFN_control.dat. Program is terminated. \n", fileobject);   
+      printf("\n There is no %s input found in %s. Program is terminated. \n", fileobject, controlfile);   
       exit(1);
     }
   fclose(cf);
@@ -1174,110 +1345,112 @@ struct inpfile Control_Param(char fileobject[], int ctr)
 ////////////////////////////////////////////////////////////////////////////
 void ReadAperture()
 {
-/****** function reads aperture from file
-       DO NOT CHANGE AREA ******************************/
+  /****** function reads aperture from file
+	  DO NOT CHANGE AREA ******************************/
   struct inpfile inputfile;
   char cs;
-  int i, j,res_a;    
+  int i, res_a;    
  
   inputfile=Control_File("aperture_type:",14);
   
-   res_a=strncmp(inputfile.filename,"frac",4);
-// if given aperture is const per fracture    
+  res_a=strncmp(inputfile.filename,"frac",4);
+  // if given aperture is const per fracture    
   if (res_a==0)
-   {
+    {
    
-   inputfile = Control_File("aperture_file:",14 );
+      inputfile = Control_File("aperture_file:",14 );
  
-  FILE *ad = OpenFile (inputfile.filename,"r");
-   printf("\n OPEN AND READ FILE: %s \n ",inputfile.filename); 
- double currentap=0.0, aperturem[nfract];
+      FILE *ad = OpenFile (inputfile.filename,"r");
+      printf("\n OPEN AND READ FILE: %s \n ",inputfile.filename); 
+      double currentap=0.0, aperturem[nfract];
  
- int apmat=0, zn; 
+      int apmat=0, zn; 
  
-     do 
+      do 
 	cs=fgetc(ad); 
       while (cs!='\n');
  
- for (i=0; i<nfract; i++)
-    {
- fscanf(ad,"%d %d %d %lf \n", &apmat, &zn, &zn, &currentap);
- apmat=apmat*(-1)-6;
- aperturem[apmat-1]=currentap;
-    }
-  fclose(ad);
-  
- 
-  
-  for (i=0; i<nnodes; i++)
-    {
-    
- // define an aperture of the cell with current node as cellcenter   
-    if (node[i].fracture[1]==0)
-    node[i].aperture=aperturem[node[i].fracture[0]-1];
-    else
-    {
-     if (aperturem[node[i].fracture[0]-1]>=aperturem[node[i].fracture[1]-1])
-         node[i].aperture=aperturem[node[i].fracture[0]-1];
-      else
-         node[i].aperture=aperturem[node[i].fracture[1]-1];   
-    }
-   
-    } 
- }
- 
-   else
-   {
-  res_a=strncmp(inputfile.filename,"cell",4);
-// if given aperture is given per cell    
-  if (res_a==0)
- {
- 
-  inputfile = Control_File("aperture_file:",14 );
- 
-  FILE *ada = OpenFile (inputfile.filename,"r");
-  
-  printf("\n OPEN AND READ FILE: %s \n ",inputfile.filename); 
- 
-  double currentap=0.0;
-  double *aperturem;
-  
-   aperturem = (double*)malloc(nnodes*sizeof(double));
- 
- 
- int apmat=0, zn; 
- char c;
- 
-     do 
-     {
- 
-	c=fgetc(ada); 
-
+      for (i=0; i<nfract; i++)
+	{
+	  if (fscanf(ad,"%d %d %d %lf \n", &apmat, &zn, &zn, &currentap)!=4)
+	    printf("Error");
+	  apmat=apmat*(-1)-6;
+	  aperturem[apmat-1]=currentap;
 	}
-      while (c!='\n');
+      fclose(ad);
   
- for (i=0; i<nnodes; i++)
-    {
- fscanf(ada,"%d %lf \n", &apmat, &currentap);
  
- aperturem[apmat-1]=currentap;
-
-    }
-  fclose(ada);
   
-  
-  
-  for (i=0; i<nnodes; i++)
-    {
-  
-  // define an aperture of the cell with current node as cellcenter   
-   
-    node[i].aperture=aperturem[i];
+      for (i=0; i<nnodes; i++)
+	{
     
+	  // define an aperture of the cell with current node as cellcenter   
+	  if (node[i].fracture[1]==0)
+	    node[i].aperture=aperturem[node[i].fracture[0]-1];
+	  else
+	    {
+	      if (aperturem[node[i].fracture[0]-1]>=aperturem[node[i].fracture[1]-1])
+		node[i].aperture=aperturem[node[i].fracture[0]-1];
+	      else
+		node[i].aperture=aperturem[node[i].fracture[1]-1];   
+	    }
+   
+	} 
     }
-    free(aperturem);
- }
  
-  } 
-return;
+  else
+    {
+      res_a=strncmp(inputfile.filename,"cell",4);
+      // if given aperture is given per cell    
+      if (res_a==0)
+	{
+ 
+	  inputfile = Control_File("aperture_file:",14 );
+ 
+	  FILE *ada = OpenFile (inputfile.filename,"r");
+  
+	  printf("\n OPEN AND READ FILE: %s \n ",inputfile.filename); 
+ 
+	  double currentap=0.0;
+	  double *aperturem;
+  
+	  aperturem = (double*)malloc(nnodes*sizeof(double));
+ 
+ 
+	  int apmat=0; 
+	  char c;
+ 
+	  do 
+	    {
+ 
+	      c=fgetc(ada); 
+
+	    }
+	  while (c!='\n');
+  
+	  for (i=0; i<nnodes; i++)
+	    {
+	      if(fscanf(ada,"%d %lf \n", &apmat, &currentap)!=2)
+		printf("Error");
+ 
+	      aperturem[apmat-1]=currentap;
+
+	    }
+	  fclose(ada);
+  
+  
+  
+	  for (i=0; i<nnodes; i++)
+	    {
+  
+	      // define an aperture of the cell with current node as cellcenter   
+   
+	      node[i].aperture=aperturem[i];
+    
+	    }
+	  free(aperturem);
+	}
+ 
+    } 
+  return;
 }

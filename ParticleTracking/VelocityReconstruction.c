@@ -42,7 +42,7 @@ void  DarcyVelocity()
   unsigned long int fracture1=0, fracture2=0;
   unsigned int fract_j1[max_neighb];
   unsigned int fract_j2[max_neighb];
-  double length=0;
+  double length=1.0;
   struct lb lbound;
   unsigned short int flag1=0, flag2=0;
 
@@ -68,42 +68,42 @@ void  DarcyVelocity()
 	      if (node[i].fracture[0]==node[node[i].indnodes[fract_j1[j]]-1].fracture[0])
 		{
 		  
-		if (pflotran==1)
-              { 
-		  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
+		  if (pflotran==1)
+		    { 
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
 		  
-		  normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
-		  normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length);
+		      normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length);
 		  
-        	 }
-	 if (fehm==1)
-              {
-                  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
+		    }
+		  if (fehm==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
 
-                  normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]);
-                  normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]);
+		      normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]);
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]);
 
-                 }
+		    }
 
 	  
-/* the length variable could be used when FEHM flow solution is provided and the area from stor file is normalized */  
+		  /* the length variable could be used when FEHM flow solution is provided and the area from stor file is normalized */  
 		}
               if (node[i].fracture[0]==node[node[i].indnodes[fract_j1[j]]-1].fracture[1])
 		{
 		
-              if (pflotran==1)
-               {
-		  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
-		  normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
-		  normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
-		}
+		  if (pflotran==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
+		      normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
+		    }
 
-	if (fehm==1)
-               {
-                  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
-                  normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]);
-                  normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]);
-                }
+		  if (fehm==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
+		      normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]);
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]);
+		    }
  
 		}
 		
@@ -144,40 +144,40 @@ void  DarcyVelocity()
 	    {
 	      if (node[i].fracture[0]==node[node[i].indnodes[j]-1].fracture[0])
 		{
-		if (pflotran==1)
-               {
-		  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
+		  if (pflotran==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
 		  
-		normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
-		normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length); 
-		}
-		if (fehm==1)
-               {
-                  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length); 
+		    }
+		  if (fehm==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
 
-                normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]);
-                normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]);
-                }
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]);
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]);
+		    }
 
 
 		}
 
 	      if (node[i].fracture[0]==node[node[i].indnodes[j]-1].fracture[1])
 		{
-		if (pflotran==1)
-               {
-		  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
+		  if (pflotran==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
 		  
-		normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
-		normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
-		}
-		if (fehm==1)
-               {
-                  length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
+		    }
+		  if (fehm==1)
+		    {
+		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
 
-                normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]);
-                normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]);
-                }
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]);
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]);
+		    }
 
 
 		}
@@ -239,12 +239,12 @@ void  DarcyVelocity()
    
   printf(" Velocities on nodes are calculated \n" );
  
-//  int res;
-//  struct inpfile inputfile;
-//  inputfile=Control_File("out_2dflow:",11);
-//  res=strncmp(inputfile.filename,"yes",3);
-//  if (res==0) 
-//     OutputVelocities();
+  //  int res;
+  //  struct inpfile inputfile;
+  //  inputfile=Control_File("out_2dflow:",11);
+  //  res=strncmp(inputfile.filename,"yes",3);
+  //  if (res==0) 
+  //     OutputVelocities();
   
   
   return;
@@ -334,11 +334,11 @@ struct matr   MatrixProducts (double normxarea[][2],  int number)
 	    }
 	}
     }
- //   printf("dp %5.8e %5.8e %5.8e %5.8e \n",dp[0][0], dp[0][1], dp[1][0],dp[1][1]);
+  //   printf("dp %5.8e %5.8e %5.8e %5.8e \n",dp[0][0], dp[0][1], dp[1][0],dp[1][1]);
   /* calculating Inverse */
   double determinant =  dp[0][0]* dp[1][1]-dp[0][1]*dp[1][0];
- // printf("det %5.8e \n", determinant);
-  double eps=1e-555;                   
+  // printf("det %5.8e \n", determinant);
+  double eps=1e-25;                   
   if ((determinant<eps) && (determinant>-eps))
     {
       //    printf("Det of matrix is close to zero %15.8e  \n",determinant);
@@ -350,7 +350,7 @@ struct matr   MatrixProducts (double normxarea[][2],  int number)
   matrices.matinv[1][0] = -dp[1][0]*invdet;
   matrices.matinv[0][1] = -dp[0][1]*invdet;
   matrices.matinv[1][1] =  dp[0][0]*invdet;
- // printf("inv %5.8e %5.8e %5.8e %5.8e \n", matrices.matinv[0][0], matrices.matinv[0][1], matrices.matinv[1][0], matrices.matinv[1][1]); 
+  // printf("inv %5.8e %5.8e %5.8e %5.8e \n", matrices.matinv[0][0], matrices.matinv[0][1], matrices.matinv[1][0], matrices.matinv[1][1]); 
   /* inverse dot product Gt */
   for (m=0; m<2; m++)
     {
@@ -360,7 +360,7 @@ struct matr   MatrixProducts (double normxarea[][2],  int number)
 	
 	}
 	
-	//printf("m %d %5.8e %5.8e %5.8e %5.8e %5.8e %5.8e\n", m, matrices.matrinvG[m][0], matrices.matrinvG[m][1], matrices.matrinvG[m][2], matrices.matrinvG[m][3], matrices.matrinvG[m][4], matrices.matrinvG[m][5]); 
+      //printf("m %d %5.8e %5.8e %5.8e %5.8e %5.8e %5.8e\n", m, matrices.matrinvG[m][0], matrices.matrinvG[m][1], matrices.matrinvG[m][2], matrices.matrinvG[m][3], matrices.matrinvG[m][4], matrices.matrinvG[m][5]); 
     }    
 
   return matrices;
@@ -449,18 +449,18 @@ void VelocityInteriorNode (double normx_area[][2], int i, int number, unsigned i
       for (j=0; j<number;j++)
 	{
 	
-	// in case of unstructured grid 
-	 qhat[m]=qhat[m]+matrices.matrinvG[m][j]*node[i].flux[indj[j]];
+	  // in case of unstructured grid 
+	  qhat[m]=qhat[m]+matrices.matrinvG[m][j]*node[i].flux[indj[j]];
 	  
 	  // in case of PFLOTRAN solver and uniform grid
-	// qhat[m]=qhat[m]+matrices.matrinvG[m][j]*normx_area[indj[j]][m]*node[i].flux[indj[j]];
+	  // qhat[m]=qhat[m]+matrices.matrinvG[m][j]*normx_area[indj[j]][m]*node[i].flux[indj[j]];
 	 
 	
 	  massbalance=massbalance+node[i].flux[indj[j]];
           
 	}
       // velocity is Darcy's velocity qhat / density * porosity and converted from m/sec to m/year  
-     node[i].velocity[vi][m]=(qhat[m]/(density*porosity))*timeunit;
+      node[i].velocity[vi][m]=(qhat[m]/(density*porosity))*timeunit;
   
     }  
   
@@ -496,8 +496,8 @@ void VelocityExteriorNode (double norm_xarea[][2], int i, int number, unsigned i
 	  //recommend in case of unstructured grid
 	  qhat[m]=qhat[m]+matrices.matrinvG[m][j]*node[i].flux[indj[j]];
 	
-	//recommend in case of PFLOTRAN and uniform grid
-	//  qhat[m]=qhat[m]+matrices.matrinvG[m][j]*norm_xarea[indj[j]][m]*node[i].flux[indj[j]];
+	  //recommend in case of PFLOTRAN and uniform grid
+	  //  qhat[m]=qhat[m]+matrices.matrinvG[m][j]*norm_xarea[indj[j]][m]*node[i].flux[indj[j]];
 	
 	
 	  massbalance=massbalance+node[i].flux[indj[j]];
@@ -531,7 +531,7 @@ void VelocityExteriorNode (double norm_xarea[][2], int i, int number, unsigned i
   for (m=0; m<2; m++)
     {
       // velocity is Darcy's velocity qhat / density * porosity and converted from m/sec to m/timeunit  
-        node[i].velocity[vi][m]=(q_b[m]/(density*porosity))*timeunit;
+      node[i].velocity[vi][m]=(q_b[m]/(density*porosity))*timeunit;
    
     }    
  
@@ -549,7 +549,7 @@ void BoundaryCells ()
     {
 
       /* define k1 and k2 - two boundary nodes in a boundary cell */
-     long int k1=0, k2=0, v1=0, v2=0, k3=0, v3=0, node3=0, vel3=0, kk3=0, vv3=0;
+      long int k1=0, k2=0, v1=0, v2=0, k3=0, v3=0, node3=0,  vel3=0, kk3=0, vv3=0;
       n1=cell[i].node_ind[0];
       if ((node[n1-1].typeN==10)|| (node[n1-1].typeN==12)||(node[n1-1].typeN==310)|| (node[n1-1].typeN==312))
 	{
@@ -586,16 +586,16 @@ void BoundaryCells ()
 	    }
 	  else
 	    {
-	     if (k2==0)
-	     {
-	      k2=n3;
-	      v2=cell[i].veloc_ind[2];
-	      }
+	      if (k2==0)
+		{
+		  k2=n3;
+		  v2=cell[i].veloc_ind[2];
+		}
 	      else
-	      {
-	      kk3=n3;
-	      vv3=cell[i].veloc_ind[2];
-	      }
+		{
+		  kk3=n3;
+		  vv3=cell[i].veloc_ind[2];
+		}
 	      if (k1==n1)
 		{
 		  node3=n2;
@@ -609,7 +609,7 @@ void BoundaryCells ()
 	{
 	  /****** first, reconstruct velocities on boundary corners***************/
 	  /* first node k1 */ 
-	long  int jk3=0, jk2=0, jk1=0, notcorner=0, notcorner1=0, k;
+	  long  int jk3=0, jk2=0, jk1=0, notcorner=0, notcorner1=0, k;
 	  for (j=0; j<node[k1-1].numneighb; j++)
 	    { 
 	      if (((node[k1-1].type[j]==10) || (node[k1-1].type[j]==12)||(node[node[k1-1].indnodes[j]-1].typeN==310)) && (node[k1-1].indnodes[j]!=k2)) 
@@ -618,12 +618,12 @@ void BoundaryCells ()
 		    {
 		      if (node[k1-1].fracts[j][k]==cell[i].fracture)
 			{
-			 if (node[k1-1].cells[j][1]==0)
-			   {
-			  k3=node[k1-1].indnodes[j];
-			  jk3=j;
-			  celln=node[k1-1].cells[j][k];
-			   }
+			  if (node[k1-1].cells[j][1]==0)
+			    {
+			      k3=node[k1-1].indnodes[j];
+			      jk3=j;
+			      celln=node[k1-1].cells[j][k];
+			    }
 			}
 		    }
 		}
@@ -652,18 +652,18 @@ void BoundaryCells ()
 	    { 
 	      if (((node[k2-1].type[j]==10) || (node[k2-1].type[j]==12)||(node[node[k2-1].indnodes[j]-1].typeN==310)) && (node[k2-1].indnodes[j]!=k1)) 
 		{
-                   for (k=0; k<4; k++)
+		  for (k=0; k<4; k++)
 		    {
 		      if (node[k2-1].fracts[j][k]==cell[i].fracture)
 			{
-			if (node[k2-1].cells[j][1]==0)
-			{
-		       k3=node[k2-1].indnodes[j];
-		    jk3=j;
-		    celln=node[k2-1].cells[j][0];
+			  if (node[k2-1].cells[j][1]==0)
+			    {
+			      k3=node[k2-1].indnodes[j];
+			      jk3=j;
+			      celln=node[k2-1].cells[j][0];
+			    }
+			}
 		    }
-		}
-		}
 		}
 	      if (node[k2-1].indnodes[j]==k1)
 		jk1=j;
@@ -690,7 +690,7 @@ void BoundaryCells ()
 	       one of them being turned onto flow direction ****************************/
 	  if ((notcorner+notcorner1)>0)
 	    {
-	      double vk1[2]={0,0}, vk2[2]={0,0},vk3[2]={0,0}, velx, vely, angleuv;
+	      double vk1[2]={0,0}, vk2[2]={0,0}, vk3[2]={0,0}, velx, vely, angleuv;
 	      double angle, eps=0.0001, node3x=0, node3y=0;
 	      vk1[0]=node[k1-1].velocity[v1][0];
 	      vk1[1]=node[k1-1].velocity[v1][1];
@@ -706,24 +706,24 @@ void BoundaryCells ()
 	      /* check those cells on boundaies but not on intersection */
 	      if ((vk1[0]*vk2[0]<0)&&(vk1[1]*vk2[1]<0) &&(angle_1<(pi+eps)) && (angle_1 >(pi-eps))&&((node[k1-1].typeN+node[k2-1].typeN)==20)) 
 		{    
-//		  printf("corner1, %d %d %lf %lf\n", node[k2-1].fracture[0], k2, node[k2-1].coord_xy[0], node[k2-1].coord_xy[0]);
-                   double minpressure=1000;
-                   int ni=0;
-                    for (ni=0; ni<node[k1-1].numneighb; ni++)
+		  //		  printf("corner1, %d %d %lf %lf\n", node[k2-1].fracture[0], k2, node[k2-1].coord_xy[0], node[k2-1].coord_xy[0]);
+		  double minpressure=1000;
+		  int ni=0;
+		  for (ni=0; ni<node[k1-1].numneighb; ni++)
                     {
                       if ((node[node[k1-1].indnodes[ni]-1].pressure < minpressure)&& (node[k1-1].indnodes[ni]!=k2))
-                      {
+			{
                       
-                      minpressure=node[node[k1-1].indnodes[ni]-1].pressure;
-                      node3=node[k1-1].indnodes[ni];
-                      node3x=node[node3-1].coord_xy[XindexC(node3,i)]-node[k1-1].coord_xy[0]; 
-		      node3y=node[node3-1].coord_xy[YindexC(node3,i)]-node[k1-1].coord_xy[1];
-                      }
+			  minpressure=node[node[k1-1].indnodes[ni]-1].pressure;
+			  node3=node[k1-1].indnodes[ni];
+			  node3x=node[node3-1].coord_xy[XindexC(node3,i)]-node[k1-1].coord_xy[0]; 
+			  node3y=node[node3-1].coord_xy[YindexC(node3,i)]-node[k1-1].coord_xy[1];
+			}
                   
                     }
                     
-//		  node3x=node[node3-1].coord_xy[XindexC(node3,i)]-node[k1-1].coord_xy[0]; 
-//		  node3y=node[node3-1].coord_xy[YindexC(node3,i)]-node[k1-1].coord_xy[1];
+		  //		  node3x=node[node3-1].coord_xy[XindexC(node3,i)]-node[k1-1].coord_xy[0]; 
+		  //		  node3y=node[node3-1].coord_xy[YindexC(node3,i)]-node[k1-1].coord_xy[1];
 
 		  angleuv=DefineAngle(vk1[0],vk1[1],node3x, node3y);   
    
@@ -748,7 +748,7 @@ void BoundaryCells ()
 	      /* check those cells on boundaries and on intersection */
 	      if ((vk1[0]*vk2[0]<0)&&(vk1[1]*vk2[1]<0) &&((node[k1-1].typeN+node[k2-1].typeN)!=20)) 
 		{
-//		 printf("corner2, %d %d %lf %lf\n", node[k2-1].fracture[0], k2, node[k2-1].coord_xy[0], node[k2-1].coord_xy[0]);
+		  //		 printf("corner2, %d %d %lf %lf\n", node[k2-1].fracture[0], k2, node[k2-1].coord_xy[0], node[k2-1].coord_xy[0]);
 		  if (node[k1-1].typeN==12)
 		    {
 		      node[k1-1].velocity[v1][0]=(-1)*node[k1-1].velocity[v1][0];
@@ -765,12 +765,12 @@ void BoundaryCells ()
 		}
 	    } 
 	} //if k1*k2
-	if((k1*k2!=0) && (kk3!=0))
+      if((k1*k2!=0) && (kk3!=0))
 	{
-	        if (node[kk3-1].numneighb==2)
-        {
-	int   notc;
-	   notc=CornerVelocity(i,kk3,k2,k1,vv3,v2,v1);
+	  if (node[kk3-1].numneighb==2)
+	    {
+	      int   notc;
+	      notc=CornerVelocity(i,kk3,k2,k1,vv3,v2,v1);
 
 	    }
 	}
@@ -814,9 +814,9 @@ int CornerVelocity(int i,int m1,int m2,int m3,int s1,int s2,int s3)
   if (((ang_uv>= (pi-eps)) && (ang_uv<=(pi+eps)))|| ((ang_uv>=(-eps)) && (ang_uv<=(+eps))))
     notcorner=1;
    
-    if ((ang_uv<(pi-eps)) && (ang_uv>eps)) 
+  if ((ang_uv<(pi-eps)) && (ang_uv>eps)) 
     {
-       notcorner=0;
+      notcorner=0;
       vk1[0]=node[m1-1].velocity[s1][0];
       vk1[1]=node[m1-1].velocity[s1][1];
       vk2[0]=node[m2-1].velocity[s2][0];
@@ -832,104 +832,104 @@ int CornerVelocity(int i,int m1,int m2,int m3,int s1,int s2,int s3)
       if ((ang_vk1u>(pi-eps)) && (ang_vk1u<(pi+eps)) && ((ang_vk1vk2<eps)||(ang_vk1vk2>(pi-eps))))
 	{  
           if ((node[m1-1].typeN<300)&&(node[m3-1].typeN<300))
-         {
+	    {
         
-	  velx=node[m1-1].velocity[s1][0]*cos(ang_vk1v)-node[m1-1].velocity[s1][1]*sin(ang_vk1v);
-	  vely=node[m1-1].velocity[s1][0]*sin(ang_vk1v)+node[m1-1].velocity[s1][1]*cos(ang_vk1v);
-	  angle=DefineAngle(velx,vely,v[0],v[1]);
-	  if (angle>eps)
-	    {
-	      velx=node[m1-1].velocity[s1][0]*cos(ang_vk1v)+node[m1-1].velocity[s1][1]*sin(ang_vk1v);
-	      vely=-1*node[m1-1].velocity[s1][0]*sin(ang_vk1v)+node[m1-1].velocity[s1][1]*cos(ang_vk1v);
+	      velx=node[m1-1].velocity[s1][0]*cos(ang_vk1v)-node[m1-1].velocity[s1][1]*sin(ang_vk1v);
+	      vely=node[m1-1].velocity[s1][0]*sin(ang_vk1v)+node[m1-1].velocity[s1][1]*cos(ang_vk1v);
 	      angle=DefineAngle(velx,vely,v[0],v[1]);
-	    }
-	  if (angle<eps)
-	    {
+	      if (angle>eps)
+		{
+		  velx=node[m1-1].velocity[s1][0]*cos(ang_vk1v)+node[m1-1].velocity[s1][1]*sin(ang_vk1v);
+		  vely=-1*node[m1-1].velocity[s1][0]*sin(ang_vk1v)+node[m1-1].velocity[s1][1]*cos(ang_vk1v);
+		  angle=DefineAngle(velx,vely,v[0],v[1]);
+		}
+	      if (angle<eps)
+		{
 	     
-	      node[m1-1].velocity[s1][0]=velx;
-	      node[m1-1].velocity[s1][1]=vely;  
-	    }
+		  node[m1-1].velocity[s1][0]=velx;
+		  node[m1-1].velocity[s1][1]=vely;  
+		}
     
-	   } 
+	    } 
 	}
       else
 	{
 	  if ((ang_vk1v>(pi-eps)) && (ang_vk1v<(pi+eps)) && ((ang_vk1vk3<eps)||(ang_vk1vk3>(pi-eps))))
 	    { 
-         if ((node[m1-1].typeN<300)&&(node[m2-1].typeN<300))
-         {
-	      velx=node[m1-1].velocity[s1][0]*cos(ang_vk1u)-node[m1-1].velocity[s1][1]*sin(ang_vk1u);
-	      vely=node[m1-1].velocity[s1][0]*sin(ang_vk1u)+node[m1-1].velocity[s1][1]*cos(ang_vk1u);
-	      angle=DefineAngle(velx,vely,u[0],u[1]);
-
-	      if (angle>eps)
+	      if ((node[m1-1].typeN<300)&&(node[m2-1].typeN<300))
 		{
-		  velx=node[m1-1].velocity[s1][0]*cos(ang_vk1u)+node[m1-1].velocity[s1][1]*sin(ang_vk1u);
-		  vely=-1*node[m1-1].velocity[s1][0]*sin(ang_vk1u)+node[m1-1].velocity[s1][1]*cos(ang_vk1u);
+		  velx=node[m1-1].velocity[s1][0]*cos(ang_vk1u)-node[m1-1].velocity[s1][1]*sin(ang_vk1u);
+		  vely=node[m1-1].velocity[s1][0]*sin(ang_vk1u)+node[m1-1].velocity[s1][1]*cos(ang_vk1u);
 		  angle=DefineAngle(velx,vely,u[0],u[1]);
-		}
-	      if (angle<eps)
-		{
+
+		  if (angle>eps)
+		    {
+		      velx=node[m1-1].velocity[s1][0]*cos(ang_vk1u)+node[m1-1].velocity[s1][1]*sin(ang_vk1u);
+		      vely=-1*node[m1-1].velocity[s1][0]*sin(ang_vk1u)+node[m1-1].velocity[s1][1]*cos(ang_vk1u);
+		      angle=DefineAngle(velx,vely,u[0],u[1]);
+		    }
+		  if (angle<eps)
+		    {
 		
-		  node[m1-1].velocity[s1][0]=velx;
-		  node[m1-1].velocity[s1][1]=vely; 
-		} 
+		      node[m1-1].velocity[s1][0]=velx;
+		      node[m1-1].velocity[s1][1]=vely; 
+		    } 
+		}
 	    }
-	   }
-	  }
+	}
 	
 	    
 
-	      /* if node is on inflow boundary:*/
-	      double ang_u, ang_v;
-	      if (((node[m1-1].typeN==310) || (node[m1-1].typeN==312)) && (node[m2-1].typeN!=310) && (node[m2-1].typeN!=312))
-		{
+      /* if node is on inflow boundary:*/
+      double ang_u, ang_v;
+      if (((node[m1-1].typeN==310) || (node[m1-1].typeN==312)) && (node[m2-1].typeN!=310) && (node[m2-1].typeN!=312))
+	{
 		
-		      ang_u=DefineAngle(vk1[0],vk1[1],u[0],u[1]);
-		      velx=node[m1-1].velocity[s1][0]*cos(ang_u)-node[m1-1].velocity[s1][1]*sin(ang_u);
-		      vely=node[m1-1].velocity[s1][0]*sin(ang_u)+node[m1-1].velocity[s1][1]*cos(ang_u);
-		      angle=DefineAngle(velx,vely,u[0],u[1]);
+	  ang_u=DefineAngle(vk1[0],vk1[1],u[0],u[1]);
+	  velx=node[m1-1].velocity[s1][0]*cos(ang_u)-node[m1-1].velocity[s1][1]*sin(ang_u);
+	  vely=node[m1-1].velocity[s1][0]*sin(ang_u)+node[m1-1].velocity[s1][1]*cos(ang_u);
+	  angle=DefineAngle(velx,vely,u[0],u[1]);
 
-		      if (angle>eps)
-			{
-			  velx=node[m1-1].velocity[s1][0]*cos(ang_u)+node[m1-1].velocity[s1][1]*sin(ang_u);
-			  vely=-1*node[m1-1].velocity[s1][0]*sin(ang_u)+node[m1-1].velocity[s1][1]*cos(ang_u);
-			  angle=DefineAngle(velx,vely,u[0],u[1]);
-			}
-		      if (angle<eps)
-			{
+	  if (angle>eps)
+	    {
+	      velx=node[m1-1].velocity[s1][0]*cos(ang_u)+node[m1-1].velocity[s1][1]*sin(ang_u);
+	      vely=-1*node[m1-1].velocity[s1][0]*sin(ang_u)+node[m1-1].velocity[s1][1]*cos(ang_u);
+	      angle=DefineAngle(velx,vely,u[0],u[1]);
+	    }
+	  if (angle<eps)
+	    {
 			 
-			  node[m1-1].velocity[s1][0]=velx;
-			  node[m1-1].velocity[s1][1]=vely; 
-			}
-		    }
+	      node[m1-1].velocity[s1][0]=velx;
+	      node[m1-1].velocity[s1][1]=vely; 
+	    }
+	}
 		    
-		  else
-		  {
-		   if (((node[m1-1].typeN==310)||(node[m1-1].typeN==312)) && (node[m3-1].typeN!=310) && (node[m3-1].typeN!=312))  
+      else
+	{
+	  if (((node[m1-1].typeN==310)||(node[m1-1].typeN==312)) && (node[m3-1].typeN!=310) && (node[m3-1].typeN!=312))  
 		  
-			{ 
-			  ang_v=DefineAngle(vk1[0],vk1[1],v[0],v[1]);
-			  velx=node[m1-1].velocity[s1][0]*cos(ang_v)-node[m1-1].velocity[s1][1]*sin(ang_v);
-			  vely=node[m1-1].velocity[s1][0]*sin(ang_v)+node[m1-1].velocity[s1][1]*cos(ang_v);
-			  angle=DefineAngle(velx,vely,v[0],v[1]);
+	    { 
+	      ang_v=DefineAngle(vk1[0],vk1[1],v[0],v[1]);
+	      velx=node[m1-1].velocity[s1][0]*cos(ang_v)-node[m1-1].velocity[s1][1]*sin(ang_v);
+	      vely=node[m1-1].velocity[s1][0]*sin(ang_v)+node[m1-1].velocity[s1][1]*cos(ang_v);
+	      angle=DefineAngle(velx,vely,v[0],v[1]);
 
-			  if (angle>eps)
-			    {
-			      velx=node[m1-1].velocity[s1][0]*cos(ang_v)+node[m1-1].velocity[s1][1]*sin(ang_v);
-			      vely=-1*node[m1-1].velocity[s1][0]*sin(ang_v)+node[m1-1].velocity[s1][1]*cos(ang_v);
-			      angle=DefineAngle(velx,vely, v[0],v[1]);
-			    }
+	      if (angle>eps)
+		{
+		  velx=node[m1-1].velocity[s1][0]*cos(ang_v)+node[m1-1].velocity[s1][1]*sin(ang_v);
+		  vely=-1*node[m1-1].velocity[s1][0]*sin(ang_v)+node[m1-1].velocity[s1][1]*cos(ang_v);
+		  angle=DefineAngle(velx,vely, v[0],v[1]);
+		}
  
-			  if (angle<eps)
-			    {
+	      if (angle<eps)
+		{
 			   
-			      node[m1-1].velocity[s1][0]=velx;
-			      node[m1-1].velocity[s1][1]=vely; 
-			    }
+		  node[m1-1].velocity[s1][0]=velx;
+		  node[m1-1].velocity[s1][1]=vely; 
+		}
 
-			} 
-		    }
+	    } 
+	}
 		
 	
     }
@@ -1032,19 +1032,19 @@ void HalfPolygonVelocity(int i,int k, int fractn, int indc, unsigned int fractj[
 	{
 	  sc1f++;
 	  subcell1f[sc1f-1]=fractj[j];
-        if (fehm==1)	  
-         {
+	  if (fehm==1)	  
+	    {
 
-	  normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]); 
-	  normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]); 
-	  }
+	      normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]); 
+	      normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]); 
+	    }
 
-       if (pflotran==1)    
-         {
+	  if (pflotran==1)    
+	    {
 
-          normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
-          normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
-          }
+	      normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
+	      normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
+	    }
 
 	  if ((node[i].type[fractj[j]]!=2)&&(node[i].type[fractj[j]]!=12))
 	    {
@@ -1071,16 +1071,16 @@ void HalfPolygonVelocity(int i,int k, int fractn, int indc, unsigned int fractj[
 	  sc2f++;
 	  subcell2f[sc2f-1]=fractj[j];
 	  if (fehm==1)
-          {
-      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]); 
-      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]); 
-          }
+	    {
+	      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]); 
+	      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]); 
+	    }
 
-         if (pflotran==1)
-          {
-      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
-      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
-          }
+	  if (pflotran==1)
+	    {
+	      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
+	      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
+	    }
 
 	  if ((node[i].type[fractj[j]]!=2)&&(node[i].type[fractj[j]]!=12))
 	    {
@@ -1123,10 +1123,10 @@ void HalfPolygonVelocity(int i,int k, int fractn, int indc, unsigned int fractj[
 	    VelocityExteriorNode (normxarea21, i, sc1f, subcell1f, lbound,indc ); 
 	    
 	  if (sc2f!=0)   
-           {
-	    VelocityExteriorNode (normxarea22, i, sc2f, subcell2f, lbound,indc+1 ); 
+	    {
+	      VelocityExteriorNode (normxarea22, i, sc2f, subcell2f, lbound,indc+1 ); 
 	  
-	   }
+	    }
 	}
     }
 
