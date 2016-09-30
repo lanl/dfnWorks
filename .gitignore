@@ -3,6 +3,8 @@
 *.nfs*
 *.swp
 python_scripts/*.pyc
+python_scripts/*.swp
+python_scripts/runDFN.py 
 DFNTrans
 C_uge_correct/correct_uge
 DFN_MESH_Connectivity_Test/ConnectivityTest
