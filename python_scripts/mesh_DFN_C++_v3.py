@@ -97,7 +97,7 @@ def create_parameter_mlgi_file(nPoly,h,slope = 2, refine_dist = 0.5):
 	# r_radius: Upper bound on radius of circumscribed circle around rectangle
 	# h_trans : amount needed to translate to create delta buffer
 	# It's all trig to work it out! 
-	delta = 0.8
+	delta = 0.7
 	h_extrude = 0.5*h # upper limit on spacing of points on interssction line
 	h_radius = sqrt((0.5*h_extrude)**2 + (0.5*h_extrude)**2)
 	h_trans = -0.5*h_extrude + h_radius*cos(arcsin(delta))
