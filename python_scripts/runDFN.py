@@ -58,6 +58,7 @@ define_paths()
 # USER INPUT FILES, ALL PATHS MUST BE VALID	
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/1L_network.dat'	
 #dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/multi_rect.dat'	
+<<<<<<< HEAD
 #dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
 dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/pl_test.dat'	
 dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'
@@ -66,6 +67,14 @@ dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_c
 #dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/CGU_networks/pl_test.dat'	
 #dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
 #dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
+=======
+dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
+#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/pl_test.dat'	
+#dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'
+dfnFlow_run_file = '/scratch/nobackup/nataliia/ugta/pflot_tb.in'	
+dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
+
+>>>>>>> 3dad40a0ca62c23315c9ab20defc5510ba52c3ee
 
 #dfnFlow_run_file = '/scratch/fe/jhyman/dfnWorks/2016-marco/fors15_115/dfn_explicit.in'	
 

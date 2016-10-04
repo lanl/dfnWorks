@@ -492,7 +492,7 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 forceLargeFractures: 0
 outputFinalRadiiPerFamily: 0 
 radiiListIncrease: 0.1
-
+removeFracturesLessThan:0 
 
 
 

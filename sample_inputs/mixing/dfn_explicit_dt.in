@@ -43,13 +43,14 @@ MATERIAL_PROPERTY soil1
 END
 
 #
-#NEWTON_SOLVER FLOW
+NEWTON_SOLVER FLOW
 #  PRECONDITIONER_MATRIX_TYPE AIJ
-#  RTOL 1.d-7
+  RTOL 1.d-8
 #  #ATOL 1.d-50
-##  STOL 1.d-30
-#  ITOL_UPDATE 1.d0
-#/
+  ITOL 1.d-8
+  STOL 1.d-30
+  ITOL_UPDATE 1.d0
+/
 
 
 #=========================== characteristic curves ============================
@@ -81,8 +82,8 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d-5 d
-  FINAL_TIME 1.d0 d
+  INITIAL_TIMESTEP_SIZE  1.d-8 d
+  FINAL_TIME 1.d-3 d
   MAXIMUM_TIMESTEP_SIZE 1.d0 d
 END
 
@@ -109,7 +110,7 @@ FLOW_CONDITION initial
   TYPE
      PRESSURE dirichlet 
   /
-  PRESSURE 1.01325d6
+  PRESSURE 1.5d6
 END
 
 
@@ -124,7 +125,7 @@ FLOW_CONDITION inflow
   TYPE
     PRESSURE dirichlet
   /
-  PRESSURE 1.050d6
+  PRESSURE 2.0d6
 END
 
 #=========================== condition couplers ===============================

@@ -1215,8 +1215,8 @@ class dfnworks(Frozen):
 		
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
-		if failure > 0:
-			mesh.cleanup_dir()
+		#if failure > 0:
+			#mesh.cleanup_dir()
 			#print 'Exiting Program'
 			#sys.exit(1)
 		tic2 = time()
