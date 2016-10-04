@@ -85,7 +85,7 @@ def parse_params_file():
 	print "Parse Params.txt: Complete\n"
 	return(nPoly, h, visualMode, dudded_points)
 	
-def create_parameter_mlgi_file(nPoly,h,slope = 2, refine_dist = 0.5):
+def create_parameter_mlgi_file(nPoly,h, slope = 2, refine_dist = 0.5):
 	
 	#Section 2 : Outputs parameteri.mlgi files used in running LaGriT Script
 	print "\nCreating parameteri.mlgi files"
@@ -130,20 +130,36 @@ def create_parameter_mlgi_file(nPoly,h,slope = 2, refine_dist = 0.5):
 		f.write('define / PRE_FINAL_FILE / tmp_pre_final_'+frac_id + '.inp\n')
 		f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' + frac_id +'.gmv\n')
 		f.write('define / H_SCALE / ' + str(h) + '\n')
+		f.write('define / H_EPS / ' + str(h*10**-7) + '\n')
 		f.write('define / H_SCALE2 / ' + str(1.5*h) + '\n')
+
+
+		f.write('define / H_SCALE8 / ' + str(8*h) + '\n')
+                f.write('define / H_SCALE16 / ' + str(16*h) + '\n')
+
+
+
 		f.write('define / H_SCALE4 / ' + str(3*h) + '\n')
 		f.write('define / H_SCALE5 / ' + str(8*h) + '\n')
 		f.write('define / H_SCALE6 / ' + str(16*h) + '\n')
 		f.write('define / H_EXTRUDE / ' + str(h_extrude) + '\n')
 		f.write('define / H_TRANS / ' + str(h_trans) + '\n')
 
+
 		f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
 		f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
 		
+		f.write('define / PURTURB16 / ' + str(16*0.1*h) + '\n')
+                f.write('define / PURTURB8 / ' + str(8*0.1*h) + '\n')
 		f.write('define / PURTURB / ' + str(3*h) + '\n')
+		
+
 		f.write('define / PARAM_A / '+str(slope)+'\n')	
-		f.write('define / PARAM_A0 / '+str(refine_dist)+'\n')	
 		f.write('define / PARAM_B / '+str(h*(1-slope*refine_dist))+'\n')	
+
+		f.write('define / PARAM_A2 / '+str(0.5*slope)+'\n')	
+		f.write('define / PARAM_B2 / '+str(h*(1 - 0.5*slope*refine_dist))+'\n')	
+		
 		f.write('define / THETA  / '+str(theta)+'\n')
 		f.write('define / X1 / '+str(x1)+'\n')
 		f.write('define / Y1 / '+str(y1)+'\n')
@@ -241,30 +257,44 @@ cmo / select / mo_pts
 '''
 	if(visualMode == 0):
 		lagrit_input += '''
-# Creates a Coarse Mesh and then refines it using the distance field from intersections 
-massage / H_SCALE6 / 1.e-5 / 1.e-5 
-smooth;recon 0;smooth;recon 0;smooth;recon 0  
+ Creates a Coarse Mesh and then refines it using the distance field from intersections 
+#massage / H_SCALE6 / 1.e-5 / 1.e-5 
+#smooth;recon 0;smooth;recon 0;smooth;recon 0  
+#smooth;recon 0;smooth;recon 0;smooth;recon 0
+#massage / H_SCALE5 / 1.e-5 / 1.e-5 
+#smooth;recon 0;smooth;recon 0;smooth;recon 0 
+#smooth;recon 0;smooth;recon 0;smooth;recon 0
+#
+#
+
+# Creates a Coarse Mesh and then refines it using the distance field from intersections
+massage / H_SCALE16 / H_EPS  / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PURTURB16 PURTURB16 0.0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
- 	'''
-#
-#		if numPoints == 4:
-#			lagrit_input += '''
-#resetpts / itp 
-#pset / p_move / attribute / itp / 1 0 0 / 0 / eq 
-#perturb/ pset get p_move / PURTURB PURTURB 0.0
-# 
-#'''
-#
-		lagrit_input += ''' 
-massage / H_SCALE5 / 1.e-5 / 1.e-5 
-smooth;recon 0;smooth;recon 0;smooth;recon 0 
+massage / H_SCALE8 / H_EPS / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PURTURB8 PURTURB8 0.0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
+
 
 cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes 
 cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
 
 # Massage points based on linear function down to h_prime
+massage2/user_function2.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+
+assign///maxiter_sm/1 
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
+assign///maxiter_sm/10
+
 massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 cmo / DELATT / mo_pts / rf_field_name 
 
@@ -310,6 +340,7 @@ cmo / printatt / mo_final / dfield / minmax
 pset / pdel / attribute dfield / 1,0,0 / lt H_PRIME2 
 rmpoint / pset,get,pdel / inclusive  
 rmpoint / compress  
+
 copypts / mo_final / mo_line_work  
 
 cmo / select / mo_final 
@@ -336,18 +367,20 @@ resetpts / itp
 		
 		lagrit_input += '''
 ## Massage Mesh Away from Intersection 
-pset / pref / attribute / dfield / 1,0,0 / lt / 1.e-6 
-pset / pregion / attribute / dfield / 1,0,0 / lt / H_SCALE 
+pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
+pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
 pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
 pset / psmooth / not / pregion pref pboundary 
-massage / H_SCALE / 1.e-5 / 1.e-5 / pset get pref / & 
-nosmooth / strictmergelenth 
+#massage / H_SCALE / 1.e-5 / 1.e-5 / pset get pref / & 
+#nosmooth / strictmergelenth
+
+assign///maxiter_sm/1 
 
 smooth / position / esug / pset get psmooth; recon 0; 
 smooth / position / esug / pset get psmooth; recon 0; 
 smooth / position / esug / pset get psmooth; recon 0; 
-smooth / position / esug / pset get psmooth; recon 0; 
 
+assign///maxiter_sm/10
 ###########################################
 # nodes for Intersection / Mesh Connectivity Check 
 cmo / copy / mo_final_check / mo_final
@@ -495,6 +528,20 @@ finish
 	f = open('user_function.lgi', 'w')
 	f.write(lagrit_input)
 	f.close()
+
+	## Create user_function.lgi file
+	lagrit_input = '''
+cmo/DELATT/mo_pts/dfield
+compute / distance_field / mo_pts / mo_line_work / dfield
+math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A2/
+math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B2/
+cmo/copyatt/mo_pts/mo_pts/fac_n/x_four
+finish
+'''
+	f = open('user_function2.lgi', 'w')
+	f.write(lagrit_input)
+	f.close()
+
 
 	print 'Writing LaGriT Control Files: Complete'
 
@@ -726,8 +773,10 @@ cmo / delete / cmo_tmp
 # LaGriT Code to remove duplicates and output the mesh
 cmo / select / mo_all 
 #recon 1
+##### MAKE H SENSITIVE #######
 define / EPS / 1.e-6
 define / EPS_FILTER / 1.e-4 
+##### MAKE H SENSITIVE #######
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
 filter / pset get pinter / EPS_FILTER 
 pset / pinter / delete
