@@ -337,7 +337,7 @@ resetpts / itp
 		lagrit_input += '''
 ## Massage Mesh Away from Intersection 
 pset / pref / attribute / dfield / 1,0,0 / lt / 1.e-6 
-pset / pregion / attribute / dfield / 1,0,0 / lt / H_SCALE 
+pset / pregion / attribute / dfield / 1,0,0 / ge / H_SCALE 
 pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
 pset / psmooth / not / pregion pref pboundary 
 massage / H_SCALE / 1.e-5 / 1.e-5 / pset get pref / & 
