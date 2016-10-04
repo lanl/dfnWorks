@@ -509,4 +509,5 @@ outputFinalRadiiPerFamily:1
 insertUserRectanglesFirst:1
 forceLargeFractures:0
 radiiListIncrease: 0.1
+removeFracturesLessThan: 0
  

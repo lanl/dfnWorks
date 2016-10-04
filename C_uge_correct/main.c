@@ -233,7 +233,6 @@ int main(int argc, char *argv[]){
 	uge_in_file = argv[4];
 	uge_out_file = argv[5];
 
-
 	printf("\nCorrecting UGE Volumes and Areas for dfnWorks\n");
 	printf("--> Current version works for Uniform Fracture Aperature\n");
 	printf("-> Mesh File: %s\n", mesh_file);
@@ -256,6 +255,4 @@ int main(int argc, char *argv[]){
 	free(aper_values);
 	free(aper_index);
 	return 0;
-
 }
-

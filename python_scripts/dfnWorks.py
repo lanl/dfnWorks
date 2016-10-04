@@ -1215,10 +1215,10 @@ class dfnworks(Frozen):
 		
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
-		#if failure > 0:
-			#mesh.cleanup_dir()
-			#print 'Exiting Program'
-			#sys.exit(1)
+		if failure > 0:
+			mesh.cleanup_dir()
+			print 'Exiting Program due to mesh failure'
+			sys.exit(1)
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
@@ -1227,9 +1227,9 @@ class dfnworks(Frozen):
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
-
+				print 'Exiting Program due to mesh dudded points failure'
 				cleanup_dir()
-				#sys.exit(1)
+				sys.exit(1)
 	
 		if production_mode > 0:
 			mesh.cleanup_dir()
@@ -2155,11 +2155,11 @@ class dfnworks(Frozen):
 
 		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-darcyvel-001-rank*.dat > darcyvel.dat'
 		os.system(cmd)
-
-		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
-			os.remove(fl)	
-		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
-			os.remove(fl)	
+#
+#		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
+#			os.remove(fl)	
+#		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
+#			os.remove(fl)	
 
 	def uncorrelated(self, sigma):
 		print '--> Creating Uncorrelated Transmissivity Fields'

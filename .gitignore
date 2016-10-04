@@ -2,6 +2,7 @@
 *~
 *.nfs*
 *.swp
+*.pyc
 python_scripts/*.pyc
 python_scripts/*.swp
 python_scripts/runDFN.py 
