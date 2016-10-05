@@ -234,15 +234,15 @@ class dfnworks(Frozen):
 		## 15. check # values (famprob: {.5,.5} {.3, .3., .4})
 		params = { 'esd':[],'insertUserRectanglesFirst':[],'keepOnlyLargestCluster':[],'rmin':[],
 		'rAngleOption':[],'boundaryFaces':[],'userRectanglesOnOff':[],'printRejectReasons':[],'numOfLayers':[],
-		'RectByCood_Input_File_Path':[],'eLogMean':[],'rExpMin':[],'lengthCorrelatedAperture':[],'ebetaDistribution':[],
+		'RectByCoord_Input_File_Path':[],'eLogMean':[],'rExpMin':[],'lengthCorrelatedAperture':[],'ebetaDistribution':[],
 		'tripleIntersections':[],'layers':[],'stdAperture':[],'ealpha':[],'constantPermeability':[],'rLogMax':[],
 		'rLogMean':[],'nFamRect':[],'etheta':[],'eLogMax':[],'rphi':[],'outputAllRadii':[],
-		'r_p32Targets':[],'permOption':[],'userRecByCoord':[],'userEllipsesOnOff':[],'UserEll_Input_File_Path':[],
+		'r_p32Targets':[],'permOption':[],'userEllByCoord':[],'userRecByCoord':[],'userEllipsesOnOff':[],'UserEll_Input_File_Path':[],
 		'rExpMean':[],'rbetaDistribution':[],'aperture':[],'emax':[],'eExpMean':[],'e_p32Targets':[],'eLayer':[],
 		'domainSizeIncrease':[],'h':[],'outputFinalRadiiPerFamily':[],'rbeta':[],'rLogMin':[],'edistr':[],'domainSize':[],
 		'eExpMin':[],'ekappa':[],'rLayer':[],'seed':[],'constantAperture':[],'stopCondition':[],'enumPoints':[],
 		'meanAperture':[],'eLogMin':[],'easpect':[],'rtheta':[],'rdistr':[],
-		'UserRect_Input_File_Path':[],'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
+		'UserRect_Input_File_Path':[],'EllByCoord_Input_File_Path':[], 'rconst':[],'rExpMax':[],'ignoreBoundaryFaces':[],
 		'visualizationMode':[],'outputAcceptedRadiiPerFamily':[],'apertureFromTransmissivity':[],'rsd':[],'ebeta':[],
 		'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
 		'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 
@@ -256,15 +256,15 @@ class dfnworks(Frozen):
 		'ebeta', 'ekappa', 'eLogMean', 'esd', 'eLogMin', 'eLogMax', 'eExpMean', 'eExpMin', 'eExpMax', 'econst', 'emin', 'emax',
 		'ealpha', 'nFamRect', 'rLayer', 'rdistr', 'rbetaDistribution', 'r_p32Targets', 'raspect', 'rAngleOption', 'rtheta', 'rphi',
 		'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
-		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path', 'userRecByCoord',
-		'RectByCood_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
+		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path','EllByCoord_Input_File_Path', 'userEllByCoord', 'userRecByCoord',
+		'RectByCoord_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
 		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		mandatory = {'stopCondition','domainSize','numOfLayers','outputAllRadii', 'outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
 		'disableFram','visualizationMode','seed','domainSizeIncrease','keepOnlyLargestCluster','ignoreBoundaryFaces',
 		'rejectsPerFracture','famProb','insertUserRectanglesFirst','nFamEll','nFamRect','userEllipsesOnOff','userRectanglesOnOff',
-		'userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
+		'userEllByCoord','userRecByCoord','aperture','permOption', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
 
 		noDependancyFlags = ['outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','tripleIntersections','printRejectReasons',
@@ -496,13 +496,14 @@ class dfnworks(Frozen):
 		def checkFamCount():
 			userDefExists = (valueOf('userEllipsesOnOff') == '1') |\
 				       (valueOf('userRectanglesOnOff') == '1') |\
-				       (valueOf('userRecByCoord') == '1')
-			
+				       (valueOf('userRecByCoord') == '1') |\
+				       (valueOf('userEllByCoord') == '1')
+
 			if ellipseFams + rectFams <= 0 and not userDefExists:
 				error("Zero polygon families have been defined. Please create at least one family "\
 				      "of ellipses/rectagnles, or provide a user-defined-polygon input file path in "\
-				      "\"UserEll_Input_File_Path\", \"UserRect_Input_File_Path\", or "\
-				      "\"RectByCood_Input_File_Path\" and set the corresponding flag to '1'.")
+				      "\"UserEll_Input_File_Path\", \"UserRect_Input_File_Path\", \"UserEll_Input_File_Path\", or "\
+				      "\"RectByCoord_Input_File_Path\" and set the corresponding flag to '1'.")
 
 		## scales list of probabilities (famProb) that doesn't add up to 1
 		## ie [.2, .2, .4] --> [0.25, 0.25, 0.5]        
@@ -675,10 +676,18 @@ class dfnworks(Frozen):
 			userEs = "userEllipsesOnOff"
 			userRs = "userRectanglesOnOff"
 			recByCoord = "userRecByCoord"
+			ellByCoord = "userEllByCoord"
 			ePath = "UserEll_Input_File_Path"
 			rPath = "UserRect_Input_File_Path"
-			coordPath = "RectByCood_Input_File_Path"
+			coordPath = "RectByCoord_Input_File_Path"
+			ecoordPath = "EllByCoord_Input_File_Path"
 			invalid = "\"{}\" is not a valid path."
+
+			if verifyFlag(valueOf(ellByCoord), ellByCoord) == 1:
+				if not os.path.isfile(valueOf(ecoordPath)):
+					error(invalid.format(ecoordPath))
+				else:
+					copy(valueOf(ecoordPath), self._jobname)
 
 			if verifyFlag(valueOf(userEs), userEs) == 1:
 				if not os.path.isfile(valueOf(ePath)):
@@ -1215,21 +1224,21 @@ class dfnworks(Frozen):
 		
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
-		if failure > 0:
-			mesh.cleanup_dir()
-			print 'Exiting Program due to mesh failure'
-			sys.exit(1)
+		#if failure > 0:
+		#	mesh.cleanup_dir()
+		#	print 'Exiting Program due to mesh failure'
+		#	sys.exit(1)
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
 		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
 		self.dumpTime('Process: Merging the Mesh', time() - tic2)	
 
-		if(visualMode == 0):	
-			if (mesh.check_dudded_points(dudded_points) == False):
-				print 'Exiting Program due to mesh dudded points failure'
-				cleanup_dir()
-				sys.exit(1)
+		#if(visualMode == 0):	
+		#	if (mesh.check_dudded_points(dudded_points) == False):
+		#		print 'Exiting Program due to mesh dudded points failure'
+		#       cleanup_dir()
+		#		sys.exit(1)
 	
 		if production_mode > 0:
 			mesh.cleanup_dir()
