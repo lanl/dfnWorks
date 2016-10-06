@@ -2164,11 +2164,11 @@ class dfnworks(Frozen):
 
 		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-darcyvel-001-rank*.dat > darcyvel.dat'
 		os.system(cmd)
-#
-#		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
-#			os.remove(fl)	
-#		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
-#			os.remove(fl)	
+
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
+			os.remove(fl)	
+		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
+			os.remove(fl)	
 
 	def uncorrelated(self, sigma):
 		print '--> Creating Uncorrelated Transmissivity Fields'
