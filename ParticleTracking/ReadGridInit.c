@@ -609,12 +609,12 @@ void ReadBoundaryNodes()
   char  line[10]={0};
   int  nzone_out, i,  fn, nn, res, nf, flag1=0, flag2=0;
   if (fscanf(fpc, "%s \n", line)!=1)
-    printf(" ");
+    i=i;
   do
     {
       fn=0;
       if (fscanf(fpc," %d  %s ", &fn, line)!=2)
-	printf(" ");
+	fn=fn;
   
       
       if  (fn==zonenumb_in) 
@@ -622,10 +622,10 @@ void ReadBoundaryNodes()
 	{
 	  flag1=1;
 	  if (fscanf(fpc, " %s ", line)!=1)
-	    printf(" ");
+	    flag1=flag1;
 
 	  if (fscanf(fpc, " %d", &nzone_in)!=1)
-	    printf(" ");
+	    nzone_in=nzone_in;
 	  /** memory allocation for nodezone_in nodes ******/
 	  nodezonein=(unsigned int*) malloc (nzone_in*sizeof(unsigned int));
 
@@ -647,16 +647,16 @@ void ReadBoundaryNodes()
 	    {
 	      flag2=1;
 	      if (fscanf(fpc, " %s ", line)!=1)
-		printf(" ");
+		fn=fn;
 	      if (fscanf(fpc, " %d",&nzone_out)!=1)
-		printf(" ");
+		nzone_out=nzone_out;
 	      /** memory allocation for nodezoneout nodes ******/
 	      nodezoneout=(unsigned int*) malloc (nzone_out*sizeof(unsigned int));
 	  
 	      for (i=0; i<nzone_out; i++)
 		{
 		  if (fscanf(fpc," %d ", &nf)!=1)
-		    printf(" ");
+		    nf=nf;
 		  nodezoneout[i]=nf;
 		  if(node[nodezoneout[i]-1].typeN<200)
 		    node[nodezoneout[i]-1].typeN=node[nodezoneout[i]-1].typeN+200;
@@ -665,15 +665,15 @@ void ReadBoundaryNodes()
 	  else
 	    {
 	      if (fscanf(fpc, " %s  ", line)!=1)
-		printf(" ");
+		   nn=nn;
  
               if (fscanf(fpc, " %d ", &nn)!=1)
-		printf(" ");
+		   nn=nn;
              
 	      for (i=0; i<nn; i++)
 		{
 		  if (fscanf(fpc," %d ", &nf)!=1)
-		    printf(" ");
+		    nf=nf;
 		}
 	    }
 	}
@@ -697,45 +697,28 @@ void ReadBoundaryNodes()
   inputfile=Control_Param("density:",8);
   density1=inputfile.param;
   //   printf(" density %lf \n", density1);
-  //unsigned int j;
-  //double sum_in=0,sumin=0.0;
-  //double sum_out=0.,sumout=0.0, areasumin=0.0, areasumout=0.0;
+  unsigned int j;
+  double sum_in=0,sum_out=0.0;
 
-  // for (i=0; i<nzone_in; i++)
-  // {
-  //if (nodezonein[i]==23)
-  // for (j=0; j<node[nodezonein[i]-1].numneighb; j++)
-  //    {
-     
-  
-  //    sum_in=sum_in+node[nodezonein[i]-1].flux[j];
-  //     areasumin=areasumin+node[nodezonein[i]-1].area[j];
-  //     }
-  //   }
+   for (i=0; i<nzone_in; i++)
+   {
+  for (j=0; j<node[nodezonein[i]-1].numneighb; j++)
+   {
+      sum_in=sum_in+node[nodezonein[i]-1].flux[j];
+       }
+     }
     
-  //    printf ("Total in-flow volumetric flux = %12.5e [m^3/s]\n", sum_in);
-  //if (areasumin>0)
-  // sumin=sum_in/areasumin;
-  // else 
-  //sumin==0;
-  //    printf ("Total in-flow flux = %12.5e [m/s]\n", sumin);
-     
+      printf ("Total in-flow volumetric flux = %12.5e [m^3/s]\n", sum_in);
 
-  //for (i=0; i<nzone_out; i++)
-  //{
-  // for (j=0; j<node[nodezoneout[i]-1].numneighb; j++)
-  //{
-  //    areasumout=areasumout+node[nodezoneout[i]-1].area[j];
-  //     sum_out=sum_out+node[nodezoneout[i]-1].flux[j];
-  // }
-  //}
-  //printf ("Total out-flow volumetric flux = %12.5e [m^3/s]\n", sum_out);
+  for (i=0; i<nzone_out; i++)
+  {
+   for (j=0; j<node[nodezoneout[i]-1].numneighb; j++)
+  {
+       sum_out=sum_out+node[nodezoneout[i]-1].flux[j];
+   }
+  }
+ printf ("Total out-flow volumetric flux = %12.5e [m^3/s]\n", sum_out);
 
-  //if (areasumout>0)
-  //sumout=sum_out/areasumout;
-  //else 
-  //sumout=0.0;
-  //printf ("Total out-flow flux = %12.5e [m/s]\n", sumout);
 
   /***************************/
   
