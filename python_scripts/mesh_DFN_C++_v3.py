@@ -545,12 +545,12 @@ finish
 
 	print 'Writing LaGriT Control Files: Complete'
 
-def mesh_fracture(fracture_id, visualMode):
-	
+def mesh_fracture(fracture_id, visualMode,nPoly):
+
 	'''Child Function for Parallized Meshing of Fractures'''
 	t = time.time()
 	p = mp.current_process()
-	print 'Fracture ', fracture_id, '\tStarting on ', p.name, '\n' 
+	print 'Fracture ', fracture_id, '\tstarting on ', p.name, '\n' 
 	a, cpu_id = p.name.split("-")
 	cpu_id = int(cpu_id)
 	
@@ -619,13 +619,14 @@ def mesh_fracture(fracture_id, visualMode):
 		print 'Could not remove parameters_CPU' + str(cpu_id) + '.mlgi'
 
 	elapsed = time.time() - t
-	print 'Fracture ', fracture_id, 'Complete' 
+	
+	print 'Fracture ', fracture_id, 'out of ',  nPoly, ' complete' 
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
-def worker(work_queue, done_queue, visualMode):
+def worker(work_queue, done_queue, visualMode, nPoly):
 	try:
 		for fracture_id in iter(work_queue.get, 'STOP'):
-			mesh_fracture(fracture_id, visualMode)
+			mesh_fracture(fracture_id, visualMode, nPoly)
 	except: 
 		print('Something went wrong on fracture ',fracture_id)
 	return True
@@ -660,9 +661,9 @@ def mesh_fractures_header(nPoly, N_CPU, visualMode):
 		work_queue.put(i)
 
 	for i in xrange(N_CPU):
-		p = mp.Process(target=worker, args= (work_queue, done_queue, visualMode))
+		p = mp.Process(target=worker, args= (work_queue, done_queue, visualMode, nPoly))
 		p.daemon = True
-		p.start()        #
+		p.start()        
 		processes.append(p)
 		work_queue.put('STOP')
 	
