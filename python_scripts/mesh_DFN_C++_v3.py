@@ -874,8 +874,9 @@ def merge_the_meshes(nPoly, N_CPU, n_jobs):
 			print 'Process ' + str(j+1) + ' finished'
 			j += 1 
 
-
+	print("Starting Final Merge")
 	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
+	print("Final Merge Complete")
 	print "Merging triangulated polygon meshes: Complete\n"
 
 
