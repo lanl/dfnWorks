@@ -251,7 +251,7 @@ void   Velocity3D()
   sprintf(filename,"%s/Velocity3D",maindir); 
   FILE *w3= OpenFile (filename,"w");
   printf("\n Output flow field: Darcy velocities on nodes in 3D \n"); 
-  fprintf(w3," node ID number; X-, Y-, Z- node's location; Vx, Vy, Vz of velocity \n");
+  fprintf(w3," node ID number; X-, Y-, Z- node's location; Vx, Vy, Vz of velocity, control cell volume, fracture number \n");
   double cord3[3]={0,0,0};
 
   unsigned int i, j, v;  
@@ -278,7 +278,7 @@ void   Velocity3D()
 	      cord3[1]=node[i].velocity[0][1];
 	      cord3[2]=0;
 	    }
-	  fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );  
+	  fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e  %5.8e  %d\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] , node[i].pvolume, node[i].fracture[0]);  
 	}             
       else
 	{
@@ -299,7 +299,7 @@ void   Velocity3D()
 		  cord3[1]=node[i].velocity[v][1];
 		  cord3[2]=0;
 		}
-	      fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );   
+	      fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e  %5.8e  %d\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2], node[i].pvolume, node[i].fracture[0] );   
 	    }
 	}
       if ((node[i].fracture[1]!=0)&&((node[i].typeN==2)||(node[i].typeN==12)))
@@ -323,7 +323,7 @@ void   Velocity3D()
 		  cord3[1]=node[i].velocity[v][1];
 		  cord3[2]=0;
 		}
-	      fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2] );   
+	      fprintf(w3," %05d  %5.8e   %5.8e   %5.8e %5.8e   %5.8e   %5.8e  %5.8e  %d\n",i+1, node[i].coord[0],node[i].coord[1], node[i].coord[2],cord3[0], cord3[1], cord3[2], node[i].pvolume, node[i].fracture[1] );   
 	    }		
 		 
 	}     
