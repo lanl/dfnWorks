@@ -26,7 +26,7 @@ class dfnworks(Frozen):
 	Class for DFN Generation and meshing
 	"""
 
-	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='perm.dat', aper_file='aperture.dat',perm_cell_file='',aper_cell_file='', dfnTrans_version =''):
+	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='perm.dat', aper_file='aperture.dat',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 		self._jobname = jobname
 		self._local_jobname = self._jobname.split('/')[-1]
 		self._input_file = input_file
@@ -1217,11 +1217,12 @@ class dfnworks(Frozen):
 		refine_factor = 1	
 		
 		nPoly, h, visualMode, dudded_points  = mesh.parse_params_file()
+		self._num_frac = nPoly
 		tic2 = time()
 		mesh.create_parameter_mlgi_file(nPoly, h)
 		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
 		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-		
+	
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
 		#if failure > 0:
@@ -2236,6 +2237,7 @@ class dfnworks(Frozen):
 		os.symlink('../pboundary_bottom.ex', 'pboundary_bottom.ex')
 		os.symlink('../materialid.dat', 'materialid.dat')
 		#os.symlink(self._jobname+'/*ex', './')
+	
 	def create_dfnTrans_links(self):
 		os.symlink('../params.txt', 'params.txt')
 		os.symlink('../allboundaries.zone', 'allboundaries.zone')
