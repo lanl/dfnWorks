@@ -1196,7 +1196,7 @@ class dfnworks(Frozen):
 		os.chdir(self._jobname)
 		print '--> Running DFNGEN'	
 		# copy input file into job folder	
-		os.system(os.environ['DFNGENC_PATH']+'/./main ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+		os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
 		os.chdir(self._jobname)
 		if os.path.isfile("params.txt") is False:
 			print '--> Generation Failed'
