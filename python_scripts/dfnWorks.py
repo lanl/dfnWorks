@@ -1856,6 +1856,8 @@ class dfnworks(Frozen):
 			    boundary_cell_coord = [[cell[0] + epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
 			elif (face == 'west'):
 			    boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
+			elif (face == 'none'):
+			    boundary_cell_coord = [[cell[0], cell[1], cell[2]] for cell in boundary_cell_coord]
 			else:
 			    sys.exit('ERROR: unknown face. Select one of: top, bottom, east, west, north, south.')
 
@@ -2171,6 +2173,7 @@ class dfnworks(Frozen):
 		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
 			os.remove(fl)	
 
+	#################### dfnFlow Functions ##########################
 	def uncorrelated(self, sigma):
 		print '--> Creating Uncorrelated Transmissivity Fields'
 		print 'Variance: ', sigma
@@ -2244,9 +2247,4 @@ class dfnworks(Frozen):
 		os.symlink('../tri_fracture.stor', 'tri_fracture.stor')
 		os.symlink('../poly_info.dat','poly_info.dat')
 		#os.symlink(self._jobname+'/*ex', './')
-
-
-	#################### dfnFlow Functions ##########################
-
-
 
