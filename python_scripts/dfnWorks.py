@@ -25,8 +25,8 @@ class dfnworks(Frozen):
 	"""
 	Class for DFN Generation and meshing
 	"""
-
 	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='perm.dat', aper_file='aperture.dat',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+
 		self._jobname = jobname
 		self._local_jobname = self._jobname.split('/')[-1]
 		self._input_file = input_file
@@ -2098,7 +2098,20 @@ class dfnworks(Frozen):
 		os.system('pwd')
 		mat_file = 'materialid.dat'
 		t = time()
-		cmd = os.environ['correct_uge_PATH']+ ' ' +  inp_file + ' ' + mat_file + ' ' + aper_file + ' ' + uge_file + ' '  + uge_file[:-4]+'_vol_area.uge'
+		f = open("convert_uge_params.txt", "w")
+		f.write("%s\n"%inp_file)
+		f.write("%s\n"%mat_file)
+		f.write("%s\n"%uge_file)
+		f.write("%s"%(uge_file[:-4]+'_vol_area.uge\n'))
+		if self._aper_cell_file:
+			f.write("%s\n"%self._aper_cell_file)
+			f.write("1\n")
+		else:
+			f.write("%s\n"%self._aper_file)
+			f.write("-1\n")
+		f.close()
+	
+		cmd = os.environ['correct_uge_PATH']+ ' convert_uge_params.txt' 
 		os.system(cmd)
 		elapsed = time() - t
 		print '--> Time elapsed for UGE file conversion: ', elapsed, 'seconds\n'
@@ -2144,6 +2157,44 @@ class dfnworks(Frozen):
 		    h5file.close()
 		    print('--> Done writing permeability to h5 file')
 		    del perm_list
+
+		if self._perm_cell_file:
+		    filename = 'dfn_properties.h5'
+		    h5file = h5py.File(filename, mode='w')
+
+		    print('--> Beginning writing to HDF5 file')
+		    print('--> Allocating cell index array')
+		    iarray = np.zeros(NumIntNodes, '=i4')
+		    print('--> Writing cell indices')
+		    # add cell ids to file
+		    for i in range(NumIntNodes):
+			iarray[i] = i + 1
+		    dataset_name = 'Cell Ids'
+		    h5dset = h5file.create_dataset(dataset_name, data=iarray)
+		    print ('--> Allocating permeability array')
+		    perm = np.zeros(NumIntNodes, '=f8')
+		    print('--> reading permeability data')
+		    print('--> Note: this script assumes isotropic permeability')
+		    f = open(self._perm_cell_file, 'r')
+		    f.readline()
+		    perm_list = []
+		    while True:
+			h = f.readline()
+			h = h.split()
+			if h == []:
+			    break
+			h.pop(0)
+			perm_list.append(h)
+
+		    perm_list = [float(perm[0]) for perm in perm_list]
+		    
+		    dataset_name = 'Permeability'
+		    h5dset = h5file.create_dataset(dataset_name, data=perm_list)
+		    f.close()
+
+		    h5file.close()
+		    print('--> Done writing permeability to h5 file')
+
 	
 	def pflotran(self):
 		os.chdir(self._jobname)
