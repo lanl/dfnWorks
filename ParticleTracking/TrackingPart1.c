@@ -26,8 +26,8 @@ struct lagrangian{
 
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT=0; 
-unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0, bin_o=0;
-unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0;
+unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0;
+unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0, frac_o=0;
 struct intcoef {
   double weights[3];
 };
@@ -80,6 +80,17 @@ void ParticleTrack ()
 	tort_o=1;
     }
 
+   // Output of fractures ID 
+  inputfile=Control_File_Optional("out_fract:",10);
+  if (inputfile.flag<0)
+    frac_o=0;
+  else
+    {
+      res=strncmp(inputfile.filename,"yes",3);
+      if (res==0)
+        frac_o=1;
+    }
+
   // Output according to trajectory curvature (not every time step)  
   inputfile=Control_File("out_curv:",9);
   res=strncmp(inputfile.filename,"yes",3);
@@ -91,19 +102,6 @@ void ParticleTrack ()
   res=strncmp(inputfile.filename,"yes",3);
   if (res==0)
     avs_o=1;
-
-//format of trajectories output:ascii or binary
-  inputfile=Control_File_Optional("out_binary:",11);
-   if (inputfile.flag<0)
-      bin_o=0; //ascii format
-    else
-      {
-        res=strncmp(inputfile.filename,"yes",3);
-       if (res==0)
-          { 
-            bin_o=1; //binary format
-          }
-      }
 
   // Output ASCII trajectory file    
   inputfile=Control_File("out_traj:",9);
@@ -123,7 +121,6 @@ void ParticleTrack ()
 	  marfa=1;
 	  traj_o=1;
 	  curv_o=1;
-          bin_o=0;
 	} 
     }
 
@@ -139,7 +136,6 @@ void ParticleTrack ()
 	  plumec=1;
 	  traj_o=1;
 	  curv_o=1;
-          bin_o=0;
 	}
     }
 
@@ -158,9 +154,6 @@ void ParticleTrack ()
   if ((avs_o+traj_o)==0)
     no_out=1;   
   
-
-
-
   // open file with total results         
   inputfile = Control_File("out_time:",9 );
   sprintf(filename,"%s/%s",maindir,inputfile.filename);
@@ -191,6 +184,16 @@ void ParticleTrack ()
       fprintf(tort,"Data for trortuosity calculation: total length of trajectory, x-,y-, z- of initial pos., x-, y-, z- final pos., number of intersections. \n");
     } 
  
+ // open FractureID file
+   FILE *frac;
+    
+   if (frac_o>0)
+     {
+      sprintf(filename,"%s/FractureID",maindir);
+      frac =  OpenFile (filename,"w");
+      fprintf(frac,"Fractures ID  \n");
+
+     }
   // Create path for trajectory outputs
   if (no_out!=1)
     {
@@ -416,20 +419,12 @@ void ParticleTrack ()
 	{   
 	  // ascii output of: 3d positions, 3d velocities, cell, fracture, time and beta     
 	  sprintf(filename,"%s/traject_%d",path,curr_n);
-           if (bin_o==0)
-            {
 	  wv = OpenFile(filename,"w");
 	  fprintf(wv,"    Current time step, x-, y-, z- pos., Vx, Vy, Vz at ths positions, # of cell, #of fracture, travel time, aperture, beta \n");
-	     }
-           if (bin_o==1)
-             {
-            wv = OpenFile(filename,"wb"); 
-          fseek(wv,0, SEEK_SET);
-                }
-             }
+	}
  
       // define capacity for temp data used for outputs
-      int capacity= (int) timesteps/2;
+      int capacity= (int) timesteps/10;
       
              
 
@@ -467,6 +462,12 @@ void ParticleTrack ()
           
           prevcell=particle[np].cell;
 	  prevfract=particle[np].fracture;
+           unsigned int fract_id[nfract], id=0;
+            
+              for (id=0; id<nfract; id++)
+                 fract_id[id]=0;
+  
+          fract_id[0]=particle[np].fracture;
 	
 	  /************LOOP ON TIME *********/
 	  FLAG_OUT=0;
@@ -590,11 +591,9 @@ void ParticleTrack ()
                   timecounter++;
 
 		  // if memory should be reallocated
-                    
 		  if (timecounter==capacity)
                      
                     {
-                      printf("reallocation %d %d  %d\n", timecounter, capacity, np);
 		      capacity=2*capacity;
 		      tempdata=(struct tempout*)realloc(tempdata, sizeof(struct tempout)*capacity);
 		      if (tempdata==NULL)
@@ -792,6 +791,7 @@ void ParticleTrack ()
 		      cur_node=0;
 		      prevfract=particle[np].fracture;
 		      fracthit=fracthit+1;
+                      fract_id[fracthit]=particle[np].fracture;
 
 		      //		   printf(" %d %d %15.8e \n",np+1, prevfract, particle[np].time); 
 		    }
@@ -859,11 +859,7 @@ void ParticleTrack ()
 	      if (out_control==1)
 		{	
 		  fclose(tmp2);  
-		}
-
-             if (no_out!=1)
-                free(tempdata);
-		  
+		}		  
 	    }
 	  else
 	    {  
@@ -955,7 +951,20 @@ void ParticleTrack ()
 		  if (tort_o>0)
 		    {
 		      fprintf(tort,"%5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E  %d\n",totallength, xinit, yinit, zinit, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], fracthit);
-		    }      
+		    }   
+
+                   if (frac_o>0)
+                   { 
+                   id=0;
+                     do
+                       { 
+                      fprintf(frac," %5d ", fract_id[id]);         
+                      id++;
+                        }
+                     while (fract_id[id]!=0);
+                       fprintf(frac,"\n"); 
+            
+                   }
 		  //      printf("%d %5.12E %5.12E %5.12E\n", np, tautau, particle[np].time, beta );
 		  //	  printf("%d %5.12E %5.12E %5.12E %5.12E %5.12E \n",t_end, particle[np].fl_weight, particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2]);
 	      
@@ -1009,7 +1018,7 @@ void ParticleTrack ()
 	    }
 	} //end if ins!=0 (the initial cell was found)
       
-      if (traj_o==1 & bin_o==0)
+      if (traj_o==1)
 	{
           rewind(wv);
           fprintf(wv,"%d \n",nodeID);
@@ -1025,7 +1034,9 @@ void ParticleTrack ()
   if (tort_o>0)
     fclose(tort);
   if (outinit>0)
-    fclose(inp); 
+    fclose(inp);
+  if (frac_o>0)
+     fclose(frac); 
     
   sprintf(filename,"%s/TotalNumberP",maindir);
   FILE *tn = OpenFile (filename,"w");
@@ -2191,21 +2202,9 @@ void ParticleOutput (int currentt)
 		{
   
   
-                 if (bin_o==0)
+  
 		  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E\n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time,node[cell[pcell-1].node_ind[0]-1].aperture, obeta);
-                if (bin_o==1)
-                {
-           fwrite(&tstart, sizeof(unsigned int),1,wv);
-           fwrite(&posit, sizeof(double), 3, wv);
-           fwrite(&veloc, sizeof(double), 3, wv);
-           fwrite(&pcell, sizeof(unsigned int), 1, wv);
-           fwrite(&pfrac, sizeof(unsigned int), 1,wv);
-           fwrite(&time, sizeof(double),1,wv);
-           fwrite(&node[cell[pcell-1].node_ind[0]-1].aperture, sizeof(double),1,wv);
-           fwrite(&obeta,sizeof(double),1,wv);
-                }
 	
- 
 		}
 	      nodeID++;
 	      if (avs_o==1)
@@ -2319,20 +2318,8 @@ void ParticleOutput (int currentt)
 
 		  if (traj_o==1)
 		    {
-                     if (bin_o==0)
-		      fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E\n", tmid, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta);
-                    if (bin_o==1)
-                {
-           fwrite(&tmid, sizeof(unsigned int),1,wv);
-           fwrite(&posit, sizeof(double), 3, wv);
-           fwrite(&veloc, sizeof(double), 3, wv);
-           fwrite(&pcell, sizeof(unsigned int), 1, wv);
-           fwrite(&pfrac, sizeof(unsigned int), 1,wv);
-           fwrite(&time, sizeof(double),1,wv);
-           fwrite(&node[cell[pcell-1].node_ind[0]-1].aperture, sizeof(double),1,wv);
-           fwrite(&obeta,sizeof(double),1,wv);
-                }
 
+		      fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E\n", tmid, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta);
 
 		    }	    
 		  nodeID++;
@@ -2387,22 +2374,7 @@ void ParticleOutput (int currentt)
 
 		    }
 		  if (traj_o==1)
-               {
-                  if (bin_o==0)
 		    fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E\n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta);
-                     if (bin_o==1)
-               {
-          fwrite(&tstart, sizeof(unsigned int),1,wv);
-          fwrite(&posit, sizeof(double), 3, wv);
-          fwrite(&veloc, sizeof(double), 3, wv);
-          fwrite(&pcell, sizeof(unsigned int), 1, wv);
-          fwrite(&pfrac, sizeof(unsigned int), 1,wv);
-          fwrite(&time, sizeof(double),1,wv);
-          fwrite(&node[cell[pcell-1].node_ind[0]-1].aperture, sizeof(double),1,wv);
-          fwrite(&obeta,sizeof(double),1,wv);
-               }
-               }
-
 		}
 
 	    } 
@@ -2412,19 +2384,9 @@ void ParticleOutput (int currentt)
   
       if (traj_o==1)
 	{
-          if (bin_o==0)
+
 	  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E\n", t, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2],particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta);
-         if (bin_o==1)
-              {
-         fwrite(&t, sizeof(unsigned int),1,wv);
-         fwrite(&particle3dp.cord3, sizeof(double), 3, wv); 
-         fwrite(&particle3dv.cord3, sizeof(double), 3, wv);
-         fwrite(&particle[np].cell, sizeof(unsigned int), 1, wv);
-         fwrite(&particle[np].fracture, sizeof(unsigned int), 1,wv);
-         fwrite(&particle[np].time,sizeof(double),1,wv);
-         fwrite(&node[cell[pcell-1].node_ind[0]-1].aperture, sizeof(double),1,wv);
-         fwrite(&obeta,sizeof(double),1,wv); 
-              }
+    
 	}
       nodeID++;
       if (avs_o==1)
