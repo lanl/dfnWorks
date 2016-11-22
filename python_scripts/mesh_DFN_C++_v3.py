@@ -129,35 +129,34 @@ def create_parameter_mlgi_file(nPoly,h, slope = 2, refine_dist = 0.5):
 		f.write('define / EXCAVATE_FILE / tmp_excavate_' + frac_id + '.inp\n')
 		f.write('define / PRE_FINAL_FILE / tmp_pre_final_'+frac_id + '.inp\n')
 		f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' + frac_id +'.gmv\n')
+		
 		f.write('define / H_SCALE / ' + str(h) + '\n')
 		f.write('define / H_EPS / ' + str(h*10**-7) + '\n')
 		f.write('define / H_SCALE2 / ' + str(1.5*h) + '\n')
 
-
-		f.write('define / H_SCALE8 / ' + str(8*h) + '\n')
-                f.write('define / H_SCALE16 / ' + str(16*h) + '\n')
-
-
-
-		f.write('define / H_SCALE4 / ' + str(3*h) + '\n')
-		f.write('define / H_SCALE5 / ' + str(8*h) + '\n')
-		f.write('define / H_SCALE6 / ' + str(16*h) + '\n')
 		f.write('define / H_EXTRUDE / ' + str(h_extrude) + '\n')
 		f.write('define / H_TRANS / ' + str(h_trans) + '\n')
-
 
 		f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
 		f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
 		
-		f.write('define / PURTURB16 / ' + str(16*0.1*h) + '\n')
-                f.write('define / PURTURB8 / ' + str(8*0.1*h) + '\n')
-		f.write('define / PURTURB / ' + str(3*h) + '\n')
-		
+		f.write('define / H_SCALE3 / ' + str(3*h) + '\n')
+		f.write('define / H_SCALE8 / ' + str(8*h) + '\n')
+                f.write('define / H_SCALE16 / ' + str(16*h) + '\n')
+                f.write('define / H_SCALE32 / ' + str(32*h) + '\n')
+                f.write('define / H_SCALE64 / ' + str(64*h) + '\n')
+
+                f.write('define / PURTURB8 / ' + str(8*0.05*h) + '\n')
+		f.write('define / PURTURB16 / ' + str(16*0.05*h) + '\n')
+                f.write('define / PURTURB32 / ' + str(32*0.05*h) + '\n')
+		f.write('define / PURTURB64 / ' + str(64*0.05*h) + '\n')
 
 		f.write('define / PARAM_A / '+str(slope)+'\n')	
+		#f.write('define / PARAM_A / '+str(0.0)+'\n')	
 		f.write('define / PARAM_B / '+str(h*(1-slope*refine_dist))+'\n')	
 
 		f.write('define / PARAM_A2 / '+str(0.5*slope)+'\n')	
+		#f.write('define / PARAM_A2 / '+str(0.0)+'\n')	
 		f.write('define / PARAM_B2 / '+str(h*(1 - 0.5*slope*refine_dist))+'\n')	
 		
 		f.write('define / THETA  / '+str(theta)+'\n')
@@ -213,7 +212,7 @@ read / LINE_FILE / mo_line_work
 	# START: Refine the point distribution
 	#
 	if(refine_factor > 1):
-		lagrit_input += 'extrude / mo_quad_work / mo_line_work / const / H_SCALE5 / volume / 0. 0. 1.  \n'
+		lagrit_input += 'extrude / mo_quad_work / mo_line_work / const / H_SCALE8 / volume / 0. 0. 1.  \n'
 		if (refine_factor == 2):
 			lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
 
@@ -230,7 +229,7 @@ read / LINE_FILE / mo_line_work
 grid2grid / tree_to_fe / mo_quad_work / mo_quad_work  
 extract/surfmesh/1,0,0/mo_ext_work/mo_quad_work/external 
 compute / distance_field / mo_ext_work / mo_line_work / dfield 
-pset / pdel_work / attribute / dfield / 1 0 0 / H_SCALE4 / gt 
+pset / pdel_work / attribute / dfield / 1 0 0 / H_SCALE3 / gt 
 rmpoint / pset get pdel_work / inclusive 
 rmpoint / compress  
 
@@ -257,32 +256,34 @@ cmo / select / mo_pts
 '''
 	if(visualMode == 0):
 		lagrit_input += '''
- Creates a Coarse Mesh and then refines it using the distance field from intersections 
-#massage / H_SCALE6 / 1.e-5 / 1.e-5 
-#smooth;recon 0;smooth;recon 0;smooth;recon 0  
-#smooth;recon 0;smooth;recon 0;smooth;recon 0
-#massage / H_SCALE5 / 1.e-5 / 1.e-5 
-#smooth;recon 0;smooth;recon 0;smooth;recon 0 
-#smooth;recon 0;smooth;recon 0;smooth;recon 0
-#
-#
-
 # Creates a Coarse Mesh and then refines it using the distance field from intersections
+massage / H_SCALE64 / H_EPS  / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PURTURB64 PURTURB64 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
+massage / H_SCALE32 / H_EPS / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PURTURB32 PURTURB32 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
 massage / H_SCALE16 / H_EPS  / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
 perturb / pset get p_move / PURTURB16 PURTURB16 0.0
-smooth;recon 0;smooth;recon 0;smooth;recon 0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE8 / H_EPS / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
 perturb / pset get p_move / PURTURB8 PURTURB8 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
-smooth;recon 0;smooth;recon 0;smooth;recon 0
-
-
 
 cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes 
 cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
@@ -320,6 +321,7 @@ trans / 1 0 0 / 0. 0. 0. / 0. 0. H_TRANS
 hextotet / 2 / mo_tri / mo_quad 
 cmo / delete / mo_quad 
 addmesh / excavate / mo_excavate / mo_pts / mo_tri
+
 ##### DEBUG #####
 # If meshing fails, uncomment and rerun the script to get tmp meshes, 
 # which are otherwise not output 
