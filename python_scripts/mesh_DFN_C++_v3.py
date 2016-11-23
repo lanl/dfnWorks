@@ -258,6 +258,7 @@ cmo / select / mo_pts
 		lagrit_input += '''
 # Creates a Coarse Mesh and then refines it using the distance field from intersections
 massage / H_SCALE64 / H_EPS  / H_EPS
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
 perturb / pset get p_move / PURTURB64 PURTURB64 0.0
