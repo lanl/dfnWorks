@@ -25,7 +25,7 @@ class dfnworks(Frozen):
 	"""
 	Class for DFN Generation and meshing
 	"""
-	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='perm.dat', aper_file='aperture.dat',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
 		self._jobname = jobname
 		self._local_jobname = self._jobname.split('/')[-1]
@@ -85,7 +85,6 @@ class dfnworks(Frozen):
 		self.dumpTime('Process: dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
-		os.chdir(self._jobname)
 		
 		# Check if full_mesh.inp exists 
 		tic_flow = time()
@@ -121,7 +120,6 @@ class dfnworks(Frozen):
 
 	def dfnTrans(self):
 		
-		os.chdir(self._jobname)
 		print ('='*80)
 		print '\n'
 		print '--> Running dfnTrans'	
@@ -142,11 +140,10 @@ class dfnworks(Frozen):
 		print '\n'
 	
 	def dumpTime(self, section_name, time):
-
 		if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):	
 			f = open(self._local_jobname+"_run_time.txt", "w")
 			f.write("Runs times for " + self._jobname + "\n")
-		else:	
+		else:
 			f = open(self._local_jobname+"_run_time.txt", "a")
 		if time < 60.0:
 			line = section_name + " :  %f seconds\n"%time
@@ -227,7 +224,6 @@ class dfnworks(Frozen):
 					This WILL be processed
 		 
 		"""
-		os.chdir(self._jobname)
 		## BIG TODO s -----
 			## ==== Problems ==== ##
 		## 11. Multiple keys on one line
@@ -1158,8 +1154,6 @@ class dfnworks(Frozen):
 					writer.write(param + ': ' + str(valueOf(param, writing=True)) + '\n')              
 			
 
-		
-
 		print '--> Checking input files'	
 		copy(self._input_file, './')
 		ioPaths = {"input":"", "output":""}
@@ -1178,7 +1172,7 @@ class dfnworks(Frozen):
 			reader = open(ioPaths["input"], 'r')
 			writer = open(ioPaths["output"], 'w')
 			inputIterator = iter(reader)
-		except FileNotFoundError:
+		except:
 			error("Check that the path of your input file is valid.")
 	      
 		print '--> Checking input data'
@@ -1192,8 +1186,6 @@ class dfnworks(Frozen):
 		print '--> Checking Input Data Complete'
 
 	def create_network(self):
-		
-		os.chdir(self._jobname)
 		print '--> Running DFNGEN'	
 		# copy input file into job folder	
 		os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
@@ -1210,7 +1202,6 @@ class dfnworks(Frozen):
 		Mesh Fracture Network using ncpus and lagrit
 		meshing file is seperate file: dfnGen_meshing.py
 		'''
-		os.chdir(self._jobname)
 		print ('='*80)
 		print '--> Meshing Network'
 		production_mode = 1
@@ -1225,21 +1216,22 @@ class dfnworks(Frozen):
 	
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
 	
-		#if failure > 0:
-		#	mesh.cleanup_dir()
-		#	print 'Exiting Program due to mesh failure'
-		#	sys.exit(1)
+		if failure > 0:
+			mesh.cleanup_dir()
+			print 'Exiting Program due to mesh failure'
+			sys.exit(1)
+		
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
 		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
 		self.dumpTime('Process: Merging the Mesh', time() - tic2)	
 
-		#if(visualMode == 0):	
-		#	if (mesh.check_dudded_points(dudded_points) == False):
-		#		print 'Exiting Program due to mesh dudded points failure'
-		#       cleanup_dir()
-		#		sys.exit(1)
+		if(visualMode == 0):	
+			if (mesh.check_dudded_points(dudded_points) == False):
+				print 'Exiting Program due to mesh dudded points failure'
+				cleanup_dir()
+				sys.exit(1)
 	
 		if production_mode > 0:
 			mesh.cleanup_dir()
@@ -1260,7 +1252,6 @@ class dfnworks(Frozen):
 		4. NOTE future developers of this code should ass functionality for radiiList of size 0. 
 
 		"""
-		os.chdir(self._jobname)
 		print '--> Creating Report of DFN generation'
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
@@ -1711,8 +1702,8 @@ class dfnworks(Frozen):
 		    vtk_file = self._vtk_file
 		else:
 		    vtk_file = inp_file[:-4]
+	   	    self._vtk_file = vtk_file + '.vtk'
 
-		self._vtk_file = vtk_file + '.vtk'
 		print("--> Reading inp data")
 
 		with open(inp_file, 'r') as f:
@@ -2094,10 +2085,11 @@ class dfnworks(Frozen):
 		if aper_file == '' and self._aper_cell_file == '':
 		    sys.exit('ERROR: aperture file must be specified!')
 
-
 		os.system('pwd')
 		mat_file = 'materialid.dat'
 		t = time()
+		
+		# Make input file for C UGE converter
 		f = open("convert_uge_params.txt", "w")
 		f.write("%s\n"%inp_file)
 		f.write("%s\n"%mat_file)
@@ -2112,9 +2104,11 @@ class dfnworks(Frozen):
 		f.close()
 	
 		cmd = os.environ['correct_uge_PATH']+ ' convert_uge_params.txt' 
-		os.system(cmd)
+		failure = os.system(cmd)
+		if failure > 0:
+			sys.exit('UGE conversion failed')
 		elapsed = time() - t
-		print '--> Time elapsed for UGE file conversion: ', elapsed, 'seconds\n'
+		print '--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed
 
 		# need number of nodes and mat ID file
 		print('--> Writing HDF5 File')
@@ -2197,7 +2191,6 @@ class dfnworks(Frozen):
 
 	
 	def pflotran(self):
-		os.chdir(self._jobname)
 		try: 
 			copy(self._pflotran_file, './')
 		except:
@@ -2229,18 +2222,19 @@ class dfnworks(Frozen):
 		print '--> Creating Uncorrelated Transmissivity Fields'
 		print 'Variance: ', sigma
 		print 'Running un-correlated'
-		x = np.genfromtxt('../aperture.dat', skip_header = 1)
+		x = np.genfromtxt('../aperture.dat', skip_header = 1)[:,-1]
+		k = np.genfromtxt('../perm.dat', skip_header = 1)[0,-1]
 		n = len(x)
-		b = x[0,-1]
-		n = len(x)
-		T = (b**3)/12.0
-		k = T/b
+
+		print np.mean(x)
 
 		perm = np.log(k)*np.ones(n) 
 		perturbation = np.random.normal(0.0, 1.0, n)
 		perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
 
-		aper = (12.0*perm)**0.5
+		aper = np.sqrt((12.0*perm))
+		aper -= np.mean(aper)
+		aper += np.mean(x)
 
 		print '\nPerm Stats'
 		print '\tMean:', np.mean(perm)
@@ -2250,7 +2244,6 @@ class dfnworks(Frozen):
 		print '\tMaximum:',max(perm)
 		print '\tMinimum:',min(np.log(perm))
 		print '\tMaximum:',max(np.log(perm))
-
 
 		print '\nAperture Stats'
 		print '\tMean:', np.mean(aper)
@@ -2299,3 +2292,10 @@ class dfnworks(Frozen):
 		os.symlink('../poly_info.dat','poly_info.dat')
 		#os.symlink(self._jobname+'/*ex', './')
 
+	def get_num_frac(self):
+		try: 
+			f = open('params.txt')
+			self._num_frac = int(f.readline())
+			f.close()
+		except:
+			print '-->ERROR getting number of fractures, no params.txt file'
