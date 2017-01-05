@@ -54,6 +54,14 @@ class dfnworks(Frozen):
 		self._freeze
 
 	def dfnGen(self):
+		'''
+		Run the dfnGen workflow. 
+		1) make_working_directory: Create a directory with name of job
+		2) check_input: Check input parameters and create a clean version of the input file
+		3) create_network: Create network. DFNGEN v2.0 is called and creates the network
+		4) output_report: Generate a PDF summary of the DFN generation
+		5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN
+		'''
 		tic_gen = time()
 		# Create Working directory
 		tic = time()
@@ -86,7 +94,6 @@ class dfnworks(Frozen):
 
 	def dfnFlow(self):
 		
-		# Check if full_mesh.inp exists 
 		tic_flow = time()
 
 		tic = time()
@@ -1213,9 +1220,7 @@ class dfnworks(Frozen):
 		mesh.create_parameter_mlgi_file(nPoly, h)
 		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
 		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-	
 		self.dumpTime('Process: Meshing Fractures', time() - tic2)
-	
 		if failure > 0:
 			mesh.cleanup_dir()
 			print 'Exiting Program due to mesh failure'

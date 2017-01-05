@@ -1,6 +1,9 @@
 import os, sys, time
+import argparse
 from dfnWorks import *
 import dfnGen_meshing as mesh
+
+import prune_dfn as prune
 
 
 def define_paths():
@@ -12,7 +15,7 @@ def define_paths():
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	#os.environ['DFNTRANS_PATH']= '/home/nataliia/DFNWorks_UBUNTU/DFNTrans2.0/'
+	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -20,10 +23,28 @@ def define_paths():
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-	
-	#os.environ['PYLAGRIT']='/home/jhyman/pylagrit/src'
-	#os.system('module load pylagrit/june_8_2015')
 
+def commandline_options():
+	parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+
+	parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+		      help="Number of CPUs")
+	parser.add_argument("-name", "--jobname", default="", type=str,
+		      help="jobname") 
+	parser.add_argument("-gen", "--dfngen", default="", type=str,
+		      help="Path to dfnGen run file") 
+	parser.add_argument("-flow", "--dfnflow", default="", type=str,
+		      help="Path to dfnFlow run file") 
+	parser.add_argument("-trans", "--dfntrans", default="", type=str,
+		      help="Path to dfnTrans run file") 
+	parser.add_argument("-cell", "--cell", default=False, action="store_true",
+		      help="Binary For Cell Based Apereture / Perm")
+ 
+	options = parser.parse_args()
+
+	if options.jobname is "":
+		raise SystemExit("Jobname is required. Exiting...")
+	return options
 
 lanl_statement = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +104,7 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 POSSIBILITY OF SUCH DAMAGE.
 '''
- 
+
 
 print ('='*80)
 print lanl_statement
@@ -91,80 +112,57 @@ print ('='*80)
 os.system("date")
 define_paths()
 
+options = commandline_options()
+print options 
+
 # 4 fracture test
-#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
-#dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
-#dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
+dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
+dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
+dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
+#
+#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/mixing/input_mixing_25L_kappa_0.dat'	
+#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/mixing/input_mixing_25L.dat'	
+#dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/mixing/dfn_explicit.in'	
+#dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/mixing/PTDFN_control.dat'	
+#
+#dfnGen_run_file = os.environ['input_files']+'/dipole_network/input_dipole.dat'
+#dfnFlow_run_file = os.environ['input_files']+'/dipole_network/dfn_explicit.in'	
+#dfnTrans_run_file = os.environ['input_files']+'/dipole_network/PTDFN_control.dat'	
 #
 
-# USER INPUT FILES, ALL PATHS MUST BE VALID	
-#dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/1L_network.dat'	
-#dfnGen_run_file = '/home/jhyman/dfnworks/dfnworks-main/sample_inputs/multi_rect.dat'	
-#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
-#dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/pl_test.dat'	
-#dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'
-#dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
-#
-dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/CGU_networks/pl_test.dat'	
-dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/dfn_explicit.in'	
-dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/simple_pl/PTDFN_control.dat'	
-#dfnFlow_run_file = '/scratch/fe/jhyman/dfnWorks/2016-marco/fors15_115/dfn_explicit.in'	
-
-
-
-
-main_time = time()
-# Command lines: argv[1] = jobname, argv[2] = number of cpus. 
-# Command line is overloaded, so argv[3], argv[4], argv[5] 
-# can be dfnGen, dfnFlow, and dfnTrans control files. 
-# They need to be the FULL path name
-try: 
-	jobname = sys.argv[1]
-	ncpu = int(sys.argv[2])
-except:
-	print 'Not enough input parameters'
-	print 'Usage:', sys.argv[0], '[jobname][nCPU]'; sys.exit(1)
-
-if len(sys.argv) == 4:
-	dfnGen_run_file = sys.argv[3] 
-elif len(sys.argv) == 5:
-	dfnGen_run_file = sys.argv[3] 
-	dfnFlow_run_file = sys.argv[4] 
-elif len(sys.argv) == 6:
-	dfnGen_run_file = sys.argv[3] 
-	dfnFlow_run_file = sys.argv[4] 
-	dfnTrans_run_file = sys.argv[5] 
+jobname = options.jobname
+ncpu = options.ncpu
+if options.dfngen is not "":
+	dfnGen_run_file = options.dfngen
+if options.dfnflow is not "":
+	dfnFlow_run_file = options.dfnflow
+if options.dfntrans is not "":
+	dfntrans_run_file = options.dfntrans
 
 # Create DFN object
 dfn = dfnworks(jobname = jobname, input_file = dfnGen_run_file, ncpu = ncpu, pflotran_file = dfnFlow_run_file, dfnTrans_file = dfnTrans_run_file)
+
+if options.cell is True:
+	dfn._aper_cell_file = 'aper_node.dat'
+	dfn._perm_cell_file = 'perm_node.dat'
+else:
+	dfn._aper_file = 'aperture.dat'
+	dfn._perm_file = 'perm.dat'
+
 
 print 'Running Job: ', jobname
 print 'Number of cpus requested: ', ncpu 
 print '--> dfnGen input file: ',dfnGen_run_file
 print '--> dfnFlow input file: ',dfnFlow_run_file
 print '--> dfnTrans input file: ',dfnTrans_run_file
-print ''
+main_time = time()
 
-
-
-
-#dfn.make_working_directory()
-#dfn.check_input()
-
+# General Work Flow
 dfn.dfnGen()
+os.chdir(dfn._jobname)
 dfn.dfnFlow()
 dfn.dfnTrans()
-#os.chdir(dfn._jobname)
-#mesh.cleanup_dir()
 
-
-# possible commands
-#dfn.make_working_directory()
-#dfn.check_input()
-#dfn.create_network()   
-#dfn.output_report()
-#dfn.dfnFlow()
-#dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 print jobname, 'Complete'
