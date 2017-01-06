@@ -12,6 +12,7 @@ from scipy.stats import norm, lognorm, powerlaw
 from scipy.integrate import odeint 
 from dfntools import *
 import h5py
+import argparse
 
 import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
@@ -25,21 +26,22 @@ class dfnworks(Frozen):
 	"""
 	Class for DFN Generation and meshing
 	"""
-	def __init__(self, jobname='', local_jobname='',input_file='',output_file='',local_input_file='',ncpu='', pflotran_file = '', local_pflotran_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+	def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
 		self._jobname = jobname
-		self._local_jobname = self._jobname.split('/')[-1]
-		self._input_file = input_file
-		self._output_file = output_file
- 
-		self._output_file = self._input_file.split('/')[-1]
-		self._local_input_file = local_input_file
-		self._local_input_file = self._input_file.split('/')[-1]
-		
-		self._pflotran_file = pflotran_file 
-		self._local_pflotran_file = self._pflotran_file.split('/')[-1]
-		self._dfnTrans_file = dfnTrans_file 
 		self._ncpu = ncpu
+		self._local_jobname = self._jobname.split('/')[-1]
+
+		self._dfnGen_file = dfnGen_file
+		self._local_dfnGen_file = self._dfnGen_file.split('/')[-1]
+		
+		self._output_file = self._dfnGen_file.split('/')[-1]
+		
+		self._dfnFlow_file = dfnFlow_file 
+		self._local_dfnFlow_file = self._dfnFlow_file.split('/')[-1]
+
+		self._dfnTrans_file = dfnTrans_file 
+		self._local_dfnTrans_file = self._dfnTrans_file.split('/')[-1]
 
 		self._vtk_file = vtk_file
 		self._inp_file = inp_file
@@ -66,87 +68,91 @@ class dfnworks(Frozen):
 		# Create Working directory
 		tic = time()
 		self.make_working_directory()
-		self.dumpTime('Function: make_working_directory', time()- tic)	
+		self.dump_time('Function: make_working_directory', time()- tic)	
 	
 		# Check input file	
 		tic = time()
 		self.check_input()
-		self.dumpTime('Function: check_input', time() - tic)	
+		self.dump_time('Function: check_input', time() - tic)	
 	
 		# Create network 	
 		tic = time()
 		self.create_network()
-		self.dumpTime('Function: create_network', time() - tic)	
+		self.dump_time('Function: create_network', time() - tic)	
 		
 		tic = time()
 		#self.output_report()
-		self.dumpTime('output_report', time() - tic)	
+		self.dump_time('output_report', time() - tic)	
 		# Mesh Network
 
 		tic = time()
 		self.mesh_network()
-		self.dumpTime('Function: mesh_network', time() - tic)	
+		self.dump_time('Function: mesh_network', time() - tic)	
 		print ('='*80)
 		print 'dfnGen Complete'
 		print ('='*80)
 		print ''
-		self.dumpTime('Process: dfnGen',time() - tic_gen)	
+		self.dump_time('Process: dfnGen',time() - tic_gen)	
 
 	def dfnFlow(self):
-		
+		''' dfnFlow
+		Run the dfnFlow portion of the workflow.
+		1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
+		'''	
+	
+		print('='*80)
+		print("\ndfnFlow Starting\n")
+		print('='*80)
+
 		tic_flow = time()
 
 		tic = time()
 		self.lagrit2pflotran()
-		self.dumpTime('Function: lagrit2pflotran', time() - tic)	
-	
-		tic = time()
-		#self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
-		#self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
-		#self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
-		#self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
-		#self.zone2ex(zone_file='pboundary_top.zone',face='top')
-		#self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
-		self.zone2ex(zone_file='all')
-
-		toc = time() 
-		self.dumpTime('Function: zone2ex', time() - tic)	
-
+		self.dump_time('Function: lagrit2pflotran', time() - tic)	
+		
 		tic = time()	
 		self.pflotran()
-		self.dumpTime('Function: pflotran', time() - tic)	
+		self.dump_time('Function: pflotran', time() - tic)	
 
 		tic = time()	
 		self.parse_pflotran_vtk()		
-		self.dumpTime('Function: parse_pflotran_vtk', time() - tic)	
+		self.dump_time('Function: parse_pflotran_vtk', time() - tic)	
 		
 		tic = time()	
 		self.pflotran_cleanup()
-		self.dumpTime('Function: parse_cleanup', time() - tic)	
-		self.dumpTime('Process: dfnFlow',time() - tic_flow)	
+		self.dump_time('Function: parse_cleanup', time() - tic)	
+		self.dump_time('Process: dfnFlow',time() - tic_flow)	
+	
+		print('='*80)
+		print("\ndfnFlow Complete\n")
+		print('='*80)
 
 	def dfnTrans(self):
-		
-		print ('='*80)
-		print '\n'
-		print '--> Running dfnTrans'	
-		try:
-			os.symlink(os.environ['DFNTRANS_PATH']+'/DFNTrans', './DFNTrans')
-		except:
-			print '--> ERROR: Problem creating link to DFNTrans'
-		try:	
-			copy(self._dfnTrans_file, './PTDFN_control.dat')
-		except:
-			print '--> ERROR: Problem copying PTDFN_control.dat file'
-		tic = time()	
-		failure = os.system('./DFNTrans PTDFN_control.dat')
-		self.dumpTime('Process: dfnTrans', time() - tic)	
-		if failure == 0:
-			print '--> Running dfnTrans complete'	
-		print ('='*80)
-		print '\n'
+		'''dfnTrans
+		Copy input files for dfnTrans into working directory and run DFNTrans
+		'''
+		print('='*80)
+		print("\ndfnTrans Starting\n")
+		print('='*80)
 	
-	def dumpTime(self, section_name, time):
+		try:
+			os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+		except:
+			print("--> ERROR: Problem creating link to DFNTrans")
+		try:	
+			copy(self._dfnTrans_file, self._local_dfnTrans_file) 
+		except:
+			print("--> ERROR: Problem copying PTDFN_control.dat file")
+		tic = time()	
+		failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
+		self.dump_time('Process: dfnTrans', time() - tic)	
+		if failure == 0:
+			print('='*80)
+			print("\ndfnTrans Complete\n")
+			print('='*80)
+		else:
+			sys.exit("--> ERROR: dfnTrans did not complete\n")
+	def dump_time(self, section_name, time):
 		if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):	
 			f = open(self._local_jobname+"_run_time.txt", "w")
 			f.write("Runs times for " + self._jobname + "\n")
@@ -159,9 +165,9 @@ class dfnworks(Frozen):
 		f.write(line)
 		f.close()
 
-	def runTime(self):
-		'''
-		read in run times and print to screen with percentages
+	def print_run_time(self):
+		'''print_run_time
+		Read in run times from file and and print to screen with percentages
 		'''
 		f=open(self._local_jobname+"_run_time.txt").readlines()
 		unit = f[-1].split()[-1]
@@ -171,14 +177,22 @@ class dfnworks(Frozen):
 
 		print 'Runs times for ', f[0]
 		percent = []
+		name = []
 		for i in range(1,len(f)):
 			unit = f[i].split()[-1]
 			time = float(f[i].split()[-2])
+	
 			if unit is 'minutes':
 				time *= 60.0
-			percent = 100.0*(time/total)
-			print f[i], '\t--> Percent of total %0.2f \n'%percent
+			percent.append(100.0*(time/total))
+			name.append(f[i].split(':')[1])
+			print f[i], '\t--> Percent if total %0.2f \n'%percent[i-1]
+		print("Primary Function Percentages")
 
+		for i in range(1,len(f) - 1):
+			if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
+				print(name[i-1]+"\t"+"*"*int(percent[i-1]))
+		print("\n")
 
 	#################### dfnGen Functions ##########################
 	def make_working_directory(self,jobname=''):
@@ -206,14 +220,14 @@ class dfnworks(Frozen):
 				os.mkdir(jobname + '/radii')
 				os.mkdir(jobname + '/intersections')
 				os.mkdir(jobname + '/polys')
-			elif keep == 'no':
-				print 'Exiting Program'
-				sys.exit(1) 
+				os.chdir(self._jobname)
+				cwd = os.getcwd()
+				print("Current directory is now: %s\n"%cwd)
+
+			elif keep == 'no' or 'n':
+				sys.exit("Not deleting folder. Exiting Program") 
 			else:
-				print 'Unknown Response'
-				print 'Exiting Program'
-				sys.exit(1)
-		os.chdir(self._jobname)
+				sys.exit("Unknown Response. Exiting Program") 
 
 
 	def check_input(self,input_file='',output_file=''):
@@ -1162,15 +1176,19 @@ class dfnworks(Frozen):
 			
 
 		print '--> Checking input files'	
-		copy(self._input_file, './')
+		try:
+			copy(self._dfnGen_file, './')
+		except:
+			sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self._dfnGen_file)
+
 		ioPaths = {"input":"", "output":""}
 		try:
-			ioPaths["input"] = self._local_input_file
+			ioPaths["input"] = self._local_dfnGen_file
 		except IndexError:
 			error("Please provide an input file path as the first command line argument.\n"\
 			      "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
 		try:
-			ioPaths["output"] = self._local_input_file[:-4]+'_clean.dat'
+			ioPaths["output"] = self._local_dfnGen_file[:-4]+'_clean.dat'
 		except IndexError:
 			ioPaths["output"] = "polishedOutput.txt"
 			warning("No output path has been provided so output will be written to "\
@@ -1195,22 +1213,25 @@ class dfnworks(Frozen):
 	def create_network(self):
 		print '--> Running DFNGEN'	
 		# copy input file into job folder	
-		os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_input_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+		os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
 		os.chdir(self._jobname)
 		if os.path.isfile("params.txt") is False:
 			print '--> Generation Failed'
 			print '--> Exiting Program'
 			exit()
 		else:
-			print '--> Generation Succeeded\n\n'
+			print('-'*80)
+			print("Generation Succeeded")
+			print('-'*80)
 
 	def mesh_network(self, ncpu = ''):
 		'''
 		Mesh Fracture Network using ncpus and lagrit
 		meshing file is seperate file: dfnGen_meshing.py
 		'''
-		print ('='*80)
-		print '--> Meshing Network'
+		print('='*80)
+		print("Meshing Network Using LaGriT : Starting")
+		print('='*80)
 		production_mode = 1
 		refine_factor = 1	
 		
@@ -1220,7 +1241,7 @@ class dfnworks(Frozen):
 		mesh.create_parameter_mlgi_file(nPoly, h)
 		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
 		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-		self.dumpTime('Process: Meshing Fractures', time() - tic2)
+		self.dump_time('Process: Meshing Fractures', time() - tic2)
 		if failure > 0:
 			mesh.cleanup_dir()
 			print 'Exiting Program due to mesh failure'
@@ -1230,7 +1251,7 @@ class dfnworks(Frozen):
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
 		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
-		self.dumpTime('Process: Merging the Mesh', time() - tic2)	
+		self.dump_time('Process: Merging the Mesh', time() - tic2)	
 
 		if(visualMode == 0):	
 			if (mesh.check_dudded_points(dudded_points) == False):
@@ -1244,7 +1265,8 @@ class dfnworks(Frozen):
 			mesh.redefine_zones(h)
 
 		mesh.output_meshing_report(visualMode)
-		print '--> Meshing Network Complete'	
+		print ('='*80)
+		print("Meshing Network Using LaGriT : Complete")
 		print ('='*80)
 
 	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
@@ -1685,68 +1707,67 @@ class dfnworks(Frozen):
 		graphRejections()
 
 		outputPDF.close()
-	#################### dfnGen Functions ##########################
+	#################### End dfnGen Functions ##########################
 
 
-
-	#################### dfnFlow Functions ##########################
-	def inp2vtk(self, inp_file=''):
-		import pyvtk as pv
-		"""
-		:rtype : object
-		"""
-		if self._inp_file:
-		    inp_file = self._inp_file
-		else:
+	#################### Start dfnFlow Functions ##########################
+	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
+		print ('='*80)
+		print("Starting conversion of files for PFLOTRAN ")
+		print ('='*80)
+		if inp_file:
 		    self._inp_file = inp_file
+		else:
+		    inp_file = self._inp_file
 
 		if inp_file == '':
 		    sys.exit('ERROR: Please provide inp filename!')
 
-		if self._vtk_file:
-		    vtk_file = self._vtk_file
+		if mesh_type:
+		    if mesh_type in mesh_types_allowed:
+			self._mesh_type = mesh_type
+		    else:
+			sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
 		else:
-		    vtk_file = inp_file[:-4]
-	   	    self._vtk_file = vtk_file + '.vtk'
+		    mesh_type = self._mesh_type
 
-		print("--> Reading inp data")
+		if mesh_type == '':
+		    sys.exit('ERROR: Please provide mesh type!')
 
-		with open(inp_file, 'r') as f:
-		    line = f.readline()
-		    num_nodes = int(line.strip(' ').split()[0])
-		    num_elems = int(line.strip(' ').split()[1])
+		self._uge_file = inp_file[:-4] + '.uge'
+		# Check if UGE file was created by LaGriT, if it does not exists, exit
+		failure = os.path.isfile(self._uge_file)
+		if failure == False:
+		    sys.exit('Failed to run LaGrit to get initial .uge file')
 
-		    coord = np.zeros((num_nodes, 3), 'float')
-		    elem_list_tri = []
-		    elem_list_tetra = []
+		if mesh_type == 'dfn':
+		    self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
 
-		    for i in range(num_nodes):
-			line = f.readline()
-			coord[i, 0] = float(line.strip(' ').split()[1])
-			coord[i, 1] = float(line.strip(' ').split()[2])
-			coord[i, 2] = float(line.strip(' ').split()[3])
-
-		    for i in range(num_elems):
-			line = f.readline().strip(' ').split()
-			line.pop(0)
-			line.pop(0)
-			elem_type = line.pop(0)
-			if elem_type == 'tri':
-			    elem_list_tri.append([int(i) - 1 for i in line])
-			if elem_type == 'tet':
-			    elem_list_tetra.append([int(i) - 1 for i in line])
-
-		print('--> Writing inp data to vtk format')
-
-		vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
-				 'Unstructured pflotran grid')
-		vtk.tofile(vtk_file)
-
+		# Convert zone files to ex format
+		#self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
+		#self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
+		#self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
+		#self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
+		#self.zone2ex(zone_file='pboundary_top.zone',face='top')
+		#self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
+		self.zone2ex(zone_file='all')
+		print ('='*80)
+		print("Conversion of files for PFLOTRAN complete")
+		print ('='*80)
+		print("\n\n")
 
 	def zone2ex(self, uge_file='', zone_file='', face=''):
+		'''zone2ex	
+		Convert zone files from LaGriT into ex format for LaGriT
+		inputs:
+		uge_file: name of uge file
+		zone_file: name of zone file
+		face: face of the plane corresponding to the zone file
 
-		print ('='*80)
-		print('\n Converting zone files to ex')	
+		zone_file='all' processes all directions, top, bottom, left, right, front, back
+		'''
+	
+		print('--> Converting zone files to ex')	
 		if self._uge_file:
 		    uge_file = self._uge_file
 		else:
@@ -1862,12 +1883,61 @@ class dfnworks(Frozen):
 			    for idx, cell in enumerate(boundary_cell_coord):
 				f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
 				    Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
+			print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file+'\n')
 
-			print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file)
-			print('\n')
+		print('--> Converting zone files to ex complete')	
 
-		print('\n Converting zone files to ex complete')	
-		print ('='*80)
+	def inp2vtk(self, inp_file=''):
+		import pyvtk as pv
+		"""
+		:rtype : object
+		"""
+		if self._inp_file:
+		    inp_file = self._inp_file
+		else:
+		    self._inp_file = inp_file
+
+		if inp_file == '':
+		    sys.exit('ERROR: Please provide inp filename!')
+
+		if self._vtk_file:
+		    vtk_file = self._vtk_file
+		else:
+		    vtk_file = inp_file[:-4]
+	   	    self._vtk_file = vtk_file + '.vtk'
+
+		print("--> Reading inp data")
+
+		with open(inp_file, 'r') as f:
+		    line = f.readline()
+		    num_nodes = int(line.strip(' ').split()[0])
+		    num_elems = int(line.strip(' ').split()[1])
+
+		    coord = np.zeros((num_nodes, 3), 'float')
+		    elem_list_tri = []
+		    elem_list_tetra = []
+
+		    for i in range(num_nodes):
+			line = f.readline()
+			coord[i, 0] = float(line.strip(' ').split()[1])
+			coord[i, 1] = float(line.strip(' ').split()[2])
+			coord[i, 2] = float(line.strip(' ').split()[3])
+
+		    for i in range(num_elems):
+			line = f.readline().strip(' ').split()
+			line.pop(0)
+			line.pop(0)
+			elem_type = line.pop(0)
+			if elem_type == 'tri':
+			    elem_list_tri.append([int(i) - 1 for i in line])
+			if elem_type == 'tet':
+			    elem_list_tetra.append([int(i) - 1 for i in line])
+
+		print('--> Writing inp data to vtk format')
+
+		vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
+				 'Unstructured pflotran grid')
+		vtk.tofile(vtk_file)
 
 	def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
 			     combined_uge_file='combined.uge'):
@@ -1979,56 +2049,7 @@ class dfnworks(Frozen):
 			    f.write(line)
 		print '--> Parsing PFLOTRAN output complete'
 
-	def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
-		#print('--> Writing pflotran uge file from lagrit')
-		if inp_file:
-		    self._inp_file = inp_file
-		else:
-		    inp_file = self._inp_file
-
-		if inp_file == '':
-		    sys.exit('ERROR: Please provide inp filename!')
-
-		if mesh_type:
-		    if mesh_type in mesh_types_allowed:
-			self._mesh_type = mesh_type
-		    else:
-			sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
-		else:
-		    mesh_type = self._mesh_type
-
-		if mesh_type == '':
-		    sys.exit('ERROR: Please provide mesh type!')
-
-		d = inp_file[:-4]
-		#d1 = d + '_tet.inp'
-		#fid = open('%s.lgi' % d, 'w')  # Open file
-		#fid.write('read / avs / ' + inp_file + '/ mo1\n')
-		#if hex2tet:
-		#    fid.write('create / cmo / cmo_tet\n')
-		#    fid.write('grid2grid / hextotet6  /  cmo_tet / mo1\n')
-		#    fid.write('dump / avs / ' + '%s' % d1 + ' / cmo_tet \n')  # write avs file
-		#    fid.write('dump / pflotran / ' + '%s' % d + ' / cmo_tet / nofilter_zero \n')  # write uge file
-		#else:
-		#    fid.write('dump / pflotran / ' + '%s' % d + ' / mo1 / nofilter_zero \n')  # write uge file
-		#fid.write('finish\n\n')
-		#fid.close()
-
-		self._uge_file = d + '.uge'
-
-		#cmd = os.environ['lagrit_dfn']+ '< %s.lgi' % d + '>lagrit_uge.txt'
-		#failure = os.system(cmd)
-		# Need to check for full_mesh.uge file
-		#if failure:
-		#    sys.exit('Failed to run LaGrit to get initial .uge file')
-		failure = os.path.isfile(self._uge_file)
-		if failure == False:
-		    sys.exit('Failed to run LaGrit to get initial .uge file')
-
-		if mesh_type == 'dfn':
-		    self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
-
-
+	
 	def inp2gmv(self, inp_file=''):
 
 		if inp_file:
@@ -2050,19 +2071,17 @@ class dfnworks(Frozen):
 		failure = os.system(cmd)
 		if failure:
 		    sys.exit('ERROR: Failed to run LaGrit to get gmv from inp file!')
-
-		print('--> Finished writing gmv format from avs format')
+		print("--> Finished writing gmv format from avs format")
 
 
 	def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
 	
-		print('--> Perms and Correct Volume Areas')
-		os.system('pwd')
+		print("--> Writing Perms and Correct Volume Areas")
 		if inp_file:
 		    self._inp_file = inp_file
 		else:
 		    inp_file = self._inp_file
-
+		
 		if inp_file == '':
 		    sys.exit('ERROR: inp file must be specified!')
 
@@ -2090,10 +2109,8 @@ class dfnworks(Frozen):
 		if aper_file == '' and self._aper_cell_file == '':
 		    sys.exit('ERROR: aperture file must be specified!')
 
-		os.system('pwd')
 		mat_file = 'materialid.dat'
 		t = time()
-		
 		# Make input file for C UGE converter
 		f = open("convert_uge_params.txt", "w")
 		f.write("%s\n"%inp_file)
@@ -2111,7 +2128,7 @@ class dfnworks(Frozen):
 		cmd = os.environ['correct_uge_PATH']+ ' convert_uge_params.txt' 
 		failure = os.system(cmd)
 		if failure > 0:
-			sys.exit('UGE conversion failed')
+			sys.exit('ERROR: UGE conversion failed\nExiting Program')
 		elapsed = time() - t
 		print '--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed
 
@@ -2154,7 +2171,7 @@ class dfnworks(Frozen):
 		    h5dset = h5file.create_dataset(dataset_name, data=perm)
 
 		    h5file.close()
-		    print('--> Done writing permeability to h5 file')
+		    print("--> Done writing permeability to h5 file")
 		    del perm_list
 
 		if self._perm_cell_file:
@@ -2196,33 +2213,40 @@ class dfnworks(Frozen):
 
 	
 	def pflotran(self):
+		''' Run pflotran
+		Copy PFLOTRAN run file into working directory and run with ncpus
+		'''
 		try: 
-			copy(self._pflotran_file, './')
+			copy(self._dfnFlow_file, './')
 		except:
-			print '-->ERROR copying PFLOTRAN input file'
-		print ('='*80)
-		print '--> Running PFLOTRAN' 
-		cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_pflotran_file
+			print("-->ERROR copying PFLOTRAN input file")
+		print("="*80)
+		print("--> Running PFLOTRAN") 
+		cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file
 		os.system(cmd)	
-		print '--> Running PFLOTRAN Complete'
-		print ('='*80)
-		
+		print('='*80)
+		print("--> Running PFLOTRAN Complete")
+		print('='*80)
+		print("\n")
 
 	def pflotran_cleanup(self):
+		'''pflotran_cleanup
+		Concatenate PFLOTRAN output files and then delete them 
+		'''
 		print '--> Processing PFLOTRAN output' 
 		
-		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-cellinfo-001-rank*.dat > cellinfo.dat'
+		cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
 		os.system(cmd)
 
-		cmd = 'cat ' + self._local_pflotran_file[:-3] + '-darcyvel-001-rank*.dat > darcyvel.dat'
+		cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
 		os.system(cmd)
 
-		for fl in glob.glob(self._local_pflotran_file[:-3]+'-cellinfo*.dat'):
+		for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
 			os.remove(fl)	
-		for fl in glob.glob(self._local_pflotran_file[:-3]+'-darcyvel*.dat'):
+		for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
 			os.remove(fl)	
 
-	#################### dfnFlow Functions ##########################
+	#################### End dfnFlow Functions ##########################
 	def uncorrelated(self, sigma):
 		print '--> Creating Uncorrelated Transmissivity Fields'
 		print 'Variance: ', sigma
@@ -2304,3 +2328,110 @@ class dfnworks(Frozen):
 			f.close()
 		except:
 			print '-->ERROR getting number of fractures, no params.txt file'
+
+def commandline_options():
+	'''Read command lines for use in dfnWorks.
+	Options:
+	-name : Jobname (Mandatory)
+	-ncpu : Number of CPUS (Optional, default=4)
+
+	-gen : Generator Input File (Mandatory, can be included within this file)
+	-flow : PFLORAN Input File (Mandatory, can be included within this file)
+	-trans: Transport Input File (Mandatory, can be included within this file)
+
+	-cell: True/False Set True for use with cell 
+		based aperture and permeabuility (Optional, default=False)
+	'''
+	parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+	parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+		      help="Number of CPUs")
+	parser.add_argument("-name", "--jobname", default="", type=str,
+		      help="jobname") 
+	parser.add_argument("-input", "--input_file", default="", type=str,
+		      help="input file with paths to run files") 
+	parser.add_argument("-gen", "--dfnGen", default="", type=str,
+		      help="Path to dfnGen run file") 
+	parser.add_argument("-flow", "--dfnFlow", default="", type=str,
+		      help="Path to dfnFlow run file") 
+	parser.add_argument("-trans", "--dfnTrans", default="", type=str,
+		      help="Path to dfnTrans run file") 
+	parser.add_argument("-cell", "--cell", default=False, action="store_true",
+		      help="Binary For Cell Based Apereture / Perm")
+
+	options = parser.parse_args()
+	
+	if options.jobname is "":
+		sys.exit("Error: Jobname is required. Exiting.")
+	return options
+
+def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
+	'''create_dfn
+	Parse command line inputs and input files to create and populate dfnworks class
+	'''
+
+	options = commandline_options()
+	print("Command Line Inputs:")
+	print options
+	print("\n-->Creating DFN class")
+	dfn = dfnworks(jobname=options.jobname, ncpu=options.ncpu)
+
+	if options.input_file != "":
+		with open(options.input_file) as f:
+			for line in f:
+				line=line.rstrip('\n')
+				line=line.split()
+
+				if line[0].find("dfnGen") == 0:
+					dfn._dfnGen_file = line[1]
+					dfn._local_dfnGen_file = line[1].split('/')[-1]
+
+				elif line[0].find("dfnFlow") == 0:
+					dfn._dfnFlow_file = line[1]
+					dfn._local_dfnFlow_file = line[1].split('/')[-1]
+
+				elif line[0].find("dfnTrans") == 0:
+					dfn._dfnTrans_file = line[1]
+					dfn._local_dfnTrans_file = line[1].split('/')[-1]
+	else:	
+		if options.dfnGen != "":
+			dfn._dfnGen_file = options.dfnGen
+		elif dfnGen_file != "":
+			dfn._dfnGen_file = dfnGen_file  
+		else:
+			sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
+		
+		if options.dfnFlow != "":
+			dfn._dfnFlow_file = options.dfnFlow
+		elif dfnFlow_file != "":
+			dfn._dfnFlow_file = dfnFlow_file  
+		else:
+			sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
+		
+		if options.dfnTrans != "":
+			dfn._dfnTrans_file = options.dfnTrans
+		elif dfnTrans_file != "":
+			dfn._dfnTrans_file = dfnTrans_file  
+		else:
+			sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
+
+	if options.cell is True:
+		dfn._aper_cell_file = 'aper_node.dat'
+		dfn._perm_cell_file = 'perm_node.dat'
+	else:
+		dfn._aper_file = 'aperture.dat'
+		dfn._perm_file = 'perm.dat'
+
+	print("\n-->Creating DFN class: Complete")
+	print 'Jobname: ', dfn._jobname
+	print 'Number of cpus requested: ', dfn._ncpu 
+	print '--> dfnGen input file: ',dfn._dfnGen_file
+	print '--> dfnFlow input file: ',dfn._dfnFlow_file
+	print '--> dfnTrans input file: ',dfn._dfnTrans_file
+	if options.cell is True:
+		print '--> Expecting Cell Based Aperture and Permeability'
+	print("="*80+"\n")	
+
+	return dfn
+
+
+
