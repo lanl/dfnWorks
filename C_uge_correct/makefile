@@ -10,3 +10,6 @@ OBJ = main.o
 correct_uge: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
 
+clean:
+	rm -f main.o 
+

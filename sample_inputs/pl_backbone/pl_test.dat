@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 250
+nPoly: 1250 
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -25,7 +25,7 @@ outputAllRadii: 0
 */
 
                       
-domainSize: {10,10,10} 
+domainSize: {15,15,15} 
      /* Mandatory Parameter.
         Creates a domain with dimension x*y*z centered at the origin.*/
 
@@ -73,11 +73,11 @@ visualizationMode:  0
    1: produce only first round of triangulations. In this case no 
    modeling of flow and transport is possible. */ 
 
-seed: 0 
+seed: 1 
     //Seed for random generator. 0 = seed off clock 
         
 
-domainSizeIncrease: {0, 0, 0} 
+domainSizeIncrease: {0.5, 0.5, 0.5} 
           //temporary size increase for inserting fracture centers outside domain
           //increases the entire width by this ammount. So, {1,1,1} will increase
           //the domain by adding .5 to the +x, and subbtracting .5 to the -x, etc
@@ -91,7 +91,7 @@ keepOnlyLargestCluster: 1
            the specified boundary faces in boundaryFaces option below
     */
 
-ignoreBoundaryFaces: 1 
+ignoreBoundaryFaces: 0 
 /*
      0 = use boundaryFaces option below 
 
@@ -382,57 +382,83 @@ rExpMax: {10}
 /* Options Specific For Constant Size of rectangles (edistr=4):              */
 
 rconst: {2, 2, 2}  // Constant radius, defined per rectangular family       
-               
-/*===========================================================================*/
-/*===========================================================================*/
-/* User-Specified Ellipses                                                   */
-/* Mandatory Parameters if using user-ellipses                               */
-/* NOTE: Number of elements must match number of user-ellipse families       */
-/*(third number in nShape parameter)                                         */
-/*===========================================================================*/
-/* NOTE: Only one user-ellipse is placed into the domain per defined 
-         user-ellipse, with possibility of being rejected  */
-
-   
-userEllipsesOnOff: 0    //0 - User Ellipses off
-                        //1 - User Ellipses on
-
-UserEll_Input_File_Path: ./inputFiles/userPolygons/closeAngleTest.dat
 
 
 /*===========================================================================*/
-/* User-Specified Rectangles                                                 */
-/* Mandatory Parameters if using user-rectangles                             */
-/* NOTE: Number of elements must match number of user-ellipse families       */
-/* (fourth number in nShape parameter)                                       */
 /*===========================================================================*/
-/* NOTE: Only one user-rectangle is placed into the domain per defined 
-         user-rectangle, with possibility of being rejected  */
-         
-
-userRectanglesOnOff: 0    //0 - User Rectangles off
-                        //1 - User Rectangles on
-
-UserRect_Input_File_Path: ./4fracTest/4rects.dat
-
+/*  User-Specified Ellipses                                                  */
+/*  Mandatory Parameters if using user-ellipses                              */
+/*  NOTE: Number of elements must match number of user-ellipse families.     */
+/*  NOTE: Only one user-ellipse is placed into the domain per defined        */
+/*        user-ellipse, with possibility of being rejected                   */
 /*===========================================================================*/
-/* If you would like to input user specified rectangles according to their
-  coordinates, you can use the parameter userDefCoordRec. In that case, all        
-  of the user specified rectangles will have to be according to coordinates.
+/*===========================================================================*/
+
+userEllipsesOnOff: 0
+/*  0 - User ellipses off
+    1 - User ellipses on
 */
 
+UserEll_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/inputFiles/userPolygons/uEllInput.dat
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*  User-Specified Ellipses                                                  */
+/*  Mandatory Parameters if using user-ellipses                              */
+/*  NOTE: Number of elements must match number of user-ellipse families.     */
+/*  NOTE: Only one user-ellipse is placed into the domain per defined        */
+/*        user-ellipse, with possibility of being rejected                   */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userEllByCoord: 0
+/*  0 - User ellipses defined by coordinates off
+    1 - User ellipses defined by coordinates on
+*/
+
+EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/inputFiles/userPolygons/ellCoords.dat
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*  User-Specified Rectangles                                                */
+/*  NOTE: Number of elements must match number of user-ellipse families      */
+/*  NOTE: Only one user-rectangle is placed into the domain per defined      */
+/*        user-rectangle, with possibility of being rejected                 */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userRectanglesOnOff: 0
+/*  0 - User Rectangles off
+    1 - User Rectangles on
+*/
+
+UserRect_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/inputFiles/userPolygons/ignoreConnTest.dat
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*                                                                           */
+/*  User Rectangles Defined By Coordinates                                   */
+/*                                                                           */
+/*===========================================================================*/
+/*===========================================================================*/
+
 userRecByCoord: 0
-//  0 - user defined rectangles not used
-//  1 - user defined rectangles used and defined by input file:
+/*  0 - User defined rectangles by coordinates off
+    1 - User defined rectangles by coordinates on
+*/
 
-RectByCood_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
+RectByCoord_Input_File_Path: ~/GitProjects/DFNGen/DFNC++Version/inputFiles/userPolygons/rectCoords.dat
 
+/*  WARNING: This option can cause LaGriT errors if the polygon
+             vertices are not put in clockwise or counter-clockwise order.
+             If errors (Usualy seg fualt during meshing in LaGriT),
+             make sure the vertices are in clockwise or counter clockwise
+             order. Also, coordinates must be co-planar.
+*/
 
-/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
-vertices are not put in clockwise or counter-clockwise order.
-If errors (Usualy seg fualt during meshing if using LaGriT), 
-try to reorder the points till u get it right.
-Also, coordinates must be co-planar */
 
 /*===========================================================================*/
 // Aperture [m]

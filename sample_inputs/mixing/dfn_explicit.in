@@ -101,7 +101,7 @@ FLOW_CONDITION initial
   TYPE
      PRESSURE dirichlet 
   /
-  PRESSURE 1.5d6
+  PRESSURE 1.115d6
 END
 
 

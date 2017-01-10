@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 4
+nPoly: 3
      /* Used when stopCondition = 0
            Total number of fractures you would like to have 
             in the domain you defined. The program will complete 
@@ -45,7 +45,7 @@ layers:
 */   
 
 
-h: 0.1
+h: 0.10
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
 
@@ -93,7 +93,7 @@ keepOnlyLargestCluster: 0
            the specified boundary faces in boundaryFaces option below
     */
 
-ignoreBoundaryFaces: 0  
+ignoreBoundaryFaces: 1  
 /*
      0 = use boundaryFaces option below 
 
@@ -393,6 +393,24 @@ userEllipsesOnOff: 0    //0 - User Ellipses off
 
 UserEll_Input_File_Path: ./TestCases/test/uEllInput.dat
 
+/*===========================================================================*/
+/*===========================================================================*/
+/*  User-Specified Ellipses                                                  */
+/*  Mandatory Parameters if using user-ellipses                              */
+/*  NOTE: Number of elements must match number of user-ellipse families.     */
+/*  NOTE: Only one user-ellipse is placed into the domain per defined        */
+/*        user-ellipse, with possibility of being rejected                   */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userEllByCoord: 0
+/*  0 - User ellipses defined by coordinates off
+    1 - User ellipses defined by coordinates on
+*/
+
+EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/inputFiles/userPolygons/ellCoords.dat
+
+
 
 /*===========================================================================*/
 /* User-Specified Rectangles                                                 */
@@ -419,7 +437,7 @@ userRecByCoord: 0
 //  0 - user defined rectangles not used
 //  1 - user defined rectangles used and defined by input file:
 
-RectByCood_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
+RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
 
 /*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
