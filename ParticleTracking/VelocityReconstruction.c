@@ -70,10 +70,10 @@ void  DarcyVelocity()
 		  
 		  if (pflotran==1)
 		    { 
-		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
-		  
-		      normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
-		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length);
+		     length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
+
+		      normxarea11[j][0]=-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/(length)); 
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/(length));
 		  
 		    }
 		  if (fehm==1)
@@ -94,8 +94,8 @@ void  DarcyVelocity()
 		  if (pflotran==1)
 		    {
 		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
-		      normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
-		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
+		      normxarea11[j][0] =-1.0*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/(length)); 
+		      normxarea11[j][1]=-1.0*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/(length)); 
 		    }
 
 		  if (fehm==1)
@@ -148,8 +148,8 @@ void  DarcyVelocity()
 		    {
 		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1],2));
 		  
-		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/length); 
-		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/length); 
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[0])*(node[i].area[j]/(length)); 
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[1])*(node[i].area[j]/(length)); 
 		    }
 		  if (fehm==1)
 		    {
@@ -168,8 +168,8 @@ void  DarcyVelocity()
 		    {
 		      length=sqrt(pow(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3],2)+pow(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4],2));
 		  
-		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/length); 
-		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/length); 
+		      normxarea11[j][0]=-1.*(node[i].coord_xy[0]-node[node[i].indnodes[j]-1].coord_xy[3])*(node[i].area[j]/(length)); 
+		      normxarea11[j][1]=-1.*(node[i].coord_xy[1]-node[node[i].indnodes[j]-1].coord_xy[4])*(node[i].area[j]/(length)); 
 		    }
 		  if (fehm==1)
 		    {
@@ -338,7 +338,7 @@ struct matr   MatrixProducts (double normxarea[][2],  int number)
   /* calculating Inverse */
   double determinant =  dp[0][0]* dp[1][1]-dp[0][1]*dp[1][0];
   // printf("det %5.8e \n", determinant);
-  double eps=1e-25;                   
+  double eps=1e-75;                   
   if ((determinant<eps) && (determinant>-eps))
     {
       //    printf("Det of matrix is close to zero %15.8e  \n",determinant);
@@ -357,7 +357,7 @@ struct matr   MatrixProducts (double normxarea[][2],  int number)
       for (j=0;j<number;j++)
 	{    
 	  matrices.matrinvG[m][j]=matrices.matinv[m][0]*normxarea[j][0]+matrices.matinv[m][1]*normxarea[j][1];
-	
+	  
 	}
 	
       //printf("m %d %5.8e %5.8e %5.8e %5.8e %5.8e %5.8e\n", m, matrices.matrinvG[m][0], matrices.matrinvG[m][1], matrices.matrinvG[m][2], matrices.matrinvG[m][3], matrices.matrinvG[m][4], matrices.matrinvG[m][5]); 
@@ -461,7 +461,6 @@ void VelocityInteriorNode (double normx_area[][2], int i, int number, unsigned i
 	}
       // velocity is Darcy's velocity qhat / density * porosity and converted from m/sec to m/year  
       node[i].velocity[vi][m]=(qhat[m]/(density*porosity))*timeunit;
-  
     }  
   
  
@@ -809,8 +808,8 @@ int CornerVelocity(int i,int m1,int m2,int m3,int s1,int s2,int s3)
 
   /* if current cell is a corner cell then calculate angles of velocities and edges */
  
-  double eps=0.001, velx, vely, angle; 
-   
+  double eps=0.001,  angle; 
+  double velx, vely; 
   if (((ang_uv>= (pi-eps)) && (ang_uv<=(pi+eps)))|| ((ang_uv>=(-eps)) && (ang_uv<=(+eps))))
     notcorner=1;
    
@@ -1042,8 +1041,8 @@ void HalfPolygonVelocity(int i,int k, int fractn, int indc, unsigned int fractj[
 	  if (pflotran==1)    
 	    {
 
-	      normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
-	      normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
+	      normxarea21[sc1f-1][0]=-1.*(bx*node[i].area[fractj[j]]/(length));
+	      normxarea21[sc1f-1][1]=-1.*(by*node[i].area[fractj[j]]/(length));
 	    }
 
 	  if ((node[i].type[fractj[j]]!=2)&&(node[i].type[fractj[j]]!=12))
@@ -1078,8 +1077,8 @@ void HalfPolygonVelocity(int i,int k, int fractn, int indc, unsigned int fractj[
 
 	  if (pflotran==1)
 	    {
-	      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]/length);
-	      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]/length);
+	      normxarea22[sc2f-1][0]=-1.*(bx*node[i].area[fractj[j]]/(length));
+	      normxarea22[sc2f-1][1]=-1.*(by*node[i].area[fractj[j]]/(length));
 	    }
 
 	  if ((node[i].type[fractj[j]]!=2)&&(node[i].type[fractj[j]]!=12))

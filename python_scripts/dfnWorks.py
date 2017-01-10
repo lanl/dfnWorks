@@ -117,7 +117,7 @@ class dfnworks(Frozen):
 		self.dumpTime('Function: pflotran', time() - tic)	
 
 		tic = time()	
-		self.parse_pflotran_vtk()		
+	#	self.parse_pflotran_vtk()		
 		self.dumpTime('Function: parse_pflotran_vtk', time() - tic)	
 		
 		tic = time()	
