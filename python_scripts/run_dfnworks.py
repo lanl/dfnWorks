@@ -108,7 +108,7 @@ main_time = time()
 # General Work Flow
 dfn.dfnGen()
 dfn.dfnFlow()
-#dfn.dfnTrans()
+dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

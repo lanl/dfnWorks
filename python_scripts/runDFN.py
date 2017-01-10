@@ -5,14 +5,15 @@ import dfnGen_meshing as mesh
 import prune_dfn as prune
 
 
+
 def define_paths():
 	# Set Environment Variables
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04'
 
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
-	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	os.environ['DFNGENC_PATH']='/home/nataliia/gitProjects/DFNGen/DFNC++Version'
+	os.environ['DFNWORKS_PATH'] = '/home/nataliia/gitProjects/dfnworks-main/'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
 	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
 
@@ -131,8 +132,19 @@ options = commandline_options()
 print options 
 
 # 4 fracture test
-dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
-dfnFlow_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
+
+dfnGen_run_file ='/home/nataliia/DFNWorks_UBUNTU/TestPT/fract4/pflotran/newcode/input_4_fracture.dat' 
+#'/home/nataliia/gitProjects/dfnworks-main/sample_inputs/4_fracture_test/input_4_fracture.dat'
+
+#DFNWorks_UBUNTU/TestPT/fract4/pflotran/newcode/input_4_fracture.dat'
+
+dfnFlow_run_file = '/home/nataliia/gitProjects/dfnworks-main/sample_inputs/4_fracture_test/dfn_explicit.in'
+
+#os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_4_fracture.dat'	
+
+#/project/dfn_tcf/nataliia/ugta/cutoffs/pflot_bt.in'
+ 
+#os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
 dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
 #
 #dfnGen_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/mixing/input_mixing_25L_kappa_0.dat'	
@@ -184,8 +196,11 @@ main_time = time()
 
 # General Work Flow
 dfn.dfnGen()
+=======
+#dfn.dfnGen()
+os.chdir(dfn._jobname)
 dfn.dfnFlow()
-dfn.dfnTrans()
+#dfn.dfnTrans()
 
 
 main_elapsed = time() - main_time

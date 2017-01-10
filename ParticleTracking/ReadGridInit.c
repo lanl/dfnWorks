@@ -632,7 +632,7 @@ void ReadBoundaryNodes()
 	  for (i=0; i<nzone_in; i++)
 	    {
 	      if (fscanf(fpc," %d ", &nf)!=1)
-		printf(" ");
+		i=i;
 	      nodezonein[i]=nf;
 
 	      if(node[nodezonein[i]-1].typeN<300)
