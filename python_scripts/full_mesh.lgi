@@ -1,4 +1,0 @@
-read / avs / full_mesh.inp/ mo1
-dump / pflotran / full_mesh / mo1 / nofilter_zero 
-finish
-

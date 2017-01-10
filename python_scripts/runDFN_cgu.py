@@ -3,7 +3,6 @@ from dfnWorks import *
 import dfnGen_meshing as mesh
 import prune_dfn as prune
 
-
 def define_paths():
 	# Set Environment Variables
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'
@@ -11,9 +10,10 @@ def define_paths():
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04'
 
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
+	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
+
 	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -21,7 +21,7 @@ def define_paths():
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-
+	
 
 
 lanl_statement = '''
@@ -42,12 +42,6 @@ any liability or responsibility for the use of this software.
 Contact Information : dfnworks@lanl.gov
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-LA-CC-17-027
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 Copyright (c) 2016, Los Alamos National Security, LLC
 All rights reserved.
@@ -88,7 +82,7 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 POSSIBILITY OF SUCH DAMAGE.
 '''
-
+ 
 
 print ('='*80)
 print lanl_statement
@@ -96,27 +90,90 @@ print ('='*80)
 os.system("date")
 define_paths()
 
-# 4 fracture test
-dfnGen_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_3_fracture.dat'	
-dfnFlow_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
-dfnTrans_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
+dfnGen_run_file = os.environ['input_files']+'/backbone_with_aric/pl_test.dat'
+dfnFlow_run_file = os.environ['input_files']+'/backbone_with_aric/dfn_explicit.in'	
+dfnTrans_run_file = os.environ['input_files']+'/backbone_with_aric/PTDFN_control.dat'	
 
-dfn = create_dfn()
 
 main_time = time()
+# Command lines: argv[1] = jobname, argv[2] = number of cpus. 
+# Command line is overloaded, so argv[3], argv[4], argv[5] 
+# can be dfnGen, dfnFlow, and dfnTrans control files. 
+# They need to be the FULL path name
+try: 
+	jobname = sys.argv[1]
+	ncpu = int(sys.argv[2])
+except:
+	print 'Not enough input parameters'
+	print 'Usage:', sys.argv[0], '[jobname][nCPU]'; sys.exit(1)
 
-# General Work Flow
-dfn.dfnGen()
-dfn.dfnFlow()
-#dfn.dfnTrans()
+if len(sys.argv) == 4:
+	dfnGen_run_file = sys.argv[3] 
+elif len(sys.argv) == 5:
+	dfnGen_run_file = sys.argv[3] 
+	dfnFlow_run_file = sys.argv[4] 
+elif len(sys.argv) == 6:
+	dfnGen_run_file = sys.argv[3] 
+	dfnFlow_run_file = sys.argv[4] 
+	dfnTrans_run_file = sys.argv[5] 
 
-main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print timing
-dfn.dump_time(dfn._jobname,main_elapsed) 
-dfn.print_run_time()	
-print("*"*80)
-print(dfn._jobname+' complete')
-print("Thank you for using dfnWorks")
-print("*"*80)
+# Create DFN object
+dfn = dfnworks(jobname = jobname, input_file = dfnGen_run_file, ncpu = ncpu, pflotran_file = dfnFlow_run_file, dfnTrans_file = dfnTrans_run_file)
+
+print 'Running Job: ', jobname
+print 'Number of cpus requested: ', ncpu 
+print '--> dfnGen input file: ',dfnGen_run_file
+print '--> dfnFlow input file: ',dfnFlow_run_file
+print '--> dfnTrans input file: ',dfnTrans_run_file
+print ''
+
+
+
+#dfn.dfnGen()
+#dfn.dfnFlow()
+dfn.dfnTrans()
+
+exit()
+
+# dfn2graph 
+os.chdir(dfn._jobname)
+dfn.get_num_frac()
+version = 2
+domain = 10
+inflow = 'left.txt'
+outflow = 'right.txt'
+
+#prune.create_adjacency_matrix(dfn._num_frac, version)
+#prune.dump_boundary_nodes(domain)
+#prune.run_max_flow(inflow, outflow)
+#prune.run_current_flow(inflow, outflow)
+#
+transfer = dfn._local_jobname + '_transfer'
+try:
+	os.mkdir(transfer)
+except:
+	print transfer + ' already exists'
+copy('left.txt',transfer+'/source.txt')
+copy('right.txt',transfer+'/target.txt')
+copy('adjac',transfer+'/')
+copy('connectivity.dat',transfer+'/')
+copy('maxflow.nodes.txt',transfer+'/')
+copy('currentflow.nodes.2-core.txt',transfer+'/')
+copy('maxflow.nodes.txt',transfer+'/')
+copy('params.txt',transfer+'/')
+
+os.system('cp -rf ' + transfer + ' ~/transfer/')
+
+
+#dfn.make_working_directory()
+#dfn.check_input()
+#dfn.create_network()   
+#dfn.output_report()
+
+#main_elapsed = time() - main_time
+#print jobname, 'Complete'
+#timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
+#print timing
+#dfn.dumpTime(dfn._jobname,main_elapsed) 
+#dfn.runTime()	
 

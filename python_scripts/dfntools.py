@@ -4,7 +4,6 @@ class Frozen(object):
 	"""
 	Prevents adding new attributes to classes once _freeze() is called on the class.
 	"""
-
 	__frozen = False
 
 	def __setattr__(self, key, value):

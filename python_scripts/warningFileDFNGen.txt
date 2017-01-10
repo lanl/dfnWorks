@@ -1,0 +1,6 @@
+WARNING --- "multipleClusters" is not one of the valid parameter names.
+WARNING --- "slope" is not one of the valid parameter names.
+WARNING --- "refineDist" is not one of the valid parameter names.
+WARNING --- "outputTriplePoints" is not one of the valid parameter names.
+WARNING --- You have set the number of ellipse families to 0, no ellipses will be generated.
+WARNING --- You have set the number of rectangle families to 0, no rectangles will be generated.

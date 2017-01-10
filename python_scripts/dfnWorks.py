@@ -1250,7 +1250,7 @@ class dfnworks(Frozen):
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
 
-		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs)
+		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
 		self.dump_time('Process: Merging the Mesh', time() - tic2)	
 
 		if(visualMode == 0):	

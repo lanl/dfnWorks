@@ -2,7 +2,6 @@ import os, sys, time
 import argparse
 from dfnWorks import *
 import dfnGen_meshing as mesh
-
 import prune_dfn as prune
 
 
@@ -25,8 +24,19 @@ def define_paths():
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
 
 def commandline_options():
-	parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+	'''Read command lines for use in dfnWorks.
+	Options:
+	-name : Jobname (Mandatory)
+	-ncpu : Number of CPUS (Optional, default=4)
 
+	-gen : Generator Input File (Mandatory, can be included within this file)
+	-flow : PFLORAN Input File (Mandatory, can be included within this file)
+	-trans: Transport Input File (Mandatory, can be included within this file)
+
+	-cell: True/False Set True for use with cell 
+		based aperture and permeabuility (Optional, default=False)
+	'''
+	parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
 	parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
 		      help="Number of CPUs")
 	parser.add_argument("-name", "--jobname", default="", type=str,
@@ -39,7 +49,6 @@ def commandline_options():
 		      help="Path to dfnTrans run file") 
 	parser.add_argument("-cell", "--cell", default=False, action="store_true",
 		      help="Binary For Cell Based Apereture / Perm")
- 
 	options = parser.parse_args()
 
 	if options.jobname is "":
@@ -64,6 +73,12 @@ any liability or responsibility for the use of this software.
 Contact Information : dfnworks@lanl.gov
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LA-CC-17-027
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Copyright (c) 2016, Los Alamos National Security, LLC
 All rights reserved.
@@ -132,12 +147,22 @@ dfnTrans_run_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/P
 
 jobname = options.jobname
 ncpu = options.ncpu
-if options.dfngen is not "":
+
+if options.dfngen is "":
+	dfnGen_run_file = dfnGen_run_file  
+else:
 	dfnGen_run_file = options.dfngen
-if options.dfnflow is not "":
+
+if options.dfnflow is "":
+	dfnFlow_run_file = dfnFlow_run_file 
+else:
 	dfnFlow_run_file = options.dfnflow
-if options.dfntrans is not "":
-	dfntrans_run_file = options.dfntrans
+
+if options.dfntrans is "":
+	dfnTrans_run_file = dfntrans_run_file 
+else:
+	dfnTrans_run_file = options.dfntrans
+
 
 # Create DFN object
 dfn = dfnworks(jobname = jobname, input_file = dfnGen_run_file, ncpu = ncpu, pflotran_file = dfnFlow_run_file, dfnTrans_file = dfnTrans_run_file)
@@ -159,15 +184,17 @@ main_time = time()
 
 # General Work Flow
 dfn.dfnGen()
-os.chdir(dfn._jobname)
 dfn.dfnFlow()
 dfn.dfnTrans()
 
 
 main_elapsed = time() - main_time
-print jobname, 'Complete'
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
 print timing
-dfn.dumpTime(dfn._jobname,main_elapsed) 
-dfn.runTime()	
+dfn.dump_time(dfn._jobname,main_elapsed) 
+dfn.run_time()	
+print("*"*80)
+print(jobname+' complete')
+print("Thank you for using dfnWorks")
+print("*"*80)
 

@@ -579,9 +579,8 @@ def mesh_fracture(fracture_id, visualMode,nPoly):
 		cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id)
 		failure = os.system(cmd_check)
 		if failure > 0:
-			print 'MESH CHECKING HAS FAILED!!!!'
-			print 'Fracture number ', fracture_id, '\trunning on ', p.name
-			print ''
+			print("MESH CHECKING HAS FAILED!!!!")
+			print 'Fracture number ', fracture_id, '\trunning on ', p.name, '\n'
 
 			with open("failure.txt", "a") as failure_file:
 			    failure_file.write("%d\n"%fracture_id)
@@ -630,8 +629,10 @@ def worker(work_queue, done_queue, visualMode, nPoly):
 	try:
 		for fracture_id in iter(work_queue.get, 'STOP'):
 			mesh_fracture(fracture_id, visualMode, nPoly)
+			#done_queue.put("Fracture %d Complete" % fracture_id)
 	except: 
-		print('Something went wrong on fracture ',fracture_id)
+		#done_queue.put('Error on Fracture ',fracture_id)
+		print('Error on Fracture ',fracture_id)
 	return True
 
 def mesh_fractures_header(nPoly, N_CPU, visualMode):
@@ -652,10 +653,9 @@ def mesh_fractures_header(nPoly, N_CPU, visualMode):
 	if ( N_CPU > nPoly):
 		N_CPU = nPoly
 
-	print 'Meshing using %d CPUS'%N_CPU
+	print("Meshing using %d CPUS"%N_CPU)
 
 	fracture_list = range(1, nPoly + 1)
-
 	work_queue = mp.Queue()   # reader() reads from queue
 	done_queue = mp.Queue()   # reader() reads from queue
 	processes = []
@@ -669,11 +669,54 @@ def mesh_fractures_header(nPoly, N_CPU, visualMode):
 		p.start()        
 		processes.append(p)
 		work_queue.put('STOP')
-	
+
 	for p in processes:
 		p.join()
 
 	done_queue.put('STOP')
+#
+#	# Check for Errors in Parallell Meshing, if they exists, 
+#	# Attempt to mesh those fractures again
+#	redo = []
+#	for status in iter(done_queue.get, 'STOP'):
+#		print status
+#		line = status.split()
+#		if line[0] == 'Error':
+#			redo.append(int(status.split()[-1]))
+#
+#	while len(redo) > 0:
+#		print("Re-meshing the following fractures:")
+#		print redo		
+#		if (N_CPU > len(redo)):
+#			N_CPU = len(redo) 
+#
+#		print("Meshing using %d CPUS"%N_CPU)
+#
+#		work_queue = mp.Queue()   # reader() reads from queue
+#		done_queue = mp.Queue()   # reader() reads from queue
+#		processes = []
+#
+#		for i in redo:
+#			work_queue.put(i)
+#
+#		for i in xrange(N_CPU):
+#			p = mp.Process(target=worker, args= (work_queue, done_queue, visualMode, nPoly))
+#			p.daemon = True
+#			p.start()        
+#			processes.append(p)
+#			work_queue.put('STOP')
+#		
+#		for p in processes:
+#			p.join()
+#
+#		done_queue.put('STOP')
+#
+#		redo = []
+#		for status in iter(done_queue.get, 'STOP'):
+#			print status
+#			if status.split()[0] =='Error':
+#				redo.append(status.split()[-1])
+#	# Checking over
 	
 	elapsed = time.time() - t_all
 	print 'Total Time to Mesh Network: %0.2f seconds'%elapsed
@@ -853,7 +896,7 @@ finish
 	return len(endis)
 
 
-def merge_the_meshes(nPoly, N_CPU, n_jobs):
+def merge_the_meshes(nPoly, N_CPU, n_jobs, visualMode):
 	''' Section 6 : Merge the Meshes
 	 Merges all the meshes together, deletes duplicate points, 
 		dumps the .gmv and fehm files
@@ -879,10 +922,20 @@ def merge_the_meshes(nPoly, N_CPU, n_jobs):
 
 	print("Starting Final Merge")
 	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
-	print("Final Merge Complete")
-	print "Merging triangulated polygon meshes: Complete\n"
 
-
+	if visualMode == 0:
+		if os.stat("full_mesh.lg").st_size > 0:
+			print("Final Merge Complete")
+			print("Merging triangulated polygon meshes: Complete\n")
+		else:
+			sys.exit("Final Merge Failed")
+	else:
+		if os.stat("reduced_full_mesh.inp").st_size > 0:
+			print("Final Merge Complete")
+			print("Merging triangulated polygon meshes: Complete\n")
+		else:
+			sys.exit("Final Merge Failed")
+		
 
 def check_dudded_points(dudded):
 	print "Checking that number of Dudded points is correct"
@@ -1159,7 +1212,7 @@ if __name__ == "__main__":
 
 	n_jobs = create_merge_poly_files(N_CPU, nPoly, visualMode)
 
-	merge_the_meshes(nPoly, N_CPU, n_jobs)
+	merge_the_meshes(nPoly, N_CPU, n_jobs, visualMode)
 	if(visualMode == 0):	
 		if (check_dudded_points(dudded_points) == False):
 			cleanup_dir()
