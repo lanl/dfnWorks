@@ -209,6 +209,9 @@ class dfnworks(Frozen):
 			os.mkdir(jobname + '/radii')
 			os.mkdir(jobname + '/intersections')
 			os.mkdir(jobname + '/polys')
+			os.chdir(self._jobname)
+			cwd = os.getcwd()
+			print("Current directory is now: %s\n"%cwd)
 		except OSError:
 			print '\nFolder ', jobname, ' exists'
 			keep = raw_input('Do you want to delete it? [yes/no] \n')
@@ -1174,7 +1177,6 @@ class dfnworks(Frozen):
 				else:
 					writer.write(param + ': ' + str(valueOf(param, writing=True)) + '\n')              
 			
-
 		print '--> Checking input files'	
 		try:
 			copy(self._dfnGen_file, './')
