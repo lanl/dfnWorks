@@ -1,8 +1,7 @@
 import os, sys, time
+sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
 from dfnWorks import *
 import dfnGen_meshing as mesh
-import prune_dfn as prune
-
 
 def define_paths():
 	# Set Environment Variables
@@ -10,8 +9,9 @@ def define_paths():
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04'
 
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	
+	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
 	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
 
@@ -48,18 +48,23 @@ LA-CC-17-027
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Copyright (2017).  Los Alamos National Security, LLC. 
+This material was produced under U.S. Government contract DE-AC52-06NA25396 for 
+Los Alamos National Laboratory (LANL), which is operated by Los Alamos National 
+Security, LLC for the U.S. Department of Energy. The U.S. Government has rights 
+to use, reproduce, and distribute this software.  NEITHER THE GOVERNMENT NOR LOS
+ ALAMOS NATIONAL SECURITY, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR 
+ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  If software is modified to 
+produce derivative works, such modified software should be clearly marked, so as
+ not to confuse it with the version available from LANL.
 
-Copyright (c) 2016, Los Alamos National Security, LLC
-All rights reserved.
-Copyright 2016. Los Alamos National Security, LLC. This software was produced 
-under U.S. Government contract DE-AC52-06NA25396 for Los Alamos National 
-Laboratory (LANL), which is operated by Los Alamos National Security, LLC for 
-the U.S. Department of Energy. The U.S. Government has rights to use, reproduce,
- and distribute this software.  NEITHER THE GOVERNMENT NOR LOS ALAMOS NATIONAL 
-SECURITY, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY 
-FOR THE USE OF THIS SOFTWARE.  If software is modified to produce derivative 
-works, such modified software should be clearly marked, so as not to confuse it
- with the version available from LANL.
+Additionally, this program is free software; you can redistribute it and/or 
+modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 2 of the License, or (at your option) 
+any later version. Accordingly, this program is distributed in the hope that it 
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
+License for more details.
  
 Additionally, redistribution and use in source and binary forms, with or 
 without modification, are permitted provided that the following conditions are 
@@ -97,9 +102,9 @@ os.system("date")
 define_paths()
 
 # 4 fracture test
-dfnGen_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_3_fracture.dat'	
-dfnFlow_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
-dfnTrans_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
+#dfnGen_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_3_fracture.dat'	
+#dfnFlow_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
+#dfnTrans_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
 
 dfn = create_dfn()
 
@@ -107,14 +112,15 @@ main_time = time()
 
 # General Work Flow
 dfn.dfnGen()
-dfn.dfnFlow()
-dfn.dfnTrans()
+os.chdir(dfn._jobname)
+#dfn.dfnFlow()
+#dfn.dfnTrans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
 print timing
 dfn.dump_time(dfn._jobname,main_elapsed) 
-dfn.print_run_time()	
+#dfn.print_run_time()	
 print("*"*80)
 print(dfn._jobname+' complete')
 print("Thank you for using dfnWorks")
