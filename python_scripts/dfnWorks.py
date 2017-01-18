@@ -1437,6 +1437,8 @@ class dfnworks(Frozen):
 			## Also add each object to global and not Removed if not empty
 			## input file's line format:   xRadius yRadius Family# Removed (Optional)
 
+			
+		
 			for line in open(radiiFile):
 				try:
 					elems = line.split(' ')
@@ -1444,9 +1446,13 @@ class dfnworks(Frozen):
 					famNum = elems[2].strip()
 					families['all'].append(radius)
 					if len(elems) < 4:              ## len = 4 when 'R' is on line
-						families['notRemoved'].append(radius)
-					if famNum not in families: 
+						families['notRemoved'].append(radius)				
+					elif famNum not in families and famNum > 0:
 						families[famNum].radiiList = [radius]
+					elif famNum not in families and famNum == -1:
+						families['userDefined'].radiiList = [radius]
+					elif famNum == -1:
+						families['userDefined'].radiiList.append(radius)
 					else:
 						families[famNum].radiiList.append(radius)
 				except ValueError:
