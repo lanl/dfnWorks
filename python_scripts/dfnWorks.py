@@ -1280,7 +1280,13 @@ class dfnworks(Frozen):
 		3. Set show = True to show plots immediately and still make pdf
 		4. NOTE future developers of this code should ass functionality for radiiList of size 0. 
 
+		
 		"""
+		#TODO: Throw specific error if X forwarding is not on
+		if ('DISPLAY' not in os.environ):
+			print 'ERROR: To output the PDF report of DFNGen, you must have X forwarding turned on'
+			exit()
+
 		print '--> Creating Report of DFN generation'
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
