@@ -1463,7 +1463,7 @@ class dfnworks(Frozen):
 						families[famNum].radiiList.append(radius)
 				except ValueError:
 					continue
-
+			
 			for fam in families:
 				if fam != 'all' and fam != 'notRemoved':
 					pass # families[fam].printPolyFam()
@@ -1536,6 +1536,9 @@ class dfnworks(Frozen):
 			return 0.5 + (0.5 * scipy.special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
 		       
 		def graphLognormal(famObj):
+			if (len(famObj.radiiList) == 0):
+				print 'WARNING: Lognormal distribution with num  ', famObj.globFamNum, ' has no fractures:not graphing'
+				return
 			numXpoints = 1000
 			xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
 			xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
@@ -1571,6 +1574,9 @@ class dfnworks(Frozen):
 			return 1 - ( (xmin / float(x))**a ) 
 
 		def graphTruncPowerLaw(famObj):
+			if (len(famObj.radiiList) == 0):
+				print 'WARNING: truncPowerLaw family with num ', famObj.globFamNum, ' has no fractures; not graphing'
+				return
 			numBuckets = 100
 			numXpoints = 1000
 			alpha = famObj.parameters["Alpha"]
@@ -1610,6 +1616,9 @@ class dfnworks(Frozen):
 			return 1 - (np.e**(-eLambda*x))
 			
 		def graphExponential(famObj):
+			if (len(famObj.radiiList) == 0):
+				print 'WARNING: expoential family with num ', famObj.globFamNum, ' has no fractures; not graphing'
+				return
 			numXpoints = 1000
 			numBuckets = 100
 			radiiSizes = famObj.radiiList
