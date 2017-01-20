@@ -1,4 +1,4 @@
-__author__ = "Jeffrey Hyman and Satish Karra"
+_author__ = "Jeffrey Hyman and Satish Karra"
 __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
@@ -214,23 +214,23 @@ class dfnworks(Frozen):
 			print("Current directory is now: %s\n"%cwd)
 		except OSError:
 			print '\nFolder ', jobname, ' exists'
-			keep = raw_input('Do you want to delete it? [yes/no] \n')
-			if keep == 'yes' or keep == 'y':
-				print 'Deleting', jobname 
-				rmtree(jobname)
-				print 'Creating', jobname 
-				os.mkdir(jobname)	
-				os.mkdir(jobname + '/radii')
-				os.mkdir(jobname + '/intersections')
-				os.mkdir(jobname + '/polys')
-				os.chdir(self._jobname)
-				cwd = os.getcwd()
-				print("Current directory is now: %s\n"%cwd)
+		#	keep = raw_input('Do you want to delete it? [yes/no] \n')
+		#	if keep == 'yes' or keep == 'y':
+			print 'Deleting', jobname 
+			rmtree(jobname)
+			print 'Creating', jobname 
+			os.mkdir(jobname)	
+			os.mkdir(jobname + '/radii')
+			os.mkdir(jobname + '/intersections')
+			os.mkdir(jobname + '/polys')
+			os.chdir(self._jobname)
+			cwd = os.getcwd()
+			print("Current directory is now: %s\n"%cwd)
 
-			elif keep == 'no' or 'n':
-				sys.exit("Not deleting folder. Exiting Program") 
-			else:
-				sys.exit("Unknown Response. Exiting Program") 
+		#	elif keep == 'no' or 'n':
+		#		sys.exit("Not deleting folder. Exiting Program") 
+		#	else:
+		#		sys.exit("Unknown Response. Exiting Program") 
 
 
 	def check_input(self,input_file='',output_file=''):
@@ -1701,7 +1701,7 @@ class dfnworks(Frozen):
 
 					## give info string from families file its own figure
 					fig = plt.figure()
-					fig.text(.1,.2,famObj.infoStr, fontsize=15, bbox=dict(facecolor='red', alpha=0.5))
+					fig.text(.1,.2,famObj.infoStr, fontsize=10, bbox=dict(facecolor='red', alpha=0.5))
 					plt.savefig(outputPDF, format='pdf')
 
 					## then graph info 
