@@ -1,8 +1,4 @@
-/*=========================================================================*/
-/*  Gereral Options & Fracture Network Parameters:                         */
-/*=========================================================================*/
-
-stopCondition: 1
+topCondition: 1
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
@@ -20,7 +16,7 @@ domainSize: {100,100,100}
     Creates a domain with dimension x*y*z centered at the origin.
 */
 
-numOfLayers: 3    
+numOfLayers: 0    
 //  Number of layers
 
 layers:
@@ -51,14 +47,14 @@ removeFracturesLessThan: 0
     shape familiy section) 
 */   
 
-h: .01
+h: .05
 /*  Minimum fracture length scale(meters).
     Any fracture with a feature, such as and intersection, 
     of less than h will be rejected. 
 */
 
 
-radiiListIncrease: 0.3
+radiiListIncrease: 0.1
 /*  Percent to increase the size of the pre-generated radii lists, per family. 
     Example: 0.2 will increase the size of the list by %20.
 
@@ -141,7 +137,7 @@ disableFram: 0
         1 - Enable  FRAM
 */
 
-visualizationMode: 1
+visualizationMode: 0
 /*  Used during meshing: 
         0 - Creates a fine mesh, according to h parameter;
         1 - Produce only first round of triangulations. In this case no 
@@ -153,7 +149,7 @@ seed: 0
     Enter 0 for time based seed.
 */        
 
-domainSizeIncrease: {1,1,1} 
+domainSizeIncrease: {0,0,0} 
 /*  Size increase for inserting fracture centers outside the domain.
     Fracture will be truncated based on domainSize above. 
     Increases the entire width by this ammount. So, {1,1,1} will increase
@@ -170,7 +166,8 @@ keepOnlyLargestCluster: 0
     cluster which connects at least any two sides of the domain.
 */
 
-ignoreBoundaryFaces: 0  
+ignoreBoundaryFaces: 1
+  
 /*
      0 - Use boundaryFaces option below 
      1 - Ignore boundaryFaces option and keep all clusters,
@@ -205,7 +202,8 @@ rejectsPerFracture: 350
 /*  Shape and Probability Parameters                                         */
 /*===========================================================================*/
 
-famProb: {0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.066,0.067}
+famProb: {0.5, 0.5} 
+
 
 /*  Each element is the probability of chosing a fracture from 
     the element's corresponding family to be inserted into the DFN.
@@ -378,19 +376,19 @@ ealpha: {2.4}
 /*============================================================================*/
 /*============================================================================*/
 
-nFamRect: 15
+nFamRect: 2
 /*  Number of rectangular families defined below.
     Having this option = 0 will ignore all rectangular family variables.
 */
 
-rLayer: {1,1,1,1,1,2,2,2,2,2,3,3,3,3,3}
+rLayer: {0,0}
 /*  Defines which domain, or layer, the family belings to.
     Layer 0 is the entire domain ('domainSize').
     Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
 
-rdistr: {1,1,3,2,2,1,1,3,2,2,1,1,3,2,2}   
+rdistr: {1,1}   
 /*  Mandatory parameter if using statistically generated rectangles.
     Rectangle statistical distribution options:
         1 - log-normal distribution
@@ -399,13 +397,13 @@ rdistr: {1,1,3,2,2,1,1,3,2,2,1,1,3,2,2}
         4 - constant 
 */
 
-rbetaDistribution: {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  
+rbetaDistribution: {1,1}  
 /*  Beta is the rotation around the polygon's normal vector
         0: Uniform distribution [0, 2PI)
         1: Constant angle (specefied below by 'rbeta')
 */                
                 
-r_p32Targets: {.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1}
+r_p32Targets: {.3,.3}
 /*  Rectangular families target fracture intensity per family. 
     When using stopCondition = 1 (defined at the top of the input file), 
     families will be inserted until the families desired fracture 
@@ -419,7 +417,7 @@ r_p32Targets: {.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1}
 //  Mandatory Parameters if using statistically generated rectangles         */
 /*===========================================================================*/
 
-raspect: {5,5,1,5,5,5,5,1,5,5,5,5,1,5,5}  
+raspect: {5,5}  
 //  Aspect ratio for stochasic rectangles.
  
 rAngleOption: 1
@@ -428,21 +426,21 @@ rAngleOption: 1
         0 - Radians (must be numerical value, cannot use "Pi") 
 */
  
-rtheta: {95.78,1.58,5.68,134.72,44.09,95.78,1.58,5.68,134.72,44.09,95.78,1.58,5.68,134.72,44.09}
+rtheta: {95.47,1.42 }
 /*  Rectangle fracture orientation.
     The angle the normal vector makes with the z-axis 
 */
 
-rphi: {9.14,4.71,79.4,12.51,17.66,9.14,4.71,79.4,12.51,17.66,9.14,4.71,79.4,12.51,17.66} 
+rphi: {23.32, 26.81} 
 /*  Rectangle fracture orientation.
     The angle the projection of the normal
     onto the x-y plane makes with the x-axis 
 */
       
-rbeta: {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}   
+rbeta: {0,0}   
 //  Rotation around the normal vector.
 
-rkappa:{2.09,5.28,2.48,1.82,1.46,2.09,5.28,2.48,1.82,1.46,2.09,5.28,2.48,1.82,1.46}   
+rkappa:{25.78, 32}   
 /*  Parameter for the fisher distribnShaprutions. The 
     bigger, the more similar (less diverging) are the 
     rectangular familiy's normal vectors.
@@ -454,16 +452,16 @@ rkappa:{2.09,5.28,2.48,1.82,1.46,2.09,5.28,2.48,1.82,1.46,2.09,5.28,2.48,1.82,1.
 // Mandatory Parameters if using rectangles with log-normal distribution     */
 /*===========================================================================*/
 
-rLogMean: {1.250,1.250,1.250,1.250,1.250,1.250 }    
+rLogMean: {1.250,1.250 }    
 //  Mean of the underlying normal distribution
 
-rsd: {0.877, 0.877, 0.877, 0.877, 0.877, 0.877 }     
+rsd: {0.877, 0.877 }     
 //  Standard deviation of the underlying normal distribution
                       
-rLogMin: {0.5, 0.5, 0.5, 0.5, 0.5, 0.5}
+rLogMin: {0.5, 0.5}
 //  Minimum radius
 
-rLogMax: {5.0, 5.0, 30.0, 30.0, 15.0, 15.0}   
+rLogMax: {50.0, 50.0}   
 //  Maximum radius                 
 
 
@@ -566,6 +564,7 @@ userEllByCoord: 0
 EllByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
 
+
 /*===========================================================================*/
 /*===========================================================================*/
 /*  Aperture Options                                                         */
@@ -574,7 +573,7 @@ EllByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 /*===========================================================================*/
 /*===========================================================================*/
 
-aperture: 3
+aperture: 2
 /*  1 - Log-normal distribution
     2 - Aperture from transmissivity, first transmissivity is defined, 
         and then, using a cubic law, the aperture is calculated.
@@ -599,7 +598,7 @@ stdAperture: 0.8
 /*  Aperture From Transmissivity Options (aperture = 2)                      */
 /*===========================================================================*/
 
-apertureFromTransmissivity: {1.6e-9, 0.8}
+apertureFromTransmissivity: {5.0e-8, 1.3681}
 /*  Transmissivity is calculated as transmissivity = F*R^k,
     where F is a first element in aperturefromTransmissivity,
     k is a second element and R is a mean radius of a polygon. 
@@ -632,7 +631,7 @@ lengthCorrelatedAperture: {5e-5, 0.5}
 /*===========================================================================*/
 /*===========================================================================*/
 
-permOption: 1
+permOption: 0
 /*  0 - Permeability of each fracture is a function of fracture aperture, 
         given by k=(b^2)/12, where b is an aperture and k is permeability
     1 - Constant permeabilty for all fractures 
