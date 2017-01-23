@@ -1519,7 +1519,7 @@ class dfnworks(Frozen):
 		def qq(trueVals, histHeights):
 			fig, ax = plt.subplots()
 			qq = plt.scatter(histHeights, trueVals, c='r', marker='o', 
-					 label="x=Empirical value\ny=Analtical PDF value")
+					 label="x=Empirical value\ny=Analytical PDF value")
 			minMax = [np.min([min(trueVals), min(histHeights)]),  # min of both axes
 				  np.max([max(trueVals), max(histHeights)])]  # max of both axes
 			plt.plot(minMax, minMax, 'k-', alpha=0.75, zorder=0, label="y/x = 1") ## 1 to 1 ratio for reference

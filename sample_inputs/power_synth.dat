@@ -2,7 +2,7 @@
 /*  Gereral Options & Fracture Network Parameters:                         */
 /*=========================================================================*/
 
-stopCondition: 1
+stopCondition: 0
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
@@ -134,7 +134,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 0
+disableFram: 1
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -475,10 +475,10 @@ rLogMax: {5.0, 5.0, 30.0, 30.0, 15.0, 15.0}
 rmin: {0.5, 0.5}  
 //  Minimum radius
 
-rmax: {125,125}    
+rmax: {5,5}    
 //  Maximum radius
 
-ralpha: {2.0,2.6}  
+ralpha: {1.0,1.0}  
 //  Alpha. Used in truncated power-law distribution calculations.
 
 

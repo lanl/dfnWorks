@@ -1,4 +1,4 @@
-topCondition: 1
+stopCondition: 0
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
@@ -130,7 +130,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 0
+disableFram: 1
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
