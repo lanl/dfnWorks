@@ -1291,14 +1291,12 @@ class dfnworks(Frozen):
 		print '--> Creating Report of DFN generation'
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
-						       ##   Isolated fracs get removed from DFN and have 'R' at end  
-						       ##   of input file line
-						       ## families['1','2','3' etc] correspond to a polyFam object\
+						       ##   Isolated fracs get radiiList, distrib, infoStr, parameters):
 		output_name = self._output_file[:-4] + '_output_report.pdf'
 		print 'Writing output into: ', output_name
 		outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 		show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
-
+	
 		class polyFam:
 			def __init__(self, globFamNum, radiiList, distrib, infoStr, parameters):
 				self.globFamNum = globFamNum
@@ -1454,7 +1452,7 @@ class dfnworks(Frozen):
 					families['all'].append(radius)
 					if len(elems) < 4:              ## len = 4 when 'R' is on line
 						families['notRemoved'].append(radius)				
-					elif famNum not in families and famNum > 0:
+					if famNum not in families and famNum >= 0:
 						families[famNum].radiiList = [radius]
 					elif famNum not in families and famNum == -1:
 						families['userDefined'].radiiList = [radius]
