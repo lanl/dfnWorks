@@ -1571,8 +1571,9 @@ class dfnworks(Frozen):
 			cdfs(histHeights, binCenters, lognormPDFVals, xmin, xmax, xVals)
 			plt.savefig(outputPDF, format='pdf')
 			if show: plt.show()
-
-			trueVals = [lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
+			
+			trueVals = getLogNormPDF(binCenters, sigma, mu) 
+			#trueVals = [lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
 			qq(trueVals, histHeights)
 			plt.savefig(outputPDF, format='pdf')
 			if show: plt.show()
