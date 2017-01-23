@@ -3,6 +3,7 @@ __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
+import math
 import re, os, sys, glob
 from time import time
 from shutil import copy, rmtree
@@ -1534,7 +1535,18 @@ class dfnworks(Frozen):
 
 		def lognormCDF(x, mu, sigma):
 			return 0.5 + (0.5 * scipy.special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
-		       
+		
+		def getLogNormPDF(xVals, sigma, mu):
+			pdfVals = []
+			pi = 3.141592653589793
+			for x in xVals:
+				first_term = 1 / (sigma*x*np.sqrt(2*pi))
+				exp_num = -math.pow(np.log(x) - mu, 2.0)
+				exp_denom = 2*math.pow(sigma, 2.0) 
+				currentVal = first_term * np.exp(exp_num/exp_denom)
+				pdfVals.append(currentVal)
+			return pdfVals
+
 		def graphLognormal(famObj):
 			if (len(famObj.radiiList) == 0):
 				print 'WARNING: Lognormal distribution with num  ', famObj.globFamNum, ' has no fractures:not graphing'
@@ -1549,7 +1561,8 @@ class dfnworks(Frozen):
 				normConstant = 1.0 / (lognormCDF(xmax, mu, sigma) - lognormCDF(xmin, mu, sigma))
 			except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 				pass  
-			lognormPDFVals = [x * normConstant for x in lognorm.pdf(xVals, sigma, loc=mu)]
+			#lognormPDFVals = [x * normConstant for x in lognorm.pdf(xVals, sigma, loc=mu)]
+			lognormPDFVals = [x * normConstant for x in getLogNormPDF(xVals, sigma, mu)]
 
 			histHeights, binCenters = histAndPDF(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
 			plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
@@ -2282,7 +2295,7 @@ class dfnworks(Frozen):
 
 		perm = np.log(k)*np.ones(n) 
 		perturbation = np.random.normal(0.0, 1.0, n)
-		perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
+		perm = np.np.exp(perm + np.sqrt(sigma)*perturbation) 
 
 		aper = np.sqrt((12.0*perm))
 		aper -= np.mean(aper)

@@ -110,10 +110,11 @@ dfn = create_dfn()
 
 main_time = time()
 
-
 dfn.make_working_directory()
 dfn.check_input()
 dfn.create_network()
+
+#os.chdir(dfn._jobname)
 dfn.output_report()
 exit()
 

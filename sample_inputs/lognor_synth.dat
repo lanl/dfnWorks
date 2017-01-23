@@ -1,10 +1,10 @@
-topCondition: 1
+stopCondition: 0
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 6000
+nPoly: 1000
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
@@ -109,14 +109,14 @@ outputAcceptedRadiiPerFamily: 1
 /*  Fracture Network Parameters:                                            */
 /*==========================================================================*/
 
-tripleIntersections: 0
+tripleIntersections: 1
 /*  Accept or reject triple intersections
         0 - Off (Reject)
         1 - On  (Accept)  
 */
 
 
-forceLargeFractures: 1
+forceLargeFractures: 0
 /*  Inserts the largest possible fracture for each defined fracture family, 
     defined by the user-defined maxium radius
         0 - Off (Do not force insertion of larest fractures)
@@ -130,7 +130,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 0
+disableFram: 1 
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -189,7 +189,7 @@ boundaryFaces: {1,1,1,1,1,1}
     using this feature.     
 */
                           
-rejectsPerFracture: 350  
+rejectsPerFracture: 10000  
 /*  If a fracture is rejected, it will be re-translated
     to a new position this number of times. 
 
