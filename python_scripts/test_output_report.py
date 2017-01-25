@@ -23,7 +23,7 @@ def getNameFromParams(param_list):
 	max_input = param_list[1]
 	mean_input = param_list[2]
 	sd_input = param_list[3]
-	name = "output_test_min_" + str(min_input) + "_max_" + str(max_input) + "_mean_" + str(mean_input) + "_sd_" + "%02d" % (sd_input)
+	name = "output_test_min_" + "%f" % (min_input) + "_max_" +  "%f" % (max_input) + "_mean_" + "%f" % (mean_input) + "_sd_" + "%f" % (sd_input)
 	return name
 
 def write_lognormal_dat_file(param_list, input_dir):
@@ -161,6 +161,7 @@ def get_all_param_lists():
 			sd = sd_ratio*mean
 			param_list = [mn, mx, mean, sd]
 			list_of_param_lists.append(param_list)
+	print list_of_param_lists
 	return list_of_param_lists
 
 def run_all_tests(flow_name, trans_name, python_dir, input_dir):

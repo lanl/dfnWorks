@@ -1293,7 +1293,7 @@ class dfnworks(Frozen):
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
 						       ##   Isolated fracs get radiiList, distrib, infoStr, parameters):
-		output_name = self._local_jobname[:-4] + '_output_report.pdf'
+		output_name = self._local_jobname + '_output_report.pdf'
 		print 'Writing output into: ', output_name
 		outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 		show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
@@ -1556,7 +1556,7 @@ class dfnworks(Frozen):
 			#xmin = max(min(famObj.radiiList), mu - 2.5*sigma ) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
 			#xmax = min(max(famObj.radiiList), mu + 2.5*sigma ) ##parameters["Maximum Radius"]   the desired max value.
 			xmin = min(famObj.radiiList)
-			xmax = max(faObj.radiiList)	
+			xmax = max(famObj.radiiList)	
 			xVals = np.linspace(xmin, xmax, numXpoints)
 			normConstant = 1.0
 			try:       
