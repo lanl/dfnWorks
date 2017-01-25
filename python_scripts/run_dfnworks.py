@@ -13,7 +13,7 @@ def define_paths():
 	
 	os.environ['DFNGENC_PATH']='/home/nknapp/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/nknapp/dfnworks/input_files'
+	os.environ['input_files']='/home/nknapp/dfnworks/test_inputs/txt_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'

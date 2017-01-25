@@ -1,10 +1,14 @@
+/*=========================================================================*/
+/*  Gereral Options & Fracture Network Parameters:                         */
+/*=========================================================================*/
+
 stopCondition: 0
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 50
+nPoly: 6000
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
@@ -54,7 +58,7 @@ h: .05
 */
 
 
-radiiListIncrease: 0.1
+radiiListIncrease: 0.01
 /*  Percent to increase the size of the pre-generated radii lists, per family. 
     Example: 0.2 will increase the size of the list by %20.
 
@@ -109,14 +113,14 @@ outputAcceptedRadiiPerFamily: 1
 /*  Fracture Network Parameters:                                            */
 /*==========================================================================*/
 
-tripleIntersections: 1
+tripleIntersections: 0
 /*  Accept or reject triple intersections
         0 - Off (Reject)
         1 - On  (Accept)  
 */
 
 
-forceLargeFractures: 0
+forceLargeFractures: 1
 /*  Inserts the largest possible fracture for each defined fracture family, 
     defined by the user-defined maxium radius
         0 - Off (Do not force insertion of larest fractures)
@@ -130,7 +134,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 1 
+disableFram: 1
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -144,7 +148,7 @@ visualizationMode: 0
             modeling of flow and transport is possible. 
 */ 
 
-seed: 0
+seed: 4017745360
 /*  Seed for random generator. 
     Enter 0 for time based seed.
 */        
@@ -166,8 +170,7 @@ keepOnlyLargestCluster: 0
     cluster which connects at least any two sides of the domain.
 */
 
-ignoreBoundaryFaces: 1
-  
+ignoreBoundaryFaces: 0  
 /*
      0 - Use boundaryFaces option below 
      1 - Ignore boundaryFaces option and keep all clusters,
@@ -189,7 +192,7 @@ boundaryFaces: {1,1,1,1,1,1}
     using this feature.     
 */
                           
-rejectsPerFracture: 10000  
+rejectsPerFracture: 350  
 /*  If a fracture is rejected, it will be re-translated
     to a new position this number of times. 
 
@@ -202,8 +205,7 @@ rejectsPerFracture: 10000
 /*  Shape and Probability Parameters                                         */
 /*===========================================================================*/
 
-famProb: {0.5, 0.5} 
-
+famProb: {0.5, 0.5}
 
 /*  Each element is the probability of chosing a fracture from 
     the element's corresponding family to be inserted into the DFN.
@@ -388,7 +390,7 @@ rLayer: {0,0}
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
 
-rdistr: {1,1}   
+rdistr: {2,2}   
 /*  Mandatory parameter if using statistically generated rectangles.
     Rectangle statistical distribution options:
         1 - log-normal distribution
@@ -403,7 +405,7 @@ rbetaDistribution: {1,1}
         1: Constant angle (specefied below by 'rbeta')
 */                
                 
-r_p32Targets: {.3,.3}
+r_p32Targets: {.3, 0.3}
 /*  Rectangular families target fracture intensity per family. 
     When using stopCondition = 1 (defined at the top of the input file), 
     families will be inserted until the families desired fracture 
@@ -426,12 +428,12 @@ rAngleOption: 1
         0 - Radians (must be numerical value, cannot use "Pi") 
 */
  
-rtheta: {95.47,1.42 }
+rtheta: {135.16, 43.04 }
 /*  Rectangle fracture orientation.
     The angle the normal vector makes with the z-axis 
 */
 
-rphi: {23.32, 26.81} 
+rphi: {21.76, 29.55} 
 /*  Rectangle fracture orientation.
     The angle the projection of the normal
     onto the x-y plane makes with the x-axis 
@@ -440,7 +442,7 @@ rphi: {23.32, 26.81}
 rbeta: {0,0}   
 //  Rotation around the normal vector.
 
-rkappa:{25.78, 32}   
+rkappa:{29.04, 30.75}   
 /*  Parameter for the fisher distribnShaprutions. The 
     bigger, the more similar (less diverging) are the 
     rectangular familiy's normal vectors.
@@ -452,16 +454,16 @@ rkappa:{25.78, 32}
 // Mandatory Parameters if using rectangles with log-normal distribution     */
 /*===========================================================================*/
 
-rLogMean: {1.250,1.250 }    
+rLogMean: {1.250,1.250,1.250,1.250,1.250,1.250 }    
 //  Mean of the underlying normal distribution
 
-rsd: {0.877, 0.877 }     
+rsd: {0.877, 0.877, 0.877, 0.877, 0.877, 0.877 }     
 //  Standard deviation of the underlying normal distribution
                       
-rLogMin: {0.5, 0.5}
+rLogMin: {0.5, 0.5, 0.5, 0.5, 0.5, 0.5}
 //  Minimum radius
 
-rLogMax: {50.0, 50.0}   
+rLogMax: {5.0, 5.0, 30.0, 30.0, 15.0, 15.0}   
 //  Maximum radius                 
 
 
@@ -470,13 +472,13 @@ rLogMax: {50.0, 50.0}
 // Mandatory Parameters if using rectangles with power-law distributions.    */
 /*===========================================================================*/
 
-rmin: {0.5, 0.5,0.5,0.5,0.5,0.5}  
+rmin: {0.5, 0.5}  
 //  Minimum radius
 
-rmax: {125,125,125,125,125,125}    
+rmax: {5,5}    
 //  Maximum radius
 
-ralpha: {2.0,2.6,2.01,2.0,2.6,2.01}  
+ralpha: {1.0,1.0}  
 //  Alpha. Used in truncated power-law distribution calculations.
 
 
@@ -562,7 +564,6 @@ RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 userEllByCoord: 0
 
 EllByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
-
 
 
 /*===========================================================================*/

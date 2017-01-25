@@ -1292,7 +1292,7 @@ class dfnworks(Frozen):
 		families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 						       ## families['notRemoved'] contains all non-isolated fractures. 
 						       ##   Isolated fracs get radiiList, distrib, infoStr, parameters):
-		output_name = self._output_file[:-4] + '_output_report.pdf'
+		output_name = self._local_jobname[:-4] + '_output_report.pdf'
 		print 'Writing output into: ', output_name
 		outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 		show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf

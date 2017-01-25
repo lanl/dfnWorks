@@ -1,0 +1,87 @@
+
+	enumPoints: {8,  12}
+	eAngleOption: 0
+	userRecByCoord: 0
+	eExpMean: {2}
+	lengthCorrelatedAperture: {5e-5,  0.5}
+	r_p32Targets: {.3}
+	e_p32Targets: {}
+	famProb: {1}
+	removeFracturesLessThan: 0
+	seed: 0
+	ephi: {0}
+	rdistr: {1}
+	rLogMax: {0.5}
+	rExpMean: {3.373}
+	printRejectReasons: 0
+	raspect: {5.0}
+	RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
+	layers: {40, 50} {-20, 37} {-50, -17}
+	econst: {10}
+	rmin: {0.5}
+	rphi: {26.81}
+	nFamEll: 0
+	eLayer: {}
+	rExpMax: {125.0}
+	rconst: {3}
+	forceLargeFractures: 0
+	rtheta: {1.42}
+	keepOnlyLargestCluster: 0
+	easpect: {}
+	rsd: {0.05}
+	ebeta: {}
+	esd: {}
+	eLogMin: {}
+	tripleIntersections: 1
+	EllByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
+	emax: {}
+	aperture: 2
+	rbeta: {0}
+	eLogMax: {}
+	rLogMean: {0.1}
+	meanAperture: 3
+	etheta: {}
+	ralpha: {}
+	boundaryFaces: {1, 1, 1, 1, 1, 1}
+	eExpMax: {}
+	outputAllRadii: 0
+	apertureFromTransmissivity: { 1.3681, 1 }
+	nPoly: 1000
+	rmax: {125, 125, 125, 125, 125}
+	ealpha: {}
+	UserRect_Input_File_Path: ./inputFiles/userPolygons/uRectInput.dat
+	outputAcceptedRadiiPerFamily: 1
+	eExpMin: {}
+	rbetaDistribution: { 1 }
+	stdAperture: 0.8
+	UserEll_Input_File_Path: ./inputFiles/userPolygons/uEllInput.dat
+	rExpMin: {0.5}
+	disableFram: 1
+	ekappa: {}
+	outputFinalRadiiPerFamily: 1
+	permOption: 0
+	constantAperture: 1e-5
+	domainSize: {100.0, 100.0, 100.0}
+	userEllByCoord: 0
+	constantPermeability: 1e-12
+	visualizationMode: 0
+	insertUserRectanglesFirst: 1
+	nFamRect: 1
+	emin: {}
+	userRectanglesOnOff: 0
+	h: .05
+	radiiListIncrease: 0.1
+	edistr: {2, 3}
+	rejectsPerFracture: 10000
+	eLogMean: {4}
+	domainSizeIncrease: {0.0, 0.0, 0.0}
+	ebetaDistribution: {0, 0}
+	numOfLayers: 0
+	stopCondition: 0
+	rLogMin: {0.01}
+	userEllipsesOnOff: 0
+	rAngleOption: 1
+	ignoreBoundaryFaces: 1
+	rLayer: {0}
+	rkappa: {32.0}
+	
