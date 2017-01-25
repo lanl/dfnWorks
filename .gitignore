@@ -15,4 +15,4 @@ python_scripts/runDFN_uncorrelated.py
 python_scripts/runDFN_mixing.py
 python_scripts/jeffrey_scripts
 *.pdf
-
+*output_test_min*

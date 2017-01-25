@@ -1484,7 +1484,8 @@ class dfnworks(Frozen):
 										alpha=0.75, label='Empirical data')
 			binCenters = [((binEdges[x] + binEdges[x+1]) / 2.0) for x in range(len(binEdges)-1)] ## need for cdf
 				     ## ^ -1 to prevent Index Error when calculating last bin Center
-			histo.set_xticks(binEdges)
+		#	histo.set_xsticks(binEdges)
+			histo.set_xticks(binEdges[0:len(binEdges)/10:-1])
 			histo.locator_params(tight = True, axis = 'x', nbins = numBuckets/8.0) ## num of axis value labels
 			histo.xaxis.set_major_formatter(FormatStrFormatter('%0.1f'))
 			
@@ -1551,10 +1552,12 @@ class dfnworks(Frozen):
 				print 'WARNING: Lognormal distribution with num  ', famObj.globFamNum, ' has no fractures:not graphing'
 				return
 			numXpoints = 1000
-			xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
-			xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
-			xVals = np.linspace(xmin, xmax, numXpoints)
 			mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
+			#xmin = max(min(famObj.radiiList), mu - 2.5*sigma ) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
+			#xmax = min(max(famObj.radiiList), mu + 2.5*sigma ) ##parameters["Maximum Radius"]   the desired max value.
+			xmin = min(famObj.radiiList)
+			xmax = max(faObj.radiiList)	
+			xVals = np.linspace(xmin, xmax, numXpoints)
 			normConstant = 1.0
 			try:       
 				normConstant = 1.0 / (lognormCDF(xmax, mu, sigma) - lognormCDF(xmin, mu, sigma))
