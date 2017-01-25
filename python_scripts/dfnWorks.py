@@ -378,7 +378,7 @@ class dfnworks(Frozen):
 		##        key - parameter the value belongs to
 		##        inList - (Optional)
 		def verifyFlag(value, key = "", inList = False):
-			if value is '0' or value is '1':
+			if value == '0' or value == '1':
 				return int(value)
 			elif inList:
 				return None
@@ -427,12 +427,13 @@ class dfnworks(Frozen):
 		def verifyList(valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
 			if valList == ['']: return 0
 			if type(valList) is not list:
-				error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
+				error("\"{}\"'s value must be a list enclosed in curly brackets {{}}.".format(key))
 			if desiredLength != 0 and len(valList) != desiredLength:
 				return -len(valList)
 			for i, value in enumerate(valList):
 				value = value.strip()
 				verifiedVal = verificationFn(value, inList = True)
+				print "verified val is ", verifiedVal
 				if verifiedVal == None:
 					listType = re.sub('Integer', 'Int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyInt' --> 'Integer'
 					error("\"{}\" must be a list of {}s {}. Non-{} found in "\
@@ -2083,7 +2084,6 @@ class dfnworks(Frozen):
 			for line in pflotran_out:
 			    f.write(line)
 		print '--> Parsing PFLOTRAN output complete'
-
 	
 	def inp2gmv(self, inp_file=''):
 

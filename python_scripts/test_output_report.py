@@ -23,7 +23,7 @@ def getNameFromParams(param_list):
 	max_input = param_list[1]
 	mean_input = param_list[2]
 	sd_input = param_list[3]
-	name = "output_test_min_" + str(min_input) + "_max_" + str(max_input) + "_mean_" + str(mean_input) + "_sd_" + str(sd_input)
+	name = "output_test_min_" + str(min_input) + "_max_" + str(max_input) + "_mean_" + str(mean_input) + "_sd_" + "%02d" % (sd_input)
 	return name
 
 def write_lognormal_dat_file(param_list, input_dir):
