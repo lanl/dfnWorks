@@ -154,7 +154,7 @@ class dfnworks(Frozen):
 		else:
 			sys.exit("--> ERROR: dfnTrans did not complete\n")
 	def dump_time(self, section_name, time):
-		if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):	
+		if (os.path.isfile(self._local_jobname+"_run_time.txt")==False):	
 			f = open(self._local_jobname+"_run_time.txt", "w")
 			f.write("Runs times for " + self._jobname + "\n")
 		else:
@@ -173,7 +173,7 @@ class dfnworks(Frozen):
 		f=open(self._local_jobname+"_run_time.txt").readlines()
 		unit = f[-1].split()[-1]
 		total = float(f[-1].split()[-2])
-		if unit is 'minutes':
+		if unit=='minutes':
 			total *= 60.0
 
 		print 'Runs times for ', f[0]
@@ -183,7 +183,7 @@ class dfnworks(Frozen):
 			unit = f[i].split()[-1]
 			time = float(f[i].split()[-2])
 	
-			if unit is 'minutes':
+			if unit=='minutes':
 				time *= 60.0
 			percent.append(100.0*(time/total))
 			name.append(f[i].split(':')[1])
@@ -212,7 +212,7 @@ class dfnworks(Frozen):
 			os.mkdir(jobname + '/polys')
 			os.chdir(self._jobname)
 			cwd = os.getcwd()
-			print("Current directory is now: %s\n"%cwd)
+			print("Current directory==now: %s\n"%cwd)
 		except OSError:
 			print '\nFolder ', jobname, ' exists'
 		#	keep = raw_input('Do you want to delete it? [yes/no] \n')
@@ -226,7 +226,7 @@ class dfnworks(Frozen):
 			os.mkdir(jobname + '/polys')
 			os.chdir(self._jobname)
 			cwd = os.getcwd()
-			print("Current directory is now: %s\n"%cwd)
+			print("Current directory==now: %s\n"%cwd)
 
 		#	elif keep == 'no' or 'n':
 		#		sys.exit("Not deleting folder. Exiting Program") 
@@ -342,13 +342,13 @@ class dfnworks(Frozen):
 					break
 			
 			if valList == [] and key in mandatory:
-				error("\"{}\" is a mandatory parameter and must be defined.".format(key))
+				error("\"{}\"==a mandatory parameter and must be defined.".format(key))
 			if key is not None:
 				params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
 			if line != "": processLine(line)
 				
 		## Input: line containing a paramter (key) preceding a ":" 
-		## Returns: key -- if it has not been defined yet and is valid
+		## Returns: key -- if it has not been defined yet and==valid
 		##          None -- if key does not exist
 		##          exits -- if the key has already been defined to prevent duplicate confusion        
 		def findKey(line):
@@ -372,7 +372,7 @@ class dfnworks(Frozen):
 		##                              Verification                              ##
 		## ====================================================================== ##
 		## Note: Always provide EITHER a key (ie "stopCondition") 
-		##         OR inList = True/False (boolean indicating val being checked is inside a list) 
+		##         OR inList = True/False (boolean indicating val being checked==inside a list) 
 
 		## Input: value - value being checked
 		##        key - parameter the value belongs to
@@ -386,7 +386,7 @@ class dfnworks(Frozen):
 				error("\"{}\" must be either '0' or '1'".format(key))
 
 		def verifyFloat(value, key = "", inList = False, noNeg = False):
-			if type(value) is list:
+			if type(value)==list:
 				error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
 			try:
 				if noNeg and float(value) < 0:
@@ -400,7 +400,7 @@ class dfnworks(Frozen):
 					
 					
 		def verifyInt(value, key = "", inList = False, noNeg = False):
-			if type(value) is list:
+			if type(value)==list:
 				error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
 			try:
 				if noNeg and int(re.sub(r'\.0*$', '', value)) < 0:
@@ -415,13 +415,13 @@ class dfnworks(Frozen):
 		## Verifies input list that come in format {0, 1, 2, 3}
 		##
 		## Input:  valList - List of values (flags, floats, or ints) corresponding to a parameter
-		##         key - the name of the parameter whose list is being verified
+		##         key - the name of the parameter whose list==being verified
 		##         verificationFn - (either verifyFlag, verifyFloat or verifyInt) checks each list element 
 		##         desiredLength - how many elements are supposed to be in the list
 		##         noZeros - (Optional) True for lists than cannot contain 0's, False if 0's are ok  
 		##         noNegs - (Optional) True for lists than cannot contain negative numbers, False otherwise
 		## Output: returns negative value of list length to indicate incorrect length and provide meaningful error message
-		##         Prints error and exits if a value of the wrong type is found in the list
+		##         Prints error and exits if a value of the wrong type==found in the list
 		##         returns None if successful
 		##
 		def verifyList(valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
@@ -433,7 +433,7 @@ class dfnworks(Frozen):
 			for i, value in enumerate(valList):
 				value = value.strip()
 				verifiedVal = verificationFn(value, inList = True)
-				print "verified val is ", verifiedVal
+				print "verified val==", verifiedVal
 				if verifiedVal == None:
 					listType = re.sub('Integer', 'Int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyInt' --> 'Integer'
 					error("\"{}\" must be a list of {}s {}. Non-{} found in "\
@@ -514,7 +514,7 @@ class dfnworks(Frozen):
 			return True if num < 0 else False
 
 		## Makes sure at least one polygon family has been defined in nFamRect or nFamEll
-		##      OR that there is a user input file for polygons. 
+		##      OR that there==a user input file for polygons. 
 		def checkFamCount():
 			userDefExists = (valueOf('userEllipsesOnOff') == '1') |\
 				       (valueOf('userRectanglesOnOff') == '1') |\
@@ -547,7 +547,7 @@ class dfnworks(Frozen):
 					      "If {} and {} were intended to be the same, use the constant distribution "\
 					      "(4) instead.".format(minParam, maxParam, shape, minParam, maxParam, ))
 				if minV > maxV:
-					error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
+					error("\"{}\"==greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
 					sys.exit()
 
 		def checkMean(minParam, maxParam, meanParam):
@@ -618,7 +618,7 @@ class dfnworks(Frozen):
 
 			for i,val in enumerate(valueOf('domainSizeIncrease')):
 				if val >= valueOf('domainSize')[i]/2:
-					error("\"domainSizeIncrease\" contains {} which is more than half of the domain's "
+					error("\"domainSizeIncrease\" contains {} which==more than half of the domain's "
 					      "range in that dimension. Cannot change the domain's size by more than half of "
 					      "that dimension's value defined in \"domainSize\". This risks collapsing or "
 					      "doubling the domain.".format(val))
@@ -635,7 +635,7 @@ class dfnworks(Frozen):
 		def layers():
 			halfZdomain = params['domainSize'][0][2]/2.0  ## -index[2] becaue domainSize = [x,y,z]
 								      ## -center of z-domain at z = 0 so 
-								      ##  whole Zdomain is -zDomainSize to +zDomainSize
+								      ##  whole Zdomain==-zDomainSize to +zDomainSize
 			for i, layer in enumerate(params['layers']):
 				errResult = verifyList(layer, "layer #{}".format(i+1), verifyFloat, desiredLength = 2)
 				if errResult != None:
@@ -648,12 +648,12 @@ class dfnworks(Frozen):
 				if minZ <= -halfZdomain and maxZ <= -halfZdomain:
 					error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
 					      "below the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
-					      "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
+					      "the domain's range. The domain's range==half of 3rd value in \"domainSize\" "\
 					      "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
 				if minZ >= halfZdomain and maxZ >= halfZdomain:
 					error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
 					      "above the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
-					      "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
+					      "the domain's range. The domain's range==half of 3rd value in \"domainSize\" "\
 					      "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
 
 		     
@@ -745,7 +745,7 @@ class dfnworks(Frozen):
 				if valueOf('apertureFromTransmissivity')[0] == 0:
 					error("\"apertureFromTransmissivity\"'s first value cannot be 0.")
 				if valueOf('apertureFromTransmissivity')[1] == 0:
-					warning("\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperature.")
+					warning("\"apertureFromTransmissivity\"'s second value==0, which will result in a constant aperature.")
 
 			elif apOption == 3:
 				if verifyFloat(valueOf('constantAperture'), 'constantAperture', noNeg=True) == 0:
@@ -759,7 +759,7 @@ class dfnworks(Frozen):
 				if valueOf('lengthCorrelatedAperture')[0] == 0:
 					error("\"lengthCorrelatedAperture\"'s first value cannot be 0.")
 				if valueOf('lengthCorrelatedAperture')[1] == 0:
-					warning("\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperature.") 
+					warning("\"lengthCorrelatedAperture\"'s second value==0, which will result in a constant aperature.") 
 					
 			else:
 				error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
@@ -837,7 +837,7 @@ class dfnworks(Frozen):
 			return h_min
 
 		def comparePtsVSh(prefix, hval):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
+			shape = "ellipse" if prefix=='e' else "rectangle"
 			aspectList = params[prefix+"aspect"][0]
 			numPointsList = None
 
@@ -883,15 +883,15 @@ class dfnworks(Frozen):
 			if val < minFracSize/1000.0 and ellipseFams + rectFams > 0: ####### NOTE ----- future developers TODO, delete the 
 										    ## "and ellipseFams + rectFams > 0" once you are also
 										    ## checking the userInput Files for minimums that could be 
-										    ## "minFracSize".  "minFracSize" is initialized to 99999999 so if no 
+										    ## "minFracSize".  "minFracSize"==initialized to 99999999 so if no 
 										    ## ellipse/rect fams are defined and the only polygons come from user 
-										    ## Input, the warning message says the min Frac size is 99999999 
+										    ## Input, the warning message says the min Frac size==99999999 
 										    ## since it never gets reset by one of the distribution minima.  
-				warning("\"h\" (length scale) is smaller than one 1000th of the minimum "\
+				warning("\"h\" (length scale)==smaller than one 1000th of the minimum "\
 				      "fracture size ({}). The generated mesh will be extremely fine and will likely be "\
 				      "computationally exhausting to create. Computation may take longer than usual.".format(minFracSize))
 			if val > minFracSize/10.0:
-				warning("\"h\" (length scale) is greater than one 10th of the minimum "\
+				warning("\"h\" (length scale)==greater than one 10th of the minimum "\
 				      "fracture size ({}). The generated mesh will be very coarse and there will likely "\
 				      "be a high rate of fracture rejection.".format(minFracSize))
 
@@ -932,8 +932,8 @@ class dfnworks(Frozen):
 
 
 		def aspect(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			numFamilies = ellipseFams if prefix=='e' else rectFams
 			paramName = prefix + "aspect"
 
 			errResult = verifyList(valueOf(paramName), paramName, verifyFloat, 
@@ -947,15 +947,15 @@ class dfnworks(Frozen):
 			verifyFlag(valueOf(paramName), paramName)
 
 		def layer(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			numFamilies = ellipseFams if prefix=='e' else rectFams
 			paramName = prefix + "Layer"
 
 			errResult = verifyList(valueOf(paramName), paramName, verifyInt, desiredLength = numFamilies)
 			if errResult != None:
 				error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
 				      "Need one layer per {} family. Layers are numbered by the order they "\
-				      "are defined in 'layers' parameter. Layer 0 is the whole domain."\
+				      "are defined in 'layers' parameter. Layer 0==the whole domain."\
 				      .format(paramName, -errResult, numFamilies, shape, shape))
 
 			for layer in valueOf(paramName):
@@ -969,8 +969,8 @@ class dfnworks(Frozen):
 					      "parameter.".format(paramName, layer, numLayers))
 
 		def thetaPhiKappa(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			numFamilies = ellipseFams if prefix=='e' else rectFams
 			paramNames = [prefix + name for name in ["theta", "phi", "kappa"]]
 			errString = "\"{}\" has defined {} angle(s) but there is(are) {} {} family(ies)."\
 				    "Please defined one angle for each {} family."
@@ -993,8 +993,8 @@ class dfnworks(Frozen):
 		## indicating contant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
 		## also verified. 
 		def betaDistribution(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			numFamilies = ellipseFams if prefix=='e' else rectFams
 			paramName = prefix + "betaDistribution"
 
 			errResult = verifyList(valueOf(paramName), paramName, verifyFlag, desiredLength = numFamilies)
@@ -1013,14 +1013,14 @@ class dfnworks(Frozen):
 				      "to 1 in \"{}\"".format(betaParam, -errResult, numBetas, paramName, paramName))
 
 
-		## Verifies "edistr" and "rdistr" making sure one disrtibution is defined per family and
-		## each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
+		## Verifies "edistr" and "rdistr" making sure one disrtibution==defined per family and
+		## each distribution==either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
 		## 
 		## Stores how many of each distrib are in use in numEdistribs or numRdistribs lists  
 		def distr(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			distribList = numEdistribs if prefix is 'e' else numRdistribs
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			distribList = numEdistribs if prefix=='e' else numRdistribs
+			numFamilies = ellipseFams if prefix=='e' else rectFams
 			paramName = prefix + "distr"
 
 			errResult = verifyList(valueOf(paramName), paramName, verifyInt, desiredLength = numFamilies)
@@ -1041,8 +1041,8 @@ class dfnworks(Frozen):
 		# prefix- "e" or "r"
 		## Verifies all logNormal Paramters for ellipses and Rectangles        
 		def lognormalDist(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			distribList = numEdistribs if prefix is 'e' else numRdistribs
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			distribList = numEdistribs if prefix=='e' else numRdistribs
 			paramNames = [prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]]
 			errString = "\"{}\" has defined {} value(s) but {} lognormal distrbution(s) was(were) " \
 				    "defined in \"{}\". Please define one value for each lognormal (distrib. #1) family."
@@ -1066,8 +1066,8 @@ class dfnworks(Frozen):
 
 		## Truncated Power Law Distribution
 		def tplDist(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			distribList = numEdistribs if prefix is 'e' else numRdistribs
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			distribList = numEdistribs if prefix=='e' else numRdistribs
 			paramNames = [prefix + name for name in ["min", "max", "alpha"]]
 			errString = "\"{}\" has defined {} value(s) but {} truncated power-law distrbution(s) was(were) " \
 				    "defined in \"{}\". Please define one value for each truncated power-law (distrib. #2) family."
@@ -1083,8 +1083,8 @@ class dfnworks(Frozen):
 			
 
 		def exponentialDist(prefix):
-			shape = "ellipse" if prefix is 'e' else "rectangle"
-			distribList = numEdistribs if prefix is 'e' else numRdistribs
+			shape = "ellipse" if prefix=='e' else "rectangle"
+			distribList = numEdistribs if prefix=='e' else numRdistribs
 			paramNames = [prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]]
 			errString = "\"{}\" has defined {} value(s) but {} exponential distrbution(s) was(were) " \
 				    "defined in \"{}\". Please define one value for each exponential (distrib. #3) family."
@@ -1101,8 +1101,8 @@ class dfnworks(Frozen):
 
 		def constantDist(prefix):
 			paramName = prefix + "const"
-			numFamilies = ellipseFams if prefix is 'e' else rectFams
-			distribList = numEdistribs if prefix is 'e' else numRdistribs
+			numFamilies = ellipseFams if prefix=='e' else rectFams
+			distribList = numEdistribs if prefix=='e' else numRdistribs
 
 			errResult = verifyList(valueOf(paramName), paramName, verifyFloat, desiredLength = distribList[4],
 						 noZeros = True, noNegs = True)
@@ -1173,7 +1173,7 @@ class dfnworks(Frozen):
 					for layer in params['layers']:
 						writer.write(listToCurly(str(layer)) + " ")
 					writer.write('\n')    
-				elif type(valueOf(param, writing=True)) is list:
+				elif type(valueOf(param, writing=True))==list:
 					curl = listToCurly(str(valueOf(param, writing = True)))
 					writer.write(param + ': ' + curl + '\n')
 				else:
@@ -1202,7 +1202,7 @@ class dfnworks(Frozen):
 			writer = open(ioPaths["output"], 'w')
 			inputIterator = iter(reader)
 		except:
-			error("Check that the path of your input file is valid.")
+			error("Check that the path of your input file==valid.")
 	      
 		print '--> Checking input data'
 		print '--> Input Data: ', ioPaths["input"] 
@@ -1219,7 +1219,7 @@ class dfnworks(Frozen):
 		# copy input file into job folder	
 		os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
 		os.chdir(self._jobname)
-		if os.path.isfile("params.txt") is False:
+		if os.path.isfile("params.txt")==False:
 			print '--> Generation Failed'
 			print '--> Exiting Program'
 			exit()
@@ -1231,7 +1231,7 @@ class dfnworks(Frozen):
 	def mesh_network(self, ncpu = ''):
 		'''
 		Mesh Fracture Network using ncpus and lagrit
-		meshing file is seperate file: dfnGen_meshing.py
+		meshing file==seperate file: dfnGen_meshing.py
 		'''
 		print('='*80)
 		print("Meshing Network Using LaGriT : Starting")
@@ -1370,7 +1370,7 @@ class dfnworks(Frozen):
 			if show: plt.show()
 
 		## Graphs position of fractures as histogram for x, y and z dimensions
-		## Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]
+		## Input file format:    Xpos Ypos Zpos (R) [R==optional, indicates it was removed due to isolation]
 		def graphTranslations():
 			xAll = []
 			xUnremoved = []
@@ -1422,7 +1422,7 @@ class dfnworks(Frozen):
 					## input format:     Distribution: "distribution name"
 					famObj.distrib = line[line.index(":") + 1:].strip()
 				elif ":" in line and line[:line.index(":")].strip() in possibleParams:
-					## if one of the distribution param names is in the line, 
+					## if one of the distribution param names==in the line, 
 					##   match the name to the value and store in parameters attribute
 					## Mean: 0.5 ----> famObj.parameters["Mean"] = 0.5
 					paramList = line.split(":")
@@ -1432,7 +1432,7 @@ class dfnworks(Frozen):
 					paramList = line.split(":")            
 					famObj.parameters[paramList[0]] = float(re.sub("m", "", paramList[1]).strip())
 
-				## ======== Jeffrey, this is where you can add the family building parser code ====== #
+				## ======== Jeffrey, this==where you can add the family building parser code ====== #
 				## elif ":" in line:
 				##          paramList = line.split(":")
 				##          family parameter name = paramList[0]
@@ -1451,7 +1451,7 @@ class dfnworks(Frozen):
 					radius = float(elems[0])
 					famNum = elems[2].strip()
 					families['all'].append(radius)
-					if len(elems) < 4:              ## len = 4 when 'R' is on line
+					if len(elems) < 4:              ## len = 4 when 'R'==on line
 						families['notRemoved'].append(radius)				
 					if famNum not in families and famNum >= 0:
 						families[famNum].radiiList = [radius]
@@ -1558,7 +1558,7 @@ class dfnworks(Frozen):
 			normConstant = 1.0
 			try:       
 				normConstant = 1.0 / (lognormCDF(xmax, mu, sigma) - lognormCDF(xmin, mu, sigma))
-			except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
+			except ZeroDivisionError: ## happens when there==only one fracture in family so ^ has 0 in denominator
 				pass  
 			#lognormPDFVals = [x * normConstant for x in lognorm.pdf(xVals, sigma, loc=mu)]
 			lognormPDFVals = [x * normConstant for x in getLogNormPDF(xVals, sigma, mu)]
@@ -1600,7 +1600,7 @@ class dfnworks(Frozen):
 			normConst = 1.0
 			try:
 				normConst = 1.0 / (powLawCDF(xmax, xmin, alpha) - powLawCDF(xmin, xmin, alpha))
-			except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
+			except ZeroDivisionError: ## happens when there==only one fracture in family so ^ has 0 in denominator
 				pass        
 			powLawPDFVals = [powLawPDF(normConst, xmin, x, alpha) for x in xVals]
 
@@ -1642,7 +1642,7 @@ class dfnworks(Frozen):
 			normConst = 1.0
 			try:
 				normConst = 1.0 / ( expCDF(eLambda, xmax) - expCDF(eLambda, xmin) )
-			except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
+			except ZeroDivisionError: ## happens when there==only one fracture in family so ^ has 0 in denominator
 				pass          
 			expPDFVals = [expPDF(normConst, eLambda, x) for x in xVals]
 
@@ -1663,7 +1663,7 @@ class dfnworks(Frozen):
 
 
 		def graphConstant(famObj):
-			#print("  Family #" + famObj.globFamNum + " is a constant distribution and only contains one radius size.")
+			#print("  Family #" + famObj.globFamNum + "==a constant distribution and only contains one radius size.")
 			pass
 
 		def graphAllAndNotRemoved():
@@ -1837,7 +1837,7 @@ class dfnworks(Frozen):
 		print('--> Finished with uge file\n')
 
 		# loop through zone files
-		if zone_file is 'all':
+		if zone_file=='all':
 			zone_files = ['pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
 					'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
 			face_names = ['south', 'north', 'west', 'east', 'top', 'bottom']
@@ -2395,7 +2395,7 @@ def commandline_options():
 
 	options = parser.parse_args()
 	
-	if options.jobname is "":
+	if options.jobname=="":
 		sys.exit("Error: Jobname is required. Exiting.")
 	return options
 
@@ -2449,7 +2449,7 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
 		else:
 			sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
-	if options.cell is True:
+	if options.cell==True:
 		dfn._aper_cell_file = 'aper_node.dat'
 		dfn._perm_cell_file = 'perm_node.dat'
 	else:
@@ -2462,7 +2462,7 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
 	print '--> dfnGen input file: ',dfn._dfnGen_file
 	print '--> dfnFlow input file: ',dfn._dfnFlow_file
 	print '--> dfnTrans input file: ',dfn._dfnTrans_file
-	if options.cell is True:
+	if options.cell==True:
 		print '--> Expecting Cell Based Aperture and Permeability'
 	print("="*80+"\n")	
 
