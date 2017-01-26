@@ -16,7 +16,7 @@ def get_means():
 	return mean_list
 
 def get_sd_ratios():
-	return [0.5, 1, 1.5]
+	return [0.25, 0.5, 0.75]
 
 def getNameFromParams(param_list):
 	min_input = param_list[0]

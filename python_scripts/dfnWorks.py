@@ -271,12 +271,12 @@ class dfnworks(Frozen):
 
 		unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
 		'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
-		'tripleIntersections', 'printRejectReasons', 'disableFram', 'visualizationMode', 'seed', 'domainSizeIncrease',
+		'tripleIntersections', 'printRejectReasons', 'disableFram', 'visualizationMode', 'seed', 'domainSizeIncrease', 'rsd',
 		'keepOnlyLargestCluster', 'ignoreBoundaryFaces', 'boundaryFaces', 'rejectsPerFracture', 'famProb', 'insertUserRectanglesFirst',
 		'nFamEll', 'eLayer', 'edistr', 'ebetaDistribution', 'e_p32Targets', 'easpect', 'enumPoints', 'eAngleOption', 'etheta', 'ephi',
 		'ebeta', 'ekappa', 'eLogMean', 'esd', 'eLogMin', 'eLogMax', 'eExpMean', 'eExpMin', 'eExpMax', 'econst', 'emin', 'emax',
 		'ealpha', 'nFamRect', 'rLayer', 'rdistr', 'rbetaDistribution', 'r_p32Targets', 'raspect', 'rAngleOption', 'rtheta', 'rphi',
-		'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
+		'rbeta', 'rkappa', 'rLogMean', 'ssd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
 		'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path','EllByCoord_Input_File_Path', 'userEllByCoord', 'userRecByCoord',
 		'RectByCoord_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
 		'lengthCorrelatedAperture', 'permOption', 'constantPermeability', 'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'}
@@ -358,6 +358,7 @@ class dfnworks(Frozen):
 				return key
 			try:
 				params[key]
+				print "params[key] already exists for key ", key, "parameter value ", params[key], "\n"
 				error("\"{}\" has been defined more than once.".format(key))
 			except KeyError:
 				warning("\"" + key + "\" is not one of the valid parameter names.")
@@ -1063,8 +1064,21 @@ class dfnworks(Frozen):
 			checkMinMax(prefix+"LogMin", prefix+"LogMax", shape)
 			checkMean(prefix+"LogMin", prefix+"LogMax", prefix+"LogMean")
 			checkMinFracSize(valueOf(prefix+"LogMin"))
+			
+			#HERE, check that the parameters given will not produce fractures larger than twice the domain size
+			for i in range(0, len(valueOf('rLogMean'))):
+				lgn_mean = valueOf('rLogMean')[i] 
+				lgn_standard_deviation = valueOf('rsd')[i]
+				domain_size = max(params['domainSize'][0]) 
+				print 'domain size is ', domain_size
+				print 'lgn_standard_deviation is ', lgn_standard_deviation
+				print 'lgn_mean is ', lgn_mean
+				if (lgn_mean + 3.5*lgn_standard_deviation > np.log(2 * domain_size)):		
+					error("The user inputs for the lognormal distribution (mean = %02d, standard deviation = %02d)," \
+					     "  allow the generator to create fractures with lengths  greater than two times the" \
+					     "	domain size (%02d m)."% (lgn_mean, lgn_standard_deviation, domain_size))		
 
-		## Truncated Power Law Distribution
+		#r Truncated Power Law Distribution
 		def tplDist(prefix):
 			shape = "ellipse" if prefix=='e' else "rectangle"
 			distribList = numEdistribs if prefix=='e' else numRdistribs
@@ -1557,6 +1571,7 @@ class dfnworks(Frozen):
 			#xmax = min(max(famObj.radiiList), mu + 2.5*sigma ) ##parameters["Maximum Radius"]   the desired max value.
 			xmin = min(famObj.radiiList)
 			xmax = max(famObj.radiiList)	
+			
 			xVals = np.linspace(xmin, xmax, numXpoints)
 			normConstant = 1.0
 			try:       
