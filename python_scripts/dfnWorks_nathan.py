@@ -10,6 +10,7 @@ import math
 import re
 import sys
 import os
+import glob
 from time import time
 from shutil import copy, rmtree
 import numpy as np
@@ -108,7 +109,7 @@ class dfnworks(Frozen):
         self.dump_time('Function: create_network', time() - tic)    
         
         tic = time()
-        self.output_report()
+        #self.output_report()
         self.dump_time('output_report', time() - tic)    
         # Mesh Network
 
