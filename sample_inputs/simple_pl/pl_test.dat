@@ -414,7 +414,11 @@ UserEll_Input_File_Path: ./inputFiles/userPolygons/closeAngleTest.dat
 userRectanglesOnOff: 1    //0 - User Rectangles off
                         //1 - User Rectangles on
 
+<<<<<<< HEAD
 UserRect_Input_File_Path: /home/jhyman/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/4_fracture_rects.dat
+=======
+UserRect_Input_File_Path: /home/nknapp/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/4_fracture_rects.dat
+>>>>>>> c935275fa2a23ff025e7d4e4fa1778670b792b3b
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their
@@ -496,6 +500,7 @@ forceLargeFractures: 0
 outputFinalRadiiPerFamily: 0 
 radiiListIncrease: 0.1
 removeFracturesLessThan:0 
+
 
 
 

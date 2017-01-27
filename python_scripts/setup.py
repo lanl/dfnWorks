@@ -40,6 +40,7 @@ make_directory_list.append(GEN_INT_ELM_LIST_PATH)
 
 #clean(make_directory_list, PYTHON_DIR)
 if (len(sys.argv) == 1):
-        compile(make_directory_list)
+	compile(make_directory_list)
 else:
-        print 'Invalid arguments to setup script.'
+	print 'Invalid arguments to setup script.'
+	
