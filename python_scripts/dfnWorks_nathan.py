@@ -10,6 +10,7 @@ import math
 import re
 import sys
 import os
+from time import time
 from shutil import copy, rmtree
 import numpy as np
 import scipy
@@ -1296,49 +1297,55 @@ class dfnworks(Frozen):
             print('-'*80)
 
     def mesh_network(self, ncpu = ''):
-        """
-        Mesh Fracture Network using ncpus and lagrit
-        meshing file is seperate file: dfnGen_meshing.py
-        """
-        print('='*80)
-        print("Meshing Network Using LaGriT : Starting")
-        print('='*80)
-        production_mode = 1
-        refine_factor = 1    
-        
-        nPoly, h, visualMode, dudded_points  = mesh.parse_params_file()
-        self._num_frac = nPoly
-        tic2 = time()
-        mesh.create_parameter_mlgi_file(nPoly, h)
-        mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
-        failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-        self.dump_time('Process: Meshing Fractures', time() - tic2)
-        if failure > 0:
-            mesh.cleanup_dir()
-            print 'Exiting Program due to mesh failure'
-            sys.exit(1)
-        
-        tic2 = time()
-        n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
+		'''
+		Mesh Fracture Network using ncpus and lagrit
+		meshing file is seperate file: dfnGen_meshing.py
+		'''
+		print('='*80)
+		print("Meshing Network Using LaGriT : Starting")
+		print('='*80)
+		production_mode = True 
+		refine_factor = 1	
+		
+		nPoly, h, visualMode, dudded_points,domain = mesh.parse_params_file()
+		self._num_frac = nPoly
+		tic2 = time()
 
-        mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
-        self.dump_time('Process: Merging the Mesh', time() - tic2)    
+		mesh.create_parameter_mlgi_file(nPoly, h)
 
-        if(visualMode == 0):    
-            if (mesh.check_dudded_points(dudded_points) == False):
-                print 'Exiting Program due to mesh dudded points failure'
-                cleanup_dir()
-                sys.exit(1)
-    
-        if production_mode > 0:
-            mesh.cleanup_dir()
-        if(visualMode == 0): 
-            mesh.redefine_zones(h)
+		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
 
-        mesh.output_meshing_report(visualMode)
-        print ('='*80)
-        print("Meshing Network Using LaGriT : Complete")
-        print ('='*80)
+		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
+		self.dump_time('Process: Meshing Fractures', time() - tic2)
+		if failure > 0:
+			mesh.cleanup_dir()
+			sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
+
+		
+		tic2 = time()
+		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
+
+		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
+		self.dump_time('Process: Merging the Mesh', time() - tic2)	
+
+		if(visualMode == False):	
+			if (mesh.check_dudded_points(dudded_points) == False):
+				cleanup_dir()
+				sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+	
+		if production_mode == True:
+			mesh.cleanup_dir()
+
+		if(visualMode == False): 
+			mesh.define_zones(h,domain)
+
+		mesh.output_meshing_report(visualMode)
+		print ('='*80)
+		if(visualMode==False):
+			print("Meshing Network Using LaGriT Complete")
+		if(visualMode==True):
+			sys.exit("Meshing Visual Mode Network Using LaGriT Complete\n"+'='*80)
+		print ('='*80)
 
     def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
         """
