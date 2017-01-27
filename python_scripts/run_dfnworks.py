@@ -1,7 +1,8 @@
 import os, sys, time
-sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
+sys.path.append("/home/nknapp/dfnworks/dfnworks-main/python_scripts/") 
 from dfnWorks import *
 import dfnGen_meshing as mesh
+from time import time
 
 def define_paths():
 	# Set Environment Variables
@@ -9,11 +10,11 @@ def define_paths():
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04'
 
-	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks/dfnworks-main/'
 	
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
+	os.environ['DFNGENC_PATH']='/home/nknapp/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
+	os.environ['input_files']='/home/nknapp/dfnworks/test_inputs/txt_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -109,6 +110,15 @@ define_paths()
 dfn = create_dfn()
 
 main_time = time()
+
+dfn.make_working_directory()
+dfn.check_input()
+dfn.create_network()
+
+#os.chdir(dfn._jobname)
+dfn.output_report()
+exit()
+
 
 # General Work Flow
 dfn.dfnGen()

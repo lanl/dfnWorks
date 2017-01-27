@@ -1,0 +1,1411 @@
+Fri Jan 20 14:39:24 MST 2017
+
+DFN Generator Input File: TSA_test_clean.dat
+
+Number of Layers: 3
+    Layer 1{-z,+z}: {40,50}, Volume: 100000m^3
+    Layer 2{-z,+z}: {-20,37}, Volume: 570000m^3
+    Layer 3{-z,+z}: {-50,-17}, Volume: 330000m^3
+
+
+h: 0.01
+
+Shape Families:
+Rectangular Family 1:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 1.67168 rad, 95.78 deg
+Phi: 0.159523 rad, 9.14 deg 
+Kappa: 2.09
+Layer: 1 {40, 50}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 5m
+Family Insertion Probability: 0.066
+
+Rectangular Family 2:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0275762 rad, 1.58 deg
+Phi: 0.082205 rad, 4.71 deg 
+Kappa: 5.28
+Layer: 1 {40, 50}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 5m
+Family Insertion Probability: 0.066
+
+Rectangular Family 3:
+Number of Vertices: 4
+Aspect Ratio: 1
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0991347 rad, 5.68 deg
+Phi: 1.38579 rad, 79.4 deg 
+Kappa: 2.48
+Layer: 1 {40, 50}
+Distribution: Exponential
+Mean: 3.373
+Lambda: 0.296472
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 4:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 2.35131 rad, 134.72 deg
+Phi: 0.218341 rad, 12.51 deg 
+Kappa: 1.82
+Layer: 1 {40, 50}
+Distribution: Truncated Power-Law
+Alpha: 2
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 5:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.769516 rad, 44.09 deg
+Phi: 0.308225 rad, 17.66 deg 
+Kappa: 1.46
+Layer: 1 {40, 50}
+Distribution: Truncated Power-Law
+Alpha: 2.6
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 6:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 1.67168 rad, 95.78 deg
+Phi: 0.159523 rad, 9.14 deg 
+Kappa: 2.09
+Layer: 2 {-20, 37}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 30m
+Family Insertion Probability: 0.066
+
+Rectangular Family 7:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0275762 rad, 1.58 deg
+Phi: 0.082205 rad, 4.71 deg 
+Kappa: 5.28
+Layer: 2 {-20, 37}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 30m
+Family Insertion Probability: 0.066
+
+Rectangular Family 8:
+Number of Vertices: 4
+Aspect Ratio: 1
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0991347 rad, 5.68 deg
+Phi: 1.38579 rad, 79.4 deg 
+Kappa: 2.48
+Layer: 2 {-20, 37}
+Distribution: Exponential
+Mean: 3.373
+Lambda: 0.296472
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 9:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 2.35131 rad, 134.72 deg
+Phi: 0.218341 rad, 12.51 deg 
+Kappa: 1.82
+Layer: 2 {-20, 37}
+Distribution: Truncated Power-Law
+Alpha: 2.01
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 10:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.769516 rad, 44.09 deg
+Phi: 0.308225 rad, 17.66 deg 
+Kappa: 1.46
+Layer: 2 {-20, 37}
+Distribution: Truncated Power-Law
+Alpha: 2
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 11:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 1.67168 rad, 95.78 deg
+Phi: 0.159523 rad, 9.14 deg 
+Kappa: 2.09
+Layer: 3 {-50, -17}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 15m
+Family Insertion Probability: 0.066
+
+Rectangular Family 12:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0275762 rad, 1.58 deg
+Phi: 0.082205 rad, 4.71 deg 
+Kappa: 5.28
+Layer: 3 {-50, -17}
+Distrubution: Lognormal
+Mean: 1.25
+Standard Deviation: 0.877
+Minimum Radius: 0.5m
+Maximum Radius: 15m
+Family Insertion Probability: 0.066
+
+Rectangular Family 13:
+Number of Vertices: 4
+Aspect Ratio: 1
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.0991347 rad, 5.68 deg
+Phi: 1.38579 rad, 79.4 deg 
+Kappa: 2.48
+Layer: 3 {-50, -17}
+Distribution: Exponential
+Mean: 3.373
+Lambda: 0.296472
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 14:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 2.35131 rad, 134.72 deg
+Phi: 0.218341 rad, 12.51 deg 
+Kappa: 1.82
+Layer: 3 {-50, -17}
+Distribution: Truncated Power-Law
+Alpha: 2.6
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.066
+
+Rectangular Family 15:
+Number of Vertices: 4
+Aspect Ratio: 5
+P32 (Fracture Intensity) Target: 0.1
+Beta (Rotation Around Normal Vector): 0 rad, 0 deg
+Theta: 0.769516 rad, 44.09 deg
+Phi: 0.308225 rad, 17.66 deg 
+Kappa: 1.46
+Layer: 3 {-50, -17}
+Distribution: Truncated Power-Law
+Alpha: 2.01
+Minimum Radius: 0.5m
+Maximum Radius: 125m
+Family Insertion Probability: 0.067
+
+
+Estimating number of fractures needed...
+
+Estimating number of fractures per family for defined fracture intensities (P32)...
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99100005626678467
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99100011587142944
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099999666213989
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099999666213989
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+Estimated 54 fractures for Rectangular family 1
+Estimated 51 fractures for Rectangular family 2
+Estimated 2 fractures for Rectangular family 3
+Estimated 2 fractures for Rectangular family 4
+Estimated 2 fractures for Rectangular family 5
+Estimated 80 fractures for Rectangular family 6
+Estimated 82 fractures for Rectangular family 7
+Estimated 233 fractures for Rectangular family 8
+Estimated 780 fractures for Rectangular family 9
+Estimated 849 fractures for Rectangular family 10
+Estimated 54 fractures for Rectangular family 11
+Estimated 56 fractures for Rectangular family 12
+Estimated 118 fractures for Rectangular family 13
+Estimated 389 fractures for Rectangular family 14
+Estimated 329 fractures for Rectangular family 15
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+P32 For Family 13 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99100005626678467
+Please check input file.
+
+
+Accepted 200 fractures
+Rejected 0 fractures
+Re-translated 1328 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.060179681
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.098347649
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.01029573
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.016570762
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.070291497
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.070367813
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.055831593
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.084411807
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.031559013
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.024859712
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.092411183
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.091197044
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.073608279
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.045329295
+
+P32 For Family 2 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99100011587142944
+Please check input file.
+
+
+P32 For Family 11 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+P32 For Family 12 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+P32 For Family 6 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099981784820557
+Please check input file.
+
+
+Accepted 400 fractures
+Rejected 0 fractures
+Re-translated 1843 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.09677925
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.034077089
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.020993212
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.074718386
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.085916936
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.095847264
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.041083142
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.040584881
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.07840246
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.055540647
+
+P32 For Family 1 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099999666213989
+Please check input file.
+
+
+P32 For Family 8 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+Accepted 600 fractures
+Rejected 0 fractures
+Re-translated 1960 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.081453547
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.034041289
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.083610229
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.099586241
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.047141448
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.04743534
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.081344821
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.059752434
+
+P32 For Family 7 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099999666213989
+Please check input file.
+
+
+P32 For Family 3 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+Accepted 800 fractures
+Rejected 0 fractures
+Re-translated 2046 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.052894756
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.091011345
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.051997177
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.053399827
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.085381962
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.064245164
+
+Accepted 1000 fractures
+Rejected 0 fractures
+Re-translated 2105 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.063745067
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.098707497
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.05537767
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.058560606
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.087877885
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.067287028
+
+P32 For Family 5 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+Accepted 1200 fractures
+Rejected 0 fractures
+Re-translated 2180 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.090014294
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.058194954
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.064447597
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.090805709
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.069281995
+
+P32 For Family 4 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099993705749512
+Please check input file.
+
+
+Accepted 1400 fractures
+Rejected 0 fractures
+Re-translated 2233 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.061839391
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.06801679
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.092872292
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.07193803
+
+Accepted 1600 fractures
+Rejected 0 fractures
+Re-translated 2270 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.065173455
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.071028046
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.094983779
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.074126855
+
+Accepted 1800 fractures
+Rejected 0 fractures
+Re-translated 2300 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.068556853
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.073257968
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.096797161
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.075534374
+
+Accepted 2000 fractures
+Rejected 0 fractures
+Re-translated 2326 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.0708711
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.075671069
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.098323017
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.079021826
+
+P32 For Family 14 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+Accepted 2200 fractures
+Rejected 0 fractures
+Re-translated 2360 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.072848774
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.078125387
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.084212609
+
+Accepted 2400 fractures
+Rejected 0 fractures
+Re-translated 2405 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.075128227
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.080551386
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.093134694
+
+P32 For Family 15 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+Accepted 2600 fractures
+Rejected 0 fractures
+Re-translated 2555 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.077226311
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.082739927
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.10014712...Done
+
+Accepted 2800 fractures
+Rejected 0 fractures
+Re-translated 2593 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.079457633
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.085349008
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.10014712...Done
+
+Accepted 3000 fractures
+Rejected 0 fractures
+Re-translated 2622 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.081332922
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.087567382
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.10014712...Done
+
+Accepted 3200 fractures
+Rejected 0 fractures
+Re-translated 2697 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.088170648
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.089274935
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.10014712...Done
+
+Accepted 3400 fractures
+Rejected 1 fractures
+Re-translated 3140 fractures
+
+Current p32 values per family:
+Rectangular family 1 target P32 = 0.1, Current P32 = 0.1002308...Done
+Rectangular family 2 target P32 = 0.1, Current P32 = 0.10176022...Done
+Rectangular family 3 target P32 = 0.1, Current P32 = 0.10144418...Done
+Rectangular family 4 target P32 = 0.1, Current P32 = 0.10004025...Done
+Rectangular family 5 target P32 = 0.1, Current P32 = 0.10109188...Done
+Rectangular family 6 target P32 = 0.1, Current P32 = 0.10022797...Done
+Rectangular family 7 target P32 = 0.1, Current P32 = 0.10013106...Done
+Rectangular family 8 target P32 = 0.1, Current P32 = 0.10009801...Done
+Rectangular family 9 target P32 = 0.1, Current P32 = 0.094173618
+Rectangular family 10 target P32 = 0.1, Current P32 = 0.095599137
+Rectangular family 11 target P32 = 0.1, Current P32 = 0.10145097...Done
+Rectangular family 12 target P32 = 0.1, Current P32 = 0.10100279...Done
+Rectangular family 13 target P32 = 0.1, Current P32 = 0.10132937...Done
+Rectangular family 14 target P32 = 0.1, Current P32 = 0.10001305...Done
+Rectangular family 15 target P32 = 0.1, Current P32 = 0.10014712...Done
+
+P32 For Family 9 Completed
+
+
+WARNING: Familiy probabilities (famProb in input file) do not sum to 1 
+sum = 0.99099987745285034
+Please check input file.
+
+
+P32 For Family 10 Completed
+
+
+========================================================
+            Network Generation Complete
+========================================================
+
+Final p32 values per family:
+Family 1 target P32 = 0.10000000149011612, Final P32 = 0.10023079812526703
+Family 2 target P32 = 0.10000000149011612, Final P32 = 0.10176022350788116
+Family 3 target P32 = 0.10000000149011612, Final P32 = 0.10144417732954025
+Family 4 target P32 = 0.10000000149011612, Final P32 = 0.1000402495265007
+Family 5 target P32 = 0.10000000149011612, Final P32 = 0.10109188407659531
+Family 6 target P32 = 0.10000000149011612, Final P32 = 0.1002279669046402
+Family 7 target P32 = 0.10000000149011612, Final P32 = 0.10013106465339661
+Family 8 target P32 = 0.10000000149011612, Final P32 = 0.10009801387786865
+Family 9 target P32 = 0.10000000149011612, Final P32 = 0.10080470144748688
+Family 10 target P32 = 0.10000000149011612, Final P32 = 0.10001546889543533
+Family 11 target P32 = 0.10000000149011612, Final P32 = 0.10145097225904465
+Family 12 target P32 = 0.10000000149011612, Final P32 = 0.10100279003381729
+Family 13 target P32 = 0.10000000149011612, Final P32 = 0.10132937133312225
+Family 14 target P32 = 0.10000000149011612, Final P32 = 0.10001304745674133
+Family 15 target P32 = 0.10000000149011612, Final P32 = 0.10014712065458298
+
+________________________________________________________
+
+Statistics Before Isolated Fractures Removed:
+
+Fractures: 3536
+Truncated: 755
+
+Total Surface Area:     502486.05266776681 m^2
+Total Fractures Volume: 2.5124302633388353 m^3
+Total Fracture Density   (P30): 0.0035359999164938927
+Total Fracture Intensity (P32): 0.5024860526677668
+Total Fracture Porosity  (P33): 2.5124302633388353e-06
+
+Family 1:
+    Accepted: 25
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40, 50}
+    Surface Area: 10023.078819274902 m^2
+    Volume: 0.050115394096374513 m^3
+    Fracture Intensity (P32): 0.10023079812526703
+
+Family 2:
+    Accepted: 18
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40, 50}
+    Surface Area: 10176.023376464844 m^2
+    Volume: 0.05088011688232421 m^3
+    Fracture Intensity (P32): 0.10176022350788116
+
+Family 3:
+    Accepted: 70
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40, 50}
+    Surface Area: 10144.416840910912 m^2
+    Volume: 0.050722084204554548 m^3
+    Fracture Intensity (P32): 0.10144417732954025
+
+Family 4:
+    Accepted: 176
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40, 50}
+    Surface Area: 10004.025701761246 m^2
+    Volume: 0.05002012850880623 m^3
+    Fracture Intensity (P32): 0.1000402495265007
+
+Family 5:
+    Accepted: 135
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40, 50}
+    Surface Area: 10109.189753293991 m^2
+    Volume: 0.050545948766470027 m^3
+    Fracture Intensity (P32): 0.10109188407659531
+
+Family 6:
+    Accepted: 23
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20, 37}
+    Surface Area: 57129.928894042969 m^2
+    Volume: 0.28564964447021485 m^3
+    Fracture Intensity (P32): 0.1002279669046402
+
+Family 7:
+    Accepted: 47
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20, 37}
+    Surface Area: 57074.708740234375 m^2
+    Volume: 0.28537354370117179 m^3
+    Fracture Intensity (P32): 0.10013106465339661
+
+Family 8:
+    Accepted: 55
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20, 37}
+    Surface Area: 57055.871475219727 m^2
+    Volume: 0.28527935737609872 m^3
+    Fracture Intensity (P32): 0.10009801387786865
+
+Family 9:
+    Accepted: 1018
+    Rejected: 1
+    Layer: 2
+    Layer {-z, +z}: {-20, 37}
+    Surface Area: 57458.691799163818 m^2
+    Volume: 0.28729345899581932 m^3
+    Fracture Intensity (P32): 0.10080470144748688
+
+Family 10:
+    Accepted: 994
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20, 37}
+    Surface Area: 57008.802642613649 m^2
+    Volume: 0.28504401321306788 m^3
+    Fracture Intensity (P32): 0.10001546889543533
+
+Family 11:
+    Accepted: 21
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50, -17}
+    Surface Area: 33478.81916809082 m^2
+    Volume: 0.16739409584045414 m^3
+    Fracture Intensity (P32): 0.10145097225904465
+
+Family 12:
+    Accepted: 15
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50, -17}
+    Surface Area: 33330.923156738281 m^2
+    Volume: 0.1666546157836914 m^3
+    Fracture Intensity (P32): 0.10100279003381729
+
+Family 13:
+    Accepted: 7
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50, -17}
+    Surface Area: 33438.689331054688 m^2
+    Volume: 0.16719344665527344 m^3
+    Fracture Intensity (P32): 0.10132937133312225
+
+Family 14:
+    Accepted: 404
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50, -17}
+    Surface Area: 33004.305481433868 m^2
+    Volume: 0.16502152740716924 m^3
+    Fracture Intensity (P32): 0.10001304745674133
+
+Family 15:
+    Accepted: 528
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50, -17}
+    Surface Area: 33048.577487468719 m^2
+    Volume: 0.16524288743734353 m^3
+    Fracture Intensity (P32): 0.10014712065458298
+
+
+________________________________________________________
+
+Statistics After Isolated Fractures Removed:
+Final Number of Fractures: 2483
+Isolated Fractures Removed: 1053
+Fractures before isolated fractures removed:: 3536
+
+Total Surface Area:     483015.2830555439 m^2
+Total Fractures Volume: 2.4150764152777202 m^3
+Total Fracture Density   (P30): 0.0024830000475049019
+Total Fracture Intensity (P32): 0.48301528305554392
+Total Fracture Porosity  (P33): 2.4150764152777201e-06
+
+Family 1:
+    Fractures After Isloated Fracture Removal: 25
+    Isolated Fractures Removed: 0
+    Accepted: 25
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40,50}
+    Surface Area: 10023.078819274902 m^2
+    Volume: 0.050115394096374513 m^3
+    Fracture Intesnsity (P32): 0.010023078819274903
+
+Family 2:
+    Fractures After Isloated Fracture Removal: 18
+    Isolated Fractures Removed: 0
+    Accepted: 18
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40,50}
+    Surface Area: 10176.023376464844 m^2
+    Volume: 0.05088011688232421 m^3
+    Fracture Intesnsity (P32): 0.010176023376464843
+
+Family 3:
+    Fractures After Isloated Fracture Removal: 41
+    Isolated Fractures Removed: 29
+    Accepted: 70
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40,50}
+    Surface Area: 9590.6968212127686 m^2
+    Volume: 0.047953484106063836 m^3
+    Fracture Intesnsity (P32): 0.0095906968212127689
+
+Family 4:
+    Fractures After Isloated Fracture Removal: 116
+    Isolated Fractures Removed: 60
+    Accepted: 176
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40,50}
+    Surface Area: 8862.8813190460205 m^2
+    Volume: 0.044314406595230095 m^3
+    Fracture Intesnsity (P32): 0.00886288131904602
+
+Family 5:
+    Fractures After Isloated Fracture Removal: 90
+    Isolated Fractures Removed: 45
+    Accepted: 135
+    Rejected: 0
+    Layer: 1
+    Layer {-z, +z}: {40,50}
+    Surface Area: 9291.4380271434784 m^2
+    Volume: 0.046457190135717419 m^3
+    Fracture Intesnsity (P32): 0.0092914380271434793
+
+Family 6:
+    Fractures After Isloated Fracture Removal: 23
+    Isolated Fractures Removed: 0
+    Accepted: 23
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20,37}
+    Surface Area: 57129.928894042969 m^2
+    Volume: 0.28564964447021485 m^3
+    Fracture Intesnsity (P32): 0.057129928894042968
+
+Family 7:
+    Fractures After Isloated Fracture Removal: 47
+    Isolated Fractures Removed: 0
+    Accepted: 47
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20,37}
+    Surface Area: 57074.708740234375 m^2
+    Volume: 0.28537354370117179 m^3
+    Fracture Intesnsity (P32): 0.057074708740234376
+
+Family 8:
+    Fractures After Isloated Fracture Removal: 54
+    Isolated Fractures Removed: 1
+    Accepted: 55
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20,37}
+    Surface Area: 56846.565536499023 m^2
+    Volume: 0.28423282768249519 m^3
+    Fracture Intesnsity (P32): 0.05684656553649902
+
+Family 9:
+    Fractures After Isloated Fracture Removal: 723
+    Isolated Fractures Removed: 295
+    Accepted: 1018
+    Rejected: 1
+    Layer: 2
+    Layer {-z, +z}: {-20,37}
+    Surface Area: 52004.217650413513 m^2
+    Volume: 0.26002108825206777 m^3
+    Fracture Intesnsity (P32): 0.052004217650413513
+
+Family 10:
+    Fractures After Isloated Fracture Removal: 698
+    Isolated Fractures Removed: 296
+    Accepted: 994
+    Rejected: 0
+    Layer: 2
+    Layer {-z, +z}: {-20,37}
+    Surface Area: 51445.299068450928 m^2
+    Volume: 0.25722649534225428 m^3
+    Fracture Intesnsity (P32): 0.051445299068450925
+
+Family 11:
+    Fractures After Isloated Fracture Removal: 21
+    Isolated Fractures Removed: 0
+    Accepted: 21
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50,-17}
+    Surface Area: 33478.81916809082 m^2
+    Volume: 0.16739409584045414 m^3
+    Fracture Intesnsity (P32): 0.033478819168090819
+
+Family 12:
+    Fractures After Isloated Fracture Removal: 15
+    Isolated Fractures Removed: 0
+    Accepted: 15
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50,-17}
+    Surface Area: 33330.923156738281 m^2
+    Volume: 0.1666546157836914 m^3
+    Fracture Intesnsity (P32): 0.03333092315673828
+
+Family 13:
+    Fractures After Isloated Fracture Removal: 7
+    Isolated Fractures Removed: 0
+    Accepted: 7
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50,-17}
+    Surface Area: 33438.689331054688 m^2
+    Volume: 0.16719344665527344 m^3
+    Fracture Intesnsity (P32): 0.033438689331054684
+
+Family 14:
+    Fractures After Isloated Fracture Removal: 245
+    Isolated Fractures Removed: 159
+    Accepted: 404
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50,-17}
+    Surface Area: 30189.289766788483 m^2
+    Volume: 0.15094644883394245 m^3
+    Fracture Intesnsity (P32): 0.030189289766788481
+
+Family 15:
+    Fractures After Isloated Fracture Removal: 360
+    Isolated Fractures Removed: 168
+    Accepted: 528
+    Rejected: 0
+    Layer: 3
+    Layer {-z, +z}: {-50,-17}
+    Surface Area: 30132.723380088806 m^2
+    Volume: 0.15066361690044403 m^3
+    Fracture Intesnsity (P32): 0.030132723380088808
+
+
+________________________________________________________
+
+
+3536 Fractures Accepted (Before Isolated Fracture Removal)
+2483 Final Fractures (After Isolated Fracture Removal)
+
+Total Fractures Rejected: 1
+Total Fractures Re-translated: 3284
+
+Number of Triple Intersection Points (Before Isolated Fracture Removal): 0
+
+Intersection Statistics:
+    2565 of 4415 Intersections Shortened
+    Original Intersection (Before Intersection Shrinking) Length: 17776.045976862973m
+    Intersection Length Discarded: 89.666731121151756m
+    Final Intersection Length: 17686.37924574182m
+
+Rejection Statistics: 
+    6 Short Intersections 
+    4 Close to Node
+    304 Close to Edge
+    0 Vertice Close to Edge
+    1 Outside of Domain
+    2968 Triple intersection Rejections
+    3 Intersections Close to Other Intersections
+
+
+________________________________________________________
+
+Fracture Estimation statistics:
+NOTE: If estimation and actual are very different, 
+expected family distributions might not be accurate. 
+If this is the case, try increasing or decreasing 
+the 'radiiListIncrease' option in the input file.
+
+Rectangular Family 1
+Estimated: 54
+Actual:    25
+
+Rectangular Family 2
+Estimated: 51
+Actual:    18
+
+Rectangular Family 3
+Estimated: 2
+Actual:    70
+
+Rectangular Family 4
+Estimated: 2
+Actual:    176
+
+Rectangular Family 5
+Estimated: 2
+Actual:    135
+
+Rectangular Family 6
+Estimated: 80
+Actual:    23
+
+Rectangular Family 7
+Estimated: 82
+Actual:    47
+
+Rectangular Family 8
+Estimated: 233
+Actual:    55
+
+Rectangular Family 9
+Estimated: 780
+Actual:    1019
+
+Rectangular Family 10
+Estimated: 849
+Actual:    994
+
+Rectangular Family 11
+Estimated: 54
+Actual:    21
+
+Rectangular Family 12
+Estimated: 56
+Actual:    15
+
+Rectangular Family 13
+Estimated: 118
+Actual:    7
+
+Rectangular Family 14
+Estimated: 389
+Actual:    404
+
+Rectangular Family 15
+Estimated: 329
+Actual:    528
+
+
+________________________________________________________
+
+Seed: 1237094527
+
+Writing Intersection Files
+Writing poly inp files
+Writing /home/nknapp/TSA_test/params.txt
+Writing aperture.dat
+Writing perm.dat
+Writing Radii File (radii.dat)
+Writing Rejection Statistics File (rejections.dat)
+Writing Family Definitions File (families.dat)
+Writing Fracture Translations File (translations.dat)
+Writing Connectivity Data (connectivity.dat)
+Writing Rotation Data File (poly_info.dat)
+Writing Normal Vectors into File (normal_vectors.dat)
+Writing Rotation Data File (rejectsPerAttempt.dat)
+Writing Accepted Radii Files Per Family
+Writing Final Radii Files Per Family
+
+Lagrit Should Remove 8700 Nodes (17400/2 - 0)
+================================================================================
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.0 ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This program was prepared at Los Alamos National Laboratory (LANL),
+Earth and Environmental Sciences Division, Computational Earth
+Science Group (EES-16), Subsurface Flow and Transport Team.
+All rights in the program are reserved by the DOE and LANL.
+Permission is granted to the public to copy and use this software
+without charge, provided that this Notice and any statement of
+authorship are reproduced on all copies. Neither the U.S. Government
+nor LANS makes any warranty, express or implied, or assumes
+any liability or responsibility for the use of this software.
+
+Contact Information : dfnworks@lanl.gov
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LA-CC-17-027
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Copyright (2017).  Los Alamos National Security, LLC. 
+This material was produced under U.S. Government contract DE-AC52-06NA25396 for 
+Los Alamos National Laboratory (LANL), which is operated by Los Alamos National 
+Security, LLC for the U.S. Department of Energy. The U.S. Government has rights 
+to use, reproduce, and distribute this software.  NEITHER THE GOVERNMENT NOR LOS
+ ALAMOS NATIONAL SECURITY, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR 
+ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  If software is modified to 
+produce derivative works, such modified software should be clearly marked, so as
+ not to confuse it with the version available from LANL.
+
+Additionally, this program is free software; you can redistribute it and/or 
+modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 2 of the License, or (at your option) 
+any later version. Accordingly, this program is distributed in the hope that it 
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
+License for more details.
+ 
+Additionally, redistribution and use in source and binary forms, with or 
+without modification, are permitted provided that the following conditions are 
+met:
+1.       Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer.
+
+2.      Redistributions in binary form must reproduce the above copyright 
+notice, this list of conditions and the following disclaimer in the 
+documentation and/or other materials provided with the distribution.
+
+3.      Neither the name of Los Alamos National Security, LLC, Los Alamos 
+National Laboratory, LANL, the U.S. Government, nor the names of its 
+contributors may be used to endorse or promote products derived from this 
+software without specific prior written permission.
+ 
+THIS SOFTWARE IS PROVIDED BY LOS ALAMOS NATIONAL SECURITY, LLC AND 
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL 
+SECURITY, LLC OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+POSSIBILITY OF SUCH DAMAGE.
+
+================================================================================
+Command Line Inputs:
+Namespace(cell=False, dfnFlow='', dfnGen='', dfnTrans='', input_file='../sample_inputs/TSA_input.txt', jobname='/home/nknapp/TSA_test', ncpu=4)
+
+-->Creating DFN class
+
+-->Creating DFN class: Complete
+Jobname:  /home/nknapp/TSA_test
+Number of cpus requested:  4
+--> dfnGen input file:  /home/nknapp/dfnworks/dfnworks-main/sample_inputs/TSA/TSA_test.dat
+--> dfnFlow input file:  /home/nknapp/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/dfn_explicit.in
+--> dfnTrans input file:  /home/nknapp/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/PTDFN_control.dat
+================================================================================
+
+
+Folder  /home/nknapp/TSA_test  exists
+Deleting /home/nknapp/TSA_test
+Creating /home/nknapp/TSA_test
+Current directory is now: /home/nknapp/TSA_test
+
+--> Checking input files
+--> Checking input data
+--> Input Data:  TSA_test.dat
+--> Output File:  TSA_test_clean.dat
+WARNING --- You have set the number of ellipse families to 0, no ellipses will be generated.
+WARNING --- "seed" has been set to 0. Random generator will use current wall time so distribution's random selection will not be as repeatable. Use an integer greater than 0 for better repeatability.
+WARNING --- 'famProb' probabilities did not add to 1 and have been scaled accordingly for their current sum, 0.991. Scaled [0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.066, 0.067] to [0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0665994, 0.0676085]
+--> Checking Input Data Complete
+--> Running DFNGEN
+--------------------------------------------------------------------------------
+Generation Succeeded
+--------------------------------------------------------------------------------
+--> Creating Report of DFN generation
+Writing output into:  _output_report.pdf
+Graphing Family #1 which contains 0 fractures.
+WARNING: Lognormal distribution with num   1  has no fractures:not graphing
+Graphing Family #2 which contains 0 fractures.
+WARNING: Lognormal distribution with num   2  has no fractures:not graphing
+Graphing Family #3 which contains 29 fractures.
+Graphing Family #4 which contains 60 fractures.
+Graphing Family #5 which contains 45 fractures.
+Graphing Family #6 which contains 0 fractures.
+WARNING: Lognormal distribution with num   6  has no fractures:not graphing
+Graphing Family #7 which contains 0 fractures.
+WARNING: Lognormal distribution with num   7  has no fractures:not graphing
+Graphing Family #8 which contains 1 fractures.
+Graphing Family #9 which contains 295 fractures.
+Graphing Family #10 which contains 296 fractures.
+Graphing Family #11 which contains 0 fractures.
+WARNING: Lognormal distribution with num   11  has no fractures:not graphing
+Graphing Family #12 which contains 0 fractures.
+WARNING: Lognormal distribution with num   12  has no fractures:not graphing
+Graphing Family #13 which contains 0 fractures.
+WARNING: expoential family with num  13  has no fractures; not graphing
+Graphing Family #14 which contains 159 fractures.
+Graphing Family #15 which contains 168 fractures.
