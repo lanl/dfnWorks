@@ -14,11 +14,14 @@ import math
 import re
 import sys
 import os
+import glob
 from shutil import copy, rmtree
+from shutil import copy, rmtree, Error 
 import numpy as np
 import scipy
 from scipy.stats import norm, lognorm, powerlaw
 from scipy.integrate import odeint 
+
 from dfntools import *
 import h5py
 import argparse
