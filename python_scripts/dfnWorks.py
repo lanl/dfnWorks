@@ -3,7 +3,8 @@ __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
-import re, os, sys, glob
+import re, sys, glob
+import os
 from time import time
 from shutil import copy, rmtree, Error 
 import numpy as np
