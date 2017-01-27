@@ -6,19 +6,19 @@ import subprocess
 
 # setup option - performs all compilations necessary before running run_dfnworks.py
 def compile(make_directory_list):
-	for directory in make_directory_list:
-		os.chdir(directory)
-		subprocess.call("make")
+        for directory in make_directory_list:
+                os.chdir(directory)
+                subprocess.call("make")
 
 # clean option - removes all files not needed in the repository
 def clean(make_directory_list, python_dir):
-	for directory in make_directory_list:
-		print directory
-		os.chdir(directory)
-		subprocess.call("rm *.o")
-	os.chdir(python_dir)
-	subprocess.call("rm -rf *~")
-	subprocess.call("rm -rf *.pyc")
+        for directory in make_directory_list:
+                print directory
+                os.chdir(directory)
+                subprocess.call("rm *.o")
+        os.chdir(python_dir)
+        subprocess.call("rm -rf *~")
+        subprocess.call("rm -rf *.pyc")
 
 # 1. C_uge_correct - make
 # 2. DFN_Mesh_Connectivity_Test - make
@@ -45,4 +45,3 @@ if (len(sys.argv) == 1):
 else:
 	print 'Invalid arguments to setup script.'
 	
-
