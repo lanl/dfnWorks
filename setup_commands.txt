@@ -1,0 +1,15 @@
+# dfnWorks 2.0 set up
+module load anaconda-python
+which python
+--> /n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python
+module use -a /n/swdev/mesh_tools/modulefiles/Ubuntu-14.04-x86_64
+module load pylagrit
+
+edit DFN_PATH on line 28 of setup.py in python_scripts
+python setup.py
+
+go into DFNGen and run "make"
+edit paths in python_scripts/run_dfnworks.py (line 12, 14)
+input_text.txt jhyman->my path
+python run_dfnworks.py -name ~/(my path)/output_directory_name -input input_text.txt -ncpu 4
+

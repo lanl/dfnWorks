@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 import sys
 import os
 import subprocess
@@ -25,7 +24,7 @@ def clean(make_directory_list, python_dir):
 # 3. Particle Tracking - make
 # 4. GenIntElmList - make
 
-DFN_PATH = '/home/nknapp/dfnworks/dfnworks-main/'
+DFN_PATH = '/home/jhyman/dfnworks/dfnworks-main/'
 C_UGE_PATH = DFN_PATH + 'C_uge_correct/'
 CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
 PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'

@@ -7,8 +7,8 @@ def define_paths():
 	# Set Environment Variables
 	os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
-	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-Ubuntu-14.04'
 
+	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-pt-testing'
 	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	
 	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
@@ -17,7 +17,8 @@ def define_paths():
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
-	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_ulin3.2'
+#	os.environ['lagrit_dfn'] = '/n/swdev/LAGRIT/bin/lagrit_ulin3.2'
+	os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
@@ -101,20 +102,15 @@ print ('='*80)
 os.system("date")
 define_paths()
 
-# 4 fracture test
-#dfnGen_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/input_3_fracture.dat'	
-#dfnFlow_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/dfn_explicit.in'	
-#dfnTrans_file = os.environ['DFNWORKS_PATH']+'sample_inputs/4_fracture_test/PTDFN_control.dat'	
-
-dfn = create_dfn()
-
 main_time = time()
-
+dfn = create_dfn()
 # General Work Flow
 dfn.dfnGen()
-os.chdir(dfn._jobname)
-#dfn.dfnFlow()
-#dfn.dfnTrans()
+dfn.dfnFlow()
+dfn.dfnTrans()
+
+
+
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

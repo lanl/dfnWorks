@@ -14,4 +14,5 @@ sample_inputs/mixing/
 python_scripts/runDFN_uncorrelated.py
 python_scripts/runDFN_mixing.py
 python_scripts/jeffrey_scripts
+python_scripts/mypaths.txt
 

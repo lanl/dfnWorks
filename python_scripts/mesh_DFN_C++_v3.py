@@ -60,7 +60,6 @@ def remove_batch(name):
 		os.remove(fl)	
 
 def parse_params_file():
-	
 	''' Read in params.txt file and parse information'''
 	print "\nParse Params.txt: Starting"
 	fparams = open('params.txt', 'r')
@@ -922,7 +921,7 @@ def merge_the_meshes(nPoly, N_CPU, n_jobs, visualMode):
 
 	print("Starting Final Merge")
 	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
-
+	# Check log_merge_all.txt for LaGriT complete successfully
 	if visualMode == 0:
 		if os.stat("full_mesh.lg").st_size > 0:
 			print("Final Merge Complete")
@@ -1224,7 +1223,6 @@ if __name__ == "__main__":
 	if(visualMode == 0): 
 		redefine_zones(h)
 		#redefine_zones_old()
-	
 	output_meshing_report(visualMode)
 	os.system("date")
 	print ('='*80)

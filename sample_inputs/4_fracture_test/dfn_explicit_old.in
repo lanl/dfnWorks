@@ -60,7 +60,6 @@ END
 OUTPUT
   TIMES s 0.01 0.05 0.1 0.2 0.5 1
 #  FORMAT TECPLOT BLOCK
-  PRINT_PRIMAL_GRID
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -70,6 +69,7 @@ OUTPUT
   /
 END
 
+PRINT_PRIMAL_GRID
 #=========================== times ============================================
 TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 s

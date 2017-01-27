@@ -5,7 +5,7 @@ __email__ = "jhyman@lanl.gov"
 
 import re, os, sys, glob
 from time import time
-from shutil import copy, rmtree
+from shutil import copy, rmtree, Error 
 import numpy as np
 import scipy
 from scipy.stats import norm, lognorm, powerlaw
@@ -26,7 +26,7 @@ class dfnworks(Frozen):
 	"""
 	Class for DFN Generation and meshing
 	"""
-	def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+	def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',rfield='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
 		self._jobname = jobname
 		self._ncpu = ncpu
@@ -52,6 +52,7 @@ class dfnworks(Frozen):
 		self._perm_cell_file = perm_cell_file
 		self._aper_cell_file = aper_cell_file
 		#self._flow_solver = 'pflotran'
+		self._rfield=rfield
 		self._dfnTrans_version= 2.0
 		self._freeze
 
@@ -134,15 +135,28 @@ class dfnworks(Frozen):
 		print('='*80)
 		print("\ndfnTrans Starting\n")
 		print('='*80)
-	
+
+		# Create Path to DFNTrans	
 		try:
 			os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+		except OSError:
+			os.remove('DFNTrans')	
+			os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
 		except:
-			print("--> ERROR: Problem creating link to DFNTrans")
-		try:	
+			sys.exit("Cannot create link to DFNTrans. Exiting Program")
+		
+		# Copy DFNTrans input file	
+		try:
+			copy(self._dfnTrans_file, self._local_dfnTrans_file) 
+		except Error:
+			print("--> Problem copying %s file"%self._local_dfnTrans_file)
+			print("--> Trying to delete and recopy") 
+			os.remove(self._local_dfnTrans_file)
 			copy(self._dfnTrans_file, self._local_dfnTrans_file) 
 		except:
-			print("--> ERROR: Problem copying PTDFN_control.dat file")
+			print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
+			sys.exit("Unable to replace. Exiting Program")
+
 		tic = time()	
 		failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
 		self.dump_time('Process: dfnTrans', time() - tic)	
@@ -152,7 +166,11 @@ class dfnworks(Frozen):
 			print('='*80)
 		else:
 			sys.exit("--> ERROR: dfnTrans did not complete\n")
+
 	def dump_time(self, section_name, time):
+		'''dump_time
+		keeps log of cpu run time, current formulation is not robust
+		'''
 		if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):	
 			f = open(self._local_jobname+"_run_time.txt", "w")
 			f.write("Runs times for " + self._jobname + "\n")
@@ -1234,20 +1252,23 @@ class dfnworks(Frozen):
 		print('='*80)
 		print("Meshing Network Using LaGriT : Starting")
 		print('='*80)
-		production_mode = 1
+		production_mode = True 
 		refine_factor = 1	
 		
-		nPoly, h, visualMode, dudded_points  = mesh.parse_params_file()
+		nPoly, h, visualMode, dudded_points,domain = mesh.parse_params_file()
 		self._num_frac = nPoly
 		tic2 = time()
+
 		mesh.create_parameter_mlgi_file(nPoly, h)
+
 		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
+
 		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
 		self.dump_time('Process: Meshing Fractures', time() - tic2)
 		if failure > 0:
 			mesh.cleanup_dir()
-			print 'Exiting Program due to mesh failure'
-			sys.exit(1)
+			sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
+
 		
 		tic2 = time()
 		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
@@ -1255,20 +1276,23 @@ class dfnworks(Frozen):
 		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
 		self.dump_time('Process: Merging the Mesh', time() - tic2)	
 
-		if(visualMode == 0):	
+		if(visualMode == False):	
 			if (mesh.check_dudded_points(dudded_points) == False):
-				print 'Exiting Program due to mesh dudded points failure'
 				cleanup_dir()
-				sys.exit(1)
+				sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 	
-		if production_mode > 0:
+		if production_mode == True:
 			mesh.cleanup_dir()
-		if(visualMode == 0): 
-			mesh.redefine_zones(h)
+
+		if(visualMode == False): 
+			mesh.define_zones(h,domain)
 
 		mesh.output_meshing_report(visualMode)
 		print ('='*80)
-		print("Meshing Network Using LaGriT : Complete")
+		if(visualMode==False):
+			print("Meshing Network Using LaGriT Complete")
+		if(visualMode==True):
+			sys.exit("Meshing Visual Mode Network Using LaGriT Complete\n"+'='*80)
 		print ('='*80)
 
 	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
@@ -1746,12 +1770,12 @@ class dfnworks(Frozen):
 		    self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
 
 		# Convert zone files to ex format
-		#self.zone2ex(zone_file='pboundary_back_n.zone',face='north')
-		#self.zone2ex(zone_file='pboundary_front_s.zone',face='south')
-		#self.zone2ex(zone_file='pboundary_left_w.zone',face='west')
-		#self.zone2ex(zone_file='pboundary_right_e.zone',face='east')
-		#self.zone2ex(zone_file='pboundary_top.zone',face='top')
-		#self.zone2ex(zone_file='pboundary_bottom.zone',face='bottom')
+		#self.zone2ex(zone_file='boundary_back_n.zone',face='north')
+		#self.zone2ex(zone_file='boundary_front_s.zone',face='south')
+		#self.zone2ex(zone_file='boundary_left_w.zone',face='west')
+		#self.zone2ex(zone_file='boundary_right_e.zone',face='east')
+		#self.zone2ex(zone_file='boundary_top.zone',face='top')
+		#self.zone2ex(zone_file='boundary_bottom.zone',face='bottom')
 		self.zone2ex(zone_file='all')
 		print ('='*80)
 		print("Conversion of files for PFLOTRAN complete")
@@ -2307,17 +2331,17 @@ class dfnworks(Frozen):
 		os.symlink('../full_mesh.uge', 'full_mesh.uge')
 		os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
 		os.symlink('../full_mesh.inp', 'full_mesh.inp')
-		os.symlink('../pboundary_back_n.ex', 'pboundary_back_n.ex')
-		os.symlink('../pboundary_front_s.ex', 'pboundary_front_s.ex')
-		os.symlink('../pboundary_left_w.ex', 'pboundary_left_w.ex')
-		os.symlink('../pboundary_right_e.ex', 'pboundary_right_e.ex')
-		os.symlink('../pboundary_top.ex', 'pboundary_top.ex')
-		os.symlink('../pboundary_bottom.ex', 'pboundary_bottom.ex')
+		os.symlink('../pboundary_back_n.zone', 'pboundary_back_n.zone')
+		os.symlink('../pboundary_front_s.zone', 'pboundary_front_s.zone')
+		os.symlink('../pboundary_left_w.zone', 'pboundary_left_w.zone')
+		os.symlink('../pboundary_right_e.zone', 'pboundary_right_e.zone')
+		os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
+		os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
 		os.symlink('../materialid.dat', 'materialid.dat')
 		#os.symlink(self._jobname+'/*ex', './')
 	
 	def create_dfnTrans_links(self):
-		os.symlink('../params.txt', 'params.txt')
+		#os.symlink('../params.txt', 'params.txt')
 		os.symlink('../allboundaries.zone', 'allboundaries.zone')
 		os.symlink('../tri_fracture.stor', 'tri_fracture.stor')
 		os.symlink('../poly_info.dat','poly_info.dat')
@@ -2345,12 +2369,14 @@ def commandline_options():
 		based aperture and permeabuility (Optional, default=False)
 	'''
 	parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
-	parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
-		      help="Number of CPUs")
 	parser.add_argument("-name", "--jobname", default="", type=str,
 		      help="jobname") 
+	parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+		      help="Number of CPUs")
 	parser.add_argument("-input", "--input_file", default="", type=str,
 		      help="input file with paths to run files") 
+	parser.add_argument("-rfield", "--field", default="", type=str,
+		      help="level of random field") 
 	parser.add_argument("-gen", "--dfnGen", default="", type=str,
 		      help="Path to dfnGen run file") 
 	parser.add_argument("-flow", "--dfnFlow", default="", type=str,
@@ -2422,6 +2448,10 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
 	else:
 		dfn._aper_file = 'aperture.dat'
 		dfn._perm_file = 'perm.dat'
+
+	if options.field != '':
+		dfn._rfield = options.field 
+
 
 	print("\n-->Creating DFN class: Complete")
 	print 'Jobname: ', dfn._jobname

@@ -45,7 +45,7 @@ layers:
 */   
 
 
-h: 0.10
+h: 0.050
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
 
