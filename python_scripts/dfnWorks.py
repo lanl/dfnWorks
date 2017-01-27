@@ -6,7 +6,10 @@
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-
+import math
+import re
+import sys
+import os
 from shutil import copy, rmtree
 import numpy as np
 import scipy
@@ -509,7 +512,7 @@ class dfnworks(Frozen):
 
         ## [1,2,3] --> '{1,2,3}'   for writing output
         def listToCurly(strList):
-            """converts Python list to a list with curly braces."""
+             """converts Python list to a list with curly braces."""
              curl = re.sub(r'\[','{', strList)
              curl = re.sub(r'\]','}', curl)
              curl = re.sub(r"\'", '', curl)
@@ -1829,9 +1832,9 @@ class dfnworks(Frozen):
 
         if mesh_type:
             if mesh_type in mesh_types_allowed:
-            self._mesh_type = mesh_type
+                self._mesh_type = mesh_type
             else:
-            sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
+                sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
         else:
             mesh_type = self._mesh_type
 
@@ -1944,16 +1947,16 @@ class dfnworks(Frozen):
                 Node_array = np.asarray(node_array)
             else:
                 for i in range(NumNodes / 10 + 1):
-                g = fzone.readline()
-                node_array = g.split()
+                    g = fzone.readline()
+                    node_array = g.split()
                 # Convert string to integer array
                 node_array = [int(id) for id in node_array]
                 if (NumNodes - 10 * i < 10):
                     for j in range(NumNodes % 10):
-                    Node_array[i * 10 + j] = node_array[j]
+                        Node_array[i * 10 + j] = node_array[j]
                 else:
                     for j in range(10):
-                    Node_array[i * 10 + j] = node_array[j]
+                        Node_array[i * 10 + j] = node_array[j]
             fzone.close()
             print('--> Finished with zone file')
 
@@ -1965,7 +1968,7 @@ class dfnworks(Frozen):
 
             boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
             epsilon = 1e-0  # Make distance really small
-            if face == 'top'):
+            if (face == 'top'):
                 boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
             elif (face == 'bottom'):
                 boundary_cell_coord = [[cell[0], cell[1], cell[2] - epsilon] for cell in boundary_cell_coord]
@@ -1985,7 +1988,7 @@ class dfnworks(Frozen):
             with open(ex_file, 'w') as f:
                 f.write('CONNECTIONS\t%i\n' % Node_array.size)
                 for idx, cell in enumerate(boundary_cell_coord):
-                f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
+                    f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
                     Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
             print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file+'\n')
 
@@ -2022,20 +2025,20 @@ class dfnworks(Frozen):
             elem_list_tetra = []
 
             for i in range(num_nodes):
-            line = f.readline()
-            coord[i, 0] = float(line.strip(' ').split()[1])
-            coord[i, 1] = float(line.strip(' ').split()[2])
-            coord[i, 2] = float(line.strip(' ').split()[3])
+                line = f.readline()
+                coord[i, 0] = float(line.strip(' ').split()[1])
+                coord[i, 1] = float(line.strip(' ').split()[2])
+                coord[i, 2] = float(line.strip(' ').split()[3])
 
             for i in range(num_elems):
-            line = f.readline().strip(' ').split()
-            line.pop(0)
-            line.pop(0)
-            elem_type = line.pop(0)
-            if elem_type == 'tri':
-                elem_list_tri.append([int(i) - 1 for i in line])
-            if elem_type == 'tet':
-                elem_list_tetra.append([int(i) - 1 for i in line])
+                line = f.readline().strip(' ').split()
+                line.pop(0)
+                line.pop(0)
+                elem_type = line.pop(0)
+                if elem_type == 'tri':
+                   elem_list_tri.append([int(i) - 1 for i in line])
+                if elem_type == 'tet':
+                  elem_list_tetra.append([int(i) - 1 for i in line])
 
         print('--> Writing inp data to vtk format')
 
@@ -2105,11 +2108,11 @@ class dfnworks(Frozen):
         with open(combined_uge_file, 'w') as f:
             f.write('CELLS\t%i\n' % len(cell_list))
             for cell in cell_list:
-            f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
+                f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
                 int(cell[0]), float(cell[1]), float(cell[2]), float(cell[3]), float(cell[4])))
             f.write('CONNECTIONS\t%i\n' % len(conn_list))
             for conn in conn_list:
-            f.write('%i\t%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
+                f.write('%i\t%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
                 int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
     def parse_pflotran_vtk(self, grid_vtk_file=''):
@@ -2128,23 +2131,23 @@ class dfnworks(Frozen):
         out_dir = 'parsed_vtk'
         for line in grid:
             if 'POINTS' in line:
-            num_cells = line.strip(' ').split()[1]
+                num_cells = line.strip(' ').split()[1]
 
         for file in files:
             with open(file, 'r') as f:
-            pflotran_out = f.readlines()[4:]
-            pflotran_out = [w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out]
-            header = ['# vtk DataFile Version 2.0\n',
+                pflotran_out = f.readlines()[4:]
+                pflotran_out = [w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out]
+                header = ['# vtk DataFile Version 2.0\n',
                   'PFLOTRAN output\n',
                   'ASCII\n']
             filename = out_dir + '/' + file
             if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
+                os.makedirs(os.path.dirname(filename))
             with open(filename, 'w') as f:
-            for line in header:
-                f.write(line)
-            for line in grid:
-                f.write(line)
+                for line in header:
+                    f.write(line)
+                for line in grid:
+                    f.write(line)
             f.write('\n')
             f.write('\n')
             if 'vel' in file:
@@ -2250,7 +2253,7 @@ class dfnworks(Frozen):
             print('--> Writing cell indices')
             # add cell ids to file
             for i in range(NumIntNodes):
-            iarray[i] = i + 1
+                iarray[i] = i + 1
             dataset_name = 'Cell Ids'
             h5dset = h5file.create_dataset(dataset_name, data=iarray)
 
@@ -2264,7 +2267,7 @@ class dfnworks(Frozen):
 
             matid_index = -1*materialid - 7
             for i in range(NumIntNodes):
-            j = matid_index[i]
+                j = matid_index[i]
             if int(perm_list[j,0]) == materialid[i]:
                 perm[i] = perm_list[j, 1]
             else:
@@ -2287,7 +2290,7 @@ class dfnworks(Frozen):
             print('--> Writing cell indices')
             # add cell ids to file
             for i in range(NumIntNodes):
-            iarray[i] = i + 1
+                 iarray[i] = i + 1
             dataset_name = 'Cell Ids'
             h5dset = h5file.create_dataset(dataset_name, data=iarray)
             print ('--> Allocating permeability array')
@@ -2298,12 +2301,12 @@ class dfnworks(Frozen):
             f.readline()
             perm_list = []
             while True:
-            h = f.readline()
-            h = h.split()
-            if h == []:
-                break
-            h.pop(0)
-            perm_list.append(h)
+                h = f.readline()
+                h = h.split()
+                if h == []:
+                   break
+                h.pop(0)
+                perm_list.append(h)
 
             perm_list = [float(perm[0]) for perm in perm_list]
             
@@ -2469,7 +2472,7 @@ def commandline_options():
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     """create_dfn
-    Parse command line inputs and input files to create and populate dfnworks class
+    Parse command line inputs and input files to ceeate and populate dfnworks class
     """
 
     options = commandline_options()
