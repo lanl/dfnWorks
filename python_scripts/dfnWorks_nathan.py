@@ -109,7 +109,7 @@ class dfnworks(Frozen):
         self.dump_time('Function: create_network', time() - tic)    
         
         tic = time()
-        #self.output_report()
+        self.output_report()
         self.dump_time('output_report', time() - tic)    
         # Mesh Network
 
@@ -1365,7 +1365,7 @@ class dfnworks(Frozen):
             exit()
 
         print '--> Creating Report of DFN generation'
-        families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
+        families = {'all':[], 'notRemoved':[], 'userDefined':[]} ## families['all'] contains all radii.   
                                ## families['notRemoved'] contains all non-isolated fractures. 
                                ##   Isolated fracs get radiiList, distrib, infoStr, parameters):
         output_name = self._local_jobname + '_output_report.pdf'
@@ -1476,9 +1476,12 @@ class dfnworks(Frozen):
             famObj = polyFam(0, [], 0, "", {})
             possibleParams = ["Mean", "Standard Deviation", "Alpha", "Lambda"]
             bounds = ["Minimum Radius", "Maximum Radius"]
-
-            for line in open(famFile):
-                if line.strip() == "":
+	    print 'Family File is ', famFile
+            linesInFamFile = False 
+	    for line in open(famFile):
+		linesInFamFile = True		
+                print line, '\n'
+		if line.strip() == "":
                     if famObj.distrib == "Constant":
                         famObj.infoStr += "\nConstant distribution, only contains one radius size.\n"\
                                    "No distribution graphs will be made for this family."
@@ -1518,22 +1521,25 @@ class dfnworks(Frozen):
             ## Also add each object to global and not Removed if not empty
             ## input file's line format:   xRadius yRadius Family# Removed (Optional)
 
+            if not linesInFamFile
+		print "ERROR: The families.dat file is empty! dfnGen failed to write a families.dat file" 
+       		exit() 
             
-        
-            for line in open(radiiFile):
+	    for line in open(radiiFile):
                 try:
                     elems = line.split(' ')
                     radius = float(elems[0])
                     famNum = elems[2].strip()
                     families['all'].append(radius)
-                    if len(elems) < 4:              ## len = 4 when 'R' is on line
+                    print 'famNum is ', famNum 
+		    if len(elems) < 4:              ## len = 4 when 'R' is on line
                         families['notRemoved'].append(radius)                
-                    if famNum not in families and famNum >= 0:
+                    if famNum not in families and famNum != '-1':
                         families[famNum].radiiList = [radius]
-                    elif famNum not in families and famNum == -1:
-                        families['userDefined'].radiiList = [radius]
-                    elif famNum == -1:
-                        families['userDefined'].radiiList.append(radius)
+                    elif famNum not in families and famNum == '-1':
+                        families[famNum].radiiList = [radius]
+                    elif famNum == '-1':
+                        families[famNum].radiiList.append(radius)
                     else:
                         families[famNum].radiiList.append(radius)
                 except ValueError:
