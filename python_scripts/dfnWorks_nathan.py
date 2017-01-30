@@ -1487,14 +1487,17 @@ class dfnworks(Frozen):
                                    "No distribution graphs will be made for this family."
 
                     famObj = polyFam(0, [], 0, "", {}) ## create new famObj for next family
-                
                 else:   ## append all info to info sting 
                     famObj.infoStr += line
-                if "UserDefined" in line:
+                if "UserDefined Rectangle" in line:
 		    famNum = '-1'
 		    famObj.globFamNum = famNum
 		    families[famNum] = famObj
-                if "Global Family" in line:
+                elif "UserDefined Ellipse" in line:
+		    famNum = '-2'
+		    famObj.globFamNum = famNum
+		    families[famNum] = famObj
+		elif "Global Family" in line:
                     ## input format:     Global Family 1
                     famNum = line[line.index("y") + 1:].strip()
                     famObj.globFamNum = famNum
@@ -1537,12 +1540,8 @@ class dfnworks(Frozen):
                     #print 'famNum is ', famNum 
 		    if len(elems) < 4:              ## len = 4 when 'R' is on line
                         families['notRemoved'].append(radius)                
-                    if famNum not in families and famNum != '-1':
+                    if famNum not in families:
                         families[famNum].radiiList = [radius]
-                    elif famNum not in families and famNum == '-1':
-                        families[famNum].radiiList = [radius]
-                    elif famNum == '-1':
-                        families[famNum].radiiList.append(radius)
                     else:
                         families[famNum].radiiList.append(radius)
                 except ValueError:
