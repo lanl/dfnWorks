@@ -114,7 +114,7 @@ class dfnworks(Frozen):
         # Mesh Network
 
         tic = time()
-        self.mesh_network()
+        #self.mesh_network()
         self.dump_time('Function: mesh_network', time() - tic)    
         print ('='*80)
         print 'dfnGen Complete'
@@ -1490,7 +1490,10 @@ class dfnworks(Frozen):
                 
                 else:   ## append all info to info sting 
                     famObj.infoStr += line
-
+                if "UserDefined" in line:
+		    famNum = '-1'
+		    famObj.globFamNum = famNum
+		    families[famNum] = famObj
                 if "Global Family" in line:
                     ## input format:     Global Family 1
                     famNum = line[line.index("y") + 1:].strip()
@@ -1521,7 +1524,7 @@ class dfnworks(Frozen):
             ## Also add each object to global and not Removed if not empty
             ## input file's line format:   xRadius yRadius Family# Removed (Optional)
 
-            if not linesInFamFile
+            if not linesInFamFile:
 		print "ERROR: The families.dat file is empty! dfnGen failed to write a families.dat file" 
        		exit() 
             
@@ -1531,7 +1534,7 @@ class dfnworks(Frozen):
                     radius = float(elems[0])
                     famNum = elems[2].strip()
                     families['all'].append(radius)
-                    print 'famNum is ', famNum 
+                    #print 'famNum is ', famNum 
 		    if len(elems) < 4:              ## len = 4 when 'R' is on line
                         families['notRemoved'].append(radius)                
                     if famNum not in families and famNum != '-1':

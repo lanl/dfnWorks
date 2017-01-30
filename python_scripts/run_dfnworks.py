@@ -107,8 +107,8 @@ main_time = time()
 dfn = create_dfn()
 # General Work Flow
 dfn.dfnGen()
-dfn.dfnFlow()
-dfn.dfnTrans()
+#dfn.dfnFlow()
+#dfn.dfnTrans()
 
 
 
