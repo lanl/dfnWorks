@@ -3,7 +3,7 @@ import os
 import subprocess
 
 # define all path names here
-dfn_dir = '/home/nknapp/dfnworks/dfnworks-main/'
+dfn_dir = '/home/nknapp/dfnworks-main/'
 python_dir = dfn_dir + 'python_scripts/'
 input_dir = dfn_dir + 'test_inputs/'
 flow_name = input_dir + '4_fracture_test/dfn_explicit.in'
