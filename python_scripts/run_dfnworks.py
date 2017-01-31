@@ -1,6 +1,6 @@
 import os, sys, time
 sys.path.append("/home/nknapp/dfnworks/dfnworks-main/python_scripts/") 
-from modules import dfnWorks
+from modules import dfnworks
 
 def define_paths():
 	# Set Environment Variables
@@ -100,7 +100,7 @@ os.system("date")
 define_paths()
 
 main_time = time.time()
-dfn = dfnWorks.create_dfn()
+dfn = dfnworks.create_dfn()
 # General Work Flow
 dfn.dfnGen()
 #dfn.dfnFlow()
