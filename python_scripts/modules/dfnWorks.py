@@ -1,4 +1,4 @@
-__author__ = "Jeffrey Hyman and Satish Karra"
+_author__ = "Jeffrey Hyman and Satish Karra"
 __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
@@ -19,9 +19,16 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
-import dfnGen_meshing as mesh
+import meshDFN as mesh
 from pylagrit import PyLaGriT
 
+import generator
+import gen_input
+import gen_output
+import mesh_helper
+import transport
+import flow
+ 
 class dfnworks(Frozen):
     """
     Class for DFN Generation and meshing

@@ -1,3 +1,5 @@
+import helper
+
 def check_input(self,input_file='',output_file=''):
 
     """

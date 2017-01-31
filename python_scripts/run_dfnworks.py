@@ -1,7 +1,6 @@
 import os, sys, time
 sys.path.append("/home/nknapp/dfnworks/dfnworks-main/python_scripts/") 
-from dfnWorks_nathan import *
-import dfnGen_meshing as mesh
+from modules import dfnWorks
 
 def define_paths():
 	# Set Environment Variables
@@ -22,9 +21,6 @@ def define_paths():
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-
-
-
 
 lanl_statement = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,8 +99,8 @@ print ('='*80)
 os.system("date")
 define_paths()
 
-main_time = time()
-dfn = create_dfn()
+main_time = time.time()
+dfn = dfnWorks.create_dfn()
 # General Work Flow
 dfn.dfnGen()
 #dfn.dfnFlow()
