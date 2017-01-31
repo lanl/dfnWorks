@@ -1,12 +1,21 @@
+"""
+.. file:: lagrit_scripts.py
+   :synopsis: create lagrit scripts for meshing dfn using LaGriT 
+   :version: 1.0
+   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
+.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+
+"""
+
 import os
 from shutil import copy, rmtree
-from numpy import genfromtxt, sort, sqrt, cos, arcsin
+from numpy import genfromtxt, sqrt, cos, arcsin
 
-def create_parameter_mlgi_file(nPoly, h, slope = 2, refine_dist = 0.5):
+def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
 	"""create parameter_mgli_files
 	Outputs parameteri.mlgi files used in running LaGriT Scripts
 	Inputs:
-	nPoly: Number of polygons
+	num_poly: Number of polygons
 	h: meshing length scale
 	slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution
 	refine_dist: distance used in coarsing function, default = 0.5,
@@ -24,7 +33,7 @@ def create_parameter_mlgi_file(nPoly, h, slope = 2, refine_dist = 0.5):
 	# h_extrude hieght of rectangle extruded from line of intersection
 	# r_radius: Upper bound on radius of circumscribed circle around rectangle
 	# h_trans : amount needed to translate to create delta buffer
-	# It's all trig to work it out! 
+	# It's  just a little trig! 
 	delta = 0.75
 	h_extrude = 0.5*h # upper limit on spacing of points on interssction line
 	h_radius = sqrt((0.5*h_extrude)**2 + (0.5*h_extrude)**2)
@@ -33,7 +42,7 @@ def create_parameter_mlgi_file(nPoly, h, slope = 2, refine_dist = 0.5):
 	#Go through the list and write out parameter file for each polygon
 	#to be an input file for LaGriT
 	data = genfromtxt('poly_info.dat')
-	for i in range(nPoly):
+	for i in range(num_poly):
 		
 		frac_id = str(int(data[i,0]))
 		long_name = str(int(data[i,0]))  	
@@ -481,7 +490,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, nPoly, visual_mode):
+def create_merge_poly_files(ncpu, num_poly, visual_mode):
 	"""
 	Section 4 : Create merge_poly file
 	 Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -494,9 +503,9 @@ def create_merge_poly_files(ncpu, nPoly, visual_mode):
 	# that the number of dudded points is that which we expect
 	print "Writing : merge_poly.lgi"
 
-	part_size = nPoly/ncpu + 1 ###v number of fractures in each part
-	endis = range(part_size, nPoly + part_size, part_size) 
-	endis[-1] = nPoly
+	part_size = num_poly/ncpu + 1 ###v number of fractures in each part
+	endis = range(part_size, num_poly + part_size, part_size) 
+	endis[-1] = num_poly
 
 	lagrit_input = """
 # Change to read LaGriT
@@ -527,8 +536,8 @@ finish \n
 	j = 0 # Counter for cpus 
 	fout = 'merge_poly_part_1.lgi'
 	f = open(fout, 'w')
-	for i in range(1, nPoly + 1):
-		tmp = 'mesh_' + str(i)  + '.lg'
+	for i in range(1,num_poly+1):
+		tmp = 'mesh_'+str(i) +'.lg'
 
 		f.write(lagrit_input%(tmp,i,i,i,i,i))
 		# if i is the last fracture in the cpu set
@@ -544,7 +553,7 @@ finish \n
 
 	f.flush() 
 	f.close() 
-	os.system('rm ' + fout) ###
+	os.remove(fout) ###
 
 	## Write LaGriT file for merge parts of the mesh and remove duplicate points 
 

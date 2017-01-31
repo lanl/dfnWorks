@@ -14,18 +14,20 @@ def parse_params_file():
 	""" Reads params.txt file and parse information
 	
 	Returns:
-	nPoly: Number of Polygons
-	h: meshing length scale h
-	visualMode: Visualmode on off
+	num_poly: (int) Number of Polygons
+	h: (float) meshing length scale h
+	dudded_points: (int) Expected number of dudded points in Filter (LaGriT)
+	visual_mode: True/False
+	domain: dict: x,y,z domain sizes 
 	"""
 	print("\n--> Parsing  params.txt")
 	fparams = open('params.txt', 'r')
 	# Line 1 is the number of polygons
-	nPoly=int(fparams.readline())
+	num_poly=int(fparams.readline())
 	#Line 2 is the h scale
 	h=float(fparams.readline())
 	# Line 3 is the visualization mode: '1' is True, '0' is False.
-	visualMode = int(fparams.readline())
+	visual_mode = int(fparams.readline())
 	# line 4 dudded points
 	dudded_points = int(fparams.readline())
 
@@ -41,20 +43,20 @@ def parse_params_file():
 	domain['z']=(float(fparams.readline()))
 	fparams.close()
 	
-	print("Number of Polygons: %d"%nPoly)
+	print("Number of Polygons: %d"%num_poly)
 	print("H_SCALE %f"%h)
-	if visualMode > 0:
-		visualMode = True 
+	if visual_mode > 0:
+		visual_mode = True 
 		print("Visual mode is on")
 	else:
-		visualMode = False
+		visual_mode = False
 		print("Visual mode is off")
 	print("Expected Number of duded points: %d"%dudded_points)
 	print("X Domain Size %d m"%domain['x'])
 	print("Y Domain Size %d m"%domain['y'])
 	print("Z Domain Size %d m"%domain['z'])
 	print("--> Parsing params.txt complete\n")
-	return(nPoly, h, visualMode, dudded_points, domain)
+	return(num_poly, h, visual_mode, dudded_points, domain)
 	
 def check_dudded_points(dudded):
 	"""Parses Lagrit log_merge_all.txt and checks if number of dudded points
@@ -89,12 +91,12 @@ def cleanup_dir():
 		for fl in glob.glob(name):
 			remove(fl)	
 
-def output_meshing_report(visualMode):
+def output_meshing_report(visual_mode):
 	""" Prints information about the final mesh to file"""
 
 	f = open('finalmesh.txt','w')
 	f.write('The final mesh of DFN consists of: \n')
-	if not visualMode: 
+	if not visual_mode: 
 		print "Output files for flow calculations are written in :"
 		print "--> full_mesh.gmv"
 		print "--> full_mesh.inp"

@@ -1,10 +1,20 @@
+"""
+.. file:: run_meshing.py
+   :synopsis: functions to mesh fracture network in parallel 
+   :version: 1.0
+   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
+.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+
+"""
+
+
 import os
 import time
 import multiprocessing as mp 
 from shutil import copy, rmtree
 from numpy import genfromtxt
 
-def mesh_fracture(fracture_id, visual_mode, nPoly):
+def mesh_fracture(fracture_id, visual_mode, num_poly):
 	"""Child Function for Parallized Meshing of Fractures"""
 
 	t = time.time()
@@ -78,23 +88,23 @@ def mesh_fracture(fracture_id, visual_mode, nPoly):
 
 	elapsed = time.time() - t
 	
-	print 'Fracture ', fracture_id, 'out of ',  nPoly, ' complete' 
+	print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete' 
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
-def worker(work_queue, done_queue, visual_mode, nPoly):
+def worker(work_queue, done_queue, visual_mode, num_poly):
 	try:
 		for fracture_id in iter(work_queue.get, 'STOP'):
-			mesh_fracture(fracture_id, visual_mode, nPoly)
+			mesh_fracture(fracture_id, visual_mode, num_poly)
 			#done_queue.put("Fracture %d Complete" % fracture_id)
 	except: 
 		#done_queue.put('Error on Fracture ',fracture_id)
 		print('Error on Fracture ',fracture_id)
 	return True
 
-def mesh_fractures_header(nPoly, ncpu, visual_mode):
+def mesh_fractures_header(num_poly, ncpu, visual_mode):
 	""" Header function for Parallel meshing of fractures
 	
-	Creates a queue of fracture numbers ranging form 1, nPoly
+	Creates a queue of fracture numbers ranging form 1, num_poly
 	
 	Each fractures is meshed using mesh_fracture called within the
 	worker function.
@@ -110,7 +120,7 @@ def mesh_fractures_header(nPoly, ncpu, visual_mode):
 	""" 
 	t_all = time.time()
 
-	print "\nTriangulate Polygons:", nPoly
+	print "\nTriangulate Polygons:", num_poly
  	try:
 		rmtree('lagrit_logs')
 	except OSError:
@@ -122,12 +132,12 @@ def mesh_fractures_header(nPoly, ncpu, visual_mode):
 	f.close()
 	# If the number of processors is greater than the number of 
 	# polygons, reset ncpu
-	if (ncpu > nPoly):
-		ncpu = nPoly
+	if (ncpu > num_poly):
+		ncpu = num_poly
 
 	print("Meshing using %d CPUS"%ncpu)
 
-	fracture_list = range(1, nPoly + 1)
+	fracture_list = range(1, num_poly + 1)
 	work_queue = mp.Queue()   # reader() reads from queue
 	done_queue = mp.Queue()   # reader() reads from queue
 	processes = []
@@ -136,7 +146,7 @@ def mesh_fractures_header(nPoly, ncpu, visual_mode):
 		work_queue.put(i)
 
 	for i in xrange(ncpu):
-		p = mp.Process(target=worker, args= (work_queue, done_queue, visual_mode, nPoly))
+		p = mp.Process(target=worker, args= (work_queue, done_queue, visual_mode, num_poly))
 		p.daemon = True
 		p.start()        
 		processes.append(p)
@@ -166,7 +176,7 @@ def mesh_fractures_header(nPoly, ncpu, visual_mode):
 	return failure_flag	
 
 
-def merge_the_meshes(nPoly, ncpu, n_jobs, visual_mode):
+def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 	""" 
 	 Merges all the meshes together, deletes duplicate points, 
 		dumps the .gmv and fehm files

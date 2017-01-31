@@ -1,19 +1,17 @@
+"""
+.. file:: meshdfn.py
+   :synopsis: meshing driver for DFN 
+   :version: 1.0
+   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
+.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+
+"""
+
 import os
 import sys
 from mesh_dfn_helper import *
 from lagrit_scripts import *
 from run_meshing import *
-
-os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
-
-# Executables	
-os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
-os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
-
-os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
-os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-
-
 ############# MAIN ###############
 if __name__ == "__main__":
 	print ('='*80)
@@ -38,6 +36,13 @@ if __name__ == "__main__":
 	refine_factor = 1
 	ncpu = 4
 
+	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+
+	# Executables	
+	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
+	os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
+	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+
 	try:
 		python_path = os.environ['python_dfn']
 		#python_path = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -59,21 +64,21 @@ if __name__ == "__main__":
 	
 
 	## input checking over
-	nPoly, h, visual_mode, dudded_points, domain = parse_params_file()
+	num_poly, h, visual_mode, dudded_points, domain = parse_params_file()
 
-	create_parameter_mlgi_file(nPoly, h)
+	create_parameter_mlgi_file(num_poly, h)
 
 	create_lagrit_scripts(visual_mode, ncpu)
 
-	failure = mesh_fractures_header(nPoly, ncpu, visual_mode)
+	failure = mesh_fractures_header(num_poly, ncpu, visual_mode)
 
 	if failure:
 		cleanup_dir()
 		sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-	n_jobs = create_merge_poly_files(ncpu, nPoly, visual_mode)
+	n_jobs = create_merge_poly_files(ncpu, num_poly, visual_mode)
 
-	merge_the_meshes(nPoly, ncpu, n_jobs, visual_mode)
+	merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
 	
 	if not visual_mode:	
 		if not check_dudded_points(dudded_points):
