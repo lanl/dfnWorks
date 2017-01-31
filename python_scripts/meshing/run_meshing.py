@@ -113,10 +113,10 @@ def mesh_fractures_header(nPoly, ncpu, visual_mode):
 	print "\nTriangulate Polygons:", nPoly
  	try:
 		rmtree('lagrit_logs')
-		os.mkdir('lagrit_logs')
 	except OSError:
 		pass
-
+	os.mkdir('lagrit_logs')
+	
 	# create failure log file
 	f = open('failure.txt', 'w')
 	f.close()

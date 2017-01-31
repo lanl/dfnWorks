@@ -19,8 +19,10 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
-import dfnGen_meshing as mesh
-from pylagrit import PyLaGriT
+#import meshdfn as mesh
+
+sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/meshing") 
+import meshdfn as mesh
 
 
 class dfnworks(Frozen):
@@ -1256,44 +1258,43 @@ class dfnworks(Frozen):
 		production_mode = True 
 		refine_factor = 1	
 		
-		nPoly, h, visualMode, dudded_points,domain = mesh.parse_params_file()
+		nPoly, h, visual_mode, dudded_points,domain = mesh.parse_params_file()
 		self._num_frac = nPoly
 		tic2 = time()
 
 		mesh.create_parameter_mlgi_file(nPoly, h)
 
-		mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
+		mesh.create_lagrit_scripts(visual_mode, self._ncpu)
 
-		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
+		failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visual_mode)
 		self.dump_time('Process: Meshing Fractures', time() - tic2)
-		if failure > 0:
+		if failure:
 			mesh.cleanup_dir()
 			sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
-
 		
 		tic2 = time()
-		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
+		n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visual_mode)
 
-		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
+		mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visual_mode)
 		self.dump_time('Process: Merging the Mesh', time() - tic2)	
 
-		if(visualMode == False):	
-			if (mesh.check_dudded_points(dudded_points) == False):
+		if not visual_mode:	
+			if not mesh.check_dudded_points(dudded_points):
 				cleanup_dir()
 				sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 	
-		if production_mode == True:
+		if production_mode:
 			mesh.cleanup_dir()
 
-		if(visualMode == False): 
+		if not visual_mode: 
 			mesh.define_zones(h,domain)
 
-		mesh.output_meshing_report(visualMode)
+		mesh.output_meshing_report(visual_mode)
 		print ('='*80)
-		if(visualMode==False):
-			print("Meshing Network Using LaGriT Complete")
-		if(visualMode==True):
+		if visual_mode:
 			sys.exit("Meshing Visual Mode Network Using LaGriT Complete\n"+'='*80)
+		else:	
+			print("Meshing Network Using LaGriT Complete")
 		print ('='*80)
 
 	def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):

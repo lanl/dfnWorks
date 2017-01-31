@@ -1,7 +1,6 @@
 import os, sys, time
-sys.path.append("/home/nknapp/dfnworks/dfnworks-main/python_scripts/") 
+sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
 from dfnWorks import *
-import dfnGen_meshing as mesh
 
 def define_paths():
 	# Set Environment Variables
