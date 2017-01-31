@@ -1,6 +1,10 @@
 import helper
+import os
+import sys
+import shutil
+import distributions
 
-def check_input(self,input_file='',output_file=''):
+def check_input(_dfnGen_file, input_file='',output_file=''):
 
     """
                     ## Input Format Requirements ##
@@ -84,21 +88,21 @@ def check_input(self,input_file='',output_file=''):
     ## Each of these should be called in the order they are defined in to accomadate for dependecies 
     def nFamEll():
         global ellipseFams 
-        ## verifyNumValsIs(1, 'nFamEll')
-        ellipseFams = verifyInt(valueOf('nFamEll'), 'nFamEll', noNeg = True)
+        ## helper.verifyNumValsIs(1, 'nFamEll')
+        ellipseFams = helper.verifyInt(helper.valueOf('nFamEll', params), 'nFamEll', noNeg = True)
         if ellipseFams == 0:
             warning("You have set the number of ellipse families to 0, no ellipses will be generated.")
 
     def nFamRect():
         global rectFams
-        ## verifyNumValsIs(1, 'nFamRect')
-        rectFams = verifyInt(valueOf('nFamRect'), 'nFamRect', noNeg = True)
+        ## helper.verifyNumValsIs(1, 'nFamRect')
+        rectFams = helper.verifyInt(helper.valueOf('nFamRect', params), 'nFamRect', noNeg = True)
         if rectFams == 0:
             warning("You have set the number of rectangle families to 0, no rectangles will be generated.")
 
     def stopCondition():
-        ## verifyNumValsIs(1, 'stopCondition')
-        if verifyFlag(valueOf('stopCondition'), 'stopCondition') == 0: 
+        ## helper.verifyNumValsIs(1, 'stopCondition')
+        if helper.verifyFlag(helper.valueOf('stopCondition', params), 'stopCondition') == 0: 
             nPoly()
         else:
             p32Targets()
@@ -106,26 +110,26 @@ def check_input(self,input_file='',output_file=''):
 
     def checkNoDepFlags():
         for flagName in noDependancyFlags:
-            verifyFlag(valueOf(flagName), flagName)
+            helper.verifyFlag(helper.valueOf(flagName, params), flagName)
         
 
     ## domainSize MUST have 3 non-zero values to define the 
     ## size of each dimension (x,y,z) of the domain 
     def domainSize():
-        errResult = verifyList(valueOf('domainSize'), 'domainSize', verifyFloat, desiredLength = 3,
+        errResult = helper.verifyList(helper.valueOf('domainSize', params), 'domainSize', helper.verifyFloat, desiredLength = 3,
                        noZeros = True, noNegs=True)
         if errResult != None:
             error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent x, y, and z dimensions".format(-errResult))
 
     def domainSizeIncrease():
-        errResult = verifyList(valueOf('domainSizeIncrease'), domainSizeIncrease, verifyFloat, desiredLength = 3)
+        errResult = helper.verifyList(helper.valueOf('domainSizeIncrease', params), domainSizeIncrease, helper.verifyFloat, desiredLength = 3)
         if errResult != None:
             error("\"domainSizeIncrease\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent extensions in the x, y, and z dimensions".format(-errResult))
 
-        for i,val in enumerate(valueOf('domainSizeIncrease')):
-            if val >= valueOf('domainSize')[i]/2:
+        for i,val in enumerate(helper.valueOf('domainSizeIncrease', params)):
+            if val >= helper.valueOf('domainSize', params)[i]/2:
                 error("\"domainSizeIncrease\" contains {} which is more than half of the domain's "
                       "range in that dimension. Cannot change the domain's size by more than half of "
                       "that dimension's value defined in \"domainSize\". This risks collapsing or "
@@ -133,7 +137,7 @@ def check_input(self,input_file='',output_file=''):
 
     def numOfLayers():
         global numLayers
-        numLayers = verifyInt(valueOf('numOfLayers'), 'numOfLayers', noNeg = True)
+        numLayers = helper.verifyInt(helper.valueOf('numOfLayers', params), 'numOfLayers', noNeg = True)
         if numLayers > 0:
             if numLayers != len(params['layers']):
                 error("\"layers\" has defined {} layers but \"numLayers\" was defined to "\
@@ -145,7 +149,7 @@ def check_input(self,input_file='',output_file=''):
                                   ## -center of z-domain at z = 0 so 
                                   ##  whole Zdomain is -zDomainSize to +zDomainSize
         for i, layer in enumerate(params['layers']):
-            errResult = verifyList(layer, "layer #{}".format(i+1), verifyFloat, desiredLength = 2)
+            errResult = helper.verifyList(layer, "layer #{}".format(i+1), helper.verifyFloat, desiredLength = 2)
             if errResult != None:
                 error("\"layers\" has defined layer #{} to have {} element(s) but each layer must "\
                       "have 2 elements, which define its upper and lower bounds".format(i+1, -errResult))
@@ -166,11 +170,11 @@ def check_input(self,input_file='',output_file=''):
 
          
     def disableFram():
-        if verifyFlag(valueOf('disableFram'), 'disableFram') == 0:
+        if helper.verifyFlag(helper.valueOf('disableFram', params), 'disableFram') == 0:
             h()
 
     def seed():
-        val = verifyInt(valueOf('seed'), 'seed', noNeg = True)
+        val = helper.verifyInt(helper.valueOf('seed', params), 'seed', noNeg = True)
         if val == 0:
             warning("\"seed\" has been set to 0. Random generator will use current wall "\
                 "time so distribution's random selection will not be as repeatable. "\
@@ -179,11 +183,11 @@ def check_input(self,input_file='',output_file=''):
         
 
     def ignoreBoundaryFaces():
-        if verifyFlag(valueOf('ignoreBoundaryFaces'), 'ignoreBoundaryFaces') == 0:
+        if helper.verifyFlag(helper.valueOf('ignoreBoundaryFaces', params), 'ignoreBoundaryFaces') == 0:
             boundaryFaces()
 
     def rejectsPerFracture():
-        val = verifyInt(valueOf('rejectsPerFracture'), 'rejectsPerFracture', noNeg = True)
+        val = helper.verifyInt(helper.valueOf('rejectsPerFracture', params), 'rejectsPerFracture', noNeg = True)
         if val == 0:
             val = 1
             warning("changing \"rejectsPerFracture\" from 0 to 1. Can't ensure 0 rejections.")
@@ -191,16 +195,16 @@ def check_input(self,input_file='',output_file=''):
         params['rejectsPerFracture'][0] = val 
         
     def famProb():
-        errResult = verifyList(valueOf('famProb'), 'famProb', verifyFloat,
+        errResult = helper.verifyList(helper.valueOf('famProb', params), 'famProb', helper.verifyFloat,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
         if errResult != None:
             error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))
 
-        probList = [float(x) for x in valueOf('famProb')]
+        probList = [float(x) for x in helper.valueOf('famProb', params)]
         if sum(probList) != 1:
-            scale(probList)
+            scale(probList, warningFile)
 
     def userDefined():
         userEs = "userEllipsesOnOff"
@@ -213,60 +217,61 @@ def check_input(self,input_file='',output_file=''):
         ecoordPath = "EllByCoord_Input_File_Path"
         invalid = "\"{}\" is not a valid path."
 
-        if verifyFlag(valueOf(ellByCoord), ellByCoord) == 1:
-            if not os.path.isfile(valueOf(ecoordPath)):
+        if helper.verifyFlag(helper.valueOf(ellByCoord, params), ellByCoord) == 1:
+            if not os.path.isfile(helper.valueOf(ecoordPath, params)):
                 error(invalid.format(ecoordPath))
             else:
-                copy(valueOf(ecoordPath), self._jobname)
+                copy(helper.valueOf(ecoordPath, params), _jobname)
 
-        if verifyFlag(valueOf(userEs), userEs) == 1:
-            if not os.path.isfile(valueOf(ePath)):
+        if helper.verifyFlag(helper.valueOf(userEs, params), userEs) == 1:
+            if not os.path.isfile(helper.valueOf(ePath, params)):
                 error(invalid.format(ePath))
             else:
-                copy(valueOf(ePath), self._jobname)
+                copy(helper.valueOf(ePath, params), _jobname)
             
-        if verifyFlag(valueOf(userRs), userRs) == 1:
-            if not os.path.isfile(valueOf(rPath)):
+        if helper.verifyFlag(helper.valueOf(userRs, params), userRs) == 1:
+            if not os.path.isfile(helper.valueOf(rPath, params)):
                 error(invalid.format(rPath))
             else:
-                copy(valueOf(rPath), self._jobname)
+                copy(helper.valueOf(rPath, params), _jobname)
             
-        if verifyFlag(valueOf(recByCoord), recByCoord) == 1:
-            if not os.path.isfile(valueOf(coordPath)):
+        if helper.verifyFlag(helper.valueOf(recByCoord, params), recByCoord) == 1:
+            if not os.path.isfile(helper.valueOf(coordPath, params)):
                 error(invalid.format(coordPath))    
             else:
-                copy(valueOf(coordPath), self._jobname)
+                copy(helper.valueOf(coordPath, params), _jobname)
 
     def aperture():
-        apOption = verifyInt(valueOf('aperture'), 'aperture')
+        apOption = helper.verifyInt(helper.valueOf('aperture', params), 'aperture')
 
         if apOption == 1:
-            if verifyFloat(valueOf('meanAperture'), 'meanAperture', noNeg=True) == 0:
+            if helper.verifyFloat(helper.valueOf('meanAperture', params), 'meanAperture', noNeg=True) == 0:
                 error("\"meanAperture\" cannot be 0.")
-            if verifyFloat(valueOf('stdAperture'), 'stdAperture', noNeg=True) == 0:
+            if helper.verifyFloat(helper.valueOf('stdAperture', params), 'stdAperture', noNeg=True) == 0:
                 error("\"stdAperture\" cannot be 0. If you wish to have a standard deviation "\
                       "of 0, use a constant aperture instead.") 
 
         elif apOption == 2:
-            verifyList(valueOf('apertureFromTransmissivity'), 'apertureFromTransmissivity', 
-                   verifyFloat, desiredLength = 2, noNegs=True)
-            if valueOf('apertureFromTransmissivity')[0] == 0:
+            helper.verifyList(helper.valueOf('apertureFromTransmissivity', params), 'apertureFromTransmissivity', 
+                   helper.verifyFloat, desiredLength = 2, noNegs=True)
+            if helper.valueOf('apertureFromTransmissivity', params)[0] == 0:
                 error("\"apertureFromTransmissivity\"'s first value cannot be 0.")
-            if valueOf('apertureFromTransmissivity')[1] == 0:
+            if helper.valueOf('apertureFromTransmissivity', params)[1] == 0:
                 warning("\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperature.")
 
         elif apOption == 3:
-            if verifyFloat(valueOf('constantAperture'), 'constantAperture', noNeg=True) == 0:
+            if helper.verifyFloat(helper.valueOf('constantAperture', params), 'constantAperture', noNeg=True) == 0:
+
                 params['constantAperture'][0] = 1e-25
                 warning("\"constantAperture\" was set to 0 and has been changed "\
                       "to 1e-25 so fractures have non-zero thickness.")
 
         elif apOption == 4:
-            verifyList(valueOf('lengthCorrelatedAperture'), 'lengthCorrelatedAperture', 
-                   verifyFloat, desiredLength = 2, noNegs=True)
-            if valueOf('lengthCorrelatedAperture')[0] == 0:
+            helper.verifyList(helper.valueOf('lengthCorrelatedAperture', params), 'lengthCorrelatedAperture', 
+                   helper.verifyFloat, desiredLength = 2, noNegs=True)
+            if helper.valueOf('lengthCorrelatedAperture', params)[0] == 0:
                 error("\"lengthCorrelatedAperture\"'s first value cannot be 0.")
-            if valueOf('lengthCorrelatedAperture')[1] == 0:
+            if helper.valueOf('lengthCorrelatedAperture', params)[1] == 0:
                 warning("\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperature.") 
                 
         else:
@@ -274,8 +279,8 @@ def check_input(self,input_file='',output_file=''):
                   "3 (constant), or 4 (length correlated).")
 
     def permeability():
-        if verifyFlag(valueOf('permOption'), 'permOption') == 1:
-            if verifyFloat(valueOf('constantPermeability'), 'constantPermeability') == 0:
+        if helper.verifyFlag(helper.valueOf('permOption'), 'permOption') == 1:
+            if helper.verifyFloat(helper.valueOf('constantPermeability'), 'constantPermeability') == 0:
                 params['constantPermeability'][0] = 1e-25
                 warning("\"constantPermeability\" was set to 0 and has been changed "\
                       "to 1e-25 so fractures have non-zero permeability.")
@@ -286,20 +291,20 @@ def check_input(self,input_file='',output_file=''):
     ## ========================================================================= ##
 
     def nPoly():
-        val = verifyInt(valueOf('nPoly'), 'nPoly', noNeg = True)
+        val = helper.verifyInt(helper.valueOf('nPoly'), 'nPoly', noNeg = True)
         if val == 0: error("\"nPoly\" cannot be zero.")
         params['nPoly'][0] = val
 
     def p32Targets():
         global ellipseFams, rectFams
-        errResult = None if (ellipseFams == 0) else verifyList(valueOf('e_p32Targets'), 'e_p32Targets', \
-                                  verifyFloat, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
+        errResult = None if (ellipseFams == 0) else helper.verifyList(helper.valueOf('e_p32Targets'), 'e_p32Targets', \
+                                  helper.verifyFloat, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
         if errResult != None:
             error("\"e_p32Targets\" has defined {} p32 values but there is(are) {} ellipse family(ies). "\
                   "Need one p32 value per ellipse family.".format(-errResult, ellipseFams))
 
-        errResult = None if (rectFams == 0) else verifyList(valueOf('r_p32Targets'), "r_p32Targets", \
-                                verifyFloat, desiredLength =  rectFams, noNegs=True, noZeros=True)
+        errResult = None if (rectFams == 0) else helper.verifyList(helper.valueOf('r_p32Targets'), "r_p32Targets", \
+                                helper.verifyFloat, desiredLength =  rectFams, noNegs=True, noZeros=True)
         if errResult != None:
             error("\"r_p32Targets\" has defined {} p32 value(s) but there is(are) {} rectangle "\
                   "family(ies). Need one p32 value per rectangle family)".format(-errResult, rectFams))
@@ -386,7 +391,7 @@ def check_input(self,input_file='',output_file=''):
                 numAspect += 1 ## this counts the family number 
 
     def h():
-        val = verifyFloat(valueOf('h'), 'h', noNeg=True)
+        val = helper.verifyFloat(helper.valueOf('h'), 'h', noNeg=True)
         if val == 0: error("\"h\" cannot be 0.")
         if val < minFracSize/1000.0 and ellipseFams + rectFams > 0: ####### NOTE ----- future developers TODO, delete the 
                                         ## "and ellipseFams + rectFams > 0" once you are also
@@ -413,18 +418,18 @@ def check_input(self,input_file='',output_file=''):
     ## ie {1, 1, 1, 0, 0, 1} represents --> {+x, -x, +y, -y, +z, -z}
     ## DFN only keeps clusters with connections to domain boundaries set to 1
     def boundaryFaces():
-        errResult = verifyList(valueOf('boundaryFaces'), 'boundaryFaces', verifyFlag, 6)
+        errResult = helper.verifyList(helper.valueOf('boundaryFaces'), 'boundaryFaces', helper.verifyFlag, 6)
         if errResult != None:
             error("\"boundaryFaces\" must be a list of 6 flags (0 or 1), {} have(has) been defined. Each flag "\
                   "represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}.".format(-errResult))
 
     def enumPoints():
-        errResult = verifyList(valueOf('enumPoints'), 'enumPoints', verifyInt, 
+        errResult = helper.verifyList(helper.valueOf('enumPoints'), 'enumPoints', helper.verifyInt, 
                        desiredLength=ellipseFams, noZeros=True, noNegs=True)
         if errResult != None:
             error("\"enumPoints\" has defined {} value(s) but there is(are) {} families of ellipses. Please "\
                   "define one enumPoints value greater than 4 for each ellipse family.".format(-errResult, ellipseFams))
-        for val in valueOf("enumPoints"):
+        for val in helper.valueOf("enumPoints"):
             if val <= 4:
                 error("\"enumPoints\" contains a value less than or equal to 4. If 4 points were intended, "\
                       "define this family as a rectangle family. No polygons with less than 4 verticies are acceptable.")
@@ -444,7 +449,7 @@ def check_input(self,input_file='',output_file=''):
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "aspect"
 
-        errResult = verifyList(valueOf(paramName), paramName, verifyFloat, 
+        errResult = helper.verifyList(helper.valueOf(paramName), paramName, helper.verifyFloat, 
                 desiredLength = numFamilies, noZeros = True, noNegs = True)
         if errResult != None:
             error("\"{}\" has defined {} value(s) but there is(are) {} {} families. Please define one "\
@@ -452,21 +457,21 @@ def check_input(self,input_file='',output_file=''):
 
     def angleOption(prefix):
         paramName = prefix + "AngleOption"
-        verifyFlag(valueOf(paramName), paramName)
+        helper.verifyFlag(helper.valueOf(paramName), paramName)
 
     def layer(prefix):
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "Layer"
 
-        errResult = verifyList(valueOf(paramName), paramName, verifyInt, desiredLength = numFamilies)
+        errResult = helper.verifyList(helper.valueOf(paramName), paramName, helper.verifyInt, desiredLength = numFamilies)
         if errResult != None:
             error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
                   "Need one layer per {} family. Layers are numbered by the order they "\
                   "are defined in 'layers' parameter. Layer 0 is the whole domain."\
                   .format(paramName, -errResult, numFamilies, shape, shape))
 
-        for layer in valueOf(paramName):
+        for layer in helper.valueOf(paramName):
             if isNegative(int(layer)):
                 error("\"{}\" contains a negative layer number. Only values from 0 to "\
                       "{} (numOfLayers) are accepted. Layer 0 corresponds to the entire"\
@@ -484,7 +489,7 @@ def check_input(self,input_file='',output_file=''):
                 "Please defined one angle for each {} family."
         
         for param in paramNames:
-            errResult = verifyList(valueOf(param), param, verifyFloat, desiredLength = numFamilies)
+            errResult = helper.verifyList(helper.valueOf(param), param, helper.verifyFloat, desiredLength = numFamilies)
             if errResult != None:
                 error(errString.format(param, -errResult, numFamilies, shape, shape))
 
@@ -510,9 +515,9 @@ def check_input(self,input_file='',output_file=''):
 #
     def parseInput():
         for line in inputIterator:
-            line = extractParameters(line) ## this strips comments
+            line = helper.extractParameters(line, inputIterator) ## this strips comments
             if (line != "" and ":" in line):
-                processLine(line)
+                helper.processLine(line, unfoundKeys, inputIterator, params, warningFile)
         needed = [unfound for unfound in unfoundKeys if unfound in mandatory]
         if needed != []:
             errString = ""
@@ -523,9 +528,9 @@ def check_input(self,input_file='',output_file=''):
     def verifyParams():
         firstPriority = [nFamEll, nFamRect, stopCondition, domainSize, numOfLayers, 
                  seed, domainSizeIncrease, ignoreBoundaryFaces, rejectsPerFracture, 
-                 userDefined, checkFamCount, checkNoDepFlags, famProb]
-        generalized = [layer, aspect, angleOption, thetaPhiKappa, betaDistribution, distr]
-        distribs = [lognormalDist, tplDist, exponentialDist, constantDist]
+                 userDefined, helper.checkFamCount, checkNoDepFlags, famProb]
+        generalized = [layer, aspect, angleOption, thetaPhiKappa, distributions.betaDistribution, distributions.distr]
+        distribs = [distributions.lognormalDist, distributions.tplDist, distributions.exponentialDist, distributions.constantDist]
         checkLast = [disableFram, aperture, permeability]
         
         for paramFunc in firstPriority: paramFunc()
@@ -549,26 +554,31 @@ def check_input(self,input_file='',output_file=''):
                 for layer in params['layers']:
                     writer.write(listToCurly(str(layer)) + " ")
                 writer.write('\n')    
-            elif type(valueOf(param, writing=True)) is list:
-                curl = listToCurly(str(valueOf(param, writing = True)))
+            elif type(helper.valueOf(param, writing=True)) is list:
+                curl = listToCurly(str(helper.valueOf(param, writing = True)))
                 writer.write(param + ': ' + curl + '\n')
             else:
-                writer.write(param + ': ' + str(valueOf(param, writing=True)) + '\n')              
+                writer.write(param + ': ' + str(helper.valueOf(param, writing=True)) + '\n')              
         
     print '--> Checking input files'    
     try:
-        copy(self._dfnGen_file, './')
+        if not os.path.exists(os.getcwd()):
+            print "ERROR: cwd: ", os.getcwd(), " does not exist"
+        if not os.path.exists(os.path.abspath(_dfnGen_file)):
+            print "ERROR: dfnGen input file path: ", os.path.abspath(_dfnGen_file), " does not exist"
+        shutil.copy(os.path.abspath(_dfnGen_file), os.getcwd())
     except:
-        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self._dfnGen_file)
+        print "copying ", os.path.abspath(_dfnGen_file), " to ", os.getcwd()
+        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%_dfnGen_file)
 
     ioPaths = {"input":"", "output":""}
     try:
-        ioPaths["input"] = self._local_dfnGen_file
+        ioPaths["input"] = _dfnGen_file
     except IndexError:
         error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] = self._local_dfnGen_file[:-4]+'_clean.dat'
+        ioPaths["output"] = _dfnGen_file[:-4]+'_clean.dat'
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"
         warning("No output path has been provided so output will be written to "\

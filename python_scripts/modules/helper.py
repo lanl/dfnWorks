@@ -1,12 +1,16 @@
-def dump_time(self, section_name, time):
+import os
+import sys
+import re
+
+def dump_time(_local_jobname, section_name, time):
     '''dump_time
     keeps log of cpu run time, current formulation is not robust
     '''
-    if (os.path.isfile(self._local_jobname+"_run_time.txt") is False):    
-        f = open(self._local_jobname+"_run_time.txt", "w")
-        f.write("Runs times for " + self._jobname + "\n")
+    if (os.path.isfile(_local_jobname+"_run_time.txt") is False):    
+        f = open(_local_jobname+"_run_time.txt", "w")
+        f.write("Runs times for " + _local_jobname + "\n")
     else:
-        f = open(self._local_jobname+"_run_time.txt", "a")
+        f = open(_local_jobname+"_run_time.txt", "a")
     if time < 60.0:
         line = section_name + " :  %f seconds\n"%time
     else:
@@ -14,11 +18,11 @@ def dump_time(self, section_name, time):
     f.write(line)
     f.close()
 
-def print_run_time(self):
+def print_run_time(_local_jobname):
     '''print_run_time
     Read in run times from file and and print to screen with percentages
     '''
-    f=open(self._local_jobname+"_run_time.txt").readlines()
+    f=open(_local_jobname+"_run_time.txt").readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
     if unit is 'minutes':
@@ -43,10 +47,10 @@ def print_run_time(self):
             print(name[i-1]+"\t"+"*"*int(percent[i-1]))
     print("\n")
 
-def get_num_frac(self):
+def get_num_frac():
     try: 
         f = open('params.txt')
-        self._num_frac = int(f.readline())
+        _num_frac = int(f.readline())
         f.close()
     except:
         print '-->ERROR getting number of fractures, no params.txt file'
@@ -74,7 +78,7 @@ def hasCurlys(line, key):
     return False
 
 ## Use to get key's value in params. writing always false  
-def valueOf(key, writing = False):
+def valueOf(key, writing = False, params):
     if (not writing) and (len(params[key]) > 1):
         error("\"{}\" can only correspond to 1 list. {} lists have been defined.".format(key, len(params[key])))
     try:    
@@ -106,8 +110,8 @@ def error(errString):
     print("\n----Program terminated while parsing input----\n")
     sys.exit(1)
 
-def warning(warnString):
-    global warningFile
+def warning(warnString, warningFile):
+    #global warningFile
     print("WARNING --- " + warnString)
     warningFile.write("WARNING --- " + warnString + "\n")
 
@@ -130,11 +134,11 @@ def checkFamCount():
 
 ## scales list of probabilities (famProb) that doesn't add up to 1
 ## ie [.2, .2, .4] --> [0.25, 0.25, 0.5]        
-def scale(probList):
+def scale(probList, warningFile):
     total = sum(probList)
     scaled = [float("{:.6}".format(x/total)) for x in probList]
     warning("'famProb' probabilities did not add to 1 and have been scaled accordingly "\
-        "for their current sum, {:.6}. Scaled {} to {}".format(total, probList, scaled))
+        "for their current sum, {:.6}. Scaled {} to {}".format(total, probList, scaled), warningFile)
     return [x/total for x in probList]                
 
 def zeroInStdDevs(valList):
@@ -151,17 +155,17 @@ def checkMinMax(minParam, maxParam, shape):
             error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
             sys.exit()
 
-def checkMean(minParam, maxParam, meanParam):
-    for minV, meanV in zip(valueOf(minParam), valueOf(meanParam)):
+def checkMean(minParam, maxParam, meanParam, warningFile):
+    for minV, meanV in zip(valueOf(minParam, params), valueOf(meanParam, params)):
         if minV > meanV: 
             warning("\"{}\" contains a min value greater than its family's mean value in "\
                   "\"{}\". This could drastically increase computation time due to increased "\
-                  "rejection rate of the most common fracture sizes.".format(minParam, meanParam))
-    for maxV, meanV in zip(valueOf(maxParam), valueOf(meanParam)):
+                  "rejection rate of the most common fracture sizes.".format(minParam, meanParam), warningFile)
+    for maxV, meanV in zip(valueOf(maxParam, params), valueOf(meanParam, params)):
         if maxV < meanV: 
             warning("\"{}\" contains a max value less than its family's mean value in "\
                   "\"{}\". This could drastically increase computation time due to increased "\
-                  "rejection rate of the most common fracture sizes.".format(maxParam, meanParam))
+                  "rejection rate of the most common fracture sizes.".format(maxParam, meanParam), warningFile)
 
 def checkMinFracSize(valList):
     global minFracSize
@@ -173,7 +177,7 @@ def checkMinFracSize(valList):
 ## ====================================================================== ##
 ##                              Parsing Functions                         ##
 ## ====================================================================== ##
-def extractParameters(line):
+def extractParameters(line, inputIterator):
     if "/*" in line:
         comment = line
         line = line[:line.index("/*")] ## only process text before '/*' comment
@@ -186,18 +190,18 @@ def extractParameters(line):
     return line.strip()
 
 
-def findVal(line, key):
+def findVal(line, key, inputIterator, params, unfoundKeys, warningFile):
     valList = []
     line = line[line.index(":") + 1:].strip()
     if line != "" : valHelper(line, valList, key)
 
-    line = extractParameters(next(inputIterator))
+    line = extractParameters(next(inputIterator), inputIterator)
     while ':' not in line:
         line = line.strip()
         if line != "" :
             valHelper(line, valList, key)
         try:
-            line = extractParameters(next(inputIterator))
+            line = extractParameters(next(inputIterator), inputIterator)
         except StopIteration:
             break
     
@@ -205,13 +209,13 @@ def findVal(line, key):
         error("\"{}\" is a mandatory parameter and must be defined.".format(key))
     if key is not None:
         params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
-    if line != "": processLine(line)
+    if line != "": processLine(line, unfoundKeys, inputIterator, params, warningFile)
         
 ## Input: line containing a paramter (key) preceding a ":" 
 ## Returns: key -- if it has not been defined yet and is valid
 ##          None -- if key does not exist
 ##          exits -- if the key has already been defined to prevent duplicate confusion        
-def findKey(line):
+def findKey(line, unfoundKeys, params, warningFile):
     key = line[:line.index(":")].strip()
     if key in unfoundKeys:
         unfoundKeys.remove(key)
@@ -220,12 +224,12 @@ def findKey(line):
         params[key]
         error("\"{}\" has been defined more than once.".format(key))
     except KeyError:
-        warning("\"" + key + "\" is not one of the valid parameter names.")
+        warning("\"" + key + "\" is not one of the valid parameter names.", warningFile)
 
-def processLine(line):
+def processLine(line, unfoundKeys, inputIterator, params, warningFile):
     if line.strip != "":
-        key = findKey(line)
-        if key != None: findVal(line, key)   
+        key = findKey(line, unfoundKeys, params, warningFile)
+        if key != None: findVal(line, key, inputIterator, params, unfoundKeys, warningFile)   
 
 
 ## ====================================================================== ##

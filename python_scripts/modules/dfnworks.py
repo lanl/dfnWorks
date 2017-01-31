@@ -76,32 +76,32 @@ class dfnworks(Frozen):
         tic_gen = time()
         # Create Working directory
         tic = time()
-        self.make_working_directory()
-        self.dump_time('Function: make_working_directory', time()- tic) 
+        generator.make_working_directory(self._jobname)
+        helper.dump_time(self._jobname, 'Function: make_working_directory', time()- tic) 
     
         # Check input file  
         tic = time()
-        self.check_input()
-        self.dump_time('Function: check_input', time() - tic)   
+        gen_input.check_input(self._dfnGen_file)
+        helper.dump_time(self._jobname, 'Function: check_input', time() - tic)   
     
         # Create network    
         tic = time()
-        self.create_network()
-        self.dump_time('Function: create_network', time() - tic)    
+        generator.create_network(self._local_dfnGen_file)
+        helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()
-        #self.output_report()
-        self.dump_time('output_report', time() - tic)   
+        #output_report()
+        helper.dump_time(self._jobname, 'output_report', time() - tic)   
         # Mesh Network
 
         tic = time()
-        self.mesh_network()
-        self.dump_time('Function: mesh_network', time() - tic)  
+        mesh_helper.mesh_network()
+        helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
         print ('='*80)
         print 'dfnGen Complete'
         print ('='*80)
         print ''
-        self.dump_time('Process: dfnGen',time() - tic_gen)  
+        helper.dump_time(self._jobname, 'Process: dfnGen',time() - tic_gen)  
 
     def dfnFlow(self):
         ''' dfnFlow
@@ -116,21 +116,21 @@ class dfnworks(Frozen):
         tic_flow = time()
 
         tic = time()
-        self.lagrit2pflotran()
-        self.dump_time('Function: lagrit2pflotran', time() - tic)   
+        flow.lagrit2pflotran()
+        helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
         
         tic = time()    
-        self.pflotran()
-        self.dump_time('Function: pflotran', time() - tic)  
+        flow.pflotran()
+        helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
         tic = time()    
-        self.parse_pflotran_vtk()       
-        self.dump_time('Function: parse_pflotran_vtk', time() - tic)    
+        flow.parse_pflotran_vtk()       
+        helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
         
         tic = time()    
-        self.pflotran_cleanup()
-        self.dump_time('Function: parse_cleanup', time() - tic) 
-        self.dump_time('Process: dfnFlow',time() - tic_flow)    
+        flow.pflotran_cleanup()
+        helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
+        helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
     
         print('='*80)
         print("\ndfnFlow Complete\n")
@@ -167,7 +167,7 @@ class dfnworks(Frozen):
 
         tic = time()    
         failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
-        self.dump_time('Process: dfnTrans', time() - tic)   
+        helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
         if failure == 0:
             print('='*80)
             print("\ndfnTrans Complete\n")
