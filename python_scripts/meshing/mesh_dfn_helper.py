@@ -6,8 +6,9 @@
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-import os
+
 import glob
+from os import remove
 
 def parse_params_file():
 	""" Reads params.txt file and parse information
@@ -49,7 +50,6 @@ def parse_params_file():
 		visualMode = False
 		print("Visual mode is off")
 	print("Expected Number of duded points: %d"%dudded_points)
-
 	print("X Domain Size %d m"%domain['x'])
 	print("Y Domain Size %d m"%domain['y'])
 	print("Z Domain Size %d m"%domain['z'])
@@ -73,7 +73,7 @@ def check_dudded_points(dudded):
 		break
 	pts = int(line.split()[1])
 	if pts == dudded:
-		print 'Correct Number of points removed \n'
+		print '--> Correct Number of points removed \n'
 		return True
 	else:
 		print 'ERROR! Incorrect Number of points removed'
@@ -87,7 +87,7 @@ def cleanup_dir():
 					'mesh*inp', 'mesh*lg']
 	for name in files_to_remove:
 		for fl in glob.glob(name):
-			os.remove(fl)	
+			remove(fl)	
 
 def output_meshing_report(visualMode):
 	""" Prints information about the final mesh to file"""

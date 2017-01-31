@@ -75,18 +75,16 @@ if __name__ == "__main__":
 
 	merge_the_meshes(nPoly, ncpu, n_jobs, visual_mode)
 	
-	if(visual_mode == False):	
-		if (check_dudded_points(dudded_points) == False):
+	if not visual_mode:	
+		if not check_dudded_points(dudded_points):
 			cleanup_dir()
 			sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
-	if production_mode == True:
+	if production_mode:
 		cleanup_dir()
 
-	if(visual_mode == False): 
+	if not visual_mode: 
 		define_zones(h,domain)
-		#redefine_zones(h)
-		#redefine_zones_old()
 
 	output_meshing_report(visual_mode)
 	os.system("date")
