@@ -57,8 +57,9 @@ def get_num_frac():
 
 class input_helper():
     
-    def __init__(self, params):
+    def __init__(self, params, minFracSize):
         self.params = params
+        self.minFracSize = minFracSize
     ## ====================================================================== ##
     ##                              Helper Functions                          ##
     ## ====================================================================== ##
@@ -162,7 +163,7 @@ class input_helper():
                 self.error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
                 sys.exit()
 
-    def checkMean(self, minParam, maxParam, meanParam, warningFile):
+    def checkMean(self, minParam, maxParam, meanParam, warningFile=''):
         for minV, meanV in zip(self.valueOf(minParam), self.valueOf(meanParam)):
             if minV > meanV: 
                self.warning("\"{}\" contains a min value greater than its family's mean value in "\
@@ -175,9 +176,8 @@ class input_helper():
                       "rejection rate of the most common fracture sizes.".format(maxParam, meanParam), warningFile)
 
     def checkMinFracSize(self, valList):
-        global minFracSize
         for val in valList:
-            if val < minFracSize: minFracSize = val
+            if val < self.minFracSize: self.minFracSize = val
 
 
 
@@ -299,7 +299,8 @@ class input_helper():
         if valList == ['']: return 0
         if type(valList) is not list:
             self.error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
-        if desiredLength != 0 and len(valList) != desiredLength:
+        if desiredLength != 0 and int(len(valList)) != int(desiredLength):
+            print 'list desired length is ', desiredLength, 'but valList is ', valList, 'with length ', len(valList)
             return -len(valList)
         for i, value in enumerate(valList):
             value = value.strip()

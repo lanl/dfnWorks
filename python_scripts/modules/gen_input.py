@@ -40,7 +40,6 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
     'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 
     'removeFracturesLessThan':[]} 
-    input_helper_methods=input_helper(params)
 
     unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
     'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
@@ -83,6 +82,8 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     warningFile = open("warningFileDFNGen.txt", 'w')        
     global jobname
     jobname = _jobname
+
+    input_helper_methods=input_helper(params, minFracSize)
 
     ## ===================================================================== ##
     ##                      Mandatory Parameters                             ##
@@ -529,7 +530,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
      
         
     def verifyParams():
-        distributions = distr_module.distr(params)
+        distributions = distr_module.distr(params, numEdistribs, numRdistribs, minFracSize)
         firstPriority = [nFamEll, nFamRect, stopCondition, domainSize, numOfLayers, 
                  seed, domainSizeIncrease, ignoreBoundaryFaces, rejectsPerFracture, 
                  userDefined, input_helper_methods.checkFamCount, checkNoDepFlags, famProb]

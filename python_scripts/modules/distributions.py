@@ -3,13 +3,14 @@ import gen_input
 
 class distr():
     
-    def __init__(self, params):
+    def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self._params = params
         global distr_helper_methods  
-        distr_helper_methods = gen_input.input_helper(params) 
+        distr_helper_methods = gen_input.input_helper(params, minFracSize) 
         self.ellipseFams = distr_helper_methods.valueOf('nFamEll')
         self.rectFams = distr_helper_methods.valueOf('nFamRect')
-   
+        self.numEdistribs = numEdistribs
+        self.numRdistribs = numRdistribs
     ## ========================================================================= ##
             ###                                                ### 
             ###        Prefix MUST be either 'e' or 'r'        ### 
@@ -46,7 +47,7 @@ class distr():
     ## Stores how many of each distrib are in use in numEdistribs or numRdistribs lists  
     def distr(self, prefix):
         shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = numEdistribs if prefix is 'e' else numRdistribs
+        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "distr"
 
@@ -69,7 +70,7 @@ class distr():
     ## Verifies all logNormal Paramters for ellipses and Rectangles        
     def lognormalDist(self, prefix):
         shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = numEdistribs if prefix is 'e' else numRdistribs
+        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]]
         errString = "\"{}\" has defined {} value(s) but {} lognormal distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each lognormal (distrib. #1) family."
@@ -82,19 +83,19 @@ class distr():
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[1], prefix+'distr'))
 
         sdParam = prefix + "sd"
-        if zeroInStdDevs(distr_helper_methods.valueOf(sdParam)): 
+        if distr_helper_methods.zeroInStdDevs(distr_helper_methods.valueOf(sdParam)): 
             distr_helper_methods.error("\"{}\" list contains a standard deviation of 0. If this was intended, " \
                 "use the constant distribution (4) instead. Otherwise, _make sure \"{}\" " \
                 "only contains values greater than 0.".format(sdParam, sdParam))
 
-        checkMinMax(prefix+"LogMin", prefix+"LogMax", shape)
-        checkMean(prefix+"LogMin", prefix+"LogMax", prefix+"LogMean")
-        checkMinFracSize(distr_helper_methods.valueOf(prefix+"LogMin"))
+        distr_helper_methods.checkMinMax(prefix+"LogMin", prefix+"LogMax", shape)
+        distr_helper_methods.checkMean(prefix+"LogMin", prefix+"LogMax", prefix+"LogMean")
+        distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(prefix+"LogMin"))
 
     ## Truncated Power Law Distribution
     def tplDist(self, prefix):
         shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = numEdistribs if prefix is 'e' else numRdistribs
+        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["min", "max", "alpha"]]
         errString = "\"{}\" has defined {} value(s) but {} truncated power-law distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each truncated power-law (distrib. #2) family."
@@ -105,13 +106,13 @@ class distr():
             if errResult != None:
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[2], prefix+'distr'))
                 
-        checkMinMax(prefix+"min", prefix+"max", shape)
-        checkMinFracSize(distr_helper_methods.valueOf(prefix+"min"))
+        distr_helper_methods.checkMinMax(prefix+"min", prefix+"max", shape)
+        distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(prefix+"min"))
         
 
     def exponentialDist(self, prefix):
         shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = numEdistribs if prefix is 'e' else numRdistribs
+        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]]
         errString = "\"{}\" has defined {} value(s) but {} exponential distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each exponential (distrib. #3) family."
@@ -122,14 +123,14 @@ class distr():
             if errResult != None:
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[3], prefix+'distr'))
                 
-        checkMinMax(prefix+"ExpMin", prefix+"ExpMax", shape)
-        checkMean(prefix+"ExpMin", prefix+"ExpMax", prefix+"ExpMean")
-        checkMinFracSize(distr_helper_methods.valueOf(prefix+"ExpMin"))
+        distr_helper_methods.checkMinMax(prefix+"ExpMin", prefix+"ExpMax", shape)
+        distr_helper_methods.checkMean(prefix+"ExpMin", prefix+"ExpMax", prefix+"ExpMean")
+        distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(prefix+"ExpMin"))
 
     def constantDist(self, prefix):
         paramName = prefix + "const"
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
-        distribList = numEdistribs if prefix is 'e' else numRdistribs
+        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
 
         errResult = distr_helper_methods.verifyList(distr_helper_methods.valueOf(paramName), paramName, distr_helper_methods.verifyFloat, desiredLength = distribList[4],
                      noZeros = True, noNegs = True)
@@ -138,6 +139,6 @@ class distr():
                   "defined in \"{}\". Please define one value for each family with a constant (distrib. "\
                   "#4) distribution.".format(paramName, -errResult, distribList[4], prefix + 'distr'))
          
-        checkMinFracSize(distr_helper_methods.valueOf(paramName))
+        distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(paramName))
         
 
