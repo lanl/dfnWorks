@@ -81,7 +81,7 @@ class dfnworks(Frozen):
     
         # Check input file  
         tic = time()
-        gen_input.check_input(self._dfnGen_file)
+        gen_input.check_input(self._dfnGen_file, self._jobname)
         helper.dump_time(self._jobname, 'Function: check_input', time() - tic)   
     
         # Create network    
