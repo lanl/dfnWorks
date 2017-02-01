@@ -123,18 +123,18 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSize', params), 'domainSize', input_helper_methods.verifyFloat, desiredLength = 3,
                        noZeros = True, noNegs=True)
         if errResult != None:
-            error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\
+            input_helper_methods.error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent x, y, and z dimensions".format(-errResult))
 
     def domainSizeIncrease():
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSizeIncrease', params), domainSizeIncrease, input_helper_methods.verifyFloat, desiredLength = 3)
         if errResult != None:
-            error("\"domainSizeIncrease\" has defined {} value(s) but there must be 3 non-zero "\
+            input_helper_methods.error("\"domainSizeIncrease\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent extensions in the x, y, and z dimensions".format(-errResult))
 
         for i,val in enumerate(input_helper_methods.valueOf('domainSizeIncrease', params)):
             if val >= input_helper_methods.valueOf('domainSize', params)[i]/2:
-                error("\"domainSizeIncrease\" contains {} which is more than half of the domain's "
+                input_helper_methods.error("\"domainSizeIncrease\" contains {} which is more than half of the domain's "
                       "range in that dimension. Cannot change the domain's size by more than half of "
                       "that dimension's value defined in \"domainSize\". This risks collapsing or "
                       "doubling the domain.".format(val))
@@ -144,7 +144,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         numLayers = input_helper_methods.verifyInt(input_helper_methods.valueOf('numOfLayers', params), 'numOfLayers', noNeg = True)
         if numLayers > 0:
             if numLayers != len(params['layers']):
-                error("\"layers\" has defined {} layers but \"numLayers\" was defined to "\
+                input_helper_methods.error("\"layers\" has defined {} layers but \"numLayers\" was defined to "\
                       "be {}.".format(len(params['layers']), numLayers))
             else: layers()
 
@@ -155,19 +155,19 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         for i, layer in enumerate(params['layers']):
             errResult = input_helper_methods.verifyList(layer, "layer #{}".format(i+1), input_helper_methods.verifyFloat, desiredLength = 2)
             if errResult != None:
-                error("\"layers\" has defined layer #{} to have {} element(s) but each layer must "\
+                input_helper_methods.error("\"layers\" has defined layer #{} to have {} element(s) but each layer must "\
                       "have 2 elements, which define its upper and lower bounds".format(i+1, -errResult))
             if params['layers'].count(layer) > 1:
-                error("\"layers\" has defined the same layer more than once.")
+                input_helper_methods.error("\"layers\" has defined the same layer more than once.")
             minZ = layer[0]
             maxZ = layer[1]
             if minZ <= -halfZdomain and maxZ <= -halfZdomain:
-                error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
+                input_helper_methods.error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
                       "below the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
                       "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
                       "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
             if minZ >= halfZdomain and maxZ >= halfZdomain:
-                error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
+                input_helper_methods.error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
                       "above the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
                       "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
                       "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
@@ -202,7 +202,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('famProb', params), 'famProb', input_helper_methods.verifyFloat,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
         if errResult != None:
-            error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
+            input_helper_methods.error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))
 
@@ -223,25 +223,25 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(ellByCoord, params), ellByCoord) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(ecoordPath, params)):
-                error(invalid.format(ecoordPath))
+                input_helper_methods.error(invalid.format(ecoordPath))
             else:
                 shutil.copy(input_helper_methods.valueOf(ecoordPath, params), _jobname)
 
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userEs, params), userEs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(ePath, params)):
-                error(invalid.format(ePath))
+                input_helper_methods.error(invalid.format(ePath))
             else:
                 shutil.copy(input_helper_methods.valueOf(ePath, params), _jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userRs, params), userRs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(rPath, params)):
-                error(invalid.format(rPath))
+                input_helper_methods.error(invalid.format(rPath))
             else:
                 shutil.copy(input_helper_methods.valueOf(rPath, params), _jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(recByCoord, params), recByCoord) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(coordPath, params)):
-                error(invalid.format(coordPath))    
+                input_helper_methods.error(invalid.format(coordPath))    
             else:
                 shutil.copy(input_helper_methods.valueOf(coordPath, params), _jobname)
 
@@ -250,16 +250,16 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
         if apOption == 1:
             if input_helper_methods.verifyFloat(input_helper_methods.valueOf('meanAperture', params), 'meanAperture', noNeg=True) == 0:
-                error("\"meanAperture\" cannot be 0.")
+                input_helper_methods.error("\"meanAperture\" cannot be 0.")
             if input_helper_methods.verifyFloat(input_helper_methods.valueOf('stdAperture', params), 'stdAperture', noNeg=True) == 0:
-                error("\"stdAperture\" cannot be 0. If you wish to have a standard deviation "\
+                input_helper_methods.error("\"stdAperture\" cannot be 0. If you wish to have a standard deviation "\
                       "of 0, use a constant aperture instead.") 
 
         elif apOption == 2:
             input_helper_methods.verifyList(input_helper_methods.valueOf('apertureFromTransmissivity', params), 'apertureFromTransmissivity', 
                    input_helper_methods.verifyFloat, desiredLength = 2, noNegs=True)
             if input_helper_methods.valueOf('apertureFromTransmissivity', params)[0] == 0:
-                error("\"apertureFromTransmissivity\"'s first value cannot be 0.")
+                input_helper_methods.error("\"apertureFromTransmissivity\"'s first value cannot be 0.")
             if input_helper_methods.valueOf('apertureFromTransmissivity', params)[1] == 0:
                 input_helper_methods.warning("\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperature.", params)
 
@@ -274,12 +274,12 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
             input_helper_methods.verifyList(input_helper_methods.valueOf('lengthCorrelatedAperture', params), 'lengthCorrelatedAperture', 
                    input_helper_methods.verifyFloat, desiredLength = 2, noNegs=True)
             if input_helper_methods.valueOf('lengthCorrelatedAperture', params)[0] == 0:
-                error("\"lengthCorrelatedAperture\"'s first value cannot be 0.")
+                input_helper_methods.error("\"lengthCorrelatedAperture\"'s first value cannot be 0.")
             if input_helper_methods.valueOf('lengthCorrelatedAperture', params)[1] == 0:
                 input_helper_methods.warning("\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperature.", params) 
                 
         else:
-            error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
+            input_helper_methods.error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
                   "3 (constant), or 4 (length correlated).")
 
     def permeability():
@@ -296,7 +296,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
     def nPoly():
         val = input_helper_methods.verifyInt(input_helper_methods.valueOf('nPoly', params), 'nPoly', noNeg = True)
-        if val == 0: error("\"nPoly\" cannot be zero.")
+        if val == 0: input_helper_methods.error("\"nPoly\" cannot be zero.")
         params['nPoly'][0] = val
 
     def p32Targets():
@@ -304,13 +304,13 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         errResult = None if (ellipseFams == 0) else input_helper_methods.verifyList(input_helper_methods.valueOf('e_p32Targets', params), 'e_p32Targets', \
                                   input_helper_methods.verifyFloat, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
         if errResult != None:
-            error("\"e_p32Targets\" has defined {} p32 values but there is(are) {} ellipse family(ies). "\
+            input_helper_methods.error("\"e_p32Targets\" has defined {} p32 values but there is(are) {} ellipse family(ies). "\
                   "Need one p32 value per ellipse family.".format(-errResult, ellipseFams))
 
         errResult = None if (rectFams == 0) else input_helper_methods.verifyList(input_helper_methods.valueOf('r_p32Targets', params), "r_p32Targets", \
                                 input_helper_methods.verifyFloat, desiredLength =  rectFams, noNegs=True, noZeros=True)
         if errResult != None:
-            error("\"r_p32Targets\" has defined {} p32 value(s) but there is(are) {} rectangle "\
+            input_helper_methods.error("\"r_p32Targets\" has defined {} p32 value(s) but there is(are) {} rectangle "\
                   "family(ies). Need one p32 value per rectangle family)".format(-errResult, rectFams))
 
     def f(theta, t, a, b):
@@ -388,7 +388,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
                     hmin = h_shapeCheck(float(aspectList[numAspect]), float(minRad)) ## dont need numPoints for rectangle, default 4
 
                 if hmin < (3 * hval):
-                    error(shape + " family #{} has defined a shape with features too small for meshing. Increase the aspect "\
+                    input_helper_methods.error(shape + " family #{} has defined a shape with features too small for meshing. Increase the aspect "\
                              "ratio or minimum radius so that no 2 points of the polygon create a line of length less "\
                              "than 3h".format(numAspect+1))
                      
@@ -396,7 +396,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
     def h():
         val = input_helper_methods.verifyFloat(input_helper_methods.valueOf('h', params), 'h', noNeg=True)
-        if val == 0: error("\"h\" cannot be 0.")
+        if val == 0: input_helper_methods.error("\"h\" cannot be 0.")
         if val < minFracSize/1000.0 and ellipseFams + rectFams > 0: ####### NOTE ----- future developers TODO, delete the 
                                         ## "and ellipseFams + rectFams > 0" once you are also
                                         ## checking the userInput Files for minimums that could be 
@@ -424,18 +424,18 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     def boundaryFaces():
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('boundaryFaces', params), 'boundaryFaces', input_helper_methods.verifyFlag, 6)
         if errResult != None:
-            error("\"boundaryFaces\" must be a list of 6 flags (0 or 1), {} have(has) been defined. Each flag "\
+            input_helper_methods.error("\"boundaryFaces\" must be a list of 6 flags (0 or 1), {} have(has) been defined. Each flag "\
                   "represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}.".format(-errResult))
 
     def enumPoints():
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('enumPoints', params), 'enumPoints', input_helper_methods.verifyInt, 
                        desiredLength=ellipseFams, noZeros=True, noNegs=True)
         if errResult != None:
-            error("\"enumPoints\" has defined {} value(s) but there is(are) {} families of ellipses. Please "\
+            input_helper_methods.error("\"enumPoints\" has defined {} value(s) but there is(are) {} families of ellipses. Please "\
                   "define one enumPoints value greater than 4 for each ellipse family.".format(-errResult, ellipseFams))
         for val in input_helper_methods.valueOf("enumPoints"):
             if val <= 4:
-                error("\"enumPoints\" contains a value less than or equal to 4. If 4 points were intended, "\
+                input_helper_methods.error("\"enumPoints\" contains a value less than or equal to 4. If 4 points were intended, "\
                       "define this family as a rectangle family. No polygons with less than 4 verticies are acceptable.")
 
 
@@ -456,7 +456,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf(paramName), paramName, input_helper_methods.verifyFloat, 
                 desiredLength = numFamilies, noZeros = True, noNegs = True)
         if errResult != None:
-            error("\"{}\" has defined {} value(s) but there is(are) {} {} families. Please define one "\
+            input_helper_methods.error("\"{}\" has defined {} value(s) but there is(are) {} {} families. Please define one "\
                   "aspect ratio for each family.".format(paramName, -errResult, numFamilies, shape))
 
     def angleOption(prefix):
@@ -470,18 +470,18 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf(paramName), paramName, input_helper_methods.verifyInt, desiredLength = numFamilies)
         if errResult != None:
-            error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
+            input_helper_methods.error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
                   "Need one layer per {} family. Layers are numbered by the order they "\
                   "are defined in 'layers' parameter. Layer 0 is the whole domain."\
                   .format(paramName, -errResult, numFamilies, shape, shape))
 
         for layer in input_helper_methods.valueOf(paramName):
             if isNegative(int(layer)):
-                error("\"{}\" contains a negative layer number. Only values from 0 to "\
+                input_helper_methods.error("\"{}\" contains a negative layer number. Only values from 0 to "\
                       "{} (numOfLayers) are accepted. Layer 0 corresponds to the entire"\
                       "domain.".format(paramName, numLayers))
             if int(layer) > numLayers:
-                error("\"{}\" contains value '{}' but only {} layer(s) is(are) defined. Make sure the "\
+                input_helper_methods.error("\"{}\" contains value '{}' but only {} layer(s) is(are) defined. Make sure the "\
                       "layer numbers referenced here are found in that same postion in \"layers\" "\
                       "parameter.".format(paramName, layer, numLayers))
 
@@ -495,7 +495,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         for param in paramNames:
             errResult = input_helper_methods.verifyList(input_helper_methods.valueOf(param), param, input_helper_methods.verifyFloat, desiredLength = numFamilies)
             if errResult != None:
-                error(errString.format(param, -errResult, numFamilies, shape, shape))
+                input_helper_methods.error(errString.format(param, -errResult, numFamilies, shape, shape))
 
 
     #
@@ -507,7 +507,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 #            try:
 #                ioPaths["input"] = sys.argv[1]
 #            except IndexError:
-#                error("Please provide an input file path as the first command line argument.\n"\
+#                input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
 #                      "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
 #
 #            try:
@@ -526,7 +526,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         if needed != []:
             errString = ""
             for key in needed: errString += "\t\"" + key + "\"\n"
-            error("Missing the following mandatory parameters: \n{}".format(errString))    
+            input_helper_methods.error("Missing the following mandatory parameters: \n{}".format(errString))    
      
         
     def verifyParams():
@@ -579,10 +579,11 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     try:
         ioPaths["input"] = _dfnGen_file
     except IndexError:
-        error("Please provide an input file path as the first command line argument.\n"\
+        input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] = _dfnGen_file[:-4]+'_clean.dat'
+        ioPaths["output"] = _jobname +  '/' + _dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
+        print "clean file path is ", ioPaths["output"]   
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"
         input_helper_methods.warning("No output path has been provided so output will be written to "\
@@ -592,7 +593,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         writer = open(ioPaths["output"], 'w')
         inputIterator = iter(reader)
     except:
-        error("Check that the path of your input file is valid.")
+        input_helper_methods.error("Check that the path of your input file is valid.")
       
     print '--> Checking input data'
     print '--> Input Data: ', ioPaths["input"] 

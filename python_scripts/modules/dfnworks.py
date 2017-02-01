@@ -86,7 +86,7 @@ class dfnworks(Frozen):
     
         # Create network    
         tic = time()
-        generator.create_network(self._local_dfnGen_file)
+        generator.create_network(self._local_dfnGen_file, self._jobname)
         helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()

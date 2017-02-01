@@ -15,6 +15,7 @@ def make_working_directory(jobname):
         os.chdir(jobname)
         cwd = os.getcwd()
         print("Current directory is now: %s\n"%cwd)
+        print "Jobname is ", jobname   
     except OSError:
         #print '\nFolder ', jobname, ' exists'
         #keep = raw_input('Do you want to delete it? [yes/no] \n')
@@ -22,6 +23,7 @@ def make_working_directory(jobname):
         print 'Deleting', jobname 
         mesh.rmtree(jobname)
         print 'Creating', jobname 
+        print "Jobname is ", jobname 
         os.mkdir(jobname)    
         os.mkdir(jobname + '/radii')
         os.mkdir(jobname + '/intersections')
@@ -35,7 +37,7 @@ def make_working_directory(jobname):
         #else:
         #    sys.exit("Unknown Response. Exiting Program") 
 
-def create_network(_local_dfnGen_file):
+def create_network(_local_dfnGen_file, jobname):
     print '--> Running DFNGEN'    
     # copy input file into job folder    
     os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + _local_dfnGen_file[:-4] + '_clean.dat' + ' ' + jobname )
