@@ -95,7 +95,7 @@ class dfnworks(Frozen):
         # Mesh Network
 
         tic = time()
-        mesh_helper.mesh_network()
+        mesh_helper.mesh_network(self._jobname, helper.get_num_frac(), self._ncpu)
         helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
         print ('='*80)
         print 'dfnGen Complete'

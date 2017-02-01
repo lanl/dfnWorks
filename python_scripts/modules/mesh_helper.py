@@ -1,4 +1,10 @@
-def mesh_network(self, ncpu = ''):
+import meshDFN as mesh
+from time import time
+import helper
+import os
+import sys
+
+def mesh_network(_jobname, _num_frac, _ncpu, ncpu = ''):
 	'''
 	Mesh Fracture Network using ncpus and lagrit
 	meshing file is seperate file: dfnGen_meshing.py
@@ -10,25 +16,26 @@ def mesh_network(self, ncpu = ''):
 	refine_factor = 1	
 	
 	nPoly, h, visualMode, dudded_points,domain = mesh.parse_params_file()
-	self._num_frac = nPoly
+	_num_frac = nPoly
 	tic2 = time()
 
 	mesh.create_parameter_mlgi_file(nPoly, h)
 
-	mesh.create_lagrit_scripts(production_mode, self._ncpu, refine_factor, visualMode)
+	mesh.create_lagrit_scripts(production_mode, _ncpu, refine_factor, visualMode)
 
-	failure = mesh.mesh_fractures_header(nPoly, self._ncpu, visualMode)
-	self.dump_time('Process: Meshing Fractures', time() - tic2)
+	failure = mesh.mesh_fractures_header(nPoly, _ncpu, visualMode)
+	helper.dump_time(_jobname, 'Process: Meshing Fractures', time() - tic2)
+
 	if failure > 0:
 		mesh.cleanup_dir()
 		sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
 	
 	tic2 = time()
-	n_jobs = mesh.create_merge_poly_files(self._ncpu, nPoly, visualMode)
+	n_jobs = mesh.create_merge_poly_files(_ncpu, nPoly, visualMode)
 
-	mesh.merge_the_meshes(nPoly, self._ncpu, n_jobs, visualMode)
-	self.dump_time('Process: Merging the Mesh', time() - tic2)	
+	mesh.merge_the_meshes(nPoly, _ncpu, n_jobs, visualMode)
+	helper.dump_time(_jobname, 'Process: Merging the Mesh', time() - tic2)	
 
 	if(visualMode == False):	
 		if (mesh.check_dudded_points(dudded_points) == False):

@@ -1,6 +1,7 @@
-import os, sys, time
+import os, sys
 sys.path.append("/home/nknapp/dfnworks/dfnworks-main/python_scripts/") 
-from modules import dfnworks
+from modules import dfnworks, helper
+from time import time
 
 def define_paths():
 	# Set Environment Variables
@@ -99,7 +100,7 @@ print ('='*80)
 os.system("date")
 define_paths()
 
-main_time = time.time()
+main_time = time()
 dfn = dfnworks.create_dfn()
 # General Work Flow
 dfn.dfnGen()
@@ -112,7 +113,7 @@ dfn.dfnGen()
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
 print timing
-dfn.dump_time(dfn._jobname,main_elapsed) 
+helper.dump_time(dfn._jobname, dfn._jobname,main_elapsed) 
 #dfn.print_run_time()	
 print("*"*80)
 print(dfn._jobname+' complete')
