@@ -108,7 +108,9 @@ class dfnworks(Frozen):
         Run the dfnFlow portion of the workflow.
         1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
         ''' 
-    
+        
+        dfnflow = flow.flow(self._inp_file, self._mesh_type, self._uge_file, self._vtk_file, self._perm_file, self._perm_cell_file, self._local_dfnFlow_file, self._aper_file, self._aper_cell_file, self._dfnFlow_file, self._ncpu, self._jobname)
+
         print('='*80)
         print("\ndfnFlow Starting\n")
         print('='*80)
@@ -116,19 +118,19 @@ class dfnworks(Frozen):
         tic_flow = time()
 
         tic = time()
-        flow.lagrit2pflotran()
+        dfnflow.lagrit2pflotran()
         helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
         
         tic = time()    
-        flow.pflotran()
+        dfnflow.pflotran()
         helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
         tic = time()    
-        flow.parse_pflotran_vtk()       
+        dfnflow.parse_pflotran_vtk()       
         helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
         
         tic = time()    
-        flow.pflotran_cleanup()
+        dfnflow.pflotran_cleanup()
         helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
         helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
     
@@ -154,16 +156,19 @@ class dfnworks(Frozen):
             sys.exit("Cannot create link to DFNTrans. Exiting Program")
         
         # Copy DFNTrans input file  
-        try:
-            copy(self._dfnTrans_file, self._local_dfnTrans_file) 
-        except Error:
-            print("--> Problem copying %s file"%self._local_dfnTrans_file)
-            print("--> Trying to delete and recopy") 
-            os.remove(self._local_dfnTrans_file)
-            copy(self._dfnTrans_file, self._local_dfnTrans_file) 
-        except:
-            print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
-            sys.exit("Unable to replace. Exiting Program")
+        #try:
+        #self._dfnTrans_file = self._jobname + '/' + self._dfnTrans_file.rsplit('/', 1)[-1]  
+        print "dfnTrans file is ", self._dfnTrans_file, "local dfnTrans file is ", self._local_dfnTrans_file 
+        copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
+        
+        #except Error:
+         #   print("--> Problem copying %s file"%self._local_dfnTrans_file)
+        #    print("--> Trying to delete and recopy") 
+         #   os.remove(self._local_dfnTrans_file)
+          #  copy(self._dfnTrans_file, self._local_dfnTrans_file) 
+        #except:
+         #   print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
+          #  sys.exit("Unable to replace. Exiting Program")
 
         tic = time()    
         failure = os.system('./DFNTrans '+self._local_dfnTrans_file)

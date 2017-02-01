@@ -2338,6 +2338,8 @@ class dfnworks(Frozen):
         """ Run pflotran
         Copy PFLOTRAN run file into working directory and run with ncpus
         """
+        self._dfnFlow_file = jobname + '/' + self._dfnFlow_file.rsplit('/', 1)[-1] 
+        print "about to copy dfnFlow file", self._dfnFlow_file
         try: 
             copy(self._dfnFlow_file, './')
         except:
