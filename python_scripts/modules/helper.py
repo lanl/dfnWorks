@@ -77,20 +77,20 @@ class input_helper():
     def hasCurlys(self, line, key):
         if '{' in line and '}' in line: return True 
         elif '{' in line or '}' in line: 
-            error("Line defining \"{}\" contains a single curly brace.".format(key))
+            self.error("Line defining \"{}\" contains a single curly brace.".format(key))
         return False
 
     ## Use to get key's value in params. writing always false  
     def valueOf(self, key, writing = False):
         if (not writing) and (len(self.params[key]) > 1):
-            error("\"{}\" can only correspond to 1 list. {} lists have been defined.".format(key, len(self.params[key])))
-        try:    
-            val = self.params[key][0]
-            if val == '' or val == []:
-                error("\"{}\" does not have a value.".format(key))
-            return val
-        except IndexError:
-            error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
+            self.error("\"{}\" can only correspond to 1 list. {} lists have been defined.".format(key, len(self.params[key])))
+        #try:    
+        val = self.params[key][0]
+        if val == '' or val == []:
+            self.error("\"{}\" does not have a value.".format(key))
+        return val
+        #except IndexError:
+        #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
     def getGroups(self, line, valList, key):
         curlyGroup = re.compile('({.*?})')
@@ -100,7 +100,7 @@ class input_helper():
             valList.append(self.curlyToList(group))
             
         if line.strip() != "":
-            error("Unexpected character found while parsing \"{}\".".format(key))
+            self.error("Unexpected character found while parsing \"{}\".".format(key))
 
     def valHelper(self, line, valList, key):
         if self.hasCurlys(line, key):
@@ -134,7 +134,7 @@ class input_helper():
 
 
         if ellipseFams + rectFams <= 0 and not userDefExists:
-            error("Zero polygon families have been defined. Please create at least one family "\
+            self.error("Zero polygon families have been defined. Please create at least one family "\
                   "of ellipses/rectagnles, or provide a user-defined-polygon input file path in "\
                   "\"UserEll_Input_File_Path\", \"UserRect_Input_File_Path\", \"UserEll_Input_File_Path\", or "\
                   "\"RectByCoord_Input_File_Path\" and set the corresponding flag to '1'.")
@@ -155,11 +155,11 @@ class input_helper():
     def checkMinMax(self, minParam, maxParam, shape):
         for minV, maxV in zip(self.valueOf(minParam), self.valueOf(maxParam)):
             if minV == maxV:
-                error("\"{}\" and \"{}\" contain equal values for the same {} family. "\
+                self.error("\"{}\" and \"{}\" contain equal values for the same {} family. "\
                       "If {} and {} were intended to be the same, use the constant distribution "\
                       "(4) instead.".format(minParam, maxParam, shape, minParam, maxParam))
             if minV > maxV:
-                error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
+                self.error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
                 sys.exit()
 
     def checkMean(self, minParam, maxParam, meanParam, warningFile):
@@ -213,7 +213,7 @@ class input_helper():
                 break
         
         if valList == [] and key in mandatory:
-            error("\"{}\" is a mandatory parameter and must be defined.".format(key))
+            self.error("\"{}\" is a mandatory parameter and must be defined.".format(key))
         if key is not None:
             self.params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
         if line != "": self.processLine(line, unfoundKeys, inputIterator, warningFile)
@@ -229,7 +229,7 @@ class input_helper():
             return key
         try:
             self.params[key]
-            error("\"{}\" has been defined more than once.".format(key))
+            self.error("\"{}\" has been defined more than once.".format(key))
         except KeyError:
            self.warning("\"" + key + "\" is not one of the valid parameter names.", warningFile)
 
@@ -254,33 +254,33 @@ class input_helper():
         elif inList:
             return None
         else:
-            error("\"{}\" must be either '0' or '1'".format(key))
+            self.error("\"{}\" must be either '0' or '1'".format(key))
 
     def verifyFloat(self, value, key = "", inList = False, noNeg = False):
         if type(value) is list:
-            error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
+            self.error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
         try:
             if noNeg and float(value) < 0:
-                error("\"{}\" cannot be a negative number.".format(key))
+                self.error("\"{}\" cannot be a negative number.".format(key))
             return float(value)
         except ValueError:
             if inList: return None
             else:
-                error("\"{}\" contains an unexpected character. Must be a single "\
+                self.error("\"{}\" contains an unexpected character. Must be a single "\
                       "floating point value (0.5, 1.6, 4.0, etc.)".format(key))
                 
                 
     def verifyInt(self, value, key = "", inList = False, noNeg = False):
         if type(value) is list:
-            error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
+            self.error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
         try:
             if noNeg and int(re.sub(r'\.0*$', '', value)) < 0:
-                error("\"{}\" cannot be a negative number.".format(key))
+                self.error("\"{}\" cannot be a negative number.".format(key))
             return int(re.sub(r'\.0*$', '', value)) ## regex for removing .0* (ie 4.00 -> 4)
         except ValueError:
             if inList: return None
             else:
-                error("\"{}\" contains an unexpected character. Must be a single "\
+                self.error("\"{}\" contains an unexpected character. Must be a single "\
                       "integer value (0,1,2,3,etc.)".format(key))
                 
     ## Verifies input list that come in format {0, 1, 2, 3}
@@ -298,7 +298,7 @@ class input_helper():
     def verifyList(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
         if valList == ['']: return 0
         if type(valList) is not list:
-            error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
+            self.error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
         if desiredLength != 0 and len(valList) != desiredLength:
             return -len(valList)
         for i, value in enumerate(valList):
@@ -306,18 +306,18 @@ class input_helper():
             verifiedVal = verificationFn(value, inList = True)
             if verifiedVal == None:
                 listType = re.sub('Integer', 'Int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyInt' --> 'Integer'
-                error("\"{}\" must be a list of {}s {}. Non-{} found in "\
+                self.error("\"{}\" must be a list of {}s {}. Non-{} found in "\
                       "list".format(key, listType, examples[listType], listType))
             if noZeros and verifiedVal == 0:
-                error("\"{}\" list cannot contain any zeroes.".format(key))
+                self.error("\"{}\" list cannot contain any zeroes.".format(key))
             if noNegs and self.isNegative(float(verifiedVal)):
-                error("\"{}\" list cannot contain any negative values.".format(key)) 
+                self.error("\"{}\" list cannot contain any negative values.".format(key)) 
             valList[i] = verifiedVal 
            
 
     ## def verifyNumValsIs(length, key):f
            ##  if len(self.params[key]) != length:
-            ##     error("ERROR: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
+            ##     self.error("ERROR: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
              ##    sys.exit()                
             
 

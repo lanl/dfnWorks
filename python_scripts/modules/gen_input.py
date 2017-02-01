@@ -2,7 +2,7 @@ from helper import *
 import os
 import sys
 import shutil
-import distributions
+import distributions as distr_module
 
 def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
@@ -40,7 +40,6 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     'nFamEll':[],'econst':[],'raspect':[],'eAngleOption':[],'emin':[],'ephi':[],'rmax':[],'famProb':[],'disableFram':[],
     'ralpha':[],'nPoly':[],'rejectsPerFracture':[],'rkappa':[],'eExpMax':[], 'forceLargeFractures':[], 'radiiListIncrease':[], 
     'removeFracturesLessThan':[]} 
-
     input_helper_methods=input_helper(params)
 
     unfoundKeys={'stopCondition','nPoly','outputAllRadii','outputAllRadii','outputFinalRadiiPerFamily',
@@ -476,7 +475,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
                   .format(paramName, -errResult, numFamilies, shape, shape))
 
         for layer in input_helper_methods.valueOf(paramName):
-            if isNegative(int(layer)):
+            if input_helper_methods.isNegative(int(layer)):
                 input_helper_methods.error("\"{}\" contains a negative layer number. Only values from 0 to "\
                       "{} (numOfLayers) are accepted. Layer 0 corresponds to the entire"\
                       "domain.".format(paramName, numLayers))
@@ -530,6 +529,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
      
         
     def verifyParams():
+        distributions = distr_module.distr(params)
         firstPriority = [nFamEll, nFamRect, stopCondition, domainSize, numOfLayers, 
                  seed, domainSizeIncrease, ignoreBoundaryFaces, rejectsPerFracture, 
                  userDefined, input_helper_methods.checkFamCount, checkNoDepFlags, famProb]
