@@ -15,15 +15,15 @@ def mesh_network(_jobname, _num_frac, _ncpu, ncpu = ''):
 	production_mode = True 
 	refine_factor = 1	
 	
-	nPoly, h, visualMode, dudded_points,domain = mesh.parse_params_file()
+	nPoly, h, visual_mode, dudded_points,domain = mesh.parse_params_file()
 	_num_frac = nPoly
 	tic2 = time()
 
 	mesh.create_parameter_mlgi_file(nPoly, h)
 
-	mesh.create_lagrit_scripts(production_mode, _ncpu, refine_factor, visualMode)
+	mesh.create_lagrit_scripts(visual_mode, _ncpu)
 
-	failure = mesh.mesh_fractures_header(nPoly, _ncpu, visualMode)
+	failure = mesh.mesh_fractures_header(nPoly, _ncpu, visual_mode)
 	helper.dump_time(_jobname, 'Process: Meshing Fractures', time() - tic2)
 
 	if failure > 0:
@@ -32,27 +32,27 @@ def mesh_network(_jobname, _num_frac, _ncpu, ncpu = ''):
 
 	
 	tic2 = time()
-	n_jobs = mesh.create_merge_poly_files(_ncpu, nPoly, visualMode)
+	n_jobs = mesh.create_merge_poly_files(_ncpu, nPoly, visual_mode)
 
-	mesh.merge_the_meshes(nPoly, _ncpu, n_jobs, visualMode)
+	mesh.merge_the_meshes(nPoly, _ncpu, n_jobs, visual_mode)
 	helper.dump_time(_jobname, 'Process: Merging the Mesh', time() - tic2)	
 
-	if(visualMode == False):	
-		if (mesh.check_dudded_points(dudded_points) == False):
+	if not visual_mode: 
+		if not mesh.check_dudded_points(dudded_points):
 			cleanup_dir()
 			sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
-	if production_mode == True:
+	if production_mode:
 		mesh.cleanup_dir()
 
-	if(visualMode == False): 
+	if not visual_mode: 
 		mesh.define_zones(h,domain)
 
-	mesh.output_meshing_report(visualMode)
+	mesh.output_meshing_report(visual_mode)
 	print ('='*80)
-	if(visualMode==False):
+	if(visual_mode==False):
 		print("Meshing Network Using LaGriT Complete")
-	if(visualMode==True):
+	if(visual_mode==True):
 		sys.exit("Meshing Visual Mode Network Using LaGriT Complete\n"+'='*80)
 	print ('='*80)
 
