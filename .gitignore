@@ -18,3 +18,5 @@ python_scripts/mypaths.txt
 test_inputs/*
 *.pdf
 *output_test_min*
+*break*
+

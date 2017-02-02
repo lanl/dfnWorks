@@ -1,6 +1,7 @@
-import os, sys, time
+import os, sys
 sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
-from dfnWorks import *
+from modules import dfnworks, helper
+from time import time
 
 def define_paths():
 	# Set Environment Variables
@@ -21,9 +22,6 @@ def define_paths():
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-
-
-
 
 lanl_statement = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,21 +99,17 @@ print lanl_statement
 print ('='*80)
 os.system("date")
 define_paths()
-
 main_time = time()
-dfn = create_dfn()
+dfn = dfnworks.create_dfn()
 # General Work Flow
 dfn.dfnGen()
 dfn.dfnFlow()
 dfn.dfnTrans()
 
-
-
-
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
 print timing
-dfn.dump_time(dfn._jobname,main_elapsed) 
+helper.dump_time(dfn._jobname, dfn._jobname,main_elapsed) 
 #dfn.print_run_time()	
 print("*"*80)
 print(dfn._jobname+' complete')

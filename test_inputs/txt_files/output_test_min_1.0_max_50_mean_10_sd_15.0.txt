@@ -1,3 +1,0 @@
-dfnGen /home/nknapp/dfnworks/dfnworks-main/test_inputs/dat_files/output_test_min_1.0_max_50_mean_10_sd_15.0.dat
-dfnFlow /home/nknapp/dfnworks/dfnworks-main/test_inputs/4_fracture_test/dfn_explicit.in
-dfnTrans /home/nknapp/dfnworks/dfnworks-main/test_inputs/4_fracture_test/PTDFN_control.dat
