@@ -17,7 +17,8 @@ def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
 	Inputs:
 	num_poly: Number of polygons
 	h: meshing length scale
-	slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution
+	slope: Slope of coarsening function, default = 2, 
+		set to 0 for uniform mesh resolution
 	refine_dist: distance used in coarsing function, default = 0.5,
 	"""
 	
@@ -105,7 +106,7 @@ def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
 		f.write('finish \n')
 		f.flush()
 		f.close()
-	print("Creating parameteri.mlgi files: Complete\n")
+	print("Creating parameter*.mlgi files: Complete\n")
 
 def create_lagrit_scripts(visual_mode, ncpu, refine_factor=1, production_mode=True): 
 	"""create_lagrit_scripts
@@ -447,13 +448,13 @@ finish
 
 	# Create a different Run file for each CPU
 	for i in range(1,ncpu+1):
-		file_name = 'mesh_poly_CPU' + str(i) + '.lgi'
+		file_name = 'mesh_poly_CPU%d.lgi'%i
 		f = open(file_name, 'w')
 		#Name of parameter Input File
-		fparameter_name = 'parameters_CPU' + str(i) + '.mlgi' 
-		fintersection_name = 'intersections_CPU' + str(i) + '.inp'
-		fpoly_name = 'poly_CPU' + str(i) + '.inp'
-		parameters = (fparameter_name, fpoly_name, fintersection_name,i)
+		fparameter_name = 'parameters_CPU%d.mlgi'%i 
+		fintersection_name = 'intersections_CPU%d.inp'%i
+		fpoly_name = 'poly_CPU%d.inp'%i
+		parameters = (fparameter_name, fpoly_name, fintersection_name, i)
 		f.write(lagrit_input%parameters)
 		f.flush()
 		f.close()
@@ -701,7 +702,9 @@ finish
 	os.system("sed -i '1d' boundary_front_s.zone ")
 	os.system("sed -i '1d' boundary_right_e.zone ")
 	os.system("sed -i '1d' boundary_back_n.zone ")
-	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone boundary_front_s.zone boundary_right_e.zone   boundary_back_n.zone  > allboundaries.zone ")
+	os.system("cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone\
+	boundary_front_s.zone boundary_right_e.zone \
+	boundary_back_n.zone  > allboundaries.zone ")
 
 	# Remove Left over zone files
 	os.remove('boundary_bottom.zone')
@@ -710,5 +713,3 @@ finish
 	os.remove('boundary_right_e.zone')
 	os.remove('boundary_front_s.zone')
 	os.remove('boundary_back_n.zone')
-
-

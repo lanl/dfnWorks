@@ -146,7 +146,8 @@ def mesh_fractures_header(num_poly, ncpu, visual_mode):
 		work_queue.put(i)
 
 	for i in xrange(ncpu):
-		p = mp.Process(target=worker, args= (work_queue, done_queue, visual_mode, num_poly))
+		p = mp.Process(target=worker, args=(work_queue, \
+			done_queue, visual_mode, num_poly))
 		p.daemon = True
 		p.start()        
 		processes.append(p)
@@ -187,7 +188,8 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 	for j in range(1, n_jobs + 1):
 		pid = os.fork()
 		if pid == 0: # clone a child job
-			cmd = os.environ['lagrit_dfn']+' < merge_poly_part_%d.lgi > log_merge_poly_part%d' 
+			cmd = os.environ['lagrit_dfn']+ ' < merge_poly_part_%d.lgi ' \
+				+ '> log_merge_poly_part%d' 
 			os.system(cmd%(j,j))
 			os._exit(0)
 		else:
@@ -202,7 +204,8 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 			j += 1 
 
 	print("Starting Final Merge")
-	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi > log_merge_all.txt') # run remove points
+	os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
+		+ ' > log_merge_all.txt') # run remove points
 
 	# Check log_merge_all.txt for LaGriT complete successfully
 	if not visual_mode:
@@ -217,7 +220,3 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 			print("Merging triangulated polygon meshes: Complete\n")
 		else:
 			sys.exit("Final Merge Failed")
-
-
-
-	
