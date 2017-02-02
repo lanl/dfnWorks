@@ -13,7 +13,7 @@ def define_paths():
 	
 	os.environ['DFNGENC_PATH']='/home/nknapp/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/nknapp/dfnworks/input_files'
+	os.environ['INPUT_PATH']='/home/nknapp/dfnworks-main/input_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -99,16 +99,12 @@ print lanl_statement
 print ('='*80)
 os.system("date")
 define_paths()
-
 main_time = time()
 dfn = dfnworks.create_dfn()
 # General Work Flow
 dfn.dfnGen()
 dfn.dfnFlow()
 dfn.dfnTrans()
-
-
-
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

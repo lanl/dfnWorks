@@ -1,0 +1,3 @@
+Runs times for 4_user_rects
+Function: make_working_directory :  0.019003 seconds
+Function: check_input :  0.018694 seconds

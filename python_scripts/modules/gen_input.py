@@ -1,8 +1,8 @@
-from helper import *
 import os
 import sys
 import shutil
 import distributions as distr_module
+import helper
 
 def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
@@ -83,7 +83,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     global jobname
     jobname = _jobname
 
-    input_helper_methods=input_helper(params, minFracSize)
+    input_helper_methods=helper.input_helper(params, minFracSize)
 
     ## ===================================================================== ##
     ##                      Mandatory Parameters                             ##
@@ -583,7 +583,9 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] = _jobname +  '/' + _dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
+        ioPaths["output"] =  _jobname +  '/' + _dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
+        ioPaths["output"] = os.path.abspath(ioPaths["output"]) 
+        print "DFNGen file path is ", _dfnGen_file 
         print "clean file path is ", ioPaths["output"]   
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"
@@ -591,11 +593,14 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
             "\"polishedOutput.txt\" in your current working directory.", params)
     try:
         reader = open(ioPaths["input"], 'r')
-        writer = open(ioPaths["output"], 'w')
-        inputIterator = iter(reader)
     except:
-        input_helper_methods.error("Check that the path of your input file is valid.")
-      
+        input_helper_methods.error("Check that the path of your input file is valid")
+    try:
+        writer = open(ioPaths["output"], 'w')
+    except:
+        input_helper_methods.error("Check that the path of your output file is valid.")
+    
+    inputIterator = iter(reader)  
     print '--> Checking input data'
     print '--> Input Data: ', ioPaths["input"] 
     print '--> Output File: ',ioPaths["output"] 

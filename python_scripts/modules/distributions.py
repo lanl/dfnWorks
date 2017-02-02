@@ -6,7 +6,7 @@ class distr():
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self._params = params
         global distr_helper_methods  
-        distr_helper_methods = gen_input.input_helper(params, minFracSize) 
+        distr_helper_methods = helper.input_helper(params, minFracSize) 
         self.ellipseFams = distr_helper_methods.valueOf('nFamEll')
         self.rectFams = distr_helper_methods.valueOf('nFamRect')
         self.numEdistribs = numEdistribs

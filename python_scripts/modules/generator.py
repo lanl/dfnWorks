@@ -14,7 +14,7 @@ def make_working_directory(jobname):
         os.mkdir(jobname + '/polys')
         os.chdir(jobname)
         cwd = os.getcwd()
-        print("Current directory is now: %s\n"%cwd)
+        rint("Current directory is now: %s\n"%cwd)
         print "Jobname is ", jobname   
     except OSError:
         #print '\nFolder ', jobname, ' exists'
@@ -41,7 +41,6 @@ def create_network(_local_dfnGen_file, jobname):
     print '--> Running DFNGEN'    
     # copy input file into job folder    
     os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + _local_dfnGen_file[:-4] + '_clean.dat' + ' ' + jobname )
-    os.chdir(jobname)
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'
         print '--> Exiting Program'

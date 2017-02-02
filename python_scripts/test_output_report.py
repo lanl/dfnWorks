@@ -103,7 +103,7 @@ def write_lognormal_dat_file(param_list, input_dir):
 	domainSize: {100.0, 100.0, 100.0}
 	userEllByCoord: 0
 	constantPermeability: 1e-12
-	visualizationMode: 0
+	visualizationMode: 1
 	insertUserRectanglesFirst: 1
 	nFamRect: 1
 	emin: {}
@@ -167,7 +167,7 @@ def get_all_param_lists():
 def run_all_tests(flow_name, trans_name, python_dir, input_dir):
 
 	list_of_param_lists = get_all_param_lists()
-	for param_list in list_of_param_lists:
+        for param_list in list_of_param_lists[0:1]:
 		dat_file_name = write_lognormal_dat_file(param_list, input_dir)
 		input_file_name = write_text_file(param_list, flow_name, trans_name, input_dir, dat_file_name)
 		run_test(param_list, flow_name, trans_name, python_dir, input_dir, input_file_name)

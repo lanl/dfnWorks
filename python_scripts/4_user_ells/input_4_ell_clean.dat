@@ -53,7 +53,7 @@ outputAcceptedRadiiPerFamily: 1
 eExpMin: {1}
 rbetaDistribution: {1, 1}
 stdAperture: 0.8
-UserEll_Input_File_Path: ./TestCases/test/uEllInput.dat
+UserEll_Input_File_Path: /home/nknapp/dfnworks-main/sample_inputs/4_fracture_test/4_user_ellipses.dat
 rExpMin: {1}
 disableFram: 0
 ekappa: {8, 8}
@@ -67,7 +67,7 @@ visualizationMode: 0
 insertUserRectanglesFirst: 1
 nFamRect: 0
 emin: {1}
-userRectanglesOnOff: 1
+userRectanglesOnOff: 0
 h: 0.05
 radiiListIncrease: 0.1
 edistr: {2, 3}
@@ -78,7 +78,7 @@ ebetaDistribution: {1, 1}
 numOfLayers: 0
 stopCondition: 0
 rLogMin: {1}
-userEllipsesOnOff: 0
+userEllipsesOnOff: 1
 rAngleOption: 0
 ignoreBoundaryFaces: 1
 rLayer: {0, 0}
