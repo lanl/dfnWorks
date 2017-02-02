@@ -114,7 +114,10 @@ class input_helper():
         print("\n----Program terminated while parsing input----\n")
         sys.exit(1)
 
-    def warning(self, warnString, warningFile):
+    def warning(self, warnString):
+        print("WARNING --- " + warnString)
+    
+    def warning(self, warnString, warningFile=''):
         #global warningFile
         print("WARNING --- " + warnString)
         #warningFile.write("WARNING --- " + warnString + "\n")

@@ -1,17 +1,21 @@
+/*=========================================================================*/
+/*  Gereral Options & Fracture Network Parameters:                         */
+/*=========================================================================*/
+
 stopCondition: 0
 /*  0: Stop once nPoly fractures are accepted (Defined below)
     1: Stop once all family's p32 values are equal or greater than the
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 50
+nPoly: 20
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {100,100,100} 
+domainSize: {10,10,10} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -109,14 +113,14 @@ outputAcceptedRadiiPerFamily: 1
 /*  Fracture Network Parameters:                                            */
 /*==========================================================================*/
 
-tripleIntersections: 1
+tripleIntersections: 0
 /*  Accept or reject triple intersections
         0 - Off (Reject)
         1 - On  (Accept)  
 */
 
 
-forceLargeFractures: 0
+forceLargeFractures: 1
 /*  Inserts the largest possible fracture for each defined fracture family, 
     defined by the user-defined maxium radius
         0 - Off (Do not force insertion of larest fractures)
@@ -130,7 +134,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 1 
+disableFram: 0
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -189,7 +193,7 @@ boundaryFaces: {1,1,1,1,1,1}
     using this feature.     
 */
                           
-rejectsPerFracture: 10000  
+rejectsPerFracture: 350  
 /*  If a fracture is rejected, it will be re-translated
     to a new position this number of times. 
 
@@ -641,4 +645,3 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 
 /*===========================================================================*/
  
-

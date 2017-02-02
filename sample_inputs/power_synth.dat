@@ -8,14 +8,14 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 6000
+nPoly: 20
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {100,100,100} 
+domainSize: {10,10,10} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -134,7 +134,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 1
+disableFram: 0
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -475,10 +475,10 @@ rLogMax: {5.0, 5.0, 30.0, 30.0, 15.0, 15.0}
 rmin: {0.5, 0.5}  
 //  Minimum radius
 
-rmax: {5,5}    
+rmax: {125,125}    
 //  Maximum radius
 
-ralpha: {1.0,1.0}  
+ralpha: {2.0,2.6}  
 //  Alpha. Used in truncated power-law distribution calculations.
 
 
@@ -642,4 +642,3 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 
 /*===========================================================================*/
  
-

@@ -3,6 +3,8 @@ import sys
 import shutil
 import distributions as distr_module
 import helper
+import numpy as np
+import scipy.integrate
 
 def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
 
@@ -336,7 +338,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
         # array of steps
         steps = np.linspace(0,c,n+1)
         # Numerically integrate arclength ODE
-        theta = odeint(f, 0, steps, args=(a, b), rtol = 10**-10)
+        theta = scipy.integrate.odeint(f, 0, steps, args=(a, b), rtol = 10**-10)
 
         # Convert theta to x and y
         x = a*r*np.cos(theta)

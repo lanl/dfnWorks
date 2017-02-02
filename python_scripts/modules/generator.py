@@ -14,7 +14,7 @@ def make_working_directory(jobname):
         os.mkdir(jobname + '/polys')
         os.chdir(jobname)
         cwd = os.getcwd()
-        rint("Current directory is now: %s\n"%cwd)
+        print("Current directory is now: %s\n"%cwd)
         print "Jobname is ", jobname   
     except OSError:
         #print '\nFolder ', jobname, ' exists'
