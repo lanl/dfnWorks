@@ -1,0 +1,3 @@
+dfnGen /home/nknapp/dfnworks-main/sample_inputs/power_synth.dat
+dfnFlow /home/nknapp/dfnworks-main/sample_inputs/4_fracture_test/dfn_explicit.in
+dfnTrans /home/nknapp/dfnworks-main/sample_inputs/4_fracture_test/PTDFN_control.dat
