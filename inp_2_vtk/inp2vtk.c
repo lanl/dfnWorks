@@ -4,17 +4,12 @@
 
 
 // get the coordinates x, y, z from a line of a C file
-float* getCoordinates(char* line) {
+float* getCoordinates(const char* line) {
 
     float coordinates[3];
-
-    char* x = strsep(&line, " ");
-    char* y = strsep(&line, " ");
-    char* z = strsep(&line, " ");
-
-    coordinates[0] = atoi(x);
-    coordinates[1] = atoi(y);
-    coordinates[2] = atoi(z);
+    float ignore; 
+    sscanf(line, "%f %f %f %f", &ignore, &coordinates[0], &coordinates[1], &coordinates[2]);
+    //printf("%f %f %f \n", coordinates[0], coordinates[1], coordinates[2]);
 }
 
 float** getCoordinateList(FILE* inp_file, int num_nodes) {
@@ -28,6 +23,8 @@ float** getCoordinateList(FILE* inp_file, int num_nodes) {
     for (i=0; i<num_nodes; i++) {
         coordinate_list[i] = malloc(3*sizeof(float));
     }
+
+    fgets(line, sizeof(line), inp_file);
 
     // Populate the coordinate array from the .inp file
     for (i=0; i<num_nodes; i++) {
@@ -44,11 +41,12 @@ int* getListForElement(char* line, int num_in_elem_list) {
     int i = 0;
     int* elem_info = NULL;
     elem_info = malloc(num_in_elem_list*sizeof(int));
-    for (i=0; i < num_in_elem_list; i++) {
-        elem_info[i] = line[j];
-        j += 2;
-    }
-
+    if (num_in_elem_list == 3)
+        sscanf(line, "%d %d %d", &elem_info[0], &elem_info[1], &elem_info[2]);
+    if (num_in_elem_list == 4)
+        sscanf(line, "%d %d %d %d", &elem_info[0], &elem_info[1], &elem_info[2], &elem_info[3]);
+    
+    printf("read in element with num %d, parts %d %d %d\n", num_in_elem_list, elem_info[0], elem_info[1], elem_info[2]);  
     return elem_info;
 }
 
@@ -57,6 +55,7 @@ int** getElementList(FILE* inp_file, int num_elems, const char* type) {
     char line[100];
     int** element_list = malloc(num_elems*sizeof(int*));
     int i = 0;
+    printf("Trying to read element list for %d %s elems \n", num_elems, type); 
     // Populate the element array from the inp file
     for (i=0; i<num_elems; i++) {
         fgets(line, sizeof(line), inp_file);
@@ -72,17 +71,20 @@ int** getElementList(FILE* inp_file, int num_elems, const char* type) {
     return element_list;
 }
 
-int getNumElems(FILE* inp_file, const char* type) {
+void getNumElems(FILE* inp_file, const char* type, int* counter) {
 
-    int num = 0;
     // Populate the element array from the inp file
     int i = 0;
-    char line[100];
+    char line[10000];
+    char line_type[3];;
+    char ign_1[10];
+    char ign_2[10];;
+
     while(fgets(line, sizeof(line), inp_file)) { 
-        if (strncmp(line, type, 3) == 0) 
-            num += 1; 
+        sscanf(line, "%s %s %s", ign_1, ign_2, line_type);   
+        if (strncmp(line_type, type, 3) == 0) 
+             *counter += 1; 
     }
-    return num;
 }
 
 void write_vtk_header(FILE* vtk_file) {
@@ -170,19 +172,46 @@ int main(int argc, char* argv[]) {
     char* line = malloc(100);
     fgets(line, sizeof(line), inp_file);
 
-    int num_nodes = atoi(strsep(&line, " "));
-    int num_elems = atoi(strsep(&line, " "));
+    int num_nodes = 0; 
+    int num_elems = 0;
+    fscanf(inp_file, "%d %d", &num_nodes, &num_elems);
+
+    printf("%d nodes read from inp file \n", num_nodes);
+    printf("%d elements read from inp file \n", num_elems);    
     
+    if (num_nodes < 0) 
+        printf("ERROR: negative or nonzero number of nodes read from .inp file \n");
+
+    if (num_elems < 0) 
+        printf("ERROR: negative or nonzero number of elements read from .inp filei \n");
+
     float** coordinate_list = getCoordinateList(inp_file, num_nodes);
-    int num_tet_elems = getNumElems(inp_file, "tet");
-    int num_tri_elems = getNumElems(inp_file, "tri");
+    printf("before getting number of elements \n");
+
+    int num_tet_elems = 0;
+    int num_tri_elems = 0;
+    rewind(inp_file);
+    getNumElems(inp_file, "tet", &num_tet_elems);
+    if (num_tet_elems > 2000) {
+        printf("catastrophic failure %d \n", num_tet_elems);
+        exit(0);   
+    } 
+    rewind(inp_file); 
+    getNumElems(inp_file, "tri", &num_tri_elems);
+    if (num_tri_elems > 2000) {
+       printf("ugggfgdsfadsfdsfa %d \n", num_tri_elems);
+       exit(0);   
+    }
+    printf("before getting inp element lists \n");
 
     rewind(inp_file);
     int** tet_element_list = getElementList(inp_file, num_tet_elems, "tet");
     rewind(inp_file);
     int** tri_element_list = getElementList(inp_file, num_tri_elems, "tri");
-
+    
     fclose(inp_file);
+
+    printf("writing vtk file \n");
 
     // WRITE VTK FILE
     char const* const vtk_file_name = argv[2];
