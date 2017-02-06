@@ -51,6 +51,13 @@ CMakeFiles/inp2vtk.dir/main.cpp.o
  VTK-7.1.0/Common/ExecutionModel/vtkCommonExecutionModelModule.h
  VTK-7.1.0/Common/ExecutionModel/vtkUnstructuredGridAlgorithm.h
  VTK-7.1.0/Filters/Core/vtkFiltersCoreModule.h
+ VTK-7.1.0/Filters/General/vtkFiltersGeneralModule.h
+ VTK-7.1.0/Filters/General/vtkShrinkFilter.h
+ VTK-7.1.0/IO/Core/vtkIOCoreModule.h
+ VTK-7.1.0/IO/Core/vtkWriter.h
+ VTK-7.1.0/IO/Legacy/vtkDataWriter.h
+ VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
+ VTK-7.1.0/IO/Legacy/vtkUnstructuredGridWriter.h
  VTK-7.1.0/Utilities/KWIML/vtk_kwiml.h
  VTK-7.1.0/Utilities/KWIML/vtkkwiml/abi.h
  VTK-7.1.0/Utilities/KWIML/vtkkwiml/include/kwiml/abi.h

@@ -116,7 +116,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=inp_2_vtk
+CMAKE_PROJECT_NAME:STATIC=inp2vtk
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -169,6 +169,15 @@ CMAKE_USE_RELATIVE_PATHS:BOOL=OFF
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+
+//The directory containing a CMake configuration file for VTK_REQUIRED.
+VTK_REQUIRED_DIR:PATH=VTK_REQUIRED_DIR-NOTFOUND
+
+//Value Computed by CMake
+inp2vtk_BINARY_DIR:STATIC=/home/nknapp/dfnworks-main/inp_2_vtk
+
+//Value Computed by CMake
+inp2vtk_SOURCE_DIR:STATIC=/home/nknapp/dfnworks-main/inp_2_vtk
 
 //Value Computed by CMake
 inp_2_vtk_BINARY_DIR:STATIC=/home/nknapp/dfnworks-main/inp_2_vtk
