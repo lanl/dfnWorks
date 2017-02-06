@@ -1,6 +1,7 @@
 import os
 import sys
 import meshdfn as mesh
+import shutil
 
 def make_working_directory(jobname):
     '''
@@ -9,33 +10,25 @@ def make_working_directory(jobname):
 
     try:
         os.mkdir(jobname)
-        os.mkdir(jobname + '/radii')
-        os.mkdir(jobname + '/intersections')
-        os.mkdir(jobname + '/polys')
-        os.chdir(jobname)
-        cwd = os.getcwd()
-        print("Current directory is now: %s\n"%cwd)
-        print "Jobname is ", jobname   
     except OSError:
-        #print '\nFolder ', jobname, ' exists'
-        #keep = raw_input('Do you want to delete it? [yes/no] \n')
-        #if keep == 'yes' or keep == 'y':
-        print 'Deleting', jobname 
-        mesh.rmtree(jobname)
-        print 'Creating', jobname 
-        print "Jobname is ", jobname 
-        os.mkdir(jobname)    
-        os.mkdir(jobname + '/radii')
-        os.mkdir(jobname + '/intersections')
-        os.mkdir(jobname + '/polys')
-        os.chdir(jobname)
-        cwd = os.getcwd()
-        print("Current directory is now: %s\n"%cwd)
-
-        #elif keep == 'no' or 'n':
-        #    sys.exit("Not deleting folder. Exiting Program") 
-        #else:
-        #    sys.exit("Unknown Response. Exiting Program") 
+        print '\nFolder ', jobname, ' exists'
+        keep = raw_input('Do you want to delete it? [yes/no] \n')
+        if keep == 'yes' or keep == 'y':
+            print 'Deleting', jobname 
+            shutil.rmtree(jobname)
+            print 'Creating', jobname 
+            os.mkdir(jobname)    
+        elif keep == 'no' or 'n':
+            sys.exit("Not deleting folder. Exiting Program") 
+        else:
+            sys.exit("Unknown Response. Exiting Program") 
+    os.mkdir(jobname + '/radii')
+    os.mkdir(jobname + '/intersections')
+    os.mkdir(jobname + '/polys')
+    os.chdir(jobname)
+    cwd = os.getcwd()
+    print("Current directory is now: %s\n"%cwd)
+    print "Jobname is ", jobname   
 
 def create_network(_local_dfnGen_file, jobname):
     print '--> Running DFNGEN'    
