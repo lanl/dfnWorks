@@ -90,7 +90,7 @@ class dfnworks(Frozen):
         helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()
-        #output_report()
+        output_report()
         helper.dump_time(self._jobname, 'output_report', time() - tic)   
         # Mesh Network
 
@@ -146,39 +146,42 @@ class dfnworks(Frozen):
         print("\ndfnTrans Starting\n")
         print('='*80)
 
-        # Create Path to DFNTrans   
-        try:
-            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
-        except OSError:
-            os.remove('DFNTrans')   
-            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
-        except:
-            sys.exit("Cannot create link to DFNTrans. Exiting Program")
-        
-        # Copy DFNTrans input file  
-        #try:
-        #self._dfnTrans_file = self._jobname + '/' + self._dfnTrans_file.rsplit('/', 1)[-1]  
-        print "dfnTrans file is ", self._dfnTrans_file, "local dfnTrans file is ", self._local_dfnTrans_file 
-        copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
-        
-        #except Error:
-         #   print("--> Problem copying %s file"%self._local_dfnTrans_file)
-        #    print("--> Trying to delete and recopy") 
-         #   os.remove(self._local_dfnTrans_file)
-          #  copy(self._dfnTrans_file, self._local_dfnTrans_file) 
-        #except:
-         #   print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
-          #  sys.exit("Unable to replace. Exiting Program")
-
-        tic = time()    
-        failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
+        transport.copy_dfnTrans_files(self._dfnTrans_file, self._local_dfnTrans_file)
+        tic=time()
+        transport.run_dfntrans(self._local_dfnTrans_file)
         helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
-        if failure == 0:
-            print('='*80)
-            print("\ndfnTrans Complete\n")
-            print('='*80)
-        else:
-            sys.exit("--> ERROR: dfnTrans did not complete\n")
+        
+#
+#        # Create Path to DFNTrans   
+#        try:
+#            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+#        except OSError:
+#            os.remove('DFNTrans')   
+#            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+#        except:
+#            sys.exit("Cannot create link to DFNTrans. Exiting Program")
+#        
+#        # Copy DFNTrans input file  
+#        try:
+#                copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
+#        except OSError:
+#            print("--> Problem copying %s file"%self._local_dfnTrans_file)
+#            print("--> Trying to delete and recopy") 
+#            os.remove(self._local_dfnTrans_file)
+#            copy(self._dfnTrans_file, self._local_dfnTrans_file) 
+#        except:
+#            print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
+#            sys.exit("Unable to replace. Exiting Program")
+#
+#        tic = time()    
+#        failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
+#        helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
+#        if failure == 0:
+#            print('='*80)
+#            print("\ndfnTrans Complete\n")
+#            print('='*80)
+#        else:
+#            sys.exit("--> ERROR: dfnTrans did not complete\n")
 
 def commandline_options():
     '''Read command lines for use in dfnWorks.

@@ -1,4 +1,8 @@
-import os, sys, helper, glob, shutil 
+import os 
+import sys
+import helper
+import glob
+import shutil
 from time import time 
 import numpy as np
 import h5py
@@ -621,4 +625,3 @@ def uncorrelated(sigma):
 
 	cmd = 'ln -s ' + output_filename + ' perm.dat '
 	os.system(cmd)
-
