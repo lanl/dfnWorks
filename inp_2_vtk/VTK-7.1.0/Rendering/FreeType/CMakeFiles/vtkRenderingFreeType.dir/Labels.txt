@@ -1,0 +1,32 @@
+# Target labels
+ vtkRenderingFreeType
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkFreeTypeStringToImage.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkFreeTypeTools.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkMathTextFreeTypeTextRenderer.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkMathTextUtilities.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkTextRendererStringToImage.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkScaledTextActor.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkVectorText.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkRenderingFreeTypeObjectFactory.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_arial_bold.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_arial_bold_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_arial.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_arial_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_courier_bold.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_courier_bold_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_courier.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_courier_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_times_bold.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_times_bold_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_times.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/fonts/face_times_italic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkFreeTypeStringToImage.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkFreeTypeTools.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkMathTextFreeTypeTextRenderer.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkMathTextUtilities.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkTextRendererStringToImage.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkScaledTextActor.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkVectorText.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkRenderingFreeTypeObjectFactory.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/FreeType/vtkRenderingFreeTypeModule.h

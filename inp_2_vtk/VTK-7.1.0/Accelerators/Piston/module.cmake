@@ -1,0 +1,19 @@
+if(NOT VTK_LEGACY_REMOVE)
+  vtk_module(vtkAcceleratorsPiston
+    TEST_DEPENDS
+      vtkTestingRendering
+      vtkInteractionStyle
+      vtkInteractionWidgets
+      vtkImagingSources
+      vtkParallelCore
+      vtkParallelMPI
+      vtkRenderingParallel
+    EXCLUDE_FROM_ALL
+    DEPENDS
+      vtkCommonCore
+      vtkCommonDataModel
+      vtkCommonExecutionModel
+      vtkRenderingCore
+      vtkRenderingOpenGL
+    )
+endif()

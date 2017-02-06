@@ -1,0 +1,19 @@
+vtk_module(vtkRenderingContextOpenGL
+  IMPLEMENTS
+    vtkRenderingContext2D
+  BACKEND
+    OpenGL
+  IMPLEMENTATION_REQUIRED_BY_BACKEND
+  KIT
+    vtkOpenGL
+  DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkRenderingContext2D
+    vtkRenderingCore
+    vtkRenderingFreeType
+    vtkRenderingOpenGL
+  PRIVATE_DEPENDS
+    vtkCommonMath
+    vtkCommonTransforms
+  )

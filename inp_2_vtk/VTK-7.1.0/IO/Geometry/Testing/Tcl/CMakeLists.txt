@@ -1,0 +1,14 @@
+vtk_add_test_tcl(
+  ParticleReader.tcl
+  Plot3DScalars.tcl
+  Plot3DVectors.tcl
+  TestAVSucdReader.tcl
+  TestChacoReader.tcl
+  TestGAMBITReader.tcl
+  TestPolygonWriters.tcl
+  TestSimplePointsReader.tcl
+  TestXYZMol.tcl
+  caffeine.tcl
+  motor.tcl
+  testHexaPenta.tcl
+  )

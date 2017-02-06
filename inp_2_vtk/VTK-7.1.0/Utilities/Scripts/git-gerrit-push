@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo 'VTK no longer uses Gerrit. Please use GitLab.'
+exit 1

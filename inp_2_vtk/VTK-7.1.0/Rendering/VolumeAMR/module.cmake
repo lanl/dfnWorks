@@ -1,0 +1,16 @@
+vtk_module(vtkRenderingVolumeAMR
+  KIT
+    vtkParallel
+  DEPENDS
+    vtkImagingCore
+    vtkRenderingVolume
+    vtkRenderingVolume${VTK_RENDERING_BACKEND}
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkCommonMath
+    vtkCommonSystem
+    vtkFiltersAMR
+    vtkRenderingCore
+  )

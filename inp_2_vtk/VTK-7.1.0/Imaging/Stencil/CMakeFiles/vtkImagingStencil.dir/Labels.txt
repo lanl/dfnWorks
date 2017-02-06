@@ -1,0 +1,18 @@
+# Target labels
+ vtkImagingStencil
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageStencil.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageStencilToImage.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageToImageStencil.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImplicitFunctionToImageStencil.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkLassoStencilSource.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkPolyDataToImageStencil.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkROIStencilSource.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageStencil.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageStencilToImage.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImageToImageStencil.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImplicitFunctionToImageStencil.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkLassoStencilSource.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkPolyDataToImageStencil.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkROIStencilSource.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Stencil/vtkImagingStencilModule.h

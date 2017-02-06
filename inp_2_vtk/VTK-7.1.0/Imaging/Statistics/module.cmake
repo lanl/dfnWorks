@@ -1,0 +1,13 @@
+vtk_module(vtkImagingStatistics
+  GROUPS
+    Imaging
+    StandAlone
+  KIT
+    vtkImaging
+  DEPENDS
+    vtkCommonExecutionModel
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkImagingCore
+  )

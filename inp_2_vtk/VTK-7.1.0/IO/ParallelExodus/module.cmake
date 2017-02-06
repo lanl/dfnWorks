@@ -1,0 +1,18 @@
+vtk_module(vtkIOParallelExodus
+  IMPLEMENTS
+    vtkIOExodus
+  TEST_DEPENDS
+    vtkTestingRendering
+  KIT
+    vtkParallel
+  DEPENDS
+    vtkCommonCore
+    vtkIOExodus
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkFiltersCore
+    vtkParallelCore
+    vtkexodusII
+    vtksys
+  )

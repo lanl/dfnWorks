@@ -1,0 +1,20 @@
+# Target labels
+ vtkImagingMath
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageDivergence.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageDotProduct.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageLogarithmicScale.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageLogic.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMagnitude.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMaskBits.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMathematics.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageWeightedSum.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageDivergence.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageDotProduct.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageLogarithmicScale.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageLogic.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMagnitude.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMaskBits.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageMathematics.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImageWeightedSum.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Math/vtkImagingMathModule.h

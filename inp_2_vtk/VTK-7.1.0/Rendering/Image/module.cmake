@@ -1,0 +1,23 @@
+vtk_module(vtkRenderingImage
+  GROUPS
+    Imaging
+    Rendering
+  TEST_DEPENDS
+    vtkTestingCore
+    vtkTestingRendering
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkInteractionStyle
+    vtkImagingSources
+    vtkFiltersModeling
+  KIT
+    vtkRendering
+  DEPENDS
+    vtkCommonExecutionModel
+    vtkRenderingCore
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonMath
+    vtkCommonTransforms
+    vtkImagingCore
+  )

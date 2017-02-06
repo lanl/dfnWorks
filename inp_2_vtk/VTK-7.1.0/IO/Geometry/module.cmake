@@ -1,0 +1,25 @@
+vtk_module(vtkIOGeometry
+  GROUPS
+    StandAlone
+  TEST_DEPENDS
+    vtkIOAMR
+    vtkIOLegacy
+    vtkFiltersGeometry
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkTestingRendering
+    vtkInteractionStyle
+  KIT
+    vtkIO
+  DEPENDS
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkIOCore
+    vtkIOLegacy
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonMisc
+    vtkCommonSystem
+    vtkCommonTransforms
+    vtksys
+    vtkzlib
+  )

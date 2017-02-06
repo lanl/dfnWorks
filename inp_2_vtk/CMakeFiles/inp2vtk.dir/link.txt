@@ -1,0 +1,1 @@
+/usr/bin/c++   -libstdc++    CMakeFiles/inp2vtk.dir/main.cpp.o  -o inp2vtk -rdynamic 

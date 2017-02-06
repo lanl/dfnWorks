@@ -1,0 +1,12 @@
+set(vtkRenderingVolumeOpenGL2_HEADERS_LOADED 1)
+set(vtkRenderingVolumeOpenGL2_HEADERS "vtkOpenGLGPUVolumeRayCastMapper;vtkOpenGLProjectedTetrahedraMapper;vtkOpenGLRayCastImageDisplayHelper;vtkSmartVolumeMapper;vtkRenderingVolumeOpenGL2ObjectFactory")
+
+foreach(header ${vtkRenderingVolumeOpenGL2_HEADERS})
+  set(vtkRenderingVolumeOpenGL2_HEADER_${header}_EXISTS 1)
+endforeach()
+
+
+set(vtkRenderingVolumeOpenGL2_HEADER_vtkRenderingVolumeOpenGL2ObjectFactory_WRAP_EXCLUDE 1)
+
+set(vtkRenderingVolumeOpenGL2_HEADER_vtkRenderingVolumeOpenGL2ObjectFactory_WRAP_EXCLUDE_PYTHON 1)
+

@@ -1,0 +1,13 @@
+# Target labels
+ vtkverdict
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_EdgeMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_GaussIntegration.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_HexMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_KnifeMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_PyramidMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_QuadMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_TetMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_TriMetric.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/VerdictVector.cpp
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/verdict/vtkverdict/V_WedgeMetric.cpp

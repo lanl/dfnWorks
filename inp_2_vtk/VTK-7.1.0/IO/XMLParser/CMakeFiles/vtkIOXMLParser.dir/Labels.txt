@@ -1,0 +1,10 @@
+# Target labels
+ vtkIOXMLParser
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLDataParser.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLParser.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLUtilities.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLDataParser.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLParser.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkXMLUtilities.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/XMLParser/vtkIOXMLParserModule.h

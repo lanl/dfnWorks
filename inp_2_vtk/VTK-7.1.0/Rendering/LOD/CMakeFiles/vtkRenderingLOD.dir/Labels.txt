@@ -1,0 +1,8 @@
+# Target labels
+ vtkRenderingLOD
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/LOD/vtkLODActor.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/LOD/vtkQuadricLODActor.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/LOD/vtkLODActor.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/LOD/vtkQuadricLODActor.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/LOD/vtkRenderingLODModule.h

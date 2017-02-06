@@ -1,0 +1,6 @@
+# Target labels
+ vtkDICOMParser
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Utilities/DICOMParser/DICOMFile.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Utilities/DICOMParser/DICOMParser.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Utilities/DICOMParser/DICOMAppHelper.cxx
