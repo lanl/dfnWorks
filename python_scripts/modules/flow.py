@@ -554,3 +554,71 @@ class flow():
             for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
                     os.remove(fl)	
 
+def create_dfnFlow_links():
+    os.symlink('../full_mesh.uge', 'full_mesh.uge')
+    os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
+    os.symlink('../full_mesh.inp', 'full_mesh.inp')
+    os.symlink('../pboundary_back_n.zone', 'pboundary_back_n.zone')
+    os.symlink('../pboundary_front_s.zone', 'pboundary_front_s.zone')
+    os.symlink('../pboundary_left_w.zone', 'pboundary_left_w.zone')
+    os.symlink('../pboundary_right_e.zone', 'pboundary_right_e.zone')
+    os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
+    os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
+    os.symlink('../materialid.dat', 'materialid.dat')
+	
+
+	#################### End dfnFlow Functions ##########################
+def uncorrelated(sigma):
+	print '--> Creating Uncorrelated Transmissivity Fields'
+	print 'Variance: ', sigma
+	print 'Running un-correlated'
+	x = np.genfromtxt('../aperture.dat', skip_header = 1)[:,-1]
+	k = np.genfromtxt('../perm.dat', skip_header = 1)[0,-1]
+	n = len(x)
+
+	print np.mean(x)
+
+	perm = np.log(k)*np.ones(n) 
+	perturbation = np.random.normal(0.0, 1.0, n)
+	perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
+
+	aper = np.sqrt((12.0*perm))
+	aper -= np.mean(aper)
+	aper += np.mean(x)
+
+	print '\nPerm Stats'
+	print '\tMean:', np.mean(perm)
+	print '\tMean:', np.mean(np.log(perm))
+	print '\tVariance:',np.var(np.log(perm))
+	print '\tMinimum:',min(perm)
+	print '\tMaximum:',max(perm)
+	print '\tMinimum:',min(np.log(perm))
+	print '\tMaximum:',max(np.log(perm))
+
+	print '\nAperture Stats'
+	print '\tMean:', np.mean(aper)
+	print '\tVariance:',np.var(aper)
+	print '\tMinimum:',min(aper)
+	print '\tMaximum:',max(aper)
+
+
+	output_filename = 'aperture_' + str(sigma) + '.dat'
+	f = open(output_filename,'w+')
+	f.write('aperture\n')
+	for i in range(n):
+		f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
+	f.close()
+
+	cmd = 'ln -s ' + output_filename + ' aperture.dat '
+	os.system(cmd)
+
+	output_filename = 'perm_' + str(sigma) + '.dat'
+	f = open(output_filename,'w+')
+	f.write('permeability\n')
+	for i in range(n):
+		f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
+	f.close()
+
+	cmd = 'ln -s ' + output_filename + ' perm.dat '
+	os.system(cmd)
+
