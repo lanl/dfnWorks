@@ -30,10 +30,11 @@ def make_working_directory(jobname):
     print("Current directory is now: %s\n"%cwd)
     print "Jobname is ", jobname   
 
-def create_network(_local_dfnGen_file, jobname):
+def create_network(local_dfnGen_file, jobname):
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + _local_dfnGen_file[:-4] + '_clean.dat' + ' ' + jobname )
+    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + local_dfnGen_file[:-4] + '_clean.dat' + ' ' + jobname )
+
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'
         print '--> Exiting Program'
