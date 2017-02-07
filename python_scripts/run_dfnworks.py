@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
+sys.path.append("/home/nknapp/dfnworks-main/python_scripts/") 
 from modules import dfnworks, helper
 from time import time
 
@@ -9,11 +9,11 @@ def define_paths():
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-pt-testing'
-	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+	os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
 	
-	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
+	os.environ['DFNGENC_PATH']='/home/nknapp/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
+	os.environ['input_files']='/home/nknapp/input_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -22,7 +22,7 @@ def define_paths():
 
 	os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
-
+        os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + '/inp_2_vtk/inp2vtk'
 lanl_statement = '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.0 ~~~~~~~~~~~~~~~~~~~~~~~~

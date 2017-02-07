@@ -2,6 +2,7 @@ import os, sys, helper, glob, shutil
 from time import time 
 import numpy as np
 import h5py
+import subprocess
 
 class flow():
     def __init__(self, _inp_file, _mesh_type, _uge_file, _vtk_file, _perm_file, _perm_cell_file, _local_dfnFlow_file, _aper_file, _aper_cell_file, _dfnFlow_file, _ncpu, _jobname):
@@ -195,6 +196,25 @@ class flow():
             print('--> Converting zone files to ex complete')	
 
     def inp2vtk(self, inp_file=''):
+         
+        if self._inp_file:
+            inp_file = self._inp_file
+        else:
+            self._inp_file = inp_file
+
+        if inp_file == '':
+            sys.exit('ERROR: Please provide inp filename!')
+
+        if self._vtk_file:
+            vtk_file = self._vtk_file
+        else:
+            vtk_file = inp_file[:-4]
+            self._vtk_file = vtk_file + '.vtk'
+        
+        arg_string = os.environ['VTK_PATH'] + ' ' + self._inp_file + ' ' + self._vtk_file 
+        subprocess.call(arg_string, shell=True)
+
+    def inp2vtk_python(self, inp_file=''):
             import pyvtk as pv
             """
             :rtype : object

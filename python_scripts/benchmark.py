@@ -15,5 +15,5 @@ benchmark_dir = home_dir +  '/dfnworks-main/benchmarks/'
 benchmark_dir = os.path.abspath(benchmark_dir)
 for input_file in os.listdir(benchmark_dir):
     input_file = benchmark_dir + '/' +  input_file 
-    if "ell" not in input_file:
+    if "ell" not in input_file: 
         run_test(input_file)
