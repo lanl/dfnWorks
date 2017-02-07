@@ -20,3 +20,49 @@ test_inputs/*
 *output_test_min*
 *break*
 
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.pyc
+main
+DFNGen
+
+# Other
+*~
+*.nfs*
+*.swp
+
+# Dont change other peoples settings in these files
+runDFN.sh
+new_mesh_DFN.py
+mesh_DFN_C++_v1.py
+mesh_DFN_C++_v2.py
+
+#input files
+#
