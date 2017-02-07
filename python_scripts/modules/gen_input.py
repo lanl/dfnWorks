@@ -6,7 +6,7 @@ import helper
 import numpy as np
 import scipy.integrate
 
-def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
+def check_input(self, input_file='',output_file=''):
 
     """
                     ## Input Format Requirements ##
@@ -83,7 +83,7 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     global warningFile
     warningFile = open("warningFileDFNGen.txt", 'w')        
     global jobname
-    jobname = _jobname
+    jobname = self._jobname
 
     input_helper_methods=helper.input_helper(params, minFracSize)
 
@@ -227,25 +227,25 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
             if not os.path.isfile(input_helper_methods.valueOf(ecoordPath, params)):
                 input_helper_methods.error(invalid.format(ecoordPath))
             else:
-                shutil.copy(input_helper_methods.valueOf(ecoordPath, params), _jobname)
+                shutil.copy(input_helper_methods.valueOf(ecoordPath, params), self._jobname)
 
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userEs, params), userEs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(ePath, params)):
                 input_helper_methods.error(invalid.format(ePath))
             else:
-                shutil.copy(input_helper_methods.valueOf(ePath, params), _jobname)
+                shutil.copy(input_helper_methods.valueOf(ePath, params), self._jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userRs, params), userRs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(rPath, params)):
                 input_helper_methods.error(invalid.format(rPath))
             else:
-                shutil.copy(input_helper_methods.valueOf(rPath, params), _jobname)
+                shutil.copy(input_helper_methods.valueOf(rPath, params), self._jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(recByCoord, params), recByCoord) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(coordPath, params)):
                 input_helper_methods.error(invalid.format(coordPath))    
             else:
-                shutil.copy(input_helper_methods.valueOf(coordPath, params), _jobname)
+                shutil.copy(input_helper_methods.valueOf(coordPath, params), self._jobname)
 
     def aperture():
         apOption = input_helper_methods.verifyInt(input_helper_methods.valueOf('aperture', params), 'aperture')
@@ -571,23 +571,23 @@ def check_input(_dfnGen_file, _jobname,  input_file='',output_file=''):
     try:
         if not os.path.exists(os.getcwd()):
             print "ERROR: cwd: ", os.getcwd(), " does not exist"
-        if not os.path.exists(os.path.abspath(_dfnGen_file)):
-            print "ERROR: dfnGen input file path: ", os.path.abspath(_dfnGen_file), " does not exist"
-        shutil.copy(os.path.abspath(_dfnGen_file), os.getcwd())
+        if not os.path.exists(os.path.abspath(self._dfnGen_file)):
+            print "ERROR: dfnGen input file path: ", os.path.abspath(self._dfnGen_file), " does not exist"
+        shutil.copy(os.path.abspath(self._dfnGen_file), os.getcwd())
     except:
-        print "copying ", os.path.abspath(_dfnGen_file), " to ", os.getcwd()
-        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%_dfnGen_file)
+        print "copying ", os.path.abspath(self._dfnGen_file), " to ", os.getcwd()
+        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self._dfnGen_file)
 
     ioPaths = {"input":"", "output":""}
     try:
-        ioPaths["input"] = _dfnGen_file
+        ioPaths["input"] = self._dfnGen_file
     except IndexError:
         input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] =  _jobname +  '/' + _dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
+        ioPaths["output"] =  self._jobname +  '/' + self._dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
         ioPaths["output"] = os.path.abspath(ioPaths["output"]) 
-        print "DFNGen file path is ", _dfnGen_file 
+        print "DFNGen file path is ", self._dfnGen_file 
         print "clean file path is ", ioPaths["output"]   
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"

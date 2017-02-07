@@ -18,9 +18,9 @@ import argparse
 from pylagrit import PyLaGriT
 
 import meshdfn as mesh
-import flow
+#import flow
 import generator
-import gen_input
+#import gen_input
 import gen_output
 import helper
 import mesh_helper
@@ -30,6 +30,12 @@ class dfnworks(Frozen):
     """
     Class for DFN Generation and meshing
     """
+    from gen_input import check_input
+    from generator import make_working_directory, create_network
+    from gen_output import output_report 
+    from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, inp2vtk
+    from transport import copy_dfnTrans_files, run_dfntrans
+
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',rfield='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self._jobname = jobname
@@ -55,7 +61,6 @@ class dfnworks(Frozen):
         self._aper_file = aper_file
         self._perm_cell_file = perm_cell_file
         self._aper_cell_file = aper_cell_file
-        #self._flow_solver = 'pflotran'
         self._rfield=rfield
         self._dfnTrans_version= 2.0
         self._freeze
@@ -72,24 +77,24 @@ class dfnworks(Frozen):
         tic_gen = time()
         # Create Working directory
         tic = time()
-        generator.make_working_directory(self._jobname)
+        self.make_working_directory()
         helper.dump_time(self._jobname, 'Function: make_working_directory', time()- tic) 
     
         # Check input file  
         tic = time()
-        gen_input.check_input(self._dfnGen_file, self._jobname)
+        self.check_input()
         helper.dump_time(self._jobname, 'Function: check_input', time() - tic)   
     
         # Create network    
         tic = time()
-        generator.create_network(self._local_dfnGen_file, self._jobname)
+        self.create_network()
         helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()
-        gen_output.output_report(self._local_jobname)
+        #self.output_report()
         helper.dump_time(self._jobname, 'output_report', time() - tic)   
-        # Mesh Network
 
+        # Mesh Network
         tic = time()
         mesh_helper.mesh_network(self._jobname, helper.get_num_frac(), self._ncpu)
         helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
@@ -104,9 +109,7 @@ class dfnworks(Frozen):
         Run the dfnFlow portion of the workflow.
         1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
         ''' 
-        
-        dfnflow = flow.flow(self._inp_file, self._mesh_type, self._uge_file, self._vtk_file, self._perm_file, self._perm_cell_file, self._local_dfnFlow_file, self._aper_file, self._aper_cell_file, self._dfnFlow_file, self._ncpu, self._jobname)
-
+ 
         print('='*80)
         print("\ndfnFlow Starting\n")
         print('='*80)
@@ -114,19 +117,19 @@ class dfnworks(Frozen):
         tic_flow = time()
 
         tic = time()
-        dfnflow.lagrit2pflotran()
+        self.lagrit2pflotran()
         helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
         
         tic = time()    
-        dfnflow.pflotran()
+        self.pflotran()
         helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
         tic = time()    
-        dfnflow.parse_pflotran_vtk()       
+        self.parse_pflotran_vtk()       
         helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
         
         tic = time()    
-        dfnflow.pflotran_cleanup()
+        self.pflotran_cleanup()
         helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
         helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
     
@@ -142,42 +145,10 @@ class dfnworks(Frozen):
         print("\ndfnTrans Starting\n")
         print('='*80)
 
-        transport.copy_dfnTrans_files(self._dfnTrans_file)
+        self.copy_dfnTrans_files()
         tic=time()
-        transport.run_dfntrans(self._local_dfnTrans_file)
+        self.run_dfntrans()
         helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
-        
-#
-#        # Create Path to DFNTrans   
-#        try:
-#            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
-#        except OSError:
-#            os.remove('DFNTrans')   
-#            os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
-#        except:
-#            sys.exit("Cannot create link to DFNTrans. Exiting Program")
-#        
-#        # Copy DFNTrans input file  
-#        try:
-#                copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
-#        except OSError:
-#            print("--> Problem copying %s file"%self._local_dfnTrans_file)
-#            print("--> Trying to delete and recopy") 
-#            os.remove(self._local_dfnTrans_file)
-#            copy(self._dfnTrans_file, self._local_dfnTrans_file) 
-#        except:
-#            print("--> ERROR: Problem copying %s file"%self._local_dfnTrans_file)
-#            sys.exit("Unable to replace. Exiting Program")
-#
-#        tic = time()    
-#        failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
-#        helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
-#        if failure == 0:
-#            print('='*80)
-#            print("\ndfnTrans Complete\n")
-#            print('='*80)
-#        else:
-#            sys.exit("--> ERROR: dfnTrans did not complete\n")
 
 def commandline_options():
     '''Read command lines for use in dfnWorks.

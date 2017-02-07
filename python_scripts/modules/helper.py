@@ -2,15 +2,15 @@ import os
 import sys
 import re
 
-def dump_time(_local_jobname, section_name, time):
+def dump_time(local_jobname, section_name, time):
     '''dump_time
     keeps log of cpu run time, current formulation is not robust
     '''
-    if (os.path.isfile(_local_jobname+"_run_time.txt") is False):    
-        f = open(_local_jobname+"_run_time.txt", "w")
-        f.write("Runs times for " + _local_jobname + "\n")
+    if (os.path.isfile(local_jobname+"_run_time.txt") is False):    
+        f = open(local_jobname+"_run_time.txt", "w")
+        f.write("Runs times for " + local_jobname + "\n")
     else:
-        f = open(_local_jobname+"_run_time.txt", "a")
+        f = open(local_jobname+"_run_time.txt", "a")
     if time < 60.0:
         line = section_name + " :  %f seconds\n"%time
     else:
@@ -18,11 +18,11 @@ def dump_time(_local_jobname, section_name, time):
     f.write(line)
     f.close()
 
-def print_run_time(_local_jobname):
+def print_run_time(local_jobname):
     '''print_run_time
     Read in run times from file and and print to screen with percentages
     '''
-    f=open(_local_jobname+"_run_time.txt").readlines()
+    f=open(local_jobname+"_run_time.txt").readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
     if unit is 'minutes':

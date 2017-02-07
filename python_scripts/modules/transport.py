@@ -9,7 +9,7 @@ def create_dfnTrans_links():
     os.symlink('../poly_info.dat','poly_info.dat')
     #os.symlink(self._jobname+'/*ex', './')
 
-def copy_dfnTrans_files(dfnTrans_file):
+def copy_dfnTrans_files(self):
 
         # Create Path to DFNTrans   
         try:
@@ -23,21 +23,21 @@ def copy_dfnTrans_files(dfnTrans_file):
         # Copy DFNTrans input file
         print(os.getcwd())
  
-        print("Attempting to Copy %s\n"%dfnTrans_file) 
+        print("Attempting to Copy %s\n"%self._dfnTrans_file) 
         try:
-            shutil.copy(dfnTrans_file, os.path.abspath(os.getcwd())) 
+            shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
         except OSError:
             print("--> Problem copying %s file"%self._local_dfnTrans_file)
             print("--> Trying to delete and recopy") 
-            os.remove(local_dfnTrans_file)
-            shutil.copy(dfnTrans_file, os.path.abspath(os.getcwd())) 
+            os.remove(self._local_dfnTrans_file)
+            shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
         except:
-            print("--> ERROR: Problem copying %s file"%dfnTrans_file)
+            print("--> ERROR: Problem copying %s file"%self._dfnTrans_file)
             sys.exit("Unable to replace. Exiting Program")
 
-def run_dfntrans(local_dfnTrans_file):
+def run_dfntrans(self):
 
-        failure = os.system('./DFNTrans '+local_dfnTrans_file)
+        failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
         if failure == 0:
             print('='*80)
             print("\ndfnTrans Complete\n")
