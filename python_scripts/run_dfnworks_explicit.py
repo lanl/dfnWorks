@@ -1,6 +1,16 @@
 import os, sys
-sys.path.append("/home/nknapp/dfnworks-main/python_scripts/") 
-from modules import dfnworks, helper
+#sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
+sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/modules") 
+from modules import dfnworks 
+import generator as generator
+import flow as flow
+import gen_input as gen_input
+import gen_output as gen_output
+import helper as helper
+import mesh_helper as mesh_helper
+import transport as transport
+
+
 from time import time
 
 def define_paths():
@@ -9,11 +19,11 @@ def define_paths():
 	os.environ['PETSC_ARCH']='/Ubuntu-14.04-nodebug'
 
 	os.environ['PFLOTRAN_DIR']='/home/satkarra/src/pflotran-dev-pt-testing'
-	os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
+	os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 	
-	os.environ['DFNGENC_PATH']='/home/nknapp/DFNGen/DFNC++Version'
+	os.environ['DFNGENC_PATH']='/home/jhyman/dfnworks/DFNGen/DFNC++Version'
 	os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-	os.environ['input_files']='/home/nknapp/input_files'
+	os.environ['input_files']='/home/jhyman/dfnworks/input_files'
 
 	# Executables	
 	os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -100,11 +110,29 @@ print ('='*80)
 os.system("date")
 define_paths()
 main_time = time()
-dfn = dfnworks.create_dfn()
-# General Work Flow
-dfn.dfnGen()
-dfn.dfnFlow()
-dfn.dfnTrans()
+DFN = dfnworks.create_dfn()
+
+
+#dfn.dfnGen()
+generator.make_working_directory(DFN._jobname)
+gen_input.check_input(DFN._dfnGen_file, DFN._jobname)
+generator.create_network(DFN._local_dfnGen_file, DFN._jobname)
+print DFN._output_file
+gen_output.output_report(DFN._output_file)
+mesh_helper.mesh_network(DFN._jobname, helper.get_num_frac(), DFN._ncpu)
+
+os.chdir(DFN._jobname)
+
+#dfn.dfnFlow()
+
+DFN.lagrit2pflotran()
+dfnflow.pflotran()
+dfnflow.parse_pflotran_vtk()       
+dfnflow.pflotran_cleanup()
+
+#dfn.dfnTrans()
+transport.copy_dfnTrans_files(DFN._dfnTrans_file)
+transport.run_dfntrans(DFN._local_dfnTrans_file)
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

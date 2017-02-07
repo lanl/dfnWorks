@@ -21,7 +21,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
 #import meshdfn as mesh
 
-sys.path.append("/home/nknapp/dfnworks-main/python_scripts/meshing") 
+sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/meshing") 
 import meshdfn as mesh
 
 

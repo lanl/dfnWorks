@@ -1,6 +1,13 @@
 import generator
+import scipy
+import numpy as np
+import re
+import matplotlib.pylab as plt
+from matplotlib.ticker import FormatStrFormatter
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.mlab as mlab
 
-def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
+def output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
 	"""
 	Create PDF report of generator 
 	Notes
@@ -16,7 +23,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 					       ##   Isolated fracs get removed from DFN and have 'R' at end  
 					       ##   of input file line
 					       ## families['1','2','3' etc] correspond to a polyFam object\
-	output_name = self._output_file[:-4] + '_output_report.pdf'
+	output_name = jobname[:-4] + '_output_report.pdf'
 	print 'Writing output into: ', output_name
 	outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
@@ -135,8 +142,15 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			
 			else:   ## append all info to info sting 
 				famObj.infoStr += line
-
-			if "Global Family" in line:
+                        if "UserDefined Ellipse" in line:
+                            famNum = '-2'
+                            famObj.globFamNum = famNum
+                            families[famNum] = famObj
+		        if "UserDefined Rectangle" in line:
+                            famNum = '-1'
+                            famObj.globFamNum = famNum
+                            families[famNum] = famObj
+                        if "Global Family" in line:
 				## input format:     Global Family 1
 				famNum = line[line.index("y") + 1:].strip()
 				famObj.globFamNum = famNum
@@ -175,7 +189,8 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 				if len(elems) < 4:              ## len = 4 when 'R' is on line
 					families['notRemoved'].append(radius)
 				if famNum not in families: 
-					families[famNum].radiiList = [radius]
+					families[famNum] = []
+                                        families[famNum].radiiList = [radius]
 				else:
 					families[famNum].radiiList.append(radius)
 			except ValueError:
@@ -263,7 +278,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			normConstant = 1.0 / (lognormCDF(xmax, mu, sigma) - lognormCDF(xmin, mu, sigma))
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 			pass  
-		lognormPDFVals = [x * normConstant for x in lognorm.pdf(xVals, sigma, loc=mu)]
+		lognormPDFVals = [x * normConstant for x in scipy.stats.lognorm.pdf(xVals, sigma, loc=mu)]
 
 		histHeights, binCenters = histAndPDF(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
 		plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
@@ -275,7 +290,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
-		trueVals = [lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
+		trueVals = [scipy.stats.lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
 		qq(trueVals, histHeights)
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()

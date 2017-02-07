@@ -15,10 +15,6 @@ from dfntools import *
 import h5py
 import argparse
 
-import matplotlib.pylab as plt
-from matplotlib.ticker import FormatStrFormatter
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.mlab as mlab
 from pylagrit import PyLaGriT
 
 import meshdfn as mesh
@@ -90,7 +86,7 @@ class dfnworks(Frozen):
         helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()
-        output_report()
+        gen_output.output_report(self._jobname)
         helper.dump_time(self._jobname, 'output_report', time() - tic)   
         # Mesh Network
 
