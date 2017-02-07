@@ -86,7 +86,7 @@ class dfnworks(Frozen):
         helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
         
         tic = time()
-        gen_output.output_report(self._jobname)
+        gen_output.output_report(self._local_jobname)
         helper.dump_time(self._jobname, 'output_report', time() - tic)   
         # Mesh Network
 
