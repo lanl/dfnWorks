@@ -142,7 +142,7 @@ class dfnworks(Frozen):
         print("\ndfnTrans Starting\n")
         print('='*80)
 
-        transport.copy_dfnTrans_files(self._dfnTrans_file, self._local_dfnTrans_file)
+        transport.copy_dfnTrans_files(self._dfnTrans_file)
         tic=time()
         transport.run_dfntrans(self._local_dfnTrans_file)
         helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   

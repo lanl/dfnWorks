@@ -23,7 +23,7 @@ def output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat', tra
 					       ##   Isolated fracs get removed from DFN and have 'R' at end  
 					       ##   of input file line
 					       ## families['1','2','3' etc] correspond to a polyFam object\
-	output_name = jobname[:-4] + '_output_report.pdf'
+	output_name = jobname + '_output_report.pdf'
 	print 'Writing output into: ', output_name
 	outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
