@@ -50,11 +50,12 @@ CMakeFiles/inp2vtk.dir/main.cpp.o
  VTK-7.1.0/Common/ExecutionModel/vtkAlgorithm.h
  VTK-7.1.0/Common/ExecutionModel/vtkCommonExecutionModelModule.h
  VTK-7.1.0/Common/ExecutionModel/vtkUnstructuredGridAlgorithm.h
+ VTK-7.1.0/Filters/Core/vtkAppendFilter.h
  VTK-7.1.0/Filters/Core/vtkFiltersCoreModule.h
- VTK-7.1.0/Filters/General/vtkFiltersGeneralModule.h
- VTK-7.1.0/Filters/General/vtkShrinkFilter.h
  VTK-7.1.0/IO/Core/vtkIOCoreModule.h
  VTK-7.1.0/IO/Core/vtkWriter.h
+ VTK-7.1.0/IO/Legacy/vtkDataObjectReader.h
+ VTK-7.1.0/IO/Legacy/vtkDataReader.h
  VTK-7.1.0/IO/Legacy/vtkDataWriter.h
  VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
  VTK-7.1.0/IO/Legacy/vtkUnstructuredGridWriter.h
