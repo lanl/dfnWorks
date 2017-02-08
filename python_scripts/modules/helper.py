@@ -1,16 +1,53 @@
 import os
 import sys
 import re
+import argparse
 
-def dump_time(_local_jobname, section_name, time):
+def commandline_options():
+    '''Read command lines for use in dfnWorks.
+    Options:
+    -name : Jobname (Mandatory)
+    -ncpu : Number of CPUS (Optional, default=4)
+
+    -gen : Generator Input File (Mandatory, can be included within this file)
+    -flow : PFLORAN Input File (Mandatory, can be included within this file)
+    -trans: Transport Input File (Mandatory, can be included within this file)
+
+    -cell: True/False Set True for use with cell 
+        based aperture and permeabuility (Optional, default=False)
+    '''
+    parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+    parser.add_argument("-name", "--jobname", default="", type=str,
+              help="jobname") 
+    parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+              help="Number of CPUs")
+    parser.add_argument("-input", "--input_file", default="", type=str,
+              help="input file with paths to run files") 
+    parser.add_argument("-rfield", "--field", default="", type=str,
+              help="level of random field") 
+    parser.add_argument("-gen", "--dfnGen", default="", type=str,
+              help="Path to dfnGen run file") 
+    parser.add_argument("-flow", "--dfnFlow", default="", type=str,
+              help="Path to dfnFlow run file") 
+    parser.add_argument("-trans", "--dfnTrans", default="", type=str,
+              help="Path to dfnTrans run file") 
+    parser.add_argument("-cell", "--cell", default=False, action="store_true",
+              help="Binary For Cell Based Apereture / Perm")
+    options = parser.parse_args()
+    if options.jobname is "":
+        sys.exit("Error: Jobname is required. Exiting.")
+    return options
+
+
+def dump_time(local_jobname, section_name, time):
     '''dump_time
     keeps log of cpu run time, current formulation is not robust
     '''
-    if (os.path.isfile(_local_jobname+"_run_time.txt") is False):    
-        f = open(_local_jobname+"_run_time.txt", "w")
-        f.write("Runs times for " + _local_jobname + "\n")
+    if (os.path.isfile(local_jobname+"_run_time.txt") is False):    
+        f = open(local_jobname+"_run_time.txt", "w")
+        f.write("Runs times for " + local_jobname + "\n")
     else:
-        f = open(_local_jobname+"_run_time.txt", "a")
+        f = open(local_jobname+"_run_time.txt", "a")
     if time < 60.0:
         line = section_name + " :  %f seconds\n"%time
     else:
@@ -18,11 +55,11 @@ def dump_time(_local_jobname, section_name, time):
     f.write(line)
     f.close()
 
-def print_run_time(_local_jobname):
+def print_run_time(local_jobname):
     '''print_run_time
     Read in run times from file and and print to screen with percentages
     '''
-    f=open(_local_jobname+"_run_time.txt").readlines()
+    f=open(local_jobname+"_run_time.txt").readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
     if unit is 'minutes':
@@ -323,6 +360,4 @@ class input_helper():
            ##  if len(self.params[key]) != length:
             ##     self.error("ERROR: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
              ##    sys.exit()                
-            
 
-            

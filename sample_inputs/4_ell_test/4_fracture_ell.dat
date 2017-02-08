@@ -1,14 +1,14 @@
-/************************* USER DEFINED ELLIPSES ***************************/
+/************************* USER DEFINED RECTANGLES ***************************/
 /*****************************************************************************/
 
 /*****************************************************************************/
-//Number of User Defined Ellipses
+//Number of User Defined Rectangles
 /*****************************************************************************/
 nUserEll: 4
-
+Number_of_Vertices: 8
 
 /*****************************************************************************/
-//Radius for each ellipse (one per line)
+//Radius for each rectangle (one per line)
 /*****************************************************************************/
 Radii:
 0.6
@@ -18,7 +18,7 @@ Radii:
 
 
 /*****************************************************************************/
-//Apect Ratio for each ellipse (one per line)
+//Apect Ratio for each rectangle (one per line)
 /*****************************************************************************/
 Aspect_Ratio: 
 1
@@ -38,7 +38,7 @@ AngleOption:
 1
 
 /*****************************************************************************/
-//Rotation around center for each ellipse (one per line)
+//Rotation around center for each rectangle (one per line)
 /*****************************************************************************/
 Beta:
 0
@@ -47,7 +47,7 @@ Beta:
 0
 
 /*****************************************************************************/
-//Translation of each ellipse according to its center {x,y,z} (one per line)
+//Translation of each rectangle according to its center {x,y,z} (one per line)
 /*****************************************************************************/
 Translation:
 {-0.4,0,0}
@@ -58,7 +58,7 @@ Translation:
 
 
 /*****************************************************************************/
-//Normal Vecor for each ellipse (one per line)
+//Normal Vecor for each rectangle (one per line)
 /*****************************************************************************/
 Normal:
 {0,0,1}
