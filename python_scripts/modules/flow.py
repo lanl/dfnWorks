@@ -21,20 +21,20 @@ def dfnFlow(self):
 
     tic = time()
     self.lagrit2pflotran()
-    helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
+    #helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
     
     tic = time()    
     self.pflotran()
-    helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
+    #helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
     self.parse_pflotran_vtk()       
-    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+    #helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
     
     tic = time()    
     self.pflotran_cleanup()
-    helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
-    helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
+    #helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
+    #helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
 
     print('='*80)
     print("\ndfnFlow Complete\n")

@@ -1,3 +1,0 @@
-Runs times for 4_user_ells
-Function: make_working_directory :  0.008423 seconds
-Function: check_input :  0.013877 seconds

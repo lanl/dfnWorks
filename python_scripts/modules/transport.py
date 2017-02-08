@@ -14,8 +14,8 @@ def dfnTrans(self):
 
     self.copy_dfnTrans_files()
     tic=time()
-    self.run_dfntrans()
-    helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
+    self.run_dfnTrans()
+    #helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
     print('='*80)
     print("\ndfnTrans Starting\n")
     print('='*80)

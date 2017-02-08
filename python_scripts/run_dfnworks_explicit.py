@@ -54,11 +54,8 @@ DFN.run_dfnTrans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print timing
-helper.dump_time(dfn._jobname, dfn._jobname,main_elapsed) 
-helper.print_run_time()	
 print("*"*80)
-print(dfn._jobname+' complete')
+print(DFN._jobname+' complete')
 print("Thank you for using dfnWorks")
 print("*"*80)
 

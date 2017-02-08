@@ -8,14 +8,14 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 20
+nPoly: 200 
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {10,10,10} 
+domainSize: {40,40,40} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -51,7 +51,7 @@ removeFracturesLessThan: 0
     shape familiy section) 
 */   
 
-h: .05
+h: .10
 /*  Minimum fracture length scale(meters).
     Any fracture with a feature, such as and intersection, 
     of less than h will be rejected. 
@@ -442,7 +442,7 @@ rphi: {80.82}
 rbeta: {0}   
 //  Rotation around the normal vector.
 
-rkappa:{10.37}   
+rkappa:{1}   
 /*  Parameter for the fisher distribnShaprutions. The 
     bigger, the more similar (less diverging) are the 
     rectangular familiy's normal vectors.
@@ -472,7 +472,7 @@ rLogMax: {5.0, 5.0, 30.0, 30.0, 15.0, 15.0}
 // Mandatory Parameters if using rectangles with power-law distributions.    */
 /*===========================================================================*/
 
-rmin: {0.5, 0.5,0.5,0.5,0.5,0.5}  
+rmin: {1.5, 0.5,0.5,0.5,0.5,0.5}  
 //  Minimum radius
 
 rmax: {125,125,125,125,125,125}    
@@ -490,7 +490,7 @@ ralpha: {2.0,2.6,2.01,2.0,2.6,2.01}
 rExpMean: {3.373 }
 //  Mean radius
 
-rExpMin: {0.5 }
+rExpMin: {1.0 }
 //  Minimum radius
 
 rExpMax: {50.0 }
