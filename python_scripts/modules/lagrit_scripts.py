@@ -22,7 +22,7 @@ def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
 	refine_dist: distance used in coarsing function, default = 0.5,
 	"""
 	
-	print("\nCreating parameteri.mlgi files")
+	print("\nCreating parameter*.mlgi files")
 	try:
 		os.mkdir('parameters')
 	except OSError:

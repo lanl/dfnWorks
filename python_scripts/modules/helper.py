@@ -1,6 +1,43 @@
 import os
 import sys
 import re
+import argparse
+
+def commandline_options():
+    '''Read command lines for use in dfnWorks.
+    Options:
+    -name : Jobname (Mandatory)
+    -ncpu : Number of CPUS (Optional, default=4)
+
+    -gen : Generator Input File (Mandatory, can be included within this file)
+    -flow : PFLORAN Input File (Mandatory, can be included within this file)
+    -trans: Transport Input File (Mandatory, can be included within this file)
+
+    -cell: True/False Set True for use with cell 
+        based aperture and permeabuility (Optional, default=False)
+    '''
+    parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+    parser.add_argument("-name", "--jobname", default="", type=str,
+              help="jobname") 
+    parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+              help="Number of CPUs")
+    parser.add_argument("-input", "--input_file", default="", type=str,
+              help="input file with paths to run files") 
+    parser.add_argument("-rfield", "--field", default="", type=str,
+              help="level of random field") 
+    parser.add_argument("-gen", "--dfnGen", default="", type=str,
+              help="Path to dfnGen run file") 
+    parser.add_argument("-flow", "--dfnFlow", default="", type=str,
+              help="Path to dfnFlow run file") 
+    parser.add_argument("-trans", "--dfnTrans", default="", type=str,
+              help="Path to dfnTrans run file") 
+    parser.add_argument("-cell", "--cell", default=False, action="store_true",
+              help="Binary For Cell Based Apereture / Perm")
+    options = parser.parse_args()
+    if options.jobname is "":
+        sys.exit("Error: Jobname is required. Exiting.")
+    return options
+
 
 def dump_time(local_jobname, section_name, time):
     '''dump_time
@@ -323,6 +360,4 @@ class input_helper():
            ##  if len(self.params[key]) != length:
             ##     self.error("ERROR: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
              ##    sys.exit()                
-            
 
-            

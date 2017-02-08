@@ -7,6 +7,40 @@ from time import time
 import numpy as np
 import h5py
 
+def dfnFlow(self):
+    ''' dfnFlow
+    Run the dfnFlow portion of the workflow.
+    1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
+    ''' 
+
+    print('='*80)
+    print("\ndfnFlow Starting\n")
+    print('='*80)
+
+    tic_flow = time()
+
+    tic = time()
+    self.lagrit2pflotran()
+    helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
+    
+    tic = time()    
+    self.pflotran()
+    helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
+
+    tic = time()    
+    self.parse_pflotran_vtk()       
+    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+    
+    tic = time()    
+    self.pflotran_cleanup()
+    helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
+    helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
+
+    print('='*80)
+    print("\ndfnFlow Complete\n")
+    print('='*80)
+
+
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print ('='*80)
