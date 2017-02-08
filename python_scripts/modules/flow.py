@@ -211,8 +211,6 @@ class flow():
             vtk_file = inp_file[:-4]
             self._vtk_file = vtk_file + '.vtk'
         
-        arg_string = os.environ['VTK_PATH'] + ' ' + self._inp_file + ' ' + self._vtk_file 
-        subprocess.call(arg_string, shell=True)
 
     def inp2vtk_python(self, inp_file=''):
             import pyvtk as pv
@@ -335,7 +333,7 @@ class flow():
                     f.write('%i\t%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
                         int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
-    def parse_pflotran_vtk(self, grid_vtk_file=''):
+    def parse_pflotran_vtk_python(self, grid_vtk_file=''):
             print '--> Parsing PFLOTRAN output'
             if grid_vtk_file:
                 self._vtk_file = grid_vtk_file
@@ -374,6 +372,24 @@ class flow():
                         f.write('POINT_DATA\t ' + num_cells + '\n')
                     for line in pflotran_out:
                         f.write(line)
+    
+    def parse_pflotran_vtk(self, grid_vtk_file=''):
+
+            print '--> Parsing PFLOTRAN output'
+            files = glob.glob('*-[0-9][0-9][0-9].vtk')
+            out_dir = 'parsed_vtk'
+
+            for file in files:
+                header = ['# vtk DataFile Version 2.0\n',
+                          'PFLOTRAN output\n',
+                          'ASCII\n']
+                filename = out_dir + '/' + file
+                if not os.path.exists(os.path.dirname(filename)):
+                    os.makedirs(os.path.dirname(filename))
+            
+                arg_string = os.environ['VTK_PATH'] + ' ' + self._inp_file + ' ' + self._vtk_file 
+                subprocess.call(arg_string, shell=True)
+            
             print '--> Parsing PFLOTRAN output complete'
 
 
