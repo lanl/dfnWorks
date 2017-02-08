@@ -366,17 +366,20 @@ class flow():
                       'ASCII\n']
             
             for fle in files:
+                print fle 
                 replacements = {'CELL_DATA':'POINT_DATA'} 
                 before_first_point_line = True
+                if os.stat(fle).st_size == 0:
+                    print 'ERROR: opening an empty vtk file to get the final vtk file'
+                    exit()
                 with open(fle, 'r') as infile, open(fle, 'w') as outfile:
                     for line in infile:
+                        print line
                         if 'CELL_DATA' in line and before_first_point_line == True:
                             before_first_point_line = False
-                            f.write('POINT_DATA\t ' + num_cells + '\n')
-                        #elif before_first_point_line == False and 'CELL_DATA' not in line:
-                        #    break
+                            outfile.write('POINT_DATA\t ' + num_cells + '\n')
                         for src, target in replacements.iteritems():
-                            line = line.replace(src_target)
+                            line = line.replace(src, target)
                         outfile.write(line) 
                 
                 vtk_filename = out_dir + '/' + fle
@@ -393,7 +396,6 @@ class flow():
                     fout.writelines(header) 
                     fout.writelines(data[4:])
             print '--> Parsing PFLOTRAN output complete'
-                   
              
     def inp2gmv(self, inp_file=''):
 
