@@ -54,10 +54,10 @@ CMakeFiles/inp2vtk.dir/main.cpp.o
  VTK-7.1.0/Filters/Core/vtkFiltersCoreModule.h
  VTK-7.1.0/IO/Core/vtkIOCoreModule.h
  VTK-7.1.0/IO/Core/vtkWriter.h
- VTK-7.1.0/IO/Legacy/vtkDataObjectReader.h
  VTK-7.1.0/IO/Legacy/vtkDataReader.h
  VTK-7.1.0/IO/Legacy/vtkDataWriter.h
  VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
+ VTK-7.1.0/IO/Legacy/vtkUnstructuredGridReader.h
  VTK-7.1.0/IO/Legacy/vtkUnstructuredGridWriter.h
  VTK-7.1.0/Utilities/KWIML/vtk_kwiml.h
  VTK-7.1.0/Utilities/KWIML/vtkkwiml/abi.h

@@ -3,19 +3,23 @@
 #include "./VTK-7.1.0/Common/DataModel/vtkPointData.h"
 #include "./VTK-7.1.0/Rendering/Core/vtkProperty.h"
 #include "./VTK-7.1.0/Common/DataModel/vtkUnstructuredGrid.h"
+#include "vtkUnstructuredGridReader.h"
 #include "vtkUnstructuredGridWriter.h"
 #include "vtkAppendFilter.h"
-#include "vtkDataObjectReader.h"
 #include <iostream>
 #include <fstream> 
 
 int main(int argc, char* argv[])
 {
   if (argc < 4)  {
-    std::cerr << "Required parameters: <inp_filename> <pflotran_output_directory> <vtk_filename>" << std::endl;
+    std::cerr << "Required parameters: <inp_filename> <pflotran_output_filename> <vtk_filename>" << std::endl;
     return EXIT_FAILURE;
   }
 
+  std::cout << ".inp filenames is " << argv[1] << std::endl;
+  std::cout << "pflotran filename is " << argv[2] << std::endl;
+  std::cout << "vtk filename is " << argv[3] << std::endl;
+  
   // Read in the inp / AVS file to a vtkUnstructuredGrid data object
   vtkNew<vtkAVSucdReader> inp_reader;
   inp_reader->SetFileName(argv[1]);
@@ -23,7 +27,7 @@ int main(int argc, char* argv[])
   vtkUnstructuredGrid* grid = vtkUnstructuredGrid::SafeDownCast(inp_reader->GetOutput());
  
   // Read in the pflotran output info - point data containg cell permeability and pressure
-  vtkNew<vtkDataObjectReader> pflotran_reader;  
+  vtkNew<vtkUnstructuredGridReader> pflotran_reader;  
   pflotran_reader->SetFileName(argv[2]);
   pflotran_reader->Update();
   vtkUnstructuredGrid* pflotran_grid = vtkUnstructuredGrid::SafeDownCast(pflotran_reader->GetOutput());

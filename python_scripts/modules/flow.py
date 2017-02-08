@@ -195,23 +195,6 @@ class flow():
 
             print('--> Converting zone files to ex complete')	
 
-    def inp2vtk(self, inp_file=''):
-         
-        if self._inp_file:
-            inp_file = self._inp_file
-        else:
-            self._inp_file = inp_file
-
-        if inp_file == '':
-            sys.exit('ERROR: Please provide inp filename!')
-
-        if self._vtk_file:
-            vtk_file = self._vtk_file
-        else:
-            vtk_file = inp_file[:-4]
-            self._vtk_file = vtk_file + '.vtk'
-        
-
     def inp2vtk_python(self, inp_file=''):
             import pyvtk as pv
             """
@@ -337,8 +320,6 @@ class flow():
             print '--> Parsing PFLOTRAN output'
             if grid_vtk_file:
                 self._vtk_file = grid_vtk_file
-            else:
-                self.inp2vtk()
 
             grid_file = self._vtk_file
             
@@ -378,21 +359,42 @@ class flow():
             print '--> Parsing PFLOTRAN output'
             files = glob.glob('*-[0-9][0-9][0-9].vtk')
             out_dir = 'parsed_vtk'
-
-            for file in files:
-                header = ['# vtk DataFile Version 2.0\n',
-                          'PFLOTRAN output\n',
-                          'ASCII\n']
-                filename = out_dir + '/' + file
-                if not os.path.exists(os.path.dirname(filename)):
-                    os.makedirs(os.path.dirname(filename))
+            vtk_filename_list = []
+             
+            header = ['# vtk DataFile Version 2.0\n',
+                      'PFLOTRAN output\n',
+                      'ASCII\n']
             
-                arg_string = os.environ['VTK_PATH'] + ' ' + self._inp_file + ' ' + self._vtk_file 
+            for fle in files:
+                replacements = {'CELL_DATA':'POINT_DATA'} 
+                before_first_point_line = True
+                with open(fle, 'r') as infile, open(fle, 'w') as outfile:
+                    for line in infile:
+                        if 'CELL_DATA' in line and before_first_point_line == True:
+                            before_first_point_line = False
+                            f.write('POINT_DATA\t ' + num_cells + '\n')
+                        #elif before_first_point_line == False and 'CELL_DATA' not in line:
+                        #    break
+                        for src, target in replacements.iteritems():
+                            line = line.replace(src_target)
+                        outfile.write(line) 
+                
+                vtk_filename = out_dir + '/' + fle
+                if not os.path.exists(os.path.dirname(vtk_filename)):
+                    os.makedirs(os.path.dirname(vtk_filename))
+                jobname = self._jobname + '/'
+                arg_string = os.environ['VTK_PATH'] + ' ' + jobname +  self._inp_file + ' ' + jobname +  fle + ' ' + jobname + vtk_filename  
                 subprocess.call(arg_string, shell=True)
-            
+                vtk_filename_list.append(vtk_filename)
+
+            for vtk_file in vtk_filename_list:
+                with open(vtk_file, 'r') as fin,  open(vtk_file, 'w') as fout:
+                    data = fin.read().splitlines(True)
+                    fout.writelines(header) 
+                    fout.writelines(data[4:])
             print '--> Parsing PFLOTRAN output complete'
-
-
+                   
+             
     def inp2gmv(self, inp_file=''):
 
             if inp_file:
