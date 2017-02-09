@@ -25,26 +25,23 @@ def parse_pflotran_vtk(inp_file, pflotran_output_file, jobname):
             ct = 0 
             for line in infile:
                 print line
-                if ct < 3:
-                    outfile.write(header[ct]) 
-                    ct = ct + 1 
-                elif 'CELL_DATA' in line:
+                if 'CELL_DATA' in line:
                     num_cells = line.strip(' ').split()[1]
                     outfile.write('POINT_DATA\t ' + num_cells + '\n')
                 else: 
                     outfile.write(line)
         infile.close()
         outfile.close()
-        vtk_filename = out_dir + '/' + fle
+        vtk_filename = out_dir + '/' + fle.split('/')[-1]
         if not os.path.exists(os.path.dirname(vtk_filename)):
             os.makedirs(os.path.dirname(vtk_filename))
-        arg_string = './inp2vtk' + ' '  +  inp_file + ' '  +  temp_file + ' '  + vtk_filename  
+        arg_string = './inp2vtk' + ' '  +  inp_file + ' ' + vtk_filename  
         subprocess.call(arg_string, shell=True)
-
-        with open(vtk_filename, 'r') as fin,  open(vtk_filename, 'w') as fout:
-            data = fin.read().splitlines(True)
-            fout.writelines(header) 
-            fout.writelines(data[4:])
+        arg_string = 'tail -n +5 ' + temp_file + ' > ' + temp_file + '.tmp && mv ' +  temp_file +  '.tmp ' + temp_file  
+        print arg_string 
+        subprocess.call(arg_string, shell=True)
+        arg_string = 'cat ' +  temp_file + ' >> ' + vtk_filename
+        subprocess.call(arg_string, shell=True) 
         print '--> Parsing PFLOTRAN output complete'
 
 subprocess.call('rm /home/nknapp/dfnworks-main/inp_2_vtk/tests/dfn_explicit-000.vtk', shell=True)
@@ -52,4 +49,5 @@ subprocess.call('cp /home/jhyman/networks/single_fracture_3x3_uni/dfn_explicit-0
 inp_file = sys.argv[1]
 pflotran_output_file = sys.argv[2]
 jobname = sys.argv[3]
+
 parse_pflotran_vtk(inp_file, pflotran_output_file, jobname)
