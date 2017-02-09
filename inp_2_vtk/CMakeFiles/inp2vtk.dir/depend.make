@@ -55,8 +55,8 @@ CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Core/vtkIOCoreModule.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Core/vtkWriter.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkDataReader.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkDataWriter.h
+CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkGenericDataObjectReader.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
-CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkUnstructuredGridReader.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/IO/Legacy/vtkUnstructuredGridWriter.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/Utilities/KWIML/vtk_kwiml.h
 CMakeFiles/inp2vtk.dir/main.cpp.o: VTK-7.1.0/Utilities/KWIML/vtkkwiml/abi.h

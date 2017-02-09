@@ -113,8 +113,8 @@ vtkAutoInit.h
 /home/nknapp/dfnworks-main/inp_2_vtk/./VTK-7.1.0/Rendering/Core/vtkProperty.h
 ./VTK-7.1.0/Common/DataModel/vtkUnstructuredGrid.h
 /home/nknapp/dfnworks-main/inp_2_vtk/./VTK-7.1.0/Common/DataModel/vtkUnstructuredGrid.h
-vtkUnstructuredGridReader.h
-/home/nknapp/dfnworks-main/inp_2_vtk/vtkUnstructuredGridReader.h
+vtkGenericDataObjectReader.h
+/home/nknapp/dfnworks-main/inp_2_vtk/vtkGenericDataObjectReader.h
 vtkUnstructuredGridWriter.h
 /home/nknapp/dfnworks-main/inp_2_vtk/vtkUnstructuredGridWriter.h
 vtkAppendFilter.h
@@ -376,13 +376,13 @@ VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
 vtkWriter.h
 VTK-7.1.0/IO/Legacy/vtkWriter.h
 
-VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
-
-VTK-7.1.0/IO/Legacy/vtkUnstructuredGridReader.h
+VTK-7.1.0/IO/Legacy/vtkGenericDataObjectReader.h
 vtkIOLegacyModule.h
 VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
 vtkDataReader.h
 VTK-7.1.0/IO/Legacy/vtkDataReader.h
+
+VTK-7.1.0/IO/Legacy/vtkIOLegacyModule.h
 
 VTK-7.1.0/IO/Legacy/vtkUnstructuredGridWriter.h
 vtkIOLegacyModule.h

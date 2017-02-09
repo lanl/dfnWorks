@@ -3,7 +3,7 @@
 #include "./VTK-7.1.0/Common/DataModel/vtkPointData.h"
 #include "./VTK-7.1.0/Rendering/Core/vtkProperty.h"
 #include "./VTK-7.1.0/Common/DataModel/vtkUnstructuredGrid.h"
-#include "vtkUnstructuredGridReader.h"
+#include "vtkGenericDataObjectReader.h"
 #include "vtkUnstructuredGridWriter.h"
 #include "vtkAppendFilter.h"
 #include <iostream>
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
   vtkUnstructuredGrid* grid = vtkUnstructuredGrid::SafeDownCast(inp_reader->GetOutput());
  
   // Read in the pflotran output info - point data containg cell permeability and pressure
-  vtkNew<vtkUnstructuredGridReader> pflotran_reader;  
+  vtkNew<vtkGenericDataObjectReader> pflotran_reader;  
   pflotran_reader->SetFileName(argv[2]);
   pflotran_reader->Update();
   vtkUnstructuredGrid* pflotran_grid = vtkUnstructuredGrid::SafeDownCast(pflotran_reader->GetOutput());

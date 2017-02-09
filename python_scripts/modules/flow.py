@@ -372,7 +372,8 @@ class flow():
                 if os.stat(fle).st_size == 0:
                     print 'ERROR: opening an empty vtk file to get the final vtk file'
                     exit()
-                with open(fle, 'r') as infile, open(fle, 'w') as outfile:
+                temp_file = fle[:-4] + '_temp.vtk'
+                with open(fle, 'r+') as nfile, open(temp_file, 'w') as outfile:
                     for line in infile:
                         print line
                         if 'CELL_DATA' in line and before_first_point_line == True:
@@ -381,11 +382,13 @@ class flow():
                         for src, target in replacements.iteritems():
                             line = line.replace(src, target)
                         outfile.write(line) 
-                
+                jobname = self._jobname + '/'
+                remove_arg_string = 'rm -f ' + jobname + fle
+                replace_arg_string = 'mv ' + jobname +  temp_file + ' ' + jobname + fle
+                subprocess.call(
                 vtk_filename = out_dir + '/' + fle
                 if not os.path.exists(os.path.dirname(vtk_filename)):
                     os.makedirs(os.path.dirname(vtk_filename))
-                jobname = self._jobname + '/'
                 arg_string = os.environ['VTK_PATH'] + ' ' + jobname +  self._inp_file + ' ' + jobname +  fle + ' ' + jobname + vtk_filename  
                 subprocess.call(arg_string, shell=True)
                 vtk_filename_list.append(vtk_filename)
