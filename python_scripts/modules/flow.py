@@ -354,51 +354,48 @@ class flow():
                     for line in pflotran_out:
                         f.write(line)
     
-    def parse_pflotran_vtk(self, grid_vtk_file=''):
+    def parse_pflotran_vtk(self, grid_vtk_file=''): 
 
-            print '--> Parsing PFLOTRAN output'
-            files = glob.glob('*-[0-9][0-9][0-9].vtk')
-            out_dir = 'parsed_vtk'
-            vtk_filename_list = []
-             
-            header = ['# vtk DataFile Version 2.0\n',
-                      'PFLOTRAN output\n',
-                      'ASCII\n']
+        print '--> Parsing PFLOTRAN output'
+        files = glob.glob('*-[0-9][0-9][0-9].vtk')
+        out_dir = 'parsed_vtk'
+        vtk_filename_list = []
+        replacements = {'CELL_DATA':'POINT_DATA'} 
+        header = ['# vtk DataFile Version 2.0\n',
+                  'PFLOTRAN output\n',
+                  'ASCII\n']
+       
+        inp_file = self._inp_file
+        jobname = self._jobname + '/'
+
+        for fle in files:
+
+            if os.stat(fle).st_size == 0:
+                print 'ERROR: opening an empty pflotran output file'
+                exit()
             
-            for fle in files:
-                print fle 
-                replacements = {'CELL_DATA':'POINT_DATA'} 
-                before_first_point_line = True
-                if os.stat(fle).st_size == 0:
-                    print 'ERROR: opening an empty vtk file to get the final vtk file'
-                    exit()
-                temp_file = fle[:-4] + '_temp.vtk'
-                with open(fle, 'r+') as nfile, open(temp_file, 'w') as outfile:
-                    for line in infile:
-                        print line
-                        if 'CELL_DATA' in line and before_first_point_line == True:
-                            before_first_point_line = False
-                            outfile.write('POINT_DATA\t ' + num_cells + '\n')
-                        for src, target in replacements.iteritems():
-                            line = line.replace(src, target)
-                        outfile.write(line) 
-                jobname = self._jobname + '/'
-                remove_arg_string = 'rm -f ' + jobname + fle
-                replace_arg_string = 'mv ' + jobname +  temp_file + ' ' + jobname + fle
-                subprocess.call(
-                vtk_filename = out_dir + '/' + fle
-                if not os.path.exists(os.path.dirname(vtk_filename)):
-                    os.makedirs(os.path.dirname(vtk_filename))
-                arg_string = os.environ['VTK_PATH'] + ' ' + jobname +  self._inp_file + ' ' + jobname +  fle + ' ' + jobname + vtk_filename  
-                subprocess.call(arg_string, shell=True)
-                vtk_filename_list.append(vtk_filename)
+            temp_file = fle[:-4] + '_temp.vtk'
+            with open(fle, 'r') as infile, open(temp_file, 'w') as outfile:
+                ct = 0 
+                for line in infile:
+                    if 'CELL_DATA' in line:
+                        num_cells = line.strip(' ').split()[1]
+                        outfile.write('POINT_DATA\t ' + num_cells + '\n')
+                    else: 
+                        outfile.write(line)
+            infile.close()
+            outfile.close()
+            vtk_filename = out_dir + '/' + fle.split('/')[-1]
+            if not os.path.exists(os.path.dirname(vtk_filename)):
+                os.makedirs(os.path.dirname(vtk_filename))
+            arg_string = os.environ['VTK_PATH'] + ' '  +  jobname + inp_file + ' ' + jobname + vtk_filename  
+            subprocess.call(arg_string, shell=True)
+            arg_string = 'tail -n +5 ' + jobname + temp_file + ' > ' + jobname + temp_file + '.tmp && mv ' + jobname + temp_file +  '.tmp ' + jobname + temp_file  
+            subprocess.call(arg_string, shell=True)
+            arg_string = 'cat ' +  jobname + temp_file + ' >> ' + jobname + vtk_filename
+            subprocess.call(arg_string, shell=True) 
 
-            for vtk_file in vtk_filename_list:
-                with open(vtk_file, 'r') as fin,  open(vtk_file, 'w') as fout:
-                    data = fin.read().splitlines(True)
-                    fout.writelines(header) 
-                    fout.writelines(data[4:])
-            print '--> Parsing PFLOTRAN output complete'
+        print '--> Parsing PFLOTRAN output complete'
              
     def inp2gmv(self, inp_file=''):
 

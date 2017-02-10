@@ -117,7 +117,7 @@ aperture_file: aperture.dat
 /********************  TIME ********************************************/
 timesteps: 200000000
 //units of time (years, days, hours, minutes) 
-time_units: seconds 
+time_units: years 
 
 /**** flux weighted particles*/
 /**** in case of random initial positions of particles - it's aperture weighted **/
