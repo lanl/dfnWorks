@@ -245,8 +245,6 @@ void ParticleTrack ()
     {
       inputfile = Control_Param("out_dtimest:",12 );
       time_d=(int)inputfile.param;
-
-   
       inputfile = Control_Param("out_dtime:",10 );
       dtime=inputfile.param;
     
@@ -427,11 +425,8 @@ void ParticleTrack ()
       int capacity= (int) timesteps/10;
       
              
-
-
       double part_squares[time_d][3];
-
-      for (ic=0; ic<time_d; ic++)
+     for (ic=0; ic<time_d; ic++)
 	{
           part_squares[ic][0]=0.0;
           part_squares[ic][1]=0.0;
@@ -536,8 +531,8 @@ void ParticleTrack ()
 	     
 		}  
 	   
-	      if (out_cylinder==1)
-		current_CP=controllength;
+	    if (out_cylinder==1)
+        current_CP=controllength;
 	     
 	    }
 
@@ -640,7 +635,6 @@ void ParticleTrack ()
 		
 	      /***** output data at each control plane ********/		
 	      double welldist=0.0; //shortest distance from particle to well
-	     
 	     
 	      if (out_control==1)
 		{

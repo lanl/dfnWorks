@@ -1,7 +1,7 @@
 
 CC=gcc
 
-CFLAGS =  -lm -O6 -Wall 
+CFLAGS =  -g -lm -O6 -Wall 
 
 OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart1.o InitialPartPositions.o output.o
 
