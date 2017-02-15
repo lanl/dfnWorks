@@ -1,0 +1,4 @@
+input_smallAngleFail.dat test should result in the third fracture being rejected.
+
+input_smallAnglePass.dat test should result in the thrid fracture being accepted.
+

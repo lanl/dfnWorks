@@ -1,0 +1,393 @@
+//================  ============================================================
+//Mandatory Mathematica/Generating Fracture Network Parameters: 
+density: .00203
+nPoly: 100
+     /* Total number of fractures you would like to have 
+			in the domain you defined. The program will complete 
+			once you have nPoly number of fractures, 
+			maxPoly number of polygon/fracture rejections, 
+		    rejPoly number of rejections in a row, or reach a 
+		    specified fracture cluster size if using 
+		    stoppingParameter = -largestSize  */
+
+domainSize: {5,5,5} 
+
+     /* Mandatory Parameter.
+		Creates a domain with dimension x*y*z centered at the origin.*/
+
+h: 0.3
+  /* Minimum fracture length scale(meters)
+    Any fracture intersection length of less than h will be rejected. */
+
+   
+//============================================================================
+/* Fracture Network Parameters: 											*/
+
+tripleIntersections: 1
+/* Options:		0: On
+				1: Off    */
+
+multipleClusters: 0 
+/* Options: 	0: Keep only largest cluster
+				1: Keep all clusters */
+
+visualizationMode: 0
+/* Options: 0 or 1 
+   Used during meshing: 0: creates a fine mesh, according to h parameter;
+   1: produce only first round of triangulations. In this case no 
+   modeling of flow and transport is possible. */ 
+   
+productionMode: 1
+/* 0:"debugging mode" - keeps data of all attempted fractures
+   during fracture generations as well as all files during mesh producing;
+   1:"production mode" - discards data of attempted but not 
+   accepted fractures and cleans up the file produced by lagrit. 
+   Default: 1  */
+
+seed: 12345769 
+    //Seed for random generators. 
+		
+
+domainSizeIncrease: {0,0,0} 
+          //temporary size increase for inserting fracture centers outside domain
+          
+boundaryFaces: {3,5, -1, -1, -1, -1}
+/*Will only keep clusters with connections to domain boundaries listed
+    0 = boundaryFaces will keep any and all two connected faces 
+    1 = top = positive z direction (0,0,1) 
+	  2 = bottom = bottom = negative z direction (0,0,-1) 
+	  3 = left / west = negative x direction (-1,0,0) 
+	  4 = front / south = positive y direction (0,1,0)
+	  5 = right / east = positive x direction (1,0,0) 
+	  6 = back / north = negative y direction (0,-1,0) */ 
+	   
+	  //Program will keep only clusters which connect to every specified face      
+	  //
+
+maxPoly: 1000*nPoly /* max number of polygons/fractures the program will attempt
+		  before program stops (accepted+rejected). Must be greater or equal to nPoly 
+	          Default: maxPoly = 100*nPoly */
+ 
+rejPoly: 100*nPoly /*Number of rejections in a row per polygon/fracture
+                      before program stops
+		                  Default: rejPoly = 100 */
+
+
+//===========================================================================
+//                  Shape and Probability Parameters
+//===========================================================================
+nFamRect: 2
+nFamEll: 0
+//user rectangles and user Ellipses defined in their cooresponding files
+
+famProb: {0.25, 0.25, 0.25,  0.25 } 
+/* Probability of occurrence of each family of random distrubution rectangles
+   and ellipses (first two dimensions of nShape).
+   User-ellipses and user-rectangles insertion will be attempted with 100% 
+   likelihood, but with possability they may be rejected.
+   The famProb elements should add up to 1.0 (for %100).
+   The probabilities are listed in order of families.
+   For example: If nShape={2,1,0,0} and famProb={.4,.5,.1}, then the first 
+   two famProb numbers are the probabilities of incurring a polygon from 
+   the two ellipses' families, and the third number is the probability of 
+   incurring a polygon of the rectangular family.*/
+   
+//===========================================================================
+//                      Elliptical Fracture Options                                     
+//      NOTE: Number of elements must match number of ellipse families  
+//            (first number in nShape input parameter)                         
+//===========================================================================
+//edist is a mandatory parameter if using statistically generated ellipses 
+edistr: {1, 3}   /* Ellipse statistical distribution options:
+                      1 - lognormal distribution
+     	              2 - truncated power law distribution   
+	                  3 - exponential distribution
+			              4 - constant */
+//===========================================================================
+// Parameters used by both lognormal and truncated power law options: 
+// Mandatory Parameters if using statistically generated ellipses  
+
+easpect: {1, 1}  /* Aspect ratio. Used for lognormal and truncated 
+                    power law distribution. */
+
+enumPoints: {15, 15} /*Number of vertices used in creating each elliptical 
+		                   fracture family. Number of elements must match number 
+		                   of ellipse families (first number in nShape) */
+
+eAngleOption: 0     /* 0 - theta in degrees
+                       1 - theta in radians (must be numerical value) */
+						
+etheta: {1.57, 0 } /*Ellipse fracture orientation.
+                     The angle the normal vector makes with the z-axis */
+
+ephi: {0, 0}  /* Ellipse fracture orientation.
+                 The angle the projection of the normal onto the x-y plane
+                 makes with the x-axis */
+
+ebeta: {1.57, 1.44)   /* rotation about the normal */
+
+
+ekappa: {20, 20}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
+		                similar (less diverging) are the elliptical familiy's
+		                normal vectors */				
+
+//===========================================================================
+// Options Specific For Ellipse Lognormal Distribution (edistr=1): 
+// Mandatory Parameters if using ellispes with lognormal distribution 
+
+//          NOTE: Number of elements must match number of
+//                ellipse families (first number in nShape)
+
+eLogMean: {4, 4}  //Mean value For Lognormal Distribution.       
+		       
+
+esd: {.5, 0.5} // Standard deviation for lognormal distributions of ellipses
+
+//===========================================================================
+//     Options Specific For Ellipse Exponential Distribution (edistr=3): 
+//     Mandatory Parameters if using ellispes with exponential distribution 
+
+eExpMean: {3.0, 2.0}  //Mean value for Exponential  Distribution.        
+
+//===========================================================================
+//    Options Specific For Constant Size of ellipses (edistr=4):
+
+econst: {2, 2}  // Constant radius for all the ellipses in the DFN      
+		       
+//===========================================================================
+// Options Specific For Ellipse Truncated Power-Law Distribution (edistr=2)
+// Mandatory Parameters if using ellipses with truncated power-law dist. 
+
+// NOTE: Number of elements must match number 
+//       of ellipse families (first number in nShape)
+
+emin: {1, 1} // Minimum radius for each ellipse family. 
+             // For power law distributions. 
+
+emax: {3, 3}  // Maximum radius for each ellipse family.
+		          // For power law distributions. 
+					
+ealpha: {1.5,1.5} // Alpha. Used in truncated power-law 
+			            // distribution calculation
+
+epowerLawReject: {50, 50}   // Maximum number of rejections of one fracture of
+			                      // given radius before its radius is decreased 
+
+
+/*===========================================================================*/
+/* Rctangular Fractures Options                                              */
+/* NOTE: Number of elements must match number of rectangle families          */
+/*      (second number in nShape parameter)                                  */
+/*===========================================================================*/
+/*rdist is a mandatory parameter if using statistically generated rectangles */
+rdistr: {4,1}   /*  Rectangle statistical distribution options:
+	                	1 - lognormal distribution
+		                2 - truncated power law distribution  
+		                3 - exponential distribution
+	                	4 - constant */
+//============================================================================
+// Parameters used by both lognormal and truncated power law options: 
+// Mandatory Parameters if using statistically generated rectangles   
+
+raspect: {1,1}  /* Aspect ratio. Used for lognormal and truncated
+			             power law distribution. */
+ 
+rAngleOption: 1     /* 0 - theta in degrees
+                       1 - theta in radians (must be numerical value) */
+ 
+rtheta: {1.3285,  1.213 } /*Rectangle fracture orientation.
+                          The angle the normal vector makes with the z-axis */
+
+rphi: { 5.93826, 3.355 } /* Rectangle fracture orientation.
+			The angle the projection of the normal onto the x-y
+			plane makes with the x-axis */
+      
+rbeta: {1.57, 1.44)   /* rotation about the normal */
+
+rkappa: { 12.99, 10.41}  /*Parameter for the fisher distributions. The bigger, 
+		                      the more similar (less diverging) are the rectangle 
+		                      familiy's normal vectors  */
+
+//=============================================================================
+// Options Specific For Rectangle Lognormal Distribution (rdistr=1):
+// Mandatory Parameters if using rectangles with lognormal distribution 
+
+rLogMean: {2, 2    }   /*For Lognormal Distribution.   NOTE: LOG[mean] is current functinality, need to change this       
+				                    Mean radius (1/2 rectangle length) in 
+				                    lognormal distribution for rectangles.
+		                        The number inside the log is the mean value.
+				                    So, if you want a mean fracture radius of 5, 
+				                    you must input Log[5]*/
+
+rsd = {.3, .3}            /* Standard deviation for lognormal distributions of 
+			                       rectangles */
+
+//=============================================================================
+// Options Specific For Rectangle Power-Law Distribution (rdistr=2): 
+// Mandatory Parameters if using rectangles with power-law distribution 
+
+ rmin: { 1, 1 }         /* Minimum radius for each rectangle family. 
+			                     For power law distributions. */
+
+ rmax: { 3, 3}   /* Maximum radius for each rectangle family.
+			              For power law distributions. */
+
+ ralpha: {1.5, 1.5}   /* Maximum radius for each ellipse family.
+			                     For power law distributions. */
+
+rpowerLawReject: {50, 50} /* Maximum number of rejections of one fracture of given 
+			                       radius before its radius is decreased */
+
+/*===========================================================================*/
+/* Options Specific For Rectangle Exponential Distribution (edistr=3):       */
+/* Mandatory Parameters if using rectangules with exponential distribution   */
+
+rExpMean: {3, 2}  // Mean value for Exponential  Distribution.        
+
+/*===========================================================================*/
+/* Options Specific For Constant Size of rectangles (edistr=4):              */
+
+rconst: {7,3}  // Constant length for all the rectangles in the DFN       
+		       
+/*===========================================================================*/
+/*===========================================================================*/
+/* User-Specified Ellipses                                                   */
+/* Mandatory Parameters if using user-ellipses                               */
+/* NOTE: Number of elements must match number of user-ellipse families       */
+/*(third number in nShape parameter)                                         */
+/*===========================================================================*/
+/* NOTE: Only one user-ellipse is placed into the domain per defined 
+         user-ellipse, with possibility of being rejected  */
+	
+userEllipsesOnOff: 0	//0 - User Ellipses off
+						//1 - User Ellipses on
+
+
+UserEll_input_File_Path: ./inputFiles/userPolygons/uEllInput.dat
+
+
+//nUserEll: 2      //number of user defined ellipses
+ 
+//ueb: {0.7, 0.7,  0.7, 0.7}    // Radius for each user-ellipse 
+
+//ueaspect: {1, 0.65,  1, 1}    // Aspect ratio for each user-ellipse 
+
+//uetanslation: {{-0.4,0,0}, {0,0,0},{0.4,0.,0.2},{0.4,0.,-0.2}}  
+                /* {x,y,z} Location of the center of
+								   each user ellipse */
+//uenormal: {{0,0,1},{1,0,0}, {0,0,1}, {0,0,1}}  /*3d normal vector direction for 
+//				                                            each user-ellipse*/										  
+//uenumPoints: {19, 19, 19, 19} // Number of verticies for each user-ellipse 
+
+
+/*===========================================================================*/
+/* User-Specified Rectangles                                                 */
+/* Mandatory Parameters if using user-rectangles                             */
+/* NOTE: Number of elements must match number of user-ellipse families       */
+/* (fourth number in nShape parameter)                                       */
+/*===========================================================================*/
+/* NOTE: Only one user-rectangle is placed into the domain per defined 
+         user-rectangle, with possibility of being rejected  */
+//Number of rectangle families
+userRectanglesOnOff: 1	//0 - User Rectangles off
+						//1 - User Rectangles on
+
+UserRect_Input_File_Path: ./TestCases/uRectInput_smallAngleFail.dat
+
+/*===========================================================================*/
+/* If you would like to input user specified rectangles according to their
+  coordinates, you can use the parameter userDefCoordRec. In that case, all			//COMMENTS NEED UPDATE
+  of the user specified rectangles will have to be according to coordinates.
+  You cannot specify user defined rectangles according to both
+  coordinates and to parameters such as urb, uraspect, etc.*/
+
+
+ 
+userRecByCoord: 0
+//  0 - user defined rectangles not used
+//  1 - user defined rectangles used and defined by input file:
+
+RectByCood_Input_File_Path: ./intputFiles/userPolygons/rectCoords.dat
+
+
+/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+vertices are not put in clockwise or counter-clockwise order.
+If errors, try to reorder the points till u get it right.
+Also, coordinates must be co-planar */
+
+/*===========================================================================*/
+// Aperture [m]
+/* Mandatory parameter, and can be specified in several ways:
+- 1)meanAperture and stdAperture for using LogNormal distribution.
+- 2)apertureFromTransmissivity, first transmissivity is defined, and then, 
+  using a cubic law, the aperture is calculated;
+- 3)constantAperture, all fractures, regardless of their size, will have 
+  the same aperture value;
+- 4)lengthCorrelatedAperture, aperture is defined as a function of fracture size*/
+
+//NOTE: Only one aperture type may be used at a time 
+
+aperture: 3  //choise of aperture option described above
+
+//(**** 1)meanAperture and stdAperture for using LogNormal distribution.********)
+meanAperture:  -3 /*Mean value for aperture using  
+			                       normal distribution */
+stdAperture: 0.8  //Standard deviation     
+
+/*(****** 2)apertureFromTransmissivity, first transmissivity is defined, 
+  and then, using a cubic law, the aperture is calculated;***************/
+apertureFromTransmissivity: {1.6e-9, 0.8}
+	/* Transmissivity is calculated as transmissivity = F*R^k,
+	   where F is a first element in aperturefromTransmissivity,
+	   k is a second element and R is a mean radius of a polygon. 
+	   Aperture is calculated according to cubic law as 
+	   b=(transmissivity*12)^1/3 */
+	   
+/*(****** 3)constantAperture, all fractures, regardless of their size, 
+   will have the same aperture value;	**********************************/
+      
+constantAperture: 1e-5  //Sets constant aperture for all fractures 
+
+/*(******** 4)lengthCorrelatedAperture, aperture is defined as a function of 
+       fracture size *******************/
+       
+lengthCorrelatedAperture: {5e-5, 0.5}
+	/*Length Correlated Aperture Option:
+	  Aperture is calculated by: b=F*R^k,
+	  where F is a first element in lengthCorrelatedAperture, 
+	  k is a second element and R is a mean radius of a polygon.*/
+
+
+//============================================================================
+//Permeability 
+/* Options:
+    0: Permeability of each fracture is a function of fracture aperture, 
+     given by k=(b^2)/12, where b is an aperture and k is permeability
+    1: Constant permeabilty for all fractures */
+
+permOption: 1  //See above for options
+
+constantPermeability: 1e-12  //Constant permeability for all fractures 
+
+
+
+//=============================================================================
+// Mandatory Meshing Grid Refinement Parameters: 
+
+slope: 2 /* Factor used when refining fractures according to distance 
+	from fractures' intersection lines. The bigger this number
+	the more refined the mesh will be closer to the intersection
+	line (multiplies the reference field in message2 
+	in the files DFNgenerator/dfn/final_dfn.py or final_dfn _un.py). */ 
+
+refineDist: 0.5  /*Factor used when refining fractures according to distance 
+	from fractures' intersection lines. The bigger this number
+	the more refined the mesh will be closer to the intersection
+	line (adds a value to the reference field in massage2
+	in the files DFNgenerator/dfn/final_dfn.py or final_dfn _un.py). */ 
+
+//=============================================================================
+
+
+
+  

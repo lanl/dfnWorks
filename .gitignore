@@ -50,7 +50,6 @@ test_inputs/*
 *.app
 *.pyc
 main
-DFNGen
 
 # Other
 *~

@@ -1,0 +1,248 @@
+#include <iostream>
+#include <algorithm>
+#include "generatingPoints.h" 
+#include "input.h"
+#include "fractureEstimating.h"
+#include "insertShape.h"
+#include "mathFunctions.h"
+#include "domain.h"
+
+
+void sortRadii(std::vector<Shape> &shapeFam) {    
+    for (int i = 0; i < shapeFam.size(); i++) {
+        std::sort(shapeFam[i].radiiList.begin(), 
+             shapeFam[i].radiiList.end(     ), greaterThan);
+    }    
+}
+
+void generateRadiiLists_nPolyOption(std::vector<Shape> &shapeFamilies, float *famProb, std::mt19937_64 &generator, Distributions &distributions) {
+
+    if (forceLargeFractures == true) {
+        for (int i = 0; i < shapeFamilies.size(); i++) {
+            double radius = getLargestFractureRadius(shapeFamilies[i]);
+            shapeFamilies[i].radiiList.push_back(radius);
+        }
+    }
+
+    for (int i = 0; i < shapeFamilies.size(); i++) {
+        int amountToAdd;
+        if (forceLargeFractures == true) {
+            amountToAdd = std::ceil(famProb[i] * (nPoly - shapeFamilies.size()));
+        }
+        else {
+            amountToAdd = std::ceil(famProb[i] * nPoly);
+        }
+
+        addRadii(amountToAdd, i, shapeFamilies[i], 
+                generator, distributions);
+    }
+}
+
+void printGeneratingFracturesLessThanHWarning(int famIndex, Shape &shapeFam) {
+    std::cout << "\nWARNING: " << shapeType(shapeFam) << " Family "
+              << getFamilyNumber(famIndex, shapeFam.shapeFamily)
+              << " is attepting to populate fracture radii lists, however "
+              << "many fractures are being generated with radii less than 3*h (Minimum radius). "
+              << "Consider adjusting distribution parameters.\n";
+}
+
+void addRadiiToLists(float percent, std::vector<Shape> &shapeFamilies, std::mt19937_64 &generator, Distributions &distributions) {
+
+    for (int i = 0; i < shapeFamilies.size(); i++) {
+        
+        int amountToAdd = std::ceil(shapeFamilies[i].radiiList.size() * percent);
+        addRadii(amountToAdd, i, shapeFamilies[i], generator, distributions);   
+    }
+}
+
+void addRadii(int amountToAdd, int famIdx, Shape &shapeFam, std::mt19937_64 &generator, Distributions &distributions) {
+   
+    int count = 0;
+    double radius;
+    double minRadius = 3*h;
+
+    std::uniform_real_distribution<double> uniformDist(0,1);
+
+    switch (shapeFam.distributionType) {
+    
+        case 1: { //lognormal
+            std::lognormal_distribution<double> logDistribution(shapeFam.mean, shapeFam.sd);
+
+            for (int k = 0; k < amountToAdd; k++) {
+                count = 0;
+                do {
+                    radius = radius = logDistribution(generator);
+                    count++;
+                    if (count % 1000 == 0) {
+                        printGeneratingFracturesLessThanHWarning(famIdx, shapeFam); 
+                    }
+                } while (radius < minRadius);
+                shapeFam.radiiList.push_back(radius);
+            }
+            break;
+        }
+
+        case 2: { //truncated power-law
+            for (int k = 0; k < amountToAdd; k++) {
+                count = 0;
+                do {
+                    radius = truncatedPowerLaw(uniformDist(generator), 
+                             shapeFam.min, shapeFam.max, shapeFam.alpha);    
+                    count++;
+                    if (count % 1000 == 0) {
+                        printGeneratingFracturesLessThanHWarning(famIdx, shapeFam);
+                    }
+                } while (radius < minRadius);
+                shapeFam.radiiList.push_back(radius);
+            }    
+            break;
+        }
+
+        case 3: { //exponential 
+            for (int k = 0; k < amountToAdd; k++) {
+                count = 0;
+                do {
+                    radius = distributions.expDist->getValue(shapeFam.expLambda,
+                             shapeFam.minDistInput, shapeFam.maxDistInput);
+                    count++;
+                    if (count % 1000 == 0) {
+                        printGeneratingFracturesLessThanHWarning(famIdx, shapeFam);
+                    }
+                } while (radius < minRadius);                   
+                shapeFam.radiiList.push_back(radius);    
+            }
+            break;
+        }
+    }    
+}
+
+/*****************************************************************************/
+//inserts fractures into domain with FRAM disabled
+//Simply inserts and truncates fractures on the domain
+//until reqired P32 is met. 
+//Used to estimate and generate radii lists for each fracture
+//family. 
+void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64 &generator, Distributions &distributions) { 
+
+    std::cout << "\nEstimating number of fractures per family for defined fracture intensities (P32)...\n";
+    
+    float domVol = domainSize[0]*domainSize[1]*domainSize[2];    
+    int totalFamilies = shapeFamilies.size();
+    int cdfSize = totalFamilies; //this variable shrinks along with CDF when used with fracture intensity (P32) option
+
+    // Create a copy of the family probablity
+    // Algoithms used in this function modify this array, 
+    // we need to keep the original in its original state
+    float *famProbability = new float[totalFamilies];
+    std::copy(shapeProb, shapeProb + totalFamilies, famProbability);
+
+    //init uniform dist on [0,1)
+    std::uniform_real_distribution<double> uniformDist(0,1);
+   
+    /******  convert famProb to cdf  *****/
+    float *CDF = createCDF(famProbability, cdfSize);
+
+    int familyIndex; //holds index to shape family of fracture being generated
+
+    while (p32Complete(totalFamilies) == 0) {
+        
+        // index to CDF array of current family being inserted 
+        int cdfIdx;  
+        int rejectCounter = 0;  
+        
+        poly newPoly;
+        
+        int forceLargeFractCount = 0;    
+        if (forceLargeFractCount < shapeFamilies.size() && forceLargeFractures == true) {
+            double radius = getLargestFractureRadius(shapeFamilies[forceLargeFractCount]);
+            familyIndex = forceLargeFractCount;
+            cdfIdx = forceLargeFractCount;
+            newPoly = generatePoly_withRadius(radius, shapeFamilies[forceLargeFractCount], generator, distributions, familyIndex);
+            forceLargeFractCount++;
+            std::cout << "count = " << forceLargeFractCount << "\n";
+                
+        }
+        else {
+            //choose a family based on probabiliyis AND their target p32 completion status
+            //if a family has already met is fracture intinisty req. (p32) dont choose that family anymore
+            //choose a family based on probabiliyis AND their target p32 completion status
+            //if a family has already met is fracture intinisty reqirement (p32) dont choose that family anymore
+            familyIndex = indexFromProb_and_P32Status(CDF, uniformDist(generator), totalFamilies, cdfSize, cdfIdx); 
+
+            newPoly = generatePoly(shapeFamilies[familyIndex], generator, distributions, familyIndex, false);
+        }
+        //truncate poly if needed
+        //returns 1 if poly is outside of domain or has less than 3 vertices
+        bool reject = false;
+        while (domainTruncation(newPoly, domainSize) == 1) {
+            //poly completely outside domain, or was truncated to less than 3 vertices due to vertices being too close together
+            rejectCounter++; //counter for re-trying a new translation
+
+            //test if newPoly has reached its limit of insertion attempts
+            if (rejectCounter >= rejectsPerFracture) {
+                delete[] newPoly.vertices; //created with new, need to manually deallocate
+                reject = true;
+                break;; //reject poly, generate new polygon
+            }
+            else { //retranslate poly and try again, preserving normal, size, and shape
+                reTranslatePoly(newPoly, shapeFamilies[familyIndex], generator);
+            }                           
+        }
+        
+        if (reject == true) {
+            //restart while loop
+            //generate new fracture
+            continue; 
+        }
+
+        //calculate poly's area
+        newPoly.area = getArea(newPoly);
+
+        //update p32 (fracture intensity) per family if using P32 option
+        if (shapeFamilies[familyIndex].layer == 0) {
+            shapeFamilies[familyIndex].currentP32 += newPoly.area*2/domVol;
+        }
+        else {
+            shapeFamilies[familyIndex].currentP32 += newPoly.area*2/layerVol[shapeFamilies[familyIndex].layer-1];
+        }
+
+        //save radius for real DFN generation
+        shapeFamilies[familyIndex].radiiList.push_back(newPoly.xradius);
+        
+        // if the last inserted pologon met the p32 reqirement, set that familiy to no longer
+        // insert any more fractures. ajust the CDF and familiy probababilties
+        if (shapeFamilies[familyIndex].currentP32 >= shapeFamilies[familyIndex].p32Target ) {
+       
+            p32Status[familyIndex] = 1; //mark family as having its p32 requirement met
+                        
+            //adjust CDF, PDF, and reduce their size by 1. Keep probabilities proportional. 
+            //remove the completed families element in the CDF and famProb[] 
+            //distribute the removed family probability evenly among the others and rebuild the CDF
+            //familyIndex = index of family's probability
+            //cdfIdx = index of the family's correspongding cdf, (index to elmt to remove)
+            if (cdfSize > 1 ){ //if there are still more families to insert ( cdfSize = 0 means no more families to insert)
+std::cout<<"family idx = " << familyIndex << "\n";
+std::cout<<"cdfIdx = " << cdfIdx << "\n";
+std::cout<<"cdfsize = " << cdfSize << "\n";
+
+                adjustCDF_and_famProb(CDF, famProbability, cdfSize, cdfIdx);
+
+            }   
+        }
+
+        //no need to save any polygons, 
+        //we are just simulating dfn with no rejections
+        //to get an idea of how many fractures we will
+        //need for each family
+        delete[] newPoly.vertices;
+               
+    } //end while loop for inserting polyons
+
+    //reset p32 to 0
+    for (int i = 0; i < totalFamilies; i++) {
+        p32Status[i] = 0;
+        shapeFamilies[i].currentP32 = 0;
+    }
+    
+}
+
