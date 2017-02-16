@@ -1,0 +1,11 @@
+set(vtkFiltersStatistics_HEADERS_LOADED 1)
+set(vtkFiltersStatistics_HEADERS "vtkAutoCorrelativeStatistics;vtkBivariateLinearTableThreshold;vtkComputeQuartiles;vtkContingencyStatistics;vtkCorrelativeStatistics;vtkDescriptiveStatistics;vtkHighestDensityRegionsStatistics;vtkExtractFunctionalBagPlot;vtkKMeansDistanceFunctorCalculator;vtkKMeansDistanceFunctor;vtkKMeansStatistics;vtkMultiCorrelativeStatistics;vtkOrderStatistics;vtkPCAStatistics;vtkStatisticsAlgorithm;vtkStrahlerMetric;vtkStreamingStatistics")
+
+foreach(header ${vtkFiltersStatistics_HEADERS})
+  set(vtkFiltersStatistics_HEADER_${header}_EXISTS 1)
+endforeach()
+
+set(vtkFiltersStatistics_HEADER_vtkStatisticsAlgorithm_ABSTRACT 1)
+
+
+

@@ -1,0 +1,8 @@
+# Target labels
+ vtkRenderingGL2PSOpenGL2
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/GL2PSOpenGL2/vtkOpenGLGL2PSHelperImpl.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/GL2PSOpenGL2/vtkRenderingGL2PSOpenGL2ObjectFactory.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/GL2PSOpenGL2/vtkOpenGLGL2PSHelperImpl.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/GL2PSOpenGL2/vtkRenderingGL2PSOpenGL2ObjectFactory.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Rendering/GL2PSOpenGL2/vtkRenderingGL2PSOpenGL2Module.h

@@ -1,0 +1,15 @@
+vtk_module(vtkGUISupportQt
+  GROUPS
+    Qt
+  TEST_DEPENDS
+    vtkTestingCore
+  EXCLUDE_FROM_WRAPPING
+  DEPENDS
+    vtkCommonCore
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkRenderingCore
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkFiltersExtraction
+    vtkInteractionStyle
+  )

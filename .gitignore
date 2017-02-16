@@ -2,6 +2,8 @@
 *~
 *.nfs*
 *.swp
+*.so
+*.cmake
 *.pyc
 python_scripts/modules/*.pyc
 python_scripts/*.swp

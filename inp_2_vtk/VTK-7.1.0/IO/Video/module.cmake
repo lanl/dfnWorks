@@ -1,0 +1,13 @@
+vtk_module(vtkIOVideo
+  GROUPS
+    StandAlone
+  KIT
+    vtkIO
+  DEPENDS
+    vtkCommonExecutionModel
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonSystem
+    vtksys
+  )

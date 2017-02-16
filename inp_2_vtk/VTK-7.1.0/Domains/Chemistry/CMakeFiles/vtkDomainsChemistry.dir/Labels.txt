@@ -1,0 +1,37 @@
+# Target labels
+ vtkDomainsChemistry
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkBlueObeliskData.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkBlueObeliskDataInternal.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkBlueObeliskDataParser.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkCMLMoleculeReader.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkGaussianCubeReader2.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeAlgorithm.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeMapper.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToAtomBallFilter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToBondStickFilter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToPolyDataFilter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkPeriodicTable.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkProgrammableElectronicData.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkProteinRibbonFilter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkSimpleBondPerceiver.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkVASPAnimationReader.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkVASPTessellationReader.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkXYZMolReader2.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkBlueObeliskData.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkBlueObeliskDataParser.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkCMLMoleculeReader.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkGaussianCubeReader2.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeAlgorithm.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeMapper.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToAtomBallFilter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToBondStickFilter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkMoleculeToPolyDataFilter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkPeriodicTable.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkProgrammableElectronicData.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkProteinRibbonFilter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkSimpleBondPerceiver.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkVASPAnimationReader.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkVASPTessellationReader.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkXYZMolReader2.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry/vtkDomainsChemistryModule.h

@@ -1,0 +1,6 @@
+# Target labels
+ vtkexpat
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/expat/vtkexpat/xmlparse.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/expat/vtkexpat/xmltok.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/expat/vtkexpat/xmlrole.c

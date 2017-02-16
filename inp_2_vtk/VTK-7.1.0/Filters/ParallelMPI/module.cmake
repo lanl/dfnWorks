@@ -1,0 +1,23 @@
+vtk_module(vtkFiltersParallelMPI
+  GROUPS
+    MPI
+  TEST_DEPENDS
+    vtkIOXML
+    vtkIOParallelXML
+    vtkCommonDataModel
+    vtkTestingCore
+  KIT
+    vtkParallel
+  DEPENDS
+    vtkCommonCore
+    vtkCommonExecutionModel
+    vtkFiltersExtraction
+    vtkImagingCore
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkFiltersGeneral
+    vtkFiltersParallel
+    vtkIOLegacy
+    vtkParallelCore
+    vtkParallelMPI
+  )

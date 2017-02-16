@@ -1,0 +1,26 @@
+vtk_module(vtkFiltersGeneric
+  GROUPS
+    StandAlone
+  TEST_DEPENDS
+    vtkIOXML
+    vtkIOLegacy
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkFiltersModeling
+    vtkRenderingLabel
+    vtkTestingRendering
+    vtkInteractionStyle
+    vtkTestingGenericBridge
+  KIT
+    vtkFilters
+  DEPENDS
+    vtkCommonExecutionModel
+    vtkCommonMath
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonMisc
+    vtkCommonSystem
+    vtkCommonTransforms
+    vtkFiltersCore
+    vtkFiltersSources
+  )

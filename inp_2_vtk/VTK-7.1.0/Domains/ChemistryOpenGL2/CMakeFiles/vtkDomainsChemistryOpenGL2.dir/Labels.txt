@@ -1,0 +1,8 @@
+# Target labels
+ vtkDomainsChemistryOpenGL2
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/vtkOpenGLMoleculeMapper.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/vtkDomainsChemistryOpenGL2ObjectFactory.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/vtkOpenGLMoleculeMapper.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/vtkDomainsChemistryOpenGL2ObjectFactory.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/vtkDomainsChemistryOpenGL2Module.h

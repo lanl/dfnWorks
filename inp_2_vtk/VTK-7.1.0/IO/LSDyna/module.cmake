@@ -1,0 +1,17 @@
+vtk_module(vtkIOLSDyna
+  GROUPS
+    StandAlone
+  TEST_DEPENDS
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkTestingRendering
+    vtkInteractionStyle
+  KIT
+    vtkIO
+  DEPENDS
+    vtkCommonCore
+    vtkCommonExecutionModel
+    vtkIOXMLParser
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtksys
+  )

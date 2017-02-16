@@ -1,0 +1,22 @@
+vtk_module(vtkFiltersExtraction
+  GROUPS
+    StandAlone
+  TEST_DEPENDS
+    vtkInteractionStyle
+    vtkIOExodus
+    vtkIOLegacy
+    vtkIOXML
+    vtkIOExodus
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkTestingRendering
+  KIT
+    vtkFilters
+  DEPENDS
+    vtkCommonExecutionModel
+    vtkFiltersGeneral
+  PRIVATE_DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkFiltersCore
+    vtkFiltersStatistics
+  )

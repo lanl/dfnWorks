@@ -1,0 +1,14 @@
+vtk_module(vtkViewsCore
+  GROUPS
+    Rendering
+  KIT
+    vtkViews
+  DEPENDS
+    vtkCommonCore
+    vtkCommonExecutionModel
+    vtkInteractionWidgets
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkFiltersGeneral
+    vtkRenderingCore
+  )

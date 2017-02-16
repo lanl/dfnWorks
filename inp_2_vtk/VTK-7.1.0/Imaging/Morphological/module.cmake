@@ -1,0 +1,20 @@
+vtk_module(vtkImagingMorphological
+  GROUPS
+    Imaging
+    StandAlone
+  TEST_DEPENDS
+    vtkInteractionStyle
+    vtkInteractionImage
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkTestingRendering
+  KIT
+    vtkImaging
+  DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkImagingCore
+    vtkImagingGeneral
+  PRIVATE_DEPENDS
+    vtkImagingSources
+  )

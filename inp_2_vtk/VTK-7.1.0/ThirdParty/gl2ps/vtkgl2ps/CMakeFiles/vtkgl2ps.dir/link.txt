@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC   -w -w -g  -Wl,--no-undefined -lc    -shared -Wl,-soname,libvtkgl2ps-7.1.so.1 -o ../../../lib/libvtkgl2ps-7.1.so.1 CMakeFiles/vtkgl2ps.dir/gl2ps.c.o ../../../lib/libvtkzlib-7.1.so.1 ../../../lib/libvtkpng-7.1.so.1 -lGLU -lGL -lSM -lICE -lX11 -lXext -lm ../../../lib/libvtkzlib-7.1.so.1 -lm -Wl,-rpath,/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/lib: 

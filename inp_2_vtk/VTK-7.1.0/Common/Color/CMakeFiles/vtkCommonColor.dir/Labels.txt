@@ -1,0 +1,8 @@
+# Target labels
+ vtkCommonColor
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/vtkColorSeries.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/vtkNamedColors.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/vtkColorSeries.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/vtkNamedColors.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/vtkCommonColorModule.h

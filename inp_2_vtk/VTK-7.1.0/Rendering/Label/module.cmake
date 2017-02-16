@@ -1,0 +1,23 @@
+vtk_module(vtkRenderingLabel
+  GROUPS
+    Rendering
+  TEST_DEPENDS
+    vtkIOXML
+    vtkTestingCore
+    vtkTestingRendering
+    vtkRendering${VTK_RENDERING_BACKEND}
+    vtkInteractionStyle
+  KIT
+    vtkRendering
+  DEPENDS
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkRenderingCore
+    vtkRenderingFreeType
+  PRIVATE_DEPENDS
+    vtkCommonMath
+    vtkCommonSystem
+    vtkCommonTransforms
+    vtkFiltersGeneral
+  )

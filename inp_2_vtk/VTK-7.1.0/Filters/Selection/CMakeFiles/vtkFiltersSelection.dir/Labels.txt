@@ -1,0 +1,10 @@
+# Target labels
+ vtkFiltersSelection
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkKdTreeSelector.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkLinearSelector.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkCellDistanceSelector.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkKdTreeSelector.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkLinearSelector.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkCellDistanceSelector.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Filters/Selection/vtkFiltersSelectionModule.h

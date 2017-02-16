@@ -1,0 +1,22 @@
+# Target labels
+ vtkImagingFourier
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageButterworthHighPass.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageButterworthLowPass.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFFT.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFourierCenter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFourierFilter.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageIdealHighPass.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageIdealLowPass.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageRFFT.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkTableFFT.cxx
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageButterworthHighPass.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageButterworthLowPass.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFFT.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFourierCenter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageFourierFilter.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageIdealHighPass.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageIdealLowPass.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImageRFFT.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkTableFFT.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Imaging/Fourier/vtkImagingFourierModule.h

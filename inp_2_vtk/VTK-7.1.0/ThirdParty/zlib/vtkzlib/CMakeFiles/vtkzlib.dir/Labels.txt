@@ -1,0 +1,29 @@
+# Target labels
+ vtkzlib
+# Source files and their labels
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/adler32.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/compress.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/crc32.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/deflate.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/gzclose.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/gzlib.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/gzread.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/gzwrite.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inflate.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/infback.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inftrees.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inffast.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/trees.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/uncompr.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/zutil.c
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/zconf.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/zlib.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/crc32.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/deflate.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/gzguts.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inffast.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inffixed.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inflate.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/inftrees.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/trees.h
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/zlib/vtkzlib/zutil.h

@@ -1,0 +1,12 @@
+vtk_module(vtkCommonTransforms
+  GROUPS
+    StandAlone
+  TEST_DEPENDS
+    vtkTestingCore
+    vtkRendering${VTK_RENDERING_BACKEND}
+  KIT
+    vtkCommon
+  DEPENDS
+    vtkCommonCore
+    vtkCommonMath
+  )

@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Utilities/EncodeString/vtkEncodeString.cxx
+iostream
+-
+string
+-
+sstream
+-
+cstdio
+-
+

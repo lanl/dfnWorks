@@ -1,0 +1,15 @@
+vtk_module(vtkFiltersImaging
+  GROUPS
+    Imaging
+    StandAlone
+  KIT
+    vtkFilters
+  DEPENDS
+    vtkCommonCore
+    vtkCommonExecutionModel
+    vtkFiltersStatistics
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkCommonSystem
+    vtkImagingGeneral
+  )

@@ -1,0 +1,10 @@
+set(vtkRenderingAnnotation_HEADERS_LOADED 1)
+set(vtkRenderingAnnotation_HEADERS "vtkAnnotatedCubeActor;vtkArcPlotter;vtkAxesActor;vtkAxisActor2D;vtkAxisActor;vtkAxisFollower;vtkBarChartActor;vtkCaptionActor2D;vtkConvexHull2D;vtkCornerAnnotation;vtkCubeAxesActor2D;vtkCubeAxesActor;vtkGraphAnnotationLayersFilter;vtkLeaderActor2D;vtkLegendBoxActor;vtkLegendScaleActor;vtkPieChartActor;vtkPolarAxesActor;vtkProp3DAxisFollower;vtkScalarBarActor;vtkSpiderPlotActor;vtkXYPlotActor")
+
+foreach(header ${vtkRenderingAnnotation_HEADERS})
+  set(vtkRenderingAnnotation_HEADER_${header}_EXISTS 1)
+endforeach()
+
+
+
+

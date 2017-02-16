@@ -1,0 +1,13 @@
+vtk_module(vtkTestingRendering
+  DEPENDS
+    vtkCommonCore
+    vtkRenderingCore
+    vtkTestingCore
+  PRIVATE_DEPENDS
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkCommonSystem
+    vtkIOImage
+    vtkImagingCore
+    vtksys
+  )
