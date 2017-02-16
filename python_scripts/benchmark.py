@@ -10,7 +10,7 @@ def run_test(input_file_name):
     subprocess.call(arg_string, shell=True)
 
 
-home_dir = '/home/jhyman/dfnworks'
+home_dir = '/home/nknapp'
 benchmark_dir = home_dir +  '/dfnworks-main/benchmarks/'
 benchmark_dir = os.path.abspath(benchmark_dir)
 for input_file in os.listdir(benchmark_dir):

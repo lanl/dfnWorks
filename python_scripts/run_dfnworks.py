@@ -9,6 +9,8 @@
 
 import os, sys
 sys.path.append("/home/nknapp/dfnworks-main/python_scripts/") 
+from time import time
+from modules import dfnworks, helper 
 
 def define_paths():
 	# Set Environment Variables
@@ -30,13 +32,12 @@ def define_paths():
 	os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
         os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + '/inp_2_vtk/inp2vtk'
 
-print ('='*80)
-print lanl_statement
-print ('='*80)
-os.system("date")
 define_paths()
 main_time = time()
 DFN = dfnworks.create_dfn()
+if type(DFN) is ' NoneType':
+    print 'ERROR: DFN object not created correctly'
+    exit()
 # General Work Flow
 DFN.dfnGen()
 DFN.dfnFlow()
