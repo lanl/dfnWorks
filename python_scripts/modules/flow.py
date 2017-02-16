@@ -317,9 +317,12 @@ class flow():
                         int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
     def parse_pflotran_vtk_python(self, grid_vtk_file=''):
+
             print '--> Parsing PFLOTRAN output'
             if grid_vtk_file:
                 self._vtk_file = grid_vtk_file
+            else:
+                self.inp2vtk_python()
 
             grid_file = self._vtk_file
             
@@ -327,7 +330,7 @@ class flow():
             with open(grid_file, 'r') as f:
                 grid = f.readlines()[3:]
 
-            out_dir = 'parsed_vtk'
+            out_dir = 'parsed_vtk_python'
             for line in grid:
                 if 'POINTS' in line:
                     num_cells = line.strip(' ').split()[1]
@@ -358,7 +361,7 @@ class flow():
 
         print '--> Parsing PFLOTRAN output'
         files = glob.glob('*-[0-9][0-9][0-9].vtk')
-        out_dir = 'parsed_vtk'
+        out_dir = 'parsed_vtk_cpp'
         vtk_filename_list = []
         replacements = {'CELL_DATA':'POINT_DATA'} 
         header = ['# vtk DataFile Version 2.0\n',

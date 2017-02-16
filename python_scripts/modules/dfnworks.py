@@ -1,4 +1,4 @@
-__author__ = "Jeffrey Hyman and Satish Karra"
+author__ = "Jeffrey Hyman and Satish Karra"
 __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
@@ -126,9 +126,22 @@ class dfnworks(Frozen):
         helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
         tic = time()    
+        dfnflow.parse_pflotran_vtk_python()       
+        helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk python', time() - tic)    
+     
+        tic = time()    
         dfnflow.parse_pflotran_vtk()       
-        helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+        helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk C++ ', time() - tic)    
         
+        #TODO: print diff between python and C++ files here
+       
+        python_parsed_vtk_dir = self._jobname + '/parsed_vtk_python/' 
+        cpp_parsed_vtk_dir = self._jobname + '/parsed_vtk_cpp/'
+        python_vtk_fle = python_parsed_vtk_dir + 'dfn_explicit_000.vtk'
+        cpp_vtk_fle = cpp_parsed_vtk_dir + 'dfn_explicit_000.vtk'
+        subprocess.call('diff ' + python_vtk_fle + ' ' + cpp_vtk_fle)
+        exit()
+
         tic = time()    
         dfnflow.pflotran_cleanup()
         helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
@@ -187,6 +200,8 @@ def commandline_options():
     -ncpu : Number of CPUS (Optional, default=4)
 
     -gen : Generator Input File (Mandatory, can be included within this file)
+            sys.exit("--> ERROR: dfnTrans did not complete\n")
+
     -flow : PFLORAN Input File (Mandatory, can be included within this file)
     -trans: Transport Input File (Mandatory, can be included within this file)
 
@@ -282,12 +297,3 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     print 'Jobname: ', dfn._jobname
     print 'Number of cpus requested: ', dfn._ncpu 
     print '--> dfnGen input file: ',dfn._dfnGen_file
-    print '--> dfnFlow input file: ',dfn._dfnFlow_file
-    print '--> dfnTrans input file: ',dfn._dfnTrans_file
-    if options.cell is True:
-        print '--> Expecting Cell Based Aperture and Permeability'
-    print("="*80+"\n")  
-
-    return dfn
-
-
