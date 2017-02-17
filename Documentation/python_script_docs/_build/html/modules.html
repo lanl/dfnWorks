@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>setup.py: compile the components of dfnWorks &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="index.html"/>
+        <link rel="prev" title="Introduction" href="intro.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#dfnworks-dfnworks-python-wrapper">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dfnworks-class">dfnworks class</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>setup.py: compile the components of dfnWorks</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/modules.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="setup-py-compile-the-components-of-dfnworks">
+<span id="dfnworks-chapter"></span><h1>setup.py: compile the components of dfnWorks<a class="headerlink" href="#setup-py-compile-the-components-of-dfnworks" title="Permalink to this headline">¶</a></h1>
+<p>The setup.py script should be run using python setup.py before using dfnWorks. This script compiles the C and C++ components of dfnWorks. Without arguments, the script performs the setup. With the argument &#8216;clean,&#8217; the script cleans up C and C++ object files.</p>
+<span class="target" id="module-setup"></span><dl class="function">
+<dt id="setup.command_line_options">
+<code class="descclassname">setup.</code><code class="descname">command_line_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#command_line_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.command_line_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read command lines 
+-clean: True/False to clean</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.remove_batch">
+<code class="descclassname">setup.</code><code class="descname">remove_batch</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#remove_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.remove_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes files with wild card *</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>name (string): the pattern attached to * which will be removed from the current working  directory</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.compile_exe">
+<code class="descclassname">setup.</code><code class="descname">compile_exe</code><span class="sig-paren">(</span><em>directory_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#compile_exe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.compile_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup option - performs all compilations necessary before running run_dfnworks.py</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>directory_list (list): list of directory names which contain Makefiles</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.clean">
+<code class="descclassname">setup.</code><code class="descname">clean</code><span class="sig-paren">(</span><em>directory_list</em>, <em>python_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>clean option - removes all files not needed in the repository</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>directory_list (list): list of directory names to be cleaned of object files
+python_dir (string): python directory name where <a href="#id1"><span class="problematic" id="id2">*</span></a>.pyc will be removed</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="dfnworks-dfnworks-python-wrapper">
+<h1>dfnworks: dfnWorks python wrapper<a class="headerlink" href="#dfnworks-dfnworks-python-wrapper" title="Permalink to this headline">¶</a></h1>
+<p>The dfnworks module is the main module in dfnWorks which contains classes and methods to read, manipulate, write and execute PFLOTRAN input files.</p>
+<div class="section" id="dfnworks-class">
+<h2>dfnworks class<a class="headerlink" href="#dfnworks-class" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">dfnworks</span></code> is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:<cite>.dfnworks</cite>.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="intro.html" class="btn btn-neutral" title="Introduction"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
