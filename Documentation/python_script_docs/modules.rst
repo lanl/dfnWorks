@@ -1,23 +1,26 @@
-.. _dfnworks-chapter:
-
-setup.py: compile the components of dfnWorks
-=========================================================
-
-The setup.py script should be run using python setup.py before using dfnWorks. This script compiles the C and C++ components of dfnWorks. Without arguments, the script performs the setup. With the argument 'clean,' the script cleans up C and C++ object files.
-
-
-.. automodule:: setup
-    :members: command_line_options, remove_batch, compile_exe, clean
-
 dfnworks: dfnWorks python wrapper
 =====================================
 
-The dfnworks module is the main module in dfnWorks which contains classes and methods to read, manipulate, write and execute PFLOTRAN input files.
+DFNWORKS class
+################
 
-dfnworks class
-###########
+The :class:`.DFNWORKS` is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:`.DFNWORKS`.
 
-The :class:`.dfnworks` is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:`.dfnworks`.
+.. autoclass:: modules.DFNWORKS.DFNWORKS
+.. automethod:: modules.DFNWORKS.create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file="")
 
-.. autoclass:: dfnworks.dfnworks
+dfnFlow class
+##############
 
+The :class:'.dfnFlow` is the class containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output. 
+
+.. autoclass:: modules.flow.dfnFlow
+  :members:
+
+dfnTrans class
+###############
+
+The :class:'.dfnTrans' is the class containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output. 
+
+.. autoclass:: modules.transport.dfnTrans
+  :members:

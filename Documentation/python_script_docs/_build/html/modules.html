@@ -159,6 +159,18 @@ python_dir (string): python directory name where <a href="#id1"><span class="pro
 <div class="section" id="dfnworks-class">
 <h2>dfnworks class<a class="headerlink" href="#dfnworks-class" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="xref py py-class docutils literal"><span class="pre">dfnworks</span></code> is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:<cite>.dfnworks</cite>.</p>
+<dl class="class">
+<dt id="modules.dfnworks.DFNWORKS">
+<em class="property">class </em><code class="descclassname">modules.dfnworks.</code><code class="descname">DFNWORKS</code><span class="sig-paren">(</span><em>jobname=''</em>, <em>local_jobname=''</em>, <em>dfnGen_file=''</em>, <em>output_file=''</em>, <em>local_dfnGen_file=''</em>, <em>ncpu=''</em>, <em>dfnFlow_file=''</em>, <em>local_dfnFlow_file=''</em>, <em>dfnTrans_file=''</em>, <em>inp_file='full_mesh.inp'</em>, <em>uge_file=''</em>, <em>vtk_file=''</em>, <em>mesh_type='dfn'</em>, <em>perm_file=''</em>, <em>aper_file=''</em>, <em>rfield=''</em>, <em>perm_cell_file=''</em>, <em>aper_cell_file=''</em>, <em>dfnTrans_version=''</em>, <em>num_frac=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/dfnworks.html#DFNWORKS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfnworks.DFNWORKS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for DFN Generation and meshing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.create_dfn">
+<code class="descclassname">dfnworks.</code><code class="descname">create_dfn</code><span class="sig-paren">(</span><em>dfnGen_file=&quot;&quot;</em>, <em>dfnFlow_file=&quot;&quot;</em>, <em>dfnTrans_file=&quot;&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.create_dfn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse command line inputs and input files to create and populate dfnworks class</p>
+</dd></dl>
+
 </div>
 </div>
 

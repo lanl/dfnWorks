@@ -68,7 +68,7 @@ class DFNWORKS(Frozen):
         self.legal()
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
-    '''create_dfn
+    '''
     Parse command line inputs and input files to create and populate dfnworks class
     '''
 
