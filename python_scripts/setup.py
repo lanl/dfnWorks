@@ -59,6 +59,8 @@ CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
 PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'
 GEN_INT_ELM_LIST_PATH = DFN_PATH + 'GenIntElmtList/'
 DFNGEN_PATH = DFN_PATH +'DFNGen/DFNC++Version/'
+VTK_PROC_PATH = DFN_PATH + 'inp_2_vtk/'
+
 PYTHON_DIR = DFN_PATH + 'python_scripts/modules'
 
 directory_list = []
@@ -67,6 +69,7 @@ directory_list.append(CONNECTIVITY_TEST_PATH)
 directory_list.append(PARTICLE_TRACKING_PATH)
 directory_list.append(DFNGEN_PATH)
 directory_list.append(GEN_INT_ELM_LIST_PATH)
+directory_list.append(VTK_PROC_PATH)
 
 if options.clean:
     print("Removing *.o and *.pyc files before compiling\n")
