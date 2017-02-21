@@ -78,6 +78,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnworks-class">DFNWORKS class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnflow-method">dfnFlow method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfntrans-method">dfnTrans method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfntools-module">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#distr-class">distr class</a></li>
 </ul>
 </li>
 </ul>
@@ -147,7 +149,16 @@
 	<span class="n">show</span> <span class="o">=</span> <span class="bp">False</span> <span class="c">## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf</span>
 
 	<span class="k">class</span> <span class="nc">polyFam</span><span class="p">:</span>
-		<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">globFamNum</span><span class="p">,</span> <span class="n">radiiList</span><span class="p">,</span> <span class="n">distrib</span><span class="p">,</span> <span class="n">infoStr</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; A data structure describing a family of fractures (that all must be either ellipses or rectangles</span>
+<span class="sd">                Attributes:</span>
+<span class="sd">                    globFamNum (int): a unique integer describing the family</span>
+<span class="sd">                    radiiList (list): a list of doubles describing the radii of all fractures in the family</span>
+<span class="sd">                    distrib (str): the type of distribution of the family (lognormal, exponential, constant, or user-defined)</span>
+<span class="sd">                    infoStr (str): an informative string describing the family</span>
+<span class="sd">                    parameters (dict): a dictionary containing the values of parameters for the family</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                
+                <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">globFamNum</span><span class="p">,</span> <span class="n">radiiList</span><span class="p">,</span> <span class="n">distrib</span><span class="p">,</span> <span class="n">infoStr</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">globFamNum</span> <span class="o">=</span> <span class="n">globFamNum</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">radiiList</span> <span class="o">=</span> <span class="n">radiiList</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">distrib</span> <span class="o">=</span> <span class="n">distrib</span>

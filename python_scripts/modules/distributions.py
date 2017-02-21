@@ -2,7 +2,16 @@ import helper
 import gen_input
 
 class distr():
+    """ 
+    Verifies the fracture distribution input parameters for dfnGen.
     
+    Attributes:
+        params (list): parameters for dfnGen
+        numEdistribs (int): number of ellipse family distributions
+        numRdistribs (int): number of rectangle family distributions
+        minFracSize (double): minimum fracture size
+    """
+
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self._params = params
         global distr_helper_methods  
@@ -11,16 +20,15 @@ class distr():
         self.rectFams = distr_helper_methods.valueOf('nFamRect')
         self.numEdistribs = numEdistribs
         self.numRdistribs = numRdistribs
-    ## ========================================================================= ##
-            ###                                                ### 
-            ###        Prefix MUST be either 'e' or 'r'        ### 
-            ###                                                ### 
-            ### ============================================== ###        
 
-    ## Verifies both the "ebetaDistribution" and "rBetaDistribution". If either contain any flags
-    ## indicating contant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
-    ## also verified. 
     def betaDistribution(self, prefix):
+        """
+        Verifies both the "ebetaDistribution" and "rBetaDistribution". If either contain any flags
+        indicating contant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
+        also verified. 
+        Args:
+            prefix (str): Indicates shapes that the beta distribution describes. 'e' if they are ellipses, 'r' if they are rectangles.
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "betaDistribution"
@@ -41,11 +49,12 @@ class distr():
                   "to 1 in \"{}\"".format(betaParam, -errResult, numBetas, paramName, paramName))
 
 
-    ## Verifies "edistr" and "rdistr" making sure one disrtibution is defined per family and
-    ## each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
-    ## 
-    ## Stores how many of each distrib are in use in numEdistribs or numRdistribs lists  
     def distr(self, prefix):
+        """ 
+        Verifies "edistr" and "rdistr" making sure one distribution is defined per family and
+        each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
+        Stores how many of each distrib are in use in numEdistribs or numRdistribs lists.  
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
@@ -66,9 +75,10 @@ class distr():
                    "2 = Truncated Power Law, 3 = Exponential, or 4 = constant).".format(paramName, dist))
 
 
-    # prefix- "e" or "r"
-    ## Verifies all logNormal Paramters for ellipses and Rectangles        
     def lognormalDist(self, prefix):
+        """
+        Verifies all logNormal Parameters for ellipses and Rectangles.
+        """ 
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]]
@@ -92,8 +102,10 @@ class distr():
         distr_helper_methods.checkMean(prefix+"LogMin", prefix+"LogMax", prefix+"LogMean")
         distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(prefix+"LogMin"))
 
-    ## Truncated Power Law Distribution
     def tplDist(self, prefix):
+        """
+        Verifies parameters for truncated power law distribution of fractures.
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["min", "max", "alpha"]]
@@ -111,6 +123,9 @@ class distr():
         
 
     def exponentialDist(self, prefix):
+        """
+        Verifies parameters for exponential distribution of fractures.
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]]
@@ -128,6 +143,9 @@ class distr():
         distr_helper_methods.checkMinFracSize(distr_helper_methods.valueOf(prefix+"ExpMin"))
 
     def constantDist(self, prefix):
+        """
+        Verifies paramters for constant distribution of fractures
+        """
         paramName = prefix + "const"
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs

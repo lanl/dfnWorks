@@ -29,7 +29,16 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
 
 	class polyFam:
-		def __init__(self, globFamNum, radiiList, distrib, infoStr, parameters):
+		""" A data structure describing a family of fractures (that all must be either ellipses or rectangles
+                Attributes:
+                    globFamNum (int): a unique integer describing the family
+                    radiiList (list): a list of doubles describing the radii of all fractures in the family
+                    distrib (str): the type of distribution of the family (lognormal, exponential, constant, or user-defined)
+                    infoStr (str): an informative string describing the family
+                    parameters (dict): a dictionary containing the values of parameters for the family
+                """
+                
+                def __init__(self, globFamNum, radiiList, distrib, infoStr, parameters):
 			self.globFamNum = globFamNum
 			self.radiiList = radiiList
 			self.distrib = distrib

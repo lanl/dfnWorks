@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>modules.distributions &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnworks-class">DFNWORKS class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnflow-method">dfnFlow method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfntrans-method">dfnTrans method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfntools-module">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#distr-class">distr class</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>modules.distributions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for modules.distributions</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">helper</span>
+<span class="kn">import</span> <span class="nn">gen_input</span>
+
+<div class="viewcode-block" id="distr"><a class="viewcode-back" href="../../modules.html#modules.distributions.distr">[docs]</a><span class="k">class</span> <span class="nc">distr</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Verifies the fracture distribution input parameters for dfnGen.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        params (list): parameters for dfnGen</span>
+<span class="sd">        numEdistribs (int): number of ellipse family distributions</span>
+<span class="sd">        numRdistribs (int): number of rectangle family distributions</span>
+<span class="sd">        minFracSize (double): minimum fracture size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">numEdistribs</span><span class="p">,</span> <span class="n">numRdistribs</span><span class="p">,</span> <span class="n">minFracSize</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="k">global</span> <span class="n">distr_helper_methods</span>  
+        <span class="n">distr_helper_methods</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">input_helper</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">minFracSize</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">ellipseFams</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="s">&#39;nFamEll&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectFams</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="s">&#39;nFamRect&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="o">=</span> <span class="n">numEdistribs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span> <span class="o">=</span> <span class="n">numRdistribs</span>
+
+    <span class="k">def</span> <span class="nf">betaDistribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies both the &quot;ebetaDistribution&quot; and &quot;rBetaDistribution&quot;. If either contain any flags</span>
+<span class="sd">        indicating contant angle (1) then the corresponding &quot;ebeta&quot; and/or &quot;rbeta&quot; parameters are </span>
+<span class="sd">        also verified. </span>
+<span class="sd">        Args:</span>
+<span class="sd">            prefix (str): Indicates shapes that the beta distribution describes. &#39;e&#39; if they are ellipses, &#39;r&#39; if they are rectangles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;ellipse&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="s">&quot;rectangle&quot;</span>
+        <span class="n">numFamilies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipseFams</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectFams</span>
+        <span class="n">paramName</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&quot;betaDistribution&quot;</span>
+
+        <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">),</span> <span class="n">paramName</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFlag</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">numFamilies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} value(s) but there is(are) {} {} family(ies). Need one &quot;</span>\
+                  <span class="s">&quot;flag (0 or 1) per {} family.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramName</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">numFamilies</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span>
+
+        <span class="n">numBetas</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c">## number of 1&#39;s in list</span>
+        <span class="k">if</span> <span class="n">numBetas</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="n">betaParam</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&quot;beta&quot;</span>
+        <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">betaParam</span><span class="p">),</span> <span class="n">betaParam</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFloat</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">numBetas</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> defined {} constant angle(s) but {} flag(s) was(were) set to 1 &quot;</span>\
+                  <span class="s">&quot;in {}. Please define one constant angle (beta value) for each flag set &quot;</span>\
+                  <span class="s">&quot;to 1 in </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">betaParam</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">numBetas</span><span class="p">,</span> <span class="n">paramName</span><span class="p">,</span> <span class="n">paramName</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="nf">distr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Verifies &quot;edistr&quot; and &quot;rdistr&quot; making sure one distribution is defined per family and</span>
+<span class="sd">        each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).</span>
+<span class="sd">        Stores how many of each distrib are in use in numEdistribs or numRdistribs lists.  </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;ellipse&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="s">&quot;rectangle&quot;</span>
+        <span class="n">distribList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span>
+        <span class="n">numFamilies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipseFams</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectFams</span>
+        <span class="n">paramName</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&quot;distr&quot;</span>
+
+        <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">),</span> <span class="n">paramName</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyInt</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">numFamilies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} distributions but there are {} {} families. &quot;</span> \
+                <span class="s">&quot;Need one distribution per family (1 = lognormal, 2 = Truncated Power Law, &quot;</span>
+                <span class="s">&quot;3 = Exponential, or 4 = constant).&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramName</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">numFamilies</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span> 
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">()</span>
+                <span class="n">distribList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dist</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>  
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> contains &#39;{}&#39; which is not a valid distribution option. &quot;</span> \
+                   <span class="s">&quot;Only values 1 through 4 can define a family&#39;s distribution (1 = lognormal, &quot;</span> \
+                   <span class="s">&quot;2 = Truncated Power Law, 3 = Exponential, or 4 = constant).&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramName</span><span class="p">,</span> <span class="n">dist</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="nf">lognormalDist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies all logNormal Parameters for ellipses and Rectangles.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;ellipse&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="s">&quot;rectangle&quot;</span>
+        <span class="n">distribList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span>
+        <span class="n">paramNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;LogMean&quot;</span><span class="p">,</span> <span class="s">&quot;sd&quot;</span><span class="p">,</span> <span class="s">&quot;LogMin&quot;</span><span class="p">,</span> <span class="s">&quot;LogMax&quot;</span><span class="p">]]</span>
+        <span class="n">errString</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} value(s) but {} lognormal distrbution(s) was(were) &quot;</span> \
+                <span class="s">&quot;defined in </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s">. Please define one value for each lognormal (distrib. #1) family.&quot;</span>
+
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">paramNames</span><span class="p">:</span>
+            <span class="n">zTmp</span> <span class="o">=</span> <span class="bp">True</span> <span class="k">if</span> <span class="s">&quot;sd&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">param</span> <span class="k">else</span> <span class="bp">False</span>  <span class="c">## Turns off noZeros check only for &#39;sd&#39; for better error msg</span>
+            <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFloat</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">noZeros</span> <span class="o">=</span> <span class="n">zTmp</span><span class="p">,</span> <span class="n">noNegs</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>         
+            <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">errString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&#39;distr&#39;</span><span class="p">))</span>
+
+        <span class="n">sdParam</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&quot;sd&quot;</span>
+        <span class="k">if</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">zeroInStdDevs</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">sdParam</span><span class="p">)):</span> 
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> list contains a standard deviation of 0. If this was intended, &quot;</span> \
+                <span class="s">&quot;use the constant distribution (4) instead. Otherwise, _make sure </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> &quot;</span> \
+                <span class="s">&quot;only contains values greater than 0.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sdParam</span><span class="p">,</span> <span class="n">sdParam</span><span class="p">))</span>
+
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinMax</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMin&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMax&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMean</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMin&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMax&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMean&quot;</span><span class="p">)</span>
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinFracSize</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;LogMin&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">tplDist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies parameters for truncated power law distribution of fractures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;ellipse&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="s">&quot;rectangle&quot;</span>
+        <span class="n">distribList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span>
+        <span class="n">paramNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">,</span> <span class="s">&quot;alpha&quot;</span><span class="p">]]</span>
+        <span class="n">errString</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} value(s) but {} truncated power-law distrbution(s) was(were) &quot;</span> \
+                <span class="s">&quot;defined in </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s">. Please define one value for each truncated power-law (distrib. #2) family.&quot;</span>
+
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">paramNames</span><span class="p">:</span>
+            <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFloat</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
+                        <span class="n">noZeros</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">noNegs</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">errString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&#39;distr&#39;</span><span class="p">))</span>
+                
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinMax</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;max&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinFracSize</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;min&quot;</span><span class="p">))</span>
+        
+
+    <span class="k">def</span> <span class="nf">exponentialDist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies parameters for exponential distribution of fractures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;ellipse&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="s">&quot;rectangle&quot;</span>
+        <span class="n">distribList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span>
+        <span class="n">paramNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;ExpMean&quot;</span><span class="p">,</span> <span class="s">&quot;ExpMin&quot;</span><span class="p">,</span> <span class="s">&quot;ExpMax&quot;</span><span class="p">]]</span>
+        <span class="n">errString</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} value(s) but {} exponential distrbution(s) was(were) &quot;</span> \
+                <span class="s">&quot;defined in </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s">. Please define one value for each exponential (distrib. #3) family.&quot;</span>
+
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">paramNames</span><span class="p">:</span>
+            <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">param</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFloat</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
+                        <span class="n">noZeros</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">noNegs</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">errString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&#39;distr&#39;</span><span class="p">))</span>
+                
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinMax</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMin&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMax&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMean</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMin&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMax&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMean&quot;</span><span class="p">)</span>
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinFracSize</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="s">&quot;ExpMin&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">constantDist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies paramters for constant distribution of fractures</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">paramName</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&quot;const&quot;</span>
+        <span class="n">numFamilies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipseFams</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectFams</span>
+        <span class="n">distribList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numEdistribs</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="s">&#39;e&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">numRdistribs</span>
+
+        <span class="n">errResult</span> <span class="o">=</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyList</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">),</span> <span class="n">paramName</span><span class="p">,</span> <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">verifyFloat</span><span class="p">,</span> <span class="n">desiredLength</span> <span class="o">=</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                     <span class="n">noZeros</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">noNegs</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errResult</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s"> has defined {} value(s) but {} constant distrbution(s) was(were) &quot;</span> \
+                  <span class="s">&quot;defined in </span><span class="se">\&quot;</span><span class="s">{}</span><span class="se">\&quot;</span><span class="s">. Please define one value for each family with a constant (distrib. &quot;</span>\
+                  <span class="s">&quot;#4) distribution.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramName</span><span class="p">,</span> <span class="o">-</span><span class="n">errResult</span><span class="p">,</span> <span class="n">distribList</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">&#39;distr&#39;</span><span class="p">))</span>
+         
+        <span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">checkMinFracSize</span><span class="p">(</span><span class="n">distr_helper_methods</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">paramName</span><span class="p">))</span>
+        
+</pre></div></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

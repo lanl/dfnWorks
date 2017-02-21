@@ -70,6 +70,8 @@ def make_working_directory(self):
     print "Jobname is ", self._jobname   
 
 def create_network(self):
+    """ Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.
+    """
     print '--> Running DFNGEN'    
     # copy input file into job folder    
     os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )

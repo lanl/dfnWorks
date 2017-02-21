@@ -15,7 +15,6 @@ dfnFlow method
 The :method:'.dfnFlow` is the method containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output. 
 
 .. automethod:: modules.flow.dfnFlow
-  :members:
 
 dfnTrans method
 ###############
@@ -23,4 +22,15 @@ dfnTrans method
 The :method:'.dfnTrans' is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output. 
 
 .. automethod:: modules.transport.dfnTrans
-  :members:
+
+dfntools module
+################
+
+.. autoclass:: modules.dfntools.Frozen
+
+distr class
+############
+
+.. autoclass:: modules.distributions.distr
+
+

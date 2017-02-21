@@ -78,6 +78,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#dfnworks-class">DFNWORKS class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dfnflow-method">dfnFlow method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dfntrans-method">dfnTrans method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfntools-module">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distr-class">distr class</a></li>
 </ul>
 </li>
 </ul>
@@ -128,6 +130,12 @@
 <dt id="modules.dfnworks.DFNWORKS.copy_dfnTrans_files">
 <code class="descname">copy_dfnTrans_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.copy_dfnTrans_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>create link to DFNTRANS and copy input file into local directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.create_network">
+<code class="descname">create_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.create_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.</p>
 </dd></dl>
 
 <dl class="method">
@@ -214,10 +222,48 @@ face: face of the plane corresponding to the zone file</p>
 <div class="section" id="dfnflow-method">
 <h2>dfnFlow method<a class="headerlink" href="#dfnflow-method" title="Permalink to this headline">¶</a></h2>
 <p>The :method:&#8217;.dfnFlow` is the method containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output.</p>
+<dl class="method">
+<dt id="modules.flow.dfnFlow">
+<code class="descclassname">flow.</code><code class="descname">dfnFlow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.flow.dfnFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnFlow portion of the workflow.
+1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN</p>
+</dd></dl>
+
 </div>
 <div class="section" id="dfntrans-method">
 <h2>dfnTrans method<a class="headerlink" href="#dfntrans-method" title="Permalink to this headline">¶</a></h2>
 <p>The :method:&#8217;.dfnTrans&#8217; is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output.</p>
+<dl class="method">
+<dt id="modules.transport.dfnTrans">
+<code class="descclassname">transport.</code><code class="descname">dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.transport.dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dfntools-module">
+<h2>dfntools module<a class="headerlink" href="#dfntools-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="modules.dfntools.Frozen">
+<em class="property">class </em><code class="descclassname">modules.dfntools.</code><code class="descname">Frozen</code><a class="reference internal" href="_modules/modules/dfntools.html#Frozen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfntools.Frozen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevents adding new attributes to classes once _freeze() is called on the class.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="distr-class">
+<h2>distr class<a class="headerlink" href="#distr-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="modules.distributions.distr">
+<em class="property">class </em><code class="descclassname">modules.distributions.</code><code class="descname">distr</code><span class="sig-paren">(</span><em>params</em>, <em>numEdistribs</em>, <em>numRdistribs</em>, <em>minFracSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies the fracture distribution input parameters for dfnGen.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>params (list): parameters for dfnGen
+numEdistribs (int): number of ellipse family distributions
+numRdistribs (int): number of rectangle family distributions
+minFracSize (double): minimum fracture size</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 

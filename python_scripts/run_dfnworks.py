@@ -11,7 +11,7 @@ from time import time
 from modules import dfnworks, helper 
 
 def define_paths():
-    """ Set environment variables that indicate paths to directories and executables. Users must manually edit these paths foer their server before running dfn    Works. """
+    """ Set environment variables that indicate paths to directories and executables. Users must manually edit these paths foer their server before running dfnWorks. """
 
     # Set Environment Variables
     os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'

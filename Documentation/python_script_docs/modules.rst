@@ -22,3 +22,15 @@ dfnTrans method
 The :method:'.dfnTrans' is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output. 
 
 .. automethod:: modules.transport.dfnTrans
+
+dfntools module
+################
+
+.. autoclass:: modules.dfntools.Frozen
+
+distr class
+############
+
+.. autoclass:: modules.distributions.distr
+
+
