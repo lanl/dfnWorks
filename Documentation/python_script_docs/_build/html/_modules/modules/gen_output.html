@@ -174,9 +174,12 @@
 			<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
 		       
 
-	<span class="c">## Rejection File line format:   &quot;118424 Short Intersections&quot; --&gt; {&quot;Short Intersections&quot;: 118424}</span>
 	<span class="k">def</span> <span class="nf">graphRejections</span><span class="p">():</span>
-		<span class="n">rejects</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Graph the fractures that were rejected by the Feature Rejection Algorithm for Meshing (FRAM) in dfnGen, using a histogram of rejection reasons.</span>
+<span class="sd">	        Rejection File line format:   &quot;118424 Short Intersections&quot; --&gt; {&quot;Short Intersections&quot;: 118424}</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">rejects</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
 		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">rejectFile</span><span class="p">):</span>
@@ -211,8 +214,8 @@
 		<span class="k">if</span> <span class="n">show</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
-	<span class="c">## Histogram making helper function for graphTranslations()</span>
 	<span class="k">def</span> <span class="nf">transHist</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">allList</span><span class="p">,</span> <span class="n">unRemovedList</span><span class="p">):</span>
+	        <span class="sd">&quot;&quot;&quot; Histogram making helper function for graphTranslations()&quot;&quot;&quot;</span>
 		<span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 		<span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">20</span>
 		<span class="n">minSize</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">allList</span><span class="p">)</span>
@@ -228,9 +231,10 @@
 		<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outputPDF</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">show</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-	<span class="c">## Graphs position of fractures as histogram for x, y and z dimensions</span>
-	<span class="c">## Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]</span>
-	<span class="k">def</span> <span class="nf">graphTranslations</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">graphTranslations</span><span class="p">():</span>
+                <span class="sd">&quot;&quot;&quot; Graphs position of fractures as histogram for x, y and z dimensions</span>
+<span class="sd">                Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]</span>
+<span class="sd">                &quot;&quot;&quot;</span>
 		<span class="n">xAll</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">xUnremoved</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">yAll</span> <span class="o">=</span> <span class="p">[]</span>
@@ -257,7 +261,9 @@
 		
 
 	<span class="k">def</span> <span class="nf">collectFamilyInfo</span><span class="p">():</span>
-		<span class="n">famObj</span> <span class="o">=</span> <span class="n">polyFam</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">{})</span>
+   		<span class="sd">&quot;&quot;&quot; Read in information from families.dat file that lists the data for each fracture family.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">famObj</span> <span class="o">=</span> <span class="n">polyFam</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">{})</span>
 		<span class="n">possibleParams</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> <span class="s">&quot;Standard Deviation&quot;</span><span class="p">,</span> <span class="s">&quot;Alpha&quot;</span><span class="p">,</span> <span class="s">&quot;Lambda&quot;</span><span class="p">]</span>
 		<span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Minimum Radius&quot;</span><span class="p">,</span> <span class="s">&quot;Maximum Radius&quot;</span><span class="p">]</span>
 
@@ -330,12 +336,18 @@
 				<span class="k">pass</span> <span class="c"># families[fam].printPolyFam()</span>
 
 
-	<span class="c">############# Histogram &amp; PDF ##############</span>
-	<span class="c">## histogram of sizes (from data) and PDF (from input parameters</span>
-	<span class="c">## returns histHeights (height of all hist bars) for plotting cdf</span>
-	<span class="c">##         &amp; list of x values of binCenters (also for cdf)</span>
 	<span class="k">def</span> <span class="nf">histAndPDF</span><span class="p">(</span><span class="n">radiiSizes</span><span class="p">,</span> <span class="n">pdfArray</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xVals</span><span class="p">):</span>
-		<span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">100</span>
+	        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Histogram of sizes (from data) and PDF (from input parameters</span>
+<span class="sd">	        returns histHeights (height of all hist bars) for plotting cdf</span>
+<span class="sd">	        &amp; list of x values of binCenters (also for cdf).</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    radiiSizes (list): list of radii sizes.</span>
+<span class="sd">                    pdfArray (list): list of pdf values for given xVals.</span>
+<span class="sd">                    xmin (double): minimum value of x on plot.. </span>
+<span class="sd">                    xmax (double): maximum value of x on plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span> 
+                <span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">100</span>
 		<span class="n">fig</span><span class="p">,</span> <span class="n">histo</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 		<span class="c">### fig = plt.figure(figsize=(8., 6.), dpi=500)  ## comment out if you dont want pdf</span>
 		<span class="c">## histo = plt.ax_stack()</span>
@@ -360,10 +372,17 @@
 
 		<span class="k">return</span> <span class="n">histHeights</span><span class="p">,</span> <span class="n">binCenters</span>
 
-	<span class="c">############# CDF ##############</span>
-	<span class="c">## 2 cdfs, analytical (from pdf from given mu and sigma) and empirical (from histogram)</span>
 	<span class="k">def</span> <span class="nf">cdfs</span><span class="p">(</span><span class="n">histHeights</span><span class="p">,</span> <span class="n">binCenters</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xVals</span><span class="p">):</span>
-		<span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+		<span class="sd">&quot;&quot;&quot; Plots 2 cdfs, analytical (from pdf from given mu and sigma) and empirical (from histogram).</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    histHeights (list): list of histogram heights</span>
+<span class="sd">                    binCenters (list): binCenters for each histogram bin.</span>
+<span class="sd">                    pdf (list): list of corresponding pdf values </span>
+<span class="sd">                    xmin (double): minimum value of x</span>
+<span class="sd">                    xmax (double): maximum value of x</span>
+<span class="sd">                    xVals (list): values of x</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 		<span class="n">analyticCDF</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>      
 		<span class="n">empiricalCDF</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">histHeights</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">histHeights</span><span class="p">)</span> <span class="c">## need these to correspond to xVals</span>
 		<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xVals</span><span class="p">,</span> <span class="n">analyticCDF</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;Analytic CDF (from input)&#39;</span><span class="p">)</span>
@@ -376,10 +395,13 @@
 		<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 		<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 
-	<span class="c">############# Q &amp; Q  ##############</span>
-	<span class="c">## histogram values (x) vs. analytical PDF values (y) &amp; a line showing ideal 1 to 1 ratio</span>
 	<span class="k">def</span> <span class="nf">qq</span><span class="p">(</span><span class="n">trueVals</span><span class="p">,</span> <span class="n">histHeights</span><span class="p">):</span>
-		<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+		<span class="sd">&quot;&quot;&quot;  Histogram values (x) vs. analytical PDF values (y) &amp; a line showing ideal 1 to 1 ratio</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    trueVals (list): ordered list of analytical values.</span>
+<span class="sd">                    histHeights (list): ordered list of generator values.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 		<span class="n">qq</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">histHeights</span><span class="p">,</span> <span class="n">trueVals</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span> 
 				 <span class="n">label</span><span class="o">=</span><span class="s">&quot;x=Empirical value</span><span class="se">\n</span><span class="s">y=Analtical PDF value&quot;</span><span class="p">)</span>
 		<span class="n">minMax</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">trueVals</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">histHeights</span><span class="p">)]),</span>  <span class="c"># min of both axes</span>
@@ -394,9 +416,19 @@
 		<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">lognormCDF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
-		<span class="k">return</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">erf</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+		<span class="sd">&quot;&quot;&quot;Get the lognnormal distribution value for the given x.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    x (double): the value of x</span>
+<span class="sd">                    mu (double): the mean  parameter of the lognormal distribution</span>
+<span class="sd">                    sigma (double): the standard deviation of the lognromal distribution</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">erf</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 	       
 	<span class="k">def</span> <span class="nf">graphLognormal</span><span class="p">(</span><span class="n">famObj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    famObj (polyFam class): the polyFam object describing the truncated power law distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
 		<span class="n">numXpoints</span> <span class="o">=</span> <span class="mi">1000</span>
 		<span class="n">xmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">famObj</span><span class="o">.</span><span class="n">radiiList</span><span class="p">)</span> <span class="c">##parameters[&quot;Minimum Radius&quot;] Use list max because distrib doesnt always get</span>
 		<span class="n">xmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">famObj</span><span class="o">.</span><span class="n">radiiList</span><span class="p">)</span> <span class="c">##parameters[&quot;Maximum Radius&quot;]   the desired max value.</span>
@@ -426,13 +458,30 @@
 	  
 	      
 	<span class="k">def</span> <span class="nf">powLawPDF</span><span class="p">(</span><span class="n">normConst</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-		<span class="k">return</span> <span class="n">normConst</span> <span class="o">*</span> <span class="p">(</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="p">(</span><span class="n">xmin</span><span class="o">**</span><span class="n">a</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> 
+		<span class="sd">&quot;&quot;&quot; Get the analytical power laws PDF value for a given x.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    normConst (double): The normalization constant for the PDF.</span>
+<span class="sd">                    xmin (double): The minimum value for the truncated power-law distribution.</span>
+<span class="sd">                    x (double): The value of x. </span>
+<span class="sd">                    a (double): The alpha parameter for the power-law distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="n">normConst</span> <span class="o">*</span> <span class="p">(</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="p">(</span><span class="n">xmin</span><span class="o">**</span><span class="n">a</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> 
 
 	<span class="k">def</span> <span class="nf">powLawCDF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-		<span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span> <span class="p">(</span><span class="n">xmin</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="n">a</span> <span class="p">)</span> 
+		<span class="sd">&quot;&quot;&quot; Get the analytical power law CDF value for a given x.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    x (double): The value of x.</span>
+<span class="sd">                    xmin (double): The lower bound of the truncated power law distribution.</span>
+<span class="sd">                    a (double): The alpha parameter in the power law distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span> <span class="p">(</span><span class="n">xmin</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="n">a</span> <span class="p">)</span> 
 
 	<span class="k">def</span> <span class="nf">graphTruncPowerLaw</span><span class="p">(</span><span class="n">famObj</span><span class="p">):</span>
-		<span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">100</span>
+		<span class="sd">&quot;&quot;&quot;Graph the PDF, CDF and QQ plot of the power law distribution agianst the expected analytical power law values.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    famObj (polyFam class): the polyFam object describing the truncated power law distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">100</span>
 		<span class="n">numXpoints</span> <span class="o">=</span> <span class="mi">1000</span>
 		<span class="n">alpha</span> <span class="o">=</span> <span class="n">famObj</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s">&quot;Alpha&quot;</span><span class="p">]</span>
 		<span class="n">radiiSizes</span> <span class="o">=</span> <span class="n">famObj</span><span class="o">.</span><span class="n">radiiList</span>
@@ -465,13 +514,26 @@
 
 
 	<span class="k">def</span> <span class="nf">expPDF</span><span class="p">(</span><span class="n">normConst</span><span class="p">,</span> <span class="n">eLambda</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-		<span class="k">return</span> <span class="n">normConst</span> <span class="o">*</span> <span class="n">eLambda</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">eLambda</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+		<span class="sd">&quot;&quot;&quot; Get the analytical exponential PDF value for a given x.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    x (double): The value of x.</span>
+<span class="sd">                    eLambda (double): The lambda value for the exponential distribution.</span>
+<span class="sd">                    normConst (double): The normalization constnat for the exponential distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="n">normConst</span> <span class="o">*</span> <span class="n">eLambda</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">eLambda</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">expCDF</span><span class="p">(</span><span class="n">eLambda</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-		<span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">eLambda</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+		<span class="sd">&quot;&quot;&quot; Get the analytical exponential CDF value for a given x.</span>
+<span class="sd">                Args:</span>
+<span class="sd">                    x (double): the value of x for which to find the exponential CDF value.</span>
+<span class="sd">                    eLambda (double): the lambda value for the exponential distribution.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">eLambda</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
 		
 	<span class="k">def</span> <span class="nf">graphExponential</span><span class="p">(</span><span class="n">famObj</span><span class="p">):</span>
-		<span class="n">numXpoints</span> <span class="o">=</span> <span class="mi">1000</span>
+	        <span class="sd">&quot;&quot;&quot; Graph exponential distribution of fractures  against the analytical exponential distributions, using a PDF, CDF, and QQ plot.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">numXpoints</span> <span class="o">=</span> <span class="mi">1000</span>
 		<span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">100</span>
 		<span class="n">radiiSizes</span> <span class="o">=</span> <span class="n">famObj</span><span class="o">.</span><span class="n">radiiList</span>
 		<span class="n">eLambda</span> <span class="o">=</span> <span class="n">famObj</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s">&quot;Lambda&quot;</span><span class="p">]</span>
@@ -502,11 +564,15 @@
 
 
 	<span class="k">def</span> <span class="nf">graphConstant</span><span class="p">(</span><span class="n">famObj</span><span class="p">):</span>
-		<span class="c">#print(&quot;  Family #&quot; + famObj.globFamNum + &quot; is a constant distribution and only contains one radius size.&quot;)</span>
+		<span class="sd">&quot;&quot;&quot; Does nothing. Constnat distributions are not graphed.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="c">#print(&quot;  Family #&quot; + famObj.globFamNum + &quot; is a constant distribution and only contains one radius size.&quot;)</span>
 		<span class="k">pass</span>
 
 	<span class="k">def</span> <span class="nf">graphAllAndNotRemoved</span><span class="p">():</span>
-		<span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">50</span>
+		<span class="sd">&quot;&quot;&quot; Graph fractures from all the families. If some fractures have been removed, also graph the fractures that remain after removal. </span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">numBuckets</span> <span class="o">=</span> <span class="mi">50</span>
 		<span class="n">allList</span> <span class="o">=</span> <span class="n">families</span><span class="p">[</span><span class="s">&#39;all&#39;</span><span class="p">]</span> 
 		<span class="n">unRemovedList</span> <span class="o">=</span> <span class="n">families</span><span class="p">[</span><span class="s">&#39;notRemoved&#39;</span><span class="p">]</span>
 		<span class="n">minSize</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">allList</span><span class="p">)</span>
@@ -548,7 +614,9 @@
 			
 		
 	<span class="k">def</span> <span class="nf">graphDistribs</span><span class="p">():</span>
-		<span class="n">famNum</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="sd">&quot;&quot;&quot;Graph the distribution of each fracture family except user defined families, using a dictionary to reference different distributions&#39; graphing function.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">famNum</span> <span class="o">=</span> <span class="mi">1</span>
 		<span class="n">updateStr</span> <span class="o">=</span> <span class="s">&quot;Graphing Family #{} which contains {} fractures.&quot;</span>
 		<span class="n">graphDistFuncs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Lognormal&quot;</span> <span class="p">:</span> <span class="n">graphLognormal</span><span class="p">,</span>              <span class="c">## dict of graph functions</span>
 				  <span class="s">&quot;Truncated Power-Law&quot;</span> <span class="p">:</span> <span class="n">graphTruncPowerLaw</span><span class="p">,</span>
@@ -580,9 +648,7 @@
 	<span class="n">graphDistribs</span><span class="p">()</span>
 	<span class="n">graphAllAndNotRemoved</span><span class="p">()</span>
 	<span class="n">graphRejections</span><span class="p">()</span>
-
 	<span class="n">outputPDF</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="c">#################### End dfnGen Functions ##########################</span>
 </pre></div>
 
           </div>
