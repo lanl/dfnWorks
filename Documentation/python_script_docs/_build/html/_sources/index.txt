@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 3
 
    intro 
+   scripts
    modules 
 
 Indices and tables

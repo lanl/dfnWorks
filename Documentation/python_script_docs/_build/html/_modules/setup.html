@@ -71,9 +71,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../intro.html#acknowledgements">Acknowledgements</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">setup.py: compile the components of dfnWorks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#dfnworks-dfnworks-python-wrapper">dfnworks: dfnWorks python wrapper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../modules.html#dfnworks-class">dfnworks class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#dfnworks-class">DFNWORKS class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#dfnflow-method">dfnFlow method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#dfntrans-method">dfnTrans method</a></li>
 </ul>
 </li>
 </ul>
@@ -120,17 +124,17 @@
 <span class="kn">import</span> <span class="nn">glob</span>
 
 
-<div class="viewcode-block" id="command_line_options"><a class="viewcode-back" href="../modules.html#setup.command_line_options">[docs]</a><span class="k">def</span> <span class="nf">command_line_options</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;Read command lines </span>
+<div class="viewcode-block" id="command_line_options"><a class="viewcode-back" href="../scripts.html#setup.command_line_options">[docs]</a><span class="k">def</span> <span class="nf">command_line_options</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Read command lines </span>
 <span class="sd">    -clean: True/False to clean </span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">&quot;Command Line Arguments for dfnWorks&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;-clean&quot;</span><span class="p">,</span> <span class="s">&quot;--clean&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span>
               <span class="n">help</span><span class="o">=</span><span class="s">&quot;Run make clean&quot;</span><span class="p">)</span>
     <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">options</span>
 	</div>
-<div class="viewcode-block" id="remove_batch"><a class="viewcode-back" href="../modules.html#setup.remove_batch">[docs]</a><span class="k">def</span> <span class="nf">remove_batch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_batch"><a class="viewcode-back" href="../scripts.html#setup.remove_batch">[docs]</a><span class="k">def</span> <span class="nf">remove_batch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Removes files with wild card *</span>
 
 <span class="sd">    Args:</span>
@@ -145,7 +149,7 @@
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>	
 </div>
-<div class="viewcode-block" id="compile_exe"><a class="viewcode-back" href="../modules.html#setup.compile_exe">[docs]</a><span class="k">def</span> <span class="nf">compile_exe</span><span class="p">(</span><span class="n">directory_list</span><span class="p">):</span>
+<div class="viewcode-block" id="compile_exe"><a class="viewcode-back" href="../scripts.html#setup.compile_exe">[docs]</a><span class="k">def</span> <span class="nf">compile_exe</span><span class="p">(</span><span class="n">directory_list</span><span class="p">):</span>
         
     <span class="sd">&quot;&quot;&quot; setup option - performs all compilations necessary before running run_dfnworks.py</span>
 <span class="sd">    </span>
@@ -158,12 +162,12 @@
             <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s">&quot;make&quot;</span><span class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="clean"><a class="viewcode-back" href="../modules.html#setup.clean">[docs]</a><span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="n">directory_list</span><span class="p">,</span> <span class="n">python_dir</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;      clean option - removes all files not needed in the repository</span>
+<div class="viewcode-block" id="clean"><a class="viewcode-back" href="../scripts.html#setup.clean">[docs]</a><span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="n">directory_list</span><span class="p">,</span> <span class="n">python_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; clean option - removes all files not needed in the repository</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">       directory_list (list): list of directory names to be cleaned of object files</span>
-<span class="sd">       python_dir (string): python directory name where *.pyc will be removed</span>
+<span class="sd">       python_dir (str): python directory name where ``*.pyc`` will be removed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">directory_list</span><span class="p">:</span>
         <span class="k">print</span> <span class="n">directory</span>

@@ -31,8 +31,6 @@ A download link for the latest release version 2.0.0 of dfnWorks_ can be found a
 
 .. _dfnWorks: http://www.lanl.gov/org/padste/adcles/earth-environmental-sciences/computational-earth-science/software/dfnworks/index.php
 
-__ dfnWorks_
-
 To install, first, download and extract the zip file from the GitHub repository, or clone the GitHub repostiory.  Then, run the setup script, in the python_scripts folder,  at the command line: 
 
 ``python setup.py install``
@@ -45,8 +43,6 @@ For successfully using dfnWorks, one needs to install PFLOTRAN. For details to i
 
 .. _PFLOTRAN: https://www.pflotran.org/
 
-__ PFLOTRAN_
-
 VisIt
 ^^^^^^^^
 
@@ -56,9 +52,6 @@ Instructions for downloading and installing VisIt_ can be found at https://wci.l
 
 .. _VisIt: https://wci.llnl.gov/codes/visit
 
-__ VisIt_ 
-
-
 Paraview
 ^^^^^^^^
 
@@ -67,8 +60,6 @@ Paraview_ is a parallel, open-source visualisation software. PFLOTRAN can output
 Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org 
 
 .. _Paraview: http://www.paraview.org
-
-__ Paraview_
 
 Import dfnWorks
 ----------------
@@ -83,7 +74,7 @@ Before doing this, one needs to ensure that dfnWorks directory is in the PYTHONP
 About this  manual
 ------------------
 
-This manual comprises sections for each of the important dfnWorks modules: :ref:`modules <modules-chapter>` In these, the important
+This manual comprises sections for each of the important dfnWorks modules. In these, the important
 classes and their methods are documented, and example usage provided. Examples can be found in the 'tests' directory of the dfnWorks repository. One can get a feel for setting up, running and visualizing dfnWorks simulations (both flow and reactive transport) through these examples.
 
 Contributors

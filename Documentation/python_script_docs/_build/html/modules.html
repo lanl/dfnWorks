@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>setup.py: compile the components of dfnWorks &mdash; dfnWorks 2.0.0 documentation</title>
+  <title>dfnworks: dfnWorks python wrapper &mdash; dfnWorks 2.0.0 documentation</title>
   
 
   
@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="dfnWorks 2.0.0 documentation" href="index.html"/>
-        <link rel="prev" title="Introduction" href="intro.html"/> 
+        <link rel="prev" title="setup.py: compile the components of dfnWorks" href="scripts.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -71,9 +71,13 @@
 <li class="toctree-l2"><a class="reference internal" href="intro.html#acknowledgements">Acknowledgements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">setup.py: compile the components of dfnWorks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#dfnworks-dfnworks-python-wrapper">dfnworks: dfnWorks python wrapper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dfnworks-class">dfnworks class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dfnworks-class">DFNWORKS class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfnflow-method">dfnFlow method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfntrans-method">dfnTrans method</a></li>
 </ul>
 </li>
 </ul>
@@ -100,7 +104,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>setup.py: compile the components of dfnWorks</li>
+    <li>dfnworks: dfnWorks python wrapper</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="_sources/modules.txt" rel="nofollow"> View page source</a>
@@ -111,66 +115,109 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="setup-py-compile-the-components-of-dfnworks">
-<span id="dfnworks-chapter"></span><h1>setup.py: compile the components of dfnWorks<a class="headerlink" href="#setup-py-compile-the-components-of-dfnworks" title="Permalink to this headline">¶</a></h1>
-<p>The setup.py script should be run using python setup.py before using dfnWorks. This script compiles the C and C++ components of dfnWorks. Without arguments, the script performs the setup. With the argument &#8216;clean,&#8217; the script cleans up C and C++ object files.</p>
-<span class="target" id="module-setup"></span><dl class="function">
-<dt id="setup.command_line_options">
-<code class="descclassname">setup.</code><code class="descname">command_line_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#command_line_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.command_line_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read command lines 
--clean: True/False to clean</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="setup.remove_batch">
-<code class="descclassname">setup.</code><code class="descname">remove_batch</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#remove_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.remove_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes files with wild card *</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>name (string): the pattern attached to * which will be removed from the current working  directory</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="setup.compile_exe">
-<code class="descclassname">setup.</code><code class="descname">compile_exe</code><span class="sig-paren">(</span><em>directory_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#compile_exe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.compile_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>setup option - performs all compilations necessary before running run_dfnworks.py</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>directory_list (list): list of directory names which contain Makefiles</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="setup.clean">
-<code class="descclassname">setup.</code><code class="descname">clean</code><span class="sig-paren">(</span><em>directory_list</em>, <em>python_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#setup.clean" title="Permalink to this definition">¶</a></dt>
-<dd><p>clean option - removes all files not needed in the repository</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>directory_list (list): list of directory names to be cleaned of object files
-python_dir (string): python directory name where <a href="#id1"><span class="problematic" id="id2">*</span></a>.pyc will be removed</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="dfnworks-dfnworks-python-wrapper">
+  <div class="section" id="dfnworks-dfnworks-python-wrapper">
 <h1>dfnworks: dfnWorks python wrapper<a class="headerlink" href="#dfnworks-dfnworks-python-wrapper" title="Permalink to this headline">¶</a></h1>
-<p>The dfnworks module is the main module in dfnWorks which contains classes and methods to read, manipulate, write and execute PFLOTRAN input files.</p>
 <div class="section" id="dfnworks-class">
-<h2>dfnworks class<a class="headerlink" href="#dfnworks-class" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal"><span class="pre">dfnworks</span></code> is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:<cite>.dfnworks</cite>.</p>
+<h2>DFNWORKS class<a class="headerlink" href="#dfnworks-class" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#modules.dfnworks.DFNWORKS" title="modules.dfnworks.DFNWORKS"><code class="xref py py-class docutils literal"><span class="pre">DFNWORKS</span></code></a> is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:<cite>.DFNWORKS</cite>.</p>
 <dl class="class">
 <dt id="modules.dfnworks.DFNWORKS">
 <em class="property">class </em><code class="descclassname">modules.dfnworks.</code><code class="descname">DFNWORKS</code><span class="sig-paren">(</span><em>jobname=''</em>, <em>local_jobname=''</em>, <em>dfnGen_file=''</em>, <em>output_file=''</em>, <em>local_dfnGen_file=''</em>, <em>ncpu=''</em>, <em>dfnFlow_file=''</em>, <em>local_dfnFlow_file=''</em>, <em>dfnTrans_file=''</em>, <em>inp_file='full_mesh.inp'</em>, <em>uge_file=''</em>, <em>vtk_file=''</em>, <em>mesh_type='dfn'</em>, <em>perm_file=''</em>, <em>aper_file=''</em>, <em>rfield=''</em>, <em>perm_cell_file=''</em>, <em>aper_cell_file=''</em>, <em>dfnTrans_version=''</em>, <em>num_frac=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/dfnworks.html#DFNWORKS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfnworks.DFNWORKS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for DFN Generation and meshing</p>
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.copy_dfnTrans_files">
+<code class="descname">copy_dfnTrans_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.copy_dfnTrans_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>create link to DFNTRANS and copy input file into local directory</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="modules.dfnworks.create_dfn">
-<code class="descclassname">dfnworks.</code><code class="descname">create_dfn</code><span class="sig-paren">(</span><em>dfnGen_file=&quot;&quot;</em>, <em>dfnFlow_file=&quot;&quot;</em>, <em>dfnTrans_file=&quot;&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.create_dfn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse command line inputs and input files to create and populate dfnworks class</p>
+<dt id="modules.dfnworks.DFNWORKS.dfnFlow">
+<code class="descname">dfnFlow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnFlow portion of the workflow.
+1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.dfnGen">
+<code class="descname">dfnGen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnGen workflow. 
+1) make_working_directory: Create a directory with name of job
+2) check_input: Check input parameters and create a clean version of the input file
+3) create_network: Create network. DFNGEN v2.0 is called and creates the network
+4) output_report: Generate a PDF summary of the DFN generation
+5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.dfnTrans">
+<code class="descname">dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.make_working_directory">
+<code class="descname">make_working_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.make_working_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>make working directories for fracture generation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.mesh_network">
+<code class="descname">mesh_network</code><span class="sig-paren">(</span><em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.mesh_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh Fracture Network using ncpus and lagrit
+meshing file is seperate file: dfnGen_meshing.py</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.output_report">
+<code class="descname">output_report</code><span class="sig-paren">(</span><em>radiiFile='radii.dat'</em>, <em>famFile='families.dat'</em>, <em>transFile='translations.dat'</em>, <em>rejectFile='rejections.dat'</em>, <em>output_name=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.output_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create PDF report of generator 
+Notes
+1. Set the number of histogram buckets (bins) by changing numBuckets variable in his graphing functions
+2. Also change number of x-values used to plot lines by changing numXpoints variable in appropriate funcs
+3. Set show = True to show plots immediately and still make pdf
+4. NOTE future developers of this code should ass functionality for radiiList of size 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.pflotran">
+<code class="descname">pflotran</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run pflotran
+Copy PFLOTRAN run file into working directory and run with ncpus</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.pflotran_cleanup">
+<code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate PFLOTRAN output files and then delete them</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.run_dfnTrans">
+<code class="descname">run_dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.run_dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>run dfnTrans simulation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.zone2ex">
+<code class="descname">zone2ex</code><span class="sig-paren">(</span><em>uge_file=''</em>, <em>zone_file=''</em>, <em>face=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.zone2ex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert zone files from LaGriT into ex format for LaGriT
+inputs:
+uge_file: name of uge file
+zone_file: name of zone file
+face: face of the plane corresponding to the zone file</p>
+<p>zone_file=&#8217;all&#8217; processes all directions, top, bottom, left, right, front, back</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dfnflow-method">
+<h2>dfnFlow method<a class="headerlink" href="#dfnflow-method" title="Permalink to this headline">¶</a></h2>
+<p>The :method:&#8217;.dfnFlow` is the method containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output.</p>
+</div>
+<div class="section" id="dfntrans-method">
+<h2>dfnTrans method<a class="headerlink" href="#dfntrans-method" title="Permalink to this headline">¶</a></h2>
+<p>The :method:&#8217;.dfnTrans&#8217; is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output.</p>
 </div>
 </div>
 
@@ -181,7 +228,7 @@ python_dir (string): python directory name where <a href="#id1"><span class="pro
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="intro.html" class="btn btn-neutral" title="Introduction"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scripts.html" class="btn btn-neutral" title="setup.py: compile the components of dfnWorks"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

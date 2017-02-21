@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; dfnWorks 2.0.0 documentation</title>
+  <title>benchmark &mdash; dfnWorks 2.0.0 documentation</title>
   
 
   
@@ -30,7 +30,8 @@
   
 
   
-    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../index.html"/> 
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -103,7 +104,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>Overview: module code</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>benchmark</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -112,17 +115,32 @@
 </div>
           <div role="main" class="document">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="benchmark.html">benchmark</a></li>
-<li><a href="modules/dfnworks.html">modules.dfnworks</a></li>
-<li><a href="modules/flow.html">modules.flow</a></li>
-<li><a href="modules/gen_output.html">modules.gen_output</a></li>
-<li><a href="modules/generator.html">modules.generator</a></li>
-<li><a href="modules/meshdfn.html">modules.meshdfn</a></li>
-<li><a href="modules/transport.html">modules.transport</a></li>
-<li><a href="run_dfnworks.html">run_dfnworks</a></li>
-<li><a href="setup.html">setup</a></li>
-</ul>
+  <h1>Source code for benchmark</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<div class="viewcode-block" id="run_test"><a class="viewcode-back" href="../scripts.html#benchmark.run_test">[docs]</a><span class="k">def</span> <span class="nf">run_test</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a single test.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_file_name (str): The input file name for the test</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;~/&#39;</span> <span class="o">+</span>  <span class="n">input_file_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">arg_string</span> <span class="o">=</span> <span class="s">&quot;python run_dfnworks.py -ncpu 32 -name  &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">+</span> <span class="s">&quot; -input &quot;</span> <span class="o">+</span> <span class="n">input_file_name</span>
+    <span class="k">print</span> <span class="s">&quot;RUNNING &quot;</span><span class="p">,</span> <span class="n">arg_string</span> 
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg_string</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">home_dir</span> <span class="o">=</span> <span class="s">&#39;/home/nknapp&#39;</span>
+    <span class="n">benchmark_dir</span> <span class="o">=</span> <span class="n">home_dir</span> <span class="o">+</span>  <span class="s">&#39;/dfnworks-main/benchmarks/&#39;</span>
+    <span class="n">benchmark_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">benchmark_dir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">benchmark_dir</span><span class="p">):</span>
+        <span class="n">input_file</span> <span class="o">=</span> <span class="n">benchmark_dir</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span>  <span class="n">input_file</span> 
+        <span class="k">if</span> <span class="s">&quot;ell&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_file</span> <span class="ow">and</span> <span class="s">&quot;rect&quot;</span> <span class="ow">in</span> <span class="n">input_file</span><span class="p">:</span> 
+            <span class="n">run_test</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+</pre></div>
 
           </div>
           <footer>

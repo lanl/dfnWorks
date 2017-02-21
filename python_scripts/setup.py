@@ -7,9 +7,9 @@ import glob
 
 
 def command_line_options():
-    '''Read command lines 
+    """Read command lines 
     -clean: True/False to clean 
-    '''
+    """
     parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
     parser.add_argument("-clean", "--clean", default=False, action="store_true",
               help="Run make clean")
@@ -45,11 +45,11 @@ def compile_exe(directory_list):
             print("")
 
 def clean(directory_list, python_dir):
-    """      clean option - removes all files not needed in the repository
+    """ clean option - removes all files not needed in the repository
     
     Args:
        directory_list (list): list of directory names to be cleaned of object files
-       python_dir (string): python directory name where *.pyc will be removed
+       python_dir (str): python directory name where ``*.pyc`` will be removed
     """
     for directory in directory_list:
         print directory

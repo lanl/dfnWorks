@@ -7,21 +7,14 @@ import numpy as np
 import scipy.integrate
 
 def check_input(self, input_file='',output_file=''):
-
-    """
-                    ## Input Format Requirements ##
-
-        1. Each parameter must be defined on its own line (seperate by newline '\n')
-        2. A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
-        - Values may also be placed on lines after the 'key:' (ie. --> key: \n value)
-        3. Comment Format:  On a line containg // or /*, nothing after */ or // will be processed
-                but text before a comment will be processed 
-                   // Single line comment
-                   /* Multline
-                  comment */ This will NOT be processed
-                This WILL be processed
-     
-    """
+    
+        ## Input Format Requirements ##  
+   # 1. Each parameter must be defined on its own line (seperate by newline '\n')
+   # 2. A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
+   # - Values may also be placed on lines after the 'key:' (ie. --> key: \n value)
+   # 3. Comment Format:  On a line containg // or /*, nothing after */ or // will be processed
+   # but text before a comment will be processed 
+    
     global params 
     ## BIG TODO s -----
         ## ==== Problems ==== ##
