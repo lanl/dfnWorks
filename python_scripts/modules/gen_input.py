@@ -8,13 +8,16 @@ import scipy.integrate
 
 def check_input(self, input_file='',output_file=''):
     
-        ## Input Format Requirements ##  
-   # 1. Each parameter must be defined on its own line (seperate by newline '\n')
-   # 2. A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
-   # - Values may also be placed on lines after the 'key:' (ie. --> key: \n value)
-   # 3. Comment Format:  On a line containg // or /*, nothing after */ or // will be processed
-   # but text before a comment will be processed 
-    
+    """ Input Format Requirements  
+    1. Each parameter must be defined on its own line (seperate by newline '\n')
+    2. A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
+    - Values may also be placed on lines after the 'key:' (ie. --> key: \n value)
+    3. Comment Format:  On a line containg // or /*, nothing after */ or // will be processed
+    but text before a comment will be processed 
+    Kwargs:
+        input_file (name): name of dfnGen input file
+        output_file (name): JDH_TODOi
+    """ 
     global params 
     ## BIG TODO s -----
         ## ==== Problems ==== ##
@@ -86,6 +89,7 @@ def check_input(self, input_file='',output_file=''):
 
     ## Each of these should be called in the order they are defined in to accomadate for dependecies 
     def nFamEll():
+        """ Check the number of families of ellipses."""
         global ellipseFams 
         ## input_helper_methods.verifyNumValsIs(1, 'nFamEll')
         ellipseFams = input_helper_methods.verifyInt(input_helper_methods.valueOf('nFamEll', params), 'nFamEll', noNeg = True)
@@ -93,6 +97,7 @@ def check_input(self, input_file='',output_file=''):
             input_helper_methods.warning("You have set the number of ellipse families to 0, no ellipses will be generated.", params)
 
     def nFamRect():
+        """ Check the number of families of rectangles."""
         global rectFams
         ## input_helper_methods.verifyNumValsIs(1, 'nFamRect')
         rectFams = input_helper_methods.verifyInt(input_helper_methods.valueOf('nFamRect', params), 'nFamRect', noNeg = True)
@@ -100,21 +105,23 @@ def check_input(self, input_file='',output_file=''):
             input_helper_methods.warning("You have set the number of rectangle families to 0, no rectangles will be generated.", params)
 
     def stopCondition():
+        """ Check the number of polygons if stopCondition is set to 1, else check the p32 target parameters."""
         ## input_helper_methods.verifyNumValsIs(1, 'stopCondition')
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf('stopCondition', params), 'stopCondition') == 0: 
             nPoly()
         else:
             p32Targets()
 
-
     def checkNoDepFlags():
+        """ Check for dependency flags.""" 
         for flagName in noDependancyFlags:
             input_helper_methods.verifyFlag(input_helper_methods.valueOf(flagName, params), flagName)
         
 
-    ## domainSize MUST have 3 non-zero values to define the 
-    ## size of each dimension (x,y,z) of the domain 
     def domainSize():
+        """ Check that domainSize has 3 non-zero values to define the 
+        size of each dimension (x,y,z) of the domain.
+        """
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSize', params), 'domainSize', input_helper_methods.verifyFloat, desiredLength = 3,
                        noZeros = True, noNegs=True)
         if errResult != None:
@@ -122,6 +129,8 @@ def check_input(self, input_file='',output_file=''):
                   "values to represent x, y, and z dimensions".format(-errResult))
 
     def domainSizeIncrease():
+        """ Check the domain size increase parameters.
+        """
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSizeIncrease', params), domainSizeIncrease, input_helper_methods.verifyFloat, desiredLength = 3)
         if errResult != None:
             input_helper_methods.error("\"domainSizeIncrease\" has defined {} value(s) but there must be 3 non-zero "\
@@ -135,6 +144,7 @@ def check_input(self, input_file='',output_file=''):
                       "doubling the domain.".format(val))
 
     def numOfLayers():
+        """ Check the number of layers parameter."""
         global numLayers
         numLayers = input_helper_methods.verifyInt(input_helper_methods.valueOf('numOfLayers', params), 'numOfLayers', noNeg = True)
         if numLayers > 0:
@@ -144,6 +154,7 @@ def check_input(self, input_file='',output_file=''):
             else: layers()
 
     def layers():
+        """ Check the layer parameters provided. """
         halfZdomain = params['domainSize'][0][2]/2.0  ## -index[2] becaue domainSize = [x,y,z]
                                   ## -center of z-domain at z = 0 so 
                                   ##  whole Zdomain is -zDomainSize to +zDomainSize
@@ -169,10 +180,14 @@ def check_input(self, input_file='',output_file=''):
 
          
     def disableFram():
+        """ Check to see if FRAM is disabled.
+        """
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf('disableFram', params), 'disableFram') == 0:
             h()
 
     def seed():
+        """ Check the value of the seed used for pseudorandom number generation.
+        """
         val = input_helper_methods.verifyInt(input_helper_methods.valueOf('seed', params), 'seed', noNeg = True)
         if val == 0:
             input_helper_methods.warning("\"seed\" has been set to 0. Random generator will use current wall "\
@@ -182,10 +197,14 @@ def check_input(self, input_file='',output_file=''):
         
 
     def ignoreBoundaryFaces():
+        """ Check the value fo the ignoreBoundaryFaces flag.
+        """
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf('ignoreBoundaryFaces', params), 'ignoreBoundaryFaces') == 0:
             boundaryFaces()
 
     def rejectsPerFracture():
+        """ Check the value of the rejectsPerFracture int. 
+        """
         val = input_helper_methods.verifyInt(input_helper_methods.valueOf('rejectsPerFracture', params), 'rejectsPerFracture', noNeg = True)
         if val == 0:
             val = 1
@@ -194,6 +213,9 @@ def check_input(self, input_file='',output_file=''):
         params['rejectsPerFracture'][0] = val 
         
     def famProb():
+        """ Check the list of family probabilites (the list of  probabilities that a fracture is in each family).
+        """
+
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('famProb', params), 'famProb', input_helper_methods.verifyFloat,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
         if errResult != None:
@@ -206,6 +228,8 @@ def check_input(self, input_file='',output_file=''):
             scale(probList, warningFile)
 
     def userDefined():
+        """ Check the parameters for user-defined rectangles and ellipses.
+        """
         userEs = "userEllipsesOnOff"
         userRs = "userRectanglesOnOff"
         recByCoord = "userRecByCoord"
@@ -241,6 +265,8 @@ def check_input(self, input_file='',output_file=''):
                 shutil.copy(input_helper_methods.valueOf(coordPath, params), self._jobname)
 
     def aperture():
+        """ Verify the int value used for aperture.
+        """
         apOption = input_helper_methods.verifyInt(input_helper_methods.valueOf('aperture', params), 'aperture')
 
         if apOption == 1:
@@ -278,6 +304,7 @@ def check_input(self, input_file='',output_file=''):
                   "3 (constant), or 4 (length correlated).")
 
     def permeability():
+        """Verify the float used for permeability, if permOption is set to 1"""
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf('permOption'), 'permOption') == 1:
             if input_helper_methods.verifyFloat(input_helper_methods.valueOf('constantPermeability', params), 'constantPermeability') == 0:
                 params['constantPermeability'][0] = 1e-25
@@ -290,11 +317,13 @@ def check_input(self, input_file='',output_file=''):
     ## ========================================================================= ##
 
     def nPoly():
+        """Verify the number of polygons integer.""" 
         val = input_helper_methods.verifyInt(input_helper_methods.valueOf('nPoly', params), 'nPoly', noNeg = True)
         if val == 0: input_helper_methods.error("\"nPoly\" cannot be zero.")
         params['nPoly'][0] = val
 
     def p32Targets():
+        """Verify the p32 target parameters for ellipses and parameters."""
         global ellipseFams, rectFams
         errResult = None if (ellipseFams == 0) else input_helper_methods.verifyList(input_helper_methods.valueOf('e_p32Targets', params), 'e_p32Targets', \
                                   input_helper_methods.verifyFloat, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
@@ -309,9 +338,11 @@ def check_input(self, input_file='',output_file=''):
                   "family(ies). Need one p32 value per rectangle family)".format(-errResult, rectFams))
 
     def f(theta, t, a, b):
+        """JDH_TODO"""
         return 1.0/np.sqrt( (a*np.sin(theta))**2 + (b*np.cos(theta)**2))
 
     def h_shapeCheck(aspect, minRadius, num_points=4):
+        """ Check that the aspect ratio of the ellipse wil work with the value of h used in FRAM. JDH_TODO ???"""
         # Major and Minor Axis of Ellipse
         ## aspect = 1.0 ## param
         r = minRadius
@@ -349,6 +380,8 @@ def check_input(self, input_file='',output_file=''):
         return h_min
 
     def comparePtsVSh(prefix, hval):
+        """ Check that the rectangles and ellipses generated will not involve features with length less than the h value used in FRAM. JDH_TODO (?)
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         aspectList = params[prefix+"aspect"][0]
         numPointsList = None
@@ -390,6 +423,8 @@ def check_input(self, input_file='',output_file=''):
                 numAspect += 1 ## this counts the family number 
 
     def h():
+        """ Check the float value provided for h to be used in FRAM (the feautre rejection algorithm for meshing.
+        """
         val = input_helper_methods.verifyFloat(input_helper_methods.valueOf('h', params), 'h', noNeg=True)
         if val == 0: input_helper_methods.error("\"h\" cannot be 0.")
         if val < minFracSize/1000.0 and ellipseFams + rectFams > 0: ####### NOTE ----- future developers TODO, delete the 
@@ -413,16 +448,18 @@ def check_input(self, input_file='',output_file=''):
         params['h'][0] = val
 
 
-    ## Must be a list of flags of length 6, one for each side of the domain
-    ## ie {1, 1, 1, 0, 0, 1} represents --> {+x, -x, +y, -y, +z, -z}
-    ## DFN only keeps clusters with connections to domain boundaries set to 1
     def boundaryFaces():
+        """Check that the boundaryFaceis list is a list of flags of length 6, one for each side of the domain
+        ie {1, 1, 1, 0, 0, 1} represents --> {+x, -x, +y, -y, +z, -z}
+        DFN only keeps clusters with connections to domain boundaries set to 1.
+        """
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('boundaryFaces', params), 'boundaryFaces', input_helper_methods.verifyFlag, 6)
         if errResult != None:
             input_helper_methods.error("\"boundaryFaces\" must be a list of 6 flags (0 or 1), {} have(has) been defined. Each flag "\
                   "represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}.".format(-errResult))
 
     def enumPoints():
+        """ Check the integer value of enumPoints for each ellipse family."""
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('enumPoints', params), 'enumPoints', input_helper_methods.verifyInt, 
                        desiredLength=ellipseFams, noZeros=True, noNegs=True)
         if errResult != None:
@@ -444,6 +481,7 @@ def check_input(self, input_file='',output_file=''):
 
 
     def aspect(prefix):
+        """ Check the aspect of the the rectangle or ellipse families. """ 
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "aspect"
@@ -455,10 +493,12 @@ def check_input(self, input_file='',output_file=''):
                   "aspect ratio for each family.".format(paramName, -errResult, numFamilies, shape))
 
     def angleOption(prefix):
+        """ Check the angle option flag. """
         paramName = prefix + "AngleOption"
         input_helper_methods.verifyFlag(input_helper_methods.valueOf(paramName), paramName)
 
     def layer(prefix):
+        """ Check the number of layers. JDH_TODO """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "Layer"
@@ -481,6 +521,8 @@ def check_input(self, input_file='',output_file=''):
                       "parameter.".format(paramName, layer, numLayers))
 
     def thetaPhiKappa(prefix):
+        """ Check the angle parameters used for Fisher distributions (?) JDH_TODO.
+        """ 
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramNames = [prefix + name for name in ["theta", "phi", "kappa"]]
@@ -513,6 +555,8 @@ def check_input(self, input_file='',output_file=''):
 #                    "\"polishedOutput.txt\" in your current working directory.", params)
 #
     def parseInput():
+        """ Parse each line of the input file. 
+        """
         for line in inputIterator:
             line = input_helper_methods.extractParameters(line, inputIterator) ## this strips comments
             if (line != "" and ":" in line):
@@ -525,6 +569,8 @@ def check_input(self, input_file='',output_file=''):
      
         
     def verifyParams():
+        """ Verify all of the parameters in the input file.
+        """
         distributions = distr_module.distr(params, numEdistribs, numRdistribs, minFracSize)
         firstPriority = [nFamEll, nFamRect, stopCondition, domainSize, numOfLayers, 
                  seed, domainSizeIncrease, ignoreBoundaryFaces, rejectsPerFracture, 
@@ -548,6 +594,8 @@ def check_input(self, input_file='',output_file=''):
         for paramFunc in checkLast: paramFunc()
 
     def writeBack():
+        """ Write the parameters from the verbose input file back to a simplified input file.
+        """
         for param in params:
             if param == 'layers':
                 writer.write(param + ': ')
