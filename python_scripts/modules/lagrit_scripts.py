@@ -719,7 +719,9 @@ finish
     os.remove('boundary_left_w.zone')
     os.remove('boundary_right_e.zone')
     os.remove('boundary_front_s.zone')
-    os.remove('boundary_back_n.zone')def edit_intersection_files(num_poly, keep_list):
+    os.remove('boundary_back_n.zone')
+
+def edit_intersection_files(num_poly, keep_list):
 
     pull_list = list(set(range(1,num_poly+ 1)) - set(keep_list))
     os.chdir('intersections')
