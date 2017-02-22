@@ -85,6 +85,8 @@ def print_run_time(local_jobname):
     print("\n")
 
 def get_num_frac():
+    """ Get the number of fractures from the params.txt file.
+    """
     try: 
         f = open('params.txt')
         _num_frac = int(f.readline())
@@ -93,7 +95,13 @@ def get_num_frac():
         print '-->ERROR getting number of fractures, no params.txt file'
 
 class input_helper():
-    
+    """ Functions to help parse the input file and check input parameters.
+        
+        Attributes:
+            params (list): list of parameters specified in the input file.
+            minFracSize (float): the minimum fracture size.
+    """
+
     def __init__(self, params, minFracSize):
         self.params = params
         self.minFracSize = minFracSize
@@ -101,25 +109,30 @@ class input_helper():
     ##                              Helper Functions                          ##
     ## ====================================================================== ##
 
-    ## '{1,2,3}' --> [1,2,3]
     def curlyToList(self, curlyList):
+        """ '{1,2,3}' --> [1,2,3]
+        """
         return re.sub("{|}", "", curlyList).strip().split(",")
 
-    ## [1,2,3] --> '{1,2,3}'   for writing output
     def listToCurly(self, strList):
-         curl = re.sub(r'\[','{', strList)
-         curl = re.sub(r'\]','}', curl)
-         curl = re.sub(r"\'", '', curl)
-         return curl 
+        """ [1,2,3] --> '{1,2,3}'   for writing output
+        """
+        curl = re.sub(r'\[','{', strList)
+        curl = re.sub(r'\]','}', curl)
+        curl = re.sub(r"\'", '', curl)
+        return curl 
 
     def hasCurlys(self, line, key):
+        """ Checks to see that every { has a matching }.
+        """
         if '{' in line and '}' in line: return True 
         elif '{' in line or '}' in line: 
             self.error("Line defining \"{}\" contains a single curly brace.".format(key))
         return False
 
-    ## Use to get key's value in params. writing always false  
     def valueOf(self, key, writing = False):
+        """ Use to get key's value in params. writing always false  
+        """
         if (not writing) and (len(self.params[key]) > 1):
             self.error("\"{}\" can only correspond to 1 list. {} lists have been defined.".format(key, len(self.params[key])))
         #try:    
@@ -131,6 +144,8 @@ class input_helper():
         #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
     def getGroups(self, line, valList, key):
+        """ JDH_TODO 
+        """
         curlyGroup = re.compile('({.*?})')
         groups = re.findall(curlyGroup, line)
         for group in groups:
@@ -141,30 +156,44 @@ class input_helper():
             self.error("Unexpected character found while parsing \"{}\".".format(key))
 
     def valHelper(self, line, valList, key):
+        """ JDH_TODO
+        """
         if self.hasCurlys(line, key):
             self.getGroups(line, valList, key)
         else:
             valList.append(line)
         
     def error(self, errString):
+        """ print an error
+        Args:
+            errString (str): a string describing the error
+        """
         print("\nERROR --- " + errString)
         print("\n----Program terminated while parsing input----\n")
         sys.exit(1)
 
     def warning(self, warnString):
+        """ print warning
+        Args:
+            warnStinrg (str): a string with the warning
+        """
         print("WARNING --- " + warnString)
     
     def warning(self, warnString, warningFile=''):
+        """ print a warning to a file (currently does not work)"""
         #global warningFile
         print("WARNING --- " + warnString)
         #warningFile.write("WARNING --- " + warnString + "\n")
 
     def isNegative(self, num): 
+        """"returns True if num is negative, false otherwise
+        """
         return True if num < 0 else False
 
-    ## Makes sure at least one polygon family has been defined in nFamRect or nFamEll
-    ##      OR that there is a user input file for polygons. 
     def checkFamCount(self):
+        """Makes sure at least one polygon family has been defined in nFamRect or nFamEll
+        OR that there is a user input file for polygons.
+        """
         userDefExists = (self.valueOf('userEllipsesOnOff') == '1') |\
                    (self.valueOf('userRectanglesOnOff') == '1') |\
                    (self.valueOf('userRecByCoord') == '1') |\
@@ -180,9 +209,11 @@ class input_helper():
                   "\"UserEll_Input_File_Path\", \"UserRect_Input_File_Path\", \"UserEll_Input_File_Path\", or "\
                   "\"RectByCoord_Input_File_Path\" and set the corresponding flag to '1'.")
 
-    ## scales list of probabilities (famProb) that doesn't add up to 1
-    ## ie [.2, .2, .4] --> [0.25, 0.25, 0.5]        
     def scale(self, probList, warningFile):
+ 
+     """ scales list of probabilities (famProb) that doesn't add up to 1
+     ie [.2, .2, .4] --> [0.25, 0.25, 0.5] 
+     """
         total = sum(probList)
         scaled = [float("{:.6}".format(x/total)) for x in probList]
         self.warning("'famProb' probabilities did not add to 1 and have been scaled accordingly "\
@@ -190,6 +221,8 @@ class input_helper():
         return [x/total for x in probList]                
 
     def zeroInStdDevs(self, valList):
+        """ returns True is there is a zero in valList of standard deviations
+        """
         for val in valList:
             if float(val) == 0: return True
         
