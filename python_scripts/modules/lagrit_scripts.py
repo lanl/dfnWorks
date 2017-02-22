@@ -676,6 +676,7 @@ pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
 pset/-all-/ zone / boundary / ascii
 finish
 '''
+
     f=open('bound_zones.lgi','w')
     f.write(lagrit_input%parameters)
     f.flush()
@@ -719,3 +720,43 @@ finish
     os.remove('boundary_right_e.zone')
     os.remove('boundary_front_s.zone')
     os.remove('boundary_back_n.zone')
+
+def edit_intersection_files(num_poly, keep_list):
+
+    pull_list = list(set(range(1,num_poly+ 1)) - set(keep_list))
+    os.chdir('intersections')
+    for i in keep_list:
+    	filename = 'intersections_%s.inp'%str(i)
+    	print '--> Working on: ', filename
+    	lagrit_script = 'read / %s / mo1'%filename
+    	lagrit_script += '''
+pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
+'''%pull_list[0]    
+    	for j in pull_list[1:]:
+    		lagrit_script += '''
+pset / prune / attribute / b_a / 1,0,0 / eq / %d
+pset / pset2remove / union / pset2remove, prune
+#rmpoint / pset, get, prune
+pset / prune / delete
+ '''%j
+    	lagrit_script += '''
+rmpoint / pset, get, pset2remove 
+rmpoint / compress
+
+cmo / modatt / mo1 / imt / ioflag / l
+cmo / modatt / mo1 / itp / ioflag / l
+cmo / modatt / mo1 / isn / ioflag / l
+cmo / modatt / mo1 / icr / ioflag / l
+
+cmo / status / brief
+dump / intersections_%d_prune.inp / mo1
+finish
+'''%i
+    	
+    	file_name = 'prune_intersection.lgi'
+    	f = open(file_name, 'w')
+    	f.write(lagrit_script)
+    	f.flush()
+    	f.close()
+    	os.system(lagrit_path +  '< prune_intersection.lgi > out.txt')
+

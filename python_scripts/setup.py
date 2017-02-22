@@ -53,7 +53,11 @@ def clean(directory_list, python_dir):
 
 options=command_line_options()
 
+<<<<<<< HEAD
 DFN_PATH = '/Users/jhyman/Documents/code/dfnworks-main/'
+=======
+DFN_PATH = '/home/jhyman/dfnworks/dfnworks-main/'
+>>>>>>> 283411775ac842d9977964db375373ba9f3c8667
 C_UGE_PATH = DFN_PATH + 'C_uge_correct/'
 CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
 PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'

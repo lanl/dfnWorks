@@ -32,6 +32,7 @@ def define_paths():
     os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
     os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + '/inp_2_vtk/inp2vtk'
 
+
 define_paths()
 main_time = time()
 DFN = dfnworks.create_dfn()
