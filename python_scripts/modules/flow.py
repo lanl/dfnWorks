@@ -28,17 +28,17 @@ def dfnFlow(self):
     self.pflotran()
     #helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
-    tic = time()    
-    self.parse_pflotran_vtk()       
-    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
-    print 'COMPLETED CPP VERSION OF PARSE VTK'
+    #tic = time()    
+    #self.parse_pflotran_vtk()       
+    #helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+    #print 'COMPLETED CPP VERSION OF PARSE VTK'
 
-#    tic = time()
-#    self.parse_pflotran_vtk_python()
-#    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk_python', time() - tic)    
-#    print 'COMPLETED PYTHON VERSION OF PARSE VTK'
+    #tic = time()
+    self.parse_pflotran_vtk_python()
+    #helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk_python', time() - tic)    
+    print 'COMPLETED PYTHON VERSION OF PARSE VTK'
 
-    tic = time()    
+    #tic = time()    
     self.pflotran_cleanup()
     #helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
     #helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
