@@ -17,7 +17,7 @@ python_scripts/runDFN_uncorrelated.py
 python_scripts/runDFN_mixing.py
 python_scripts/jeffrey_scripts
 python_scripts/mypaths.txt
-test_inputs/*
+python_scripts/test_inputs/*
 *.pdf
 *output_test_min*
 *break*
@@ -67,4 +67,4 @@ mesh_DFN_C++_v2.py
 
 #input files
 python_scripts/run_dfnworks_explicit.py
-
+ParticleTracking/*.o
