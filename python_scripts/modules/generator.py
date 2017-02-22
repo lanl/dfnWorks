@@ -72,7 +72,7 @@ def make_working_directory(self):
 def create_network(self):
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    os.system(os.environ['DFNGENC_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
 
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'
