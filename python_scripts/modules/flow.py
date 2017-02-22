@@ -29,12 +29,12 @@ def dfnFlow(self):
     #helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    self.parse_pflotran_vtk()       
+    #self.parse_pflotran_vtk()       
     helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
     print 'COMPLETED CPP VERSION OF PARSE VTK'
 
 #    tic = time()
-#    self.parse_pflotran_vtk_python()
+    self.parse_pflotran_vtk_python()
 #    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk_python', time() - tic)    
 #    print 'COMPLETED PYTHON VERSION OF PARSE VTK'
 
@@ -95,7 +95,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print("\n\n")
 
 def zone2ex(self, uge_file='', zone_file='', face=''):
-    '''zone2ex	
+    '''zone2ex    
     Convert zone files from LaGriT into ex format for LaGriT
     inputs:
     uge_file: name of uge file
@@ -105,7 +105,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
     zone_file='all' processes all directions, top, bottom, left, right, front, back
     '''
 
-    print('--> Converting zone files to ex')	
+    print('--> Converting zone files to ex')    
     if self._uge_file:
         uge_file = self._uge_file
     else:
@@ -223,7 +223,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
                         Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
             print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file+'\n')
 
-    print('--> Converting zone files to ex complete')	
+    print('--> Converting zone files to ex complete')    
 
 def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
                  combined_uge_file='combined.uge'):
@@ -468,7 +468,7 @@ def pflotran(self):
     print("="*80)
     print("--> Running PFLOTRAN") 
     cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file
-    os.system(cmd)	
+    os.system(cmd)    
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
@@ -487,9 +487,9 @@ def pflotran_cleanup(self):
     os.system(cmd)
 
     for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
-            os.remove(fl)	
+            os.remove(fl)    
     for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
-            os.remove(fl)	
+            os.remove(fl)    
 
 def create_dfnFlow_links():
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
@@ -502,60 +502,60 @@ def create_dfnFlow_links():
     os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
     os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
     os.symlink('../materialid.dat', 'materialid.dat')
-	
+    
 def uncorrelated(sigma):
-	print '--> Creating Uncorrelated Transmissivity Fields'
-	print 'Variance: ', sigma
-	print 'Running un-correlated'
-	x = np.genfromtxt('../aperture.dat', skip_header = 1)[:,-1]
-	k = np.genfromtxt('../perm.dat', skip_header = 1)[0,-1]
-	n = len(x)
+    print '--> Creating Uncorrelated Transmissivity Fields'
+    print 'Variance: ', sigma
+    print 'Running un-correlated'
+    x = np.genfromtxt('../aperture.dat', skip_header = 1)[:,-1]
+    k = np.genfromtxt('../perm.dat', skip_header = 1)[0,-1]
+    n = len(x)
 
-	print np.mean(x)
+    print np.mean(x)
 
-	perm = np.log(k)*np.ones(n) 
-	perturbation = np.random.normal(0.0, 1.0, n)
-	perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
+    perm = np.log(k)*np.ones(n) 
+    perturbation = np.random.normal(0.0, 1.0, n)
+    perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
 
-	aper = np.sqrt((12.0*perm))
-	aper -= np.mean(aper)
-	aper += np.mean(x)
+    aper = np.sqrt((12.0*perm))
+    aper -= np.mean(aper)
+    aper += np.mean(x)
 
-	print '\nPerm Stats'
-	print '\tMean:', np.mean(perm)
-	print '\tMean:', np.mean(np.log(perm))
-	print '\tVariance:',np.var(np.log(perm))
-	print '\tMinimum:',min(perm)
-	print '\tMaximum:',max(perm)
-	print '\tMinimum:',min(np.log(perm))
-	print '\tMaximum:',max(np.log(perm))
+    print '\nPerm Stats'
+    print '\tMean:', np.mean(perm)
+    print '\tMean:', np.mean(np.log(perm))
+    print '\tVariance:',np.var(np.log(perm))
+    print '\tMinimum:',min(perm)
+    print '\tMaximum:',max(perm)
+    print '\tMinimum:',min(np.log(perm))
+    print '\tMaximum:',max(np.log(perm))
 
-	print '\nAperture Stats'
-	print '\tMean:', np.mean(aper)
-	print '\tVariance:',np.var(aper)
-	print '\tMinimum:',min(aper)
-	print '\tMaximum:',max(aper)
+    print '\nAperture Stats'
+    print '\tMean:', np.mean(aper)
+    print '\tVariance:',np.var(aper)
+    print '\tMinimum:',min(aper)
+    print '\tMaximum:',max(aper)
 
 
-	output_filename = 'aperture_' + str(sigma) + '.dat'
-	f = open(output_filename,'w+')
-	f.write('aperture\n')
-	for i in range(n):
-		f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
-	f.close()
+    output_filename = 'aperture_' + str(sigma) + '.dat'
+    f = open(output_filename,'w+')
+    f.write('aperture\n')
+    for i in range(n):
+    	f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
+    f.close()
 
-	cmd = 'ln -s ' + output_filename + ' aperture.dat '
-	os.system(cmd)
+    cmd = 'ln -s ' + output_filename + ' aperture.dat '
+    os.system(cmd)
 
-	output_filename = 'perm_' + str(sigma) + '.dat'
-	f = open(output_filename,'w+')
-	f.write('permeability\n')
-	for i in range(n):
-		f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
-	f.close()
+    output_filename = 'perm_' + str(sigma) + '.dat'
+    f = open(output_filename,'w+')
+    f.write('permeability\n')
+    for i in range(n):
+    	f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
+    f.close()
 
-	cmd = 'ln -s ' + output_filename + ' perm.dat '
-	os.system(cmd) 
+    cmd = 'ln -s ' + output_filename + ' perm.dat '
+    os.system(cmd) 
         
 
 def parse_pflotran_vtk(self, grid_vtk_file=''): 

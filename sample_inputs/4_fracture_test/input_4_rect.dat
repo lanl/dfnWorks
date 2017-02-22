@@ -425,7 +425,7 @@ EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/input
 userRectanglesOnOff: 1    //0 - User Rectangles off
                         //1 - User Rectangles on
                           
-UserRect_Input_File_Path: /home/nknapp/dfnworks-main/sample_inputs/4_fracture_test/4_user_rects.dat 
+UserRect_Input_File_Path: /Users/jhyman/Documents/code/dfnworks-main/sample_inputs/4_fracture_test/4_user_rects.dat 
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their
