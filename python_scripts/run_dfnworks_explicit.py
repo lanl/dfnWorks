@@ -6,7 +6,6 @@
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-# JDH_TODO: how is run_dfnworks_explicit.py different from run_dfnworks.py
 
 import os
 import sys
