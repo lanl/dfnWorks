@@ -58,7 +58,7 @@ struct vertex {
   unsigned int** fracts;//array of fracture's numbers
   unsigned int* type; //array of node's type
   double* flux;//array of fluxes 
-  double* area;//area of Voronoi face
+  double* area;//area of Voronoi facea
   double residtime; //residential time of particles 
   double aperture; //aperture of the cell
 };
@@ -144,7 +144,7 @@ double InOutFlowCell(int indcell, int int1, double nposx, double nposy);
 void Moving2NextCellBound(int prevcell);
 struct inpfile Control_File(char fileobject[], int ctr);
 struct inpfile Control_Data(char fileobject[], int ctr);
-void ParticleOutput (int currentt);
+void ParticleOutput (int currentt, int frac_p);
 struct inpfile Control_Param(char fileobject[], int ctr);
 void FlowInWeight(int numbpart);
 int InitParticles_ones (int k_current, double inter_p[][4], int fracture, int parts_fracture, int ii, double thirdcoor, int zonenumb_in, int first_ind, int last_ind);
