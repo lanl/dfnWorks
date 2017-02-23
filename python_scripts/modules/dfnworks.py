@@ -21,6 +21,23 @@ import helper
 class DFNWORKS(Frozen):
     """
     Class for DFN Generation and meshing
+    Attributes:
+        _jobname (str): name of job, also the folder where output files are stored
+        _ncpu (int): number of CPUs used in the job
+        _dfnGen_file (str): the name of the dfnGen input file
+        _dfnFlow_file (str): the name of the dfnFlow input file
+        _local prefix: indicates that the name contains only the most local directory
+        _vtk_file (str): the name of the VTK file
+        _inp_file (str): the name of the INP file
+        _uge_file (str): the name of the UGE file
+        _mesh_type (str): the type of mesh
+        _perm_file (str): the name of the file containing permeabilities (JDH_TODO)
+        _aper_file (str): the name of the file containing apertures (JDH_TODO)
+        _perm_cell_file (str): the name of the file containing cell permeabilities 
+        _aper_cell_file (str): the name of the file containing cell apertures
+        _rfield (str): JDH_TODO
+        _dfnTrans_version (str): the version of dfnTrans to use
+        _freeze (object): indicates whether the class attributes can be modified
     """
     from generator import dfnGen
     from flow import dfnFlow

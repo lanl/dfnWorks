@@ -11,7 +11,6 @@ import h5py
 def dfnFlow(self):
     ''' dfnFlow
     Run the dfnFlow portion of the workflow.
-    1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
     ''' 
 
     print('='*80)
@@ -50,6 +49,12 @@ def dfnFlow(self):
 
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
+    """  Takes output from LaGriT and processes it for use in PFLOTRAN.
+    Kwargs:
+        inp_file (str): name of the inp (AVS) file produced by LaGriT (JDH_TODO (?)). 
+        mesh_type (str): the type of mesh
+        hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
+    """
     print ('='*80)
     print("Starting conversion of files for PFLOTRAN ")
     print ('='*80)
@@ -227,7 +232,13 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 
 def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
                  combined_uge_file='combined.uge'):
-
+    """ Extract common nodes from the DFN and volume mesh .uge files, and places them in the combined uge file.  (? JDH_TODO)
+    Kwargs:
+        volume_mesh_uge_file (str): name of volume mesh uge file
+        dfn_mesh_uge_file (str): name of DFN mesh uge file
+        common_table_file (str): name of common table file
+        combined_uge_file (str): name of combined uge file
+    """
     print('--> Extracting nodes common to the volume and dfn meshes')
 
     table_file = common_table_file
@@ -295,6 +306,10 @@ def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', co
                 int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
 
 def inp2gmv(self, inp_file=''):
+    """ Convert inp file to gmv file, for (JDH_TODO). .
+    Kwargs:
+        inp_file (str): name of inp file
+    """
 
     if inp_file:
         self._inp_file = inp_file
@@ -319,7 +334,8 @@ def inp2gmv(self, inp_file=''):
 
 
 def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
-
+    """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file and inp_file (?). JDH_TODO 
+    """
     print("--> Writing Perms and Correct Volume Areas")
     if inp_file:
         self._inp_file = inp_file
@@ -559,7 +575,8 @@ def uncorrelated(sigma):
         
 
 def parse_pflotran_vtk(self, grid_vtk_file=''): 
-
+    """ Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.
+    """
     print '--> Parsing PFLOTRAN output'
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
     out_dir = 'parsed_vtk_cpp'
@@ -607,8 +624,7 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
 
 def inp2vtk_python(self, inp_file=''):
     import pyvtk as pv
-    """
-    :rtype : object
+    """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
     if self._inp_file:
         inp_file = self._inp_file
@@ -659,6 +675,7 @@ def inp2vtk_python(self, inp_file=''):
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
+    """ Replace CELL_DATA with POINT_DATA in the VTK output."""
     print '--> Parsing PFLOTRAN output'
     if grid_vtk_file:
         self._vtk_file = grid_vtk_file
