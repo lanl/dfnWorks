@@ -11,7 +11,7 @@ class Frozen(object):
             Set attribute to a value.
             Args:
                 key (string): the key of the attribute being set.
-                value : the value of the attribute being set. (JDH_TODO, what is the type of value)
+                value : the value of the attribute being set. 
             """
             if not self.__frozen or hasattr(self, key):
 		object.__setattr__(self, key, value)

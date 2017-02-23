@@ -22,11 +22,10 @@ class DFNWORKS(Frozen):
         _inp_file (str): the name of the INP file
         _uge_file (str): the name of the UGE file
         _mesh_type (str): the type of mesh
-        _perm_file (str): the name of the file containing permeabilities (JDH_TODO)
-        _aper_file (str): the name of the file containing apertures (JDH_TODO)
+        _perm_file (str): the name of the file containing permeabilities 
+        _aper_file (str): the name of the file containing apertures 
         _perm_cell_file (str): the name of the file containing cell permeabilities 
         _aper_cell_file (str): the name of the file containing cell apertures
-        _rfield (str): JDH_TODO
         _dfnTrans_version (str): the version of dfnTrans to use
         _freeze (object): indicates whether the class attributes can be modified
     """
@@ -44,7 +43,7 @@ class DFNWORKS(Frozen):
 
     from legal import legal
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',rfield='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self._jobname = jobname
         self._ncpu = ncpu
@@ -69,7 +68,6 @@ class DFNWORKS(Frozen):
         self._aper_file = aper_file
         self._perm_cell_file = perm_cell_file
         self._aper_cell_file = aper_cell_file
-        self._rfield=rfield
         self._dfnTrans_version= 2.0
         self._freeze
 
@@ -131,9 +129,6 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     else:
         dfn._aper_file = 'aperture.dat'
         dfn._perm_file = 'perm.dat'
-
-    if options.field != '':
-        dfn._rfield = options.field 
 
 
     print("\n-->Creating DFN class: Complete")

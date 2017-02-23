@@ -23,8 +23,6 @@ def commandline_options():
               help="Number of CPUs")
     parser.add_argument("-input", "--input_file", default="", type=str,
               help="input file with paths to run files") 
-    parser.add_argument("-rfield", "--field", default="", type=str,
-              help="level of random field") 
     parser.add_argument("-gen", "--dfnGen", default="", type=str,
               help="Path to dfnGen run file") 
     parser.add_argument("-flow", "--dfnFlow", default="", type=str,
@@ -144,7 +142,7 @@ class input_helper():
         #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
     def getGroups(self, line, valList, key):
-        """ JDH_TODO 
+        """ extract values between { and } 
         """
         curlyGroup = re.compile('({.*?})')
         groups = re.findall(curlyGroup, line)
@@ -156,7 +154,7 @@ class input_helper():
             self.error("Unexpected character found while parsing \"{}\".".format(key))
 
     def valHelper(self, line, valList, key):
-        """ JDH_TODO
+        """ pulls values from culry brackets 
         """
         if self.hasCurlys(line, key):
             self.getGroups(line, valList, key)
@@ -282,7 +280,7 @@ class input_helper():
 
 
     def findVal(self, line, key, inputIterator, unfoundKeys, warningFile):
-        """ Extract the value for key from line. JDH_TODO
+        """ Extract the value for key from line. 
         """
         valList = []
         line = line[line.index(":") + 1:].strip()

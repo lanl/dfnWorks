@@ -17,7 +17,7 @@ def check_input(self, input_file='',output_file=''):
     
     Kwargs:
         input_file (name): name of dfnGen input file
-        output_file (name): JDH_TODO
+        output_file (name): stripped down input file for DFNGen 
     
     """ 
     global params 
@@ -340,11 +340,12 @@ def check_input(self, input_file='',output_file=''):
                   "family(ies). Need one p32 value per rectangle family)".format(-errResult, rectFams))
 
     def f(theta, t, a, b):
-        """JDH_TODO"""
+        """Differential Equation Angle Theta as a function of arc length, see Hyman et al. 2014, SIAM J. Sci. Compu
+            Equation 3.3"""
         return 1.0/np.sqrt( (a*np.sin(theta))**2 + (b*np.cos(theta)**2))
 
     def h_shapeCheck(aspect, minRadius, num_points=4):
-        """ Check that the aspect ratio of the ellipse wil work with the value of h used in FRAM. JDH_TODO ???"""
+        """ Check that the arc length discretized ellipse is greater than 3*h """
         # Major and Minor Axis of Ellipse
         ## aspect = 1.0 ## param
         r = minRadius
@@ -382,7 +383,7 @@ def check_input(self, input_file='',output_file=''):
         return h_min
 
     def comparePtsVSh(prefix, hval):
-        """ Check that the rectangles and ellipses generated will not involve features with length less than the h value used in FRAM. JDH_TODO (?)
+        """ Check that the rectangles and ellipses generated will not involve features with length less than 3*h value used in FRAM. 
         """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         aspectList = params[prefix+"aspect"][0]
@@ -500,7 +501,7 @@ def check_input(self, input_file='',output_file=''):
         input_helper_methods.verifyFlag(input_helper_methods.valueOf(paramName), paramName)
 
     def layer(prefix):
-        """ Check the number of layers. JDH_TODO """
+        """ Check the number of layers. """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "Layer"
@@ -523,7 +524,7 @@ def check_input(self, input_file='',output_file=''):
                       "parameter.".format(paramName, layer, numLayers))
 
     def thetaPhiKappa(prefix):
-        """ Check the angle parameters used for Fisher distributions (?) JDH_TODO.
+        """ Check the angle parameters used for Fisher distributions 
         """ 
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = ellipseFams if prefix is 'e' else rectFams
