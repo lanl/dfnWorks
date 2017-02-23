@@ -1,12 +1,3 @@
-"""
-.. file:: dfnworks.py
-   :synopsis: DFNWORKS class 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-
-"""
-
 __author__ = "Jeffrey Hyman and Satish Karra"
 __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
@@ -19,8 +10,8 @@ from dfntools import *
 import helper
 
 class DFNWORKS(Frozen):
-    """
-    Class for DFN Generation and meshing
+    """  Class for DFN Generation and meshing
+    
     Attributes:
         _jobname (str): name of job, also the folder where output files are stored
         _ncpu (int): number of CPUs used in the job

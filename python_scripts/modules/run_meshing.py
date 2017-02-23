@@ -1,8 +1,6 @@
 """
-.. file:: run_meshing.py
+.. module:: run_meshing.py
    :synopsis: functions to mesh fracture network in parallel 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """

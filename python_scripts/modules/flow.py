@@ -50,6 +50,7 @@ def dfnFlow(self):
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
+    
     Kwargs:
         inp_file (str): name of the inp (AVS) file produced by LaGriT (JDH_TODO (?)). 
         mesh_type (str): the type of mesh
@@ -233,6 +234,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
                  combined_uge_file='combined.uge'):
     """ Extract common nodes from the DFN and volume mesh .uge files, and places them in the combined uge file.  (? JDH_TODO)
+    
     Kwargs:
         volume_mesh_uge_file (str): name of volume mesh uge file
         dfn_mesh_uge_file (str): name of DFN mesh uge file
@@ -307,6 +309,7 @@ def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', co
 
 def inp2gmv(self, inp_file=''):
     """ Convert inp file to gmv file, for (JDH_TODO). .
+    
     Kwargs:
         inp_file (str): name of inp file
     """

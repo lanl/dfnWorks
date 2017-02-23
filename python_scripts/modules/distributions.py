@@ -26,6 +26,7 @@ class distr():
         Verifies both the "ebetaDistribution" and "rBetaDistribution". If either contain any flags
         indicating contant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
         also verified. 
+        
         Args:
             prefix (str): Indicates shapes that the beta distribution describes. 'e' if they are ellipses, 'r' if they are rectangles.
         """

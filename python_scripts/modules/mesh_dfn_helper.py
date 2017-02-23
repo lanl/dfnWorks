@@ -1,8 +1,6 @@
 """
-.. file:: mesh_dfn_helper.py
+.. module:: mesh_dfn_helper.py
    :synopsis: helper functions for meshing dfn using lagrit  
-   :version: 4.0
-   :maintainer: Jeffrey Hyman, Satish Karra, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """

@@ -75,16 +75,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnworks">DFNWORKS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#legal-module">legal module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-module">generator module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#flow-module">flow module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#transport-module">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.transport">transport module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfntools">dfntools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#distrbutions-module">distrbutions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#helper-module">helper module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-input-processing-module">generator input processing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-output-report-module">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_output">generator output report module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.meshdfn">Mesh DFN module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
@@ -128,10 +128,8 @@
             
   <h1>Source code for modules.meshdfn</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. file:: meshdfn.py</span>
+<span class="sd">.. module:: meshdfn.py</span>
 <span class="sd">   :synopsis: meshing driver for DFN </span>
-<span class="sd">   :version: 1.0</span>
-<span class="sd">   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp</span>
 <span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -144,7 +142,7 @@
 <span class="kn">import</span> <span class="nn">lagrit_scripts</span> <span class="kn">as</span> <span class="nn">lagrit</span> 
 <span class="kn">import</span> <span class="nn">run_meshing</span> <span class="kn">as</span> <span class="nn">run_mesh</span> 
 
-<div class="viewcode-block" id="mesh_network"><a class="viewcode-back" href="../../modules.html#modules.meshdfn.mesh_network">[docs]</a><span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="mesh_network"><a class="viewcode-back" href="../../modules.html#modules.dfnworks.mesh_network">[docs]</a><span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Mesh Fracture Network using ncpus and lagrit</span>
 <span class="sd">    meshing file is separate file: dfnGen_meshing.py</span>

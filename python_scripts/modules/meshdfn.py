@@ -1,8 +1,6 @@
 """
-.. file:: meshdfn.py
+.. module:: meshdfn.py
    :synopsis: meshing driver for DFN 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """

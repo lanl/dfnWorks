@@ -8,12 +8,12 @@ DFNWORKS
   :members:
 
 legal module
-############
+##############
 .. automodule:: modules.legal
-  :members:#
+  :members:
 
 generator module
-################
+###################
 
 .. automodule:: modules.generator
   :members:
@@ -25,13 +25,13 @@ flow module
     :members:
 
 transport module
-###############
+##################
 
 .. automodule:: modules.transport
     :members:
 
 dfntools module
-################
+###################
 
 .. automodule:: modules.dfntools
     :members:
@@ -67,18 +67,18 @@ LaGriT scripts module
     :members:
 
 Mesh DFN module
-################
+####################
 .. automodule:: modules.meshdfn
     :members:
 
 Mesh DFN helper module
-######################
+#######################
 
 .. automodule:: modules.mesh_dfn_helper
     :members:
 
 Parallel meshing module
-#######################
+########################
 
 .. automodule:: modules.run_meshing
     :members:

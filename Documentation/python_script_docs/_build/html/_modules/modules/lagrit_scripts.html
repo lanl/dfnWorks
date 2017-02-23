@@ -75,16 +75,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#dfnworks">DFNWORKS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#legal-module">legal module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-module">generator module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#flow-module">flow module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#transport-module">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.transport">transport module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfntools">dfntools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#distrbutions-module">distrbutions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#helper-module">helper module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-input-processing-module">generator input processing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../modules.html#generator-output-report-module">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_output">generator output report module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.meshdfn">Mesh DFN module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
@@ -128,10 +128,8 @@
             
   <h1>Source code for modules.lagrit_scripts</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. file:: lagrit_scripts.py</span>
+<span class="sd">.. module:: lagrit_scripts.py</span>
 <span class="sd">   :synopsis: create lagrit scripts for meshing dfn using LaGriT </span>
-<span class="sd">   :version: 1.0</span>
-<span class="sd">   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp</span>
 <span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -141,15 +139,14 @@
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">arcsin</span>
 
 <div class="viewcode-block" id="create_parameter_mlgi_file"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.create_parameter_mlgi_file">[docs]</a><span class="k">def</span> <span class="nf">create_parameter_mlgi_file</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">refine_dist</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;create parameter_mgli_files</span>
-<span class="sd">	Outputs parameteri.mlgi files used in running LaGriT Scripts</span>
-<span class="sd">	Inputs:</span>
-<span class="sd">	num_poly: Number of polygons</span>
-<span class="sd">	h: meshing length scale</span>
-<span class="sd">	slope: Slope of coarsening function, default = 2, </span>
-<span class="sd">		set to 0 for uniform mesh resolution</span>
-<span class="sd">	refine_dist: distance used in coarsing function, default = 0.5,</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; create parameter_mgli_files</span>
+<span class="sd">        Outputs parameteri.mlgi files used in running LaGriT Scripts</span>
+<span class="sd">        Inputs:</span>
+<span class="sd">        num_poly: Number of polygons</span>
+<span class="sd">        h: meshing length scale</span>
+<span class="sd">        slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution</span>
+<span class="sd">        refine_dist: distance used in coarsing function, default = 0.5,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 	
 	<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Creating parameter*.mlgi files&quot;</span><span class="p">)</span>
 	<span class="k">try</span><span class="p">:</span>

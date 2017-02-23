@@ -165,6 +165,7 @@ class input_helper():
         
     def error(self, errString):
         """ print an error
+        
         Args:
             errString (str): a string describing the error
         """
@@ -174,6 +175,7 @@ class input_helper():
 
     def warning(self, warnString):
         """ print warning
+        
         Args:
             warnStinrg (str): a string with the warning
         """
@@ -211,9 +213,9 @@ class input_helper():
 
     def scale(self, probList, warningFile):
  
-     """ scales list of probabilities (famProb) that doesn't add up to 1
-     ie [.2, .2, .4] --> [0.25, 0.25, 0.5] 
-     """
+        """ scales list of probabilities (famProb) that doesn't add up to 1
+        ie [.2, .2, .4] --> [0.25, 0.25, 0.5] 
+        """
         total = sum(probList)
         scaled = [float("{:.6}".format(x/total)) for x in probList]
         self.warning("'famProb' probabilities did not add to 1 and have been scaled accordingly "\
@@ -303,7 +305,8 @@ class input_helper():
         if line != "": self.processLine(line, unfoundKeys, inputIterator, warningFile)
             
     def findKey(self, line, unfoundKeys, warningFile):
-        """Input: line containing a paramter (key) preceding a ":" 
+        """ Input: line containing a paramter (key) preceding a ":" 
+           
            Returns: key -- if it has not been defined yet and is valid
                     None -- if key does not exist
                     exits -- if the key has already been defined to prevent duplicate confusion        
@@ -377,7 +380,7 @@ class input_helper():
                       "integer value (0,1,2,3,etc.)".format(key))
                 
     
-    def verifylist(self, vallist, key, verificationfn, desiredlength, nozeros=false, nonegs=false):
+    def verifylist(self, vallist, key, verificationfn, desiredlength, nozeros=False, nonegs=False):
         """verifies input list that come in format {0, 1, 2, 3}
        
         input:  vallist - list of values (flags, floats, or ints) corresponding to a parameter

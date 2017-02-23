@@ -1,8 +1,6 @@
 """
-.. file:: lagrit_scripts.py
+.. module:: lagrit_scripts.py
    :synopsis: create lagrit scripts for meshing dfn using LaGriT 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
@@ -12,15 +10,14 @@ from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
 def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
-	"""create parameter_mgli_files
-	Outputs parameteri.mlgi files used in running LaGriT Scripts
-	Inputs:
-	num_poly: Number of polygons
-	h: meshing length scale
-	slope: Slope of coarsening function, default = 2, 
-		set to 0 for uniform mesh resolution
-	refine_dist: distance used in coarsing function, default = 0.5,
-	"""
+        """ create parameter_mgli_files
+        Outputs parameteri.mlgi files used in running LaGriT Scripts
+        Inputs:
+        num_poly: Number of polygons
+        h: meshing length scale
+        slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution
+        refine_dist: distance used in coarsing function, default = 0.5,
+        """
 	
 	print("\nCreating parameter*.mlgi files")
 	try:
