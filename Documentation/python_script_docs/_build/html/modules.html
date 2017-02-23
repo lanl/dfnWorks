@@ -75,11 +75,20 @@
 <li class="toctree-l1"><a class="reference internal" href="scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">dfnworks: dfnWorks python wrapper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dfnworks-class">DFNWORKS class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dfnflow-method">dfnFlow method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dfntrans-method">dfnTrans method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dfntools-module">dfntools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#distr-class">distr class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legal-module">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generator-module">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flow-module">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transport-module">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.dfntools">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distrbutions-module">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-module">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generator-input-processing-module">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generator-output-report-module">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.meshdfn">Mesh DFN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.run_meshing">Parallel meshing module</a></li>
 </ul>
 </li>
 </ul>
@@ -119,129 +128,24 @@
             
   <div class="section" id="dfnworks-dfnworks-python-wrapper">
 <h1>dfnworks: dfnWorks python wrapper<a class="headerlink" href="#dfnworks-dfnworks-python-wrapper" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dfnworks-class">
-<h2>DFNWORKS class<a class="headerlink" href="#dfnworks-class" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#modules.dfnworks.DFNWORKS" title="modules.dfnworks.DFNWORKS"><code class="xref py py-class docutils literal"><span class="pre">DFNWORKS</span></code></a> is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:<cite>.DFNWORKS</cite>.</p>
-<dl class="class">
-<dt id="modules.dfnworks.DFNWORKS">
-<em class="property">class </em><code class="descclassname">modules.dfnworks.</code><code class="descname">DFNWORKS</code><span class="sig-paren">(</span><em>jobname=''</em>, <em>local_jobname=''</em>, <em>dfnGen_file=''</em>, <em>output_file=''</em>, <em>local_dfnGen_file=''</em>, <em>ncpu=''</em>, <em>dfnFlow_file=''</em>, <em>local_dfnFlow_file=''</em>, <em>dfnTrans_file=''</em>, <em>inp_file='full_mesh.inp'</em>, <em>uge_file=''</em>, <em>vtk_file=''</em>, <em>mesh_type='dfn'</em>, <em>perm_file=''</em>, <em>aper_file=''</em>, <em>rfield=''</em>, <em>perm_cell_file=''</em>, <em>aper_cell_file=''</em>, <em>dfnTrans_version=''</em>, <em>num_frac=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/dfnworks.html#DFNWORKS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfnworks.DFNWORKS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for DFN Generation and meshing</p>
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.copy_dfnTrans_files">
-<code class="descname">copy_dfnTrans_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.copy_dfnTrans_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>create link to DFNTRANS and copy input file into local directory</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.create_network">
-<code class="descname">create_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.create_network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.dfnFlow">
-<code class="descname">dfnFlow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnFlow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the dfnFlow portion of the workflow.
-1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.dfnGen">
-<code class="descname">dfnGen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnGen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the dfnGen workflow. 
-1) make_working_directory: Create a directory with name of job
-2) check_input: Check input parameters and create a clean version of the input file
-3) create_network: Create network. DFNGEN v2.0 is called and creates the network
-4) output_report: Generate a PDF summary of the DFN generation
-5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.dfnTrans">
-<code class="descname">dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnTrans" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.make_working_directory">
-<code class="descname">make_working_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.make_working_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>make working directories for fracture generation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.mesh_network">
-<code class="descname">mesh_network</code><span class="sig-paren">(</span><em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.mesh_network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mesh Fracture Network using ncpus and lagrit
-meshing file is seperate file: dfnGen_meshing.py</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.output_report">
-<code class="descname">output_report</code><span class="sig-paren">(</span><em>radiiFile='radii.dat'</em>, <em>famFile='families.dat'</em>, <em>transFile='translations.dat'</em>, <em>rejectFile='rejections.dat'</em>, <em>output_name=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.output_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create PDF report of generator 
-Notes
-1. Set the number of histogram buckets (bins) by changing numBuckets variable in his graphing functions
-2. Also change number of x-values used to plot lines by changing numXpoints variable in appropriate funcs
-3. Set show = True to show plots immediately and still make pdf
-4. NOTE future developers of this code should ass functionality for radiiList of size 0.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.pflotran">
-<code class="descname">pflotran</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run pflotran
-Copy PFLOTRAN run file into working directory and run with ncpus</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.pflotran_cleanup">
-<code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Concatenate PFLOTRAN output files and then delete them</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.run_dfnTrans">
-<code class="descname">run_dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.run_dfnTrans" title="Permalink to this definition">¶</a></dt>
-<dd><p>run dfnTrans simulation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modules.dfnworks.DFNWORKS.zone2ex">
-<code class="descname">zone2ex</code><span class="sig-paren">(</span><em>uge_file=''</em>, <em>zone_file=''</em>, <em>face=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.zone2ex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert zone files from LaGriT into ex format for LaGriT
-inputs:
-uge_file: name of uge file
-zone_file: name of zone file
-face: face of the plane corresponding to the zone file</p>
-<p>zone_file=&#8217;all&#8217; processes all directions, top, bottom, left, right, front, back</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="dfnworks">
+<h2>DFNWORKS<a class="headerlink" href="#dfnworks" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="dfnflow-method">
-<h2>dfnFlow method<a class="headerlink" href="#dfnflow-method" title="Permalink to this headline">¶</a></h2>
-<p>The :method:&#8217;.dfnFlow` is the method containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output.</p>
-<dl class="method">
-<dt id="modules.flow.dfnFlow">
-<code class="descclassname">flow.</code><code class="descname">dfnFlow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.flow.dfnFlow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the dfnFlow portion of the workflow.
-1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN</p>
-</dd></dl>
-
+<div class="section" id="legal-module">
+<h2>legal module<a class="headerlink" href="#legal-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="dfntrans-method">
-<h2>dfnTrans method<a class="headerlink" href="#dfntrans-method" title="Permalink to this headline">¶</a></h2>
-<p>The :method:&#8217;.dfnTrans&#8217; is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output.</p>
-<dl class="method">
-<dt id="modules.transport.dfnTrans">
-<code class="descclassname">transport.</code><code class="descname">dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.transport.dfnTrans" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
-</dd></dl>
-
+<div class="section" id="generator-module">
+<h2>generator module<a class="headerlink" href="#generator-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="dfntools-module">
-<h2>dfntools module<a class="headerlink" href="#dfntools-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="flow-module">
+<h2>flow module<a class="headerlink" href="#flow-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="transport-module">
+<h2>transport module<a class="headerlink" href="#transport-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-modules.dfntools">
+<span id="dfntools-module"></span><h2>dfntools module<a class="headerlink" href="#module-modules.dfntools" title="Permalink to this headline">¶</a></h2>
+<p>Tools for dfnworks data</p>
 <dl class="class">
 <dt id="modules.dfntools.Frozen">
 <em class="property">class </em><code class="descclassname">modules.dfntools.</code><code class="descname">Frozen</code><a class="reference internal" href="_modules/modules/dfntools.html#Frozen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfntools.Frozen" title="Permalink to this definition">¶</a></dt>
@@ -249,19 +153,151 @@ face: face of the plane corresponding to the zone file</p>
 </dd></dl>
 
 </div>
-<div class="section" id="distr-class">
-<h2>distr class<a class="headerlink" href="#distr-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="modules.distributions.distr">
-<em class="property">class </em><code class="descclassname">modules.distributions.</code><code class="descname">distr</code><span class="sig-paren">(</span><em>params</em>, <em>numEdistribs</em>, <em>numRdistribs</em>, <em>minFracSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies the fracture distribution input parameters for dfnGen.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd>params (list): parameters for dfnGen
-numEdistribs (int): number of ellipse family distributions
-numRdistribs (int): number of rectangle family distributions
-minFracSize (double): minimum fracture size</dd>
+<div class="section" id="distrbutions-module">
+<h2>distrbutions module<a class="headerlink" href="#distrbutions-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="helper-module">
+<h2>helper module<a class="headerlink" href="#helper-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="generator-input-processing-module">
+<h2>generator input processing module<a class="headerlink" href="#generator-input-processing-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="generator-output-report-module">
+<h2>generator output report module<a class="headerlink" href="#generator-output-report-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-modules.lagrit_scripts">
+<span id="lagrit-scripts-module"></span><h2>LaGriT scripts module<a class="headerlink" href="#module-modules.lagrit_scripts" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_lagrit_scripts">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_lagrit_scripts</code><span class="sig-paren">(</span><em>visual_mode</em>, <em>ncpu</em>, <em>refine_factor=1</em>, <em>production_mode=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_lagrit_scripts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_lagrit_scripts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates LaGriT script to be run for each polygon
+Inputs: visual_mode (True / False)
+ncpu: number of cpus
+refine_fractor: used rectangles
+produnction_mode (True/False)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_merge_poly_files">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_merge_poly_files</code><span class="sig-paren">(</span><em>ncpu</em>, <em>num_poly</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_merge_poly_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_merge_poly_files" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Section 4 <span class="classifier-delimiter">:</span> <span class="classifier">Create merge_poly file</span></dt>
+<dd>Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
+Then duplicate points are removed from the main mesh using EPS_FILTER 
+The points are compressed, and then written in the files full_mesh.gmv, full_mesh.inp, and an FEHM dump is preformed.</dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_parameter_mlgi_file">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_parameter_mlgi_file</code><span class="sig-paren">(</span><em>num_poly</em>, <em>h</em>, <em>slope=2</em>, <em>refine_dist=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_parameter_mlgi_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_parameter_mlgi_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>create parameter_mgli_files
+Outputs parameteri.mlgi files used in running LaGriT Scripts
+Inputs:
+num_poly: Number of polygons
+h: meshing length scale
+slope: Slope of coarsening function, default = 2,</p>
+<blockquote>
+<div>set to 0 for uniform mesh resolution</div></blockquote>
+<p>refine_dist: distance used in coarsing function, default = 0.5,</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_user_functions">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_user_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_user_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_user_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create user_function.lgi files for meshing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.define_zones">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">define_zones</code><span class="sig-paren">(</span><em>h</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#define_zones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.define_zones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and runs LaGriT script to define domain size</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.meshdfn">
+<span id="mesh-dfn-module"></span><h2>Mesh DFN module<a class="headerlink" href="#module-modules.meshdfn" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.meshdfn.mesh_network">
+<code class="descclassname">modules.meshdfn.</code><code class="descname">mesh_network</code><span class="sig-paren">(</span><em>self</em>, <em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/meshdfn.html#mesh_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.meshdfn.mesh_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh Fracture Network using ncpus and lagrit
+meshing file is separate file: dfnGen_meshing.py</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.mesh_dfn_helper">
+<span id="mesh-dfn-helper-module"></span><h2>Mesh DFN helper module<a class="headerlink" href="#module-modules.mesh_dfn_helper" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.check_dudded_points">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">check_dudded_points</code><span class="sig-paren">(</span><em>dudded</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#check_dudded_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.check_dudded_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses Lagrit log_merge_all.txt and checks if number of dudded points
+is the expected number</p>
+<p>Returns: 
+True if the number of dudded points is correct 
+False if the number of dudded points is incorrect</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.cleanup_dir">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">cleanup_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#cleanup_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.cleanup_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes files from meshing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.output_meshing_report">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">output_meshing_report</code><span class="sig-paren">(</span><em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#output_meshing_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.output_meshing_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints information about the final mesh to file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.parse_params_file">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">parse_params_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#parse_params_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.parse_params_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads params.txt file and parse information</p>
+<p>Returns:
+num_poly: (int) Number of Polygons
+h: (float) meshing length scale h
+dudded_points: (int) Expected number of dudded points in Filter (LaGriT)
+visual_mode: True/False
+domain: dict: x,y,z domain sizes</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.run_meshing">
+<span id="parallel-meshing-module"></span><h2>Parallel meshing module<a class="headerlink" href="#module-modules.run_meshing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.run_meshing.merge_the_meshes">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">merge_the_meshes</code><span class="sig-paren">(</span><em>num_poly</em>, <em>ncpu</em>, <em>n_jobs</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#merge_the_meshes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.merge_the_meshes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Merges all the meshes together, deletes duplicate points, </dt>
+<dd>dumps the .gmv and fehm files</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.mesh_fracture">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">mesh_fracture</code><span class="sig-paren">(</span><em>fracture_id</em>, <em>visual_mode</em>, <em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#mesh_fracture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.mesh_fracture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Child Function for Parallized Meshing of Fractures</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.mesh_fractures_header">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">mesh_fractures_header</code><span class="sig-paren">(</span><em>num_poly</em>, <em>ncpu</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#mesh_fractures_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.mesh_fractures_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Header function for Parallel meshing of fractures</p>
+<p>Creates a queue of fracture numbers ranging form 1, num_poly</p>
+<p>Each fractures is meshed using mesh_fracture called within the
+worker function.</p>
+<p>If any fracture fails to mesh properly, then a folder is created with 
+that fracture information and the fracture number is written into
+failure.txt.</p>
+<p>Returns:
+True: If failure.txt is empty meaning all fractures meshed correctly
+False: If failure.txt is not empty, then at least one fracture failed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.worker">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">worker</code><span class="sig-paren">(</span><em>work_queue</em>, <em>done_queue</em>, <em>visual_mode</em>, <em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>worker function for parallelized meshing</p>
 </dd></dl>
 
 </div>

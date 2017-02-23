@@ -1,36 +1,86 @@
 dfnworks: dfnWorks python wrapper
 =====================================
 
-DFNWORKS class
+DFNWORKS 
 ################
 
-The :class:`.DFNWORKS` is the main class that wraps the dfnWorks suite. It executes the components of this suite, handles parallel execution, and processes input and output files where necessary. The other classes discussed in this section are defined to increase modularity of class:`.DFNWORKS`.
-
-.. autoclass:: modules.dfnworks.DFNWORKS
+.. automodule:: modules.dfnworks
   :members:
 
-dfnFlow method
+legal module
+############
+.. automodule:: modules.legal
+  :members:#
+
+generator module
+################
+
+.. automodule:: modules.generator
+  :members:
+
+flow module
 ##############
 
-The :method:'.dfnFlow` is the method containing methods that execute PFLOTRAN and perform IO processing on PFLOTRAN input and output. 
+.. automodule:: modules.flow
+    :members:
 
-.. automethod:: modules.flow.dfnFlow
-
-dfnTrans method
+transport module
 ###############
 
-The :method:'.dfnTrans' is the method containing methods that execute dfnTrans and perform IO processing on dfnTrans input and output. 
-
-.. automethod:: modules.transport.dfnTrans
+.. automodule:: modules.transport
+    :members:
 
 dfntools module
 ################
 
-.. autoclass:: modules.dfntools.Frozen
+.. automodule:: modules.dfntools
+    :members:
 
-distr class
-############
+distrbutions module 
+####################
 
-.. autoclass:: modules.distributions.distr
+.. automodule:: modules.distributions
+    :members:
+
+helper module
+#####################
+
+.. automodule:: modules.helper
+    :members:
+
+generator input processing module
+###################################
+
+.. automodule:: modules.gen_input
+    :members:
+
+generator output report module
+################################
+
+.. automodule:: modules.gen_output
+    :members:
+
+LaGriT scripts module
+######################
+
+.. automodule:: modules.lagrit_scripts
+    :members:
+
+Mesh DFN module
+################
+.. automodule:: modules.meshdfn
+    :members:
+
+Mesh DFN helper module
+######################
+
+.. automodule:: modules.mesh_dfn_helper
+    :members:
+
+Parallel meshing module
+#######################
+
+.. automodule:: modules.run_meshing
+    :members:
 
 

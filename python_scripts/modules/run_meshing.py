@@ -92,7 +92,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 	print 'Time for meshing: %0.2f seconds\n'%elapsed
 
 def worker(work_queue, done_queue, visual_mode, num_poly):
-	try:
+        """ worker function for parallelized meshing """	
+        try:
 		for fracture_id in iter(work_queue.get, 'STOP'):
 			mesh_fracture(fracture_id, visual_mode, num_poly)
 			#done_queue.put("Fracture %d Complete" % fracture_id)
