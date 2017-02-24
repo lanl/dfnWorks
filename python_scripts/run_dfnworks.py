@@ -1,11 +1,9 @@
-"""
-.. file:: run_dfnworks.py
-   :synopsis: run file for dfnworks 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-
-"""
+#"""
+#   :synopsis: run file for dfnworks 
+#   :version: 1.0
+#   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
+#.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+#"""
 
 import os, sys
 sys.path.append("/Users/jhyman/Documents/code/dfnworks-main/python_scripts/") 
@@ -13,6 +11,7 @@ from time import time
 from modules import dfnworks, helper 
 
 def define_paths():
+<<<<<<< HEAD
     # Set Environment Variables
     os.environ['PETSC_DIR']='/Users/jhyman/Documents/code/petsc'
     os.environ['PETSC_ARCH']='arch-darwin-c-debug'
@@ -32,25 +31,26 @@ def define_paths():
     os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
     os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + '/inp_2_vtk/inp2vtk'
 
+if __name__ == "__main__":
 
-define_paths()
-main_time = time()
-DFN = dfnworks.create_dfn()
-if type(DFN) is ' NoneType':
-    print 'ERROR: DFN object not created correctly'
-    exit()
-# General Work Flow
-DFN.dfnGen()
-DFN.dfnFlow()
-DFN.dfnTrans()
+    define_paths()
+    main_time = time()
+    DFN = dfnworks.create_dfn()
+    if type(DFN) is ' NoneType':
+        print 'ERROR: DFN object not created correctly'
+        exit()
+    # General Work Flow
+    DFN.dfnGen()
+    DFN.dfnFlow()
+    DFN.dfnTrans()
 
-main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print timing
-helper.dump_time(DFN._local_jobname, DFN._jobname,main_elapsed) 
-#dfn.print_run_time()    
-print("*"*80)
-print(DFN._jobname+' complete')
-print("Thank you for using dfnWorks")
-print("*"*80)
+    main_elapsed = time() - main_time
+    timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
+    print timing
+    helper.dump_time(DFN._local_jobname, DFN._jobname,main_elapsed) 
+    #dfn.print_run_time()	
+    print("*"*80)
+    print(DFN._jobname+' complete')
+    print("Thank you for using dfnWorks")
+    print("*"*80)
 

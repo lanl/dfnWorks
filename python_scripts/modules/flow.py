@@ -11,7 +11,6 @@ import h5py
 def dfnFlow(self):
     ''' dfnFlow
     Run the dfnFlow portion of the workflow.
-    1) lagrit2pflotran: takes output from LaGriT and processes it for use in PFLOTRAN
     ''' 
 
     print('='*80)
@@ -50,6 +49,13 @@ def dfnFlow(self):
 
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
+    """  Takes output from LaGriT and processes it for use in PFLOTRAN.
+    
+    Kwargs:
+        inp_file (str): name of the inp (AVS) file produced by LaGriT 
+        mesh_type (str): the type of mesh
+        hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
+    """
     print ('='*80)
     print("Starting conversion of files for PFLOTRAN ")
     print ('='*80)
@@ -225,76 +231,12 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 
     print('--> Converting zone files to ex complete')    
 
-def extract_common_nodes(self, volume_mesh_uge_file='', dfn_mesh_uge_file='', common_table_file='',
-                 combined_uge_file='combined.uge'):
-
-    print('--> Extracting nodes common to the volume and dfn meshes')
-
-    table_file = common_table_file
-    dat = np.genfromtxt(table_file, skip_header=7)
-    common_dat = [[arr[0], arr[5]] for arr in dat if arr[1] == 21]
-
-    file = dfn_mesh_uge_file
-    f = open(file, 'r')
-    num_cells = int(f.readline().strip('').split()[1])
-    cell_count = num_cells
-
-    cell_list = []
-    for i in range(num_cells):
-        line = f.readline().strip('').split()
-        cell_list.append(line)
-
-    conn_list = []
-    num_conns = int(f.readline().strip('').split()[1])
-    for i in range(num_conns):
-        line = f.readline().strip('').split()
-        conn_list.append(line)
-
-    f.close()
-
-    file = volume_mesh_uge_file
-    f = open(file, 'r')
-    num_cells = int(f.readline().strip('').split()[1])
-
-    for i in range(num_cells):
-        line = f.readline().strip('').split()
-        line[0] = str(int(line[0]) + cell_count)
-        cell_list.append(line)
-
-    num_conns = int(f.readline().strip('').split()[1])
-    for i in range(num_conns):
-        line = f.readline().strip('').split()
-        line[0] = str(int(line[0]) + cell_count)
-        line[1] = str(int(line[1]) + cell_count)
-        conn_list.append(line)
-
-    f.close()
-
-    epsilon = 1.e-3
-    area = 1.e9
-
-    for dat in common_dat:
-        conn_list.append([cell_list[int(dat[0]) - 1][0], cell_list[int(dat[1]) - 1][0],
-                          str(float(cell_list[int(dat[0]) - 1][1]) + epsilon),
-                          str(float(cell_list[int(dat[0]) - 1][2]) + epsilon),
-                          str(float(cell_list[int(dat[0]) - 1][3]) + epsilon), str(area)])
-
-    for dat in common_dat:
-        cell_list[int(dat[1]) - 1][1] = str(float(cell_list[int(dat[1]) - 1][1]) + epsilon)
-        cell_list[int(dat[1]) - 1][2] = str(float(cell_list[int(dat[1]) - 1][2]) + epsilon)
-        cell_list[int(dat[1]) - 1][3] = str(float(cell_list[int(dat[1]) - 1][3]) + epsilon)
-
-    with open(combined_uge_file, 'w') as f:
-        f.write('CELLS\t%i\n' % len(cell_list))
-        for cell in cell_list:
-            f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
-                int(cell[0]), float(cell[1]), float(cell[2]), float(cell[3]), float(cell[4])))
-        f.write('CONNECTIONS\t%i\n' % len(conn_list))
-        for conn in conn_list:
-            f.write('%i\t%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
-                int(conn[0]), int(conn[1]), float(conn[2]), float(conn[3]), float(conn[4]), float(conn[5])))
-
 def inp2gmv(self, inp_file=''):
+    """ Convert inp file to gmv file, for general mesh viewer .
+    
+    Kwargs:
+        inp_file (str): name of inp file
+    """
 
     if inp_file:
         self._inp_file = inp_file
@@ -319,7 +261,8 @@ def inp2gmv(self, inp_file=''):
 
 
 def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
-
+    """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
+    """
     print("--> Writing Perms and Correct Volume Areas")
     if inp_file:
         self._inp_file = inp_file
@@ -559,7 +502,8 @@ def uncorrelated(sigma):
         
 
 def parse_pflotran_vtk(self, grid_vtk_file=''): 
-
+    """ Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.
+    """
     print '--> Parsing PFLOTRAN output'
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
     out_dir = 'parsed_vtk_cpp'
@@ -607,8 +551,7 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
 
 def inp2vtk_python(self, inp_file=''):
     import pyvtk as pv
-    """
-    :rtype : object
+    """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
     if self._inp_file:
         inp_file = self._inp_file
@@ -659,6 +602,7 @@ def inp2vtk_python(self, inp_file=''):
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
+    """ Replace CELL_DATA with POINT_DATA in the VTK output."""
     print '--> Parsing PFLOTRAN output'
     if grid_vtk_file:
         self._vtk_file = grid_vtk_file

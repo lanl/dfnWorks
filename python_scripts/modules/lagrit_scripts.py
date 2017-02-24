@@ -1,8 +1,6 @@
 """
-.. file:: lagrit_scripts.py
+.. module:: lagrit_scripts.py
    :synopsis: create lagrit scripts for meshing dfn using LaGriT 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """

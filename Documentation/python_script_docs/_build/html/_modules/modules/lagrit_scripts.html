@@ -1,0 +1,901 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>modules.lagrit_scripts &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.transport">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfntools">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_output">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.meshdfn">Mesh DFN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.run_meshing">Parallel meshing module</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>modules.lagrit_scripts</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for modules.lagrit_scripts</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: lagrit_scripts.py</span>
+<span class="sd">   :synopsis: create lagrit scripts for meshing dfn using LaGriT </span>
+<span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">rmtree</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">arcsin</span>
+
+<div class="viewcode-block" id="create_parameter_mlgi_file"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.create_parameter_mlgi_file">[docs]</a><span class="k">def</span> <span class="nf">create_parameter_mlgi_file</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">refine_dist</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; create parameter_mgli_files</span>
+<span class="sd">        Outputs parameteri.mlgi files used in running LaGriT Scripts</span>
+<span class="sd">        Inputs:</span>
+<span class="sd">        num_poly: Number of polygons</span>
+<span class="sd">        h: meshing length scale</span>
+<span class="sd">        slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution</span>
+<span class="sd">        refine_dist: distance used in coarsing function, default = 0.5,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+	
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Creating parameter*.mlgi files&quot;</span><span class="p">)</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">&#39;parameters&#39;</span><span class="p">)</span>
+	<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+		<span class="n">rmtree</span><span class="p">(</span><span class="s">&#39;parameters&#39;</span><span class="p">)</span>	
+		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">&#39;parameters&#39;</span><span class="p">)</span>
+
+	<span class="c"># Extrude and Translate computation</span>
+	<span class="c"># Parameters, delta: buffer zone, amount of h/2 we remove from around line</span>
+	<span class="c"># h_extrude hieght of rectangle extruded from line of intersection</span>
+	<span class="c"># r_radius: Upper bound on radius of circumscribed circle around rectangle</span>
+	<span class="c"># h_trans : amount needed to translate to create delta buffer</span>
+	<span class="c"># It&#39;s  just a little trig! </span>
+	<span class="n">delta</span> <span class="o">=</span> <span class="mf">0.75</span>
+	<span class="n">h_extrude</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">h</span> <span class="c"># upper limit on spacing of points on interssction line</span>
+	<span class="n">h_radius</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="mf">0.5</span><span class="o">*</span><span class="n">h_extrude</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">h_extrude</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">h_trans</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">h_extrude</span> <span class="o">+</span> <span class="n">h_radius</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">arcsin</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span>
+
+	<span class="c">#Go through the list and write out parameter file for each polygon</span>
+	<span class="c">#to be an input file for LaGriT</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="n">genfromtxt</span><span class="p">(</span><span class="s">&#39;poly_info.dat&#39;</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_poly</span><span class="p">):</span>
+		
+		<span class="n">frac_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+		<span class="n">long_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>  	
+		<span class="n">theta</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>	
+		<span class="n">x1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>	
+		<span class="n">y1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>	
+		<span class="n">z1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>	
+		<span class="n">x2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>	
+		<span class="n">y2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>	
+		<span class="n">z2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>	
+		<span class="n">family</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+		<span class="n">fparameter_name</span> <span class="o">=</span> <span class="s">&#39;parameters/parameters_&#39;</span> <span class="o">+</span> <span class="n">long_name</span> <span class="o">+</span> <span class="s">&#39;.mlgi&#39;</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fparameter_name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / ID / &#39;</span> <span class="o">+</span> <span class="n">frac_id</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / OUTFILE_GMV / mesh_&#39;</span> <span class="o">+</span> <span class="n">long_name</span> <span class="o">+</span> <span class="s">&#39;.gmv</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / OUTFILE_AVS / mesh_&#39;</span> <span class="o">+</span> <span class="n">long_name</span> <span class="o">+</span> <span class="s">&#39;.inp</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / OUTFILE_LG / mesh_&#39;</span> <span class="o">+</span> <span class="n">long_name</span> <span class="o">+</span> <span class="s">&#39;.lg</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / POLY_FILE / poly_&#39;</span> <span class="o">+</span> <span class="n">long_name</span> <span class="o">+</span> <span class="s">&#39;.inp</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / QUAD_FILE / tmp_quad_&#39;</span> <span class="o">+</span> <span class="n">frac_id</span> <span class="o">+</span> <span class="s">&#39;.inp</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / EXCAVATE_FILE / tmp_excavate_&#39;</span> <span class="o">+</span> <span class="n">frac_id</span> <span class="o">+</span> <span class="s">&#39;.inp</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PRE_FINAL_FILE / tmp_pre_final_&#39;</span><span class="o">+</span><span class="n">frac_id</span> <span class="o">+</span> <span class="s">&#39;.inp</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_&#39;</span> <span class="o">+</span> <span class="n">frac_id</span> <span class="o">+</span><span class="s">&#39;.gmv</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_EPS / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE2 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_EXTRUDE / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">h_extrude</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_TRANS / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">h_trans</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_PRIME / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mf">0.8</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_PRIME2 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mf">0.3</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE3 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE8 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE16 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE32 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">32</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / H_SCALE64 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">64</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PURTURB8 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PURTURB16 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PURTURB32 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">32</span><span class="o">*</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PURTURB64 / &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">64</span><span class="o">*</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PARAM_A / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>	
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PARAM_B / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">slope</span><span class="o">*</span><span class="n">refine_dist</span><span class="p">))</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>	
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PARAM_A2 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">slope</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>	
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / PARAM_B2 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">slope</span><span class="o">*</span><span class="n">refine_dist</span><span class="p">))</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>	
+		
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / THETA  / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / X1 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / Y1 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / Z1 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / X2 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / Y2 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / Z2 / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;define / family / &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">family</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;finish </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Creating parameter*.mlgi files: Complete</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="create_lagrit_scripts"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.create_lagrit_scripts">[docs]</a><span class="k">def</span> <span class="nf">create_lagrit_scripts</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span> 
+	<span class="sd">&quot;&quot;&quot;create_lagrit_scripts</span>
+<span class="sd">	Creates LaGriT script to be run for each polygon</span>
+<span class="sd">	Inputs: visual_mode (True / False)</span>
+<span class="sd">	ncpu: number of cpus</span>
+<span class="sd">	refine_fractor: used rectangles</span>
+<span class="sd">	produnction_mode (True/False)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c">#Section 2 : Creates LaGriT script to be run for each polygon</span>
+	<span class="c">#Switches to control the LaGriT output</span>
+	<span class="c">#Network visualization mode True ouputs the triangulated mesh</span>
+	<span class="c">#for each fracture without any refinement. The goal is to visualize</span>
+	<span class="c">#the network structure instead of outputing the appropriate values</span>
+	<span class="c">#for computation</span>
+
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Writing LaGriT Control Files&quot;</span><span class="p">)</span>
+	<span class="c">#Go through the list and write out parameter file for each polygon</span>
+	<span class="c">#to be an input file for LaGriT</span>
+
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;infile </span><span class="si">%s</span><span class="s"> </span>
+<span class="s">#LaGriT Script</span>
+<span class="s"># Name the input files that contain the polygons </span>
+<span class="s"># and lines of intersection. </span>
+
+<span class="s">define / POLY_FILE / </span><span class="si">%s</span><span class="s"> </span>
+<span class="s">define / LINE_FILE / </span><span class="si">%s</span><span class="s"> </span>
+<span class="s">define / OUTPUT_INTER_ID_SSINT / id_tri_node_CPU</span><span class="si">%d</span><span class="s">.list</span>
+
+<span class="s"># Define parameters such as: </span>
+<span class="s"># length scale to refine triangular mesh  </span>
+<span class="s"># purturbation distance to break symmetry of refined mesh# </span>
+
+<span class="s"># Read in line and polygon files  </span>
+<span class="s">read / POLY_FILE / mo_poly_work</span>
+<span class="s">&quot;&quot;&quot;</span> 
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">read / LINE_FILE / mo_line_work </span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="c">#</span>
+	<span class="c"># START: Refine the point distribution</span>
+	<span class="c">#</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">refine_factor</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;extrude / mo_quad_work / mo_line_work / const / H_SCALE8 / volume / 0. 0. 1.  </span><span class="se">\n</span><span class="s">&#39;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">refine_factor</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">refine_factor</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+			
+		<span class="k">if</span> <span class="p">(</span><span class="n">refine_factor</span> <span class="o">==</span> <span class="mi">8</span><span class="p">):</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span><span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span><span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span><span class="s">&#39;refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  </span><span class="se">\n</span><span class="s">&#39;</span>
+			
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot; </span>
+<span class="s">grid2grid / tree_to_fe / mo_quad_work / mo_quad_work  </span>
+<span class="s">extract/surfmesh/1,0,0/mo_ext_work/mo_quad_work/external </span>
+<span class="s">compute / distance_field / mo_ext_work / mo_line_work / dfield </span>
+<span class="s">pset / pdel_work / attribute / dfield / 1 0 0 / H_SCALE3 / gt </span>
+<span class="s">rmpoint / pset get pdel_work / inclusive </span>
+<span class="s">rmpoint / compress  </span>
+
+<span class="s">cmo / delete / mo_quad_work </span>
+<span class="s">cmo / delete / mo_line_work</span>
+<span class="s">cmo / move / mo_line_work / mo_ext_work </span>
+<span class="s">rmpoint / compress  </span>
+<span class="s">&quot;&quot;&quot;</span>	
+		<span class="c"># END: Refine the point distribution</span>
+		<span class="c">#</span>
+	<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">## Triangulate Fracture without point addition </span>
+<span class="s">cmo / create / mo_pts / / / triplane </span>
+<span class="s">copypts / mo_pts / mo_poly_work </span>
+<span class="s">cmo / select / mo_pts </span>
+<span class="s">triangulate / counterclockwise </span>
+
+<span class="s">cmo / setatt / mo_pts / imt / 1 0 0 / ID </span>
+<span class="s">cmo / setatt / mo_pts / itetclr / 1 0 0 / ID </span>
+<span class="s">resetpts / itp </span>
+<span class="s">cmo / delete / mo_poly_work </span>
+<span class="s">cmo / select / mo_pts </span>
+
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s"># Creates a Coarse Mesh and then refines it using the distance field from intersections</span>
+<span class="s">massage / H_SCALE64 / H_EPS  / H_EPS</span>
+<span class="s">recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+<span class="s">resetpts / itp</span>
+<span class="s">pset / p_move / attribute / itp / 1 0 0 / 0 / eq</span>
+<span class="s">perturb / pset get p_move / PURTURB64 PURTURB64 0.0</span>
+<span class="s">recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+<span class="s">smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+
+<span class="s">massage / H_SCALE32 / H_EPS / H_EPS</span>
+<span class="s">resetpts / itp</span>
+<span class="s">pset / p_move / attribute / itp / 1 0 0 / 0 / eq</span>
+<span class="s">perturb / pset get p_move / PURTURB32 PURTURB32 0.0</span>
+<span class="s">recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+<span class="s">smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+
+<span class="s">massage / H_SCALE16 / H_EPS  / H_EPS</span>
+<span class="s">resetpts / itp</span>
+<span class="s">pset / p_move / attribute / itp / 1 0 0 / 0 / eq</span>
+<span class="s">perturb / pset get p_move / PURTURB16 PURTURB16 0.0</span>
+<span class="s">recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+<span class="s">smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+
+<span class="s">massage / H_SCALE8 / H_EPS / H_EPS</span>
+<span class="s">resetpts / itp</span>
+<span class="s">pset / p_move / attribute / itp / 1 0 0 / 0 / eq</span>
+<span class="s">perturb / pset get p_move / PURTURB8 PURTURB8 0.0</span>
+<span class="s">recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+<span class="s">smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+
+<span class="s">cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes </span>
+<span class="s">cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes </span>
+
+<span class="s"># Massage points based on linear function down to h_prime</span>
+<span class="s">massage2/user_function2.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength </span>
+
+<span class="s">assign///maxiter_sm/1 </span>
+<span class="s">smooth;recon 0;smooth;recon 0;smooth;recon 0</span>
+
+<span class="s">assign///maxiter_sm/10</span>
+
+<span class="s">massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength </span>
+<span class="s">cmo / DELATT / mo_pts / rf_field_name </span>
+
+<span class="s"># Extrude and excavate the lines of intersection</span>
+<span class="s">cmo / select / mo_line_work </span>
+
+<span class="s">extrude / mo_quad / mo_line_work / const / H_EXTRUDE / volume / 0. 0. 1. </span>
+<span class="s">&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">production_mode</span><span class="p">:</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">dump / avs / QUAD_FILE / mo_quad </span>
+<span class="s">cmo / delete / mo_quad </span>
+<span class="s">read / QUAD_FILE / mo_quad </span>
+<span class="s">&quot;&quot;&quot;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;cmo / select / mo_quad </span><span class="se">\n</span><span class="s">&#39;</span>
+		
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s"># Translate extruced lines of intersectino down slightly to excavate </span>
+<span class="s"># nearby points from the mesh </span>
+
+<span class="s">trans / 1 0 0 / 0. 0. 0. / 0. 0. H_TRANS</span>
+<span class="s">hextotet / 2 / mo_tri / mo_quad </span>
+<span class="s">cmo / delete / mo_quad </span>
+<span class="s">addmesh / excavate / mo_excavate / mo_pts / mo_tri</span>
+
+<span class="s">##### DEBUG #####</span>
+<span class="s"># If meshing fails, uncomment and rerun the script to get tmp meshes, </span>
+<span class="s"># which are otherwise not output </span>
+<span class="s">#dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0</span>
+<span class="s">#dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0</span>
+<span class="s">#dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0</span>
+<span class="s">#finish</span>
+<span class="s">#####</span>
+<span class="s"> </span>
+<span class="s">cmo / delete / mo_tri </span>
+<span class="s">cmo / delete / mo_pts </span>
+
+<span class="s"># recompute dfield </span>
+<span class="s">cmo / create / mo_final / / / triplane </span>
+<span class="s">copypts / mo_final / mo_excavate  </span>
+<span class="s">compute / distance_field / mo_final / mo_line_work / dfield </span>
+<span class="s">cmo / printatt / mo_final / dfield / minmax </span>
+<span class="s">pset / pdel / attribute dfield / 1,0,0 / lt H_PRIME2 </span>
+<span class="s">rmpoint / pset,get,pdel / inclusive  </span>
+<span class="s">rmpoint / compress  </span>
+
+<span class="s">copypts / mo_final / mo_line_work  </span>
+
+<span class="s">cmo / select / mo_final </span>
+<span class="s">cmo / setatt / mo_final / imt / 1 0 0 / ID </span>
+<span class="s">cmo / setatt / mo_final / itp / 1 0 0 / 0 </span>
+<span class="s">cmo / setatt / mo_final / itetclr / 1 0 0 / ID </span>
+<span class="s"># cmo / printatt / mo_final / -xyz- / minmax </span>
+<span class="s">trans/ 1 0 0 / zero / xyz </span>
+<span class="s">cmo / setatt / mo_final / zic / 1 0 0 / 0.0 </span>
+<span class="s">cmo / printatt / mo_final / -xyz- / minmax </span>
+<span class="s">connect </span>
+
+<span class="s">trans / 1 0 0 / original / xyz </span>
+<span class="s">cmo / printatt / mo_final / -xyz- / minmax </span>
+
+<span class="s">#cmo / delete / mo_line_work </span>
+<span class="s">cmo / delete / mo_excavate</span>
+<span class="s">cmo / select / mo_final </span>
+<span class="s">resetpts / itp </span>
+
+<span class="s">&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">production_mode</span><span class="p">:</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&#39;dump / gmv / PRE_FINAL_MASSAGE / mo_final </span><span class="se">\n</span><span class="s">&#39;</span>
+		
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">## Massage Mesh Away from Intersection </span>
+<span class="s">pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS </span>
+<span class="s">pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 </span>
+<span class="s">pset / pboundary / attribute / itp / 1,0,0 / eq / 10 </span>
+<span class="s">pset / psmooth / not / pregion pref pboundary </span>
+<span class="s">#massage / H_SCALE / 1.e-5 / 1.e-5 / pset get pref / &amp; </span>
+<span class="s">#nosmooth / strictmergelenth</span>
+
+<span class="s">assign///maxiter_sm/1 </span>
+
+<span class="s">smooth / position / esug / pset get psmooth; recon 0; </span>
+<span class="s">smooth / position / esug / pset get psmooth; recon 0; </span>
+<span class="s">smooth / position / esug / pset get psmooth; recon 0; </span>
+
+<span class="s">assign///maxiter_sm/10</span>
+<span class="s">###########################################</span>
+<span class="s"># nodes for Intersection / Mesh Connectivity Check </span>
+<span class="s">cmo / copy / mo_final_check / mo_final</span>
+<span class="s">#</span>
+<span class="s"># Define variables that are hard wired for this part of the workflow</span>
+<span class="s">define / MO_TRI_MESH_SSINT / mo_tri_tmp_subset</span>
+<span class="s">define / MO_LINE_MESH_SSINT / mo_line_tmp_subset</span>
+<span class="s">define / ATT_ID_INTERSECTION_SSINT / b_a</span>
+<span class="s">define / ATT_ID_SOURCE_SSINT / id_node_global</span>
+<span class="s">define / ATT_ID_SINK_SSINT / id_node_tri</span>
+<span class="s">#</span>
+<span class="s"># Before subsetting the mesh reate a node attribute containing the integer global node number</span>
+<span class="s">cmo / set_id / mo_final_check / node / ATT_ID_SOURCE_SSINT</span>
+<span class="s">#</span>
+<span class="s"># Subset the triangle mesh based on b_a node attribute ne 0</span>
+<span class="s">#</span>
+<span class="s">cmo / select / mo_final_check</span>
+<span class="s">pset / pkeep / attribute / ATT_ID_INTERSECTION_SSINT / 1 0 0 / ne / 0</span>
+<span class="s">pset / pall / seq / 1 0 0</span>
+<span class="s">pset / pdel / not pall pkeep</span>
+<span class="s">rmpoint / pset get pdel / exclusive</span>
+<span class="s">rmpoint / compress</span>
+<span class="s">#</span>
+<span class="s"># Create an integer node attribute in the line mesh to interpolate the triangle node number onto</span>
+<span class="s"># </span>
+<span class="s">cmo / addatt / mo_line_work / ATT_ID_SINK_SSINT / vint / scalar / nnodes</span>
+<span class="s">interpolate / voronoi / mo_line_work ATT_ID_SINK_SSINT / 1 0 0 / &amp;</span>
+<span class="s">                        mo_final_check  ATT_ID_SOURCE_SSINT</span>
+<span class="s">#</span>
+<span class="s"># Supress AVS output of a bunch of node attributes</span>
+<span class="s">#</span>
+<span class="s">cmo / modatt / mo_line_work / imt / ioflag / l</span>
+<span class="s">cmo / modatt / mo_line_work / itp / ioflag / l</span>
+<span class="s">cmo / modatt / mo_line_work / isn / ioflag / l</span>
+<span class="s">cmo / modatt / mo_line_work / icr / ioflag / l</span>
+<span class="s">cmo / modatt / mo_line_work / a_b / ioflag / l</span>
+<span class="s">cmo / modatt / mo_line_work / b_a / ioflag / l</span>
+<span class="s">#</span>
+<span class="s"># Output list of intersection nodes with the corrosponding node id number from the triangle mesh</span>
+
+<span class="s">dump / avs2 / OUTPUT_INTER_ID_SSINT / mo_line_work / 0 0 2 0</span>
+<span class="s">cmo / delete / mo_line_work</span>
+
+<span class="s">cmo / delete / mo_final_check</span>
+<span class="s"># nodes for intersection check over</span>
+
+<span class="s">cmo / select / mo_final </span>
+
+<span class="s">##### DEBUG</span>
+<span class="s"># write out mesh before it is rotate back into its final location</span>
+<span class="s"># Useful to compare with meshing workflow if something crashes</span>
+<span class="s">#dump / avs2 / tmp_mesh_2D.inp / mo_final / 1 1 1 0 </span>
+<span class="s">##### DEBUG</span>
+<span class="s"># Rotate facture back into original plane </span>
+<span class="s">rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/  </span>
+<span class="s">cmo / printatt / mo_final / -xyz- / minmax </span>
+<span class="s">recon 1 </span>
+
+<span class="s">resetpts / itp </span>
+
+<span class="s">cmo / addatt / mo_final / unit_area_normal / xyz / vnorm </span>
+<span class="s">cmo / addatt / mo_final / scalar / xnorm ynorm znorm / vnorm </span>
+<span class="s">cmo / DELATT / mo_final / vnorm </span>
+
+<span class="s">&quot;&quot;&quot;</span>
+		<span class="c"># Clean up before output to GMV/AVS</span>
+		<span class="k">if</span> <span class="n">production_mode</span><span class="p">:</span>
+			<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo / DELATT / mo_final / x_four </span>
+<span class="s">cmo / DELATT / mo_final / fac_n </span>
+<span class="s">cmo / DELATT / mo_final / rf_field_name </span>
+<span class="s">cmo / DELATT / mo_final / xnorm </span>
+<span class="s">cmo / DELATT / mo_final / ynorm </span>
+<span class="s">cmo / DELATT / mo_final / znorm </span>
+<span class="s">cmo / DELATT / mo_final / a_b </span>
+<span class="s">cmo / setatt / mo_final / ipolydat / no </span>
+<span class="s">cmo / modatt / mo_final / icr1 / ioflag / l </span>
+<span class="s">cmo / modatt / mo_final / isn1 / ioflag / l </span>
+<span class="s">	</span>
+<span class="s"># Create Family element set</span>
+<span class="s">cmo / addatt / mo_final / family_id / vint / scalar / nelements </span>
+<span class="s">cmo / setatt / mo_final / family_id / 1 0 0 / family</span>
+<span class="s">	</span>
+<span class="s">&quot;&quot;&quot;</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">dump / OUTFILE_AVS / mo_final</span>
+<span class="s">dump / lagrit / OUTFILE_LG / mo_final</span>
+<span class="s">&quot;&quot;&quot;</span> 
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo / setatt / mo_pts / imt / 1 0 0 / ID </span>
+<span class="s">cmo / setatt / mo_pts / itetclr / 1 0 0 / ID </span>
+<span class="s">resetpts / itp </span>
+
+<span class="s">cmo / setatt / mo_line_work / imt / 1 0 0 / ID </span>
+<span class="s">cmo / setatt / mo_line_work / itetclr / 1 0 0 / ID</span>
+
+<span class="s">addmesh / merge / mo_final / mo_pts / mo_line_work </span>
+<span class="s">cmo / delete / mo_pts </span>
+<span class="s">cmo / delete / mo_line_work </span>
+<span class="s">	</span>
+<span class="s"># Create Family element set</span>
+<span class="s">cmo / addatt / mo_final / family_id / vint / scalar / nelements </span>
+<span class="s">cmo / setatt / mo_final / family_id / 1 0 0 / family</span>
+
+<span class="s">cmo / select / mo_final </span>
+<span class="s"># Rotate </span>
+<span class="s">rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/ </span>
+
+<span class="s">cmo / printatt / mo_final / -xyz- / minmax </span>
+<span class="s">cmo / modatt / mo_final / icr1 / ioflag / l </span>
+<span class="s">cmo / modatt / mo_final / isn1 / ioflag / l</span>
+<span class="s">dump / lagrit / OUTFILE_LG / mo_final </span>
+<span class="s">&quot;&quot;&quot;</span>
+
+	<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">quality </span>
+<span class="s">cmo / delete / mo_final </span>
+<span class="s">cmo / status / brief </span>
+<span class="s">finish</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+	<span class="c"># Create a different Run file for each CPU</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">ncpu</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">file_name</span> <span class="o">=</span> <span class="s">&#39;mesh_poly_CPU</span><span class="si">%d</span><span class="s">.lgi&#39;</span><span class="o">%</span><span class="n">i</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+		<span class="c">#Name of parameter Input File</span>
+		<span class="n">fparameter_name</span> <span class="o">=</span> <span class="s">&#39;parameters_CPU</span><span class="si">%d</span><span class="s">.mlgi&#39;</span><span class="o">%</span><span class="n">i</span> 
+		<span class="n">fintersection_name</span> <span class="o">=</span> <span class="s">&#39;intersections_CPU</span><span class="si">%d</span><span class="s">.inp&#39;</span><span class="o">%</span><span class="n">i</span>
+		<span class="n">fpoly_name</span> <span class="o">=</span> <span class="s">&#39;poly_CPU</span><span class="si">%d</span><span class="s">.inp&#39;</span><span class="o">%</span><span class="n">i</span>
+		<span class="n">parameters</span> <span class="o">=</span> <span class="p">(</span><span class="n">fparameter_name</span><span class="p">,</span> <span class="n">fpoly_name</span><span class="p">,</span> <span class="n">fintersection_name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="o">%</span><span class="n">parameters</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	<span class="k">print</span> <span class="s">&#39;Writing LaGriT Control Files: Complete&#39;</span>
+</div>
+<div class="viewcode-block" id="create_user_functions"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.create_user_functions">[docs]</a><span class="k">def</span> <span class="nf">create_user_functions</span><span class="p">():</span>
+	<span class="sd">&quot;&quot;&quot; Create user_function.lgi files for meshing&quot;&quot;&quot;</span>
+
+	<span class="c"># user_function.lgi useing PARAM_A and PARAM_B for slope and intercept</span>
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo/DELATT/mo_pts/dfield</span>
+<span class="s">compute / distance_field / mo_pts / mo_line_work / dfield</span>
+<span class="s">math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A/</span>
+<span class="s">math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B/</span>
+<span class="s">cmo/copyatt/mo_pts/mo_pts/fac_n/x_four</span>
+<span class="s">finish</span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;user_function.lgi&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+	<span class="c"># user_function2.lgi uses PARAM_A2 and PARAM_B2 for slope and intercept</span>
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo/DELATT/mo_pts/dfield</span>
+<span class="s">compute / distance_field / mo_pts / mo_line_work / dfield</span>
+<span class="s">math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A2/</span>
+<span class="s">math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B2/</span>
+<span class="s">cmo/copyatt/mo_pts/mo_pts/fac_n/x_four</span>
+<span class="s">finish</span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;user_function2.lgi&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+</div>
+<div class="viewcode-block" id="create_merge_poly_files"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.create_merge_poly_files">[docs]</a><span class="k">def</span> <span class="nf">create_merge_poly_files</span><span class="p">(</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Section 4 : Create merge_poly file</span>
+<span class="sd">	 Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object</span>
+<span class="sd">	 Then duplicate points are removed from the main mesh using EPS_FILTER </span>
+<span class="sd">	 The points are compressed, and then written in the files full_mesh.gmv, full_mesh.inp, and an FEHM dump is preformed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+
+	<span class="c"># This needs to be re-written using PyLaGriT so we can check </span>
+	<span class="c"># that the number of dudded points is that which we expect</span>
+	<span class="k">print</span> <span class="s">&quot;Writing : merge_poly.lgi&quot;</span>
+
+	<span class="n">part_size</span> <span class="o">=</span> <span class="n">num_poly</span><span class="o">/</span><span class="n">ncpu</span> <span class="o">+</span> <span class="mi">1</span> <span class="c">###v number of fractures in each part</span>
+	<span class="n">endis</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">part_size</span><span class="p">,</span> <span class="n">num_poly</span> <span class="o">+</span> <span class="n">part_size</span><span class="p">,</span> <span class="n">part_size</span><span class="p">)</span> 
+	<span class="n">endis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_poly</span>
+
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s"># Change to read LaGriT</span>
+<span class="s">read / lagrit /  </span><span class="si">%s</span><span class="s"> / mo_</span><span class="si">%d</span><span class="s"> / binary</span>
+<span class="s">cmo / move / mo_</span><span class="si">%d</span><span class="s"> / mo_final </span>
+<span class="s">define / MO_NAME_FRAC / mo_</span><span class="si">%d</span><span class="s"></span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo / addatt / MO_NAME_FRAC / volume / evol_onen</span>
+<span class="s">math / sum / MO_NAME_FRAC / evol_sum / 1 0 0 / MO_NAME_FRAC / evol_one </span>
+<span class="s">&quot;&quot;&quot;</span> 
+	<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">addmesh / merge / cmo_tmp / cmo_tmp / mo_</span><span class="si">%d</span><span class="s"></span>
+<span class="s">cmo / delete / mo_</span><span class="si">%d</span><span class="s"></span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="n">lagrit_input_2</span> <span class="o">=</span> <span class="s">&#39;#Writing out merged fractures</span><span class="se">\n</span><span class="s">&#39;</span> 
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>
+		<span class="n">lagrit_input_2</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">mo / addatt/ cmo_tmp / volume / evol_all</span>
+<span class="s">math / sum / cmo_tmp / evol_sum / 1 0 0 / cmo_tmp / evol_all &quot;&quot;&quot;</span>
+	<span class="n">lagrit_input_2</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot; </span>
+<span class="s">cmo select cmo_tmp</span>
+<span class="s">dump lagrit part</span><span class="si">%d</span><span class="s">.lg cmo_tmp</span>
+<span class="s">finish </span><span class="se">\n</span><span class="s"> </span>
+<span class="s">&quot;&quot;&quot;</span>
+
+	<span class="n">j</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># Counter for cpus </span>
+	<span class="n">fout</span> <span class="o">=</span> <span class="s">&#39;merge_poly_part_1.lgi&#39;</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_poly</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">tmp</span> <span class="o">=</span> <span class="s">&#39;mesh_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span><span class="s">&#39;.lg&#39;</span>
+
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="o">%</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+		<span class="c"># if i is the last fracture in the cpu set</span>
+		<span class="c"># move to the next cpu set	</span>
+		<span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">endis</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+			<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input_2</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+			<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+			<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			
+			<span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="n">fout</span> <span class="o">=</span> <span class="s">&#39;merge_poly_part_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;.lgi&#39;</span>
+			<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span> 
+
+	<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span> 
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> 
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span> <span class="c">###</span>
+
+	<span class="c">## Write LaGriT file for merge parts of the mesh and remove duplicate points </span>
+
+	<span class="n">lagrit_input</span>  <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">read / lagrit / part</span><span class="si">%d</span><span class="s">.lg / junk / binary</span>
+<span class="s">addmesh / merge / mo_all / mo_all / cmo_tmp </span>
+<span class="s">cmo / delete / cmo_tmp </span>
+
+<span class="s">	&quot;&quot;&quot;</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;merge_rmpts.lgi&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">endis</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+
+	<span class="c"># Append meshes complete</span>
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot; </span>
+<span class="s"># Appending the meshes complete </span>
+<span class="s"># LaGriT Code to remove duplicates and output the mesh</span>
+<span class="s">cmo / select / mo_all </span>
+<span class="s">#recon 1</span>
+<span class="s">##### JDH #####</span>
+<span class="s">##### MAKE H SENSITIVE #######</span>
+<span class="s">define / EPS / 1.e-6</span>
+<span class="s">define / EPS_FILTER / 1.e-4 </span>
+<span class="s">##### MAKE H SENSITIVE #######</span>
+<span class="s">pset / pinter / attribute / dfield / 1,0,0 / lt / EPS </span>
+<span class="s">filter / pset get pinter / EPS_FILTER </span>
+<span class="s">pset / pinter / delete</span>
+<span class="s">rmpoint / compress </span>
+<span class="s"># SORT can affect a_b attribute</span>
+<span class="s">sort / mo_all / index / ascending / ikey / imt xic yic zic </span>
+<span class="s">reorder / mo_all / ikey </span>
+<span class="s">cmo / DELATT / mo_all / ikey</span>
+<span class="s">&quot;&quot;&quot;</span>
+	 
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span> 
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">resetpts / itp </span>
+<span class="s">boundary_components </span>
+<span class="s">dump / full_mesh.gmv / mo_all</span>
+<span class="s">dump / full_mesh.inp / mo_all</span>
+<span class="s">dump / lagrit / full_mesh.lg / mo_all</span>
+<span class="s">dump / pflotran / full_mesh / mo_all / nofilter_zero</span>
+<span class="s">dump / stor / tri_fracture / mo_all / ascii</span>
+
+<span class="s"># Dump out Material ID Dat file</span>
+<span class="s">cmo / modatt / mo_all / isn / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / x_four / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / fac_n / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / dfield / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / rf_field / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / a_b / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / b_a / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / xnorm / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / ynorm / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / znorm / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / evol_one / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / evol_all / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / numbnd / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / id_numb / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / evol_all / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / itp / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / icr / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / meshid / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / id_n_1 / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / id_n_2 / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / pt_gtg / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / pt_gtg / ioflag / l</span>
+<span class="s"># Dump out Material ID Dat file</span>
+<span class="s">dump / avs2 / materialid.dat / mo_all / 0 0 2 0</span>
+
+<span class="s">cmo / modatt / mo_all / imt1 / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / family_id / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / evol_onen / ioflag / l</span>
+<span class="s"># Dump mesh with no attributes for viz</span>
+<span class="s">dump / full_mesh_viz.inp / mo_all</span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cmo / modatt / mo_all / icr1 / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / isn1 / ioflag / l</span>
+<span class="s">cmo / modatt / mo_all / itp1 / ioflag / l</span>
+<span class="s">dump / reduced_full_mesh.gmv / mo_all </span>
+<span class="s">dump / reduced_full_mesh.inp / mo_all</span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="n">lagrit_input</span> <span class="o">+=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">quality </span>
+<span class="s">finish</span>
+<span class="s">&quot;&quot;&quot;</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+	<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">endis</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="define_zones"><a class="viewcode-back" href="../../modules.html#modules.lagrit_scripts.define_zones">[docs]</a><span class="k">def</span> <span class="nf">define_zones</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;	</span>
+<span class="sd">	Creates and runs LaGriT script to define domain size</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
+	<span class="n">eps</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">3</span>
+	<span class="n">parameters</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> \
+		<span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> \
+		<span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;z&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;z&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+
+	<span class="n">lagrit_input</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">read / lagrit / full_mesh.lg / mo_all / binary </span>
+<span class="s">define / XMAX / </span><span class="si">%e</span><span class="s"> </span>
+<span class="s">define / XMIN / </span><span class="si">%e</span><span class="s"> </span>
+<span class="s">define / YMAX / </span><span class="si">%e</span><span class="s"> </span>
+<span class="s">define / YMIN / </span><span class="si">%e</span><span class="s"> </span>
+<span class="s">define / ZMAX / </span><span class="si">%e</span><span class="s"> </span>
+<span class="s">define / ZMIN / </span><span class="si">%e</span><span class="s"> </span>
+
+<span class="s">pset / top/ attribute / zic / 1,0,0/ gt /ZMAX </span>
+<span class="s">pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN </span>
+<span class="s">pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN</span>
+<span class="s">pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX</span>
+<span class="s">pset / right_e / attribute/ xic/1,0,0/ gt/XMAX</span>
+<span class="s">pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN</span>
+<span class="s">pset/-all-/ zone / boundary / ascii</span>
+<span class="s">finish</span>
+<span class="s">&#39;&#39;&#39;</span>
+	<span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;bound_zones.lgi&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_input</span><span class="o">%</span><span class="n">parameters</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;lagrit_dfn&#39;</span><span class="p">]</span><span class="o">+</span> <span class="s">&quot; &lt; bound_zones.lgi &gt; boundary_output.txt &quot;</span><span class="p">)</span>
+	
+	<span class="c"># copies boundary zone files for PFLOTRAN </span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_bottom.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_bottom.zone&#39;</span><span class="p">)</span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_left_w.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_left_w.zone&#39;</span><span class="p">)</span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_front_s.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_front_s.zone&#39;</span><span class="p">)</span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_right_e.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_right_e.zone&#39;</span><span class="p">)</span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_back_n.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_back_n.zone&#39;</span><span class="p">)</span>
+	<span class="n">copy</span><span class="p">(</span><span class="s">&#39;boundary_top.zone&#39;</span><span class="p">,</span><span class="s">&#39;pboundary_top.zone&#39;</span><span class="p">)</span>
+	
+	<span class="c"># edits zone files to concatenate for dfnTrans</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;$d&#39; boundary_top.zone &quot;</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;$d&#39; boundary_bottom.zone &quot;</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;$d&#39; boundary_left_w.zone &quot;</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;$d&#39; boundary_front_s.zone &quot;</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;$d&#39; boundary_right_e.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;1d&#39; boundary_bottom.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;1d&#39; boundary_left_w.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;1d&#39; boundary_front_s.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;1d&#39; boundary_right_e.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sed -i &#39;1d&#39; boundary_back_n.zone &quot;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;cat boundary_top.zone boundary_bottom.zone boundary_left_w.zone</span><span class="se">\</span>
+<span class="s">	boundary_front_s.zone boundary_right_e.zone </span><span class="se">\</span>
+<span class="s">	boundary_back_n.zone  &gt; allboundaries.zone &quot;</span><span class="p">)</span>
+
+	<span class="c"># Remove Left over zone files</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_bottom.zone&#39;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_top.zone&#39;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_left_w.zone&#39;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_right_e.zone&#39;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_front_s.zone&#39;</span><span class="p">)</span>
+	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;boundary_back_n.zone&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

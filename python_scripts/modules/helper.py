@@ -23,8 +23,6 @@ def commandline_options():
               help="Number of CPUs")
     parser.add_argument("-input", "--input_file", default="", type=str,
               help="input file with paths to run files") 
-    parser.add_argument("-rfield", "--field", default="", type=str,
-              help="level of random field") 
     parser.add_argument("-gen", "--dfnGen", default="", type=str,
               help="Path to dfnGen run file") 
     parser.add_argument("-flow", "--dfnFlow", default="", type=str,
@@ -85,6 +83,8 @@ def print_run_time(local_jobname):
     print("\n")
 
 def get_num_frac():
+    """ Get the number of fractures from the params.txt file.
+    """
     try: 
         f = open('params.txt')
         _num_frac = int(f.readline())
@@ -93,7 +93,13 @@ def get_num_frac():
         print '-->ERROR getting number of fractures, no params.txt file'
 
 class input_helper():
-    
+    """ Functions to help parse the input file and check input parameters.
+        
+        Attributes:
+            params (list): list of parameters specified in the input file.
+            minFracSize (float): the minimum fracture size.
+    """
+
     def __init__(self, params, minFracSize):
         self.params = params
         self.minFracSize = minFracSize
@@ -101,25 +107,30 @@ class input_helper():
     ##                              Helper Functions                          ##
     ## ====================================================================== ##
 
-    ## '{1,2,3}' --> [1,2,3]
     def curlyToList(self, curlyList):
+        """ '{1,2,3}' --> [1,2,3]
+        """
         return re.sub("{|}", "", curlyList).strip().split(",")
 
-    ## [1,2,3] --> '{1,2,3}'   for writing output
     def listToCurly(self, strList):
-         curl = re.sub(r'\[','{', strList)
-         curl = re.sub(r'\]','}', curl)
-         curl = re.sub(r"\'", '', curl)
-         return curl 
+        """ [1,2,3] --> '{1,2,3}'   for writing output
+        """
+        curl = re.sub(r'\[','{', strList)
+        curl = re.sub(r'\]','}', curl)
+        curl = re.sub(r"\'", '', curl)
+        return curl 
 
     def hasCurlys(self, line, key):
+        """ Checks to see that every { has a matching }.
+        """
         if '{' in line and '}' in line: return True 
         elif '{' in line or '}' in line: 
             self.error("Line defining \"{}\" contains a single curly brace.".format(key))
         return False
 
-    ## Use to get key's value in params. writing always false  
     def valueOf(self, key, writing = False):
+        """ Use to get key's value in params. writing always false  
+        """
         if (not writing) and (len(self.params[key]) > 1):
             self.error("\"{}\" can only correspond to 1 list. {} lists have been defined.".format(key, len(self.params[key])))
         #try:    
@@ -131,6 +142,8 @@ class input_helper():
         #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
     def getGroups(self, line, valList, key):
+        """ extract values between { and } 
+        """
         curlyGroup = re.compile('({.*?})')
         groups = re.findall(curlyGroup, line)
         for group in groups:
@@ -141,30 +154,46 @@ class input_helper():
             self.error("Unexpected character found while parsing \"{}\".".format(key))
 
     def valHelper(self, line, valList, key):
+        """ pulls values from culry brackets 
+        """
         if self.hasCurlys(line, key):
             self.getGroups(line, valList, key)
         else:
             valList.append(line)
         
     def error(self, errString):
+        """ print an error
+        
+        Args:
+            errString (str): a string describing the error
+        """
         print("\nERROR --- " + errString)
         print("\n----Program terminated while parsing input----\n")
         sys.exit(1)
 
     def warning(self, warnString):
+        """ print warning
+        
+        Args:
+            warnStinrg (str): a string with the warning
+        """
         print("WARNING --- " + warnString)
     
     def warning(self, warnString, warningFile=''):
+        """ print a warning to a file (currently does not work)"""
         #global warningFile
         print("WARNING --- " + warnString)
         #warningFile.write("WARNING --- " + warnString + "\n")
 
     def isNegative(self, num): 
+        """"returns True if num is negative, false otherwise
+        """
         return True if num < 0 else False
 
-    ## Makes sure at least one polygon family has been defined in nFamRect or nFamEll
-    ##      OR that there is a user input file for polygons. 
     def checkFamCount(self):
+        """Makes sure at least one polygon family has been defined in nFamRect or nFamEll
+        OR that there is a user input file for polygons.
+        """
         userDefExists = (self.valueOf('userEllipsesOnOff') == '1') |\
                    (self.valueOf('userRectanglesOnOff') == '1') |\
                    (self.valueOf('userRecByCoord') == '1') |\
@@ -180,9 +209,11 @@ class input_helper():
                   "\"UserEll_Input_File_Path\", \"UserRect_Input_File_Path\", \"UserEll_Input_File_Path\", or "\
                   "\"RectByCoord_Input_File_Path\" and set the corresponding flag to '1'.")
 
-    ## scales list of probabilities (famProb) that doesn't add up to 1
-    ## ie [.2, .2, .4] --> [0.25, 0.25, 0.5]        
     def scale(self, probList, warningFile):
+ 
+        """ scales list of probabilities (famProb) that doesn't add up to 1
+        ie [.2, .2, .4] --> [0.25, 0.25, 0.5] 
+        """
         total = sum(probList)
         scaled = [float("{:.6}".format(x/total)) for x in probList]
         self.warning("'famProb' probabilities did not add to 1 and have been scaled accordingly "\
@@ -190,10 +221,14 @@ class input_helper():
         return [x/total for x in probList]                
 
     def zeroInStdDevs(self, valList):
+        """ returns True is there is a zero in valList of standard deviations
+        """
         for val in valList:
             if float(val) == 0: return True
         
     def checkMinMax(self, minParam, maxParam, shape):
+        """ Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.
+        """
         for minV, maxV in zip(self.valueOf(minParam), self.valueOf(maxParam)):
             if minV == maxV:
                 self.error("\"{}\" and \"{}\" contain equal values for the same {} family. "\
@@ -204,6 +239,9 @@ class input_helper():
                 sys.exit()
 
     def checkMean(self, minParam, maxParam, meanParam, warningFile=''):
+        """ Warns the user if the minimum value of a parameter is greater than the family's mean value, or if the
+        maximum value of the parameter is less than the family's mean value.
+        """
         for minV, meanV in zip(self.valueOf(minParam), self.valueOf(meanParam)):
             if minV > meanV: 
                self.warning("\"{}\" contains a min value greater than its family's mean value in "\
@@ -216,6 +254,8 @@ class input_helper():
                       "rejection rate of the most common fracture sizes.".format(maxParam, meanParam), warningFile)
 
     def checkMinFracSize(self, valList):
+        """ Corrects the minimum fracture size if necessary, by looking at the values in valList.
+        """
         for val in valList:
             if val < self.minFracSize: self.minFracSize = val
 
@@ -225,6 +265,8 @@ class input_helper():
     ##                              Parsing Functions                         ##
     ## ====================================================================== ##
     def extractParameters(self, line, inputIterator):
+        """Returns line without comments or white space.
+        """
         if "/*" in line:
             comment = line
             line = line[:line.index("/*")] ## only process text before '/*' comment
@@ -238,6 +280,8 @@ class input_helper():
 
 
     def findVal(self, line, key, inputIterator, unfoundKeys, warningFile):
+        """ Extract the value for key from line. 
+        """
         valList = []
         line = line[line.index(":") + 1:].strip()
         if line != "" : self.valHelper(line, valList, key)
@@ -258,11 +302,13 @@ class input_helper():
             self.params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
         if line != "": self.processLine(line, unfoundKeys, inputIterator, warningFile)
             
-    ## Input: line containing a paramter (key) preceding a ":" 
-    ## Returns: key -- if it has not been defined yet and is valid
-    ##          None -- if key does not exist
-    ##          exits -- if the key has already been defined to prevent duplicate confusion        
     def findKey(self, line, unfoundKeys, warningFile):
+        """ Input: line containing a paramter (key) preceding a ":" 
+           
+           Returns: key -- if it has not been defined yet and is valid
+                    None -- if key does not exist
+                    exits -- if the key has already been defined to prevent duplicate confusion        
+        """
         key = line[:line.index(":")].strip()
         if key in unfoundKeys:
             unfoundKeys.remove(key)
@@ -274,6 +320,8 @@ class input_helper():
            self.warning("\"" + key + "\" is not one of the valid parameter names.", warningFile)
 
     def processLine(self, line, unfoundKeys, inputIterator, warningFile):
+        """ Find the key in a line, and the value for that key.
+        """
         if line.strip != "":
             key = self.findKey(line, unfoundKeys, warningFile)
             if key != None: self.findVal(line, key, inputIterator, unfoundKeys, warningFile)   
@@ -289,6 +337,8 @@ class input_helper():
     ##        key - parameter the value belongs to
     ##        inList - (Optional)
     def verifyFlag(self, value, key = "", inList = False):
+        """ Verify that value is either a 0 or a 1.
+        """
         if value is '0' or value is '1':
             return int(value)
         elif inList:
@@ -297,6 +347,8 @@ class input_helper():
             self.error("\"{}\" must be either '0' or '1'".format(key))
 
     def verifyFloat(self, value, key = "", inList = False, noNeg = False):
+        """ Verify that value is a positive float.
+        """
         if type(value) is list:
             self.error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
         try:
@@ -311,6 +363,8 @@ class input_helper():
                 
                 
     def verifyInt(self, value, key = "", inList = False, noNeg = False):
+        """ Verify that value is a positive integer.
+        """
         if type(value) is list:
             self.error("\"{}\" contains curly braces {{}} but should not be a list value.".format(key))
         try:
@@ -323,41 +377,42 @@ class input_helper():
                 self.error("\"{}\" contains an unexpected character. Must be a single "\
                       "integer value (0,1,2,3,etc.)".format(key))
                 
-    ## Verifies input list that come in format {0, 1, 2, 3}
-    ##
-    ## Input:  valList - List of values (flags, floats, or ints) corresponding to a parameter
-    ##         key - the name of the parameter whose list is being verified
-    ##         verificationFn - (either verifyFlag, verifyFloat or verifyInt) checks each list element 
-    ##         desiredLength - how many elements are supposed to be in the list
-    ##         noZeros - (Optional) True for lists than cannot contain 0's, False if 0's are ok  
-    ##         noNegs - (Optional) True for lists than cannot contain negative numbers, False otherwise
-    ## Output: returns negative value of list length to indicate incorrect length and provide meaningful error message
-    ##         Prints error and exits if a value of the wrong type is found in the list
-    ##         returns None if successful
-    ##
-    def verifyList(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
-        if valList == ['']: return 0
-        if type(valList) is not list:
+    
+    def verifylist(self, vallist, key, verificationfn, desiredlength, nozeros=False, nonegs=False):
+        """verifies input list that come in format {0, 1, 2, 3}
+       
+        input:  vallist - list of values (flags, floats, or ints) corresponding to a parameter
+                key - the name of the parameter whose list is being verified
+                verificationfn - (either verifyflag, verifyfloat or verifyint) checks each list element 
+                desiredlength - how many elements are supposed to be in the list
+                nozeros - (optional) true for lists than cannot contain 0's, false if 0's are ok  
+                nonegs - (optional) true for lists than cannot contain negative numbers, false otherwise
+        output: returns negative value of list length to indicate incorrect length and provide meaningful error message
+                prints error and exits if a value of the wrong type is found in the list
+                returns none if successful"""
+        
+        if vallist == ['']: return 0
+        if type(vallist) is not list:
             self.error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
-        if desiredLength != 0 and int(len(valList)) != int(desiredLength):
-            print 'list desired length is ', desiredLength, 'but valList is ', valList, 'with length ', len(valList)
-            return -len(valList)
-        for i, value in enumerate(valList):
+        if desiredlength != 0 and int(len(vallist)) != int(desiredlength):
+            print 'list desired length is ', desiredlength, 'but vallist is ', vallist, 'with length ', len(vallist)
+            return -len(vallist)
+        for i, value in enumerate(vallist):
             value = value.strip()
-            verifiedVal = verificationFn(value, inList = True)
-            if verifiedVal == None:
-                listType = re.sub('Integer', 'Int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyInt' --> 'Integer'
-                self.error("\"{}\" must be a list of {}s {}. Non-{} found in "\
-                      "list".format(key, listType, examples[listType], listType))
-            if noZeros and verifiedVal == 0:
+            verifiedval = verificationfn(value, inlist = true)
+            if verifiedval == none:
+                listtype = re.sub('integer', 'int', re.sub(r'verify', '', verificationfn.__name__)) ## 'verifyint' --> 'integer'
+                self.error("\"{}\" must be a list of {}s {}. non-{} found in "\
+                      "list".format(key, listtype, examples[listtype], listtype))
+            if nozeros and verifiedval == 0:
                 self.error("\"{}\" list cannot contain any zeroes.".format(key))
-            if noNegs and self.isNegative(float(verifiedVal)):
+            if nonegs and self.isnegative(float(verifiedval)):
                 self.error("\"{}\" list cannot contain any negative values.".format(key)) 
-            valList[i] = verifiedVal 
+            vallist[i] = verifiedval 
            
 
-    ## def verifyNumValsIs(length, key):f
+    ## def verifynumvalsis(length, key):f
            ##  if len(self.params[key]) != length:
-            ##     self.error("ERROR: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
+            ##     self.error("error: ", "\"" + param + "\"", "should have", length, "value(s) but", len(self.params[key]), "are defined.")
              ##    sys.exit()                
 

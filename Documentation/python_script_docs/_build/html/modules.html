@@ -1,0 +1,985 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dfnworks: dfnWorks python wrapper &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="index.html"/>
+        <link rel="prev" title="setup.py: compile the components of dfnWorks" href="scripts.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.transport">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.dfntools">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.gen_output">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.meshdfn">Mesh DFN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-modules.run_meshing">Parallel meshing module</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>dfnworks: dfnWorks python wrapper</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/modules.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="dfnworks-dfnworks-python-wrapper">
+<h1>dfnworks: dfnWorks python wrapper<a class="headerlink" href="#dfnworks-dfnworks-python-wrapper" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-modules.dfnworks">
+<span id="dfnworks"></span><h2>DFNWORKS<a class="headerlink" href="#module-modules.dfnworks" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="modules.dfnworks.DFNWORKS">
+<em class="property">class </em><code class="descclassname">modules.dfnworks.</code><code class="descname">DFNWORKS</code><span class="sig-paren">(</span><em>jobname=''</em>, <em>local_jobname=''</em>, <em>dfnGen_file=''</em>, <em>output_file=''</em>, <em>local_dfnGen_file=''</em>, <em>ncpu=''</em>, <em>dfnFlow_file=''</em>, <em>local_dfnFlow_file=''</em>, <em>dfnTrans_file=''</em>, <em>inp_file='full_mesh.inp'</em>, <em>uge_file=''</em>, <em>vtk_file=''</em>, <em>mesh_type='dfn'</em>, <em>perm_file=''</em>, <em>aper_file=''</em>, <em>rfield=''</em>, <em>perm_cell_file=''</em>, <em>aper_cell_file=''</em>, <em>dfnTrans_version=''</em>, <em>num_frac=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/dfnworks.html#DFNWORKS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfnworks.DFNWORKS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for DFN Generation and meshing</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>_jobname (str): name of job, also the folder where output files are stored
+_ncpu (int): number of CPUs used in the job
+_dfnGen_file (str): the name of the dfnGen input file
+_dfnFlow_file (str): the name of the dfnFlow input file
+_local prefix: indicates that the name contains only the most local directory
+_vtk_file (str): the name of the VTK file
+_inp_file (str): the name of the INP file
+_uge_file (str): the name of the UGE file
+_mesh_type (str): the type of mesh
+_perm_file (str): the name of the file containing permeabilities (JDH_TODO)
+_aper_file (str): the name of the file containing apertures (JDH_TODO)
+_perm_cell_file (str): the name of the file containing cell permeabilities 
+_aper_cell_file (str): the name of the file containing cell apertures
+_rfield (str): JDH_TODO
+_dfnTrans_version (str): the version of dfnTrans to use
+_freeze (object): indicates whether the class attributes can be modified</dd>
+</dl>
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.check_input">
+<code class="descname">check_input</code><span class="sig-paren">(</span><em>input_file=''</em>, <em>output_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.check_input" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Input Format Requirements  </dt>
+<dd><ol class="first last arabic simple">
+<li>Each parameter must be defined on its own line (seperate by newline &#8216;</li>
+</ol>
+</dd>
+<dt>&#8216;)</dt>
+<dd><blockquote class="first">
+<div>2. A parameter (key) MUST be separated from its value by a colon &#8216;:&#8217; (ie. &#8211;&gt; key: value)
+- Values may also be placed on lines after the &#8216;key:&#8217; (ie. &#8211;&gt; key:</div></blockquote>
+<dl class="last docutils">
+<dt>value)</dt>
+<dd><p class="first">3. Comment Format:  On a line containg  // or / <code class="docutils literal"><span class="pre">*</span></code>, nothing after <code class="docutils literal"><span class="pre">*</span></code> / or // will be processed
+but text before a comment will be processed</p>
+<dl class="last docutils">
+<dt>Kwargs:</dt>
+<dd>input_file (name): name of dfnGen input file
+output_file (name): JDH_TODO</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.copy_dfnTrans_files">
+<code class="descname">copy_dfnTrans_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.copy_dfnTrans_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>create link to DFNTRANS and copy input file into local directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.create_network">
+<code class="descname">create_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.create_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.dfnFlow">
+<code class="descname">dfnFlow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnFlow portion of the workflow.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.dfnGen">
+<code class="descname">dfnGen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnGen workflow. 
+1) make_working_directory: Create a directory with name of job
+2) check_input: Check input parameters and create a clean version of the input file
+3) create_network: Create network. DFNGEN v2.0 is called and creates the network
+4) output_report: Generate a PDF summary of the DFN generation
+5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.dfnTrans">
+<code class="descname">dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.lagrit2pflotran">
+<code class="descname">lagrit2pflotran</code><span class="sig-paren">(</span><em>inp_file=''</em>, <em>mesh_type=''</em>, <em>hex2tet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.lagrit2pflotran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes output from LaGriT and processes it for use in PFLOTRAN.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd>inp_file (str): name of the inp (AVS) file produced by LaGriT (JDH_TODO (?)). 
+mesh_type (str): the type of mesh
+hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.legal">
+<code class="descname">legal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.legal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the legal LANL statement for dfnWorks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.make_working_directory">
+<code class="descname">make_working_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.make_working_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>make working directories for fracture generation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.mesh_network">
+<code class="descname">mesh_network</code><span class="sig-paren">(</span><em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.mesh_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh Fracture Network using ncpus and lagrit
+meshing file is separate file: dfnGen_meshing.py</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.output_report">
+<code class="descname">output_report</code><span class="sig-paren">(</span><em>radiiFile='radii.dat'</em>, <em>famFile='families.dat'</em>, <em>transFile='translations.dat'</em>, <em>rejectFile='rejections.dat'</em>, <em>output_name=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.output_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create PDF report of generator 
+Notes
+1. Set the number of histogram buckets (bins) by changing numBuckets variable in his graphing functions
+2. Also change number of x-values used to plot lines by changing numXpoints variable in appropriate funcs
+3. Set show = True to show plots immediately and still make pdf
+4. NOTE future developers of this code should ass functionality for radiiList of size 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.parse_pflotran_vtk">
+<code class="descname">parse_pflotran_vtk</code><span class="sig-paren">(</span><em>grid_vtk_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.parse_pflotran_vtk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.parse_pflotran_vtk_python">
+<code class="descname">parse_pflotran_vtk_python</code><span class="sig-paren">(</span><em>grid_vtk_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.parse_pflotran_vtk_python" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace CELL_DATA with POINT_DATA in the VTK output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.pflotran">
+<code class="descname">pflotran</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run pflotran
+Copy PFLOTRAN run file into working directory and run with ncpus</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.pflotran_cleanup">
+<code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate PFLOTRAN output files and then delete them</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.run_dfnTrans">
+<code class="descname">run_dfnTrans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.run_dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>run dfnTrans simulation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.write_perms_and_correct_volumes_areas">
+<code class="descname">write_perms_and_correct_volumes_areas</code><span class="sig-paren">(</span><em>inp_file=''</em>, <em>uge_file=''</em>, <em>perm_file=''</em>, <em>aper_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.write_perms_and_correct_volumes_areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file and inp_file (?). JDH_TODO</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.dfnworks.DFNWORKS.zone2ex">
+<code class="descname">zone2ex</code><span class="sig-paren">(</span><em>uge_file=''</em>, <em>zone_file=''</em>, <em>face=''</em><span class="sig-paren">)</span><a class="headerlink" href="#modules.dfnworks.DFNWORKS.zone2ex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert zone files from LaGriT into ex format for LaGriT
+inputs:
+uge_file: name of uge file
+zone_file: name of zone file
+face: face of the plane corresponding to the zone file</p>
+<p>zone_file=&#8217;all&#8217; processes all directions, top, bottom, left, right, front, back</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.dfnworks.create_dfn">
+<code class="descclassname">modules.dfnworks.</code><code class="descname">create_dfn</code><span class="sig-paren">(</span><em>dfnGen_file=''</em>, <em>dfnFlow_file=''</em>, <em>dfnTrans_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/dfnworks.html#create_dfn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfnworks.create_dfn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse command line inputs and input files to create and populate dfnworks class</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.legal">
+<span id="legal-module"></span><h2>legal module<a class="headerlink" href="#module-modules.legal" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.legal.legal">
+<code class="descclassname">modules.legal.</code><code class="descname">legal</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/legal.html#legal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.legal.legal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the legal LANL statement for dfnWorks.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.generator">
+<span id="generator-module"></span><h2>generator module<a class="headerlink" href="#module-modules.generator" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.generator.create_network">
+<code class="descclassname">modules.generator.</code><code class="descname">create_network</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/generator.html#create_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.generator.create_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.generator.dfnGen">
+<code class="descclassname">modules.generator.</code><code class="descname">dfnGen</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/generator.html#dfnGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.generator.dfnGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnGen workflow. 
+1) make_working_directory: Create a directory with name of job
+2) check_input: Check input parameters and create a clean version of the input file
+3) create_network: Create network. DFNGEN v2.0 is called and creates the network
+4) output_report: Generate a PDF summary of the DFN generation
+5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.generator.make_working_directory">
+<code class="descclassname">modules.generator.</code><code class="descname">make_working_directory</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/generator.html#make_working_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.generator.make_working_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>make working directories for fracture generation</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.flow">
+<span id="flow-module"></span><h2>flow module<a class="headerlink" href="#module-modules.flow" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.flow.dfnFlow">
+<code class="descclassname">modules.flow.</code><code class="descname">dfnFlow</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#dfnFlow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.dfnFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the dfnFlow portion of the workflow.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.extract_common_nodes">
+<code class="descclassname">modules.flow.</code><code class="descname">extract_common_nodes</code><span class="sig-paren">(</span><em>self</em>, <em>volume_mesh_uge_file=''</em>, <em>dfn_mesh_uge_file=''</em>, <em>common_table_file=''</em>, <em>combined_uge_file='combined.uge'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#extract_common_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.extract_common_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract common nodes from the DFN and volume mesh .uge files, and places them in the combined uge file.  (? JDH_TODO)</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd>volume_mesh_uge_file (str): name of volume mesh uge file
+dfn_mesh_uge_file (str): name of DFN mesh uge file
+common_table_file (str): name of common table file
+combined_uge_file (str): name of combined uge file</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.inp2gmv">
+<code class="descclassname">modules.flow.</code><code class="descname">inp2gmv</code><span class="sig-paren">(</span><em>self</em>, <em>inp_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#inp2gmv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.inp2gmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert inp file to gmv file, for (JDH_TODO). .</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd>inp_file (str): name of inp file</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.lagrit2pflotran">
+<code class="descclassname">modules.flow.</code><code class="descname">lagrit2pflotran</code><span class="sig-paren">(</span><em>self</em>, <em>inp_file=''</em>, <em>mesh_type=''</em>, <em>hex2tet=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#lagrit2pflotran"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.lagrit2pflotran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes output from LaGriT and processes it for use in PFLOTRAN.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd>inp_file (str): name of the inp (AVS) file produced by LaGriT (JDH_TODO (?)). 
+mesh_type (str): the type of mesh
+hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.parse_pflotran_vtk">
+<code class="descclassname">modules.flow.</code><code class="descname">parse_pflotran_vtk</code><span class="sig-paren">(</span><em>self</em>, <em>grid_vtk_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#parse_pflotran_vtk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.parse_pflotran_vtk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.parse_pflotran_vtk_python">
+<code class="descclassname">modules.flow.</code><code class="descname">parse_pflotran_vtk_python</code><span class="sig-paren">(</span><em>self</em>, <em>grid_vtk_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#parse_pflotran_vtk_python"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.parse_pflotran_vtk_python" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace CELL_DATA with POINT_DATA in the VTK output.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.pflotran">
+<code class="descclassname">modules.flow.</code><code class="descname">pflotran</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#pflotran"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.pflotran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run pflotran
+Copy PFLOTRAN run file into working directory and run with ncpus</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.pflotran_cleanup">
+<code class="descclassname">modules.flow.</code><code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#pflotran_cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate PFLOTRAN output files and then delete them</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.write_perms_and_correct_volumes_areas">
+<code class="descclassname">modules.flow.</code><code class="descname">write_perms_and_correct_volumes_areas</code><span class="sig-paren">(</span><em>self</em>, <em>inp_file=''</em>, <em>uge_file=''</em>, <em>perm_file=''</em>, <em>aper_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#write_perms_and_correct_volumes_areas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.write_perms_and_correct_volumes_areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file and inp_file (?). JDH_TODO</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.flow.zone2ex">
+<code class="descclassname">modules.flow.</code><code class="descname">zone2ex</code><span class="sig-paren">(</span><em>self</em>, <em>uge_file=''</em>, <em>zone_file=''</em>, <em>face=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/flow.html#zone2ex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.flow.zone2ex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert zone files from LaGriT into ex format for LaGriT
+inputs:
+uge_file: name of uge file
+zone_file: name of zone file
+face: face of the plane corresponding to the zone file</p>
+<p>zone_file=&#8217;all&#8217; processes all directions, top, bottom, left, right, front, back</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.transport">
+<span id="transport-module"></span><h2>transport module<a class="headerlink" href="#module-modules.transport" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.transport.copy_dfnTrans_files">
+<code class="descclassname">modules.transport.</code><code class="descname">copy_dfnTrans_files</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/transport.html#copy_dfnTrans_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.transport.copy_dfnTrans_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>create link to DFNTRANS and copy input file into local directory</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.transport.dfnTrans">
+<code class="descclassname">modules.transport.</code><code class="descname">dfnTrans</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/transport.html#dfnTrans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.transport.dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy input files for dfnTrans into working directory and run DFNTrans</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.transport.run_dfnTrans">
+<code class="descclassname">modules.transport.</code><code class="descname">run_dfnTrans</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/transport.html#run_dfnTrans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.transport.run_dfnTrans" title="Permalink to this definition">¶</a></dt>
+<dd><p>run dfnTrans simulation</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.dfntools">
+<span id="dfntools-module"></span><h2>dfntools module<a class="headerlink" href="#module-modules.dfntools" title="Permalink to this headline">¶</a></h2>
+<p>Tools for dfnworks data</p>
+<dl class="class">
+<dt id="modules.dfntools.Frozen">
+<em class="property">class </em><code class="descclassname">modules.dfntools.</code><code class="descname">Frozen</code><a class="reference internal" href="_modules/modules/dfntools.html#Frozen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.dfntools.Frozen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevents adding new attributes to classes once _freeze() is called on the class.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.distributions">
+<span id="distrbutions-module"></span><h2>distrbutions module<a class="headerlink" href="#module-modules.distributions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="modules.distributions.distr">
+<em class="property">class </em><code class="descclassname">modules.distributions.</code><code class="descname">distr</code><span class="sig-paren">(</span><em>params</em>, <em>numEdistribs</em>, <em>numRdistribs</em>, <em>minFracSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies the fracture distribution input parameters for dfnGen.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>params (list): parameters for dfnGen
+numEdistribs (int): number of ellipse family distributions
+numRdistribs (int): number of rectangle family distributions
+minFracSize (double): minimum fracture size</dd>
+</dl>
+<dl class="method">
+<dt id="modules.distributions.distr.betaDistribution">
+<code class="descname">betaDistribution</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.betaDistribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.betaDistribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies both the &#8220;ebetaDistribution&#8221; and &#8220;rBetaDistribution&#8221;. If either contain any flags
+indicating contant angle (1) then the corresponding &#8220;ebeta&#8221; and/or &#8220;rbeta&#8221; parameters are 
+also verified.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>prefix (str): Indicates shapes that the beta distribution describes. &#8216;e&#8217; if they are ellipses, &#8216;r&#8217; if they are rectangles.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.distributions.distr.constantDist">
+<code class="descname">constantDist</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.constantDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.constantDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies paramters for constant distribution of fractures</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.distributions.distr.distr">
+<code class="descname">distr</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.distr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.distr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies &#8220;edistr&#8221; and &#8220;rdistr&#8221; making sure one distribution is defined per family and
+each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
+Stores how many of each distrib are in use in numEdistribs or numRdistribs lists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.distributions.distr.exponentialDist">
+<code class="descname">exponentialDist</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.exponentialDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.exponentialDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies parameters for exponential distribution of fractures.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.distributions.distr.lognormalDist">
+<code class="descname">lognormalDist</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.lognormalDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.lognormalDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies all logNormal Parameters for ellipses and Rectangles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.distributions.distr.tplDist">
+<code class="descname">tplDist</code><span class="sig-paren">(</span><em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/distributions.html#distr.tplDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.distributions.distr.tplDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies parameters for truncated power law distribution of fractures.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.helper">
+<span id="helper-module"></span><h2>helper module<a class="headerlink" href="#module-modules.helper" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.helper.commandline_options">
+<code class="descclassname">modules.helper.</code><code class="descname">commandline_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#commandline_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.commandline_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read command lines for use in dfnWorks.
+Options:
+-name : Jobname (Mandatory)
+-ncpu : Number of CPUS (Optional, default=4)</p>
+<p>-gen : Generator Input File (Mandatory, can be included within this file)
+-flow : PFLORAN Input File (Mandatory, can be included within this file)
+-trans: Transport Input File (Mandatory, can be included within this file)</p>
+<dl class="docutils">
+<dt>-cell: True/False Set True for use with cell </dt>
+<dd>based aperture and permeabuility (Optional, default=False)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.helper.dump_time">
+<code class="descclassname">modules.helper.</code><code class="descname">dump_time</code><span class="sig-paren">(</span><em>local_jobname</em>, <em>section_name</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#dump_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.dump_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>keeps log of cpu run time, current formulation is not robust</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.helper.get_num_frac">
+<code class="descclassname">modules.helper.</code><code class="descname">get_num_frac</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#get_num_frac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.get_num_frac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of fractures from the params.txt file.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="modules.helper.input_helper">
+<em class="property">class </em><code class="descclassname">modules.helper.</code><code class="descname">input_helper</code><span class="sig-paren">(</span><em>params</em>, <em>minFracSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functions to help parse the input file and check input parameters.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>params (list): list of parameters specified in the input file.
+minFracSize (float): the minimum fracture size.</dd>
+</dl>
+<dl class="method">
+<dt id="modules.helper.input_helper.checkFamCount">
+<code class="descname">checkFamCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.checkFamCount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.checkFamCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes sure at least one polygon family has been defined in nFamRect or nFamEll
+OR that there is a user input file for polygons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.checkMean">
+<code class="descname">checkMean</code><span class="sig-paren">(</span><em>minParam</em>, <em>maxParam</em>, <em>meanParam</em>, <em>warningFile=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.checkMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.checkMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warns the user if the minimum value of a parameter is greater than the family&#8217;s mean value, or if the
+maximum value of the parameter is less than the family&#8217;s mean value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.checkMinFracSize">
+<code class="descname">checkMinFracSize</code><span class="sig-paren">(</span><em>valList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.checkMinFracSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.checkMinFracSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corrects the minimum fracture size if necessary, by looking at the values in valList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.checkMinMax">
+<code class="descname">checkMinMax</code><span class="sig-paren">(</span><em>minParam</em>, <em>maxParam</em>, <em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.checkMinMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.checkMinMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.curlyToList">
+<code class="descname">curlyToList</code><span class="sig-paren">(</span><em>curlyList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.curlyToList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.curlyToList" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8216;{1,2,3}&#8217; &#8211;&gt; [1,2,3]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>errString</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>print an error</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>errString (str): a string describing the error</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.extractParameters">
+<code class="descname">extractParameters</code><span class="sig-paren">(</span><em>line</em>, <em>inputIterator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.extractParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.extractParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns line without comments or white space.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.findKey">
+<code class="descname">findKey</code><span class="sig-paren">(</span><em>line</em>, <em>unfoundKeys</em>, <em>warningFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.findKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.findKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input: line containing a paramter (key) preceding a &#8221;:&#8221;</p>
+<dl class="docutils">
+<dt>Returns: key &#8211; if it has not been defined yet and is valid</dt>
+<dd>None &#8211; if key does not exist
+exits &#8211; if the key has already been defined to prevent duplicate confusion</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.findVal">
+<code class="descname">findVal</code><span class="sig-paren">(</span><em>line</em>, <em>key</em>, <em>inputIterator</em>, <em>unfoundKeys</em>, <em>warningFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.findVal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.findVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the value for key from line. JDH_TODO</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.getGroups">
+<code class="descname">getGroups</code><span class="sig-paren">(</span><em>line</em>, <em>valList</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.getGroups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.getGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>JDH_TODO</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.hasCurlys">
+<code class="descname">hasCurlys</code><span class="sig-paren">(</span><em>line</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.hasCurlys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.hasCurlys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see that every { has a matching }.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.isNegative">
+<code class="descname">isNegative</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.isNegative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.isNegative" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;returns True if num is negative, false otherwise</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.listToCurly">
+<code class="descname">listToCurly</code><span class="sig-paren">(</span><em>strList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.listToCurly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.listToCurly" title="Permalink to this definition">¶</a></dt>
+<dd><p>[1,2,3] &#8211;&gt; &#8216;{1,2,3}&#8217;   for writing output</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.processLine">
+<code class="descname">processLine</code><span class="sig-paren">(</span><em>line</em>, <em>unfoundKeys</em>, <em>inputIterator</em>, <em>warningFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.processLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.processLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the key in a line, and the value for that key.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>probList</em>, <em>warningFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>scales list of probabilities (famProb) that doesn&#8217;t add up to 1
+ie [.2, .2, .4] &#8211;&gt; [0.25, 0.25, 0.5]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.valHelper">
+<code class="descname">valHelper</code><span class="sig-paren">(</span><em>line</em>, <em>valList</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.valHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.valHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>JDH_TODO</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.valueOf">
+<code class="descname">valueOf</code><span class="sig-paren">(</span><em>key</em>, <em>writing=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.valueOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.valueOf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to get key&#8217;s value in params. writing always false</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.verifyFlag">
+<code class="descname">verifyFlag</code><span class="sig-paren">(</span><em>value</em>, <em>key=''</em>, <em>inList=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.verifyFlag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.verifyFlag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that value is either a 0 or a 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.verifyFloat">
+<code class="descname">verifyFloat</code><span class="sig-paren">(</span><em>value</em>, <em>key=''</em>, <em>inList=False</em>, <em>noNeg=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.verifyFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.verifyFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that value is a positive float.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.verifyInt">
+<code class="descname">verifyInt</code><span class="sig-paren">(</span><em>value</em>, <em>key=''</em>, <em>inList=False</em>, <em>noNeg=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.verifyInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.verifyInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that value is a positive integer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.verifylist">
+<code class="descname">verifylist</code><span class="sig-paren">(</span><em>vallist</em>, <em>key</em>, <em>verificationfn</em>, <em>desiredlength</em>, <em>nozeros=False</em>, <em>nonegs=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.verifylist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.verifylist" title="Permalink to this definition">¶</a></dt>
+<dd><p>verifies input list that come in format {0, 1, 2, 3}</p>
+<dl class="docutils">
+<dt>input:  vallist - list of values (flags, floats, or ints) corresponding to a parameter</dt>
+<dd>key - the name of the parameter whose list is being verified
+verificationfn - (either verifyflag, verifyfloat or verifyint) checks each list element 
+desiredlength - how many elements are supposed to be in the list
+nozeros - (optional) true for lists than cannot contain 0&#8217;s, false if 0&#8217;s are ok  
+nonegs - (optional) true for lists than cannot contain negative numbers, false otherwise</dd>
+<dt>output: returns negative value of list length to indicate incorrect length and provide meaningful error message</dt>
+<dd>prints error and exits if a value of the wrong type is found in the list
+returns none if successful</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.warning">
+<code class="descname">warning</code><span class="sig-paren">(</span><em>warnString</em>, <em>warningFile=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.warning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>print a warning to a file (currently does not work)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modules.helper.input_helper.zeroInStdDevs">
+<code class="descname">zeroInStdDevs</code><span class="sig-paren">(</span><em>valList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#input_helper.zeroInStdDevs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.input_helper.zeroInStdDevs" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns True is there is a zero in valList of standard deviations</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.helper.print_run_time">
+<code class="descclassname">modules.helper.</code><code class="descname">print_run_time</code><span class="sig-paren">(</span><em>local_jobname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/helper.html#print_run_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.helper.print_run_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in run times from file and and print to screen with percentages</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.gen_input">
+<span id="generator-input-processing-module"></span><h2>generator input processing module<a class="headerlink" href="#module-modules.gen_input" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.gen_input.check_input">
+<code class="descclassname">modules.gen_input.</code><code class="descname">check_input</code><span class="sig-paren">(</span><em>self</em>, <em>input_file=''</em>, <em>output_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/gen_input.html#check_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.gen_input.check_input" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Input Format Requirements  </dt>
+<dd><ol class="first last arabic simple">
+<li>Each parameter must be defined on its own line (seperate by newline &#8216;</li>
+</ol>
+</dd>
+<dt>&#8216;)</dt>
+<dd><blockquote class="first">
+<div>2. A parameter (key) MUST be separated from its value by a colon &#8216;:&#8217; (ie. &#8211;&gt; key: value)
+- Values may also be placed on lines after the &#8216;key:&#8217; (ie. &#8211;&gt; key:</div></blockquote>
+<dl class="last docutils">
+<dt>value)</dt>
+<dd><p class="first">3. Comment Format:  On a line containg  // or / <code class="docutils literal"><span class="pre">*</span></code>, nothing after <code class="docutils literal"><span class="pre">*</span></code> / or // will be processed
+but text before a comment will be processed</p>
+<dl class="last docutils">
+<dt>Kwargs:</dt>
+<dd>input_file (name): name of dfnGen input file
+output_file (name): JDH_TODO</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.gen_output">
+<span id="generator-output-report-module"></span><h2>generator output report module<a class="headerlink" href="#module-modules.gen_output" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="modules.gen_output.output_report">
+<code class="descclassname">modules.gen_output.</code><code class="descname">output_report</code><span class="sig-paren">(</span><em>self</em>, <em>radiiFile='radii.dat'</em>, <em>famFile='families.dat'</em>, <em>transFile='translations.dat'</em>, <em>rejectFile='rejections.dat'</em>, <em>output_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/gen_output.html#output_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.gen_output.output_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create PDF report of generator 
+Notes
+1. Set the number of histogram buckets (bins) by changing numBuckets variable in his graphing functions
+2. Also change number of x-values used to plot lines by changing numXpoints variable in appropriate funcs
+3. Set show = True to show plots immediately and still make pdf
+4. NOTE future developers of this code should ass functionality for radiiList of size 0.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.lagrit_scripts">
+<span id="lagrit-scripts-module"></span><h2>LaGriT scripts module<a class="headerlink" href="#module-modules.lagrit_scripts" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-lagrit_scripts.py"></span><dl class="function">
+<dt id="modules.lagrit_scripts.create_lagrit_scripts">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_lagrit_scripts</code><span class="sig-paren">(</span><em>visual_mode</em>, <em>ncpu</em>, <em>refine_factor=1</em>, <em>production_mode=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_lagrit_scripts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_lagrit_scripts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates LaGriT script to be run for each polygon
+Inputs: visual_mode (True / False)
+ncpu: number of cpus
+refine_fractor: used rectangles
+produnction_mode (True/False)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_merge_poly_files">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_merge_poly_files</code><span class="sig-paren">(</span><em>ncpu</em>, <em>num_poly</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_merge_poly_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_merge_poly_files" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Section 4 <span class="classifier-delimiter">:</span> <span class="classifier">Create merge_poly file</span></dt>
+<dd>Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
+Then duplicate points are removed from the main mesh using EPS_FILTER 
+The points are compressed, and then written in the files full_mesh.gmv, full_mesh.inp, and an FEHM dump is preformed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_parameter_mlgi_file">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_parameter_mlgi_file</code><span class="sig-paren">(</span><em>num_poly</em>, <em>h</em>, <em>slope=2</em>, <em>refine_dist=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_parameter_mlgi_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_parameter_mlgi_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>create parameter_mgli_files
+Outputs parameteri.mlgi files used in running LaGriT Scripts
+Inputs:
+num_poly: Number of polygons
+h: meshing length scale
+slope: Slope of coarsening function, default = 2, set to 0 for uniform mesh resolution
+refine_dist: distance used in coarsing function, default = 0.5,</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.create_user_functions">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">create_user_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#create_user_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.create_user_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create user_function.lgi files for meshing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.lagrit_scripts.define_zones">
+<code class="descclassname">modules.lagrit_scripts.</code><code class="descname">define_zones</code><span class="sig-paren">(</span><em>h</em>, <em>domain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/lagrit_scripts.html#define_zones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.lagrit_scripts.define_zones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and runs LaGriT script to define domain size</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.meshdfn">
+<span id="mesh-dfn-module"></span><h2>Mesh DFN module<a class="headerlink" href="#module-modules.meshdfn" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-meshdfn.py"></span><dl class="function">
+<dt id="modules.meshdfn.mesh_network">
+<code class="descclassname">modules.meshdfn.</code><code class="descname">mesh_network</code><span class="sig-paren">(</span><em>self</em>, <em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/meshdfn.html#mesh_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.meshdfn.mesh_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh Fracture Network using ncpus and lagrit
+meshing file is separate file: dfnGen_meshing.py</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.mesh_dfn_helper">
+<span id="mesh-dfn-helper-module"></span><h2>Mesh DFN helper module<a class="headerlink" href="#module-modules.mesh_dfn_helper" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-mesh_dfn_helper.py"></span><dl class="function">
+<dt id="modules.mesh_dfn_helper.check_dudded_points">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">check_dudded_points</code><span class="sig-paren">(</span><em>dudded</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#check_dudded_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.check_dudded_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses Lagrit log_merge_all.txt and checks if number of dudded points
+is the expected number</p>
+<p>Returns: 
+True if the number of dudded points is correct 
+False if the number of dudded points is incorrect</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.cleanup_dir">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">cleanup_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#cleanup_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.cleanup_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes files from meshing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.output_meshing_report">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">output_meshing_report</code><span class="sig-paren">(</span><em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#output_meshing_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.output_meshing_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints information about the final mesh to file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.mesh_dfn_helper.parse_params_file">
+<code class="descclassname">modules.mesh_dfn_helper.</code><code class="descname">parse_params_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/mesh_dfn_helper.html#parse_params_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.mesh_dfn_helper.parse_params_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads params.txt file and parse information</p>
+<p>Returns:
+num_poly: (int) Number of Polygons
+h: (float) meshing length scale h
+dudded_points: (int) Expected number of dudded points in Filter (LaGriT)
+visual_mode: True/False
+domain: dict: x,y,z domain sizes</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-modules.run_meshing">
+<span id="parallel-meshing-module"></span><h2>Parallel meshing module<a class="headerlink" href="#module-modules.run_meshing" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-run_meshing.py"></span><dl class="function">
+<dt id="modules.run_meshing.merge_the_meshes">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">merge_the_meshes</code><span class="sig-paren">(</span><em>num_poly</em>, <em>ncpu</em>, <em>n_jobs</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#merge_the_meshes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.merge_the_meshes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Merges all the meshes together, deletes duplicate points, </dt>
+<dd>dumps the .gmv and fehm files</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.mesh_fracture">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">mesh_fracture</code><span class="sig-paren">(</span><em>fracture_id</em>, <em>visual_mode</em>, <em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#mesh_fracture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.mesh_fracture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Child Function for Parallized Meshing of Fractures</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.mesh_fractures_header">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">mesh_fractures_header</code><span class="sig-paren">(</span><em>num_poly</em>, <em>ncpu</em>, <em>visual_mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#mesh_fractures_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.mesh_fractures_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Header function for Parallel meshing of fractures</p>
+<p>Creates a queue of fracture numbers ranging form 1, num_poly</p>
+<p>Each fractures is meshed using mesh_fracture called within the
+worker function.</p>
+<p>If any fracture fails to mesh properly, then a folder is created with 
+that fracture information and the fracture number is written into
+failure.txt.</p>
+<p>Returns:
+True: If failure.txt is empty meaning all fractures meshed correctly
+False: If failure.txt is not empty, then at least one fracture failed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.run_meshing.worker">
+<code class="descclassname">modules.run_meshing.</code><code class="descname">worker</code><span class="sig-paren">(</span><em>work_queue</em>, <em>done_queue</em>, <em>visual_mode</em>, <em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/run_meshing.html#worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.run_meshing.worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>worker function for parallelized meshing</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="scripts.html" class="btn btn-neutral" title="setup.py: compile the components of dfnWorks"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

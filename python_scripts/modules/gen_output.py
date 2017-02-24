@@ -29,7 +29,16 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
 
 	class polyFam:
-		def __init__(self, globFamNum, radiiList, distrib, infoStr, parameters):
+		""" A data structure describing a family of fractures (that all must be either ellipses or rectangles
+                Attributes:
+                    globFamNum (int): a unique integer describing the family
+                    radiiList (list): a list of doubles describing the radii of all fractures in the family
+                    distrib (str): the type of distribution of the family (lognormal, exponential, constant, or user-defined)
+                    infoStr (str): an informative string describing the family
+                    parameters (dict): a dictionary containing the values of parameters for the family
+                """
+                
+                def __init__(self, globFamNum, radiiList, distrib, infoStr, parameters):
 			self.globFamNum = globFamNum
 			self.radiiList = radiiList
 			self.distrib = distrib
@@ -45,9 +54,12 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			print("\n\n")
 		       
 
-	## Rejection File line format:   "118424 Short Intersections" --> {"Short Intersections": 118424}
 	def graphRejections():
-		rejects = {}
+		"""
+                Graph the fractures that were rejected by the Feature Rejection Algorithm for Meshing (FRAM) in dfnGen, using a histogram of rejection reasons.
+	        Rejection File line format:   "118424 Short Intersections" --> {"Short Intersections": 118424}
+                """
+                rejects = {}
 		plt.subplots()
 
 		for line in open(rejectFile):
@@ -82,8 +94,8 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		if show: plt.show()
 
 
-	## Histogram making helper function for graphTranslations()
 	def transHist(prefix, allList, unRemovedList):
+	        """ Histogram making helper function for graphTranslations()"""
 		plt.subplots()
 		numBuckets = 20
 		minSize = min(allList)
@@ -99,9 +111,10 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
-	## Graphs position of fractures as histogram for x, y and z dimensions
-	## Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]
-	def graphTranslations():
+        def graphTranslations():
+                """ Graphs position of fractures as histogram for x, y and z dimensions
+                Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]
+                """
 		xAll = []
 		xUnremoved = []
 		yAll = []
@@ -128,7 +141,9 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		
 
 	def collectFamilyInfo():
-		famObj = polyFam(0, [], 0, "", {})
+   		""" Read in information from families.dat file that lists the data for each fracture family.
+                """
+                famObj = polyFam(0, [], 0, "", {})
 		possibleParams = ["Mean", "Standard Deviation", "Alpha", "Lambda"]
 		bounds = ["Minimum Radius", "Maximum Radius"]
 
@@ -201,12 +216,18 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 				pass # families[fam].printPolyFam()
 
 
-	############# Histogram & PDF ##############
-	## histogram of sizes (from data) and PDF (from input parameters
-	## returns histHeights (height of all hist bars) for plotting cdf
-	##         & list of x values of binCenters (also for cdf)
 	def histAndPDF(radiiSizes, pdfArray, xmin, xmax, xVals):
-		numBuckets = 100
+	        """
+                Histogram of sizes (from data) and PDF (from input parameters
+	        returns histHeights (height of all hist bars) for plotting cdf
+	        & list of x values of binCenters (also for cdf).
+                Args:
+                    radiiSizes (list): list of radii sizes.
+                    pdfArray (list): list of pdf values for given xVals.
+                    xmin (double): minimum value of x on plot.. 
+                    xmax (double): maximum value of x on plot.
+		""" 
+                numBuckets = 100
 		fig, histo = plt.subplots()
 		### fig = plt.figure(figsize=(8., 6.), dpi=500)  ## comment out if you dont want pdf
 		## histo = plt.ax_stack()
@@ -231,10 +252,17 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 		return histHeights, binCenters
 
-	############# CDF ##############
-	## 2 cdfs, analytical (from pdf from given mu and sigma) and empirical (from histogram)
 	def cdfs(histHeights, binCenters, pdf, xmin, xmax, xVals):
-		plt.subplots()
+		""" Plots 2 cdfs, analytical (from pdf from given mu and sigma) and empirical (from histogram).
+                Args:
+                    histHeights (list): list of histogram heights
+                    binCenters (list): binCenters for each histogram bin.
+                    pdf (list): list of corresponding pdf values 
+                    xmin (double): minimum value of x
+                    xmax (double): maximum value of x
+                    xVals (list): values of x
+                """
+                plt.subplots()
 		analyticCDF = 1. * np.cumsum(pdf) / sum(pdf)      
 		empiricalCDF = 1. * np.cumsum(histHeights) / sum(histHeights) ## need these to correspond to xVals
 		plt.plot(xVals, analyticCDF, 'b', label='Analytic CDF (from input)')
@@ -247,10 +275,13 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.tight_layout()
 		plt.subplots_adjust(top=0.9)
 
-	############# Q & Q  ##############
-	## histogram values (x) vs. analytical PDF values (y) & a line showing ideal 1 to 1 ratio
 	def qq(trueVals, histHeights):
-		fig, ax = plt.subplots()
+		"""  Histogram values (x) vs. analytical PDF values (y) & a line showing ideal 1 to 1 ratio
+                Args:
+                    trueVals (list): ordered list of analytical values.
+                    histHeights (list): ordered list of generator values.
+                """
+                fig, ax = plt.subplots()
 		qq = plt.scatter(histHeights, trueVals, c='r', marker='o', 
 				 label="x=Empirical value\ny=Analtical PDF value")
 		minMax = [np.min([min(trueVals), min(histHeights)]),  # min of both axes
@@ -265,9 +296,19 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.subplots_adjust(top=0.9)
 
 	def lognormCDF(x, mu, sigma):
-		return 0.5 + (0.5 * scipy.special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
+		"""Get the lognnormal distribution value for the given x.
+                Args:
+                    x (double): the value of x
+                    mu (double): the mean  parameter of the lognormal distribution
+                    sigma (double): the standard deviation of the lognromal distribution
+                """
+                return 0.5 + (0.5 * scipy.special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
 	       
 	def graphLognormal(famObj):
+		"""Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.
+                Args:
+                    famObj (polyFam class): the polyFam object describing the truncated power law distribution.
+                """
 		numXpoints = 1000
 		xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
 		xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
@@ -297,13 +338,30 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 	  
 	      
 	def powLawPDF(normConst, xmin, x, a):
-		return normConst * ( (a*(xmin**a)) / float(x**(a+1)) ) 
+		""" Get the analytical power laws PDF value for a given x.
+                Args:
+                    normConst (double): The normalization constant for the PDF.
+                    xmin (double): The minimum value for the truncated power-law distribution.
+                    x (double): The value of x. 
+                    a (double): The alpha parameter for the power-law distribution.
+                """
+                return normConst * ( (a*(xmin**a)) / float(x**(a+1)) ) 
 
 	def powLawCDF(x, xmin, a):
-		return 1 - ( (xmin / float(x))**a ) 
+		""" Get the analytical power law CDF value for a given x.
+                Args:
+                    x (double): The value of x.
+                    xmin (double): The lower bound of the truncated power law distribution.
+                    a (double): The alpha parameter in the power law distribution.
+                """
+                return 1 - ( (xmin / float(x))**a ) 
 
 	def graphTruncPowerLaw(famObj):
-		numBuckets = 100
+		"""Graph the PDF, CDF and QQ plot of the power law distribution agianst the expected analytical power law values.
+                Args:
+                    famObj (polyFam class): the polyFam object describing the truncated power law distribution.
+                """
+                numBuckets = 100
 		numXpoints = 1000
 		alpha = famObj.parameters["Alpha"]
 		radiiSizes = famObj.radiiList
@@ -336,13 +394,26 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 
 	def expPDF(normConst, eLambda, x):
-		return normConst * eLambda * np.e**(-eLambda*x)
+		""" Get the analytical exponential PDF value for a given x.
+                Args:
+                    x (double): The value of x.
+                    eLambda (double): The lambda value for the exponential distribution.
+                    normConst (double): The normalization constnat for the exponential distribution.
+                """
+                return normConst * eLambda * np.e**(-eLambda*x)
 
 	def expCDF(eLambda, x):
-		return 1 - (np.e**(-eLambda*x))
+		""" Get the analytical exponential CDF value for a given x.
+                Args:
+                    x (double): the value of x for which to find the exponential CDF value.
+                    eLambda (double): the lambda value for the exponential distribution.
+                """
+                return 1 - (np.e**(-eLambda*x))
 		
 	def graphExponential(famObj):
-		numXpoints = 1000
+	        """ Graph exponential distribution of fractures  against the analytical exponential distributions, using a PDF, CDF, and QQ plot.
+                """
+                numXpoints = 1000
 		numBuckets = 100
 		radiiSizes = famObj.radiiList
 		eLambda = famObj.parameters["Lambda"]
@@ -373,11 +444,15 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 
 	def graphConstant(famObj):
-		#print("  Family #" + famObj.globFamNum + " is a constant distribution and only contains one radius size.")
+		""" Does nothing. Constnat distributions are not graphed.
+                """
+                #print("  Family #" + famObj.globFamNum + " is a constant distribution and only contains one radius size.")
 		pass
 
 	def graphAllAndNotRemoved():
-		numBuckets = 50
+		""" Graph fractures from all the families. If some fractures have been removed, also graph the fractures that remain after removal. 
+                """
+                numBuckets = 50
 		allList = families['all'] 
 		unRemovedList = families['notRemoved']
 		minSize = min(allList)
@@ -419,7 +494,9 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			
 		
 	def graphDistribs():
-		famNum = 1
+                """Graph the distribution of each fracture family except user defined families, using a dictionary to reference different distributions' graphing function.
+                """
+                famNum = 1
 		updateStr = "Graphing Family #{} which contains {} fractures."
 		graphDistFuncs = {"Lognormal" : graphLognormal,              ## dict of graph functions
 				  "Truncated Power-Law" : graphTruncPowerLaw,
@@ -451,7 +528,5 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 	graphDistribs()
 	graphAllAndNotRemoved()
 	graphRejections()
-
 	outputPDF.close()
-#################### End dfnGen Functions ##########################
 

@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>modules.meshdfn &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.transport">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfntools">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_output">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.meshdfn">Mesh DFN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.run_meshing">Parallel meshing module</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>modules.meshdfn</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for modules.meshdfn</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: meshdfn.py</span>
+<span class="sd">   :synopsis: meshing driver for DFN </span>
+<span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">import</span> <span class="nn">mesh_dfn_helper</span> <span class="kn">as</span> <span class="nn">mh</span> 
+<span class="kn">import</span> <span class="nn">lagrit_scripts</span> <span class="kn">as</span> <span class="nn">lagrit</span> 
+<span class="kn">import</span> <span class="nn">run_meshing</span> <span class="kn">as</span> <span class="nn">run_mesh</span> 
+
+<div class="viewcode-block" id="mesh_network"><a class="viewcode-back" href="../../modules.html#modules.dfnworks.mesh_network">[docs]</a><span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Mesh Fracture Network using ncpus and lagrit</span>
+<span class="sd">    meshing file is separate file: dfnGen_meshing.py</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Meshing Network Using LaGriT : Starting&quot;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    
+    <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">()</span>
+
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_parameter_mlgi_file</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">)</span>
+
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_lagrit_scripts</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncpu</span><span class="p">)</span>
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_user_functions</span><span class="p">()</span>
+
+    <span class="n">failure</span> <span class="o">=</span> <span class="n">run_mesh</span><span class="o">.</span><span class="n">mesh_fractures_header</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncpu</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s">Exiting Program&quot;</span><span class="p">)</span>
+
+    <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">lagrit</span><span class="o">.</span><span class="n">create_merge_poly_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+
+    <span class="n">run_mesh</span><span class="o">.</span><span class="n">merge_the_meshes</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncpu</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>    
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mh</span><span class="o">.</span><span class="n">check_dudded_points</span><span class="p">(</span><span class="n">dudded_points</span><span class="p">):</span>
+            <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s">Exitingin Program&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">production_mode</span><span class="p">:</span>
+        <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span> 
+        <span class="n">lagrit</span><span class="o">.</span><span class="n">define_zones</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">domain</span><span class="p">)</span>
+
+    <span class="n">mh</span><span class="o">.</span><span class="n">output_meshing_report</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">)</span>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">print</span> <span class="p">(</span><span class="s">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&#39;&#39;&#39;Python Script to parse DFNGEN output and mesh it using LaGriT </span>
+
+<span class="s">    Last Update August 1 2016 by Jeffrey Hyman</span>
+<span class="s">    EES - 16, LANL</span>
+<span class="s">    jhyman@lanl.gov</span>
+<span class="s">    &#39;&#39;&#39;</span>
+    <span class="c">#Production mode &quot;ON&quot; outputs the final results for computation, </span>
+    <span class="c">#cleaning up all the temporary attributes needed during refinement.</span>
+    <span class="c">#Note that the visualization mode must be &quot;OFF&quot; in order to run</span>
+    <span class="c">#in produciton mode. &quot;dfield&quot; can also be turn ON/OFF. </span>
+    <span class="c">#*1: &quot;ON&quot;, *0: &quot;OFF&quot;. </span>
+    <span class="c">#dfield = 0</span>
+
+    <span class="n">slope</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">refine_dist</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="n">production_mode</span> <span class="o">=</span> <span class="bp">True</span> 
+    <span class="n">refine_factor</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ncpu</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DFNWORKS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;/home/nknapp/dfnworks-main/&#39;</span>
+
+    <span class="c"># Executables    </span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;python_dfn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;lagrit_dfn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;connect_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DFNWORKS_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s">&#39;/DFN_Mesh_Connectivity_Test/ConnectivityTest&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">python_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;python_dfn&#39;</span><span class="p">]</span>
+        <span class="c">#python_path = &#39;/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python&#39;</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;python_dfn not defined&#39;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    
+    <span class="k">try</span><span class="p">:</span>    
+        <span class="n">connectivity_test</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;connect_test&#39;</span><span class="p">]</span>
+        <span class="c">#connectivity_test = &#39;/home/jhyman/dfnWorks/DFN_Mesh_Connectivity_Test/ConnectivityTest&#39;</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&#39;connect_test undefined&#39;</span><span class="p">)</span>    
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Number of CPU&#39;s to use (default):&quot;</span><span class="p">,</span> <span class="n">ncpu</span>
+    
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">ncpu</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">print</span> <span class="s">&quot;Number of CPU&#39;s to use:&quot;</span><span class="p">,</span> <span class="n">ncpu</span>
+    
+
+    <span class="c">## input checking over</span>
+    <span class="c">## input checking over</span>
+    <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">()</span>
+
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_parameter_mlgi_file</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_lagrit_scripts</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">)</span>
+    <span class="n">lagrit</span><span class="o">.</span><span class="n">create_user_functions</span><span class="p">()</span>
+
+    <span class="n">failure</span> <span class="o">=</span> <span class="n">run_mesh</span><span class="o">.</span><span class="n">mesh_fractures_header</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s">Exiting Program&quot;</span><span class="p">)</span>
+
+    <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">lagrit</span><span class="o">.</span><span class="n">create_merge_poly_files</span><span class="p">(</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+
+    <span class="n">run_mesh</span><span class="o">.</span><span class="n">merge_the_meshes</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>    
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mh</span><span class="o">.</span><span class="n">check_dudded_points</span><span class="p">(</span><span class="n">dudded_points</span><span class="p">):</span>
+            <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s">Exitingin Program&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">production_mode</span><span class="p">:</span>
+        <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span> 
+        <span class="n">lagrit</span><span class="o">.</span><span class="n">define_zones</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">domain</span><span class="p">)</span>
+
+    <span class="n">mh</span><span class="o">.</span><span class="n">output_meshing_report</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

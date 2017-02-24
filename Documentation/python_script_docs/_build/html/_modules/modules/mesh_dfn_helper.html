@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>modules.mesh_dfn_helper &mdash; dfnWorks 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="dfnWorks 2.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> dfnWorks</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#import-dfnworks">Import dfnWorks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#about-this-manual">About this  manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../intro.html#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">setup.py: compile the components of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#benchmark-py-test-dfnworks-using-one-or-more-benchamrks">benchmark.py: test dfnWorks using one or more benchamrks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#run-dfnworks-py-execute-a-single-run-of-dfnworks">run_dfnworks.py: execute a single run of dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dfnworks: dfnWorks python wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfnworks">DFNWORKS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.legal">legal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.generator">generator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.flow">flow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.transport">transport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.dfntools">dfntools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.distributions">distrbutions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.helper">helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_input">generator input processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.gen_output">generator output report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.lagrit_scripts">LaGriT scripts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.meshdfn">Mesh DFN module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.mesh_dfn_helper">Mesh DFN helper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-modules.run_meshing">Parallel meshing module</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">dfnWorks</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>modules.mesh_dfn_helper</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for modules.mesh_dfn_helper</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: mesh_dfn_helper.py</span>
+<span class="sd">   :synopsis: helper functions for meshing dfn using lagrit  </span>
+<span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">remove</span>
+
+<div class="viewcode-block" id="parse_params_file"><a class="viewcode-back" href="../../modules.html#modules.mesh_dfn_helper.parse_params_file">[docs]</a><span class="k">def</span> <span class="nf">parse_params_file</span><span class="p">():</span>
+	<span class="sd">&quot;&quot;&quot; Reads params.txt file and parse information</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	num_poly: (int) Number of Polygons</span>
+<span class="sd">	h: (float) meshing length scale h</span>
+<span class="sd">	dudded_points: (int) Expected number of dudded points in Filter (LaGriT)</span>
+<span class="sd">	visual_mode: True/False</span>
+<span class="sd">	domain: dict: x,y,z domain sizes </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--&gt; Parsing  params.txt&quot;</span><span class="p">)</span>
+	<span class="n">fparams</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;params.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+	<span class="c"># Line 1 is the number of polygons</span>
+	<span class="n">num_poly</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+	<span class="c">#Line 2 is the h scale</span>
+	<span class="n">h</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+	<span class="c"># Line 3 is the visualization mode: &#39;1&#39; is True, &#39;0&#39; is False.</span>
+	<span class="n">visual_mode</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+	<span class="c"># line 4 dudded points</span>
+	<span class="n">dudded_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+
+	<span class="c"># Dict domain contains the length of the domain in x,y, and z	</span>
+	<span class="n">domain</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+	<span class="c">#Line 5 is the x domain length</span>
+	<span class="n">domain</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+	
+	<span class="c">#Line 5 is the x domain length </span>
+	<span class="n">domain</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+	<span class="c">#Line 5 is the x domain length </span>
+	<span class="n">domain</span><span class="p">[</span><span class="s">&#39;z&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+	<span class="n">fparams</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Number of Polygons: </span><span class="si">%d</span><span class="s">&quot;</span><span class="o">%</span><span class="n">num_poly</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;H_SCALE </span><span class="si">%f</span><span class="s">&quot;</span><span class="o">%</span><span class="n">h</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">visual_mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="n">visual_mode</span> <span class="o">=</span> <span class="bp">True</span> 
+		<span class="k">print</span><span class="p">(</span><span class="s">&quot;Visual mode is on&quot;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">visual_mode</span> <span class="o">=</span> <span class="bp">False</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">&quot;Visual mode is off&quot;</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Expected Number of duded points: </span><span class="si">%d</span><span class="s">&quot;</span><span class="o">%</span><span class="n">dudded_points</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;X Domain Size </span><span class="si">%d</span><span class="s"> m&quot;</span><span class="o">%</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">])</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Y Domain Size </span><span class="si">%d</span><span class="s"> m&quot;</span><span class="o">%</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;y&#39;</span><span class="p">])</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Z Domain Size </span><span class="si">%d</span><span class="s"> m&quot;</span><span class="o">%</span><span class="n">domain</span><span class="p">[</span><span class="s">&#39;z&#39;</span><span class="p">])</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;--&gt; Parsing params.txt complete</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="k">return</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+	</div>
+<div class="viewcode-block" id="check_dudded_points"><a class="viewcode-back" href="../../modules.html#modules.mesh_dfn_helper.check_dudded_points">[docs]</a><span class="k">def</span> <span class="nf">check_dudded_points</span><span class="p">(</span><span class="n">dudded</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Parses Lagrit log_merge_all.txt and checks if number of dudded points</span>
+<span class="sd">	is the expected number</span>
+
+<span class="sd">	Returns: </span>
+<span class="sd">	True if the number of dudded points is correct </span>
+<span class="sd">	False if the number of dudded points is incorrect </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">print</span> <span class="s">&quot;Checking that number of Dudded points is correct&quot;</span>
+        <span class="n">datafile</span> <span class="o">=</span> <span class="nb">file</span><span class="p">(</span><span class="s">&#39;log_merge_all.txt&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">datafile</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&#39;Dudding&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+				<span class="k">print</span> <span class="s">&#39;From LaGriT: &#39;</span>
+				<span class="k">print</span> <span class="n">line</span>
+				<span class="k">break</span>
+	<span class="n">pts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+	<span class="k">if</span> <span class="n">pts</span> <span class="o">==</span> <span class="n">dudded</span><span class="p">:</span>
+		<span class="k">print</span> <span class="s">&#39;--&gt; Correct Number of points removed </span><span class="se">\n</span><span class="s">&#39;</span>
+		<span class="k">return</span> <span class="bp">True</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">print</span> <span class="s">&#39;ERROR! Incorrect Number of points removed&#39;</span>
+		<span class="k">print</span> <span class="s">&#39;Expected Number &#39;</span><span class="p">,</span> <span class="n">dudded</span>
+		<span class="k">return</span> <span class="bp">False</span>
+	</div>
+<div class="viewcode-block" id="cleanup_dir"><a class="viewcode-back" href="../../modules.html#modules.mesh_dfn_helper.cleanup_dir">[docs]</a><span class="k">def</span> <span class="nf">cleanup_dir</span><span class="p">():</span>
+	<span class="sd">&quot;&quot;&quot; Removes files from meshing &quot;&quot;&quot;</span>
+
+	<span class="n">files_to_remove</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;part*&#39;</span><span class="p">,</span> <span class="s">&#39;log_merge*&#39;</span><span class="p">,</span> <span class="s">&#39;merge*&#39;</span><span class="p">,</span> <span class="s">&#39;mesh_poly_CPU*&#39;</span><span class="p">,</span>
+					<span class="s">&#39;mesh*inp&#39;</span><span class="p">,</span> <span class="s">&#39;mesh*lg&#39;</span><span class="p">]</span>
+	<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files_to_remove</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+			<span class="n">remove</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>	
+</div>
+<div class="viewcode-block" id="output_meshing_report"><a class="viewcode-back" href="../../modules.html#modules.mesh_dfn_helper.output_meshing_report">[docs]</a><span class="k">def</span> <span class="nf">output_meshing_report</span><span class="p">(</span><span class="n">visual_mode</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot; Prints information about the final mesh to file&quot;&quot;&quot;</span>
+
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;finalmesh.txt&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;The final mesh of DFN consists of: </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span> 
+		<span class="k">print</span> <span class="s">&quot;Output files for flow calculations are written in :&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; full_mesh.gmv&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; full_mesh.inp&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; full_mesh.lg&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; full_mesh.uge&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; tri_fracture.stor&quot;</span>
+
+		<span class="n">finp</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;full_mesh.inp&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+		<span class="n">g</span> <span class="o">=</span> <span class="n">finp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+		<span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+		<span class="n">NumElems</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+		<span class="n">NumIntNodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">NumElems</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; triangular elements; </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">NumIntNodes</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  nodes / control volume cells; </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">finp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+		
+		<span class="n">fstor</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;tri_fracture.stor&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+		<span class="n">fstor</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+		<span class="n">fstor</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+		<span class="n">gs</span> <span class="o">=</span> <span class="n">fstor</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+		<span class="n">gs</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+		<span class="n">NumCoeff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">NumCoeff</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; geometrical coefficients / control volume faces. </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">fstor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">print</span> <span class="s">&quot;Output files for visualization are written in :&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; reduced_full_mesh.gmv&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;--&gt; reduced_full_mesh.inp&quot;</span>
+		<span class="n">finp</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;reduced_full_mesh.inp&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+		<span class="n">g</span> <span class="o">=</span> <span class="n">finp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+		<span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+		<span class="n">NumElems</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+		<span class="n">NumIntNodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">NumElems</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; triangular elements; </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">NumIntNodes</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;  nodes / control volume cells. </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+		<span class="n">finp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jeffrey Hyman, Satish Karra, Nataliia Makedonska, Nathaniel Knapp.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

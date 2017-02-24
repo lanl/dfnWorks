@@ -1,8 +1,0 @@
-Runs times for /home/nknapp/dfnworks-main/python_scripts/input_text
-Function: make_working_directory :  0.017745 seconds
-Function: check_input :  0.017287 seconds
-Function: create_network :  0.081600 seconds
-output_report :  2.800434 seconds
-Function: mesh_network :  0.000001 seconds
-Process: dfnGen :  2.922666 seconds
-/home/nknapp/dfnworks-main/python_scripts/input_text :  2.929054 seconds

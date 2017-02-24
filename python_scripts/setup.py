@@ -5,10 +5,11 @@ import subprocess
 import argparse
 import glob
 
+
 def command_line_options():
-    '''Read command lines 
+    """Read command lines 
     -clean: True/False to clean 
-    '''
+    """
     parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
     parser.add_argument("-clean", "--clean", default=False, action="store_true",
               help="Run make clean")
@@ -16,7 +17,12 @@ def command_line_options():
     return options
 	
 def remove_batch(name):
-    """ Removes files with wild card *"""
+    """ Removes files with wild card *
+
+    Args:
+        name (string): the pattern attached to * which will be removed from the current working  directory 
+    """
+
     print("Removing files:")
     for fl in glob.glob(name):
         print fl
@@ -25,24 +31,33 @@ def remove_batch(name):
         except OSError:
             pass	
 
-# setup option - performs all compilations necessary before running run_dfnworks.py
 def compile_exe(directory_list):
-        for directory in directory_list:
-                print directory
-                os.chdir(directory)
-                subprocess.call("make")
-                print("")
+        
+    """ setup option - performs all compilations necessary before running run_dfnworks.py
+    
+    Args:
+       directory_list (list): list of directory names which contain Makefiles
+    """ 
+    for directory in directory_list:
+            print directory
+            os.chdir(directory)
+            subprocess.call("make")
+            print("")
 
-
-# clean option - removes all files not needed in the repository
 def clean(directory_list, python_dir):
-        for directory in directory_list:
-                print directory
-                os.chdir(directory)
-                remove_batch("*.o")
-                print ""
-        os.chdir(python_dir)
-        remove_batch("*pyc")
+    """ clean option - removes all files not needed in the repository
+    
+    Args:
+       directory_list (list): list of directory names to be cleaned of object files
+       python_dir (str): python directory name where ``*.pyc`` will be removed
+    """
+    for directory in directory_list:
+        print directory
+        os.chdir(directory)
+        remove_batch("*.o")
+        print ""
+    os.chdir(python_dir)
+    remove_batch("*pyc")
 
 
 # 1. C_uge_correct - make
@@ -51,35 +66,30 @@ def clean(directory_list, python_dir):
 # 4. GenIntElmList - make
 # 5. DFNGen - make
 
-options=command_line_options()
+if __name__ == "__main__":
 
-<<<<<<< HEAD
-DFN_PATH = '/Users/jhyman/Documents/code/dfnworks-main/'
-=======
-DFN_PATH = '/home/jhyman/dfnworks/dfnworks-main/'
->>>>>>> 283411775ac842d9977964db375373ba9f3c8667
-C_UGE_PATH = DFN_PATH + 'C_uge_correct/'
-CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
-PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'
-GEN_INT_ELM_LIST_PATH = DFN_PATH + 'GenIntElmtList/'
-DFNGEN_PATH = DFN_PATH +'DFNGen/DFNC++Version/'
-VTK_PROC_PATH = DFN_PATH + 'inp_2_vtk/'
+    options=command_line_options()
 
-PYTHON_DIR = DFN_PATH + 'python_scripts/modules'
+    DFN_PATH = '/home/nknapp/dfnworks-main/'
+    C_UGE_PATH = DFN_PATH + 'C_uge_correct/'
+    CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
+    PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'
+    GEN_INT_ELM_LIST_PATH = DFN_PATH + 'GenIntElmtList/'
+    DFNGEN_PATH = DFN_PATH +'DFNGen/DFNC++Version/'
+    PYTHON_DIR = DFN_PATH + 'python_scripts/modules'
 
-directory_list = []
-directory_list.append(C_UGE_PATH)
-directory_list.append(CONNECTIVITY_TEST_PATH)
-directory_list.append(PARTICLE_TRACKING_PATH)
-directory_list.append(DFNGEN_PATH)
-directory_list.append(GEN_INT_ELM_LIST_PATH)
-directory_list.append(VTK_PROC_PATH)
+    directory_list = []
+    directory_list.append(C_UGE_PATH)
+    directory_list.append(CONNECTIVITY_TEST_PATH)
+    directory_list.append(PARTICLE_TRACKING_PATH)
+    directory_list.append(DFNGEN_PATH)
+    directory_list.append(GEN_INT_ELM_LIST_PATH)
 
-if options.clean:
-    print("Removing *.o and *.pyc files before compiling\n")
-    clean(directory_list, PYTHON_DIR)	
-    print("Compiling executables\n")
-    compile_exe(directory_list)
-else:
-    compile_exe(directory_list)
-	
+    if options.clean:
+        print("Removing *.o and *.pyc files before compiling\n")
+        clean(directory_list, PYTHON_DIR)	
+        print("Compiling executables\n")
+        compile_exe(directory_list)
+    else:
+        compile_exe(directory_list)
+            

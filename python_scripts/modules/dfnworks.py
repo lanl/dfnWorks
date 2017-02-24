@@ -1,12 +1,3 @@
-"""
-.. file:: dfnworks.py
-   :synopsis: DFNWORKS class 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-
-"""
-
 __author__ = "Jeffrey Hyman and Satish Karra"
 __version__ = "2.0"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
@@ -19,8 +10,24 @@ from dfntools import *
 import helper
 
 class DFNWORKS(Frozen):
-    """
-    Class for DFN Generation and meshing
+    """  Class for DFN Generation and meshing
+    
+    Attributes:
+        _jobname (str): name of job, also the folder where output files are stored
+        _ncpu (int): number of CPUs used in the job
+        _dfnGen_file (str): the name of the dfnGen input file
+        _dfnFlow_file (str): the name of the dfnFlow input file
+        _local prefix: indicates that the name contains only the most local directory
+        _vtk_file (str): the name of the VTK file
+        _inp_file (str): the name of the INP file
+        _uge_file (str): the name of the UGE file
+        _mesh_type (str): the type of mesh
+        _perm_file (str): the name of the file containing permeabilities 
+        _aper_file (str): the name of the file containing apertures 
+        _perm_cell_file (str): the name of the file containing cell permeabilities 
+        _aper_cell_file (str): the name of the file containing cell apertures
+        _dfnTrans_version (str): the version of dfnTrans to use
+        _freeze (object): indicates whether the class attributes can be modified
     """
     from generator import dfnGen
     from flow import dfnFlow
@@ -36,7 +43,7 @@ class DFNWORKS(Frozen):
 
     from legal import legal
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',rfield='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self._jobname = jobname
         self._ncpu = ncpu
@@ -61,14 +68,13 @@ class DFNWORKS(Frozen):
         self._aper_file = aper_file
         self._perm_cell_file = perm_cell_file
         self._aper_cell_file = aper_cell_file
-        self._rfield=rfield
         self._dfnTrans_version= 2.0
         self._freeze
 
         self.legal()
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
-    '''create_dfn
+    '''
     Parse command line inputs and input files to create and populate dfnworks class
     '''
 
@@ -123,9 +129,6 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     else:
         dfn._aper_file = 'aperture.dat'
         dfn._perm_file = 'perm.dat'
-
-    if options.field != '':
-        dfn._rfield = options.field 
 
 
     print("\n-->Creating DFN class: Complete")

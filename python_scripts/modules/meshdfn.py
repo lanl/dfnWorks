@@ -1,8 +1,6 @@
 """
-.. file:: meshdfn.py
+.. module:: meshdfn.py
    :synopsis: meshing driver for DFN 
-   :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
@@ -18,7 +16,7 @@ import run_meshing as run_mesh
 def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     '''
     Mesh Fracture Network using ncpus and lagrit
-    meshing file is seperate file: dfnGen_meshing.py
+    meshing file is separate file: dfnGen_meshing.py
     '''
     print('='*80)
     print("Meshing Network Using LaGriT : Starting")
