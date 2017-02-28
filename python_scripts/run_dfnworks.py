@@ -19,13 +19,12 @@ def define_paths():
 
 
     os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
-    os.environ['DFNGEN_PATH']=os.environ['DFNWORKS_PATH']+'/DFNGen/DFNC++Version'
+    os.environ['DFNGEN_PATH']=os.environ['DFNWORKS_PATH']+'DFNGen/DFNC++Version'
     os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
 
     # Executables	
     os.environ['python_dfn'] = '/Applications/anaconda/bin/python2.7'
-    os.environ['lagrit_dfn'] = '/Users/jhyman/Applications/LaGriT/lagrit_macOS12_GCC4.8_o'
-
+    os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
     os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
     os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'/C_uge_correct/correct_uge' 
     os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + '/inp_2_vtk/inp2vtk'

@@ -24,6 +24,7 @@ def copy_dfnTrans_files(self):
     #Create Path to DFNTrans   
     try:
         os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+        print 'creating symlink from ', os.environ['DFNTRANS_PATH']+'DFNTrans' 
     except OSError:
         os.remove('DFNTrans')   
         os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
@@ -47,6 +48,7 @@ def copy_dfnTrans_files(self):
 
 def run_dfnTrans(self):
     '''run dfnTrans simulation'''
+    print 'current working directory is ', os.getcwd()
     failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
     if failure == 0:
         print('='*80)
