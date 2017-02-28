@@ -11,7 +11,6 @@ from time import time
 from modules import dfnworks, helper 
 
 def define_paths():
-<<<<<<< HEAD
     # Set Environment Variables
     os.environ['PETSC_DIR']='/Users/jhyman/Documents/code/petsc'
     os.environ['PETSC_ARCH']='arch-darwin-c-debug'
