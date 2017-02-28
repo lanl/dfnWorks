@@ -378,37 +378,37 @@ class input_helper():
                       "integer value (0,1,2,3,etc.)".format(key))
                 
     
-    def verifylist(self, vallist, key, verificationfn, desiredlength, nozeros=False, nonegs=False):
+    def verifyList(self, valList, key, verificationFn, desiredLength = 3, noZeros=False, noNegs=False):
         """verifies input list that come in format {0, 1, 2, 3}
        
-        input:  vallist - list of values (flags, floats, or ints) corresponding to a parameter
+        input:  valList - list of values (flags, floats, or ints) corresponding to a parameter
                 key - the name of the parameter whose list is being verified
-                verificationfn - (either verifyflag, verifyfloat or verifyint) checks each list element 
-                desiredlength - how many elements are supposed to be in the list
-                nozeros - (optional) true for lists than cannot contain 0's, false if 0's are ok  
-                nonegs - (optional) true for lists than cannot contain negative numbers, false otherwise
+                verificationFn - (either verifyflag, verifyfloat or verifyint) checks each list element 
+                desiredLength - how many elements are supposed to be in the list
+                noZeros - (optional) true for lists than cannot contain 0's, false if 0's are ok  
+                noNegs - (optional) true for lists than cannot contain negative numbers, false otherwise
         output: returns negative value of list length to indicate incorrect length and provide meaningful error message
                 prints error and exits if a value of the wrong type is found in the list
-                returns none if successful"""
+                returns None if successful"""
         
-        if vallist == ['']: return 0
-        if type(vallist) is not list:
+        if valList == ['']: return 0
+        if type(valList) is not list:
             self.error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
-        if desiredlength != 0 and int(len(vallist)) != int(desiredlength):
-            print 'list desired length is ', desiredlength, 'but vallist is ', vallist, 'with length ', len(vallist)
-            return -len(vallist)
-        for i, value in enumerate(vallist):
+        if desiredLength != 0 and int(len(valList)) != int(desiredLength):
+            print 'list desired length is ', desiredLength, 'but valList is ', valList, 'with length ', len(valList)
+            return -len(valList)
+        for i, value in enumerate(valList):
             value = value.strip()
-            verifiedval = verificationfn(value, inlist = true)
-            if verifiedval == none:
-                listtype = re.sub('integer', 'int', re.sub(r'verify', '', verificationfn.__name__)) ## 'verifyint' --> 'integer'
+            verifiedVal = verificationFn(value, inList = True)
+            if verifiedVal == None:
+                listtype = re.sub('integer', 'int', re.sub(r'verify', '', verificationFn.__name__)) ## 'verifyint' --> 'integer'
                 self.error("\"{}\" must be a list of {}s {}. non-{} found in "\
                       "list".format(key, listtype, examples[listtype], listtype))
-            if nozeros and verifiedval == 0:
+            if noZeros and verifiedVal == 0:
                 self.error("\"{}\" list cannot contain any zeroes.".format(key))
-            if nonegs and self.isnegative(float(verifiedval)):
+            if noNegs and self.isNegative(float(verifiedVal)):
                 self.error("\"{}\" list cannot contain any negative values.".format(key)) 
-            vallist[i] = verifiedval 
+            valList[i] = verifiedVal 
            
 
     ## def verifynumvalsis(length, key):f

@@ -124,7 +124,9 @@ def check_input(self, input_file='',output_file=''):
         """ Check that domainSize has 3 non-zero values to define the 
         size of each dimension (x,y,z) of the domain.
         """
-        errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSize', params), 'domainSize', input_helper_methods.verifyFloat, desiredLength = 3,
+        desiredLength = 3
+
+        errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSize', params), 'domainSize', input_helper_methods.verifyFloat,  desiredLength,
                        noZeros = True, noNegs=True)
         if errResult != None:
             input_helper_methods.error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\

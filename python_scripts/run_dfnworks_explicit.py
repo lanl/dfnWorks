@@ -10,7 +10,7 @@
 import os
 import sys
 from time import time
-sys.path.append("/home/jhyman/dfnworks/dfnworks-main/python_scripts/") 
+sys.path.append("/home/nknapp/dfnworks-main/python_scripts/") 
 from modules import dfnworks, helper
 
 def define_paths():
@@ -26,7 +26,7 @@ def define_paths():
     os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
 
     # Set this to the git repo
-    os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
     # Do not touch these    
     os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
     os.environ['DFNGEN_PATH']=os.environ['DFNWORKS_PATH']+'DFNGen/DFNC++Version'

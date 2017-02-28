@@ -6,19 +6,19 @@
 #"""
 
 import os, sys
-sys.path.append("/Users/jhyman/Documents/code/dfnworks-main/python_scripts/") 
+sys.path.append("/home/nknapp/dfnworks-main/python_scripts/") 
 from time import time
 from modules import dfnworks, helper 
 
 def define_paths():
     # Set Environment Variables
-    os.environ['PETSC_DIR']='/Users/jhyman/Documents/code/petsc'
+    os.environ['PETSC_DIR']='/home/nknapp/petsc'
     os.environ['PETSC_ARCH']='arch-darwin-c-debug'
 
-    os.environ['PFLOTRAN_DIR']='/Users/jhyman/Documents/code/pflotran-dev/'
+    os.environ['PFLOTRAN_DIR']='/home/nknapp/pflotran-dev/'
 
 
-    os.environ['DFNWORKS_PATH'] = '/Users/jhyman/Documents/code/dfnworks-main/'
+    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
     os.environ['DFNGEN_PATH']=os.environ['DFNWORKS_PATH']+'/DFNGen/DFNC++Version'
     os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
 
