@@ -1,1 +1,0 @@
-/usr/bin/cc  -fPIC   -w -g  -Wl,--no-undefined -lc    -shared -Wl,-soname,libvtksqlite-7.1.so.1 -o ../../../lib/libvtksqlite-7.1.so.1 CMakeFiles/vtksqlite.dir/vtk_sqlite3.c.o -lpthread 

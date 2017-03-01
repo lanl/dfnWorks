@@ -1,3 +1,0 @@
-dfnGen /home/nknapp/dfnworks/dfnworks-main/sample_inputs/break.dat	
-dfnFlow /home/nknapp/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/dfn_explicit.in
-dfnTrans /home/nknapp/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/PTDFN_control.dat

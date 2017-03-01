@@ -1,8 +1,0 @@
-# Target labels
- vtkViewsContext2D
-# Source files and their labels
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Views/Context2D/vtkContextView.cxx
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Views/Context2D/vtkContextInteractorStyle.cxx
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Views/Context2D/vtkContextView.h
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Views/Context2D/vtkContextInteractorStyle.h
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Views/Context2D/vtkViewsContext2DModule.h

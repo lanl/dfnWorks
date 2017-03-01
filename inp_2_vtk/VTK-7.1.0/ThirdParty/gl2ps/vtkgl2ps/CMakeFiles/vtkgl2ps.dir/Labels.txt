@@ -1,4 +1,0 @@
-# Target labels
- vtkgl2ps
-# Source files and their labels
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/gl2ps/vtkgl2ps/gl2ps.c

@@ -1,1 +1,0 @@
-/usr/bin/cc  -fPIC   -w -w -g  -Wl,--no-undefined -lc    -shared -Wl,-soname,libvtkexpat-7.1.so.1 -o ../../../lib/libvtkexpat-7.1.so.1 CMakeFiles/vtkexpat.dir/xmlparse.c.o CMakeFiles/vtkexpat.dir/xmltok.c.o CMakeFiles/vtkexpat.dir/xmlrole.c.o 

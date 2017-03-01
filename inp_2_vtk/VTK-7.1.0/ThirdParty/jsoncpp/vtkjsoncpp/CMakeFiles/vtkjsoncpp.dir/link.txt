@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC   -w -w -w -g  -Wl,--no-undefined -lc    -shared -Wl,-soname,libvtkjsoncpp-7.1.so.1 -o ../../../lib/libvtkjsoncpp-7.1.so.1 CMakeFiles/vtkjsoncpp.dir/jsoncpp.cpp.o 

@@ -1,4 +1,0 @@
-# Target labels
- vtkUtilitiesEncodeString
-# Source files and their labels
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Utilities/EncodeString/vtkEncodeString.cxx

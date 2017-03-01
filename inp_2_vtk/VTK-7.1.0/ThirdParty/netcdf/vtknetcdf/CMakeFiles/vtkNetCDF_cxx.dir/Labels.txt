@@ -1,5 +1,0 @@
-# Target labels
- vtknetcdf
-# Source files and their labels
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/netcdf/vtknetcdf/cxx/netcdf.cpp
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/ThirdParty/netcdf/vtknetcdf/cxx/ncvalues.cpp

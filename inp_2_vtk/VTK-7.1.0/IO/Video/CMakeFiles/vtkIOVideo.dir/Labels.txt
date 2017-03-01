@@ -1,6 +1,0 @@
-# Target labels
- vtkIOVideo
-# Source files and their labels
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/Video/vtkVideoSource.cxx
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/Video/vtkVideoSource.h
-/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/IO/Video/vtkIOVideoModule.h
