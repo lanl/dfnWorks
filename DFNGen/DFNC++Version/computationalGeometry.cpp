@@ -89,7 +89,8 @@ double *rotationMatrix(double *normalA, double *normalB) {
         double sin = sqrt(xProd[0]*xProd[0] + xProd[1]*xProd[1] + xProd[2]*xProd[2]);
         double cos = dotProduct(normalA, normalB);
         double v[9] = {0, -xProd[2], xProd[1], xProd[2], 0, -xProd[0], -xProd[1], xProd[0], 0};
-        double scalar = (1.0f-cos)/(sin*sin);
+        //double scalar = (1.0f-cos)/(sin*sin);
+        double scalar = 1.0/(1.0+cos);
 
         double vSquared[9];
         vSquared[0] = (v[0]*v[0] + v[1]*v[3] + v[2]*v[6])*scalar;
@@ -145,6 +146,8 @@ double *rotationMatrix(double *normalA, double *normalB) {
     Arg 1: Poly to be rotated
     Arg 2: Normal vector to rotate to (array of 3 doubles) */
 void applyRotation3D(Poly &newPoly, double *normalB) {
+
+    std::cout << "\nNormal rotating to: " <<  normalB[0] << normalB[1] << normalB[2];
     // Normals should already be normalized by this point!!!
 
     // NormalA: newPoly's current normal
