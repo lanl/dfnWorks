@@ -28,8 +28,6 @@ ParticleTracking/*.o
 ParticleTracking/DFNTrans
 
 
-python_scripts/run_dfnworks.py
-python_scripts/setup.py
 
 python_scripts/test_inputs/input_text.txt
 sample_inputs/4_fracture_test/input_4_rect.dat
@@ -77,12 +75,4 @@ main
 *.nfs*
 *.swp
 
-# Dont change other peoples settings in these files
-runDFN.sh
-new_mesh_DFN.py
-mesh_DFN_C++_v1.py
-mesh_DFN_C++_v2.py
-
-#input files
-python_scripts/run_dfnworks_explicit.py
 
