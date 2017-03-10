@@ -1,0 +1,10 @@
+vtk_add_test_tcl(
+  TestBMPReader.tcl
+  TestImageWriters.tcl
+  TestJPEGReader.tcl
+  TestMHD.tcl
+  TestMetaImage2D.tcl
+  TestSetFileNames.tcl
+  TestTIFFReader.tcl
+  dem.tcl
+  )

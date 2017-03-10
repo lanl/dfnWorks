@@ -1,0 +1,3 @@
+dfnGen /home/nknapp/dfnworks-main/tests/gen_exponential_dist.dat
+dfnFlow /home/nknapp/dfnworks-main/tests/dfn_explicit.in
+dfnTrans /home/nknapp/dfnworks-main/tests/PTDFN_control.dat
