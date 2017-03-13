@@ -410,7 +410,8 @@ def pflotran(self):
             exit()
     print("="*80)
     print("--> Running PFLOTRAN") 
-    cmd = '${PETSC_DIR}/${PETSC_ARCH}/bin/mpirun -np ' + str(self._ncpu) + ' $PFLOTRAN_DIR/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file
+    cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self._ncpu) + \
+        ' '+ os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file
     os.system(cmd)    
     print('='*80)
     print("--> Running PFLOTRAN Complete")
@@ -484,7 +485,7 @@ def uncorrelated(sigma):
     f = open(output_filename,'w+')
     f.write('aperture\n')
     for i in range(n):
-    	f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
+        f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
     f.close()
 
     cmd = 'ln -s ' + output_filename + ' aperture.dat '
@@ -494,7 +495,7 @@ def uncorrelated(sigma):
     f = open(output_filename,'w+')
     f.write('permeability\n')
     for i in range(n):
-    	f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
+        f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
     f.close()
 
     cmd = 'ln -s ' + output_filename + ' perm.dat '
