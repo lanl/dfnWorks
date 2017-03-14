@@ -1,6 +1,7 @@
 from tempfile import mkstemp
 from shutil import move
 import os
+import subprocess
 
 def define_paths():
 
@@ -9,7 +10,7 @@ def define_paths():
     # ================================================
     
     # the dfnWorks-Version2.0  repository 
-    os.environ['DFNWORKS_PATH'] = 'LOUIS_THE_CHILD/dfnWorks-Version2.0/'
+    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'
     
     # PETSC paths
     os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'
@@ -39,21 +40,5 @@ def define_paths():
     #===============================================
     # correct all the paths in the tests directory
 
-    test_directory = os.environ['DFNWORKS_PATH'] + 'tests'
-    prefix = os.environ['DFNWORKS_PATH'].split('dfnWorks-Version2.0')[0]
-    for test_input_fle in os.listdir(test_directory):
-        fh, abs_path = mkstemp()
-        with open(abs_path, 'w') as new_file:
-            test_input_fle = test_directory + '/' + test_input_fle
-            with open(test_input_fle, 'r') as old_file:
-                if '.txt' in test_input_fle:
-                    for line in old_file:
-                        temp_line = line
-                        path_to_edit = temp_line.split()[1] 
-                        print 'path to edit is ', path_to_edit
-                        old_prefix = path_to_edit.split('dfnWorks-Version2.0')[0]
-                        print 'old prefix is ', old_prefix
-                        new_file.write(line.replace(old_prefix, prefix))
-        os.close(fh)
-        os.remove(test_input_fle)
-        move(abs_path, test_input_fle)
+    subprocess.call(os.environ['python_dfn'] + ' ' + os.environ['PYDFNWORKS_PATH'] + ' ' + 'bin/fix_paths.py', shell=True)
+

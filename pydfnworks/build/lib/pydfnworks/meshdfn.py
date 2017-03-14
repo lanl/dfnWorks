@@ -77,7 +77,7 @@ if __name__ == "__main__":
     refine_factor = 1
     ncpu = 4
 
-    os.environ['DFNWORKS_PATH'] = 'LOUIS_THE_CHILD/dfnworks-main/'
+    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnWorks-Release2.0/'
 
     # Executables    
     os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
