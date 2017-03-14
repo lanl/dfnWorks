@@ -27,6 +27,16 @@ python_scripts/setup.py
 python_scripts/test_inputs/input_text.txt
 sample_inputs/4_fracture_test/input_4_rect.dat
 
+*doctree*
+*pickle*
+*png*
+*/build/*
+*aux*
+*idx*
+*ilg*
+*.ind*
+*.tex*
+*.toc*
 
 
 *.pdf
