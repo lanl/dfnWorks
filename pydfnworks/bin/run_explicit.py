@@ -7,27 +7,25 @@
 
 """
 
-import os
-import sys
+import os, sys
 from time import time
-from modules import dfnworks, helper
+from pydfnworks import * 
+import subprocess
 
 define_paths()
 main_time = time()
 DFN = dfnworks.create_dfn()
 
-#DFN.make_working_directory()
-#DFN.check_input()
-#DFN.create_network()
-##DFN.output_report()
-#DFN.mesh_network()
-#exit()
+DFN.make_working_directory()
+DFN.check_input()
+DFN.create_network()
+DFN.output_report()
+DFN.mesh_network()
 
 os.chdir(DFN._jobname)
-
-#DFN.lagrit2pflotran()
-#DFN.pflotran()
-DFN.parse_pflotran_vtk()       
+DFN.lagrit2pflotran()
+DFN.pflotran()
+DFN.parse_pflotran_vtk_python()       
 DFN.pflotran_cleanup()
 
 DFN.copy_dfnTrans_files()
