@@ -20,7 +20,7 @@ Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This 
 
 python fix_paths.py [OLD_PREFIX] [NEW_PREFIX]
 
-Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is the prefix you wish to replace. 
+Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is the prefix you wish to replace. If OLD_PREFIX includes the ending '/' character, then NEW_PREFIX must also include it.  
 
 Turn on X forwarding if on server
 ----------------------------------

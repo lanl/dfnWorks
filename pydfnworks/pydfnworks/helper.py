@@ -11,7 +11,7 @@ def cleanup_files(self, output_dir):
     pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat']
     dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
     exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list
-    delete_list = ['output_files.txt', 'dfn_explicit-cellinfo', 'dfn_explicit-darcyvel', 'dfn_explicit-mas.dat', 'convert_uge_params.txt', 'logx3dgen', 'outx3dgen']
+    delete_list = ['output_files.txt', 'dfn_explicit-cellinfo', 'dfn_explicit-darcyvel', 'dfn_explicit-mas.dat', 'convert_uge_params.txt', 'logx3dgen', 'outx3dgen', '-e']
     subprocess.call('mkdir ' + output_dir, shell=True)
     for output_fle in os.listdir(os.getcwd()):
         exclude = False
