@@ -4,7 +4,7 @@ import os
 import subprocess
 import argparse
 import glob
-
+from pydfnworks import *
 
 def command_line_options():
     """Read command lines 
@@ -15,6 +15,8 @@ def command_line_options():
     parser.add_argument("-clean", "--clean", default=False, action="store_true",
               help="Run make clean")
     parser.add_argument("-ncpus", "--ncpus", default=1, help="Run make using ncpus processors")
+    parser.add_argument("-large_network", "--large_network", default=False, action="store_true",
+              help="Set true to use CPP for file processing bottleneck. default=False")
     options = parser.parse_args()
     return options
 	
@@ -74,22 +76,16 @@ def clean(directory_list, python_dir):
 
 if __name__ == "__main__":
 
+    define_paths()
     options=command_line_options()
 
-    DFN_PATH = '/home/nknapp/dfnworks-main/'
-    C_UGE_PATH = DFN_PATH + 'C_uge_correct/'
-    CONNECTIVITY_TEST_PATH = DFN_PATH + 'DFN_Mesh_Connectivity_Test/'
-    PARTICLE_TRACKING_PATH = DFN_PATH +'ParticleTracking/'
-    DFNGEN_PATH = DFN_PATH +'DFNGen/'
-    PYTHON_DIR = DFN_PATH + 'pydfnworks/pydfnworks/modules'
-    INP2VTK_PATH = DFN_PATH + 'inp_2_vtk/'
     directory_list = []
-    directory_list.append(C_UGE_PATH)
-    directory_list.append(CONNECTIVITY_TEST_PATH)
-    directory_list.append(PARTICLE_TRACKING_PATH)
-    directory_list.append(DFNGEN_PATH)
+    directory_list.append(os.environ['correct_uge_PATH'])
+    directory_list.append(os.environ['connect_test'])
+    directory_list.append(os.environ['DFNTRANS_PATH'])
+    directory_list.append(os.environ['DFNGEN_PATH'])
     if options.large_network:    
-        directory_list.append(INP2VTK_PATH)
+        directory_list.append(os.environ['VTK_PATH'])
         print("Using C++ to parse VTK files")
     if options.clean:
         print("Removing *.o and *.pyc files before compiling\n")

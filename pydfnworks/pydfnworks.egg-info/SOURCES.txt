@@ -18,6 +18,7 @@ pydfnworks/lagrit_scripts.py
 pydfnworks/legal.py
 pydfnworks/mesh_dfn_helper.py
 pydfnworks/meshdfn.py
+pydfnworks/paths.py
 pydfnworks/run_meshing.py
 pydfnworks/transport.py
 pydfnworks.egg-info/PKG-INFO

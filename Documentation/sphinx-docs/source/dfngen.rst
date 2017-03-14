@@ -382,7 +382,7 @@ explanation of each keyword.
 
     userRectanglesOnOff: 1    //0 - User Rectangles off //1 - User Rectangles on
 	                          
-    UserRect_Input_File_Path: /home/nknapp/dfnworks-main/
+    UserRect_Input_File_Path: /home/nknapp/dfnWorks-Version2.0/
     tests/define_4_user_rects.dat 
 
     /*===========================================================================*/

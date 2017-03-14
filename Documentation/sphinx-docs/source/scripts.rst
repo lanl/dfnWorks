@@ -3,7 +3,7 @@
 Scripts
 ========
 
-The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnworks-main/pydfnworks/bin/ . 
+The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ . 
 
 compile.py: compile dfnWorks components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

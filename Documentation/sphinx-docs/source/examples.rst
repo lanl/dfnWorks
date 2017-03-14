@@ -11,13 +11,25 @@ This document contains a short, five example, tutorial for dfnWorks. The five te
 - truncated_power_law_dist: The user specifies the parameters for two families of fractures with a truncated power-law distribution of fracture size. 
 
 
-All required input files for these examples are contained in the folder dfnworks-main/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
+All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
+
+Before doing anything else
+----------------------------
+
+1. Setup the python package, in the folder dfnWorks-Version2.0/pydfnworks/ ::
+
+python setup.py install (if the user has admin privileges), OR:
+
+python setup.py install --user (if the user does not have admin privileges)
+
+2. Set the paths correctly - described in the next section
 
 Setting the paths correctly
 ------------------------------
 
-Before executing dfnWorks, the following paths must be set. These are in the file dfnworks-main/pydfnworks/bin/run.py:
+Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
 
+- DFNWORKS_PATH: the dfnWorks-Version2.0 repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
 - PFLOTRAN_DIR: The PFLOTRAN directory
 - python_dfn: The location of the Python distribution to use
@@ -26,7 +38,7 @@ Before executing dfnWorks, the following paths must be set. These are in the fil
 Executing dfnWorks
 -------------------
 
-To run one of the test cases enter either of the following types of command (INPUT PARAMETERS WILL CHANGE FOR ACTUAL RUNS). Both of the scripts invoked below are in the directory dfnworks-main/pydfnworks/bin/ : 
+To run one of the test cases enter either of the following types of command (INPUT PARAMETERS WILL CHANGE FOR ACTUAL RUNS). Both of the scripts invoked below are in the directory dfnWorks-Version2.0/pydfnworks/bin/ : 
 
 - python test.py [JOBNAME], where name is one of the names above. 
 - python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpus [NUMBER_OF_CPUS] -large_network 
@@ -44,7 +56,7 @@ python test.py lognormal_dist
 
 OR
 
-python run.py -name lognormal_dist -input dfnworks-main/tests/lognormal_distribution.txt -ncpus 4 -large_network 
+python run.py -name lognormal_dist -input dfnWorks-Version2.0/tests/lognormal_distribution.txt -ncpus 4 -large_network 
 
 Both of these command line inputs will run the lognormal_dist test and create a new folder lognormal_dist where all output files will be located. Descriptions of each output file are in the documentation. The only difference between the command line inputs above is that in the first, parameters such as number of CPUs and the input file are specified in the script test.py, while the second allows the user to specify these parameters on the command line. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
 
@@ -52,9 +64,9 @@ Both of these command line inputs will run the lognormal_dist test and create a 
 4_user_defined_rectangles
 --------------------------
 
-This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnworks-main/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
+This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
 
-python dfnworks-main/pydfnworks/bin/run.py -name 4_user_defined_rectangles -input dfnworks_main/tests/4_user_rectangles.txt -ncpus 4
+python dfnWorks-Version2.0/pydfnworks/bin/run.py -name 4_user_defined_rectangles -input dfnworks_main/tests/4_user_rectangles.txt -ncpus 4
 
 This will create a new folder, test 4fractures, where all of the output will be located. You can compare your results to the following images.
 
@@ -94,7 +106,7 @@ In the other tests, only a brief description and pictures are provided.
 4_user_defined_ellipses
 --------------------------
 
-This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnworks-main/tests, and is named define_4_user_ellipses.dat. 
+This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_ellipses.dat. 
 
 .. image:: figures/4_user_ellipses_mesh.png
    :scale: 100 %

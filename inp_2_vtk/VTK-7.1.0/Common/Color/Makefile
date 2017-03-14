@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0
+CMAKE_SOURCE_DIR = /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0
+CMAKE_BINARY_DIR = /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,14 +113,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/CMakeFiles /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Common/Color/CMakeFiles/progress.marks
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/CMakeFiles 0
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/CMakeFiles /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/Common/Color/CMakeFiles/progress.marks
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/clean
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/clean
 .PHONY : clean
 
 # The main clean target
@@ -129,22 +129,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/preinstall
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/preinstall
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 Common/Color/CMakeFiles/vtkCommonColor.dir/rule:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/CMakeFiles/vtkCommonColor.dir/rule
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Common/Color/CMakeFiles/vtkCommonColor.dir/rule
 .PHONY : Common/Color/CMakeFiles/vtkCommonColor.dir/rule
 
 # Convenience name for target.
@@ -153,7 +153,7 @@ vtkCommonColor: Common/Color/CMakeFiles/vtkCommonColor.dir/rule
 
 # fast build rule for target.
 vtkCommonColor/fast:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/build
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/build
 .PHONY : vtkCommonColor/fast
 
 vtkColorSeries.o: vtkColorSeries.cxx.o
@@ -161,7 +161,7 @@ vtkColorSeries.o: vtkColorSeries.cxx.o
 
 # target to build an object file
 vtkColorSeries.cxx.o:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.o
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.o
 .PHONY : vtkColorSeries.cxx.o
 
 vtkColorSeries.i: vtkColorSeries.cxx.i
@@ -169,7 +169,7 @@ vtkColorSeries.i: vtkColorSeries.cxx.i
 
 # target to preprocess a source file
 vtkColorSeries.cxx.i:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.i
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.i
 .PHONY : vtkColorSeries.cxx.i
 
 vtkColorSeries.s: vtkColorSeries.cxx.s
@@ -177,7 +177,7 @@ vtkColorSeries.s: vtkColorSeries.cxx.s
 
 # target to generate assembly for a file
 vtkColorSeries.cxx.s:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.s
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkColorSeries.cxx.s
 .PHONY : vtkColorSeries.cxx.s
 
 vtkNamedColors.o: vtkNamedColors.cxx.o
@@ -185,7 +185,7 @@ vtkNamedColors.o: vtkNamedColors.cxx.o
 
 # target to build an object file
 vtkNamedColors.cxx.o:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.o
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.o
 .PHONY : vtkNamedColors.cxx.o
 
 vtkNamedColors.i: vtkNamedColors.cxx.i
@@ -193,7 +193,7 @@ vtkNamedColors.i: vtkNamedColors.cxx.i
 
 # target to preprocess a source file
 vtkNamedColors.cxx.i:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.i
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.i
 .PHONY : vtkNamedColors.cxx.i
 
 vtkNamedColors.s: vtkNamedColors.cxx.s
@@ -201,7 +201,7 @@ vtkNamedColors.s: vtkNamedColors.cxx.s
 
 # target to generate assembly for a file
 vtkNamedColors.cxx.s:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.s
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Common/Color/CMakeFiles/vtkCommonColor.dir/build.make Common/Color/CMakeFiles/vtkCommonColor.dir/vtkNamedColors.cxx.s
 .PHONY : vtkNamedColors.cxx.s
 
 # Help Target
@@ -234,6 +234,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

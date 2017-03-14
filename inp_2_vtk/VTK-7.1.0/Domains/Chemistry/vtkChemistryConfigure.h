@@ -17,6 +17,6 @@
 #define vtkDomainsChemistryConfigure_h
 
 /* Where the Blue Obelisk Data Repository element.xml file is found. */
-#define VTK_BODR_DATA_PATH_BUILD "/home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/Chemistry"
+#define VTK_BODR_DATA_PATH_BUILD "/home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/Domains/Chemistry"
 
 #endif

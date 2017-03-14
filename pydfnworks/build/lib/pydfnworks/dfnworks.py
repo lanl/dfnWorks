@@ -43,6 +43,7 @@ class DFNWORKS(Frozen):
     from transport import copy_dfnTrans_files, run_dfnTrans
     from meshdfn import mesh_network
     from legal import legal
+    from paths import define_paths
 
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 

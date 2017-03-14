@@ -5,7 +5,7 @@ pydfnworks: the dfnWorks python package
 
 The pydfnworks package allows the user to easily run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package easily.
 
-The pydfnworks must be setup by the user using the following command in the directory dfnworks-main/pydfnworks/ :
+The pydfnworks must be setup by the user using the following command in the directory dfnWorks-Version2.0/pydfnworks/ :
 
 python setup.py install (if the user has admin privileges), OR:
 

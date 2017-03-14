@@ -1971,7 +1971,7 @@ END
 \label{pydfnworks:dfnworks-python-chapter}\label{pydfnworks::doc}\label{pydfnworks:pydfnworks-the-dfnworks-python-package}
 The pydfnworks package allows the user to easily run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package easily.
 
-The pydfnworks must be setup by the user using the following command in the directory dfnworks-main/pydfnworks/ :
+The pydfnworks must be setup by the user using the following command in the directory dfnWorks-Version2.0/pydfnworks/ :
 
 python setup.py install (if the user has admin privileges), OR:
 
@@ -3231,7 +3231,7 @@ Read in run times from file and and print to screen with percentages
 
 \chapter{Scripts}
 \label{scripts:scripts}\label{scripts::doc}\label{scripts:scripts-chapter}
-The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnworks-main/pydfnworks/bin/ .
+The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ .
 
 
 \section{compile.py: compile dfnWorks components}
@@ -3274,12 +3274,12 @@ truncated\_power\_law\_dist: The user specifies the parameters for two families 
 
 \end{itemize}
 
-All required input files for these examples are contained in the folder dfnworks-main/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here.
+All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here.
 
 
 \section{Setting the paths correctly}
 \label{examples:setting-the-paths-correctly}
-Before executing dfnWorks, the following paths must be set. These are in the file dfnworks-main/pydfnworks/bin/run.py:
+Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/bin/run.py:
 \begin{itemize}
 \item {} 
 PETSC\_DIR and PETSC\_ARCH: PETSC environmental variables
@@ -3298,7 +3298,7 @@ lagrit\_dfn: The location of the LaGriT executable
 
 \section{Executing dfnWorks}
 \label{examples:executing-dfnworks}
-To run one of the test cases enter either of the following types of command (INPUT PARAMETERS WILL CHANGE FOR ACTUAL RUNS). Both of the scripts invoked below are in the directory dfnworks-main/pydfnworks/bin/ :
+To run one of the test cases enter either of the following types of command (INPUT PARAMETERS WILL CHANGE FOR ACTUAL RUNS). Both of the scripts invoked below are in the directory dfnWorks-Version2.0/pydfnworks/bin/ :
 \begin{itemize}
 \item {} 
 python test.py {[}JOBNAME{]}, where name is one of the names above.
@@ -3321,16 +3321,16 @@ python test.py lognormal\_dist
 
 OR
 
-python run.py -name lognormal\_dist -input dfnworks-main/tests/lognormal\_distribution.txt -ncpus 4 -large\_network
+python run.py -name lognormal\_dist -input dfnWorks-Version2.0/tests/lognormal\_distribution.txt -ncpus 4 -large\_network
 
 Both of these command line inputs will run the lognormal\_dist test and create a new folder lognormal\_dist where all output files will be located. Descriptions of each output file are in the documentation. The only difference between the command line inputs above is that in the first, parameters such as number of CPUs and the input file are specified in the script test.py, while the second allows the user to specify these parameters on the command line. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
 
 
 \section{4\_user\_defined\_rectangles}
 \label{examples:user-defined-rectangles}
-This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnworks-main/tests, and is named define\_4\_user\_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
+This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define\_4\_user\_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
 
-python dfnworks-main/pydfnworks/bin/run.py -name 4\_user\_defined\_rectangles -input dfnworks\_main/tests/4\_user\_rectangles.txt -ncpus 4
+python dfnWorks-Version2.0/pydfnworks/bin/run.py -name 4\_user\_defined\_rectangles -input dfnworks\_main/tests/4\_user\_rectangles.txt -ncpus 4
 
 This will create a new folder, test 4fractures, where all of the output will be located. You can compare your results to the following images.
 
@@ -3359,7 +3359,7 @@ In the other tests, only a brief description and pictures are provided.
 
 \section{4\_user\_defined\_ellipses}
 \label{examples:user-defined-ellipses}
-This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnworks-main/tests, and is named define\_4\_user\_ellipses.dat.
+This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define\_4\_user\_ellipses.dat.
 
 {\hfill\scalebox{1.000000}{\includegraphics{4_user_ellipses_mesh.png}}\hfill}
 

@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0
+CMAKE_SOURCE_DIR = /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0
+CMAKE_BINARY_DIR = /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,14 +113,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/CMakeFiles /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/CMakeFiles/progress.marks
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0/CMakeFiles 0
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/CMakeFiles /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/Domains/ChemistryOpenGL2/CMakeFiles/progress.marks
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/clean
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/clean
 .PHONY : clean
 
 # The main clean target
@@ -129,22 +129,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/preinstall
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/preinstall
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/rule:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/rule
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f CMakeFiles/Makefile2 Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/rule
 .PHONY : Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/rule
 
 # Convenience name for target.
@@ -153,7 +153,7 @@ vtkDomainsChemistryOpenGL2: Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemis
 
 # fast build rule for target.
 vtkDomainsChemistryOpenGL2/fast:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build
 .PHONY : vtkDomainsChemistryOpenGL2/fast
 
 vtkDomainsChemistryOpenGL2ObjectFactory.o: vtkDomainsChemistryOpenGL2ObjectFactory.cxx.o
@@ -161,7 +161,7 @@ vtkDomainsChemistryOpenGL2ObjectFactory.o: vtkDomainsChemistryOpenGL2ObjectFacto
 
 # target to build an object file
 vtkDomainsChemistryOpenGL2ObjectFactory.cxx.o:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.o
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.o
 .PHONY : vtkDomainsChemistryOpenGL2ObjectFactory.cxx.o
 
 vtkDomainsChemistryOpenGL2ObjectFactory.i: vtkDomainsChemistryOpenGL2ObjectFactory.cxx.i
@@ -169,7 +169,7 @@ vtkDomainsChemistryOpenGL2ObjectFactory.i: vtkDomainsChemistryOpenGL2ObjectFacto
 
 # target to preprocess a source file
 vtkDomainsChemistryOpenGL2ObjectFactory.cxx.i:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.i
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.i
 .PHONY : vtkDomainsChemistryOpenGL2ObjectFactory.cxx.i
 
 vtkDomainsChemistryOpenGL2ObjectFactory.s: vtkDomainsChemistryOpenGL2ObjectFactory.cxx.s
@@ -177,7 +177,7 @@ vtkDomainsChemistryOpenGL2ObjectFactory.s: vtkDomainsChemistryOpenGL2ObjectFacto
 
 # target to generate assembly for a file
 vtkDomainsChemistryOpenGL2ObjectFactory.cxx.s:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.s
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkDomainsChemistryOpenGL2ObjectFactory.cxx.s
 .PHONY : vtkDomainsChemistryOpenGL2ObjectFactory.cxx.s
 
 vtkOpenGLMoleculeMapper.o: vtkOpenGLMoleculeMapper.cxx.o
@@ -185,7 +185,7 @@ vtkOpenGLMoleculeMapper.o: vtkOpenGLMoleculeMapper.cxx.o
 
 # target to build an object file
 vtkOpenGLMoleculeMapper.cxx.o:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.o
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.o
 .PHONY : vtkOpenGLMoleculeMapper.cxx.o
 
 vtkOpenGLMoleculeMapper.i: vtkOpenGLMoleculeMapper.cxx.i
@@ -193,7 +193,7 @@ vtkOpenGLMoleculeMapper.i: vtkOpenGLMoleculeMapper.cxx.i
 
 # target to preprocess a source file
 vtkOpenGLMoleculeMapper.cxx.i:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.i
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.i
 .PHONY : vtkOpenGLMoleculeMapper.cxx.i
 
 vtkOpenGLMoleculeMapper.s: vtkOpenGLMoleculeMapper.cxx.s
@@ -201,7 +201,7 @@ vtkOpenGLMoleculeMapper.s: vtkOpenGLMoleculeMapper.cxx.s
 
 # target to generate assembly for a file
 vtkOpenGLMoleculeMapper.cxx.s:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.s
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(MAKE) -f Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/build.make Domains/ChemistryOpenGL2/CMakeFiles/vtkDomainsChemistryOpenGL2.dir/vtkOpenGLMoleculeMapper.cxx.s
 .PHONY : vtkOpenGLMoleculeMapper.cxx.s
 
 # Help Target
@@ -234,6 +234,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/nknapp/dfnworks-main/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/nknapp/dfnWorks-Version2.0/inp_2_vtk/VTK-7.1.0 && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
