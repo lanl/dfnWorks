@@ -311,7 +311,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
             f.write("-1\n")
     f.close()
 
-    cmd = os.environ['correct_uge_PATH']+ ' convert_uge_params.txt' 
+    cmd = os.environ['correct_uge_PATH']+ 'correct_uge' + ' convert_uge_params.txt' 
     failure = os.system(cmd)
     if failure > 0:
             sys.exit('ERROR: UGE conversion failed\nExiting Program')

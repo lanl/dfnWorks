@@ -32,7 +32,7 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     failure = run_mesh.mesh_fractures_header(num_poly, self._ncpu, visual_mode)
 
     if failure:
-        mesh.cleanup_dir()
+        mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
     n_jobs = lagrit.create_merge_poly_files(self._ncpu, num_poly, visual_mode)
