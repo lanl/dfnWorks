@@ -10,7 +10,7 @@ def define_paths():
     # ================================================
     
     # the dfnWorks-Version2.0  repository 
-    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'
+    os.environ['DFNWORKS_PATH'] = 'LOUIS_THE_CHILD/dfnWorks-Version2.0/'
     
     # PETSC paths
     os.environ['PETSC_DIR']='/home/satkarra/src/petsc-git/petsc-3.7-release'

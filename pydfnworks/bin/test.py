@@ -9,7 +9,7 @@ def run_test(input_file_name):
     Args:
         input_file_name (str): The input file name for the test
     """
-
+    
     name = '~/' + 'test_output_files/' + input_file_name.rsplit('/', 1)[-1][:-4]
     arg_string = os.environ['python_dfn'] + " run.py -ncpu 32 -name  " + name+ " -input " + input_file_name #+ " -large_network"
     print "RUNNING ", arg_string 

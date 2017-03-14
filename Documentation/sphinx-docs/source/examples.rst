@@ -22,10 +22,20 @@ python setup.py install (if the user has admin privileges), OR:
 
 python setup.py install --user (if the user does not have admin privileges)
 
-2. Set the paths correctly - described in the next section
+2. Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
 
-Setting the paths correctly
-------------------------------
+python fix_paths.py [OLD_PREFIX (optional)] [NEW_PREFIX]
+
+Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is optional and is the prefix you wish to replace. Its default is /home/nknapp/.
+
+3. Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:
+
+ssh -X [REMOTE_SERVER]
+
+4. Set the paths correctly - described in the next section
+
+Setting the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
+----------------------------------------------------------------
 
 Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
 
