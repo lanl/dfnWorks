@@ -3,19 +3,23 @@
 Scripts
 ========
 
-The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ . 
+The pydfnworks package has four Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ . 
+
+fix_paths.py: fix the paths in the tests folder
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Syntax: python fix_paths.py [OLD_PREFIX] [NEW_PREFIX], where NEW_PREFIX is the current location of the dfnWorks-Version2.0 repository (the folder above the repository), and OLD_PREFIX was the old location. 
 
 compile.py: compile dfnWorks components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The compile.py script is called by run.py, but can also be called on its own. This script compiles the C and C++ components of dfnWorks. Without arguments, the script performs the compiling. With the argument 'clean,' the script cleans up C and C++ object files, before compiling.
 
-
 test.py: test dfnWorks 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The benchmark.py script can be used to easily test functionality of dfnWorks. It runs a benchmark suite (input files contained in the benchmarks folder) that test the exponential, power law, and lognormal distributions as well as user-defined ellipses and user-defined rectangle fracture inputs.
-
+The test.py script can be used to easily test functionality of dfnWorks. It runs a test suite (input files contained in the tests folder) that test the exponential, power law, and lognormal distributions as well as user-defined ellipses and user-defined rectangle fracture inputs.
+Syntax: python test.py [TEST_NAME_PART], where [TEST_NAME_PART] is all or part of the name of the tests the user wants to run.
 
 run.py: run dfnWorks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

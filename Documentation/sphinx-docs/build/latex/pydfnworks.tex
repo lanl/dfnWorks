@@ -19,7 +19,7 @@
 
 
 \title{pydfnworks Documentation}
-\date{March 09, 2017}
+\date{March 14, 2017}
 \release{2.0}
 \author{Computational Earth Science (EES-16), LANL, LA-CC-17-027}
 \newcommand{\sphinxlogo}{\includegraphics{dfnworks_logo.png}\par}
@@ -700,7 +700,7 @@ user\PYGZhy{}rectangle, with possibility of being rejected  */
 
 userRectanglesOnOff: 1    //0 \PYGZhy{} User Rectangles off //1 \PYGZhy{} User Rectangles on
 
-UserRect\PYGZus{}Input\PYGZus{}File\PYGZus{}Path: /home/nknapp/dfnworks\PYGZhy{}main/
+UserRect\PYGZus{}Input\PYGZus{}File\PYGZus{}Path: /home/nknapp/dfnWorks\PYGZhy{}Version2.0/
 tests/define\PYGZus{}4\PYGZus{}user\PYGZus{}rects.dat
 
 /*===========================================================================*/
@@ -3231,7 +3231,12 @@ Read in run times from file and and print to screen with percentages
 
 \chapter{Scripts}
 \label{scripts:scripts}\label{scripts::doc}\label{scripts:scripts-chapter}
-The pydfnworks package has three Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ .
+The pydfnworks package has four Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ .
+
+
+\section{fix\_paths.py: fix the paths in the tests folder}
+\label{scripts:fix-paths-py-fix-the-paths-in-the-tests-folder}
+Syntax: python fix\_paths.py {[}OLD\_PREFIX{]} {[}NEW\_PREFIX{]}, where NEW\_PREFIX is the current location of the dfnWorks-Version2.0 repository (the folder above the repository), and OLD\_PREFIX was the old location.
 
 
 \section{compile.py: compile dfnWorks components}
@@ -3241,7 +3246,8 @@ The compile.py script is called by run.py, but can also be called on its own. Th
 
 \section{test.py: test dfnWorks}
 \label{scripts:test-py-test-dfnworks}
-The benchmark.py script can be used to easily test functionality of dfnWorks. It runs a benchmark suite (input files contained in the benchmarks folder) that test the exponential, power law, and lognormal distributions as well as user-defined ellipses and user-defined rectangle fracture inputs.
+The test.py script can be used to easily test functionality of dfnWorks. It runs a test suite (input files contained in the tests folder) that test the exponential, power law, and lognormal distributions as well as user-defined ellipses and user-defined rectangle fracture inputs.
+Syntax: python test.py {[}TEST\_NAME\_PART{]}, where {[}TEST\_NAME\_PART{]} is all or part of the name of the tests the user wants to run.
 
 
 \section{run.py: run dfnWorks}
@@ -3277,10 +3283,29 @@ truncated\_power\_law\_dist: The user specifies the parameters for two families 
 All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here.
 
 
-\section{Setting the paths correctly}
-\label{examples:setting-the-paths-correctly}
-Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/bin/run.py:
+\section{Fix paths in test directory}
+\label{examples:fix-paths-in-test-directory}
+Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix\_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
+
+python fix\_paths.py {[}OLD\_PREFIX{]} {[}NEW\_PREFIX{]}
+
+Here, NEW\_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD\_PREFIX is the prefix you wish to replace.
+
+
+\section{Turn on X forwarding if on server}
+\label{examples:turn-on-x-forwarding-if-on-server}
+Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:
+
+ssh -X {[}REMOTE\_SERVER{]}
+
+
+\section{Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly}
+\label{examples:set-the-petsc-pflotran-python-and-lagrit-paths-correctly}
+Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
 \begin{itemize}
+\item {} 
+DFNWORKS\_PATH: the dfnWorks-Version2.0 repository folder
+
 \item {} 
 PETSC\_DIR and PETSC\_ARCH: PETSC environmental variables
 
@@ -3294,6 +3319,15 @@ python\_dfn: The location of the Python distribution to use
 lagrit\_dfn: The location of the LaGriT executable
 
 \end{itemize}
+
+
+\section{Setup the Python package pydfnworks}
+\label{examples:setup-the-python-package-pydfnworks}
+In the folder dfnWorks-Version2.0/pydfnworks/
+
+python setup.py install (if the user has admin privileges), OR:
+
+python setup.py install --user (if the user does not have admin privileges)
 
 
 \section{Executing dfnWorks}

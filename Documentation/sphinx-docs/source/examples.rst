@@ -13,28 +13,23 @@ This document contains a short, five example, tutorial for dfnWorks. The five te
 
 All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
-Before doing anything else
+Fix paths in test directory 
 ----------------------------
 
-1. Setup the python package, in the folder dfnWorks-Version2.0/pydfnworks/ ::
+Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
 
-python setup.py install (if the user has admin privileges), OR:
+python fix_paths.py [OLD_PREFIX] [NEW_PREFIX]
 
-python setup.py install --user (if the user does not have admin privileges)
+Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is the prefix you wish to replace. 
 
-2. Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
+Turn on X forwarding if on server
+----------------------------------
 
-python fix_paths.py [OLD_PREFIX (optional)] [NEW_PREFIX]
-
-Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is optional and is the prefix you wish to replace. Its default is /home/nknapp/.
-
-3. Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:
+Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:
 
 ssh -X [REMOTE_SERVER]
 
-4. Set the paths correctly - described in the next section
-
-Setting the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
+Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 ----------------------------------------------------------------
 
 Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
@@ -44,6 +39,15 @@ Before executing dfnWorks, the following paths must be set. These are in the fil
 - PFLOTRAN_DIR: The PFLOTRAN directory
 - python_dfn: The location of the Python distribution to use
 - lagrit_dfn: The location of the LaGriT executable
+
+Setup the Python package pydfnworks
+-------------------------------------
+
+In the folder dfnWorks-Version2.0/pydfnworks/ ::
+
+python setup.py install (if the user has admin privileges), OR:
+
+python setup.py install --user (if the user does not have admin privileges)
 
 Executing dfnWorks
 -------------------

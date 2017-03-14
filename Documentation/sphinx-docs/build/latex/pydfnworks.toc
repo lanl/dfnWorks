@@ -66,17 +66,21 @@
 \contentsline {subsection}{\numberline {5.6.2}Print legal statement}{42}{subsection.5.6.2}
 \contentsline {subsection}{\numberline {5.6.3}Other helper methods}{42}{subsection.5.6.3}
 \contentsline {chapter}{\numberline {6}Scripts}{45}{chapter.6}
-\contentsline {section}{\numberline {6.1}compile.py: compile dfnWorks components}{45}{section.6.1}
-\contentsline {section}{\numberline {6.2}test.py: test dfnWorks}{45}{section.6.2}
-\contentsline {section}{\numberline {6.3}run.py: run dfnWorks}{45}{section.6.3}
+\contentsline {section}{\numberline {6.1}fix\_paths.py: fix the paths in the tests folder}{45}{section.6.1}
+\contentsline {section}{\numberline {6.2}compile.py: compile dfnWorks components}{45}{section.6.2}
+\contentsline {section}{\numberline {6.3}test.py: test dfnWorks}{45}{section.6.3}
+\contentsline {section}{\numberline {6.4}run.py: run dfnWorks}{45}{section.6.4}
 \contentsline {chapter}{\numberline {7}dfnWorks test case tutorial}{47}{chapter.7}
-\contentsline {section}{\numberline {7.1}Setting the paths correctly}{47}{section.7.1}
-\contentsline {section}{\numberline {7.2}Executing dfnWorks}{47}{section.7.2}
-\contentsline {section}{\numberline {7.3}4\_user\_defined\_rectangles}{48}{section.7.3}
-\contentsline {section}{\numberline {7.4}4\_user\_defined\_ellipses}{50}{section.7.4}
-\contentsline {section}{\numberline {7.5}truncated\_power\_law\_dist}{51}{section.7.5}
-\contentsline {section}{\numberline {7.6}exponential\_dist}{52}{section.7.6}
-\contentsline {section}{\numberline {7.7}lognormal\_dist}{55}{section.7.7}
+\contentsline {section}{\numberline {7.1}Fix paths in test directory}{47}{section.7.1}
+\contentsline {section}{\numberline {7.2}Turn on X forwarding if on server}{47}{section.7.2}
+\contentsline {section}{\numberline {7.3}Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly}{48}{section.7.3}
+\contentsline {section}{\numberline {7.4}Setup the Python package pydfnworks}{48}{section.7.4}
+\contentsline {section}{\numberline {7.5}Executing dfnWorks}{48}{section.7.5}
+\contentsline {section}{\numberline {7.6}4\_user\_defined\_rectangles}{49}{section.7.6}
+\contentsline {section}{\numberline {7.7}4\_user\_defined\_ellipses}{50}{section.7.7}
+\contentsline {section}{\numberline {7.8}truncated\_power\_law\_dist}{52}{section.7.8}
+\contentsline {section}{\numberline {7.9}exponential\_dist}{53}{section.7.9}
+\contentsline {section}{\numberline {7.10}lognormal\_dist}{55}{section.7.10}
 \contentsline {chapter}{\numberline {8}Example Applications}{59}{chapter.8}
 \contentsline {section}{\numberline {8.1}Carbon dioxide sequestration}{59}{section.8.1}
 \contentsline {section}{\numberline {8.2}Shale energy extraction}{59}{section.8.2}
