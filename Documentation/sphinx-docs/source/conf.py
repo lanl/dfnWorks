@@ -56,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pydfnworks'
-copyright = '2016, LANL, LA-CC-17-027'
+copyright = '2016, LANL, LA-UR-17-22216'
  
 author = u'EES-16, Subsurface Flow and Transport'
 
@@ -67,7 +67,7 @@ author = u'EES-16, Subsurface Flow and Transport'
 # built documents.
 #
 # The short X.Y version.
-version = u'2.0, LA-CC-17-027'
+version = u'2.0, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 
 # The full version, including alpha/beta/rc tags.
 release = u'2.0'
@@ -271,7 +271,7 @@ htmlhelp_basename = 'pydfnworksdoc'
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'pydfnworks.tex', u'pydfnworks Documentation',
-     u'Computational Earth Science (EES-16), LANL, LA-CC-17-027', 'manual'),
+     u'Subsurface Flow and Transport Team, LANL, LA-UR-17-22216', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
