@@ -35,7 +35,7 @@ class DFNWORKS(Frozen):
     from flow import dfnFlow
     from transport import dfnTrans
     # Specific functions
-    from helper import cleanup_files, cleanup_end, commandline_options
+    from helper import * # scale, cleanup_files, cleanup_end, commandline_options
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 

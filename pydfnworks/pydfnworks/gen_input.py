@@ -2,7 +2,7 @@ import os
 import sys
 import shutil
 import distributions as distr_module
-import helper
+import helper 
 import numpy as np
 import scipy.integrate
 
@@ -231,7 +231,7 @@ def check_input(self, input_file='',output_file=''):
 
         probList = [float(x) for x in input_helper_methods.valueOf('famProb', params)]
         if sum(probList) != 1:
-            scale(probList, warningFile)
+            input_helper_methods.scale(probList, warningFile)
 
     def userDefined():
         """ Check the parameters for user-defined rectangles and ellipses.
@@ -636,8 +636,9 @@ def check_input(self, input_file='',output_file=''):
         input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] =  self._jobname +  '/' + self._dfnGen_file.rsplit('/',1)[-1][:-4] + '_clean.dat'
-        ioPaths["output"] = os.path.abspath(ioPaths["output"]) 
+        ioPaths["output"] = self._jobname + '/' + self._dfnGen_file.split('/')[-1][:-4] + '_clean.dat'
+        ioPaths["output"] = os.path.abspath(ioPaths["output"])
+        print ioPaths["output"] 
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"
         input_helper_methods.warning("No output path has been provided so output will be written to "\
