@@ -59,7 +59,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 			copy('parameters_CPU' + str(cpu_id) + '.mlgi', folder +'/')	
 			copy('mesh_poly_CPU' + str(cpu_id) + '.lgi', folder + '/')	
 			copy('user_function.lgi', folder +'/')	
-		try:
+	                # Prevents time consuming meshing of other fractures when overall mesh will not work
+                        exit()
+                try:
 			os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
 		except: 
 			print 'Could not remove id_tri_node_CPU' + str(cpu_id) + '.list'

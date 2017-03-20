@@ -6,7 +6,7 @@ import glob
 import shutil
 from time import time 
 import numpy as np
-#import h5py
+import h5py
 
 def dfnFlow(self):
     ''' dfnFlow
