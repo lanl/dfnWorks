@@ -1,4 +1,4 @@
-dfnWorks test case tutorial
+Tutorial
 =============================
 
 
@@ -21,7 +21,7 @@ Ensure that X forwarding is turned on if you are running dfnWorks from an ssh co
 
 .. code-block:: bash
    
-    $ ssh -X darcy 
+    $ ssh -X SERVER_NAME 
 
 Fix paths in test directory 
 ----------------------------
@@ -50,7 +50,7 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 
 .. code-block:: bash
     
-    $vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
+    $ vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
 
 .. code-block:: python
     
@@ -60,6 +60,7 @@ Setup the Python package pydfnworks
 -------------------------------------
 
 .. code-block:: bash
+    
     $ cd ~/dfnWorks-Version2.0/pydfnworks/ 
 
 **If the user has admin privelges**:
@@ -83,14 +84,15 @@ To run one of the test cases enter the following command:
 
 The arguments are:
 
--[JOBNAME]: The name of the run, which is also the folder which will contain the run's output.
--[INPUT_FILE]: An input file with three lines that have input files for dfnGen, dfnFlow, and dfnTrans, respectively. Any of the files with ending .txt in the directory tests can be used as examples of input files. 
--[NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
--large_network (optional): Only use this flag if the user should use CPP for file processing. 
+- [JOBNAME]: The name of the run, which is also the folder which will contain the run's output.
+- [INPUT_FILE]: An input file with three lines that have input files for dfnGen, dfnFlow, and dfnTrans, respectively. Any of the files with ending .txt in the directory tests can be used as examples of input files. 
+- [NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
+- large_network (optional): Only use this flag if the user should use CPP for file processing. 
 
 For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the command line input would be:
 
 .. code-block:: bash
+    
     $ cd ~/dfnWorks-Version2.0/pydfnworks/bin    
     $ python run.py -name 4_user_defined_rectangles 
      -input ~/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
@@ -98,6 +100,23 @@ For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the co
 
 This command will run the 4_user_defined_rectangles test and create a new folder 4_user_defined_rectangles where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
 
+Summary
+--------
+
+Here is a quick summary of the steps described above, with commands for the 4_user_defined_rectangles test case. **You MUST edit the paths in paths.py, and change ~ to the location of the repository, for these commands to work!** 
+
+.. code-block:: bash
+    
+    $ ssh -X SERVER_NAME
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
+    $ python fix_paths.py /home/nknapp/ ~ 
+    $ vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/  
+    $ python setup.py install --user
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin    
+    $ python run.py -name 4_user_defined_rectangles 
+     -input ~/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+     -ncpu 4  
 
 4_user_defined_rectangles
 --------------------------

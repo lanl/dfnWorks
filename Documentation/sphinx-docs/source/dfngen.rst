@@ -473,578 +473,578 @@ explanation of each keyword.
     removeFracturesLessThan: 0 /*Used to change the lower cutoff of fracture
     size*/
 	 
-
-Fracture Cluster Management
----------------------------
-
-Introduction
-************* 
-This section covers dfnGen 2.0’s cluster group management system
-and the isolated fracture removal process. 
-
-Fracture clusters are used in dfnGen for isolated fracture removal after the DFN
-has been generated and before dfnGen generates its output files. An isolated
-fracture is a fracture that does not intersect any other fractures and will not
-contribute to flow. Fracture clusters are also considered isolated when the
-cluster does not connect the users defined domain boundary faces.
-
-NOTE: Isolated fracture removal only removes fractures with no intersections
-when the input option ``ignoreBoundaryFaces`` is set to 1. 
-
-Fracture cluster data is kept and updated with each new polygon/fracture added
-to a DFN.
-
-Algorithm Overview
-*******************
-In the dfnGen source code, relevant
-functions are:
-1. ``intersectionChecking()``, found in ``computationalGeometry.cpp``
-2. ``assignGroup()``, found in ``clusterGroups.cpp``
-3. ``updateGroups()``, found in ``clusterGroups.cpp``
-4. ``getCluster()``, found in ``clusterGroups.cpp``
- 	
-As a new polygon is being tested for intersections and for feature sizes less
-than ``h`` (these checks happen one intersection at a time), three lists are
-maintained:
--a.	Intersected polygons list (variable ``tempIntersectList`` in
-``intersectionChecking()``).  This list contains indices/pointers to all the
-polygons which the new polygon has intersected in the order that they occur. 
--b. Intersections list (variable ``tempIntPts`` in ``intersectionChecking()``). This
-list contains all new intersections (``IntPoints`` structures) created by the
-new polygon in the order that they occur. 
--c.	Encountered cluster groups list
-(variable ``encounteredGroups`` in ``intersectionChecking()``). This list
-contains all other cluster group numbers which the new polygon has intersected
-with after the new polygon already has been assigned a group number. 
-
-E.g. If from the first intersection, the new polygon is assigned to group 5, and
-the next intersection is with a fracture in group 2, ‘2’ is the first group
-saved to the encountered groups.
-
-When a polygon bridges more than one group, there will be several different
-cluster groups to update. 
-
-If for any reason the fracture is rejected (FRAM rejects it while checking an
-intersection for features of size less than ``h``), these lists are deleted and
-the fracture is either re-translated to a new position, or a new fracture is
-generated. If the fracture is accepted, the data in these lists are used to
-update the permanent fracture cluster data. 
-
-Code overview
-+++++++++++++++
-
-1.	Go through previously accepted polygons and test
-for intersections with the new polygon being added to the DFN.  Once an
-intersection is found (by function ``intersectionChecking()``) and has passed
-the FRAM tests, several things happen:
-2.	The intersection structure for the newest intersection is appended to the
-   temp intersection array ``tempIntPts``.
-3.	The index of the fracture the new polygon intersects with is appended to the
-   intersected polygons list ``tempIntersectList``.
-4.	The index to the new intersection structure’s place in the permanent intPts
-   array, if the new polygon is accepted, is calculated and appended to the new
-   polygons list ``intersectionIndex``. That is, the index that is saved is the
-   index the intersection will have once moved to the permanent array if it is
-   not rejected.
-5.	Any triple intersection points are saved to a temporary list of structure
-   tempData. This structure contains the triple intersection point, and the
-   index to the place in the permanent triplePoints list of where it will go if
-   the polygon is not rejected (similar to step 4).
-6.	New Polygon Gets a Cluster Group Number (``groupNum`` in the Poly struct).
-   a.	If it is the first intersection found, the new polygon inherits the
-   cluster group number of the intersecting polygon.  b.	If the new polygon
-   has already been given a cluster group number from intersecting another
-   fracture), the intersecting polygon’s cluster group number is added to the
-   encountered cluster groups list ``encounteredGroups``. This will be used to
-   update the fractures and cluster groups (merging the two groups together) IF
-   the new polygon does not end up being rejected (it still has more polygons to
-   check for intersections with).
-
-Numbers 2 to 5 repeat until all fractures have been checked for intersections
-with the new polygon. If the polygon has not been rejected during the process: 
-
-7.	If no intersections were found after searching through previously accepted
-   polygons, the new polygon is given a new cluster group number using the
-   ``assignGroup()`` function (details below).
-
-8.	The new polygon is moved to the permanent ``acceptedPoly`` list.
-
-9.	If there were new intersections, they are now appended to the permanent
-   ``intPts`` list.
-
-10.	All intersected polygons will have their ``intersectionIndex`` list updated
-    with the indices of the new intersections. We do this by adding the index of
-    each new intersection to its corresponding polygon in the same order which
-    they were found. The list for polygons we encountered is in the variable
-    ``tempIntersectList``. 
-
-E.g. if the permanent ``intPts`` intersection list already has 10 (indexes 0 -
-9) intersections from  previous fractures and we just added 3 more fractures and
-intersections, and each fracture can only intersect with the new polygon once,
-the indexes to the new intersections once they are moved to the permanent
-``intPts`` list will be indexes 10, 11, and 12 (indexes start at 0). So, we
-append to the first polygon listed in the tempIntersectList index 10, the second
-polygon in the list index 11, and the third index 12. 
-
-11.	If there are new triple intersection points, they are now appended to the
-    permanent ``triplePoints`` list. The temporary triple intersection points
-    are held in a list of ``TrieplePtTempData`` structures. This structure
-    contains the triple intersection point, and the index for each of the
-    intersections it belongs to (three total). One of the intersections will be
-    a new intersection just created by the new polygon, and the other two will
-    be a triple intersection point on previously accepted intersections. 
-
-The new triple intersection point is added to the permanent ``triplePoints``
-array, and then its index in that permanent array is appended to the
-intersection structure variable ``triplePointsIdx`` for the intersection that it
-belongs to. 
-
-12.	 The last thing that is done is a call to the function ``updateGroups()``
-     (details below). 
-
-
-Function ``assignGroup()``: assign polygon to cluster group
-*********************************************************************
-
-The function ``assignGroup()``, defined in clusterGroups.cpp,  is used to assign
-a new polygon to a new cluster group. This function is for polygons that do not
-intersect with any other polygons; otherwise a cluster group will be inherited
-from the intersected polygon. 
-
-Arguments to this function: 
-1.	Poly structure reference. A reference to the new
-polygon being assigned a new group. 
-2.	Stats structure reference. The program
-statistics object (variable name pstats throughout the code). The Stats
-structure contains two structures within it that contain all the cluster group
-information. These structures are ``FractureGroups`` and ``GroupData`` (details
-below). 
-3.	Index (integer) of the new polygons place in the permanent polygon
-list ``acceptedPoly``. 
-
-Code Overview (See sections on GroupData and FractureGroups structures for their details)
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-1.	The new polygon is assigned the next available group number. This comes from
-   the Stats variable ``nextGroupNum``.
-
-2.	A ``GroupData`` structure is created.
-
-3.	Inside the ``GroupData`` structure, there is a boolean array of six
-   elements. This array, faces, contains connectivity information for the
-   cluster. There is an element for each of the six faces, or walls, of the
-   domain. False meaning it is not touching that face, true meaning it is
-   touching the face (see GroupData section for more details). Likewise, there
-   is another faces array in the polygon Poly structure. 
-
-The polygon’s faces array and the ``GroupData’s`` faces array are bitwise ORed
-together so that anywhere there is a true in the polygons faces array, there
-will be a true in the ``GroupData’s`` faces array. After many polygons go
-through this process for a single cluster group, by looking at the GroupData’s
-faces array we are able to see which domain faces the cluster connects.
-
-4.	Next, the variable size inside of the structure ``GroupData`` is
-   incremented. This contains the number of fractures contained in the fracture
-   cluster group.  5.	The ``GroupData`` structure is now saved to a permanent
-   location within the ``Stats`` structure.  6.	A ``FractureGroups`` structure
-   is now created.  7.	The new ``FractureGroups`` structure is assigned the
-   same group number from step 1 using the same ``nextGroupNum`` variable.  8.
-   ``nextGroupNum`` is incremented.  9.	Inside the ``FractrueGroups`` structure
-   is the list (polyList) of polygons belonging to the group. The index for the
-   location in the permanent polygon list, ``acceptedPoly``, for the new polygon
-   is added to this list.  10.	The ``FractureGroup`` structure is then saved to
-   a permanent location within the ``Stats`` structure. 
-
-Function  ``updateGroups()`` : update fracture cluster group information
-*************************************************************************
-
-The function ``updateGroups()``, defined in clusterGroups.cpp,  is used to
-update the fracture cluster group information for new polygons that have
-intersected other polygons. When updating the cluster group information, there
-are two cases: A.	The new polygon only intersected with polygons of a single
-group.  B.	The new polygon intersected and connected more than one group. The
-groups now need to be merged together into a single group. 
-
-Arguments to this function: 1.	``Poly`` structure reference. A reference to the
-new polygon being added to fracture cluster groups.  2.	Permanent list of
-accepted polygons already in the DFN (variable ``acceptedPoly``).  3.	List of
-cluster groups which the new polygon has intersected with, if more than one
-group (see example in part c on page 1).  4.	``Stats`` structure reference.
-The program statistics object (variable name ``pstats`` throughout the code).
-The ``Stats`` structure contains two structures within it that contain all the
-cluster group information. These structures are ``FractureGroups`` and
-``GroupData`` (details below).  5.	Index (integer) of the new polygons place in
-the permanent polygon list ``acceptedPoly``. 
-
-
-Case A
-++++++++
-1.	The new polygons faces data is ORed into its corresponding
-``GroupData`` structure. 
-
-The ``GroupData`` array, (in variable pstats) is always aligned with cluster
-group numbers. Group numbers start at 1, the indexes to the array start at 0.
-E.g. to access the ``GroupData`` structure for cluster group 12, it is the
-variable ``pstats.groupData[12 – 1]``. 
-
-2.	The corresponding ``GroupData`` structure’s variable size is incremented
-   (number of polygons in the group). 
-
-3.	Next, the corresponding ``FractureGroup`` structure must be found. This has
-   to be done by searching through the array (``pstats.fractGroup``) and
-   comparing the new polygons ``groupNum`` and the group number in the
-   ``FractureGroup`` structure. 
-
-See below for an explanation as to why we have to search for the group number,
-and why the ``GroupData`` and ``FractureGroup`` structures are not combined a
-single structure.
-
-4.	Once the correct FractureGroup structure is found, the index to the new
-   polygon in the permanent polygon list acceptedPoly is appended to the list
-   polyList in the ``FractureGroups`` structure. 
-
-Case B
-+++++++
-1.	The new polygon’s corresponding ``FractureGroup`` structure
-is searched and found. The poly is added to the ``FractureGroup`` structure (see
-3 and 4 in Case A).
-
-2.	The new polygon’s faces data is ORed into the new polygons corresponding
-   ``GroupData`` structure (see 1 in Case A).
-
-3.	The new polygon’s corresponding ``GroupData`` structure has it’s size
-   incremented (see 2 in case A). 
-
-Merge Cluster Groups
-++++++++++++++++++++++
-4.	For all groups in the
-``encounteredGroups`` list (see part c under Algorithm Overview at the beginning
-of this document), the ``GroupData’s`` size variable, is added to and the
-``GroupData`` structure corresponding to the new polygons group number. 
-
-5.	The ``GroupData’s`` faces array for each of the groups in
-   ``encounteredGroups`` is ORed together with the ``GroupData`` structure
-   corresponding to the new polygons group. 
-
-6.	While doing steps 4 and 5, the ``GroupData’s`` valid variable for each group
-   in ``encounteredGroups`` is set to false. This means that that
-   ``GroupData’s`` data is no longer valid and it should be disregarded (see
-   next section of this document for more details).
-
-7.	Search for the corresponding ``FractureGroup`` for the group numbers listed
-   in ``encounteredGroups``. 
-
-8.	For each of the corresponding ``FractureGroups`` for the group numbers
-   listed in ``encounteredGroups``, change the ``groupNum`` variable in
-   ``FractureGroups`` to the new polygon’s group number. 
-
-9.	Inside the ``FractureGroups`` structure, go through all the polygons listed
-   there and change their groupNum group number variables to match the new
-   polygon’s group number.
-
-
-Group data structures:  ``GroupData`` and ``FractureGroups``
-************************************************************************
-
-Structure Definitions:
-
-NOTE: Both structures use a constructor to initialize their variables (see code
-in ``structures.cpp``).
-
-.. code-block:: c
-
-    struct GroupData { unsigned int size; bool valid; bool faces[6]; /* Domain
-    boundary sides/faces that this cluster connects to..  Index Key: [0]: -x
-    face, [1]: +x face [2]: -y face, [3]: +y face [4]: -z face, [5]: +z face */
-    };
-
-    struct FractureGroups { unsigned long long int groupNum;
-    std::vector<unsigned int> polyList; };
-
-The reason we do not combine the ``GroupData`` and ``FractureGroups`` into a
-single structure is for performance reasons. 
-
-If the two structures were combined, a problem arises when two different
-fracture groups merge together. The structures could no longer be aligned with
-the group numbers in an array because the group numbers will be changing
-whenever groups merge together. This would cause constant searching every time
-you needed to access any of the data. We still need to search when dealing with
-the ``FractureGroups`` array, but save some performance costs by being able to
-access everything in the GroupData array for any group number without any
-searching. 
-
-If you tried to force the alignment by having empty structures where groups were
-merged to another group, it would require constantly deleting and reallocating
-the arrays, and copying polygons to the new group every time groups merged to
-make everything fit as it should. This would be a huge performance hit and
-probably the worst solution. 
- 
-The solution implemented was to keep the two structures separate. When clusters
-merge together, we simply have to set the old cluster’s ``GroupData`` valid bit
-false (no search required), add its size and OR the faces to the ``GroupData``
-structure that it is being merged into. We then need to find (search required)
-the group number that is about to go away in the ``FractureGroups`` list and
-change it to the new group number, and change the polygons in that group to the
-same group number. Nothing is ever re-allocated.
-
-NOTE: When the group number changes in ``FractureGroups`` after clusters merge
-together, there will be two ``FractureGroups`` with the same group number but
-with different polygons listed. To get all the polygons from a single group, the
-two lists (or more if clusters continued to merge) need to be concatenated.
-
-
-Funciton  ``getCluster()`` : get a cluster of fractures
-********************************************************************
-
-The ``getCluster()`` function is responsible for returning a list of  indexes to
-the polygons which match the user’s connectivity option. 
-
-Arguments to this function: 1. The program statistics Stats object (named pstats
-throughout the code).  There are three user options that deal with fracture
-connectivity: 1.	``boundaryFaces`` a.	This option provides a way to select
-which faces or walls of the domain the user wants the fractures to connect with.
-It is an array of 6 elements. A zero means not to enforce a connection, a 1
-means fractures must have a connection to that face.  i.	Array elements match
-to each boundary wall as follows: [0]: -x face, [1]: +x face [2]: -y face, [3]:
-+y face [4]: -z face, [5]: +z face
-
-2.	``ignoreBoundaryFaces`` a.	This option ignores the ``boundaryFaces``
-   connectivity option completely and causes ``getCluster()`` to return a list
-   of all polygons containing at least one intersection.  3.
-   ``keepOnlyLargestCluster`` a.	This option keeps causes getCluster() to
-   return the largest cluster using the above two options as well. If
-   ``ignoreBoundaryFaces`` is being used, ``getCluster()`` will return the
-   largest cluster of fractures in the DFN, even if they do not connect to any
-   of the domain walls. If the ``boundaryFaces`` option is being used,
-   ``getCluster()`` will return the largest cluster which connects the user’s
-   required domain walls. 
-
-Code Overview
-+++++++++++++++
-
-Part 1: Find cluster groups that match the user’s
-connectivity option 1.	If the user is using the ``boundaryFaces`` option,
-search through the GroupData and compare the ``GroupData’s`` faces array to the
-users ``boundaryFaces`` array. If the groups faces connectivity array connects
-the required user defined domain walls, add that group number to a list
-(``matchingGroups`` in the code). 
-
-2.	If the user is using the ``ignoreBoundaryFaces`` option, go through the
-   ``GroupData`` array and add all the valid groups to the ``matchingGroups``
-   array. 
-
-3.	If the user is using the ``keepOnlyLargestCluster`` option, go through the
-   ``matchingGroups`` array and compare each group’s ``GroupData.size``
-   variable. Keep group with the largest size.
-
-
-4.	Search for each group in the ``FractureGroups`` array and concatenate their
-   polygon lists in a list to be returned by the function.
-
-
-Exponential Distribution Class Implementation
----------------------------------------------
-
-Introduction
-************
-This document is intended for new developers working
-on dfnGen. It covers the implementation of the ``Distributions`` class, and its
-composed exponential distribution class ``ExpDist`` in dfnGen V2.0. 
-
-During dfnGen 2.0 development, new functionality was needed to allow for the
-control of the range of numbers produced by the exponential distribution.
-Previously, dfnGen V2.0 was developed using the C++ standard library,
-``random``. 
-
-Need for a Customized Exponential Distribution
-*************************************************
-There was need to control the
-minimum fracture size for exponential distributed fracture families for research
-purposes. Also, all fracture radii must always be greater than the minimum
-feature size ``h``. 
-
-The exponential distribution favors small numbers that caused a lot of
-re-sampling when the distribution generated fracture radii of less than h or
-smaller than the user’s defined minimum radius. Re-sampling the standard
-library’s exponential distribution when the distribution produced numbers
-outside of the user’s defined ranged was found to be very inefficient and could
-halt program execution when the exponential mean did not match the range which
-the user had chosen. The program could re-sample the distribution thousands of
-times before an acceptable radius was generated.
-
-With the standard library’s implementation, complete randomness is forced from
-the distribution. There was no way to control the range of numbers produced by
-the distribution. A way of limiting the output of the distribution was needed
-that did not involve re-sampling.
-
-Implementation Overview *********************** Our implementation uses the CDF
-determine the random variable range from which we need to sample. When the
-inverse CDF is sampled uniformly between 0 and 1, an exponential distribution
-will be produced that matches that of the standard library’s exponential
-distribution output. By limiting the random variable range, we can sample
-between the users desired minimum and maximum without generating numbers outside
-of that range.
-
-To limit the range of output, we use the exponential CDF formula: ``rv = 1 – e
-(-lambda * output)``, where rv is the random variable needed to produce output
-when plugged into the inverse CDF function: ``output = -log(1-rv)/lambda``. 
-
-When the user’s defined minimum and maximum are plugged in to output, we get the
-range which the distribution should be sample from in order to get a exponential
-distribution bounded by the users defined minimum and maximum.
-
-These variables, the range to sample the exponential distribution, are saved to
-minDistInput and maxDistInput in the family’s corresponding Shape structure.  
-
-
-Implementation Details
-***********************
-
-Our implementation uses
-composition for increased modularity and to increase the ease of adding
-additional distribution types in the future. 
-
-The ``ExpDist`` class is a sub-class of the ``Distributions`` class. This allows
-the programmer to only create one instance of the ``Distributions`` class, and
-the ``ExpDist`` class and any other distribution classes added in the future
-will be automatically set up and initialized by ``Distributions`` constructor.
-
-``Distributions`` Class ************************ The ``Distributions`` class
-contains functions and variables that are needed to initialize the ``ExpDist``
-class, and likely other distribution classes added in the future. It also
-contains the ``ExpDist`` class within it. 
-
-When the ``Distributions`` class is created, its constructor function is called.
-This function creates and initializes the ``ExpDist`` class within the
-``Distributions`` class. 
-
-One of the issues with the exponential distribution is that if given 1.0 as a
-random variable, the distribution returns inf. To maximize the range of numbers
-which can be produced, we need to know the largest value less than 1.0 that the
-computer is able to produce. 
-
-The ``Distributions`` class has a function called ``getMaxDecimalDouble()``.
-During ``Distributions`` creation, ``getMaxDecimalDouble()`` returns the largest
-number less than 1, e.g. 0.999….9, to its maximum precision. This variable is
-saved to variable ``maxInput`` in the ``Distributions`` class. It is also passed
-to the ``ExpDist`` class during its creation. 
-
-Also in the ``Distributions`` class constructor, the function
-``checkDistributionUserInput()`` is called. This function error checks user
-exponential input options and finishes initializing the exponential
-distribution. The function is written with the expectation for other
-distributions to be added and will be easy to modify. 
-
-In ``checkDistributionUserInput()``, ``minDistInput`` and ``maxDistInput`` are
-initialized for each family using exponential distribution (see Implementation
-Overview). Error checks are performed to ensure ``minDistInput`` and
-``maxDistInput`` are within the machines capabilities to produce. If they are
-set very high, plugging in ``maxInput`` (see above) into the distribution can
-produce a number smaller than the requested maximum, and possibly minimum. If
-the user defined maximum cannot be produced stochastically, the user is warned
-and the user defined maximum is set to the largest possible number that the
-machine can produce. The minimum is then checked to ensure it is still less than
-the maximum. If it is not, the error is reported to the user and the program
-terminates. Otherwise, everything is okay and the ``ExpDist`` class is ready to
-use. 
-
-``ExpDist`` Class
-*******************
-
-After the ``ExpDist`` class has been
-initialized, the ``getValue()`` function can be used to return random numbers
-from the exponential distribution. The function has been overloaded to either be
-given the random input variable (random variable between 0 and 1) as an
-argument, or be given a range between 0 and 1 to generate random input variables
-from. 
-
-Other Details
-****************
-The C++ standard random library is still used for
-generating uniform random reals. The 64-bit Mersenne twister engine random
-generator is the random generator used for all dfnGen’s random variables. It is
-created in main() and passed as a reference to the Distributions class during
-its creation. 
-
-Hotkey ``~``
---------------
-
-If the dfnGen takes too long, one can use ``~`` to
-abort fracture generation process and contine to the next step of outputting the
-data related the fractures generated until that point in time.
-
-Developer notes: Variables that might need adjusting
-**********************************************************************
-
-Due to the recent changes in the LaGriT meshing script, there are a couple parts
-of the code that might need adjusting.
-
-Distance between intersections
-+++++++++++++++++++++++++++++++++
-
-After updates to
-the meshing script, there are cases where intersections can have only one
-triangular element between them. If the distance between intersections needs to
-be increased, adjust the last argument in ``checkDistDistToOldIntersections()``
-and ``checkDistToNewIntersections()``, lines 645 and 653 in
-computationalGeometry.cpp
-
-Allowed Intersection Angles
-+++++++++++++++++++++++++++
-
-The changes to the
-LaGriT meshing script might allow for smaller angles without causing problems in
-the mesh. This is for intersection angles crossing the edge of a polygon, not
-for triple intersections.
- 
-To change the angle, adjust the variable ``const static double minDist2`` found
-on line 1260 in ``computationalGeometry.cpp``. 
-
-``minDist2`` is the minimum distance allowed to the edge of a polygon from the
-first discretized intersection point, not including the end points (the first
-node in from the end point). 
-
-Adding new user input variables to dfnGen 2.0
-*********************************************
-1.	Add option/variable to an
-existing input file. Tag the option’s name with ``:`` at the end.  There must be
-at least 1 space or a new line in between the ``:`` and the data.  E.g.
-``newUserOption: 12``
-
-2.	Add ``extern varType varName`` to ``input.h``. Most user input variables are
-   stored globally. ``input.h`` must be included in any files that need access
-   to them.
-
-3.	Update ``readInput.cpp``. Declare the new global variable (the same variable
-   as in step 1 but without the ``extern`` keyword) at the top of this file. 
-
-This file contains the function ``getInput()``.  This function is responsible
-for reading in user input files.  ``getInput()`` needs to be updated to read in
-the new variable. I suggest looking for a similar variable, whether it be an
-array, a flag, or a number, and use that as an example to read in the new input
-option. 
-
-The function ``searchVar()`` is very helpful in reading variables from the user
-input file. The first argument is the file object (C++ ifstream object), the
-second argument is a string of the variable/option name in the input file
-including the ``:`` at the end.  After this function runs, the file pointer will
-be pointing to the data directly after the input options name (e.g. in step 1,
-the file pointer will be pointing to the white space directly after the colon.)
-All that is left is to read the input variable in to a C++ variable e.g. ``file
->> var``. NOTE: C++ is smart and will skip multiple spaces and/or new line
-characters. 
-
-If the option requires a list or array as the options parameters, see similar
-options in readInput.cpp. Instead of reading in directly to a variable (``file
->> var``), a function will be required to parse the list. See
-``readInputFunctions.cpp`` and ``readInputFunctions.h`` for some examples on how
-to do this.
-
-4.  The last thing to do is to write/edit the code that will use the new option.
-    Include ``input.h`` in any new file to access the global variable. If the
-    new variable is an array, don’t forget to use ``delete[]`` to free its
-    memory after the variable is no longer needed. If a new file was created, be
-    sure to edit the makefile to include it in the built. 
+.. 
+    Fracture Cluster Management
+    ---------------------------
+
+    Introduction
+    ************* 
+    This section covers dfnGen 2.0’s cluster group management system
+    and the isolated fracture removal process. 
+
+    Fracture clusters are used in dfnGen for isolated fracture removal after the DFN
+    has been generated and before dfnGen generates its output files. An isolated
+    fracture is a fracture that does not intersect any other fractures and will not
+    contribute to flow. Fracture clusters are also considered isolated when the
+    cluster does not connect the users defined domain boundary faces.
+
+    NOTE: Isolated fracture removal only removes fractures with no intersections
+    when the input option ``ignoreBoundaryFaces`` is set to 1. 
+
+    Fracture cluster data is kept and updated with each new polygon/fracture added
+    to a DFN.
+
+    Algorithm Overview
+    *******************
+    In the dfnGen source code, relevant
+    functions are:
+    1. ``intersectionChecking()``, found in ``computationalGeometry.cpp``
+    2. ``assignGroup()``, found in ``clusterGroups.cpp``
+    3. ``updateGroups()``, found in ``clusterGroups.cpp``
+    4. ``getCluster()``, found in ``clusterGroups.cpp``
+        
+    As a new polygon is being tested for intersections and for feature sizes less
+    than ``h`` (these checks happen one intersection at a time), three lists are
+    maintained:
+    -a.	Intersected polygons list (variable ``tempIntersectList`` in
+    ``intersectionChecking()``).  This list contains indices/pointers to all the
+    polygons which the new polygon has intersected in the order that they occur. 
+    -b. Intersections list (variable ``tempIntPts`` in ``intersectionChecking()``). This
+    list contains all new intersections (``IntPoints`` structures) created by the
+    new polygon in the order that they occur. 
+    -c.	Encountered cluster groups list
+    (variable ``encounteredGroups`` in ``intersectionChecking()``). This list
+    contains all other cluster group numbers which the new polygon has intersected
+    with after the new polygon already has been assigned a group number. 
+
+    E.g. If from the first intersection, the new polygon is assigned to group 5, and
+    the next intersection is with a fracture in group 2, ‘2’ is the first group
+    saved to the encountered groups.
+
+    When a polygon bridges more than one group, there will be several different
+    cluster groups to update. 
+
+    If for any reason the fracture is rejected (FRAM rejects it while checking an
+    intersection for features of size less than ``h``), these lists are deleted and
+    the fracture is either re-translated to a new position, or a new fracture is
+    generated. If the fracture is accepted, the data in these lists are used to
+    update the permanent fracture cluster data. 
+
+    Code overview
+    +++++++++++++++
+
+    1.	Go through previously accepted polygons and test
+    for intersections with the new polygon being added to the DFN.  Once an
+    intersection is found (by function ``intersectionChecking()``) and has passed
+    the FRAM tests, several things happen:
+    2.	The intersection structure for the newest intersection is appended to the
+       temp intersection array ``tempIntPts``.
+    3.	The index of the fracture the new polygon intersects with is appended to the
+       intersected polygons list ``tempIntersectList``.
+    4.	The index to the new intersection structure’s place in the permanent intPts
+       array, if the new polygon is accepted, is calculated and appended to the new
+       polygons list ``intersectionIndex``. That is, the index that is saved is the
+       index the intersection will have once moved to the permanent array if it is
+       not rejected.
+    5.	Any triple intersection points are saved to a temporary list of structure
+       tempData. This structure contains the triple intersection point, and the
+       index to the place in the permanent triplePoints list of where it will go if
+       the polygon is not rejected (similar to step 4).
+    6.	New Polygon Gets a Cluster Group Number (``groupNum`` in the Poly struct).
+       a.	If it is the first intersection found, the new polygon inherits the
+       cluster group number of the intersecting polygon.  b.	If the new polygon
+       has already been given a cluster group number from intersecting another
+       fracture), the intersecting polygon’s cluster group number is added to the
+       encountered cluster groups list ``encounteredGroups``. This will be used to
+       update the fractures and cluster groups (merging the two groups together) IF
+       the new polygon does not end up being rejected (it still has more polygons to
+       check for intersections with).
+
+    Numbers 2 to 5 repeat until all fractures have been checked for intersections
+    with the new polygon. If the polygon has not been rejected during the process: 
+
+    7.	If no intersections were found after searching through previously accepted
+       polygons, the new polygon is given a new cluster group number using the
+       ``assignGroup()`` function (details below).
+
+    8.	The new polygon is moved to the permanent ``acceptedPoly`` list.
+
+    9.	If there were new intersections, they are now appended to the permanent
+       ``intPts`` list.
+
+    10.	All intersected polygons will have their ``intersectionIndex`` list updated
+        with the indices of the new intersections. We do this by adding the index of
+        each new intersection to its corresponding polygon in the same order which
+        they were found. The list for polygons we encountered is in the variable
+        ``tempIntersectList``. 
+
+    E.g. if the permanent ``intPts`` intersection list already has 10 (indexes 0 -
+    9) intersections from  previous fractures and we just added 3 more fractures and
+    intersections, and each fracture can only intersect with the new polygon once,
+    the indexes to the new intersections once they are moved to the permanent
+    ``intPts`` list will be indexes 10, 11, and 12 (indexes start at 0). So, we
+    append to the first polygon listed in the tempIntersectList index 10, the second
+    polygon in the list index 11, and the third index 12. 
+
+    11.	If there are new triple intersection points, they are now appended to the
+        permanent ``triplePoints`` list. The temporary triple intersection points
+        are held in a list of ``TrieplePtTempData`` structures. This structure
+        contains the triple intersection point, and the index for each of the
+        intersections it belongs to (three total). One of the intersections will be
+        a new intersection just created by the new polygon, and the other two will
+        be a triple intersection point on previously accepted intersections. 
+
+    The new triple intersection point is added to the permanent ``triplePoints``
+    array, and then its index in that permanent array is appended to the
+    intersection structure variable ``triplePointsIdx`` for the intersection that it
+    belongs to. 
+
+    12.	 The last thing that is done is a call to the function ``updateGroups()``
+         (details below). 
+
+
+    Function ``assignGroup()``: assign polygon to cluster group
+    *********************************************************************
+
+    The function ``assignGroup()``, defined in clusterGroups.cpp,  is used to assign
+    a new polygon to a new cluster group. This function is for polygons that do not
+    intersect with any other polygons; otherwise a cluster group will be inherited
+    from the intersected polygon. 
+
+    Arguments to this function: 
+    1.	Poly structure reference. A reference to the new
+    polygon being assigned a new group. 
+    2.	Stats structure reference. The program
+    statistics object (variable name pstats throughout the code). The Stats
+    structure contains two structures within it that contain all the cluster group
+    information. These structures are ``FractureGroups`` and ``GroupData`` (details
+    below). 
+    3.	Index (integer) of the new polygons place in the permanent polygon
+    list ``acceptedPoly``. 
+
+    Code Overview (See sections on GroupData and FractureGroups structures for their details)
+    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    1.	The new polygon is assigned the next available group number. This comes from
+       the Stats variable ``nextGroupNum``.
+
+    2.	A ``GroupData`` structure is created.
+
+    3.	Inside the ``GroupData`` structure, there is a boolean array of six
+       elements. This array, faces, contains connectivity information for the
+       cluster. There is an element for each of the six faces, or walls, of the
+       domain. False meaning it is not touching that face, true meaning it is
+       touching the face (see GroupData section for more details). Likewise, there
+       is another faces array in the polygon Poly structure. 
+
+    The polygon’s faces array and the ``GroupData’s`` faces array are bitwise ORed
+    together so that anywhere there is a true in the polygons faces array, there
+    will be a true in the ``GroupData’s`` faces array. After many polygons go
+    through this process for a single cluster group, by looking at the GroupData’s
+    faces array we are able to see which domain faces the cluster connects.
+
+    4.	Next, the variable size inside of the structure ``GroupData`` is
+       incremented. This contains the number of fractures contained in the fracture
+       cluster group.  5.	The ``GroupData`` structure is now saved to a permanent
+       location within the ``Stats`` structure.  6.	A ``FractureGroups`` structure
+       is now created.  7.	The new ``FractureGroups`` structure is assigned the
+       same group number from step 1 using the same ``nextGroupNum`` variable.  8.
+       ``nextGroupNum`` is incremented.  9.	Inside the ``FractrueGroups`` structure
+       is the list (polyList) of polygons belonging to the group. The index for the
+       location in the permanent polygon list, ``acceptedPoly``, for the new polygon
+       is added to this list.  10.	The ``FractureGroup`` structure is then saved to
+       a permanent location within the ``Stats`` structure. 
+
+    Function  ``updateGroups()`` : update fracture cluster group information
+    *************************************************************************
+
+    The function ``updateGroups()``, defined in clusterGroups.cpp,  is used to
+    update the fracture cluster group information for new polygons that have
+    intersected other polygons. When updating the cluster group information, there
+    are two cases: A.	The new polygon only intersected with polygons of a single
+    group.  B.	The new polygon intersected and connected more than one group. The
+    groups now need to be merged together into a single group. 
+
+    Arguments to this function: 1.	``Poly`` structure reference. A reference to the
+    new polygon being added to fracture cluster groups.  2.	Permanent list of
+    accepted polygons already in the DFN (variable ``acceptedPoly``).  3.	List of
+    cluster groups which the new polygon has intersected with, if more than one
+    group (see example in part c on page 1).  4.	``Stats`` structure reference.
+    The program statistics object (variable name ``pstats`` throughout the code).
+    The ``Stats`` structure contains two structures within it that contain all the
+    cluster group information. These structures are ``FractureGroups`` and
+    ``GroupData`` (details below).  5.	Index (integer) of the new polygons place in
+    the permanent polygon list ``acceptedPoly``. 
+
+
+    Case A
+    ++++++++
+    1.	The new polygons faces data is ORed into its corresponding
+    ``GroupData`` structure. 
+
+    The ``GroupData`` array, (in variable pstats) is always aligned with cluster
+    group numbers. Group numbers start at 1, the indexes to the array start at 0.
+    E.g. to access the ``GroupData`` structure for cluster group 12, it is the
+    variable ``pstats.groupData[12 – 1]``. 
+
+    2.	The corresponding ``GroupData`` structure’s variable size is incremented
+       (number of polygons in the group). 
+
+    3.	Next, the corresponding ``FractureGroup`` structure must be found. This has
+       to be done by searching through the array (``pstats.fractGroup``) and
+       comparing the new polygons ``groupNum`` and the group number in the
+       ``FractureGroup`` structure. 
+
+    See below for an explanation as to why we have to search for the group number,
+    and why the ``GroupData`` and ``FractureGroup`` structures are not combined a
+    single structure.
+
+    4.	Once the correct FractureGroup structure is found, the index to the new
+       polygon in the permanent polygon list acceptedPoly is appended to the list
+       polyList in the ``FractureGroups`` structure. 
+
+    Case B
+    +++++++
+    1.	The new polygon’s corresponding ``FractureGroup`` structure
+    is searched and found. The poly is added to the ``FractureGroup`` structure (see
+    3 and 4 in Case A).
+
+    2.	The new polygon’s faces data is ORed into the new polygons corresponding
+       ``GroupData`` structure (see 1 in Case A).
+
+    3.	The new polygon’s corresponding ``GroupData`` structure has it’s size
+       incremented (see 2 in case A). 
+
+    Merge Cluster Groups
+    ++++++++++++++++++++++
+    4.	For all groups in the
+    ``encounteredGroups`` list (see part c under Algorithm Overview at the beginning
+    of this document), the ``GroupData’s`` size variable, is added to and the
+    ``GroupData`` structure corresponding to the new polygons group number. 
+
+    5.	The ``GroupData’s`` faces array for each of the groups in
+       ``encounteredGroups`` is ORed together with the ``GroupData`` structure
+       corresponding to the new polygons group. 
+
+    6.	While doing steps 4 and 5, the ``GroupData’s`` valid variable for each group
+       in ``encounteredGroups`` is set to false. This means that that
+       ``GroupData’s`` data is no longer valid and it should be disregarded (see
+       next section of this document for more details).
+
+    7.	Search for the corresponding ``FractureGroup`` for the group numbers listed
+       in ``encounteredGroups``. 
+
+    8.	For each of the corresponding ``FractureGroups`` for the group numbers
+       listed in ``encounteredGroups``, change the ``groupNum`` variable in
+       ``FractureGroups`` to the new polygon’s group number. 
+
+    9.	Inside the ``FractureGroups`` structure, go through all the polygons listed
+       there and change their groupNum group number variables to match the new
+       polygon’s group number.
+
+
+    Group data structures:  ``GroupData`` and ``FractureGroups``
+    ************************************************************************
+
+    Structure Definitions:
+
+    NOTE: Both structures use a constructor to initialize their variables (see code
+    in ``structures.cpp``).
+
+    .. code-block:: c
+
+        struct GroupData { unsigned int size; bool valid; bool faces[6]; /* Domain
+        boundary sides/faces that this cluster connects to..  Index Key: [0]: -x
+        face, [1]: +x face [2]: -y face, [3]: +y face [4]: -z face, [5]: +z face */
+        };
+
+        struct FractureGroups { unsigned long long int groupNum;
+        std::vector<unsigned int> polyList; };
+
+    The reason we do not combine the ``GroupData`` and ``FractureGroups`` into a
+    single structure is for performance reasons. 
+
+    If the two structures were combined, a problem arises when two different
+    fracture groups merge together. The structures could no longer be aligned with
+    the group numbers in an array because the group numbers will be changing
+    whenever groups merge together. This would cause constant searching every time
+    you needed to access any of the data. We still need to search when dealing with
+    the ``FractureGroups`` array, but save some performance costs by being able to
+    access everything in the GroupData array for any group number without any
+    searching. 
+
+    If you tried to force the alignment by having empty structures where groups were
+    merged to another group, it would require constantly deleting and reallocating
+    the arrays, and copying polygons to the new group every time groups merged to
+    make everything fit as it should. This would be a huge performance hit and
+    probably the worst solution. 
+     
+    The solution implemented was to keep the two structures separate. When clusters
+    merge together, we simply have to set the old cluster’s ``GroupData`` valid bit
+    false (no search required), add its size and OR the faces to the ``GroupData``
+    structure that it is being merged into. We then need to find (search required)
+    the group number that is about to go away in the ``FractureGroups`` list and
+    change it to the new group number, and change the polygons in that group to the
+    same group number. Nothing is ever re-allocated.
+
+    NOTE: When the group number changes in ``FractureGroups`` after clusters merge
+    together, there will be two ``FractureGroups`` with the same group number but
+    with different polygons listed. To get all the polygons from a single group, the
+    two lists (or more if clusters continued to merge) need to be concatenated.
+
+
+    Funciton  ``getCluster()`` : get a cluster of fractures
+    ********************************************************************
+
+    The ``getCluster()`` function is responsible for returning a list of  indexes to
+    the polygons which match the user’s connectivity option. 
+
+    Arguments to this function: 1. The program statistics Stats object (named pstats
+    throughout the code).  There are three user options that deal with fracture
+    connectivity: 1.	``boundaryFaces`` a.	This option provides a way to select
+    which faces or walls of the domain the user wants the fractures to connect with.
+    It is an array of 6 elements. A zero means not to enforce a connection, a 1
+    means fractures must have a connection to that face.  i.	Array elements match
+    to each boundary wall as follows: [0]: -x face, [1]: +x face [2]: -y face, [3]:
+    +y face [4]: -z face, [5]: +z face
+
+    2.	``ignoreBoundaryFaces`` a.	This option ignores the ``boundaryFaces``
+       connectivity option completely and causes ``getCluster()`` to return a list
+       of all polygons containing at least one intersection.  3.
+       ``keepOnlyLargestCluster`` a.	This option keeps causes getCluster() to
+       return the largest cluster using the above two options as well. If
+       ``ignoreBoundaryFaces`` is being used, ``getCluster()`` will return the
+       largest cluster of fractures in the DFN, even if they do not connect to any
+       of the domain walls. If the ``boundaryFaces`` option is being used,
+       ``getCluster()`` will return the largest cluster which connects the user’s
+       required domain walls. 
+
+    Code Overview
+    +++++++++++++++
+
+    Part 1: Find cluster groups that match the user’s
+    connectivity option 1.	If the user is using the ``boundaryFaces`` option,
+    search through the GroupData and compare the ``GroupData’s`` faces array to the
+    users ``boundaryFaces`` array. If the groups faces connectivity array connects
+    the required user defined domain walls, add that group number to a list
+    (``matchingGroups`` in the code). 
+
+    2.	If the user is using the ``ignoreBoundaryFaces`` option, go through the
+       ``GroupData`` array and add all the valid groups to the ``matchingGroups``
+       array. 
+
+    3.	If the user is using the ``keepOnlyLargestCluster`` option, go through the
+       ``matchingGroups`` array and compare each group’s ``GroupData.size``
+       variable. Keep group with the largest size.
+
+
+    4.	Search for each group in the ``FractureGroups`` array and concatenate their
+       polygon lists in a list to be returned by the function.
+
+
+    Exponential Distribution Class Implementation
+    ---------------------------------------------
+
+    Introduction
+    ************
+    This document is intended for new developers working
+    on dfnGen. It covers the implementation of the ``Distributions`` class, and its
+    composed exponential distribution class ``ExpDist`` in dfnGen V2.0. 
+
+    During dfnGen 2.0 development, new functionality was needed to allow for the
+    control of the range of numbers produced by the exponential distribution.
+    Previously, dfnGen V2.0 was developed using the C++ standard library,
+    ``random``. 
+
+    Need for a Customized Exponential Distribution
+    *************************************************
+    There was need to control the
+    minimum fracture size for exponential distributed fracture families for research
+    purposes. Also, all fracture radii must always be greater than the minimum
+    feature size ``h``. 
+
+    The exponential distribution favors small numbers that caused a lot of
+    re-sampling when the distribution generated fracture radii of less than h or
+    smaller than the user’s defined minimum radius. Re-sampling the standard
+    library’s exponential distribution when the distribution produced numbers
+    outside of the user’s defined ranged was found to be very inefficient and could
+    halt program execution when the exponential mean did not match the range which
+    the user had chosen. The program could re-sample the distribution thousands of
+    times before an acceptable radius was generated.
+
+    With the standard library’s implementation, complete randomness is forced from
+    the distribution. There was no way to control the range of numbers produced by
+    the distribution. A way of limiting the output of the distribution was needed
+    that did not involve re-sampling.
+
+    Implementation Overview *********************** Our implementation uses the CDF
+    determine the random variable range from which we need to sample. When the
+    inverse CDF is sampled uniformly between 0 and 1, an exponential distribution
+    will be produced that matches that of the standard library’s exponential
+    distribution output. By limiting the random variable range, we can sample
+    between the users desired minimum and maximum without generating numbers outside
+    of that range.
+
+    To limit the range of output, we use the exponential CDF formula: ``rv = 1 – e
+    (-lambda * output)``, where rv is the random variable needed to produce output
+    when plugged into the inverse CDF function: ``output = -log(1-rv)/lambda``. 
+
+    When the user’s defined minimum and maximum are plugged in to output, we get the
+    range which the distribution should be sample from in order to get a exponential
+    distribution bounded by the users defined minimum and maximum.
+
+    These variables, the range to sample the exponential distribution, are saved to
+    minDistInput and maxDistInput in the family’s corresponding Shape structure.  
+
+
+    Implementation Details
+    ***********************
+
+    Our implementation uses
+    composition for increased modularity and to increase the ease of adding
+    additional distribution types in the future. 
+
+    The ``ExpDist`` class is a sub-class of the ``Distributions`` class. This allows
+    the programmer to only create one instance of the ``Distributions`` class, and
+    the ``ExpDist`` class and any other distribution classes added in the future
+    will be automatically set up and initialized by ``Distributions`` constructor.
+
+    ``Distributions`` Class ************************ The ``Distributions`` class
+    contains functions and variables that are needed to initialize the ``ExpDist``
+    class, and likely other distribution classes added in the future. It also
+    contains the ``ExpDist`` class within it. 
+
+    When the ``Distributions`` class is created, its constructor function is called.
+    This function creates and initializes the ``ExpDist`` class within the
+    ``Distributions`` class. 
+
+    One of the issues with the exponential distribution is that if given 1.0 as a
+    random variable, the distribution returns inf. To maximize the range of numbers
+    which can be produced, we need to know the largest value less than 1.0 that the
+    computer is able to produce. 
+
+    The ``Distributions`` class has a function called ``getMaxDecimalDouble()``.
+    During ``Distributions`` creation, ``getMaxDecimalDouble()`` returns the largest
+    number less than 1, e.g. 0.999….9, to its maximum precision. This variable is
+    saved to variable ``maxInput`` in the ``Distributions`` class. It is also passed
+    to the ``ExpDist`` class during its creation. 
+
+    Also in the ``Distributions`` class constructor, the function
+    ``checkDistributionUserInput()`` is called. This function error checks user
+    exponential input options and finishes initializing the exponential
+    distribution. The function is written with the expectation for other
+    distributions to be added and will be easy to modify. 
+
+    In ``checkDistributionUserInput()``, ``minDistInput`` and ``maxDistInput`` are
+    initialized for each family using exponential distribution (see Implementation
+    Overview). Error checks are performed to ensure ``minDistInput`` and
+    ``maxDistInput`` are within the machines capabilities to produce. If they are
+    set very high, plugging in ``maxInput`` (see above) into the distribution can
+    produce a number smaller than the requested maximum, and possibly minimum. If
+    the user defined maximum cannot be produced stochastically, the user is warned
+    and the user defined maximum is set to the largest possible number that the
+    machine can produce. The minimum is then checked to ensure it is still less than
+    the maximum. If it is not, the error is reported to the user and the program
+    terminates. Otherwise, everything is okay and the ``ExpDist`` class is ready to
+    use. 
+
+    ``ExpDist`` Class
+    *******************
+
+    After the ``ExpDist`` class has been
+    initialized, the ``getValue()`` function can be used to return random numbers
+    from the exponential distribution. The function has been overloaded to either be
+    given the random input variable (random variable between 0 and 1) as an
+    argument, or be given a range between 0 and 1 to generate random input variables
+    from. 
+
+    Other Details
+    ****************
+    The C++ standard random library is still used for
+    generating uniform random reals. The 64-bit Mersenne twister engine random
+    generator is the random generator used for all dfnGen’s random variables. It is
+    created in main() and passed as a reference to the Distributions class during
+    its creation. 
+
+    Hotkey ``~``
+    --------------
+
+    If the dfnGen takes too long, one can use ``~`` to
+    abort fracture generation process and contine to the next step of outputting the
+    data related the fractures generated until that point in time.
+
+    Developer notes: Variables that might need adjusting
+    **********************************************************************
+
+    Due to the recent changes in the LaGriT meshing script, there are a couple parts
+    of the code that might need adjusting.
+
+    Distance between intersections
+    +++++++++++++++++++++++++++++++++
+
+    After updates to
+    the meshing script, there are cases where intersections can have only one
+    triangular element between them. If the distance between intersections needs to
+    be increased, adjust the last argument in ``checkDistDistToOldIntersections()``
+    and ``checkDistToNewIntersections()``, lines 645 and 653 in
+    computationalGeometry.cpp
+
+    Allowed Intersection Angles
+    +++++++++++++++++++++++++++
+
+    The changes to the
+    LaGriT meshing script might allow for smaller angles without causing problems in
+    the mesh. This is for intersection angles crossing the edge of a polygon, not
+    for triple intersections.
+     
+    To change the angle, adjust the variable ``const static double minDist2`` found
+    on line 1260 in ``computationalGeometry.cpp``. 
+
+    ``minDist2`` is the minimum distance allowed to the edge of a polygon from the
+    first discretized intersection point, not including the end points (the first
+    node in from the end point). 
+
+    Adding new user input variables to dfnGen 2.0
+    *********************************************
+    1.	Add option/variable to an
+    existing input file. Tag the option’s name with ``:`` at the end.  There must be
+    at least 1 space or a new line in between the ``:`` and the data.  E.g.
+    ``newUserOption: 12``
+
+    2.	Add ``extern varType varName`` to ``input.h``. Most user input variables are
+       stored globally. ``input.h`` must be included in any files that need access
+       to them.
+
+    3.	Update ``readInput.cpp``. Declare the new global variable (the same variable
+       as in step 1 but without the ``extern`` keyword) at the top of this file. 
+
+    This file contains the function ``getInput()``.  This function is responsible
+    for reading in user input files.  ``getInput()`` needs to be updated to read in
+    the new variable. I suggest looking for a similar variable, whether it be an
+    array, a flag, or a number, and use that as an example to read in the new input
+    option. 
+
+    The function ``searchVar()`` is very helpful in reading variables from the user
+    input file. The first argument is the file object (C++ ifstream object), the
+    second argument is a string of the variable/option name in the input file
+    including the ``:`` at the end.  After this function runs, the file pointer will
+    be pointing to the data directly after the input options name (e.g. in step 1,
+    the file pointer will be pointing to the white space directly after the colon.)
+    All that is left is to read the input variable in to a C++ variable e.g. ``file
+    >> var``. NOTE: C++ is smart and will skip multiple spaces and/or new line
+    characters. 
+
+    If the option requires a list or array as the options parameters, see similar
+    options in readInput.cpp. Instead of reading in directly to a variable (``file
+    >> var``), a function will be required to parse the list. See
+    ``readInputFunctions.cpp`` and ``readInputFunctions.h`` for some examples on how
+    to do this.
+
+    4.  The last thing to do is to write/edit the code that will use the new option.
+        Include ``input.h`` in any new file to access the global variable. If the
+        new variable is an array, don’t forget to use ``delete[]`` to free its
+        memory after the variable is no longer needed. If a new file was created, be
+        sure to edit the makefile to include it in the built. 
 
 
 
