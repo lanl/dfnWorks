@@ -248,24 +248,28 @@ def check_input(self, input_file='',output_file=''):
 
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(ellByCoord, params), ellByCoord) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(ecoordPath, params)):
+                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.valueOf(ecoordPath, params)
                 input_helper_methods.error(invalid.format(ecoordPath))
             else:
                 shutil.copy(input_helper_methods.valueOf(ecoordPath, params), self._jobname)
 
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userEs, params), userEs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(ePath, params)):
+                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.valueOf(ePath, params)
                 input_helper_methods.error(invalid.format(ePath))
             else:
                 shutil.copy(input_helper_methods.valueOf(ePath, params), self._jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(userRs, params), userRs) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(rPath, params)):
+                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.valueOf(rPath, params)
                 input_helper_methods.error(invalid.format(rPath))
             else:
                 shutil.copy(input_helper_methods.valueOf(rPath, params), self._jobname)
             
         if input_helper_methods.verifyFlag(input_helper_methods.valueOf(recByCoord, params), recByCoord) == 1:
             if not os.path.isfile(input_helper_methods.valueOf(coordPath, params)):
+                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.valueOf(coordPath, params) 
                 input_helper_methods.error(invalid.format(coordPath))    
             else:
                 shutil.copy(input_helper_methods.valueOf(coordPath, params), self._jobname)
