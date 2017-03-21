@@ -11,7 +11,7 @@ This document contains a short, five example, tutorial for dfnWorks. The five te
 - truncated_power_law_dist: The user specifies the parameters for two families of fractures with a truncated power-law distribution of fracture size. 
 
 
-All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
+All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
 
 Turn on X forwarding if on server
@@ -26,11 +26,12 @@ Ensure that X forwarding is turned on if you are running dfnWorks from an ssh co
 Fix paths in test directory 
 ----------------------------
 
-Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
+Fix the pathnames for all files in the folder i$dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py:
 
 
 .. code-block:: bash
 
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
     $ python fix_paths.py CHANGE_THIS_PATH NEW_PATH 
 
 Here, NEW_PATH is the name of the directory **that contains** the dfnWorks-Version2.0 repository. CHANGE_THIS_PATH is the prefix you wish to replace. If CHANGE_THIS_PATH includes the ending '/' character, then NEW_PATH must also include it.  
@@ -39,7 +40,7 @@ Here, NEW_PATH is the name of the directory **that contains** the dfnWorks-Versi
 Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 ----------------------------------------------------------------
 
-**Before executing dfnWorks,** the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
+**Before executing dfnWorks,** the following paths must be set:
 
 - DFNWORKS_PATH: the dfnWorks-Version2.0 repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
@@ -47,7 +48,9 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 - python_dfn: The location of the Python distribution to use
 - lagrit_dfn: The location of the LaGriT executable
 
-For *example*:
+.. code-block:: bash
+    
+    $vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
 
 .. code-block:: python
     
@@ -56,7 +59,8 @@ For *example*:
 Setup the Python package pydfnworks
 -------------------------------------
 
-**In the folder dfnWorks-Version2.0/pydfnworks/** :
+.. code-block:: bash
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/ 
 
 **If the user has admin privelges**:
 
@@ -73,9 +77,9 @@ Setup the Python package pydfnworks
 Executing dfnWorks
 -------------------
 
-To run one of the test cases enter the following command, **from the directory  dfnWorks-Version2.0/pydfnworks/bin/** : 
+To run one of the test cases enter the following command:
 
-- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpus [NUMBER_OF_CPUS] -large_network 
+- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS] -large_network 
 
 The arguments are:
 
@@ -84,30 +88,21 @@ The arguments are:
 -[NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
 -large_network (optional): Only use this flag if the user should use CPP for file processing. 
 
-For example, to run the demo lognormal on 4 CPUs,  the command line input would be:
+For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the command line input would be:
 
 .. code-block:: bash
-    
-    $ python run.py -name lognormal_dist
-     -input dfnWorks-Version2.0/tests/lognormal_distribution.txt
-     -ncpus 4  
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin    
+    $ python run.py -name 4_user_defined_rectangles 
+     -input ~/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+     -ncpu 4  
 
-This command will run the lognormal_dist test and create a new folder lognormal_dist where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
+This command will run the 4_user_defined_rectangles test and create a new folder 4_user_defined_rectangles where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
 
 
 4_user_defined_rectangles
 --------------------------
 
 This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
-
-.. code-block:: bash
-    
-    $ python dfnWorks-Version2.0/pydfnworks/bin/run.py
-      -name 4_user_defined_rectangles
-      -input dfnworks_main/tests/4_user_rectangles.txt
-      -ncpus 4
-
-This will create a new folder, test 4fractures, where all of the output will be located. You can compare your results to the following images.
 
 The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the folder 4_user_defined_rectangles/LaGriT/, into Paraview.
 
