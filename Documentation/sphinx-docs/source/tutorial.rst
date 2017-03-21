@@ -13,26 +13,33 @@ This document contains a short, five example, tutorial for dfnWorks. The five te
 
 All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
-Fix paths in test directory 
-----------------------------
-
-Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
-
-python fix_paths.py [OLD_PREFIX] [NEW_PREFIX]
-
-Here, NEW_PREFIX is the name of the directory that contains the dfnWorks-Version2.0 repository. OLD_PREFIX is the prefix you wish to replace. If OLD_PREFIX includes the ending '/' character, then NEW_PREFIX must also include it.  
 
 Turn on X forwarding if on server
 ----------------------------------
 
 Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:
 
-ssh -X [REMOTE_SERVER]
+.. code-block:: bash
+   
+    $ ssh -X darcy 
+
+Fix paths in test directory 
+----------------------------
+
+Fix the pathnames for all files in the folder dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py in dfnWorks-Version2.0/pydfnworks/bin/ :
+
+
+.. code-block:: bash
+
+    $ python fix_paths.py CHANGE_THIS_PATH NEW_PATH 
+
+Here, NEW_PATH is the name of the directory **that contains** the dfnWorks-Version2.0 repository. CHANGE_THIS_PATH is the prefix you wish to replace. If CHANGE_THIS_PATH includes the ending '/' character, then NEW_PATH must also include it.  
+
 
 Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 ----------------------------------------------------------------
 
-Before executing dfnWorks, the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
+**Before executing dfnWorks,** the following paths must be set. These are in the file dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py:
 
 - DFNWORKS_PATH: the dfnWorks-Version2.0 repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
@@ -40,39 +47,52 @@ Before executing dfnWorks, the following paths must be set. These are in the fil
 - python_dfn: The location of the Python distribution to use
 - lagrit_dfn: The location of the LaGriT executable
 
+For *example*:
+
+.. code-block:: python
+    
+    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'    
+
 Setup the Python package pydfnworks
 -------------------------------------
 
-In the folder dfnWorks-Version2.0/pydfnworks/ ::
+**In the folder dfnWorks-Version2.0/pydfnworks/** :
 
-python setup.py install (if the user has admin privileges), OR:
+**If the user has admin privelges**:
 
-python setup.py install --user (if the user does not have admin privileges)
+.. code-block:: bash
+    
+    $ python setup.py install
+
+**If the user DOES NOT have admin priveleges**:
+
+.. code-block:: bash
+   
+    $ python setup.py install --user
 
 Executing dfnWorks
 -------------------
 
-To run one of the test cases enter either of the following types of command (INPUT PARAMETERS WILL CHANGE FOR ACTUAL RUNS). Both of the scripts invoked below are in the directory dfnWorks-Version2.0/pydfnworks/bin/ : 
+To run one of the test cases enter the following command, **from the directory  dfnWorks-Version2.0/pydfnworks/bin/** : 
 
-- python test.py [JOBNAME], where name is one of the names above. 
 - python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpus [NUMBER_OF_CPUS] -large_network 
 
-The second way of running dfnWorks can be used for any input, not only the examples presented here. The arguments are:
+The arguments are:
 
 -[JOBNAME]: The name of the run, which is also the folder which will contain the run's output.
 -[INPUT_FILE]: An input file with three lines that have input files for dfnGen, dfnFlow, and dfnTrans, respectively. Any of the files with ending .txt in the directory tests can be used as examples of input files. 
 -[NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
 -large_network (optional): Only use this flag if the user should use CPP for file processing. 
 
-For example, to run the demo lognormal on 4 CPUs, using C++ for file processing,  the command line input would be either:
+For example, to run the demo lognormal on 4 CPUs,  the command line input would be:
 
-python test.py lognormal_dist 
+.. code-block:: bash
+    
+    $ python run.py -name lognormal_dist
+     -input dfnWorks-Version2.0/tests/lognormal_distribution.txt
+     -ncpus 4  
 
-OR
-
-python run.py -name lognormal_dist -input dfnWorks-Version2.0/tests/lognormal_distribution.txt -ncpus 4 -large_network 
-
-Both of these command line inputs will run the lognormal_dist test and create a new folder lognormal_dist where all output files will be located. Descriptions of each output file are in the documentation. The only difference between the command line inputs above is that in the first, parameters such as number of CPUs and the input file are specified in the script test.py, while the second allows the user to specify these parameters on the command line. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
+This command will run the lognormal_dist test and create a new folder lognormal_dist where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
 
 
 4_user_defined_rectangles
@@ -80,7 +100,12 @@ Both of these command line inputs will run the lognormal_dist test and create a 
 
 This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
 
-python dfnWorks-Version2.0/pydfnworks/bin/run.py -name 4_user_defined_rectangles -input dfnworks_main/tests/4_user_rectangles.txt -ncpus 4
+.. code-block:: bash
+    
+    $ python dfnWorks-Version2.0/pydfnworks/bin/run.py
+      -name 4_user_defined_rectangles
+      -input dfnworks_main/tests/4_user_rectangles.txt
+      -ncpus 4
 
 This will create a new folder, test 4fractures, where all of the output will be located. You can compare your results to the following images.
 

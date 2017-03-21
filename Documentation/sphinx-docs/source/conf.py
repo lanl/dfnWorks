@@ -55,7 +55,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pydfnworks'
+project = u'dfnWorks'
 copyright = '2016, LANL, LA-UR-17-22216'
  
 author = u'EES-16, Subsurface Flow and Transport'
@@ -144,7 +144,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'pydfnworks v2.0'
+# html_title = u'dfnWorks v2.0'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -244,7 +244,7 @@ html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pydfnworksdoc'
+htmlhelp_basename = 'dfnWorksdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -270,7 +270,7 @@ htmlhelp_basename = 'pydfnworksdoc'
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pydfnworks.tex', u'pydfnworks Documentation',
+    (master_doc, 'dfnWorks.tex', u'dfnWorks Documentation',
      u'Subsurface Flow and Transport Team, LANL, LA-UR-17-22216', 'manual'),
 ]
 
@@ -312,7 +312,7 @@ latex_logo = 'dfnworks_logo.png'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dfnworks-python', u'pydfnworks Documentation',
+    (master_doc, 'dfnworks-python', u'dfnWorks Documentation',
      [author], 1)
 ]
 
@@ -327,8 +327,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pydfnworks', u'pydfnworks Documentation',
-     author, 'pydfnworks', 'One line description of project.',
+    (master_doc, 'dfnWorks', u'dfnWorks Documentation',
+     author, 'dfnWorks', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -16,5 +16,5 @@ Contents:
    dfntrans
    pydfnworks
    scripts
-   examples
+   tutorial
    applications
