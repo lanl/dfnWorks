@@ -8,7 +8,7 @@ The pydfnworks package has four Python scripts that assist with compiling, testi
 fix_paths.py: fix the paths in the tests folder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Syntax: python fix_paths.py [OLD_PREFIX] [NEW_PREFIX], where NEW_PREFIX is the current location of the dfnWorks-Version2.0 repository (the folder above the repository), and OLD_PREFIX was the old location. 
+Syntax: python fix_paths.py 
 
 compile.py: compile dfnWorks components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
