@@ -23,19 +23,22 @@ Ensure that X forwarding is turned on if you are running dfnWorks from an ssh co
    
     $ ssh -X SERVER_NAME 
 
-Fix paths in test directory 
-----------------------------
-
-Fix the pathnames for all files in the folder i$dfnWorks-Version2.0/tests/ . This can be done automatically by running the script fix_paths.py:
-
+Go to the dnfWorks-Version2.0 repository
+------------------------------------------
 
 .. code-block:: bash
 
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
-    $ python fix_paths.py CHANGE_THIS_PATH NEW_PATH 
+    $ cd ~/dfnWorks-Version2.0/
 
-Here, NEW_PATH is the name of the directory **that contains** the dfnWorks-Version2.0 repository. CHANGE_THIS_PATH is the prefix you wish to replace. If CHANGE_THIS_PATH includes the ending '/' character, then NEW_PATH must also include it.  
+Fix paths in test directory 
+----------------------------
 
+Fix the pathnames for all files in the folder /tests/ . This can be done automatically by running the script fix_paths.py:
+
+.. code-block:: bash
+
+    $ cd /pydfnworks/bin/
+    $ python fix_paths.py 
 
 Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 ----------------------------------------------------------------
@@ -50,7 +53,9 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 
 .. code-block:: bash
     
-    $ vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
+    $ vi /pydfnworks/pydfnworks/paths.py
+
+For example:
 
 .. code-block:: python
     
@@ -59,9 +64,11 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 Setup the Python package pydfnworks
 -------------------------------------
 
+Go up a directory:
+
 .. code-block:: bash
     
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/ 
+    $ cd ..
 
 **If the user has admin privelges**:
 
@@ -84,7 +91,7 @@ To run one of the test cases enter the following command:
 
 The arguments are:
 
-- [JOBNAME]: The name of the run, which is also the folder which will contain the run's output.
+- [JOBNAME]: The name of the run, which is also the absolute path name of the folder which will contain the run's output.
 - [INPUT_FILE]: An input file with three lines that have input files for dfnGen, dfnFlow, and dfnTrans, respectively. Any of the files with ending .txt in the directory tests can be used as examples of input files. 
 - [NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
 - large_network (optional): Only use this flag if the user should use CPP for file processing. 
@@ -93,9 +100,9 @@ For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the co
 
 .. code-block:: bash
     
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin    
-    $ python run.py -name 4_user_defined_rectangles 
-     -input ~/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+    $ cd bin    
+    $ python run.py -name ~/4_user_defined_rectangles 
+     -input ../tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 This command will run the 4_user_defined_rectangles test and create a new folder 4_user_defined_rectangles where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
@@ -109,13 +116,13 @@ Here is a quick summary of the steps described above, with commands for the 4_us
     
     $ ssh -X SERVER_NAME
     $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
-    $ python fix_paths.py /home/nknapp/ ~ 
-    $ vi ~/dfnWorks-Version2.0/pydfnworks/pydfnworks/paths.py
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/  
+    $ python fix_paths.py  
+    $ vi /pydfnworks/pydfnworks/paths.py
+    $ cd .. 
     $ python setup.py install --user
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin    
-    $ python run.py -name 4_user_defined_rectangles 
-     -input ~/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+    $ cd bin    
+    $ python run.py -name ~/4_user_defined_rectangles 
+     -input ../tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 4_user_defined_rectangles
