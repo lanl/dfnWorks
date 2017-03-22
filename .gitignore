@@ -29,7 +29,7 @@ python_scripts/setup.py
 
 python_scripts/test_inputs/input_text.txt
 sample_inputs/4_fracture_test/input_4_rect.dat
-
+*Documentation/sphinx-docs/build/latex/dfnWorks.log*
 *doctree*
 *pickle*
 *png*
@@ -43,7 +43,7 @@ sample_inputs/4_fracture_test/input_4_rect.dat
 
 
 *.pdf
-!pydfnworks.pdf
+!dfnWorks.pdf
 *output_test_min*
 *break*
 
