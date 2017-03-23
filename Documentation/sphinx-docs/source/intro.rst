@@ -1,7 +1,22 @@
 Introduction
 ============
 
-dfnWorks is a parallelized computational suite to generate three-dimensional discrete fracture networks (DFN) and simulate flow and transport. Developed at Los Alamos National Laboratory, it has been used to study flow and transport in fractured media at scales ranging from millimeters to kilometers. The networks are created and meshed using dfnGen, which combines FRAM (the feature rejection algorithm for meshing) methodology to stochastically generate three-dimensional DFNs with the LaGriT meshing toolbox to create a high-quality computational mesh representation. The representation produces a conforming Delaunay triangulation suitable for high performance computing finite volume solvers in an intrinsically parallel fashion. Flow through the network is simulated with dfnFlow, which utilizes the massively parallel subsurface flow and reactive transport finite volume code PFLOTRAN. A Lagrangian approach to simulating transport through the DFN is adopted within dfnTrans to determine pathlines and solute transport through the DFN. Applications of the dfnWorks suite include nuclear waste repository science, hydraulic fracturing and |CO2| sequestration.
+dfnWorks is a parallelized computational suite to generate three-dimensional 
+discrete fracture networks (DFN) and simulate flow and transport. Developed at 
+Los Alamos National Laboratory, it has been used to study flow and transport 
+in fractured media at scales ranging from millimeters to kilometers. The 
+networks are created and meshed using dfnGen, which combines FRAM (the feature 
+rejection algorithm for meshing) methodology to stochastically generate 
+three-dimensional DFNs with the LaGriT meshing toolbox to create a high-quality 
+computational mesh representation. The representation produces a conforming 
+Delaunay triangulation suitable for high performance computing finite volume 
+solvers in an intrinsically parallel fashion. Flow through the network is 
+simulated with dfnFlow, which utilizes the massively parallel subsurface flow 
+and reactive transport finite volume code PFLOTRAN. A Lagrangian approach to 
+simulating transport through the DFN is adopted within dfnTrans to determine 
+pathlines and solute transport through the DFN. Applications of the dfnWorks 
+suite include nuclear waste repository science, hydraulic fracturing and 
+|CO2| sequestration.
 
 .. |CO2| replace:: CO\ :sub:`2`    
 
@@ -71,7 +86,9 @@ FRAM (the feature rejection algorithm for meshing) is executed using the dfnGen 
 
 LaGriT
 ******
-The LaGriT_ (http://lagrit.lanl.gov) meshing toolbox is used to create a high resolution computational mesh representation of the DFN in parallel. An algorithm for conforming Delaunay triangulation is implemented so that fracture intersections are coincident with triangle edges in the mesh and Voronoi control volumes are suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
+The LaGriT_ (https://lagrit.lanl.gov) meshing toolbox is used to create a high resolution computational mesh representation of the DFN in parallel. An algorithm for conforming Delaunay triangulation is implemented so that fracture intersections are coincident with triangle edges in the mesh and Voronoi control volumes are suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
+
+.. _LaGriT: https://lagrit.lanl.gov
 
 dfnFlow
 ^^^^^^^
@@ -79,13 +96,15 @@ You will need one of either PFLOTRAN or FEHM to solve for flow using the mesh fi
 
 PFLOTRAN
 ********
-PFLOTRAN_ (http://www.pflotran.org) is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media. The code is designed to run on leadership-class supercomputers as well as workstations and laptops.
+PFLOTRAN_ (http://pflotran.org) is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media. The code is designed to run on leadership-class supercomputers as well as workstations and laptops.
 
-.. _PFLOTRAN: https://www.pflotran.org/
+.. _PFLOTRAN: http://pflotran.org/
 
 FEHM
 ****
-FEHM_ (http://fehm.lanl.gov) is a subsurface multiphase flow code developed at Los Alamos National Laboratory.
+FEHM_ (https://fehm.lanl.gov) is a subsurface multiphase flow code developed at Los Alamos National Laboratory.
+
+.. _FEHM: https://fehm.lanl.gov
 
 dfnTrans
 ^^^^^^^^
