@@ -86,7 +86,7 @@ FRAM (the feature rejection algorithm for meshing) is executed using the dfnGen 
 
 LaGriT
 ******
-The LaGriT_ (https://lagrit.lanl.gov) meshing toolbox is used to create a high resolution computational mesh representation of the DFN in parallel. An algorithm for conforming Delaunay triangulation is implemented so that fracture intersections are coincident with triangle edges in the mesh and Voronoi control volumes are suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
+The LaGriT_ meshing toolbox is used to create a high resolution computational mesh representation of the DFN in parallel. An algorithm for conforming Delaunay triangulation is implemented so that fracture intersections are coincident with triangle edges in the mesh and Voronoi control volumes are suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
 .. _LaGriT: https://lagrit.lanl.gov
 
@@ -96,13 +96,13 @@ You will need one of either PFLOTRAN or FEHM to solve for flow using the mesh fi
 
 PFLOTRAN
 ********
-PFLOTRAN_ (http://pflotran.org) is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media. The code is designed to run on leadership-class supercomputers as well as workstations and laptops.
+PFLOTRAN_  is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media. The code is designed to run on leadership-class supercomputers as well as workstations and laptops.
 
-.. _PFLOTRAN: http://pflotran.org/
+.. _PFLOTRAN: http://pflotran.org
 
 FEHM
 ****
-FEHM_ (https://fehm.lanl.gov) is a subsurface multiphase flow code developed at Los Alamos National Laboratory.
+FEHM_ is a subsurface multiphase flow code developed at Los Alamos National Laboratory.
 
 .. _FEHM: https://fehm.lanl.gov
 
@@ -112,7 +112,9 @@ dfnTrans is a method for resolving solute transport using control volume flow so
 
 CMake
 ^^^^^^^
-CMake (https://cmake.org/) is an open-source, cross-platform family of tools designed to build, test and package software. It is needed to use C++ for processing files at a bottleneck IO step of dfnWorks. Using C+C++ for this file processing optional but can greatly increase the speed of dfnWorks for large fracture networks. Details on how to use C++ for file processing are in the scripts section of this documentation.
+CMake_ is an open-source, cross-platform family of tools designed to build, test and package software. It is needed to use C++ for processing files at a bottleneck IO step of dfnWorks. Using C+C++ for this file processing optional but can greatly increase the speed of dfnWorks for large fracture networks. Details on how to use C++ for file processing are in the scripts section of this documentation.
+
+.. _CMake: https://cmake.org
 
 VisIt
 ^^^^^
