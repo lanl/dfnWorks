@@ -101,8 +101,8 @@ For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the co
 .. code-block:: bash
     
     $ cd bin    
-    $ python run.py -name ~/4_user_defined_rectangles 
-     -input ../tests/4_user_defined_rectangles.txt
+    $ python run.py -name /home/nknapp/4_user_defined_rectangles
+     -input /home/nknapp/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 This command will run the 4_user_defined_rectangles test and create a new folder 4_user_defined_rectangles where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
@@ -110,7 +110,7 @@ This command will run the 4_user_defined_rectangles test and create a new folder
 Summary
 --------
 
-Here is a quick summary of the steps described above, with commands for the 4_user_defined_rectangles test case. **You MUST edit the paths in paths.py, and change ~ to the location of the repository, for these commands to work!** 
+Here is a quick summary of the steps described above, with commands for the 4_user_defined_rectangles test case. **You MUST edit the paths in paths.py, and change ~ to the location of the repository, for these commands to work! Also, note that the last command should be on one line.** 
 
 .. code-block:: bash
     
@@ -121,8 +121,8 @@ Here is a quick summary of the steps described above, with commands for the 4_us
     $ cd .. 
     $ python setup.py install --user
     $ cd bin    
-    $ python run.py -name ~/4_user_defined_rectangles 
-     -input ../tests/4_user_defined_rectangles.txt
+    $ python run.py -name /home/nknapp/4_user_defined_rectangles
+     -input /home/nknapp/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 4_user_defined_rectangles

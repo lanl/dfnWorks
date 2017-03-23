@@ -10,7 +10,8 @@ def cleanup_files(self, output_dir):
     lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
     pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat', 'full_mesh_vol_area.uge']
     dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
-    exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list
+    transport_exclude_list = ['.ex']
+    exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list + transport_exclude_list
     delete_list = ['output_files.txt', 'dfn_explicit-cellinfo', 'dfn_explicit-darcyvel', 'dfn_explicit-mas.dat', 'convert_uge_params.txt', 'logx3dgen', 'outx3dgen', '-e']
     subprocess.call('mkdir ' + output_dir, shell=True)
     for output_fle in os.listdir(os.getcwd()):
@@ -43,7 +44,16 @@ def cleanup_end(self):
         for name in lagrit_exclude_list:
             if name in output_fle:
                 subprocess.call('mv ' + output_fle + ' LaGriT', shell=True)
-           
+    subprocess.call('cd LaGriT', shell=True)
+    subprocess.call('mkdir transport')
+    for fle in os.listdir(os.getcwd()):
+        if 'zone' in fle:
+            subprocess.call('mv ' + fle + ' transport', shell=True)
+        elif 'ex' in fle:
+            subprocess.call('mv ' + fle + ' ../PFLOTRAN', shell=True)
+    subprocess.call('cd ../DFN_generator', shell=True)
+    subprocess.call('rm -rf None') 
+
 def commandline_options():
     """Read command lines for use in dfnWorks.
     
