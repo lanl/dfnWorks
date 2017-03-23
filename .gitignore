@@ -41,7 +41,7 @@ sample_inputs/4_fracture_test/input_4_rect.dat
 *.ind*
 *.tex*
 *.toc*
-
+!sphinx-docs/source/
 
 *.pdf
 !dfnWorks.pdf
