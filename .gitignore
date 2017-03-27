@@ -12,6 +12,9 @@ python_scripts/*.swp
 ParticleTracking/DFNTrans
 ParticleTracking/DFNTrans
 
+*/build/*
+*/dist/*
+*.egg
 
 C_uge_correct/correct_uge
 C_uge_correct/*o
