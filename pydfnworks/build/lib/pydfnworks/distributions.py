@@ -3,10 +3,10 @@ import gen_input
 
 class distr():
     """ 
-    Verifies the fracture distribution input parameters for dfng_en.
+    Verifies the fracture distribution input parameters for dfnGen.
     
     Attributes:
-        * params (list): parameters for dfng_en
+        * params (list): parameters for dfnGen
         * numEdistribs (int): number of ellipse family distributions
         * numRdistribs (int): number of rectangle family distributions
         * minFracSize (double): minimum fracture size

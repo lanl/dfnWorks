@@ -387,7 +387,7 @@ rconst: {4,4}  // Constant radius, defined per rectangular family
 userEllipsesOnOff: 1    //0 - User Ellipses off
                         //1 - User Ellipses on
 
-UserEll_Input_File_Path: DUMMY/dfnWorks-Version2.0/tests/define_4_user_ellipses.dat 
+UserEll_Input_File_Path: /home/nknapp/dfnworks-main/pydfnworks/bin/dfnWorks-Version2.0/tests/define_4_user_ellipses.dat 
 
 /*===========================================================================*/
 /*===========================================================================*/
@@ -421,7 +421,7 @@ EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/input
 userRectanglesOnOff: 0    //0 - User Rectangles off
                         //1 - User Rectangles on
                           
-UserRect_Input_File_Path: DUMMY/dfnWorks-Version2.0/sample_inputs/4_fracture_test/4_fracture_rects.dat 
+UserRect_Input_File_Path: /home/nknapp/dfnworks-main/pydfnworks/bin/dfnWorks-Version2.0/sample_inputs/4_fracture_test/4_fracture_rects.dat 
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their

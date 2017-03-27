@@ -16,7 +16,7 @@ def check_input(self, input_file='',output_file=''):
         * Comment Format:  On a line containing  // or / ``*``, nothing after ``*`` / or // will be processed  but text before a comment will be processed 
     
     Kwargs:
-        * input_file (name): name of dfng_en input file
+        * input_file (name): name of dfnGen input file
         * output_file (name): stripped down input file for DFNGen 
     
     """ 
@@ -130,7 +130,7 @@ def check_input(self, input_file='',output_file=''):
             input_helper_methods.error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent x, y, and z dimensions".format(-errResult))
 
-    def domains_izei_ncrease():
+    def domains_izeIncrease():
         """ Check the domain size increase parameters.
         """
         errResult = input_helper_methods.verifyList(input_helper_methods.valueOf('domainSizeIncrease', params), domainSizeIncrease, input_helper_methods.verifyFloat, desiredLength = 3)
@@ -555,7 +555,7 @@ def check_input(self, input_file='',output_file=''):
     ##                      Main for I/O Checkin and Writing                     ##
     ## ========================================================================= ##
 ###
-#        def checki_o_args(ioPaths):
+#        def checkIOargs(ioPaths):
 #            try:
 #                ioPaths["input"] = sys.argv[1]
 #            except IndexError:
@@ -569,7 +569,7 @@ def check_input(self, input_file='',output_file=''):
 #                input_helper_methods.warning("No output path has been provided so output will be written to "\
 #                    "\"polishedOutput.txt\" in your current working directory.", params)
 #
-    def parsei_nput():
+    def parseInput():
         """ Parse each line of the input file. 
         """
         for line in inputIterator:
@@ -583,7 +583,7 @@ def check_input(self, input_file='',output_file=''):
             input_helper_methods.error("Missing the following mandatory parameters: \n{}".format(errString))    
      
         
-    def verifyp_arams():
+    def verifyParams():
         """ Verify all of the parameters in the input file.
         """
         distributions = distr_module.distr(params, numEdistribs, numRdistribs, minFracSize)
@@ -608,7 +608,7 @@ def check_input(self, input_file='',output_file=''):
             
         for paramFunc in checkLast: paramFunc()
 
-    def writeb_ack():
+    def writeBack():
         """ Write the parameters from the verbose input file back to a simplified input file.
         """
         for param in params:
@@ -627,20 +627,20 @@ def check_input(self, input_file='',output_file=''):
     try:
         if not os.path.exists(os.getcwd()):
             print "ERROR: cwd: ", os.getcwd(), " does not exist"
-        if not os.path.exists(os.path.abspath(self._dfng_en_file)):
-            print "ERROR: dfng_en input file path: ", os.path.abspath(self._dfng_en_file), " does not exist"
-        shutil.copy(os.path.abspath(self._dfng_en_file), os.getcwd())
+        if not os.path.exists(os.path.abspath(self._dfnGen_file)):
+            print "ERROR: dfnGen input file path: ", os.path.abspath(self._dfnGen_file), " does not exist"
+        shutil.copy(os.path.abspath(self._dfnGen_file), os.getcwd())
     except:
-        sys.exit("Unable to copy dfng_en input file\n%s\nExiting"%self._dfng_en_file)
+        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self._dfnGen_file)
 
     ioPaths = {"input":"", "output":""}
     try:
-        ioPaths["input"] = self._dfng_en_file
+        ioPaths["input"] = self._dfnGen_file
     except IndexError:
         input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] = self._jobname + '/' + self._dfng_en_file.split('/')[-1][:-4] + '_clean.dat'
+        ioPaths["output"] = self._jobname + '/' + self._dfnGen_file.split('/')[-1][:-4] + '_clean.dat'
         ioPaths["output"] = os.path.abspath(ioPaths["output"])
         print ioPaths["output"] 
     except IndexError:

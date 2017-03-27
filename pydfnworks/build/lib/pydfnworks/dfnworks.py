@@ -15,8 +15,8 @@ class DFNWORKS(Frozen):
     Attributes:
         * _jobname: name of job, also the folder where output files are stored
         * _ncpu: number of CPUs used in the job
-        * _dfng_en file: the name of the dfng_en input file
-        * _dfnflow file: the name of the dfnflow input file
+        * _dfnGen file: the name of the dfnGen input file
+        * _dfnf_low file: the name of the dfnf_low input file
         * _local prefix: indicates that the name contains only the most local directory
         * _vtk_file: the name of the VTK file
         * _inp_file: the name of the INP file
@@ -26,41 +26,41 @@ class DFNWORKS(Frozen):
         * _aper_file: the name of the file containing apertures 
         * _perm_cell file: the name of the file containing cell permeabilities 
         * _aper_cell_file: the name of the file containing cell apertures
-        * _dfnt_rans_version: the version of dfnt_rans to use
+        * _dfnTrans_version: the version of dfnTrans to use
         * _freeze: indicates whether the class attributes can be modified
         * _large_network: indicates whether C++ or Python is used for file processing at the bottleneck
         of inp to vtk conversion
     """
-    from generator import dfng_en
-    from flow import dfnflow
-    from transport import dfnt_rans
+    from generator import dfnGen
+    from flow import dfnf_low
+    from transport import dfnTrans
     # Specific functions
     from helper import * # scale, cleanup_files, cleanup_end, commandline_options
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
     from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
-    from transport import copy_dfnt_rans_files, run_dfnt_rans
+    from transport import copy_dfnTrans_files, run_dfnTrans
     from meshdfn import mesh_network
     from legal import legal
     from paths import define_paths
 
-    def __init__(self, jobname='', local_jobname='',dfng_en_file='',output_file='',local_dfng_en_file='',ncpu='', dfnflow_file = '', local_dfnflow_file = '', dfnt_rans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnt_rans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnf_low_file = '', local_dfnf_low_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self._jobname = jobname
         self._ncpu = ncpu
         self._local_jobname = self._jobname.split('/')[-1]
 
-        self._dfng_en_file = dfng_en_file
-        self._local_dfng_en_file = self._dfng_en_file.split('/')[-1]
+        self._dfnGen_file = dfnGen_file
+        self._local_dfnGen_file = self._dfnGen_file.split('/')[-1]
         
-        self._output_file = self._dfng_en_file.split('/')[-1]
+        self._output_file = self._dfnGen_file.split('/')[-1]
         
-        self._dfnflow_file = dfnflow_file 
-        self._local_dfnflow_file = self._dfnflow_file.split('/')[-1]
+        self._dfnf_low_file = dfnf_low_file 
+        self._local_dfnf_low_file = self._dfnf_low_file.split('/')[-1]
 
-        self._dfnt_rans_file = dfnt_rans_file 
-        self._local_dfnt_rans_file = self._dfnt_rans_file.split('/')[-1]
+        self._dfnTrans_file = dfnTrans_file 
+        self._local_dfnTrans_file = self._dfnTrans_file.split('/')[-1]
 
         self._vtk_file = vtk_file
         self._inp_file = inp_file
@@ -70,7 +70,7 @@ class DFNWORKS(Frozen):
         self._aper_file = aper_file
         self._perm_cell_file = perm_cell_file
         self._aper_cell_file = aper_cell_file
-        self._dfnt_rans_version= 2.0
+        self._dfnTrans_version= 2.0
         self._freeze
         self._large_network = False
         self.legal()
@@ -79,7 +79,7 @@ class DFNWORKS(Frozen):
         if options.large_network ==  True:
             self._large_network = True
 
-def create_dfn(dfng_en_file="", dfnflow_file="", dfnt_rans_file=""):
+def create_dfn(dfnGen_file="", dfnf_low_file="", dfnTrans_file=""):
     '''
     Parse command line inputs and input files to create and populate dfnworks class
     '''
@@ -96,38 +96,38 @@ def create_dfn(dfng_en_file="", dfnflow_file="", dfnt_rans_file=""):
                 line=line.rstrip('\n')
                 line=line.split()
 
-                if line[0].find("dfng_en") == 0:
-                    dfn._dfng_en_file = line[1]
-                    dfn._local_dfng_en_file = line[1].split('/')[-1]
+                if line[0].find("dfnGen") == 0:
+                    dfn._dfnGen_file = line[1]
+                    dfn._local_dfnGen_file = line[1].split('/')[-1]
 
-                elif line[0].find("dfnflow") == 0:
-                    dfn._dfnflow_file = line[1]
-                    dfn._local_dfnflow_file = line[1].split('/')[-1]
+                elif line[0].find("dfnf_low") == 0:
+                    dfn._dfnf_low_file = line[1]
+                    dfn._local_dfnf_low_file = line[1].split('/')[-1]
 
-                elif line[0].find("dfnt_rans") == 0:
-                    dfn._dfnt_rans_file = line[1]
-                    dfn._local_dfnt_rans_file = line[1].split('/')[-1]
+                elif line[0].find("dfnTrans") == 0:
+                    dfn._dfnTrans_file = line[1]
+                    dfn._local_dfnTrans_file = line[1].split('/')[-1]
     else:   
-        if options.dfng_en != "":
-            dfn._dfng_en_file = options.dfng_en
-        elif dfng_en_file != "":
-            dfn._dfng_en_file = dfng_en_file  
+        if options.dfnGen != "":
+            dfn._dfnGen_file = options.dfnGen
+        elif dfnGen_file != "":
+            dfn._dfnGen_file = dfnGen_file  
         else:
-            sys.exit("ERROR: Input File for dfng_en not provided. Exiting")
+            sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
         
-        if options.dfnflow != "":
-            dfn._dfnflow_file = options.dfnflow
-        elif dfnflow_file != "":
-            dfn._dfnflow_file = dfnflow_file  
+        if options.dfnf_low != "":
+            dfn._dfnf_low_file = options.dfnf_low
+        elif dfnf_low_file != "":
+            dfn._dfnf_low_file = dfnf_low_file  
         else:
-            sys.exit("ERROR: Input File for dfnflow not provided. Exiting")
+            sys.exit("ERROR: Input File for dfnf_low not provided. Exiting")
         
-        if options.dfnt_rans != "":
-            dfn._dfnt_rans_file = options.dfnt_rans
-        elif dfnt_rans_file != "":
-            dfn._dfnt_rans_file = dfnt_rans_file  
+        if options.dfnTrans != "":
+            dfn._dfnTrans_file = options.dfnTrans
+        elif dfnTrans_file != "":
+            dfn._dfnTrans_file = dfnTrans_file  
         else:
-            sys.exit("ERROR: Input File for dfnt_rans not provided. Exiting")
+            sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
     if options.cell is True:
         dfn._aper_cell_file = 'aper_node.dat'
@@ -140,9 +140,9 @@ def create_dfn(dfng_en_file="", dfnflow_file="", dfnt_rans_file=""):
     print("\n-->Creating DFN class: Complete")
     print 'Jobname: ', dfn._jobname
     print 'Number of cpus requested: ', dfn._ncpu 
-    print '--> dfng_en input file: ',dfn._dfng_en_file
-    print '--> dfnflow input file: ',dfn._dfnflow_file
-    print '--> dfnt_rans input file: ',dfn._dfnt_rans_file
+    print '--> dfnGen input file: ',dfn._dfnGen_file
+    print '--> dfnf_low input file: ',dfn._dfnf_low_file
+    print '--> dfnTrans input file: ',dfn._dfnTrans_file
     if options.cell is True:
         print '--> Expecting Cell Based Aperture and Permeability'
     print("="*80+"\n")  

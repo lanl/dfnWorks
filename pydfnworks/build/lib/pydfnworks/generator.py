@@ -5,15 +5,15 @@ from time import time
 import helper
 import subprocess
 
-def dfng_en(self):
+def dfnGen(self):
     ''' 
     
-    Run the dfng_en workflow: 
+    Run the dfnGen workflow: 
         * 1) make_working_directory: Create a directory with name of job
         * 2) check_input: Check input parameters and create a clean version of the input file
         * 3) create_network: Create network. DFNGEN v2.0 is called and creates the network
         * 4) output_report: Generate a PDF summary of the DFN generation
-        * 5) mesh_network: calls module dfng_en_meshing and runs LaGriT to mesh the DFN
+        * 5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN
     '''
     tic_gen = time()
     # Create Working directory
@@ -44,10 +44,10 @@ def dfng_en(self):
 
     #helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
     print ('='*80)
-    print 'dfng_en Complete'
+    print 'dfnGen Complete'
     print ('='*80)
     print ''
-    #helper.dump_time(self._jobname, 'Process: dfng_en',time() - tic_gen)  
+    #helper.dump_time(self._jobname, 'Process: dfnGen',time() - tic_gen)  
 
 def make_working_directory(self):
     '''
@@ -77,11 +77,11 @@ def make_working_directory(self):
     print "Jobname is ", self._jobname   
 
 def create_network(self):
-    """ Execute dfng_en and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.
+    """ Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.
     """
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self._local_dfng_en_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
 
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'

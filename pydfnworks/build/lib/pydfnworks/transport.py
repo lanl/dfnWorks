@@ -4,22 +4,22 @@ import shutil
 import helper
 from time import time
 
-def dfnt_rans(self):
-    '''dfnt_rans
-    Copy input files for dfnt_rans into working directory and run DFNTrans
+def dfnTrans(self):
+    '''dfnTrans
+    Copy input files for dfnTrans into working directory and run DFNTrans
     '''
     print('='*80)
-    print("\ndfnt_rans Starting\n")
+    print("\ndfnTrans Starting\n")
     print('='*80)
 
-    self.copy_dfnt_rans_files()
+    self.copy_dfnTrans_files()
     tic=time()
-    self.run_dfnt_rans()
-    self.cleanup_files('dfnt_rans')
-    #helper.dump_time(self._jobname, 'Process: dfnt_rans', time() - tic)   
+    self.run_dfnTrans()
+    self.cleanup_files('dfnTrans')
+    #helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
 
 
-def copy_dfnt_rans_files(self):
+def copy_dfnTrans_files(self):
     '''create link to DFNTRANS and copy input file into local directory
     '''
     #Create Path to DFNTrans   
@@ -34,29 +34,29 @@ def copy_dfnt_rans_files(self):
     # Copy DFNTrans input file
     print(os.getcwd())
 
-    print("Attempting to Copy %s\n"%self._dfnt_rans_file) 
+    print("Attempting to Copy %s\n"%self._dfnTrans_file) 
     try:
-        shutil.copy(self._dfnt_rans_file, os.path.abspath(os.getcwd())) 
+        shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
     except OSError:
-        print("--> Problem copying %s file"%self._local_dfnt_rans_file)
+        print("--> Problem copying %s file"%self._local_dfnTrans_file)
         print("--> Trying to delete and recopy") 
-        os.remove(self._local_dfnt_rans_file)
-        shutil.copy(self._dfnt_rans_file, os.path.abspath(os.getcwd())) 
+        os.remove(self._local_dfnTrans_file)
+        shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
     except:
-        print("--> ERROR: Problem copying %s file"%self._dfnt_rans_file)
+        print("--> ERROR: Problem copying %s file"%self._dfnTrans_file)
         sys.exit("Unable to replace. Exiting Program")
 
-def run_dfnt_rans(self):
-    '''run dfnt_rans simulation'''
-    failure = os.system('./DFNTrans '+self._local_dfnt_rans_file)
+def run_dfnTrans(self):
+    '''run dfnTrans simulation'''
+    failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
     if failure == 0:
         print('='*80)
-        print("\ndfnt_rans Complete\n")
+        print("\ndfnTrans Complete\n")
         print('='*80)
     else:
-        sys.exit("--> ERROR: dfnt_rans did not complete\n")
+        sys.exit("--> ERROR: dfnTrans did not complete\n")
 
-def create_dfnt_rans_links():
+def create_dfnTrans_links():
     os.symlink('../params.txt', 'params.txt')
     os.symlink('../allboundaries.zone', 'allboundaries.zone')
     os.symlink('../tri_fracture.stor', 'tri_fracture.stor')

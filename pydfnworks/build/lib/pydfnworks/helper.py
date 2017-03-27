@@ -75,12 +75,12 @@ def commandline_options():
               help="Number of CPUs")
     parser.add_argument("-input", "--input_file", default="", type=str,
               help="input file with paths to run files") 
-    parser.add_argument("-gen", "--dfng_en", default="", type=str,
-              help="Path to dfng_en run file") 
-    parser.add_argument("-flow", "--dfnflow", default="", type=str,
-              help="Path to dfnflow run file") 
-    parser.add_argument("-trans", "--dfnt_rans", default="", type=str,
-              help="Path to dfnt_rans run file") 
+    parser.add_argument("-gen", "--dfnGen", default="", type=str,
+              help="Path to dfnGen run file") 
+    parser.add_argument("-flow", "--dfnf_low", default="", type=str,
+              help="Path to dfnf_low run file") 
+    parser.add_argument("-trans", "--dfnTrans", default="", type=str,
+              help="Path to dfnTrans run file") 
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
     parser.add_argument("-large_network", "--large_network", default=False, action="store_true",
@@ -132,7 +132,7 @@ def print_run_time(local_jobname):
     print("Primary Function Percentages")
 
     for i in range(1,len(f) - 1):
-        if name[i-1] == ' dfng_en ' or name[i-1] == ' dfnflow ' or name[i-1] == ' dfnt_rans ':
+        if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnf_low ' or name[i-1] == ' dfnTrans ':
             print(name[i-1]+"\t"+"*"*int(percent[i-1]))
     print("\n")
 
@@ -161,12 +161,12 @@ class input_helper():
     ##                              Helper Functions                          ##
     ## ====================================================================== ##
 
-    def curlyt_ol_ist(self, curlyList):
+    def curlyToList(self, curlyList):
         """ '{1,2,3}' --> [1,2,3]
         """
         return re.sub("{|}", "", curlyList).strip().split(",")
 
-    def listt_oc_urly(self, strList):
+    def listToCurly(self, strList):
         """ [1,2,3] --> '{1,2,3}'   for writing output
         """
         curl = re.sub(r'\[','{', strList)
@@ -174,7 +174,7 @@ class input_helper():
         curl = re.sub(r"\'", '', curl)
         return curl 
 
-    def hasc_urlys(self, line, key):
+    def hasCurlys(self, line, key):
         """ Checks to see that every { has a matching }.
         """
         if '{' in line and '}' in line: return True 
@@ -182,7 +182,7 @@ class input_helper():
             self.error("Line defining \"{}\" contains a single curly brace.".format(key))
         return False
 
-    def valueo_f(self, key, writing = False):
+    def valueOf(self, key, writing = False):
         """ Use to get key's value in params. writing always false  
         """
         if (not writing) and (len(self.params[key]) > 1):
@@ -195,7 +195,7 @@ class input_helper():
         #except IndexError:
         #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
-    def getg_roups(self, line, valList, key):
+    def getGroups(self, line, valList, key):
         """ extract values between { and } 
         """
         curlyGroup = re.compile('({.*?})')
@@ -207,7 +207,7 @@ class input_helper():
         if line.strip() != "":
             self.error("Unexpected character found while parsing \"{}\".".format(key))
 
-    def valh_elper(self, line, valList, key):
+    def valHelper(self, line, valList, key):
         """ pulls values from culry brackets 
         """
         if self.hasCurlys(line, key):
@@ -239,12 +239,12 @@ class input_helper():
         print("WARNING --- " + warnString)
         #warningFile.write("WARNING --- " + warnString + "\n")
 
-    def isn_egative(self, num): 
+    def isNegative(self, num): 
         """"returns True if num is negative, false otherwise
         """
         return True if num < 0 else False
 
-    def checkf_amc_ount(self):
+    def checkFamCount(self):
         """Makes sure at least one polygon family has been defined in nFamRect or nFamEll
         OR that there is a user input file for polygons.
         """
@@ -274,13 +274,13 @@ class input_helper():
             "for their current sum, {:.6}. Scaled {} to {}".format(total, probList, scaled), warningFile)
         return [x/total for x in probList]                
 
-    def zeroi_ns_tdd_evs(self, valList):
+    def zeroInStdDevs(self, valList):
         """ returns True is there is a zero in valList of standard deviations
         """
         for val in valList:
             if float(val) == 0: return True
         
-    def checkm_inm_ax(self, minParam, maxParam, shape):
+    def checkMinMax(self, minParam, maxParam, shape):
         """ Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.
         """
         for minV, maxV in zip(self.valueOf(minParam), self.valueOf(maxParam)):
@@ -292,7 +292,7 @@ class input_helper():
                 self.error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
                 sys.exit()
 
-    def checkm_ean(self, minParam, maxParam, meanParam, warningFile=''):
+    def checkMean(self, minParam, maxParam, meanParam, warningFile=''):
         """ Warns the user if the minimum value of a parameter is greater than the family's mean value, or if the
         maximum value of the parameter is less than the family's mean value.
         """
@@ -307,7 +307,7 @@ class input_helper():
                       "\"{}\". This could drastically increase computation time due to increased "\
                       "rejection rate of the most common fracture sizes.".format(maxParam, meanParam), warningFile)
 
-    def checkm_inf_racs_ize(self, valList):
+    def checkMinFracSize(self, valList):
         """ Corrects the minimum fracture size if necessary, by looking at the values in valList.
         """
         for val in valList:
@@ -318,7 +318,7 @@ class input_helper():
     ## ====================================================================== ##
     ##                              Parsing Functions                         ##
     ## ====================================================================== ##
-    def extractp_arameters(self, line, inputIterator):
+    def extractParameters(self, line, inputIterator):
         """Returns line without comments or white space.
         """
         if "/*" in line:
@@ -333,7 +333,7 @@ class input_helper():
         return line.strip()
 
 
-    def findv_al(self, line, key, inputIterator, unfoundKeys, warningFile):
+    def findVal(self, line, key, inputIterator, unfoundKeys, warningFile):
         """ Extract the value for key from line. 
         """
         valList = []
@@ -356,7 +356,7 @@ class input_helper():
             self.params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
         if line != "": self.processLine(line, unfoundKeys, inputIterator, warningFile)
             
-    def findk_ey(self, line, unfoundKeys, warningFile):
+    def findKey(self, line, unfoundKeys, warningFile):
         """ Input: line containing a paramter (key) preceding a ":" 
            
         Returns: 
@@ -374,7 +374,7 @@ class input_helper():
         except KeyError:
            self.warning("\"" + key + "\" is not one of the valid parameter names.", warningFile)
 
-    def processl_ine(self, line, unfoundKeys, inputIterator, warningFile):
+    def processLine(self, line, unfoundKeys, inputIterator, warningFile):
         """ Find the key in a line, and the value for that key.
         """
         if line.strip != "":
@@ -391,7 +391,7 @@ class input_helper():
     ## Input: value - value being checked
     ##        key - parameter the value belongs to
     ##        inList - (Optional)
-    def verifyf_lag(self, value, key = "", inList = False):
+    def verifyFlag(self, value, key = "", inList = False):
         """ Verify that value is either a 0 or a 1.
         """
         if value is '0' or value is '1':
@@ -401,7 +401,7 @@ class input_helper():
         else:
             self.error("\"{}\" must be either '0' or '1'".format(key))
 
-    def verifyf_loat(self, value, key = "", inList = False, noNeg = False):
+    def verifyFloat(self, value, key = "", inList = False, noNeg = False):
         """ Verify that value is a positive float.
         """
         if type(value) is list:
@@ -417,7 +417,7 @@ class input_helper():
                       "floating point value (0.5, 1.6, 4.0, etc.)".format(key))
                 
                 
-    def verifyi_nt(self, value, key = "", inList = False, noNeg = False):
+    def verifyInt(self, value, key = "", inList = False, noNeg = False):
         """ Verify that value is a positive integer.
         """
         if type(value) is list:
@@ -433,7 +433,7 @@ class input_helper():
                       "integer value (0,1,2,3,etc.)".format(key))
                 
     
-    def verifyl_ist(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
+    def verifyList(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
         """verifies input list that come in format {0, 1, 2, 3}
        
         Input: 

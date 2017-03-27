@@ -21,9 +21,9 @@ if __name__ == "__main__":
         print 'ERROR: DFN object not created correctly'
         exit()
     # General Work Flow
-    DFN.dfng_en()
-    DFN.dfnflow()
-    DFN.dfnt_rans()
+    DFN.dfnGen()
+    DFN.dfnf_low()
+    DFN.dfnTrans()
     DFN.cleanup_end()
 
     main_elapsed = time() - main_time
