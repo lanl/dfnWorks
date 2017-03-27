@@ -19,8 +19,9 @@ def get_function_list(file_name):
     function_list = []
     for line in f:
         if "def " in line:
+            line = line.lstrip(' \t\n\r')
             function_name = line.split('(')[0][4:]
-            function_list.append(function_name)
+            function_list.append(function_name + '(')
     return function_list
     
 
