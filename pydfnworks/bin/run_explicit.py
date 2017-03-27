@@ -28,8 +28,8 @@ DFN.mesh_network()
 #DFN.parse_pflotran_vtk_python()       
 #DFN.pflotran_cleanup()
 
-#DFN.copy_dfnTrans_files()
-#DFN.run_dfnTrans()
+#DFN.copy_dfn_trans_files()
+#DFN.run_dfn_trans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

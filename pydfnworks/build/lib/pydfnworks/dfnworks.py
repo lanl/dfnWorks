@@ -16,7 +16,7 @@ class DFNWORKS(Frozen):
         * _jobname: name of job, also the folder where output files are stored
         * _ncpu: number of CPUs used in the job
         * _dfnGen file: the name of the dfnGen input file
-        * _dfnf_low file: the name of the dfnf_low input file
+        * _dfnFlow file: the name of the dfnFlow input file
         * _local prefix: indicates that the name contains only the most local directory
         * _vtk_file: the name of the VTK file
         * _inp_file: the name of the INP file
@@ -31,21 +31,21 @@ class DFNWORKS(Frozen):
         * _large_network: indicates whether C++ or Python is used for file processing at the bottleneck
         of inp to vtk conversion
     """
-    from generator import dfnGen
-    from flow import dfnf_low
-    from transport import dfnTrans
+    from generator import dfn_gen
+    from flow import dfn_flow
+    from transport import dfn_trans
     # Specific functions
     from helper import * # scale, cleanup_files, cleanup_end, commandline_options
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
     from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
-    from transport import copy_dfnTrans_files, run_dfnTrans
+    from transport import copy_dfn_trans_files, run_dfn_trans
     from meshdfn import mesh_network
     from legal import legal
     from paths import define_paths
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnf_low_file = '', local_dfnf_low_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self._jobname = jobname
         self._ncpu = ncpu
@@ -56,8 +56,8 @@ class DFNWORKS(Frozen):
         
         self._output_file = self._dfnGen_file.split('/')[-1]
         
-        self._dfnf_low_file = dfnf_low_file 
-        self._local_dfnf_low_file = self._dfnf_low_file.split('/')[-1]
+        self._dfnFlow_file = dfnFlow_file 
+        self._local_dfnFlow_file = self._dfnFlow_file.split('/')[-1]
 
         self._dfnTrans_file = dfnTrans_file 
         self._local_dfnTrans_file = self._dfnTrans_file.split('/')[-1]
@@ -79,7 +79,7 @@ class DFNWORKS(Frozen):
         if options.large_network ==  True:
             self._large_network = True
 
-def create_dfn(dfnGen_file="", dfnf_low_file="", dfnTrans_file=""):
+def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     '''
     Parse command line inputs and input files to create and populate dfnworks class
     '''
@@ -100,9 +100,9 @@ def create_dfn(dfnGen_file="", dfnf_low_file="", dfnTrans_file=""):
                     dfn._dfnGen_file = line[1]
                     dfn._local_dfnGen_file = line[1].split('/')[-1]
 
-                elif line[0].find("dfnf_low") == 0:
-                    dfn._dfnf_low_file = line[1]
-                    dfn._local_dfnf_low_file = line[1].split('/')[-1]
+                elif line[0].find("dfnFlow") == 0:
+                    dfn._dfnFlow_file = line[1]
+                    dfn._local_dfnFlow_file = line[1].split('/')[-1]
 
                 elif line[0].find("dfnTrans") == 0:
                     dfn._dfnTrans_file = line[1]
@@ -115,12 +115,12 @@ def create_dfn(dfnGen_file="", dfnf_low_file="", dfnTrans_file=""):
         else:
             sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
         
-        if options.dfnf_low != "":
-            dfn._dfnf_low_file = options.dfnf_low
-        elif dfnf_low_file != "":
-            dfn._dfnf_low_file = dfnf_low_file  
+        if options.dfnFlow != "":
+            dfn._dfnFlow_file = options.dfnFlow
+        elif dfnFlow_file != "":
+            dfn._dfnFlow_file = dfnFlow_file  
         else:
-            sys.exit("ERROR: Input File for dfnf_low not provided. Exiting")
+            sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
         
         if options.dfnTrans != "":
             dfn._dfnTrans_file = options.dfnTrans
@@ -141,7 +141,7 @@ def create_dfn(dfnGen_file="", dfnf_low_file="", dfnTrans_file=""):
     print 'Jobname: ', dfn._jobname
     print 'Number of cpus requested: ', dfn._ncpu 
     print '--> dfnGen input file: ',dfn._dfnGen_file
-    print '--> dfnf_low input file: ',dfn._dfnf_low_file
+    print '--> dfnFlow input file: ',dfn._dfnFlow_file
     print '--> dfnTrans input file: ',dfn._dfnTrans_file
     if options.cell is True:
         print '--> Expecting Cell Based Aperture and Permeability'

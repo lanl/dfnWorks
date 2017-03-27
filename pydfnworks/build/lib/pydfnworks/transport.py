@@ -4,7 +4,7 @@ import shutil
 import helper
 from time import time
 
-def dfnTrans(self):
+def dfn_trans(self):
     '''dfnTrans
     Copy input files for dfnTrans into working directory and run DFNTrans
     '''
@@ -12,14 +12,14 @@ def dfnTrans(self):
     print("\ndfnTrans Starting\n")
     print('='*80)
 
-    self.copy_dfnTrans_files()
+    self.copy_dfn_trans_files()
     tic=time()
-    self.run_dfnTrans()
+    self.run_dfn_trans()
     self.cleanup_files('dfnTrans')
     #helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
 
 
-def copy_dfnTrans_files(self):
+def copy_dfn_trans_files(self):
     '''create link to DFNTRANS and copy input file into local directory
     '''
     #Create Path to DFNTrans   
@@ -46,7 +46,7 @@ def copy_dfnTrans_files(self):
         print("--> ERROR: Problem copying %s file"%self._dfnTrans_file)
         sys.exit("Unable to replace. Exiting Program")
 
-def run_dfnTrans(self):
+def run_dfn_trans(self):
     '''run dfnTrans simulation'''
     failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
     if failure == 0:
@@ -56,7 +56,7 @@ def run_dfnTrans(self):
     else:
         sys.exit("--> ERROR: dfnTrans did not complete\n")
 
-def create_dfnTrans_links():
+def create_dfn_trans_links():
     os.symlink('../params.txt', 'params.txt')
     os.symlink('../allboundaries.zone', 'allboundaries.zone')
     os.symlink('../tri_fracture.stor', 'tri_fracture.stor')

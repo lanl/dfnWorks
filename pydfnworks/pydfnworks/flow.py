@@ -8,7 +8,7 @@ from time import time
 import numpy as np
 import h5py
 
-def dfnFlow(self):
+def dfn_flow(self):
     ''' dfnFlow
     Run the dfnFlow portion of the workflow.
     ''' 
@@ -434,7 +434,7 @@ def pflotran_cleanup(self):
     for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
-def create_dfnFlow_links():
+def create_dfn_flow_links():
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
     os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
     os.symlink('../full_mesh.inp', 'full_mesh.inp')

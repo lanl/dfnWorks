@@ -8,13 +8,13 @@ from time import time
 import numpy as np
 import h5py
 
-def dfnf_low(self):
-    ''' dfnf_low
-    Run the dfnf_low portion of the workflow.
+def dfn_flow(self):
+    ''' dfnFlow
+    Run the dfnFlow portion of the workflow.
     ''' 
 
     print('='*80)
-    print("\ndfnf_low Starting\n")
+    print("\ndfnFlow Starting\n")
     print('='*80)
 
     tic_flow = time()
@@ -37,12 +37,12 @@ def dfnf_low(self):
     tic = time()    
     self.pflotran_cleanup()
     helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
-    helper.dump_time(self._jobname,'Process: dfnf_low',time() - tic_flow)    
+    helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
 
     self.cleanup_files('PFLOTRAN')
     
     print('='*80)
-    print("\ndfnf_low Complete\n")
+    print("\ndfnFlow Complete\n")
     print('='*80)
 
 
@@ -403,14 +403,14 @@ def pflotran(self):
     Copy PFLOTRAN run file into working directory and run with ncpus
     '''
     try: 
-            shutil.copy(os.path.abspath(self._dfnf_low_file), os.path.abspath(os.getcwd()))
+            shutil.copy(os.path.abspath(self._dfnFlow_file), os.path.abspath(os.getcwd()))
     except:
             print("-->ERROR copying PFLOTRAN input file")
             exit()
     print("="*80)
     print("--> Running PFLOTRAN") 
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self._ncpu) + \
-          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnf_low_file 
+          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file 
     os.system(cmd)    
     print('='*80)
     print("--> Running PFLOTRAN Complete")
@@ -423,18 +423,18 @@ def pflotran_cleanup(self):
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self._local_dfnf_low_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
     os.system(cmd)
 
-    cmd = 'cat '+self._local_dfnf_low_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
     os.system(cmd)
 
-    for fl in glob.glob(self._local_dfnf_low_file[:-3]+'-cellinfo*.dat'):
+    for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
             os.remove(fl)    
-    for fl in glob.glob(self._local_dfnf_low_file[:-3]+'-darcyvel*.dat'):
+    for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
-def create_dfnf_low_links():
+def create_dfn_flow_links():
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
     os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
     os.symlink('../full_mesh.inp', 'full_mesh.inp')

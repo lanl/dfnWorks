@@ -46,7 +46,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			self.infoStr = infoStr
 			self.parameters = parameters
 
-		def printPolyFam(self):
+		def print_poly_fam(self):
 			print("famNum:\n", self.globFamNum)
 			print("\nradiiList:\n",self.radiiList)
 			print("\ndistrib:\n", self.distrib)
@@ -55,7 +55,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			print("\n\n")
 		       
 
-	def graphRejections():
+	def graph_rejections():
 		"""
                 Graph the fractures that were rejected by the Feature Rejection Algorithm for Meshing (FRAM) in dfnGen, using a histogram of rejection reasons.
 	        Rejection File line format:   "118424 Short Intersections" --> {"Short Intersections": 118424}
@@ -95,8 +95,8 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		if show: plt.show()
 
 
-	def transHist(prefix, allList, unRemovedList):
-	        """ Histogram making helper function for graphTranslations()"""
+	def trans_hist(prefix, allList, unRemovedList):
+	        """ Histogram making helper function for graph_translations()"""
 		plt.subplots()
 		numBuckets = 20
 		minSize = min(allList)
@@ -112,7 +112,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
-        def graphTranslations():
+        def graph_translations():
                 """ Graphs position of fractures as histogram for x, y and z dimensions
                 Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]
                 """
@@ -136,12 +136,12 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			except ValueError:
 				continue
 
-		transHist('X', xAll, xUnremoved)
-		transHist('Y', yAll, yUnremoved)
-		transHist('Z', zAll, zUnremoved)
+		trans_hist('X', xAll, xUnremoved)
+		trans_hist('Y', yAll, yUnremoved)
+		trans_hist('Z', zAll, zUnremoved)
 		
 
-	def collectFamilyInfo():
+	def collect_family_info():
    		""" Read in information from families.dat file that lists the data for each fracture family.
                 """
                 famObj = polyFam(0, [], 0, "", {})
@@ -214,10 +214,10 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 		for fam in families:
 			if fam != 'all' and fam != 'notRemoved':
-				pass # families[fam].printPolyFam()
+				pass # families[fam].print_poly_fam()
 
 
-	def histAndPDF(radiiSizes, pdfArray, xmin, xmax, xVals):
+	def hist_and_p_d_f(radiiSizes, pdfArray, xmin, xmax, xVals):
 	        """
                 Histogram of sizes (from data) and PDF (from input parameters
 	        returns histHeights (height of all hist bars) for plotting cdf
@@ -296,7 +296,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.tight_layout()
 		plt.subplots_adjust(top=0.9)
 
-	def lognormCDF(x, mu, sigma):
+	def lognorm_c_d_f(x, mu, sigma):
 		"""Get the lognnormal distribution value for the given x.
                 Args:
                     x (double): the value of x
@@ -305,7 +305,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return 0.5 + (0.5 * special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
 	       
-	def graphLognormal(famObj):
+	def graph_lognormal(famObj):
 		"""Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.
                 Args:
                     famObj (polyFam class): the polyFam object describing the truncated power law distribution.
@@ -317,12 +317,12 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
 		normConstant = 1.0
 		try:       
-			normConstant = 1.0 / (lognormCDF(xmax, mu, sigma) - lognormCDF(xmin, mu, sigma))
+			normConstant = 1.0 / (lognorm_c_d_f(xmax, mu, sigma) - lognorm_c_d_f(xmin, mu, sigma))
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 			pass  
 		lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
 
-		histHeights, binCenters = histAndPDF(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
+		histHeights, binCenters = hist_and_p_d_f(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
 		plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
 			  "\nFamily #" + famObj.globFamNum)
 		plt.savefig(outputPDF, format='pdf')
@@ -338,7 +338,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		if show: plt.show()
 	  
 	      
-	def powLawPDF(normConst, xmin, x, a):
+	def pow_law_p_d_f(normConst, xmin, x, a):
 		""" Get the analytical power laws PDF value for a given x.
                 Args:
                     normConst (double): The normalization constant for the PDF.
@@ -348,7 +348,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return normConst * ( (a*(xmin**a)) / float(x**(a+1)) ) 
 
-	def powLawCDF(x, xmin, a):
+	def pow_law_c_d_f(x, xmin, a):
 		""" Get the analytical power law CDF value for a given x.
                 Args:
                     x (double): The value of x.
@@ -357,7 +357,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return 1 - ( (xmin / float(x))**a ) 
 
-	def graphTruncPowerLaw(famObj):
+	def graph_trunc_power_law(famObj):
 		"""Graph the PDF, CDF and QQ plot of the power law distribution agianst the expected analytical power law values.
                 Args:
                     famObj (polyFam class): the polyFam object describing the truncated power law distribution.
@@ -371,12 +371,12 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		xVals = np.linspace(xmin, xmax, numXpoints)
 		normConst = 1.0
 		try:
-			normConst = 1.0 / (powLawCDF(xmax, xmin, alpha) - powLawCDF(xmin, xmin, alpha))
+			normConst = 1.0 / (pow_law_c_d_f(xmax, xmin, alpha) - pow_law_c_d_f(xmin, xmin, alpha))
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 			pass        
-		powLawPDFVals = [powLawPDF(normConst, xmin, x, alpha) for x in xVals]
+		powLawPDFVals = [pow_law_p_d_f(normConst, xmin, x, alpha) for x in xVals]
 
-		histHeights, binCenters = histAndPDF(radiiSizes, powLawPDFVals, xmin, xmax, xVals)
+		histHeights, binCenters = hist_and_p_d_f(radiiSizes, powLawPDFVals, xmin, xmax, xVals)
 		plt.title("Histogram of Obtained Radii Sizes & Truncated Power Law Distribution PDF."\
 			  "\n Family #" + famObj.globFamNum)
 		plt.savefig(outputPDF, format='pdf')
@@ -386,7 +386,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
-		trueVals = [powLawPDF(normConst, xmin, binCenters[i], alpha) for i in range(len(binCenters))]
+		trueVals = [pow_law_p_d_f(normConst, xmin, binCenters[i], alpha) for i in range(len(binCenters))]
 
 		qq(trueVals, histHeights)
 		plt.savefig(outputPDF, format='pdf')
@@ -394,7 +394,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 
 
-	def expPDF(normConst, eLambda, x):
+	def exp_p_d_f(normConst, eLambda, x):
 		""" Get the analytical exponential PDF value for a given x.
                 Args:
                     x (double): The value of x.
@@ -403,7 +403,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return normConst * eLambda * np.e**(-eLambda*x)
 
-	def expCDF(eLambda, x):
+	def exp_c_d_f(eLambda, x):
 		""" Get the analytical exponential CDF value for a given x.
                 Args:
                     x (double): the value of x for which to find the exponential CDF value.
@@ -411,7 +411,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return 1 - (np.e**(-eLambda*x))
 		
-	def graphExponential(famObj):
+	def graph_exponential(famObj):
 	        """ Graph exponential distribution of fractures  against the analytical exponential distributions, using a PDF, CDF, and QQ plot.
                 """
                 numXpoints = 1000
@@ -423,12 +423,12 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		xVals = np.linspace(xmin, xmax, numXpoints)
 		normConst = 1.0
 		try:
-			normConst = 1.0 / ( expCDF(eLambda, xmax) - expCDF(eLambda, xmin) )
+			normConst = 1.0 / ( exp_c_d_f(eLambda, xmax) - exp_c_d_f(eLambda, xmin) )
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 			pass          
-		expPDFVals = [expPDF(normConst, eLambda, x) for x in xVals]
+		expPDFVals = [exp_p_d_f(normConst, eLambda, x) for x in xVals]
 
-		histHeights, binCenters = histAndPDF(radiiSizes, expPDFVals, xmin, xmax, xVals)
+		histHeights, binCenters = hist_and_p_d_f(radiiSizes, expPDFVals, xmin, xmax, xVals)
 		plt.title("Histogram of Obtained Radii Sizes & Exponential Distribution PDF."\
 			  "\nFamily #" + famObj.globFamNum) 
 		plt.savefig(outputPDF, format='pdf')
@@ -438,19 +438,19 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
-		trueVals = [expPDF(normConst, eLambda, binCenters[i]) for i in range(len(binCenters))]
+		trueVals = [exp_p_d_f(normConst, eLambda, binCenters[i]) for i in range(len(binCenters))]
 		qq(trueVals, histHeights)
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
 
 
-	def graphConstant(famObj):
+	def graph_constant(famObj):
 		""" Does nothing. Constnat distributions are not graphed.
                 """
                 #print("  Family #" + famObj.globFamNum + " is a constant distribution and only contains one radius size.")
 		pass
 
-	def graphAllAndNotRemoved():
+	def graph_all_and_not_removed():
 		""" Graph fractures from all the families. If some fractures have been removed, also graph the fractures that remain after removal. 
                 """
                 numBuckets = 50
@@ -494,7 +494,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		if show: plt.show()
 			
 		
-	def graphDistribs():
+	def graph_distribs():
                 """Graph the distribution of each fracture family except user defined families, using a dictionary to reference different distributions' graphing function.
                 """
                 famNum = 1
@@ -524,10 +524,10 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 	
 	
-	collectFamilyInfo()
-	graphTranslations()
-	graphDistribs()
-	graphAllAndNotRemoved()
-	graphRejections()
+	collect_family_info()
+	graph_translations()
+	graph_distribs()
+	graph_all_and_not_removed()
+	graph_rejections()
 	outputPDF.close()
 

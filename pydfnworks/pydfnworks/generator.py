@@ -5,7 +5,7 @@ from time import time
 import helper
 import subprocess
 
-def dfnGen(self):
+def dfn_gen(self):
     ''' 
     
     Run the dfnGen workflow: 
