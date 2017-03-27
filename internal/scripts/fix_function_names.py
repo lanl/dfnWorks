@@ -4,8 +4,8 @@ import subprocess
 def replace_capitals(line):
     
     capital_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G',
-                'H', 'I', 'J', 'K', 'L', 'M', 'I', 
-                'J', 'K', 'L', 'M', 'N', 'O', 'P', 
+                'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 
                 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
                 'X', 'Y', 'Z']
     
@@ -41,6 +41,8 @@ function_list = sum(function_list, [])
 for fxn in function_list:
     old = fxn
     new = replace_capitals(fxn)
+    print 'replacing ', old 
+    print 'with ', new
     subprocess.call("find " + py_dir + " -type f -print0 | xargs -0 sed -i -e 's@" + old + "@" + new + "@g'", shell=True)
     subprocess.call("find " + script_dir + " -type f -print0 | xargs -0 sed -i -e 's@" + old + "@" + new + "@g'", shell=True)
 
