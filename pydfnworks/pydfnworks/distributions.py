@@ -34,7 +34,7 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "betaDistribution"
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verifyFlag, desiredLength = numFamilies)
+        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_flag, desiredLength = numFamilies)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} value(s) but there is(are) {} {} family(ies). Need one "\
                   "flag (0 or 1) per {} family.".format(paramName, -errResult, numFamilies, shape, shape))
@@ -43,7 +43,7 @@ class distr():
         if numBetas == 0: return
 
         betaParam = prefix + "beta"
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(betaParam), betaParam, distr_helper_methods.verifyFloat, desiredLength = numBetas)
+        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(betaParam), betaParam, distr_helper_methods.verify_float, desiredLength = numBetas)
         if errResult != None:
             distr_helper_methods.error("\"{}\" defined {} constant angle(s) but {} flag(s) was(were) set to 1 "\
                   "in {}. Please define one constant angle (beta value) for each flag set "\
@@ -61,7 +61,7 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "distr"
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verifyInt, desiredLength = numFamilies)
+        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_int, desiredLength = numFamilies)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} distributions but there are {} {} families. " \
                 "Need one distribution per family (1 = lognormal, 2 = Truncated Power Law, "
@@ -88,7 +88,7 @@ class distr():
 
         for param in paramNames:
             zTmp = True if "sd" not in param else False  ## Turns off noZeros check only for 'sd' for better error msg
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verifyFloat, desiredLength = distribList[1],
+            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[1],
                         noZeros = zTmp, noNegs = True)         
             if errResult != None:
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[1], prefix+'distr'))
@@ -114,7 +114,7 @@ class distr():
                 "defined in \"{}\". Please define one value for each truncated power-law (distrib. #2) family."
 
         for param in paramNames:
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verifyFloat, desiredLength = distribList[2], 
+            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[2], 
                         noZeros = True, noNegs = True)
             if errResult != None:
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[2], prefix+'distr'))
@@ -134,7 +134,7 @@ class distr():
                 "defined in \"{}\". Please define one value for each exponential (distrib. #3) family."
 
         for param in paramNames:
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verifyFloat, desiredLength = distribList[3], 
+            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[3], 
                         noZeros = True, noNegs = True)
             if errResult != None:
                 distr_helper_methods.error(errString.format(param, -errResult, distribList[3], prefix+'distr'))
@@ -151,7 +151,7 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verifyFloat, desiredLength = distribList[4],
+        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_float, desiredLength = distribList[4],
                      noZeros = True, noNegs = True)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} value(s) but {} constant distrbution(s) was(were) " \

@@ -45,14 +45,14 @@ def cleanup_end(self):
             if name in output_fle:
                 subprocess.call('mv ' + output_fle + ' LaGriT', shell=True)
     subprocess.call('cd LaGriT', shell=True)
-    subprocess.call('mkdir transport')
+    subprocess.call('mkdir transport', shell=True)
     for fle in os.listdir(os.getcwd()):
         if 'zone' in fle:
             subprocess.call('mv ' + fle + ' transport', shell=True)
         elif 'ex' in fle:
             subprocess.call('mv ' + fle + ' ../PFLOTRAN', shell=True)
     subprocess.call('cd ../DFN_generator', shell=True)
-    subprocess.call('rm -rf None') 
+    subprocess.call('rm -rf None', shell=True) 
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
