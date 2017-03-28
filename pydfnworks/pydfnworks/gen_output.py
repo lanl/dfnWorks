@@ -499,10 +499,10 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 famNum = 1
 		updateStr = "Graphing Family #{} which contains {} fractures."
-		graphDistFuncs = {"Lognormal" : graphLognormal,              ## dict of graph functions
-				  "Truncated Power-Law" : graphTruncPowerLaw,
-				  "Exponential" : graphExponential,
-				  "Constant" : graphConstant }
+		graphDistFuncs = {"Lognormal" : graph_lognormal,              ## dict of graph functions
+				  "Truncated Power-Law" : graph_trunc_power_law,
+				  "Exponential" : graph_exponential,
+				  "Constant" : graph_constant }
 		
 		try: 
 			while famNum > 0:

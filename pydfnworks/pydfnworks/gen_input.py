@@ -27,11 +27,11 @@ def check_input(self, input_file='',output_file=''):
     ## 15. check # values (famprob: {.5,.5} {.3, .3., .4})
     params = { 'esd':[],'insertUserRectanglesFirst':[],'keepOnlyLargestCluster':[],'rmin':[],
     'rAngleOption':[],'boundaryFaces':[],'userRectanglesOnOff':[],'printRejectReasons':[],'numOfLayers':[],
-    'RectByCoord_Input_File_Path':[],'eLogMean':[],'rExpMin':[],'lengthCorrelatedAperture':[],'ebeta_distribution':[],
+    'RectByCoord_Input_File_Path':[],'eLogMean':[],'rExpMin':[],'lengthCorrelatedAperture':[],'ebetaDistribution':[],
     'tripleIntersections':[],'layers':[],'stdAperture':[],'ealpha':[],'constantPermeability':[],'rLogMax':[],
     'rLogMean':[],'nFamRect':[],'etheta':[],'eLogMax':[],'rphi':[],'outputAllRadii':[],
     'r_p32Targets':[],'permOption':[],'userEllByCoord':[],'userRecByCoord':[],'userEllipsesOnOff':[],'UserEll_Input_File_Path':[],
-    'rExpMean':[],'rbeta_distribution':[],'aperture':[],'emax':[],'eExpMean':[],'e_p32Targets':[],'eLayer':[],
+    'rExpMean':[],'rbetaDistribution':[],'aperture':[],'emax':[],'eExpMean':[],'e_p32Targets':[],'eLayer':[],
     'domainSizeIncrease':[],'h':[],'outputFinalRadiiPerFamily':[],'rbeta':[],'rLogMin':[],'edistr':[],'domainSize':[],
     'eExpMin':[],'ekappa':[],'rLayer':[],'seed':[],'constantAperture':[],'stopCondition':[],'enumPoints':[],
     'meanAperture':[],'eLogMin':[],'easpect':[],'rtheta':[],'rdistr':[],
@@ -45,9 +45,9 @@ def check_input(self, input_file='',output_file=''):
     'outputAcceptedRadiiPerFamily','domainSize', 'numOfLayers', 'layers', 'h', 
     'tripleIntersections', 'printRejectReasons', 'disableFram', 'visualizationMode', 'seed', 'domainSizeIncrease',
     'keepOnlyLargestCluster', 'ignoreBoundaryFaces', 'boundaryFaces', 'rejectsPerFracture', 'famProb', 'insertUserRectanglesFirst',
-    'nFamEll', 'eLayer', 'edistr', 'ebeta_distribution', 'e_p32Targets', 'easpect', 'enumPoints', 'eAngleOption', 'etheta', 'ephi',
+    'nFamEll', 'eLayer', 'edistr', 'ebetaDistribution', 'e_p32Targets', 'easpect', 'enumPoints', 'eAngleOption', 'etheta', 'ephi',
     'ebeta', 'ekappa', 'eLogMean', 'esd', 'eLogMin', 'eLogMax', 'eExpMean', 'eExpMin', 'eExpMax', 'econst', 'emin', 'emax',
-    'ealpha', 'nFamRect', 'rLayer', 'rdistr', 'rbeta_distribution', 'r_p32Targets', 'raspect', 'rAngleOption', 'rtheta', 'rphi',
+    'ealpha', 'nFamRect', 'rLayer', 'rdistr', 'rbetaDistribution', 'r_p32Targets', 'raspect', 'rAngleOption', 'rtheta', 'rphi',
     'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin', 'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
     'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path', 'userRectanglesOnOff', 'UserRect_Input_File_Path','EllByCoord_Input_File_Path', 'userEllByCoord', 'userRecByCoord',
     'RectByCoord_Input_File_Path', 'aperture', 'meanAperture', 'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
@@ -93,23 +93,23 @@ def check_input(self, input_file='',output_file=''):
     def n_fam_ell():
         """ Check the number of families of ellipses."""
         global ellipseFams 
-        ## input_helper_methods.verifyNumValsIs(1, 'n_fam_ell')
-        ellipseFams = input_helper_methods.verify_int(input_helper_methods.value_of('n_fam_ell', params), 'n_fam_ell', noNeg = True)
+        ## input_helper_methods.verifyNumValsIs(1, 'nFamEll')
+        ellipseFams = input_helper_methods.verify_int(input_helper_methods.value_of('nFamEll', params), 'nFamEll', noNeg = True)
         if ellipseFams == 0:
             input_helper_methods.warning("You have set the number of ellipse families to 0, outside user-defined ellipses, no ellipses will be generated.", params)
 
     def n_fam_rect():
         """ Check the number of families of rectangles."""
         global rectFams
-        ## input_helper_methods.verifyNumValsIs(1, 'n_fam_rect')
-        rectFams = input_helper_methods.verify_int(input_helper_methods.value_of('n_fam_rect', params), 'n_fam_rect', noNeg = True)
+        ## input_helper_methods.verifyNumValsIs(1, 'nFamRect')
+        rectFams = input_helper_methods.verify_int(input_helper_methods.value_of('nFamRect', params), 'nFamRect', noNeg = True)
         if rectFams == 0:
             input_helper_methods.warning("You have set the number of rectangle families to 0, outside user-defined rectangles, no rectangles will be generated.", params)
 
     def stop_condition():
-        """ Check the number of polygons if stop_condition is set to 1, else check the p32 target parameters."""
-        ## input_helper_methods.verifyNumValsIs(1, 'stop_condition')
-        if input_helper_methods.verify_flag(input_helper_methods.value_of('stop_condition', params), 'stop_condition') == 0: 
+        """ Check the number of polygons if stopCondition is set to 1, else check the p32 target parameters."""
+        ## input_helper_methods.verifyNumValsIs(1, 'stopCondition')
+        if input_helper_methods.verify_flag(input_helper_methods.value_of('stopCondition', params), 'stopCondition') == 0: 
             n_poly()
         else:
             p32_targets()
@@ -121,28 +121,28 @@ def check_input(self, input_file='',output_file=''):
         
 
     def domain_size():
-        """ Check that domain_size has 3 non-zero values to define the 
+        """ Check that domainSize has 3 non-zero values to define the 
         size of each dimension (x,y,z) of the domain.
         """
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('domain_size', params), 'domain_size', input_helper_methods.verifyFloat, desiredLength = 3,
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('domainSize', params), 'domainSize', input_helper_methods.verify_float, desiredLength = 3,
                        noZeros = True, noNegs=True)
         if errResult != None:
-            input_helper_methods.error("\"domain_size\" has defined {} value(s) but there must be 3 non-zero "\
+            input_helper_methods.error("\"domainSize\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent x, y, and z dimensions".format(-errResult))
 
     def domain_size_increase():
         """ Check the domain size increase parameters.
         """
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('domain_size_increase', params), domain_size_increase, input_helper_methods.verifyFloat, desiredLength = 3)
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('domainSizeIncrease', params), domain_size_increase, input_helper_methods.verify_float, desiredLength = 3)
         if errResult != None:
-            input_helper_methods.error("\"domain_size_increase\" has defined {} value(s) but there must be 3 non-zero "\
+            input_helper_methods.error("\"domainSizeIncrease\" has defined {} value(s) but there must be 3 non-zero "\
                   "values to represent extensions in the x, y, and z dimensions".format(-errResult))
 
-        for i,val in enumerate(input_helper_methods.value_of('domain_size_increase', params)):
-            if val >= input_helper_methods.value_of('domain_size', params)[i]/2:
-                input_helper_methods.error("\"domain_size_increase\" contains {} which is more than half of the domain's "
+        for i,val in enumerate(input_helper_methods.value_of('domainSizeIncrease', params)):
+            if val >= input_helper_methods.value_of('domainSize', params)[i]/2:
+                input_helper_methods.error("\"domainSizeIncrease\" contains {} which is more than half of the domain's "
                       "range in that dimension. Cannot change the domain's size by more than half of "
-                      "that dimension's value defined in \"domain_size\". This risks collapsing or "
+                      "that dimension's value defined in \"domainSize\". This risks collapsing or "
                       "doubling the domain.".format(val))
 
     def num_of_layers():
@@ -157,11 +157,11 @@ def check_input(self, input_file='',output_file=''):
 
     def layers():
         """ Check the layer parameters provided. """
-        halfZdomain = params['domain_size'][0][2]/2.0  ## -index[2] becaue domain_size = [x,y,z]
+        halfZdomain = params['domainSize'][0][2]/2.0  ## -index[2] becaue domainSize = [x,y,z]
                                   ## -center of z-domain at z = 0 so 
                                   ##  whole Zdomain is -zDomainSize to +zDomainSize
         for i, layer in enumerate(params['layers']):
-            errResult = input_helper_methods.verify_list(layer, "layer #{}".format(i+1), input_helper_methods.verifyFloat, desiredLength = 2)
+            errResult = input_helper_methods.verify_list(layer, "layer #{}".format(i+1), input_helper_methods.verify_float, desiredLength = 2)
             if errResult != None:
                 input_helper_methods.error("\"layers\" has defined layer #{} to have {} element(s) but each layer must "\
                       "have 2 elements, which define its upper and lower bounds".format(i+1, -errResult))
@@ -172,12 +172,12 @@ def check_input(self, input_file='',output_file=''):
             if minZ <= -halfZdomain and maxZ <= -halfZdomain:
                 input_helper_methods.error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
                       "below the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
-                      "the domain's range. The domain's range is half of 3rd value in \"domain_size\" "\
+                      "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
                       "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
             if minZ >= halfZdomain and maxZ >= halfZdomain:
                 input_helper_methods.error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
                       "above the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
-                      "the domain's range. The domain's range is half of 3rd value in \"domain_size\" "\
+                      "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
                       "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
 
          
@@ -185,12 +185,12 @@ def check_input(self, input_file='',output_file=''):
         """ Verify the flag that indicates whether if FRAM is disabled.
             If FRAM is enabled, verify the value of h is valid.  
         """
-        if input_helper_methods.verify_flag(input_helper_methods.value_of('disable_fram', params), 'disableFram') == 0:
+        if input_helper_methods.verify_flag(input_helper_methods.value_of('disableFram', params), 'disableFram') == 0:
             h()
         else:
             input_helper_methods.warning("FRAM (feature rejection algorithm for meshing) is disabled. This means that"\
                                          "dfnWorks will only run through fracture network generation (the code will stop before meshing)."\
-                                         "To run the full code change the disable_fram option to 1")
+                                         "To run the full code change the disableFram option to 1")
     def seed():
         """ Check the value of the seed used for pseudorandom number generation.
         """
@@ -203,33 +203,33 @@ def check_input(self, input_file='',output_file=''):
         
 
     def ignore_boundary_faces():
-        """ Check the value fo the ignore_boundary_faces flag.
+        """ Check the value fo the ignoreBoundaryFaces flag.
         """
-        if input_helper_methods.verify_flag(input_helper_methods.value_of('ignore_boundary_faces', params), 'ignore_boundary_faces') == 0:
+        if input_helper_methods.verify_flag(input_helper_methods.value_of('ignoreBoundaryFaces', params), 'ignoreBoundaryFaces') == 0:
             boundary_faces()
 
     def rejects_per_fracture():
-        """ Check the value of the rejects_per_fracture int. 
+        """ Check the value of the rejectsPerFracture int. 
         """
-        val = input_helper_methods.verify_int(input_helper_methods.value_of('rejects_per_fracture', params), 'rejects_per_fracture', noNeg = True)
+        val = input_helper_methods.verify_int(input_helper_methods.value_of('rejectsPerFracture', params), 'rejectsPerFracture', noNeg = True)
         if val == 0:
             val = 1
-            input_helper_methods.warning("changing \"rejects_per_fracture\" from 0 to 1. Can't ensure 0 rejections.", params)
+            input_helper_methods.warning("changing \"rejectsPerFracture\" from 0 to 1. Can't ensure 0 rejections.", params)
 
-        params['rejects_per_fracture'][0] = val 
+        params['rejectsPerFracture'][0] = val 
         
     def fam_prob():
         """ Check the list of family probabilites (the list of  probabilities that a fracture is in each family).
         """
 
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('fam_prob', params), 'fam_prob', input_helper_methods.verifyFloat,
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('famProb', params), 'famProb', input_helper_methods.verify_float,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
         if errResult != None:
-            input_helper_methods.error("\"fam_prob\" must have {} (n_fam_ell + n_fam_rect) non-zero elements,"\
+            input_helper_methods.error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))
 
-        probList = [float(x) for x in input_helper_methods.value_of('fam_prob', params)]
+        probList = [float(x) for x in input_helper_methods.value_of('famProb', params)]
         if sum(probList) != 1:
             input_helper_methods.scale(probList, warningFile)
 
@@ -288,7 +288,7 @@ def check_input(self, input_file='',output_file=''):
 
         elif apOption == 2:
             input_helper_methods.verify_list(input_helper_methods.value_of('apertureFromTransmissivity', params), 'apertureFromTransmissivity', 
-                   input_helper_methods.verifyFloat, desiredLength = 2, noNegs=True)
+                   input_helper_methods.verify_float, desiredLength = 2, noNegs=True)
             if input_helper_methods.value_of('apertureFromTransmissivity', params)[0] == 0:
                 input_helper_methods.error("\"apertureFromTransmissivity\"'s first value cannot be 0.")
             if input_helper_methods.value_of('apertureFromTransmissivity', params)[1] == 0:
@@ -303,7 +303,7 @@ def check_input(self, input_file='',output_file=''):
 
         elif apOption == 4:
             input_helper_methods.verify_list(input_helper_methods.value_of('lengthCorrelatedAperture', params), 'lengthCorrelatedAperture', 
-                   input_helper_methods.verifyFloat, desiredLength = 2, noNegs=True)
+                   input_helper_methods.verify_float, desiredLength = 2, noNegs=True)
             if input_helper_methods.value_of('lengthCorrelatedAperture', params)[0] == 0:
                 input_helper_methods.error("\"lengthCorrelatedAperture\"'s first value cannot be 0.")
             if input_helper_methods.value_of('lengthCorrelatedAperture', params)[1] == 0:
@@ -336,13 +336,13 @@ def check_input(self, input_file='',output_file=''):
         """Verify the p32 target parameters for ellipses and parameters."""
         global ellipseFams, rectFams
         errResult = None if (ellipseFams == 0) else input_helper_methods.verify_list(input_helper_methods.value_of('e_p32Targets', params), 'e_p32Targets', \
-                                  input_helper_methods.verifyFloat, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
+                                  input_helper_methods.verify_float, desiredLength =  ellipseFams, noNegs=True, noZeros=True)
         if errResult != None:
             input_helper_methods.error("\"e_p32Targets\" has defined {} p32 values but there is(are) {} ellipse family(ies). "\
                   "Need one p32 value per ellipse family.".format(-errResult, ellipseFams))
 
         errResult = None if (rectFams == 0) else input_helper_methods.verify_list(input_helper_methods.value_of('r_p32Targets', params), "r_p32Targets", \
-                                input_helper_methods.verifyFloat, desiredLength =  rectFams, noNegs=True, noZeros=True)
+                                input_helper_methods.verify_float, desiredLength =  rectFams, noNegs=True, noZeros=True)
         if errResult != None:
             input_helper_methods.error("\"r_p32Targets\" has defined {} p32 value(s) but there is(are) {} rectangle "\
                   "family(ies). Need one p32 value per rectangle family)".format(-errResult, rectFams))
@@ -468,14 +468,14 @@ def check_input(self, input_file='',output_file=''):
         ie {1, 1, 1, 0, 0, 1} represents --> {+x, -x, +y, -y, +z, -z}
         DFN only keeps clusters with connections to domain boundaries set to 1.
         """
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('boundaryFaces', params), 'boundaryFaces', input_helper_methods.verifyFlag, 6)
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('boundaryFaces', params), 'boundaryFaces', input_helper_methods.verify_flag, 6)
         if errResult != None:
             input_helper_methods.error("\"boundaryFaces\" must be a list of 6 flags (0 or 1), {} have(has) been defined. Each flag "\
                   "represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}.".format(-errResult))
 
     def enum_points():
         """ Check the integer value of enumPoints for each ellipse family."""
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('enumPoints', params), 'enumPoints', input_helper_methods.verifyInt, 
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of('enumPoints', params), 'enumPoints', input_helper_methods.verify_int, 
                        desiredLength=ellipseFams, noZeros=True, noNegs=True)
         if errResult != None:
             input_helper_methods.error("\"enumPoints\" has defined {} value(s) but there is(are) {} families of ellipses. Please "\
@@ -501,7 +501,7 @@ def check_input(self, input_file='',output_file=''):
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "aspect"
 
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of(paramName), paramName, input_helper_methods.verifyFloat, 
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of(paramName), paramName, input_helper_methods.verify_float, 
                 desiredLength = numFamilies, noZeros = True, noNegs = True)
         if errResult != None:
             input_helper_methods.error("\"{}\" has defined {} value(s) but there is(are) {} {} families. Please define one "\
@@ -518,7 +518,7 @@ def check_input(self, input_file='',output_file=''):
         numFamilies = ellipseFams if prefix is 'e' else rectFams
         paramName = prefix + "Layer"
 
-        errResult = input_helper_methods.verify_list(input_helper_methods.value_of(paramName), paramName, input_helper_methods.verifyInt, desiredLength = numFamilies)
+        errResult = input_helper_methods.verify_list(input_helper_methods.value_of(paramName), paramName, input_helper_methods.verify_int, desiredLength = numFamilies)
         if errResult != None:
             input_helper_methods.error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
                   "Need one layer per {} family. Layers are numbered by the order they "\
@@ -545,7 +545,7 @@ def check_input(self, input_file='',output_file=''):
                 "Please defined one angle for each {} family."
         
         for param in paramNames:
-            errResult = input_helper_methods.verify_list(input_helper_methods.value_of(param), param, input_helper_methods.verifyFloat, desiredLength = numFamilies)
+            errResult = input_helper_methods.verify_list(input_helper_methods.value_of(param), param, input_helper_methods.verify_float, desiredLength = numFamilies)
             if errResult != None:
                 input_helper_methods.error(errString.format(param, -errResult, numFamilies, shape, shape))
 
@@ -587,7 +587,7 @@ def check_input(self, input_file='',output_file=''):
         """ Verify all of the parameters in the input file.
         """
         distributions = distr_module.distr(params, numEdistribs, numRdistribs, minFracSize)
-        firstPriority = [n_fam_ell, n_fam_rect, stop_condition, domain_size, numOfLayers, 
+        firstPriority = [n_fam_ell, n_fam_rect, stop_condition, domain_size, num_of_layers, 
                  seed, domain_size_increase, ignore_boundary_faces, rejects_per_fracture, 
                  user_defined, input_helper_methods.check_fam_count, check_no_dep_flags, fam_prob]
         generalized = [layer, aspect, angle_option, theta_phi_kappa, distributions.beta_distribution, distributions.distr]
