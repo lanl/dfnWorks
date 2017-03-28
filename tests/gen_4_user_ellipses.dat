@@ -387,7 +387,7 @@ rconst: {4,4}  // Constant radius, defined per rectangular family
 userEllipsesOnOff: 1    //0 - User Ellipses off
                         //1 - User Ellipses on
 
-UserEll_Input_File_Path: /home/nknapp/dfnworks-main/pydfnworks/bin/dfnWorks-Version2.0/tests/define_4_user_ellipses.dat 
+UserEll_Input_File_Path: /home/nknapp/dfnworks-main/tests/define_4_user_ellipses.dat 
 
 /*===========================================================================*/
 /*===========================================================================*/

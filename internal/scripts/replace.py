@@ -4,9 +4,12 @@ import subprocess
 dir_list = []
 source_path = '/home/nknapp/dfnworks-main/pydfnworks/pydfnworks'
 script_path = '/home/nknapp/dfnworks-main/pydfnworks/bin'
+test_path = '/home/nknapp/dfnworks-main/tests'
 
 dir_list.append(script_path)
 dir_list.append(source_path)
+dir_list.append(test_path)
+
 old = sys.argv[1]
 new = sys.argv[2]
 
