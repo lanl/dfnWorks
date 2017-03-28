@@ -72,7 +72,6 @@ def clean(directory_list, python_dir):
 # 3. Particle Tracking - make
 # 4. GenIntElmList - make
 # 5. DFNGen - make
-# 6. inp2vtk - make
 
 if __name__ == "__main__":
 
@@ -84,9 +83,6 @@ if __name__ == "__main__":
     directory_list.append(os.environ['connect_test'])
     directory_list.append(os.environ['DFNTRANS_PATH'])
     directory_list.append(os.environ['DFNGEN_PATH'])
-    if options.large_network:    
-        directory_list.append(os.environ['VTK_PATH'])
-        print("Using C++ to parse VTK files")
     if options.clean:
         print("Removing *.o and *.pyc files before compiling\n")
         clean(directory_list, PYTHON_DIR)	
