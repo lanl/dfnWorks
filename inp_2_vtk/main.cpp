@@ -23,19 +23,6 @@ int main(int argc, char* argv[])
   inp_reader->Update();
   vtkUnstructuredGrid* grid = vtkUnstructuredGrid::SafeDownCast(inp_reader->GetOutput());
  
-  // Read in the pflotran output info - point data containg cell permeability and pressure
-  //vtkNew<vtkGenericDataObjectReader> pflotran_reader;  
-  //pflotran_reader->SetFileName(argv[2]);
-  //pflotran_reader->Update();
-  //vtkUnstructuredGrid* pflotran_grid = vtkUnstructuredGrid::SafeDownCast(pflotran_reader->GetOutput());
-  
-  // Combine the grids
-  //vtkNew<vtkAppendFilter> append_filter;
-  //append_filter->AddInputData(grid);
-  //append_filter->AddInputData(pflotran_grid);
-  //append_filter->Update();  
-  //vtkUnstructuredGrid* end_grid = append_filter->GetOutput();
-
   // Write the vtkUnstructuredGrid into a VTK file 
   vtkUnstructuredGridWriter* writer = vtkUnstructuredGridWriter::New(); 
   writer->SetInputData(grid);
