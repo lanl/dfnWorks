@@ -6,6 +6,7 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
+import subprocess
 
 def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
 	"""
@@ -28,8 +29,9 @@ def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat'
 	print 'Writing output into: ', output_name
 	outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
-
-	class polyFam:
+        subprocess.call('cd ' + jobname, shell=True)	
+        
+        class polyFam:
 		""" A data structure describing a family of fractures (that all must be either ellipses or rectangles
                 Attributes:
                     * globFamNum (int): a unique integer describing the family
@@ -63,7 +65,7 @@ def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat'
                 rejects = {}
 		plt.subplots()
 
-		for line in open(rejectFile):
+		for line in open(jobname + rejectFile):
 			num = int(line[:line.index(" ", 0)]) ## number comes before first space in line
 			name = line[line.index(" ", 0) + 1:].strip() ## name comes after first space
 			midSpaceIndex = 1
@@ -148,7 +150,7 @@ def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat'
 		possibleParams = ["Mean", "Standard Deviation", "Alpha", "Lambda"]
 		bounds = ["Minimum Radius", "Maximum Radius"]
 
-		for line in open(famFile):
+		for line in open(jobname + famFile):
 			if line.strip() == "":
 				if famObj.distrib == "Constant":
 					famObj.infoStr += "\nConstant distribution, only contains one radius size.\n"\
@@ -196,7 +198,7 @@ def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat'
 		## Also add each object to global and not Removed if not empty
 		## input file's line format:   xRadius yRadius Family# Removed (Optional)
 
-		for line in open(radiiFile):
+		for line in open(jobname + radiiFile):
                         try:
 				elems = line.split(' ')
 				radius = float(elems[0])
