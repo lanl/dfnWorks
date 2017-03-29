@@ -125,7 +125,7 @@ def only_output_report(jobname, radiiFile = 'radii.dat', famFile ='families.dat'
 		zAll = []
 		zUnremoved = []
 		
-		for line in open(transFile):
+		for line in open(jobname + transFile):
 			line = line.split(" ")
 			try:
 				xAll.append(float(line[0]))
