@@ -19,7 +19,7 @@
 
 
 \title{dfnWorks Documentation}
-\date{March 28, 2017}
+\date{March 29, 2017}
 \release{2.0}
 \author{Subsurface Flow and Transport Team, LANL, LA-UR-17-22216}
 \newcommand{\sphinxlogo}{\includegraphics{dfnworks_logo.png}\par}
@@ -3277,69 +3277,135 @@ Here is a list of file locations after dfnWorks has finished running:
 
 
 \section{dfnGen}
-\label{output:id1}\phantomsection\label{output:connectivity-dat}
+\label{output:id1}
+connectivity.dat:
+
+\textbf{connectivity.dat:}
+\phantomsection\label{output:connectivity-dat}
 Fracture connection list. Each row corresponds to a single fracture. The integers in that row are the fractures that fracture intersects with. These are the non-zero elements of the adjacency matrix. Located in generator directory.
+
+convert\_uge\_params.txt:
+
+\textbf{convert\_uge\_params.txt:}
 \phantomsection\label{output:convert-uge-params-txt}
 Input file do conver\_uge executable. Located in pflotran directory.
+
+\textbf{DFN\_output.txt:}
 \phantomsection\label{output:dfn-output-txt}
 Detailed information about fracture network. Output by DFNGen.  Located in generatory directory once network is complete.
+
+\textbf{families.dat:}
 \phantomsection\label{output:families-dat}
 Information about fracture families. Produced by DFNGen. Located in generator directory.
+
+\textbf{input\_generator.dat:}
 \phantomsection\label{output:input-generator-dat}
 Input file for DFN generator. Located in generator.
+
+\textbf{input\_generator\_clean.dat:}
 \phantomsection\label{output:input-generator-clean-dat}
 Abbreviated input file for DFN generator. Located in main directory.
+
+\textbf{normal\_vectors.dat:}
 \phantomsection\label{output:normal-vectors-dat}
 Normal vector of each fracture in the network. Located in generator.
+
+\textbf{poly\_info.dat:}
 \phantomsection\label{output:poly-info-dat}
 Fracture information output by DFNGen. Format: Fracture Number, Family number, rotation angle for rotateln in LaGriT, x0, y0, z0, x1, y1, z1 (end points of line of rotation). Located in LaGriT.
+
+\textbf{user\_rects.dat:}
 \phantomsection\label{output:user-rects-dat}
 User defined rectangle file. Located in generator directory once network is complete.
+
+\textbf{radii:}
 \phantomsection\label{output:radii}
 Subdirectory containing fracture radii information. Located in generator.
+
+\textbf{radii.dat:}
 \phantomsection\label{output:radii-dat}
 Concatentate file of fracture radii. Contains fractures that are removed due to isolation.  Located in generator.
+
+\textbf{radii\_Final.dat:}
 \phantomsection\label{output:radii-final-dat}
 Concatentated file of final radii in the DFN. Located in generator.
+
+\textbf{rejections.dat:}
 \phantomsection\label{output:rejections-dat}
 Summary of rejection reasons. Located in generator.
+
+\textbf{rejectsPerAttempt.dat:}
 \phantomsection\label{output:rejectsperattempt-dat}
 Number of rejections per attempted fracture. Located in generator.
+
+\textbf{translations.dat:}
 \phantomsection\label{output:translations-dat}
 Fracture centriods. Located in generator.
+
+\textbf{triple\_points.dat:}
 \phantomsection\label{output:triple-points-dat}
 x,y,z location of triple intersection points. Located in main directory.
+
+\textbf{warningFileDFNGen.txt:}
 \phantomsection\label{output:warningfiledfngen-txt}
 Warning file output by DFNGen. Located in generator.
 
 
 \section{LaGrit}
-\label{output:id2}\phantomsection\label{output:bound-zones-lgi}
+\label{output:id2}
+\textbf{bound\_zones.lgi:}
+\phantomsection\label{output:bound-zones-lgi}
 LaGriT run file to identify boundary nodes. Dumps zone files. Located in LaGriT directory.
+
+\textbf{boundary\_output.txt:}
 \phantomsection\label{output:boundary-output-txt}
 Output file from bound\_zones.lgi. Located in LaGriT directory.
+
+\textbf{finalmesh.txt:}
 \phantomsection\label{output:finalmesh-txt}
 Brief summary of final mesh. Located in LaGriT directory.
+
+\textbf{full\_mesh.inp:}
 \phantomsection\label{output:full-mesh-inp}
 Full DFN mesh in AVS format. Located in main directory.
+
+\textbf{full\_mesh.gmv:}
 \phantomsection\label{output:full-mesh-gmv}
 Full DFN mesh in GMV (general mesh viewer) format. Located in LaGriT directory.
+
+\textbf{full\_mesh.lg:}
 \phantomsection\label{output:full-mesh-lg}
 Information: Full DFN mesh in LaGriT binary format. Located in LaGriT directory.
+
+\textbf{intersections:}
 \phantomsection\label{output:intersections}
 Directory containing intersection avs files output by the generator and used by LaGrit. Located in LaGriT.
+
+\textbf{lagrit\_logs:}
 \phantomsection\label{output:lagrit-logs}
 Directory of output files from individual meshing. Located in LaGriT
+
+\textbf{logx3dgen:}
 \phantomsection\label{output:logx3dgen}
 LaGriT output. Located in LaGriT.
+
+\textbf{outx3dgen:}
 \phantomsection\label{output:outx3dgen}
 LaGriT output. Located in LaGriT.
+
+\textbf{parameters:}
 \phantomsection\label{output:parameters}
 Directory of parameter*.mgli files used for fracture meshing. Located in LaGriT.
+
+\textbf{params.txt:}
 \phantomsection\label{output:params-txt}
 Parameter information about the fracture network used for meshing. Includes number of fractures, h, visualmode, expected number of dudded points, and x,y,z dimensions of the domain. Located in main directory.
+
+\textbf{polys:}
 \phantomsection\label{output:polys}
 Subdirectory contiaining AVS file for polygon boundaries. Located in LaGriT.
+
+\textbf{tri\_fracture.stor:}
 \phantomsection\label{output:tri-fracture-stor}
 FEHM stor file. Information about cell volume and area. Located in LaGriT.
 
@@ -3352,26 +3418,48 @@ Function used by LaGriT for meshing. Defines coarsening gradient. Located in LaG
 \label{output:id3}
 
 \section{dfnTrans}
-\label{output:dfntrans}\phantomsection\label{output:allboundaries-zone}
+\label{output:dfntrans}
+\textbf{allboundaries.zone:}
+\phantomsection\label{output:allboundaries-zone}
 Concatenated file of all zone files. Used by DFNTrans. Located in main directory
+
+\textbf{darcyvel.dat:}
 \phantomsection\label{output:darcyvel-dat}
 Concatenated file of darcy velocities output by PFLOTRAN. Used by DFNTrans. Located in main directory.
+
+\textbf{dfnTrans\_output\_dir:}
 \phantomsection\label{output:dfntrans-output-dir}
 Outpur directory from DFNTrans. Particle travel times, trajectories, and reconstructed Velocities are in this directory. Located in main directory.
+
+\textbf{PTDFN\_control.dat:}
 \phantomsection\label{output:ptdfn-control-dat}
 Input file for DFNTrans. Located in main directory.
+
+\textbf{tri\_fracture.stor:}
 \phantomsection\label{output:id4}
 FEHM stor file. Information about cell volume and area. Used by DFNTrans. Located in main directory.
+
+\textbf{pboundary\_back\_n.zone:}
 \phantomsection\label{output:pboundary-back-n-zone}
 Boundary zone file for the back of the domain. Used by DFNTrans. Located in the main diretory.
+
+\textbf{pboundary\_bottom.zone:}
 \phantomsection\label{output:pboundary-bottom-zone}
 Boundary zone file for the bottom of the domain. Used by DFNTrans. Located in the main diretory.
+
+\textbf{pboundary\_front\_s.zone:}
 \phantomsection\label{output:pboundary-front-s-zone}
 Boundary zone file for the front of the domain. Used by DFNTrans. Located in the main diretory.
+
+\textbf{pboundary\_left\_w.zone:}
 \phantomsection\label{output:pboundary-left-w-zone}
 Boundary zone file for the left side of the domain. Used by DFNTrans. Located in the main diretory.
+
+\textbf{pboundary\_right\_e.zone:}
 \phantomsection\label{output:pboundary-right-e-zone}
 Boundary zone file for the bottom of the domain. Used by DFNTrans. Located in the main diretory.
+
+\textbf{pboundary\_top.zone:}
 \phantomsection\label{output:pboundary-top-zone}
 Boundary zone file for the top of the domain. Used by DFNTrans. Located in the main diretory.
 

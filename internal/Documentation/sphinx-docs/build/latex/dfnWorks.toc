@@ -53,25 +53,25 @@
 \contentsline {subsection}{\numberline {7.1.3}LaGriT}{42}{subsection.7.1.3}
 \contentsline {subsection}{\numberline {7.1.4}PFLOTRAN}{42}{subsection.7.1.4}
 \contentsline {section}{\numberline {7.2}dfnGen}{43}{section.7.2}
-\contentsline {section}{\numberline {7.3}LaGrit}{43}{section.7.3}
+\contentsline {section}{\numberline {7.3}LaGrit}{44}{section.7.3}
 \contentsline {section}{\numberline {7.4}PFLOTRAN}{44}{section.7.4}
 \contentsline {section}{\numberline {7.5}dfnTrans}{44}{section.7.5}
-\contentsline {chapter}{\numberline {8}Tutorial}{45}{chapter.8}
-\contentsline {section}{\numberline {8.1}Turn on X forwarding if on server}{45}{section.8.1}
-\contentsline {section}{\numberline {8.2}Go to the dnfWorks-Version2.0 repository}{45}{section.8.2}
-\contentsline {section}{\numberline {8.3}Fix paths in test directory}{45}{section.8.3}
-\contentsline {section}{\numberline {8.4}Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly}{46}{section.8.4}
-\contentsline {section}{\numberline {8.5}Setup the Python package pydfnworks}{46}{section.8.5}
-\contentsline {section}{\numberline {8.6}Executing dfnWorks}{46}{section.8.6}
-\contentsline {section}{\numberline {8.7}Summary}{47}{section.8.7}
-\contentsline {section}{\numberline {8.8}4\_user\_defined\_rectangles}{47}{section.8.8}
-\contentsline {section}{\numberline {8.9}4\_user\_defined\_ellipses}{48}{section.8.9}
-\contentsline {section}{\numberline {8.10}truncated\_power\_law\_dist}{50}{section.8.10}
-\contentsline {section}{\numberline {8.11}exponential\_dist}{51}{section.8.11}
-\contentsline {section}{\numberline {8.12}lognormal\_dist}{54}{section.8.12}
-\contentsline {chapter}{\numberline {9}Example Applications}{57}{chapter.9}
-\contentsline {section}{\numberline {9.1}Carbon dioxide sequestration}{57}{section.9.1}
-\contentsline {section}{\numberline {9.2}Shale energy extraction}{57}{section.9.2}
-\contentsline {section}{\numberline {9.3}Nuclear waste repository}{57}{section.9.3}
-\contentsline {chapter}{Python Module Index}{59}{section*.173}
-\contentsline {chapter}{Index}{61}{section*.174}
+\contentsline {chapter}{\numberline {8}Tutorial}{47}{chapter.8}
+\contentsline {section}{\numberline {8.1}Turn on X forwarding if on server}{47}{section.8.1}
+\contentsline {section}{\numberline {8.2}Go to the dnfWorks-Version2.0 repository}{47}{section.8.2}
+\contentsline {section}{\numberline {8.3}Fix paths in test directory}{47}{section.8.3}
+\contentsline {section}{\numberline {8.4}Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly}{48}{section.8.4}
+\contentsline {section}{\numberline {8.5}Setup the Python package pydfnworks}{48}{section.8.5}
+\contentsline {section}{\numberline {8.6}Executing dfnWorks}{48}{section.8.6}
+\contentsline {section}{\numberline {8.7}Summary}{49}{section.8.7}
+\contentsline {section}{\numberline {8.8}4\_user\_defined\_rectangles}{49}{section.8.8}
+\contentsline {section}{\numberline {8.9}4\_user\_defined\_ellipses}{50}{section.8.9}
+\contentsline {section}{\numberline {8.10}truncated\_power\_law\_dist}{52}{section.8.10}
+\contentsline {section}{\numberline {8.11}exponential\_dist}{53}{section.8.11}
+\contentsline {section}{\numberline {8.12}lognormal\_dist}{56}{section.8.12}
+\contentsline {chapter}{\numberline {9}Example Applications}{59}{chapter.9}
+\contentsline {section}{\numberline {9.1}Carbon dioxide sequestration}{59}{section.9.1}
+\contentsline {section}{\numberline {9.2}Shale energy extraction}{59}{section.9.2}
+\contentsline {section}{\numberline {9.3}Nuclear waste repository}{59}{section.9.3}
+\contentsline {chapter}{Python Module Index}{61}{section*.173}
+\contentsline {chapter}{Index}{63}{section*.174}

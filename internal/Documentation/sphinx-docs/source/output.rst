@@ -96,69 +96,103 @@ PFLOTRAN
 dfnGen 
 --------
 
+connectivity.dat:
+
+**connectivity.dat:**
+
 .. _connectivity.dat:
+
 Fracture connection list. Each row corresponds to a single fracture. The integers in that row are the fractures that fracture intersects with. These are the non-zero elements of the adjacency matrix. Located in generator directory.  
 
+convert_uge_params.txt:
+
+**convert_uge_params.txt:**
 
 .. _convert_uge_params.txt:
+
 Input file do conver_uge executable. Located in pflotran directory. 
 
 
+**DFN_output.txt:**
+
 .. _DFN_output.txt:
+
 Detailed information about fracture network. Output by DFNGen.  Located in generatory directory once network is complete. 
 
+**families.dat:**
 
 .. _families.dat:
 Information about fracture families. Produced by DFNGen. Located in generator directory. 
 
+**input_generator.dat:**
 
 .. _input_generator.dat:
 Input file for DFN generator. Located in generator.
 
+**input_generator_clean.dat:**
 
 .. _input_generator_clean.dat:
 Abbreviated input file for DFN generator. Located in main directory.
 
+**normal_vectors.dat:**
 
 .. _normal_vectors.dat:
 Normal vector of each fracture in the network. Located in generator. 
 
+**poly_info.dat:**
 
 .. _poly_info.dat:
 Fracture information output by DFNGen. Format: Fracture Number, Family number, rotation angle for rotateln in LaGriT, x0, y0, z0, x1, y1, z1 (end points of line of rotation). Located in LaGriT. 
 
+**user_rects.dat:**
 
 .. _user_rects.dat:
 User defined rectangle file. Located in generator directory once network is complete. 
 
 
+**radii:**
+
 .. _radii:
 Subdirectory containing fracture radii information. Located in generator.
 
+
+**radii.dat:**
 
 .. _radii.dat:
 Concatentate file of fracture radii. Contains fractures that are removed due to isolation.  Located in generator.
 
 
+**radii_Final.dat:**
+
 .. _radii_Final.dat:
 Concatentated file of final radii in the DFN. Located in generator.
 
+
+**rejections.dat:**
 
 .. _rejections.dat:
 Summary of rejection reasons. Located in generator.
 
 
+**rejectsPerAttempt.dat:**
+
 .. _rejectsPerAttempt.dat:
 Number of rejections per attempted fracture. Located in generator.
 
+
+**translations.dat:**
 
 .. _translations.dat:
 Fracture centriods. Located in generator.
 
 
+**triple_points.dat:**
+
 .. _triple_points.dat:
 x,y,z location of triple intersection points. Located in main directory.
 
+
+**warningFileDFNGen.txt:**
 
 .. _warningFileDFNGen.txt:
 Warning file output by DFNGen. Located in generator. 
@@ -166,44 +200,72 @@ Warning file output by DFNGen. Located in generator.
 LaGrit 
 ---------
 
+**bound_zones.lgi:**
+
 .. _bound_zones.lgi:
 LaGriT run file to identify boundary nodes. Dumps zone files. Located in LaGriT directory.
+
+**boundary_output.txt:**
 
 .. _boundary_output.txt:
 Output file from bound_zones.lgi. Located in LaGriT directory. 
 
+**finalmesh.txt:**
+
 .. _finalmesh.txt:
 Brief summary of final mesh. Located in LaGriT directory. 
+
+**full_mesh.inp:**
 
 .. _full_mesh.inp:
 Full DFN mesh in AVS format. Located in main directory.
 
+**full_mesh.gmv:**
+
 .. _full_mesh.gmv:
 Full DFN mesh in GMV (general mesh viewer) format. Located in LaGriT directory.
+
+**full_mesh.lg:**
 
 .. _full_mesh.lg:
 Information: Full DFN mesh in LaGriT binary format. Located in LaGriT directory. 
 
+**intersections:**
+
 .. _intersections:
 Directory containing intersection avs files output by the generator and used by LaGrit. Located in LaGriT. 
+
+**lagrit_logs:**
 
 .. _lagrit_logs:
 Directory of output files from individual meshing. Located in LaGriT
 
+**logx3dgen:**
+
 .. _logx3dgen:
 LaGriT output. Located in LaGriT. 
+
+**outx3dgen:**
 
 .. _outx3dgen:
 LaGriT output. Located in LaGriT.
 
+**parameters:**
+
 .. _parameters:
 Directory of parameter*.mgli files used for fracture meshing. Located in LaGriT. 
+
+**params.txt:**
 
 .. _params.txt:
 Parameter information about the fracture network used for meshing. Includes number of fractures, h, visualmode, expected number of dudded points, and x,y,z dimensions of the domain. Located in main directory.
 
+**polys:**
+
 .. _polys:
 Subdirectory contiaining AVS file for polygon boundaries. Located in LaGriT.
+
+**tri_fracture.stor:**
 
 .. _tri_fracture.stor:
 FEHM stor file. Information about cell volume and area. Located in LaGriT.
@@ -284,38 +346,60 @@ PFLOTRAN
 dfnTrans 
 -------------
 
+**allboundaries.zone:**
+
 .. _allboundaries.zone:
 Concatenated file of all zone files. Used by DFNTrans. Located in main directory 
+
+**darcyvel.dat:**
 
 .. _darcyvel.dat:
 Concatenated file of darcy velocities output by PFLOTRAN. Used by DFNTrans. Located in main directory.
 
+**dfnTrans_output_dir:**
+
 .. _dfnTrans_output_dir:
 Outpur directory from DFNTrans. Particle travel times, trajectories, and reconstructed Velocities are in this directory. Located in main directory.
+
+**PTDFN_control.dat:**
 
 .. _PTDFN_control.dat:
 Input file for DFNTrans. Located in main directory. 
 
+**tri_fracture.stor:**
+
 .. _tri_fracture.stor:
 FEHM stor file. Information about cell volume and area. Used by DFNTrans. Located in main directory.
+
+**pboundary_back_n.zone:**
 
 .. _pboundary_back_n.zone:
 Boundary zone file for the back of the domain. Used by DFNTrans. Located in the main diretory.
 
 
+**pboundary_bottom.zone:**
+
 .. _pboundary_bottom.zone:
 Boundary zone file for the bottom of the domain. Used by DFNTrans. Located in the main diretory.
+
+**pboundary_front_s.zone:**
 
 .. _pboundary_front_s.zone:
 Boundary zone file for the front of the domain. Used by DFNTrans. Located in the main diretory.
 
 
+**pboundary_left_w.zone:**
+
 .. _pboundary_left_w.zone:
 Boundary zone file for the left side of the domain. Used by DFNTrans. Located in the main diretory.
 
 
+**pboundary_right_e.zone:**
+
 .. _pboundary_right_e.zone:
 Boundary zone file for the bottom of the domain. Used by DFNTrans. Located in the main diretory.
+
+**pboundary_top.zone:**
 
 .. _pboundary_top.zone:
 Boundary zone file for the top of the domain. Used by DFNTrans. Located in the main diretory.
