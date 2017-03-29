@@ -28,10 +28,7 @@ def dfn_flow(self):
     helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    if self._large_network:
-        self.parse_pflotran_vtk()       
-    else:
-        self.parse_pflotran_vtk_python()
+    self.parse_pflotran_vtk_python()
     helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
     tic = time()    

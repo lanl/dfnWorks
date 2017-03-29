@@ -87,14 +87,13 @@ Executing dfnWorks
 
 To run one of the test cases enter the following command:
 
-- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS] -large_network 
+- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS]  
 
 The arguments are:
 
 - [JOBNAME]: The name of the run, which is also the absolute path name of the folder which will contain the run's output.
 - [INPUT_FILE]: An input file with three lines that have input files for dfnGen, dfnFlow, and dfnTrans, respectively. Any of the files with ending .txt in the directory tests can be used as examples of input files. 
 - [NUMBER_OF_CPUS]: The number of CPUs that the user would like to use for the parralel computation of the meshing and flow solutions.
-- large_network (optional): Only use this flag if the user should use CPP for file processing. 
 
 For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the command line input would be:
 

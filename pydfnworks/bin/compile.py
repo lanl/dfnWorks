@@ -15,8 +15,6 @@ def command_line_options():
     parser.add_argument("-clean", "--clean", default=False, action="store_true",
               help="Run make clean")
     parser.add_argument("-ncpus", "--ncpus", default=1, help="Run make using ncpus processors")
-    parser.add_argument("-large_network", "--large_network", default=False, action="store_true",
-              help="Set true to use CPP for file processing bottleneck. default=False")
     options = parser.parse_args()
     return options
 	

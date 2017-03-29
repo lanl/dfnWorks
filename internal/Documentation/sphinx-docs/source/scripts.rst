@@ -26,7 +26,7 @@ run.py: run dfnWorks
 
 The run.py script allows the user to execute a single run of dfnWorks. The syntax for this script is:
 
-python run.py -name [JOBNAME] -input [INPUT_FILE_NAME] -ncpu [NUMBER OF CPUS TO USE] -input [INPUT_FILE_NAME] -large_network
+python run.py -name [JOBNAME] -input [INPUT_FILE_NAME] -ncpu [NUMBER OF CPUS TO USE] -input [INPUT_FILE_NAME] 
 
 Please refer to the tutorial section (the next section for a detailed description of how to run dfnWorks. 
 

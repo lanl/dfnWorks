@@ -72,12 +72,8 @@ class DFNWORKS(Frozen):
         self._aper_cell_file = aper_cell_file
         self._dfnTrans_version= 2.0
         self._freeze
-        self._large_network = False
         self.legal()
-
         options = helper.commandline_options()
-        if options.large_network ==  True:
-            self._large_network = True
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     '''

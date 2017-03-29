@@ -65,7 +65,6 @@ def commandline_options():
         * -flow : PFLORAN Input File (Mandatory, can be included within this file)
         * -trans: Transport Input File (Mandatory, can be included within this file)
         * -cell: True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
-        * -large_network: True/False Set True to use CPP for file processing bottleneck (Optional, default=False)
     
     """
     parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
@@ -83,8 +82,6 @@ def commandline_options():
               help="Path to dfnTrans run file") 
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
-    parser.add_argument("-large_network", "--large_network", default=False, action="store_true",
-              help="Set True to use CPP for file processing bottleneck. Default=False")
     options = parser.parse_args()
     if options.jobname is "":
         sys.exit("Error: Jobname is required. Exiting.")
