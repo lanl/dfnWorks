@@ -8,7 +8,7 @@ def cleanup_files(self, output_dir):
     gen_exclude_list = ['intersections', 'polys', 'radii', 'DFN_output.txt', 'aperture.dat',
                         'families.dat', 'params.txt', 'perm.dat', 'poly_info.dat', 'triple_points.dat']  
     lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
-    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat', 'full_mesh_vol_area.uge']
+    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat', 'full_mesh_vol_area.uge', 'PTDFN', 'output_files.txt', 'all_boundaries.zone']
     dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
     transport_exclude_list = ['.ex']
     exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list + transport_exclude_list
