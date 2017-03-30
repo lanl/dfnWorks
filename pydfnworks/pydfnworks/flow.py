@@ -36,13 +36,9 @@ def dfn_flow(self):
     helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
     helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
 
-    self.cleanup_files('PFLOTRAN')
-    
     print('='*80)
     print("\ndfnFlow Complete\n")
     print('='*80)
-
-
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.

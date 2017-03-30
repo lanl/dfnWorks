@@ -24,7 +24,6 @@ if __name__ == "__main__":
     DFN.dfn_gen()
     DFN.dfn_flow()
     DFN.dfn_trans()
-    DFN.cleanup_end()
 
     main_elapsed = time() - main_time
     timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

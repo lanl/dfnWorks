@@ -34,12 +34,10 @@ def dfn_gen(self):
     
     self.output_report()
     #helper.dump_time(self._jobname, 'output_report', time() - tic)   
-    #self.cleanup_files('DFN_generator')
     
     # Mesh Network
     tic = time()
     self.mesh_network()
-    self.cleanup_files('LaGriT')
 
     #helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
     print ('='*80)

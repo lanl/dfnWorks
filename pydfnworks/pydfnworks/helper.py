@@ -4,27 +4,32 @@ import re
 import argparse
 import subprocess
 
-def cleanup_files(self, output_dir):
+def move_files(file_list, dir_name):
+    os.mkdir(dir_name) 
+    for fle in os.listdir(os.getcwd()):
+        for name in file_list:
+            if name in fle:
+                subprocess.call('mv ' + fle + ' ' + dir_name, shell=True)
+
+def cleanup_files_at_end(self):
     
     main_list = ['allboundaries.zone', 'aperture.dat', 'cellinfo.dat',
                  'darcyvel.dat', 'dfnTrans_ouput_dir', 'params.txt',
                  'PTDFN_control.dat', 'pboundary', 'zone', 'poly_info.dat',
                  '.inp', 'id_tri_node', 'intersections']
-    delete_list = [] 
-    subprocess.call('mkdir ' + output_dir, shell=True)
-    for output_fle in os.listdir(os.getcwd()):
-        exclude = False
-        for name in delete_list:
-            if name in output_fle: 
-                subprocess.call('rm ' + output_fle, shell=True)
-                exclude = True
-        if exclude:
-            continue
-        for name in main_list:
-            if name in output_fle:
-                exclude = True
-        if not exclude: 
-            subprocess.call('mv ' + output_fle + ' ' + output_dir, shell=True)
+    gen_list = ['DFN_output.txt', 'connectivity.dat', 'families.dat', 'input_generator.dat',
+                'input_generator_clean.dat', 'normal_vectors.dat', 'radii', 'rejections.dat',
+                'rejectsPerAttempt.dat', 'translations.dat', 'triple_points.dat', 'user_rects.dat',
+                'warningFileDFNGen.txt']
+    lagrit_list = ['.lgi', 'boundary_output.txt', 'finalmesh.txt', 'full_mesh.inp',
+                    'full_mesh.gmv', 'full_mesh.lg', 'intersections',
+                   'lagrit_logs', '3dgen', 'parameters', 'polys', 'tri_fracture.stor']
+    pflotran_list = ['aperture.dat', 'cellinfo.dat', 'dfn_explicit', 'dfn_properties.h5','full_mesh.uge',
+                      'full_mesh_viz.inp', 'full_mesh_vol_area', 'materialid.dat', 'parsed_vtk', 'perm.dat', 
+                      'pboundary_']
+    move_files(gen_list, 'DFN_generator')
+    move_files(lagrit_list, 'LaGriT')
+    move_files(pflotran_list, 'PFLOTRAN')
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
