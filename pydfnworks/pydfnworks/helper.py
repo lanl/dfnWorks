@@ -5,14 +5,12 @@ import argparse
 import subprocess
 
 def cleanup_files(self, output_dir):
-    gen_exclude_list = ['intersections', 'polys', 'radii', 'DFN_output.txt', 'aperture.dat',
-                        'families.dat', 'params.txt', 'perm.dat', 'poly_info.dat', 'triple_points.dat']  
-    lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
-    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat', 'full_mesh_vol_area.uge', 'PTDFN', 'output_files.txt', 'all_boundaries.zone']
-    dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
-    transport_exclude_list = ['.ex']
-    exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list + transport_exclude_list
-    delete_list = ['output_files.txt', 'dfn_explicit-cellinfo', 'dfn_explicit-darcyvel', 'dfn_explicit-mas.dat', 'convert_uge_params.txt', 'logx3dgen', 'outx3dgen', '-e']
+    
+    main_list = ['allboundaries.zone', 'aperture.dat', 'cellinfo.dat',
+                 'darcyvel.dat', 'dfnTrans_ouput_dir', 'params.txt',
+                 'PTDFN_control.dat', 'pboundary', 'zone', 'poly_info.dat',
+                 '.inp', 'id_tri_node', 'intersections']
+    delete_list = [] 
     subprocess.call('mkdir ' + output_dir, shell=True)
     for output_fle in os.listdir(os.getcwd()):
         exclude = False
@@ -22,37 +20,11 @@ def cleanup_files(self, output_dir):
                 exclude = True
         if exclude:
             continue
-        for name in exclude_list:
+        for name in main_list:
             if name in output_fle:
                 exclude = True
-        if not exclude and not (output_dir == 'None'):
+        if not exclude: 
             subprocess.call('mv ' + output_fle + ' ' + output_dir, shell=True)
-
-def cleanup_end(self):
-    gen_exclude_list = ['intersections', 'polys', 'radii', 'DFN_output.txt', 'aperture.dat',
-                        'families.dat', 'params.txt', 'perm.dat', 'poly_info.dat', 'triple_points.dat']  
-    lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
-    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat']
-    dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
-    for output_fle in os.listdir(os.getcwd()):
-        for name in gen_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' DFN_generator', shell=True)
-        for name in pflotran_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' PFLOTRAN', shell=True)
-        for name in lagrit_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' LaGriT', shell=True)
-    subprocess.call('cd LaGriT', shell=True)
-    subprocess.call('mkdir transport', shell=True)
-    for fle in os.listdir(os.getcwd()):
-        if 'zone' in fle:
-            subprocess.call('mv ' + fle + ' transport', shell=True)
-        elif 'ex' in fle:
-            subprocess.call('mv ' + fle + ' ../PFLOTRAN', shell=True)
-    subprocess.call('cd ../DFN_generator', shell=True)
-    subprocess.call('rm -rf None', shell=True) 
 
 def commandline_options():
     """Read command lines for use in dfnWorks.

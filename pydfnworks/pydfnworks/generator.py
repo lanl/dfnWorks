@@ -20,8 +20,7 @@ def dfn_gen(self):
     tic = time()
     self.make_working_directory()
     #helper.dump_time(self._jobname, 'Function: make_working_directory', time()- tic) 
-    self.cleanup_files('None')
-
+    
     # Check input file  
     tic = time()
     self.check_input()
@@ -35,7 +34,7 @@ def dfn_gen(self):
     
     self.output_report()
     #helper.dump_time(self._jobname, 'output_report', time() - tic)   
-    self.cleanup_files('DFN_generator')
+    #self.cleanup_files('DFN_generator')
     
     # Mesh Network
     tic = time()

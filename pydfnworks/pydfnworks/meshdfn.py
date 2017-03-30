@@ -39,10 +39,10 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
 
     run_mesh.merge_the_meshes(num_poly, self._ncpu, n_jobs, visual_mode)
     
-    if not visual_mode:    
-        if not mh.check_dudded_points(dudded_points):
-            mh.cleanup_dir()
-            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+  #  if not visual_mode:    
+   #     if not mh.check_dudded_points(dudded_points):
+    #        mh.cleanup_dir()
+     #       sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
     if production_mode:
         mh.cleanup_dir()
