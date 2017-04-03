@@ -61,8 +61,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 			copy('parameters_CPU' + str(cpu_id) + '.mlgi', folder +'/')	
 			copy('mesh_poly_CPU' + str(cpu_id) + '.lgi', folder + '/')	
 			copy('user_function.lgi', folder +'/')	
-	                # Prevents time consuming meshing of other fractures when overall mesh will not work
-                        #exit()
                 try:
 			os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
 		except: 
@@ -74,10 +72,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
  	else:
 		failure = 0
         
-        if failure > 0:
-            'One or more fractures failed to mesh correctly. Exiting dfnWorks now'
-            exit()
-
 	# Remove old links and files
 	try:
 		os.remove('poly_CPU' + str(cpu_id) + '.inp')
@@ -93,9 +87,12 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 		print 'Could not remove parameters_CPU' + str(cpu_id) + '.mlgi'
 
 	elapsed = time.time() - t
-	
-	print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete' 
-	print 'Time for meshing: %0.2f seconds\n'%elapsed
+        if failure > 0:
+	    print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete, but mesh checking failed' 
+	    print 'Time for meshing and error output: %0.2f seconds\n'%elapsed
+        else:
+	    print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete' 
+	    print 'Time for meshing: %0.2f seconds\n'%elapsed
 
 def worker(work_queue, done_queue, visual_mode, num_poly):
         """ Worker function for parallelized meshing """	
