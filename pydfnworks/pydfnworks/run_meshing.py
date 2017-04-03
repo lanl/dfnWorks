@@ -60,7 +60,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 			copy('mesh_poly_CPU' + str(cpu_id) + '.lgi', folder + '/')	
 			copy('user_function.lgi', folder +'/')	
 	                # Prevents time consuming meshing of other fractures when overall mesh will not work
-                        exit()
+                        #exit()
                 try:
 			os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
 		except: 
@@ -71,6 +71,10 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 			print 'Could not remove mesh' + str(cpu_id) + '.inp'
  	else:
 		failure = 0
+        
+        if failure > 0:
+            'One or more fractures failed to mesh correctly. Exiting dfnWorks now'
+            exit()
 
 	# Remove old links and files
 	try:

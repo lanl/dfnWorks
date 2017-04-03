@@ -111,9 +111,14 @@ int main(int argc, char **argv) {
     #ifdef CHECKALLNODES
     bool error = false;
     #endif
-   
+    std::ofstream meshErrorFile;
+    std::string fractureNumber = std::string(argv[1]);;
+    std::string meshErrorFileName = fractureNumber  + "_mesh_errors.txt";;
+    meshErrorFile.open(meshErrorFileName);
+    meshErrorFile << argv[1] << std::endl; 
     // check that all connections in connections[] 
     // also exist in edge graph
+    bool error = false;
     for (int i = 0; i < connSize; i++) {
         int searchIdx;
         int searchFor;
@@ -150,24 +155,21 @@ int main(int argc, char **argv) {
         }
         
 
-
+        
         // Check the list to see if connection exists
         // Returns null if no connection found
         Node* node = edgeGraph[searchIdx].find(searchFor);
+        
         if (node == nullptr) {
             // Clean up
   			std::cout << "Did not find connection (" << searchIdx+minId << ", " << searchFor << ")\n";
-            
-            #ifdef CHECKALLNODES
+            // TODO: print diagnostics here
+            meshErrorFile << searchIdx << " " << searchFor << " " << std::endl; 
             error = true;
-            #else
-            delete[] connections;
-            delete[] edgeGraph;
-            return 1;
-            #endif
         }
     }
 
+    meshErrorFile.close();
 //    std::cout<<"Intersection connectivity verified.\n";
     // Clean up
     delete[] connections;
