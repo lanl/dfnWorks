@@ -39,8 +39,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 	if not visual_mode:
                 cmd_check = os.environ['connect_test'] + 'ConnectivityTest' + ' intersections_CPU%d.inp' \
 		+ ' id_tri_node_CPU%d.list ' \
-		+ ' mesh_%d.inp'
-		cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id)
+		+ ' mesh_%d.inp' \
+		+ ' %d'
+                cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id)
 		failure = os.system(cmd_check)
 		if failure > 0:
 			print("MESH CHECKING HAS FAILED!!!!")

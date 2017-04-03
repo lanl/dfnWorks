@@ -19,7 +19,7 @@ DFN = dfnworks.create_dfn()
 DFN.make_working_directory()
 DFN.check_input()
 DFN.create_network()
-DFN.output_report()
+#DFN.output_report()
 DFN.mesh_network()
 
 #os.chdir(DFN._jobname)
