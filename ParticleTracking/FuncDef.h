@@ -79,6 +79,7 @@ struct contam{
   double weight[3]; // weights, that are calculated for velocity interpolation from cell vertexes  
   double time; //calculated time that particle in travel  
   double fl_weight; //weight of particle according to flow fluxes in in-flow boundary /or aperture weight/
+  double pressure; // fluid pressure
 };
 
 extern    struct material *fracture;

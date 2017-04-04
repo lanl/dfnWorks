@@ -45,7 +45,8 @@ struct tempout{  // strucuture of the particle data, saved temporary for output 
   unsigned int fracturep; // number of fracture in current particle position
   double timep; // particle's current travel time
   double betap; // current beta parameter
-  double length_t; //particle's trajectory length
+  double length_t; // particle's trajectory length
+  double pressure; // pressure
 };
 
 struct tempout *tempdata;
@@ -58,7 +59,7 @@ static FILE *wint;
 
 
 //////////////////////////////////////////////////////////////////////////////
-void ParticleTrack ()
+void ParticleTrack()
 {
 
   /*********Functions holds the loops on particles and loop on time steps for 
@@ -160,7 +161,7 @@ void ParticleTrack ()
   inputfile = Control_File("out_time:",9 );
   sprintf(filename,"%s/%s",maindir,inputfile.filename);
   FILE *tp = OpenFile (filename,"w");
-  fprintf(tp,"# of time steps, flux weights, total travel time, x-, y-, z-final pos, beta, total length[m] \n");
+  fprintf(tp,"# of time steps, flux weights, total travel time, x-, y-, z-final pos, beta, total length[m] pressure\n");
   
   /* initial positions of particle, output file****/
   FILE *inp;
@@ -414,7 +415,8 @@ void ParticleTrack ()
 	  fprintf(wpt_att,"vel_x, real\n");
 	  fprintf(wpt_att,"vel_y, real\n");
 	  fprintf(wpt_att,"vel_z, real\n");
-	  fprintf(wpt_att,"aperture, real\n");
+    fprintf(wpt_att,"aperture, real\n");
+    fprintf(wpt_att,"pressure, real\n");
 	} 
        
       if (traj_o==1)
@@ -599,9 +601,10 @@ void ParticleTrack ()
 		  tempdata[timecounter].fracturep = particle[np].fracture; 
 		  tempdata[timecounter].timep= particle[np].time; 
 		  tempdata[timecounter].betap= beta; 
-                  tempdata[timecounter].length_t=totallength;
+      tempdata[timecounter].length_t=totallength;
+      tempdata[timecounter].pressure=particle[np].pressure;
  
-                  timecounter++;
+      timecounter++;
 
 		  // if memory should be reallocated
 		  if (timecounter==capacity)
@@ -1015,7 +1018,7 @@ void ParticleTrack ()
 			  fprintf(wpt, "%10d %5d line %10d %10d\n", i+1, 1, i+1,i+2);  
 			}
 		      rewind(wpt);
-		      fprintf(wpt,"%10d    %10d    %10d    %10d    %10d\n", nodeID, nodeID-1 ,7,0,0); 
+		      fprintf(wpt,"%10d    %10d    %10d    %10d    %10d\n", nodeID, nodeID-1 ,8,0,0); 
 		      fclose(wpt);
 		      fclose(wpt_att);
 		      char filename1[125]={0}, filename2[125]={0}, filename3[125]={0}, buffer[500]={0};
@@ -1363,7 +1366,9 @@ void PredictorStep()
   /** velocity interpolation ***/
   particle[np].velocity[0]=particle[np].weight[0]*node[n1-1].velocity[v1][0]+particle[np].weight[1]*node[n2-1].velocity[v2][0]+particle[np].weight[2]*node[n3-1].velocity[v3][0];
   particle[np].velocity[1]=particle[np].weight[0]*node[n1-1].velocity[v1][1]+particle[np].weight[1]*node[n2-1].velocity[v2][1]+particle[np].weight[2]*node[n3-1].velocity[v3][1];
-   
+  
+  /** pressure interploation **/
+  particle[np].pressure=particle[np].weight[0]*node[n1-1].pressure+particle[np].weight[1]*node[n2-1].pressure+particle[np].weight[2]*node[n3-1].pressure;  
         
   particle[np].prev_pos[0]=particle[np].position[0];
   particle[np].prev_pos[1]=particle[np].position[1];
@@ -1400,7 +1405,7 @@ void CorrectorStep()
 }
 ///////////////////////////////////////////////////////////////////////////////
 /**** function check neighboring cells to find a particle *************/
-void NeighborCells (int k)
+void NeighborCells(int k)
 {
   int i=0,j,inscell,nc;
   do
@@ -1993,7 +1998,7 @@ void Moving2Center (int nnp, int cellnumber)
 /////////////////////////////////////////////////////////////////////////////
 
 
-int Moving2NextCell (int stuck, int k)
+int Moving2NextCell(int stuck, int k)
 {
   /* in case when particle got stuck in one cell, we move it to the center of neighboring cell */ 
  
@@ -2192,13 +2197,14 @@ void Moving2NextCellBound(int prevcell)
   return;
 }
 //////////////////////////////////////////////////////////////////////////////
-void ParticleOutput (int currentt, int fract_p)
+void ParticleOutput(int currentt, int fract_p)
 {
   /****** function outputs particles data int external file *******************/
 
 
   double posit[3]={0.0, 0.0, 0.0}, veloc[3]={0.0, 0.0, 0.0};
   double startx, starty, endx, endy, midx, midy, time, velocity_t=0.0, obeta=0.0, length_t=0.0;
+  double pressure;
   int i,tstart=-1, pcell=0, pfrac=0, tend=0, tmid; 
   int time_l, kdiv=2;
   double eps=0.05;
@@ -2217,10 +2223,11 @@ void ParticleOutput (int currentt, int fract_p)
   time= tempdata[0].timep;
   obeta= tempdata[0].betap;
   length_t=tempdata[0].length_t;
+  pressure = tempdata[0].pressure;
 
   
               if (traj_o==1)
-                    fprintf(wint,"%5.12E %5.12E  %5.12E   %5.12E  %5.12E %d %5.12E\n", length_t, time, posit[0], posit[1], posit[2], pfrac, obeta);
+                    fprintf(wint,"%5.12E %5.12E  %5.12E   %5.12E  %5.12E %d %5.12E %5.12E\n", length_t, time, posit[0], posit[1], posit[2], pfrac, obeta, pressure);
 
   tstart=tempdata[0].times;
  
@@ -2242,7 +2249,7 @@ void ParticleOutput (int currentt, int fract_p)
   
   
   
-		  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d \n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time,node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0);
+		  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E\n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time,node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0, pressure);
 	
 		}
 	      nodeID++;
@@ -2251,7 +2258,7 @@ void ParticleOutput (int currentt, int fract_p)
 		  
 		  fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, posit[0], posit[1], posit[2]); 
 		  velocity_t=sqrt(pow(veloc[0],2)+pow(veloc[1],2)+pow(veloc[2],2));
-		  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture);
+		  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 		}
 	      int tstep, flag=0, isch=0; 
 	      double angle_m;
@@ -2279,6 +2286,7 @@ void ParticleOutput (int currentt, int fract_p)
 		      pfrac= tempdata[isch].fracturep;
 		      time= tempdata[isch].timep;
 		      obeta= tempdata[isch].betap;
+          pressure = tempdata[isch].pressure;
 
 		      if (tmid==tstart+tstep)
 			break;
@@ -2348,6 +2356,7 @@ void ParticleOutput (int currentt, int fract_p)
 		      pfrac= tempdata[isch].fracturep;
 		      time= tempdata[isch].timep;
 		      obeta= tempdata[isch].betap;
+          pressure = tempdata[isch].pressure;
 
 		      if (tmid==tstart+tstep*(i+1))
 			break;
@@ -2358,7 +2367,7 @@ void ParticleOutput (int currentt, int fract_p)
 		  if (traj_o==1)
 		    {
 
-		      fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d\n", tmid, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0);
+		      fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E\n", tmid, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0, pressure);
 
 		    }	    
 		  nodeID++;
@@ -2367,7 +2376,7 @@ void ParticleOutput (int currentt, int fract_p)
 		      
 		      fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, posit[0], posit[1], posit[2]); 
 		      velocity_t=sqrt(pow(veloc[0],2)+pow(veloc[1],2)+pow(veloc[2],2));
-		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture);
+		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 
 		    }
 		}
@@ -2402,18 +2411,18 @@ void ParticleOutput (int currentt, int fract_p)
                   pfrac= tempdata[i].fracturep;
                   time= tempdata[i].timep;
                   obeta= tempdata[i].betap;
-                  
+                  pressure = tempdata[i].pressure;
 		  nodeID++;
 		  if (avs_o==1)
 		    {
 		      
 		      fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, posit[0], posit[1], posit[2]); 
 		      velocity_t=sqrt(pow(veloc[0],2)+pow(veloc[1],2)+pow(veloc[2],2));
-		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture);
+		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 
 		    }
 		  if (traj_o==1)
-		    fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d \n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0);
+		    fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E\n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0, pressure);
 		}
 
 	    } 
@@ -2424,7 +2433,7 @@ void ParticleOutput (int currentt, int fract_p)
       if (traj_o==1)
 	{
 
-	  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d\n", t, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2],particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, fract_p);
+	  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E  %d %5.12E\n", t, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2],particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, fract_p, pressure);
     
 	}
       nodeID++;
@@ -2434,7 +2443,7 @@ void ParticleOutput (int currentt, int fract_p)
 	  fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2]); 
 	  
 	  velocity_t=sqrt(pow(particle3dv.cord3[0],2)+pow(particle3dv.cord3[1],2)+pow(particle3dv.cord3[2],2));
-	  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E\n", nodeID, particle[np].fracture, particle[np].time, velocity_t, particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2], node[cell[pcell-1].node_ind[0]-1].aperture);
+	  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, particle[np].fracture, particle[np].time, velocity_t, particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 	 
 	}
     }
