@@ -79,7 +79,7 @@ void ReadInit()
   if (fscanf (fps," %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb )!=5)
     printf("Error");
 
-  printf (" Total number of edges in Voronoi polygons = %d, total number of nodes = %d \n", nedges, node1);
+  printf (" Total number of edges in Voronoy polygons = %d, total number of nodes = %d \n", nedges, node1);
   if (node1!=nnodes)
     printf("the number of nodes in inp is not equal to number of nodes in stor file! \n");
 

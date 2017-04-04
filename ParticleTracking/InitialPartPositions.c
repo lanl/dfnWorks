@@ -34,10 +34,10 @@ int InitPos()
     {
       
       if ((i>0)&&(node[nodezonein[i]-1].fracture[0]!=node[nodezonein[i-1]-1].fracture[0]))
-				{
-	 			 //	printf("fract %d ", node[nodezonein[i]-1].fracture[0]);
-	 			 numbf++;
-				}
+	{
+	  //	printf("fract %d ", node[nodezonein[i]-1].fracture[0]);
+	  numbf++;
+	}
     }
  
   if ((numbf==0)&&(nzone_in!=0))
