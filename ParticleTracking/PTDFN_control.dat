@@ -61,6 +61,16 @@ out_path: trajectories /*name of directory where all particle
 				final positions of particles */
 out_time: partime
 
+/************** output to MARFA and PLUMECALC **************************/
+// creates output file for MARFA input
+out_marfa: no
+
+//creates output file for PLUMECALC input
+out_plumecalc: no
+
+
+
+
 /**************** PARTICLES INITIAL POSITIONS ******************************/
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 

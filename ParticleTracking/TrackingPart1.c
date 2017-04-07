@@ -386,7 +386,7 @@ void ParticleTrack ()
   for (np=0; np<numbpart; np++) 
     {
 
-            
+     t=0;           
       if ((numbpart<100)&&(((np-1) % 10)==0)&&(np>2))
 	printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
       else
@@ -808,6 +808,12 @@ void ParticleTrack ()
 		      cur_node=0;
 		      prevfract=particle[np].fracture;
 		      fracthit=fracthit+1;
+                       if (fracthit > nfract)
+                          {
+                            FLAG_OUT=0;
+                             break;
+                           }
+
                       fract_id[fracthit]=particle[np].fracture;
 
 		      //		   printf(" %d %d %15.8e \n",np+1, prevfract, particle[np].time); 
@@ -820,37 +826,37 @@ void ParticleTrack ()
 		  if (counttimestep > (int)timesteps/3.0)
 		    {
 		      //	                         printf("stuck %05d %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %d %d\n",t+1,particle[np].position[0], particle[np].position[1], particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2],particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, counttimestep, (int)timesteps/3.0);
-                  
+                     FLAG_OUT=0;
 		      break;
-		      if (particle[np].cell==stuckcell)
-			stuck=cur_ind;
-		      else
-			{
-                          stuck=0; 
-                          stuckcell=particle[np].cell;
-			} 
-		      if (cur_ind<node[cell[particle[np].cell-1].node_ind[cur_node]-1].numneighb)        
-			cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
-		      else
-			{
-			  if (cur_node<2)
-			    {
-			      cur_ind=0;
-			      cur_node++;
-			      cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
-			    }
-			  else
-			    {
+//		      if (particle[np].cell==stuckcell)
+//			stuck=cur_ind;
+//		      else
+//			{
+//                          stuck=0; 
+  //                        stuckcell=particle[np].cell;
+//			} 
+//		      if (cur_ind<node[cell[particle[np].cell-1].node_ind[cur_node]-1].numneighb)        
+//			cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
+//		      else
+//			{
+//			  if (cur_node<2)
+//			    {
+//			      cur_ind=0;
+//			      cur_node++;
+//			      cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
+//			    }
+//			  else
+//			    {
 			      //		      			      printf(" got stuck \n");
-			      break;
-			    }
-			}
+//			      break;
+//			    }
+//			}
 
 		      /** time correction step ***/    
-		      double delt=CalculateCurrentDT();
-		      particle[np].time=particle[np].time-counttimestep*delt;
+//		      double delt=CalculateCurrentDT();
+//		      particle[np].time=particle[np].time-counttimestep*delt;
 		      //		      printf(" cot %15.8e %d\n",counttimestep*delt, counttimestep); 
-		      t=t-counttimestep;
+//		      t=t-counttimestep;
 		    }
 		}
 	      t_end=t;
