@@ -1,9 +1,0 @@
-vtk_add_test_python(
-  ExtractEdgesQuadraticCells.py
-  extractPolyData.py
-  extractRectGrid.py
-  extractTemporalFieldData.py,NO_RT,NO_VALID
-  ExtractTensors.py
-  extractUGrid.py
-  extractVectors.py
-  )

@@ -1,42 +1,20 @@
+#CMake
 *CMakeFiles*
-*.o
-*~
-*.nfs*
-*.swp
-*.so
 *.cmake
-*.pyc
-python_scripts/modules/*.pyc
-python_scripts/*.swp
 
+# dfnWorks Executables
 ParticleTracking/DFNTrans
-ParticleTracking/DFNTrans
-
-
 C_uge_correct/correct_uge
-C_uge_correct/*o
 DFN_MESH_Connectivity_Test/ConnectivityTest
-runDFN_mixing.py
-sample_inputs/mixing/
-python_scripts/runDFN_uncorrelated.py
-python_scripts/runDFN_mixing.py
-python_scripts/jeffrey_scripts
-python_scripts/mypaths.txt
-python_scripts/test_inputs/*
 
-ParticleTracking/*.o
-ParticleTracking/DFNTrans
+!inp_2_vtk/inp2vtk
 
-
-
-python_scripts/test_inputs/input_text.txt
-sample_inputs/4_fracture_test/input_4_rect.dat
-
-
+*/build/*
+*/dist/*
+*.egg
 
 *.pdf
-*output_test_min*
-*break*
+!dfnWorks.pdf
 
 # Compiled Object files
 *.slo
@@ -68,7 +46,6 @@ sample_inputs/4_fracture_test/input_4_rect.dat
 *.out
 *.app
 *.pyc
-main
 
 # Other
 *~

@@ -27,18 +27,20 @@ int main(int argc, char **argv) {
     using namespace std;
 
     //check cmd line args
-    if (argc != 4) {
+    if (argc != 5) {
         cout <<"\nMust inlude cmd line arguments:\n";
         cout << "Arg 1: Path to fracture intersection inp file.\n";
         cout << "Arg 2: Path to intersection node to global node numbers file.\n";
         cout << "Arg 3: Path to mesh inp file \n\n";
+        cout << "Arg 4: Fracture ID";
         exit(1);
     }
 
     #ifdef DEBUG
     cout << "\nIntersections file: " << argv[1] << endl;
     cout << "Global node numbers file: " << argv[2] << endl;
-    cout << "Mesh inp file: " << argv[3] << endl << endl;
+    cout << "Mesh inp file: " << argv[3] << endl;
+    cout << "fracture id: " << argv[4] << endl << endl;
     #endif
     
     int connSize; //connSize is set in readIntersectionConnectivity()
@@ -111,9 +113,14 @@ int main(int argc, char **argv) {
     #ifdef CHECKALLNODES
     bool error = false;
     #endif
-   
+    std::ofstream meshErrorFile;
+    std::string fractureNumber = std::string(argv[4]);;
+    std::string meshErrorFileName = fractureNumber  + "_mesh_errors.txt";;
+    meshErrorFile.open(meshErrorFileName);
+    meshErrorFile << "Fracture ID " << argv[4] << std::endl; 
     // check that all connections in connections[] 
     // also exist in edge graph
+    bool error = false;
     for (int i = 0; i < connSize; i++) {
         int searchIdx;
         int searchFor;
@@ -150,24 +157,21 @@ int main(int argc, char **argv) {
         }
         
 
-
+        
         // Check the list to see if connection exists
         // Returns null if no connection found
         Node* node = edgeGraph[searchIdx].find(searchFor);
+        
         if (node == nullptr) {
             // Clean up
   			std::cout << "Did not find connection (" << searchIdx+minId << ", " << searchFor << ")\n";
-            
-            #ifdef CHECKALLNODES
+            // TODO: print diagnostics here
+            meshErrorFile << searchIdx << " " << searchFor << " " << std::endl; 
             error = true;
-            #else
-            delete[] connections;
-            delete[] edgeGraph;
-            return 1;
-            #endif
         }
     }
 
+    meshErrorFile.close();
 //    std::cout<<"Intersection connectivity verified.\n";
     // Clean up
     delete[] connections;
