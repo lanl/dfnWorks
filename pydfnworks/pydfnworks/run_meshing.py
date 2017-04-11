@@ -53,7 +53,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
             folder='failure_'+str(fracture_id)
             os.mkdir(folder)
-            copy(str(fracture_id) + '_mesh_errors.txt', folder + '/')
             copy('mesh_'+str(fracture_id)+'.inp', folder + '/')
             copy('poly_CPU'+str(cpu_id)+'.inp', folder + '/')
             copy('id_tri_node_CPU'+str(cpu_id)+'.list', folder + '/')
