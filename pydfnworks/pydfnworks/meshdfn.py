@@ -24,25 +24,26 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     
     num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
 
+    # if number of fractures is greater than number of CPUS, 
+    # only use num_poly CPUs. This change is only made here, so ncpus
+    # is still used in PFLOTRAN
+    ncpu=min(self._ncpu, num_poly)
     lagrit.create_parameter_mlgi_file(num_poly, h, slope=slope)
-
-    lagrit.create_lagrit_scripts(visual_mode, self._ncpu)
+    lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
-
-    failure = run_mesh.mesh_fractures_header(num_poly, self._ncpu, visual_mode)
-
+    failure = run_mesh.mesh_fractures_header(num_poly, ncpu, visual_mode)
     if failure:
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(self._ncpu, num_poly, visual_mode)
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode)
 
-    run_mesh.merge_the_meshes(num_poly, self._ncpu, n_jobs, visual_mode)
+    run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
-  #  if not visual_mode:    
-   #     if not mh.check_dudded_points(dudded_points):
-    #        mh.cleanup_dir()
-     #       sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+    if not visual_mode:    
+        if not mh.check_dudded_points(dudded_points):
+            mh.cleanup_dir()
+            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
     if production_mode:
         mh.cleanup_dir()
@@ -51,7 +52,6 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
         lagrit.define_zones(h,domain)
 
     mh.output_meshing_report(visual_mode)
-
 
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     refine_factor = 1
     ncpu = 4
 
-    os.environ['DFNWORKS_PATH'] = 'DUMMY/dfnWorks-Release2.0/'
+    os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnWorks-Release2.0/'
 
     # Executables    
     os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
@@ -97,27 +97,28 @@ if __name__ == "__main__":
         sys.exit('connect_test undefined')    
     
     if (len(sys.argv) == 1):
-    	filename = 'params.txt'
-    	print "Number of CPU's to use (default):", ncpu
-    	print "Reading in file (default):", filename 
+        filename = 'params.txt'
+        print "Number of CPU's to use (default):", ncpu
+        print "Reading in file (default):", filename 
 
     elif (len(sys.argv) == 2):
-    	filename = sys.argv[1] 
-    	print "Reading in file:", filename 
-    	print "Number of CPU's to use (default):", ncpu
-    	
+        filename = sys.argv[1] 
+        print "Reading in file:", filename 
+        print "Number of CPU's to use (default):", ncpu
+        
     elif (len(sys.argv) == 3):
-    	filename = sys.argv[1] 
-    	ncpu = int(sys.argv[2])
-    	print "Reading in file:", filename 
-    	print "Number of CPU's to use:", ncpu
-    	
+        filename = sys.argv[1] 
+        ncpu = int(sys.argv[2])
+        print "Reading in file:", filename 
+        print "Number of CPU's to use:", ncpu
+        
 
      ## input checking over
     num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
 
-    lagrit.create_parameter_mlgi_file(num_poly, h)
+    ncpu=min(ncpu, num_poly)
 
+    lagrit.create_parameter_mlgi_file(num_poly, h)
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
 
