@@ -59,8 +59,7 @@ def parse_params_file():
 def check_dudded_points(dudded):
     """Parses Lagrit log_merge_all.txt and checks if number of dudded points
     is the expected number
-
-    Returns: 
+    Returns: A
         * True if the number of dudded points is correct 
         * False if the number of dudded points is incorrect 
     """
@@ -83,6 +82,7 @@ def check_dudded_points(dudded):
         print 'Expected Number ', dudded
         return False
     
+
 def cleanup_dir():
     """ Removes files from meshing """
 
