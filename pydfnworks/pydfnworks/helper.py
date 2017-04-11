@@ -16,15 +16,16 @@ def cleanup_files_at_end(self):
     main_list = ['allboundaries.zone', 'aperture.dat', 'cellinfo.dat',
                  'darcyvel.dat', 'dfnTrans_ouput_dir', 'params.txt',
                  'PTDFN_control.dat', 'pboundary', 'zone', 'poly_info.dat',
-                 '.inp', 'id_tri_node', 'intersections']
+                 '.inp', 'id_tri_node', 'intersections', 'full_mesh.inp', 'tri_fracture.stor',
+                   'cellinfo.dat', 'aperture.dat']
     gen_list = ['DFN_output.txt', 'connectivity.dat', 'families.dat', 'input_generator.dat',
                 'input_generator_clean.dat', 'normal_vectors.dat', 'radii', 'rejections.dat',
                 'rejectsPerAttempt.dat', 'translations.dat', 'triple_points.dat', 'user_rects.dat',
                 'warningFileDFNGen.txt']
-    lagrit_list = ['.lgi', 'boundary_output.txt', 'finalmesh.txt', 'full_mesh.inp',
+    lagrit_list = ['.lgi', 'boundary_output.txt', 'finalmesh.txt', 
                     'full_mesh.gmv', 'full_mesh.lg', 'intersections',
-                   'lagrit_logs', '3dgen', 'parameters', 'polys', 'tri_fracture.stor']
-    pflotran_list = ['aperture.dat', 'cellinfo.dat', 'dfn_explicit', 'dfn_properties.h5','full_mesh.uge',
+                   'lagrit_logs', '3dgen', 'parameters', 'polys']
+    pflotran_list = [  'dfn_explicit', 'dfn_properties.h5','full_mesh.uge',
                       'full_mesh_viz.inp', 'full_mesh_vol_area', 'materialid.dat', 'parsed_vtk', 'perm.dat', 
                       'pboundary_']
     move_files(gen_list, 'DFN_generator')
