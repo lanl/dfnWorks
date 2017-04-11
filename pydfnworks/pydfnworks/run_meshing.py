@@ -64,7 +64,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
                 try:
 			os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
 		except: 
-			print 'Could not remove id_tri_node_CPU' + str(cpu_id) + '.list'
+                        print 'Could not remove id_tri_node_CPU' + str(cpu_id) + '.list'
 		try:
 			os.remove('mesh_' + str(fracture_id) + '.inp')
 		except:
@@ -97,12 +97,13 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 def worker(work_queue, done_queue, visual_mode, num_poly):
     """ Worker function for parallelized meshing """	
     try:
-		for fracture_id in iter(work_queue.get, 'STOP'):
-			mesh_fracture(fracture_id, visual_mode, num_poly)
-			#done_queue.put("Fracture %d Complete" % fracture_id)
+            for fracture_id in iter(work_queue.get, 'STOP'):
+                    mesh_fracture(fracture_id, visual_mode, num_poly)
+                    #done_queue.put("Fracture %d Complete" % fracture_id)
     except: 
-		#done_queue.put('Error on Fracture ',fracture_id)
-		print('Error on Fracture ',fracture_id)
+            #done_queue.put('Error on Fracture ',fracture_id)		
+            #print('Error on Fracture ',fracture_id)
+            pass
     return True
 
 def mesh_fractures_header(num_poly, ncpu, visual_mode):
