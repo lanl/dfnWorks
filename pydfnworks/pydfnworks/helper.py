@@ -27,7 +27,7 @@ def cleanup_files_at_end(self):
                    'lagrit_logs', '3dgen', 'parameters', 'polys']
     pflotran_list = [  'dfn_explicit', 'dfn_properties.h5','full_mesh.uge',
                       'full_mesh_viz.inp', 'full_mesh_vol_area', 'materialid.dat', 'parsed_vtk', 'perm.dat', 
-                      'pboundary_']
+                      'pboundary_', 'convert_uge_params.txt']
     move_files(gen_list, 'DFN_generator')
     move_files(lagrit_list, 'LaGriT')
     move_files(pflotran_list, 'PFLOTRAN')

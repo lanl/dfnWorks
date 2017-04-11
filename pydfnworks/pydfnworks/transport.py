@@ -15,9 +15,8 @@ def dfn_trans(self):
     self.copy_dfn_trans_files()
     tic=time()
     self.run_dfn_trans()
-    self.cleanup_files_at_end()
+    #self.cleanup_files_at_end()
     #helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
-
 
 def copy_dfn_trans_files(self):
     '''create link to DFNTRANS and copy input file into local directory
