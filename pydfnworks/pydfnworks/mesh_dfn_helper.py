@@ -71,8 +71,8 @@ def check_dudded_points(dudded):
 				print 'From LaGriT: '
 				print line
 				break
-        print 'MESSING UP ON THIS :', line.split()[1]	
-        pts = int(line.split()[1])
+        print 'MESSING UP ON THIS :', line 	
+        pts = int(line.split()[3])
 	if pts == dudded:
 		print '--> Correct Number of points removed \n'
 		return True
