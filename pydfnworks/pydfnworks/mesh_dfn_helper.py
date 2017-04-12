@@ -125,8 +125,8 @@ def output_meshing_report(visual_mode):
     else:
         print "Output files for visualization are written in :"
         print "--> reduced_mesh.gmv"
-        print "--> reduced__mesh.inp"
-        finp=open('reduced__mesh.inp','r')
+        print "--> reduced_mesh.inp"
+        finp=open('reduced_mesh.inp','r')
         g = finp.readline()
         g = g.split()
         NumElems = int(g.pop(1))
