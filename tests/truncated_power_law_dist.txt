@@ -1,3 +1,3 @@
-dfnGen /home/jhyman/dfnworks/dfnworks-main/tests/gen_truncated_power_law_dist.dat
-dfnFlow /home/jhyman/dfnworks/dfnworks-main/tests/dfn_explicit.in
-dfnTrans /home/jhyman/dfnworks/dfnworks-main/tests/PTDFN_control.dat
+dfnGen DUMMY/dfnworks-main/tests/gen_truncated_power_law_dist.dat
+dfnFlow DUMMY/dfnworks-main/tests/dfn_explicit.in
+dfnTrans DUMMY/dfnworks-main/tests/PTDFN_control.dat
