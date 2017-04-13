@@ -8,7 +8,7 @@ from time import time
 import numpy as np
 import h5py
 
-def dfnFlow(self):
+def dfn_flow(self):
     ''' dfnFlow
     Run the dfnFlow portion of the workflow.
     ''' 
@@ -28,10 +28,7 @@ def dfnFlow(self):
     helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    if self._large_network:
-        self.parse_pflotran_vtk()       
-    else:
-        self.parse_pflotran_vtk_python()
+    self.parse_pflotran_vtk_python()
     helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
     tic = time()    
@@ -39,13 +36,9 @@ def dfnFlow(self):
     helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
     helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
 
-    self.cleanup_files('PFLOTRAN')
-    
     print('='*80)
     print("\ndfnFlow Complete\n")
     print('='*80)
-
-
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
@@ -434,7 +427,7 @@ def pflotran_cleanup(self):
     for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
-def create_dfnFlow_links():
+def create_dfn_flow_links():
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
     os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
     os.symlink('../full_mesh.inp', 'full_mesh.inp')

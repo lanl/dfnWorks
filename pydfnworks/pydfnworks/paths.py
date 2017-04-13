@@ -37,7 +37,8 @@ def define_paths():
     valid('python_dfn')
     
     # LaGriT executable
-    os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
+#    os.environ['lagrit_dfn'] = '/n/swqa/LAGRIT/lagrit.lanl.gov/downloads/lagrit_ulin3.2' 
+    os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/dev/gcc-4.8.4/lagrit'
     valid('lagrit_dfn')
 
     # =================================================== 

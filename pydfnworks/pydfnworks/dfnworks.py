@@ -31,16 +31,16 @@ class DFNWORKS(Frozen):
         * _large_network: indicates whether C++ or Python is used for file processing at the bottleneck
         of inp to vtk conversion
     """
-    from generator import dfnGen
-    from flow import dfnFlow
-    from transport import dfnTrans
+    from generator import dfn_gen
+    from flow import dfn_flow
+    from transport import dfn_trans
     # Specific functions
     from helper import * # scale, cleanup_files, cleanup_end, commandline_options
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
     from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
-    from transport import copy_dfnTrans_files, run_dfnTrans
+    from transport import copy_dfn_trans_files, run_dfn_trans
     from meshdfn import mesh_network
     from legal import legal
     from paths import define_paths
@@ -72,12 +72,8 @@ class DFNWORKS(Frozen):
         self._aper_cell_file = aper_cell_file
         self._dfnTrans_version= 2.0
         self._freeze
-        self._large_network = False
         self.legal()
-
         options = helper.commandline_options()
-        if options.large_network ==  True:
-            self._large_network = True
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     '''

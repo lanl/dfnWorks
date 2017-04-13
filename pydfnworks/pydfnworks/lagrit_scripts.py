@@ -491,7 +491,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, num_poly, visual_mode):
+def create_merge_poly_files(ncpu, num_poly, h, visual_mode):
     """
     Section 4 : Create merge_poly file
      Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -574,11 +574,8 @@ cmo / delete / cmo_tmp
 # LaGriT Code to remove duplicates and output the mesh
 cmo / select / mo_all 
 #recon 1
-##### JDH #####
-##### MAKE H SENSITIVE #######
-define / EPS / 1.e-6
-define / EPS_FILTER / 1.e-4 
-##### MAKE H SENSITIVE #######
+define / EPS / %e 
+define / EPS_FILTER / %e 
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
 filter / pset get pinter / EPS_FILTER 
 pset / pinter / delete
@@ -587,7 +584,7 @@ rmpoint / compress
 sort / mo_all / index / ascending / ikey / imt xic yic zic 
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
-"""
+"""%(h*10**-5, h*10**-3)
      
     if not visual_mode: 
     	lagrit_input += """
@@ -636,8 +633,8 @@ dump / full_mesh_viz.inp / mo_all
 cmo / modatt / mo_all / icr1 / ioflag / l
 cmo / modatt / mo_all / isn1 / ioflag / l
 cmo / modatt / mo_all / itp1 / ioflag / l
-dump / reduced_full_mesh.gmv / mo_all 
-dump / reduced_full_mesh.inp / mo_all
+dump / reduced__mesh.gmv / mo_all 
+dump / reduced_mesh.inp / mo_all
 """
     lagrit_input += """
 quality 

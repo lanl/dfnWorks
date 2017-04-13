@@ -4,55 +4,33 @@ import re
 import argparse
 import subprocess
 
-def cleanup_files(self, output_dir):
-    gen_exclude_list = ['intersections', 'polys', 'radii', 'DFN_output.txt', 'aperture.dat',
-                        'families.dat', 'params.txt', 'perm.dat', 'poly_info.dat', 'triple_points.dat']  
-    lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
-    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat', 'full_mesh_vol_area.uge']
-    dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
-    transport_exclude_list = ['.ex']
-    exclude_list = gen_exclude_list + lagrit_exclude_list + pflotran_exclude_list +  dir_name_list + transport_exclude_list
-    delete_list = ['output_files.txt', 'dfn_explicit-cellinfo', 'dfn_explicit-darcyvel', 'dfn_explicit-mas.dat', 'convert_uge_params.txt', 'logx3dgen', 'outx3dgen', '-e']
-    subprocess.call('mkdir ' + output_dir, shell=True)
-    for output_fle in os.listdir(os.getcwd()):
-        exclude = False
-        for name in delete_list:
-            if name in output_fle: 
-                subprocess.call('rm ' + output_fle, shell=True)
-                exclude = True
-        if exclude:
-            continue
-        for name in exclude_list:
-            if name in output_fle:
-                exclude = True
-        if not exclude and not (output_dir == 'None'):
-            subprocess.call('mv ' + output_fle + ' ' + output_dir, shell=True)
-
-def cleanup_end(self):
-    gen_exclude_list = ['intersections', 'polys', 'radii', 'DFN_output.txt', 'aperture.dat',
-                        'families.dat', 'params.txt', 'perm.dat', 'poly_info.dat', 'triple_points.dat']  
-    lagrit_exclude_list = ['materialid.dat', 'allboundaries.zone', 'full_mesh.inp', 'full_mesh.uge', 'parameters', 'pboundary_', 'tri_fracture']
-    pflotran_exclude_list = ['cellinfo.dat', 'darcyvel.dat']
-    dir_name_list = ['DFN_generator', 'LaGriT', 'PFLOTRAN']
-    for output_fle in os.listdir(os.getcwd()):
-        for name in gen_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' DFN_generator', shell=True)
-        for name in pflotran_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' PFLOTRAN', shell=True)
-        for name in lagrit_exclude_list:
-            if name in output_fle:
-                subprocess.call('mv ' + output_fle + ' LaGriT', shell=True)
-    subprocess.call('cd LaGriT', shell=True)
-    subprocess.call('mkdir transport')
+def move_files(file_list, dir_name):
+    os.mkdir(dir_name) 
     for fle in os.listdir(os.getcwd()):
-        if 'zone' in fle:
-            subprocess.call('mv ' + fle + ' transport', shell=True)
-        elif 'ex' in fle:
-            subprocess.call('mv ' + fle + ' ../PFLOTRAN', shell=True)
-    subprocess.call('cd ../DFN_generator', shell=True)
-    subprocess.call('rm -rf None') 
+        for name in file_list:
+            if name in fle:
+                subprocess.call('mv ' + fle + ' ' + dir_name, shell=True)
+
+def cleanup_files_at_end(self):
+    
+    main_list = ['allboundaries.zone', 'aperture.dat', 'cellinfo.dat',
+                 'darcyvel.dat', 'dfnTrans_ouput_dir', 'params.txt',
+                 'PTDFN_control.dat', 'pboundary', 'zone', 'poly_info.dat',
+                 '.inp', 'id_tri_node', 'intersections', 'full_mesh.inp', 'tri_fracture.stor',
+                   'cellinfo.dat', 'aperture.dat']
+    gen_list = ['DFN_output.txt', 'connectivity.dat', 'families.dat', 'input_generator.dat',
+                'input_generator_clean.dat', 'normal_vectors.dat', 'radii', 'rejections.dat',
+                'rejectsPerAttempt.dat', 'translations.dat', 'triple_points.dat', 'user_rects.dat',
+                'warningFileDFNGen.txt']
+    lagrit_list = ['.lgi', 'boundary_output.txt', 'finalmesh.txt', 
+                    'full_mesh.gmv', 'full_mesh.lg', 'intersections',
+                   'lagrit_logs', '3dgen', 'parameters', 'polys']
+    pflotran_list = [  'dfn_explicit', 'dfn_properties.h5','full_mesh.uge',
+                      'full_mesh_viz.inp', 'full_mesh_vol_area', 'materialid.dat', 'parsed_vtk', 'perm.dat', 
+                      'pboundary_', 'convert_uge_params.txt']
+    move_files(gen_list, 'DFN_generator')
+    move_files(lagrit_list, 'LaGriT')
+    move_files(pflotran_list, 'PFLOTRAN')
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
@@ -65,7 +43,6 @@ def commandline_options():
         * -flow : PFLORAN Input File (Mandatory, can be included within this file)
         * -trans: Transport Input File (Mandatory, can be included within this file)
         * -cell: True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
-        * -large_network: True/False Set True to use CPP for file processing bottleneck (Optional, default=False)
     
     """
     parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
@@ -83,8 +60,6 @@ def commandline_options():
               help="Path to dfnTrans run file") 
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
-    parser.add_argument("-large_network", "--large_network", default=False, action="store_true",
-              help="Set True to use CPP for file processing bottleneck. Default=False")
     options = parser.parse_args()
     if options.jobname is "":
         sys.exit("Error: Jobname is required. Exiting.")
@@ -161,12 +136,12 @@ class input_helper():
     ##                              Helper Functions                          ##
     ## ====================================================================== ##
 
-    def curlyToList(self, curlyList):
+    def curly_to_list(self, curlyList):
         """ '{1,2,3}' --> [1,2,3]
         """
         return re.sub("{|}", "", curlyList).strip().split(",")
 
-    def listToCurly(self, strList):
+    def list_to_curly(self, strList):
         """ [1,2,3] --> '{1,2,3}'   for writing output
         """
         curl = re.sub(r'\[','{', strList)
@@ -174,7 +149,7 @@ class input_helper():
         curl = re.sub(r"\'", '', curl)
         return curl 
 
-    def hasCurlys(self, line, key):
+    def has_curlys(self, line, key):
         """ Checks to see that every { has a matching }.
         """
         if '{' in line and '}' in line: return True 
@@ -182,7 +157,7 @@ class input_helper():
             self.error("Line defining \"{}\" contains a single curly brace.".format(key))
         return False
 
-    def valueOf(self, key, writing = False):
+    def value_of(self, key, writing = False):
         """ Use to get key's value in params. writing always false  
         """
         if (not writing) and (len(self.params[key]) > 1):
@@ -195,23 +170,23 @@ class input_helper():
         #except IndexError:
         #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
-    def getGroups(self, line, valList, key):
+    def get_groups(self, line, valList, key):
         """ extract values between { and } 
         """
         curlyGroup = re.compile('({.*?})')
         groups = re.findall(curlyGroup, line)
         for group in groups:
             line = line.replace(group, '', 1) ## only delete first occurence
-            valList.append(self.curlyToList(group))
+            valList.append(self.curly_to_list(group))
             
         if line.strip() != "":
             self.error("Unexpected character found while parsing \"{}\".".format(key))
 
-    def valHelper(self, line, valList, key):
+    def val_helper(self, line, valList, key):
         """ pulls values from culry brackets 
         """
-        if self.hasCurlys(line, key):
-            self.getGroups(line, valList, key)
+        if self.has_curlys(line, key):
+            self.get_groups(line, valList, key)
         else:
             valList.append(line)
         
@@ -239,22 +214,22 @@ class input_helper():
         print("WARNING --- " + warnString)
         #warningFile.write("WARNING --- " + warnString + "\n")
 
-    def isNegative(self, num): 
+    def is_negative(self, num): 
         """"returns True if num is negative, false otherwise
         """
         return True if num < 0 else False
 
-    def checkFamCount(self):
+    def check_fam_count(self):
         """Makes sure at least one polygon family has been defined in nFamRect or nFamEll
         OR that there is a user input file for polygons.
         """
-        userDefExists = (self.valueOf('userEllipsesOnOff') == '1') |\
-                   (self.valueOf('userRectanglesOnOff') == '1') |\
-                   (self.valueOf('userRecByCoord') == '1') |\
-                   (self.valueOf('userEllByCoord') == '1')
+        userDefExists = (self.value_of('userEllipsesOnOff') == '1') |\
+                   (self.value_of('userRectanglesOnOff') == '1') |\
+                   (self.value_of('userRecByCoord') == '1') |\
+                   (self.value_of('userEllByCoord') == '1')
         
-        ellipseFams = len(self.valueOf('nFamRect'))
-        rectFams = len(self.valueOf('nFamEll'))
+        ellipseFams = len(self.value_of('nFamRect'))
+        rectFams = len(self.value_of('nFamEll'))
 
 
         if ellipseFams + rectFams <= 0 and not userDefExists:
@@ -274,16 +249,16 @@ class input_helper():
             "for their current sum, {:.6}. Scaled {} to {}".format(total, probList, scaled), warningFile)
         return [x/total for x in probList]                
 
-    def zeroInStdDevs(self, valList):
+    def zero_in_std_devs(self, valList):
         """ returns True is there is a zero in valList of standard deviations
         """
         for val in valList:
             if float(val) == 0: return True
         
-    def checkMinMax(self, minParam, maxParam, shape):
+    def check_min_max(self, minParam, maxParam, shape):
         """ Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.
         """
-        for minV, maxV in zip(self.valueOf(minParam), self.valueOf(maxParam)):
+        for minV, maxV in zip(self.value_of(minParam), self.value_of(maxParam)):
             if minV == maxV:
                 self.error("\"{}\" and \"{}\" contain equal values for the same {} family. "\
                       "If {} and {} were intended to be the same, use the constant distribution "\
@@ -292,22 +267,22 @@ class input_helper():
                 self.error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
                 sys.exit()
 
-    def checkMean(self, minParam, maxParam, meanParam, warningFile=''):
+    def check_mean(self, minParam, maxParam, meanParam, warningFile=''):
         """ Warns the user if the minimum value of a parameter is greater than the family's mean value, or if the
         maximum value of the parameter is less than the family's mean value.
         """
-        for minV, meanV in zip(self.valueOf(minParam), self.valueOf(meanParam)):
+        for minV, meanV in zip(self.value_of(minParam), self.value_of(meanParam)):
             if minV > meanV: 
                self.warning("\"{}\" contains a min value greater than its family's mean value in "\
                       "\"{}\". This could drastically increase computation time due to increased "\
                       "rejection rate of the most common fracture sizes.".format(minParam, meanParam), warningFile)
-        for maxV, meanV in zip(self.valueOf(maxParam), self.valueOf(meanParam)):
+        for maxV, meanV in zip(self.value_of(maxParam), self.value_of(meanParam)):
             if maxV < meanV: 
                self.warning("\"{}\" contains a max value less than its family's mean value in "\
                       "\"{}\". This could drastically increase computation time due to increased "\
                       "rejection rate of the most common fracture sizes.".format(maxParam, meanParam), warningFile)
 
-    def checkMinFracSize(self, valList):
+    def check_min_frac_size(self, valList):
         """ Corrects the minimum fracture size if necessary, by looking at the values in valList.
         """
         for val in valList:
@@ -318,7 +293,7 @@ class input_helper():
     ## ====================================================================== ##
     ##                              Parsing Functions                         ##
     ## ====================================================================== ##
-    def extractParameters(self, line, inputIterator):
+    def extract_parameters(self, line, inputIterator):
         """Returns line without comments or white space.
         """
         if "/*" in line:
@@ -333,20 +308,20 @@ class input_helper():
         return line.strip()
 
 
-    def findVal(self, line, key, inputIterator, unfoundKeys, warningFile):
+    def find_val(self, line, key, inputIterator, unfoundKeys, warningFile):
         """ Extract the value for key from line. 
         """
         valList = []
         line = line[line.index(":") + 1:].strip()
-        if line != "" : self.valHelper(line, valList, key)
+        if line != "" : self.val_helper(line, valList, key)
 
-        line = self.extractParameters(next(inputIterator), inputIterator)
+        line = self.extract_parameters(next(inputIterator), inputIterator)
         while ':' not in line:
             line = line.strip()
             if line != "" :
-                self.valHelper(line, valList, key)
+                self.val_helper(line, valList, key)
             try:
-                line = self.extractParameters(next(inputIterator), inputIterator)
+                line = self.extract_parameters(next(inputIterator), inputIterator)
             except StopIteration:
                 break
         
@@ -354,9 +329,9 @@ class input_helper():
             self.error("\"{}\" is a mandatory parameter and must be defined.".format(key))
         if key is not None:
             self.params[key] = valList if valList != [] else [""] ## allows nothing to be entered for unused params 
-        if line != "": self.processLine(line, unfoundKeys, inputIterator, warningFile)
+        if line != "": self.process_line(line, unfoundKeys, inputIterator, warningFile)
             
-    def findKey(self, line, unfoundKeys, warningFile):
+    def find_key(self, line, unfoundKeys, warningFile):
         """ Input: line containing a paramter (key) preceding a ":" 
            
         Returns: 
@@ -374,12 +349,12 @@ class input_helper():
         except KeyError:
            self.warning("\"" + key + "\" is not one of the valid parameter names.", warningFile)
 
-    def processLine(self, line, unfoundKeys, inputIterator, warningFile):
+    def process_line(self, line, unfoundKeys, inputIterator, warningFile):
         """ Find the key in a line, and the value for that key.
         """
         if line.strip != "":
-            key = self.findKey(line, unfoundKeys, warningFile)
-            if key != None: self.findVal(line, key, inputIterator, unfoundKeys, warningFile)   
+            key = self.find_key(line, unfoundKeys, warningFile)
+            if key != None: self.find_val(line, key, inputIterator, unfoundKeys, warningFile)   
 
 
     ## ====================================================================== ##
@@ -391,7 +366,7 @@ class input_helper():
     ## Input: value - value being checked
     ##        key - parameter the value belongs to
     ##        inList - (Optional)
-    def verifyFlag(self, value, key = "", inList = False):
+    def verify_flag(self, value, key = "", inList = False):
         """ Verify that value is either a 0 or a 1.
         """
         if value is '0' or value is '1':
@@ -401,7 +376,7 @@ class input_helper():
         else:
             self.error("\"{}\" must be either '0' or '1'".format(key))
 
-    def verifyFloat(self, value, key = "", inList = False, noNeg = False):
+    def verify_float(self, value, key = "", inList = False, noNeg = False):
         """ Verify that value is a positive float.
         """
         if type(value) is list:
@@ -417,7 +392,7 @@ class input_helper():
                       "floating point value (0.5, 1.6, 4.0, etc.)".format(key))
                 
                 
-    def verifyInt(self, value, key = "", inList = False, noNeg = False):
+    def verify_int(self, value, key = "", inList = False, noNeg = False):
         """ Verify that value is a positive integer.
         """
         if type(value) is list:
@@ -433,7 +408,7 @@ class input_helper():
                       "integer value (0,1,2,3,etc.)".format(key))
                 
     
-    def verifyList(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
+    def verify_list(self, valList, key, verificationFn, desiredLength, noZeros=False, noNegs=False):
         """verifies input list that come in format {0, 1, 2, 3}
        
         Input: 
@@ -463,7 +438,7 @@ class input_helper():
                       "list".format(key, listType, examples[listType], listType))
             if noZeros and verifiedVal == 0:
                 self.error("\"{}\" list cannot contain any zeroes.".format(key))
-            if noNegs and self.isNegative(float(verifiedVal)):
+            if noNegs and self.is_negative(float(verifiedVal)):
                 self.error("\"{}\" list cannot contain any negative values.".format(key)) 
             valList[i] = verifiedVal 
            

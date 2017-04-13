@@ -5,7 +5,7 @@ from time import time
 import helper
 import subprocess
 
-def dfnGen(self):
+def dfn_gen(self):
     ''' 
     
     Run the dfnGen workflow: 
@@ -20,8 +20,7 @@ def dfnGen(self):
     tic = time()
     self.make_working_directory()
     #helper.dump_time(self._jobname, 'Function: make_working_directory', time()- tic) 
-    self.cleanup_files('None')
-
+    
     # Check input file  
     tic = time()
     self.check_input()
@@ -35,12 +34,10 @@ def dfnGen(self):
     
     self.output_report()
     #helper.dump_time(self._jobname, 'output_report', time() - tic)   
-    self.cleanup_files('DFN_generator')
     
     # Mesh Network
     tic = time()
     self.mesh_network()
-    self.cleanup_files('LaGriT')
 
     #helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
     print ('='*80)
