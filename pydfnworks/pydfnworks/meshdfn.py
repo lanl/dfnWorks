@@ -43,7 +43,7 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     if not visual_mode:    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+            sys.exit("Incorrect Number of dudded points.\nExiting Program")
 
     if production_mode:
         mh.cleanup_dir()
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     if not visual_mode:    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+            sys.exit("Incorrect Number of dudded points.\nExiting Program")
 
     if production_mode:
         mh.cleanup_dir()
