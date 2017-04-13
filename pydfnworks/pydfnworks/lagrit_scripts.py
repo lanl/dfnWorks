@@ -574,8 +574,8 @@ cmo / delete / cmo_tmp
 # LaGriT Code to remove duplicates and output the mesh
 cmo / select / mo_all 
 #recon 1
-define / EPS / %f 
-define / EPS_FILTER / %f 
+define / EPS / %e 
+define / EPS_FILTER / %e 
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
 filter / pset get pinter / EPS_FILTER 
 pset / pinter / delete
