@@ -11,6 +11,7 @@
 *.pyc
 python_scripts/modules/*.pyc
 python_scripts/*.swp
+DFNGen
 DFNTrans
 C_uge_correct/correct_uge
 DFN_MESH_Connectivity_Test/ConnectivityTest
