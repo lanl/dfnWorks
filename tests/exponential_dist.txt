@@ -1,0 +1,3 @@
+dfnGen DUMMY/dfnWorks-Version2.0/tests/gen_exponential_dist.dat
+dfnFlow DUMMY/dfnWorks-Version2.0/tests/dfn_explicit.in
+dfnTrans DUMMY/dfnWorks-Version2.0/tests/PTDFN_control.dat

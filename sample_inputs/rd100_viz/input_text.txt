@@ -1,3 +1,0 @@
-dfnGen /home/jhyman/dfnworks/dfnworks-main/sample_inputs/rd100_viz/rd100_fractures.dat	
-dfnFlow /home/jhyman/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/dfn_explicit.in
-dfnTrans /home/jhyman/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/PTDFN_control.dat

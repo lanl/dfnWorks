@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+dfnGen /home/jhyman/dfnworks/dfnWorks-Version2.0/tests/gen_4_user_rectangles.dat
+dfnFlow /home/jhyman/dfnworks/dfnWorks-Version2.0/tests/dfn_explicit.in
+dfnTrans /home/jhyman/dfnworks/dfnWorks-Version2.0/tests/PTDFN_control.dat
+=======
+dfnGen DUMMY/dfnWorks-Version2.0/tests/gen_4_user_rectangles.dat
+dfnFlow DUMMY/dfnWorks-Version2.0/tests/dfn_explicit.in
+dfnTrans DUMMY/dfnWorks-Version2.0/tests/PTDFN_control.dat
+>>>>>>> a245dc0a4b284cd0d0c734de46f2e0eb4e4f5e50
