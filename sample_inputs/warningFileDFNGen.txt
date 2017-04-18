@@ -1,1 +1,0 @@
-WARNING --- You have set the number of rectangle families to 0, no rectangles will be generated.
