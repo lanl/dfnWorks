@@ -15,8 +15,8 @@ def define_paths():
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
     
-    # the dfnWorks-Version2.0  repository 
-    os.environ['DFNWORKS_PATH'] = 'DUMMY/dfnWorks-Version2.0/'
+    # the dfnworks-main  repository 
+    os.environ['DFNWORKS_PATH'] = 'DUMMY/dfnworks-main/'
     valid('DFNWORKS_PATH')
     if not (os.path.isdir(os.path.abspath(os.environ['DFNWORKS_PATH'] + 'tests/'))):
         print "INVALID VERSION OF DFNWORKS - does not have tests folder of official release 2.0"
