@@ -408,7 +408,7 @@ void ParticleTrack ()
           //open a separate file for attributes, will be attached to the original AVS later
 	  sprintf(filename,"%s/part3D_%d.att",path,curr_n);
 	  wpt_att = OpenFile(filename,"w");  
-	  fprintf(wpt_att,"0008   1    1     1    1    1     1    1\n");
+	  fprintf(wpt_att,"0008   1    1     1    1    1     1    1    1\n");
 	  fprintf(wpt_att,"fracture, integer\n");
 	  fprintf(wpt_att,"time, real\n");
 	  fprintf(wpt_att,"velocity, real\n");
