@@ -9,7 +9,7 @@ import os
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
-def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
+def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     """create parameter_mgli_files
     Outputs parameteri.mlgi files used in running LaGriT Scripts
     
@@ -97,10 +97,10 @@ def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
     	f.write('define / THETA  / '+str(theta)+'\n')
     	f.write('define / X1 / '+str(x1)+'\n')
     	f.write('define / Y1 / '+str(y1)+'\n')
-    	f.write('define / Z1 / '+str(z1)+'\n')
+    	f.write('define / Z1 / %f\n'%0.0)
     	f.write('define / X2 / '+str(x2)+'\n')
     	f.write('define / Y2 / '+str(y2)+'\n')
-    	f.write('define / Z2 / '+str(z2)+'\n')
+    	f.write('define / Z2 / %f\n'%0.0)
     	f.write('define / family / '+str(family)+'\n')
     	f.write('finish \n')
     	f.flush()
@@ -491,7 +491,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, num_poly, h, visual_mode):
+def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
     """
     Section 4 : Create merge_poly file
      Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -577,14 +577,19 @@ cmo / select / mo_all
 define / EPS / %e 
 define / EPS_FILTER / %e 
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
+#cmo / addatt / mo_all / inter / vint / scalar / nnodes 
+#cmo / setatt / mo_all / inter / 1 0 0 / 0 
+#cmo / setatt / mo_all / inter / pset, get, pinter / 1 
+
 filter / pset get pinter / EPS_FILTER 
 pset / pinter / delete
+
 rmpoint / compress 
 # SORT can affect a_b attribute
 sort / mo_all / index / ascending / ikey / imt xic yic zic 
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
-"""%(h*10**-5, h*10**-3)
+"""%(h*10**-5, h*10**-4)
      
     if not visual_mode: 
     	lagrit_input += """
@@ -627,7 +632,54 @@ cmo / modatt / mo_all / family_id / ioflag / l
 cmo / modatt / mo_all / evol_onen / ioflag / l
 # Dump mesh with no attributes for viz
 dump / full_mesh_viz.inp / mo_all
+
+# Dump out zone files
+define / XMAX / %e 
+define / XMIN / %e 
+define / YMAX / %e 
+define / YMIN / %e 
+define / ZMAX / %e 
+define / ZMIN / %e 
+
+define / ZONE / 1
+define / FOUT / boundary_top
+pset / top / attribute / zic / 1,0,0/ gt / ZMAX
+pset / top / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / boundary_bottom
+pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
+pset / bottom / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / boundary_left_w
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / left_w / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / boundary_front_s
+pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
+pset / front_s / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / boundary_right_e
+pset / right_e / attribute/ xic / 1,0,0/ gt/XMAX
+pset / right_e / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / boundary_back_n
+pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
+pset / back_n / zone / FOUT/ ascii / ZONE
+
+
 """
+        eps = h*10**-3
+        parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
+    	    0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
+    	    0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
+
+        lagrit_input=lagrit_input%parameters
+
     else:
     	lagrit_input += """
 cmo / modatt / mo_all / icr1 / ioflag / l
@@ -636,6 +688,8 @@ cmo / modatt / mo_all / itp1 / ioflag / l
 dump / reduced__mesh.gmv / mo_all 
 dump / reduced_mesh.inp / mo_all
 """
+
+
     lagrit_input += """
 quality 
 finish
@@ -646,41 +700,40 @@ finish
 
     return len(endis)
 
-def define_zones(h, domain):
+def define_zones():
     """	
-    Creates and runs LaGriT script to define domain size
+    Processes zone file for particle tracking 
     """	
-    eps = h*10**-3
-    parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
-    	0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
-    	0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
-
-    lagrit_input = '''
-read / lagrit / full_mesh.lg / mo_all / binary 
-define / XMAX / %e 
-define / XMIN / %e 
-define / YMAX / %e 
-define / YMIN / %e 
-define / ZMAX / %e 
-define / ZMIN / %e 
-
-pset / top/ attribute / zic / 1,0,0/ gt /ZMAX 
-pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN 
-pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
-pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
-pset / right_e / attribute/ xic/1,0,0/ gt/XMAX
-pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
-pset/-all-/ zone / boundary / ascii
-finish
-'''
-
-    f=open('bound_zones.lgi','w')
-    f.write(lagrit_input%parameters)
-    f.flush()
-    f.close()
-    os.system(os.environ['lagrit_dfn']+ " < bound_zones.lgi > boundary_output.txt ")
-    
-    # copies boundary zone files for PFLOTRAN 
+#    eps = h*10**-3
+#    parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
+#    	0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
+#    	0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
+#
+#    lagrit_input = '''
+#read / lagrit / full_mesh.lg / mo_all / binary 
+#define / XMAX / %e 
+#define / XMIN / %e 
+#define / YMAX / %e 
+#define / YMIN / %e 
+#define / ZMAX / %e 
+#define / ZMIN / %e 
+#
+#pset / top/ attribute / zic / 1,0,0/ gt /ZMAX 
+#pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN 
+#pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+#pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
+#pset / right_e / attribute/ xic/1,0,0/ gt/XMAX
+#pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
+#pset/-all-/ zone / boundary / ascii
+#finish
+#'''
+#
+#    f=open('bound_zones.lgi','w')
+#    f.write(lagrit_input%parameters)
+#    f.flush()
+#    f.close()
+#    os.system(os.environ['lagrit_dfn']+ " < bound_zones.lgi > boundary_output.txt ")
+      # copies boundary zone files for PFLOTRAN 
     copy('boundary_bottom.zone','pboundary_bottom.zone')
     copy('boundary_left_w.zone','pboundary_left_w.zone')
     copy('boundary_front_s.zone','pboundary_front_s.zone')
