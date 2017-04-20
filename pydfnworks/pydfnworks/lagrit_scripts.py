@@ -9,6 +9,7 @@ import os
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
+
 def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     """create parameter_mgli_files
     Outputs parameteri.mlgi files used in running LaGriT Scripts
@@ -67,7 +68,7 @@ def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     	f.write('define / PRE_FINAL_FILE / tmp_pre_final_'+frac_id + '.inp\n')
     	f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' + frac_id +'.gmv\n')
     	
-    	f.write('define / H_SCALE / ' + str(h) + '\n')
+    	f.write('define / H_SCALE / %f\n'%h)
     	f.write('define / H_EPS / ' + str(h*10**-7) + '\n')
     	f.write('define / H_SCALE2 / ' + str(1.5*h) + '\n')
 
@@ -83,25 +84,25 @@ def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     	f.write('define / H_SCALE32 / ' + str(32*h) + '\n')
     	f.write('define / H_SCALE64 / ' + str(64*h) + '\n')
 
-    	f.write('define / PURTURB8 / ' + str(8*0.05*h) + '\n')
-    	f.write('define / PURTURB16 / ' + str(16*0.05*h) + '\n')
-    	f.write('define / PURTURB32 / ' + str(32*0.05*h) + '\n')
-    	f.write('define / PURTURB64 / ' + str(64*0.05*h) + '\n')
+    	f.write('define / PERTURB8 / ' + str(8*0.05*h) + '\n')
+    	f.write('define / PERTURB16 / ' + str(16*0.05*h) + '\n')
+    	f.write('define / PERTURB32 / ' + str(32*0.05*h) + '\n')
+    	f.write('define / PERTURB64 / ' + str(64*0.05*h) + '\n')
 
-    	f.write('define / PARAM_A / '+str(slope)+'\n')	
+    	f.write('define / PARAM_A / %f \n'%slope)	
     	f.write('define / PARAM_B / '+str(h*(1-slope*refine_dist))+'\n')	
 
     	f.write('define / PARAM_A2 / '+str(0.5*slope)+'\n')	
     	f.write('define / PARAM_B2 / '+str(h*(1 - 0.5*slope*refine_dist))+'\n')	
     	
-    	f.write('define / THETA  / '+str(theta)+'\n')
-    	f.write('define / X1 / '+str(x1)+'\n')
-    	f.write('define / Y1 / '+str(y1)+'\n')
-    	f.write('define / Z1 / %f\n'%0.0)
-    	f.write('define / X2 / '+str(x2)+'\n')
-    	f.write('define / Y2 / '+str(y2)+'\n')
-    	f.write('define / Z2 / %f\n'%0.0)
-    	f.write('define / family / '+str(family)+'\n')
+    	f.write('define / THETA  / %0.15f \n'%theta)
+    	f.write('define / X1 /  %0.15f \n'%x1)
+    	f.write('define / Y1 / %0.15f \n'%y1)
+    	f.write('define / Z1 / %0.15f \n'%z1)
+    	f.write('define / X2 / %0.15f \n'%x2)
+    	f.write('define / Y2 / %0.15f \n'%y2)
+    	f.write('define / Z2 / %0.15f \n'%0.0)
+    	f.write('define / family / %d \n'%family)
     	f.write('finish \n')
     	f.flush()
     	f.close()
@@ -201,28 +202,28 @@ massage / H_SCALE64 / H_EPS  / H_EPS
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB64 PURTURB64 0.0
+perturb / pset get p_move / PERTURB64 PERTURB64 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE32 / H_EPS / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB32 PURTURB32 0.0
+perturb / pset get p_move / PERTURB32 PERTURB32 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE16 / H_EPS  / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB16 PURTURB16 0.0
+perturb / pset get p_move / PERTURB16 PERTURB16 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE8 / H_EPS / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB8 PURTURB8 0.0
+perturb / pset get p_move / PERTURB8 PERTURB8 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
@@ -589,7 +590,7 @@ rmpoint / compress
 sort / mo_all / index / ascending / ikey / imt xic yic zic 
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
-"""%(h*10**-5, h*10**-4)
+"""%(h*10**-5, h*10**-3)
      
     if not visual_mode: 
     	lagrit_input += """
