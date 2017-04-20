@@ -68,41 +68,41 @@ def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     	f.write('define / PRE_FINAL_FILE / tmp_pre_final_'+frac_id + '.inp\n')
     	f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' + frac_id +'.gmv\n')
     	
-    	f.write('define / H_SCALE / %f\n'%h)
-    	f.write('define / H_EPS / ' + str(h*10**-7) + '\n')
-    	f.write('define / H_SCALE2 / ' + str(1.5*h) + '\n')
+    	f.write('define / H_SCALE / %e \n'%h)
+    	f.write('define / H_EPS / %e \n'%(h*10**-7))
+    	f.write('define / H_SCALE2 / %e \n'%(1.5*h))
 
-    	f.write('define / H_EXTRUDE / ' + str(h_extrude) + '\n')
-    	f.write('define / H_TRANS / ' + str(h_trans) + '\n')
+    	f.write('define / H_EXTRUDE / %e \n'%(h_extrude))
+    	f.write('define / H_TRANS / %e \n'%(h_trans))
 
-    	f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
-    	f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
+    	f.write('define / H_PRIME / %e \n'%(0.8*h))
+    	f.write('define / H_PRIME2 / %e \n'%(0.3*h))
     	
-    	f.write('define / H_SCALE3 / ' + str(3*h) + '\n')
-    	f.write('define / H_SCALE8 / ' + str(8*h) + '\n')
-    	f.write('define / H_SCALE16 / ' + str(16*h) + '\n')
-    	f.write('define / H_SCALE32 / ' + str(32*h) + '\n')
-    	f.write('define / H_SCALE64 / ' + str(64*h) + '\n')
+    	f.write('define / H_SCALE3 / %e \n'%(3.0*h))
+    	f.write('define / H_SCALE8 / %e \n'%(8.0*h))
+    	f.write('define / H_SCALE16 / %e \n'%(16.0*h))
+    	f.write('define / H_SCALE32 / %e \n'%(32.0*h))
+    	f.write('define / H_SCALE64 / %e \n' %(64.0*h))
 
-    	f.write('define / PERTURB8 / ' + str(8*0.05*h) + '\n')
-    	f.write('define / PERTURB16 / ' + str(16*0.05*h) + '\n')
-    	f.write('define / PERTURB32 / ' + str(32*0.05*h) + '\n')
-    	f.write('define / PERTURB64 / ' + str(64*0.05*h) + '\n')
+    	f.write('define / PERTURB8 / %e \n'%(8*0.05*h))
+    	f.write('define / PERTURB16 / %e \n'%(16*0.05*h))
+    	f.write('define / PERTURB32 / %e \n'%(32*0.05*h))
+    	f.write('define / PERTURB64 / %e \n'%(64*0.05*h))
 
     	f.write('define / PARAM_A / %f \n'%slope)	
-    	f.write('define / PARAM_B / '+str(h*(1-slope*refine_dist))+'\n')	
+    	f.write('define / PARAM_B / %f \n'%(h*(1-slope*refine_dist)))	
 
-    	f.write('define / PARAM_A2 / '+str(0.5*slope)+'\n')	
-    	f.write('define / PARAM_B2 / '+str(h*(1 - 0.5*slope*refine_dist))+'\n')	
+    	f.write('define / PARAM_A2 / %f \n'%(0.5*slope))	
+    	f.write('define / PARAM_B2 / %f \n'%(h*(1 - 0.5*slope*refine_dist)))	
     	
-    	f.write('define / THETA  / %0.15f \n'%theta)
-    	f.write('define / X1 /  %0.15f \n'%x1)
-    	f.write('define / Y1 / %0.15f \n'%y1)
-    	f.write('define / Z1 / %0.15f \n'%z1)
-    	f.write('define / X2 / %0.15f \n'%x2)
-    	f.write('define / Y2 / %0.15f \n'%y2)
-    	f.write('define / Z2 / %0.15f \n'%0.0)
-    	f.write('define / family / %d \n'%family)
+    	f.write('define / THETA  / %0.12f \n'%theta)
+    	f.write('define / X1 /  %0.12f \n'%x1)
+    	f.write('define / Y1 / %0.12f \n'%y1)
+    	f.write('define / Z1 / %0.12f \n'%z1)
+    	f.write('define / X2 / %0.12f \n'%x2)
+    	f.write('define / Y2 / %0.12f \n'%y2)
+    	f.write('define / Z2 / %0.12f \n'%z2)
+    	f.write('define / FAMILY / %d \n'%family)
     	f.write('finish \n')
     	f.flush()
     	f.close()
@@ -406,7 +406,7 @@ cmo / modatt / mo_final / isn1 / ioflag / l
     
 # Create Family element set
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
-cmo / setatt / mo_final / family_id / 1 0 0 / family
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
     
 """
     	lagrit_input += """
@@ -428,7 +428,7 @@ cmo / delete / mo_line_work
     
 # Create Family element set
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
-cmo / setatt / mo_final / family_id / 1 0 0 / family
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
 
 cmo / select / mo_final 
 # Rotate 
