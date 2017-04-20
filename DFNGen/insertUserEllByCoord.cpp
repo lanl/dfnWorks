@@ -18,7 +18,7 @@
     Arg 2: Array for all accepted intersections
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
-void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints) {
+void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts) {
 
     std::cout << "\n" <<  nEllByCoord << " User Ellipses By Coordinates Defined\n\n";
 
@@ -82,7 +82,7 @@ void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints
         newPoly.translation[1] = .5*(newPoly.vertices[1]+newPoly.vertices[midPtIdx+1]);
         newPoly.translation[2] = .5*(newPoly.vertices[2]+newPoly.vertices[midPtIdx+2]);
 
-        if (domainTruncation(newPoly, domainSize) == 1) {
+        if (domainTruncation(newPoly, domainSize, boundaryPts, acceptedPoly.size() ) == 1) {
             // Poly completely outside domain
             delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;

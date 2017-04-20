@@ -7,10 +7,10 @@
 #include <string>
 #include "distributions.h"
 
-void insertUserRects(std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints);
-void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts,struct Stats &pstats, std::vector<Point> &triplePoints);
-void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts,struct Stats &pstats, std::vector<Point> &triplePoints);
-void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints);
+void insertUserRects(std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts);
+void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts,struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts);
+void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts,struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts);
+void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts);
 struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Distributions &distributions, int familyIndex, bool useList);
 void initializeRectVertices(struct Poly &newPoly, float radius, float aspectRatio);
 void assignAperture(struct Poly &newPoly,  std::mt19937_64 &generator);

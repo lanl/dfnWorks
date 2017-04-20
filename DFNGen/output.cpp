@@ -68,6 +68,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     writeRejectsPerAttempt(pstats, output);
     // Write all accepted radii, for Nataliia
     writeFinalPolyRadii(finalFractures, acceptedPoly, output);
+    // Write out graph information 
+    writeGraphData(finalFractures, acceptedPoly, intPts); 
 
     if (outputAcceptedRadiiPerFamily) {
         std::cout << "Writing Accepted Radii Files Per Family\n";
@@ -310,7 +312,7 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
                 intersectingFractures.push_back(fract2);    
             }
             else {
-		fract2 = -intPts[polyIntIdx].fract1;
+		        fract2 = -intPts[polyIntIdx].fract1;
                 intersectingFractures.push_back(fract2);
             }
             // If triple points exist on intersection, discretize from endpoint to closest triple point,
@@ -1113,13 +1115,13 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
         }
         
                 
-        double x0 = (-maxDomainSize*v[0]);
-        double y0 = (-maxDomainSize*v[1]);
-        double z0 = (-maxDomainSize*v[2]);
+        double x0 = 1.1*(-maxDomainSize*v[0]);
+        double y0 = 1.1*(-maxDomainSize*v[1]);
+        double z0 = 1.1*(-maxDomainSize*v[2]);
         
-        double x1 = maxDomainSize*v[0];
-        double y1 = maxDomainSize*v[1];
-        double z1 = maxDomainSize*v[2];    
+        double x1 = 1.1*maxDomainSize*v[0];
+        double y1 = 1.1*maxDomainSize*v[1];
+        double z1 = 1.1*maxDomainSize*v[2];    
     
         
         // The last number is the shape family number. Throughout this program,
@@ -1200,10 +1202,106 @@ void writeRejectsPerAttempt(Stats &pstats, std::string &output) {
     file.close();
 }
 
+/* writeGraphData() ******************************************************************/
+/*! Writes graph data files to output folder
+    Arg 1: std::vector array of indices to fractures (Arg 2) remaining after isolated 
+           fracture removal
+    Arg 2: std::vector array of all accepted fractures (before isolated fracture removal)
+    Arg 3: std::vector array of all intersections
+    Arg 4: std::vector array all triple intersection points
+    Arg 5: Path to intersections folder
+    Arg 6: Stats strcture. DFNGen running program stats (keeps track of total intersecion node count) */
+void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts) { 
+    
+    Point tempPoint1, tempPoint2, tempPoint3; // Keeps track of current un-rotated points we are working with
 
+    std::cout << "\nWriting Graph Data Files\n";    
 
+    adjustIntFractIDs(finalFractures,acceptedPoly, intPts);
+ 
+    std::ofstream intFile; 
+ 
+    // Make new intersection file in intersections folder
+    std::string file = "intersection_info.dat"; 
+    intFile.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
 
+    checkIfOpen(intFile, file);
 
+    intFile << "f1 f2 x y z length\n";
 
+    // Go through finalFractures. Rotate poly, intersections, and triple intersection points 
+    // to XY plane. Discretize and write to file
+    for (unsigned int i = 0; i < finalFractures.size(); i++){
+        
+        // Starting positions for each intersection. Lets us know how to make the line connections
+        std::vector<unsigned int> intStart;         
+        // Used in writing which nodes belong to which two fractures in finishWritingOutput()
+        std::vector<unsigned int> intersectingFractures; 
+                                    
+        // Go through each final fracture's intersections and write to output
+        unsigned int size = acceptedPoly[finalFractures[i]].intersectionIndex.size();
+        for (unsigned int j = 0; j < size; j++){        
+
+            // tempTripPts holds rotated triple points for an intersection. Triple pts must be rotated 3 different 
+            // ways so we cannot change the original data 
+            std::vector<Point> tempTripPts; 
+
+            // Used to measure current length before rotation (used to calculate number of points 
+            // to discretize) based on original intersection. This fixes any precision errors we 
+            // when calculating length after rotation, both rotations for the same intersection will
+            // always have the same step size and same number of discretized points.
+            double curLength = 0;
+        
+            unsigned int polyIntIdx = acceptedPoly[finalFractures[i]].intersectionIndex[j];
+                        
+            // poly and intersection now rotated
+        
+            // fracture 1 is i
+            // fracture 2 is the other intersecting fracture
+            unsigned int fract1;
+            unsigned int fract2;
+         
+           if (-intPts[polyIntIdx].fract1 == i+1){
+                fract1 = -intPts[polyIntIdx].fract1;
+                fract2 = -intPts[polyIntIdx].fract2;
+                intersectingFractures.push_back(fract2);    
+            }
+            else {
+		        fract2 = -intPts[polyIntIdx].fract1;
+		        fract1 = -intPts[polyIntIdx].fract2;
+                intersectingFractures.push_back(fract2);
+            }
+            tempPoint1.x = intPts[polyIntIdx].x1;
+            tempPoint1.y = intPts[polyIntIdx].y1;
+            tempPoint1.z = intPts[polyIntIdx].z1;
+
+            tempPoint2.x = intPts[polyIntIdx].x2;
+            tempPoint2.y = intPts[polyIntIdx].y2;
+            tempPoint2.z = intPts[polyIntIdx].z2;
+            
+            tempPoint3.x = 0.5*(tempPoint1.x + tempPoint2.x); 
+            tempPoint3.y = 0.5*(tempPoint1.y + tempPoint2.y); 
+            tempPoint3.z = 0.5*(tempPoint1.z + tempPoint2.z);
+
+            curLength = euclideanDistance(tempPoint1, tempPoint2);
+            /*
+            std::cout << "Intersection Information\n";
+            std::cout << "Fracture " << fract1 << " intersects " << fract2 << "\n";
+            
+            std::cout << "End Point 1: (x,y,z) (" << tempPoint1.x << "," << tempPoint1.y << ","<<tempPoint1.z << ")\n";  
+            std::cout << "End Point 1: (x,y,z) (" << tempPoint2.x << "," << tempPoint2.y << ","<<tempPoint2.z << ")\n";  
+            std::cout << "Mid Point: (x,y,z) (" << tempPoint3.x << "," << tempPoint3.y << ","<<tempPoint3.z << ")\n";  
+            
+            std::cout << "Intersection Length: " << curLength << "\n";
+            */
+
+            if(fract1 < fract2){
+                intFile << fract1 << " " << fract2 << " " << tempPoint3.x << " " << tempPoint3.y << " "<<tempPoint3.z << " " << curLength << "\n"; 
+            }   
+        }
+    }
+    // Done with fracture and intersections
+    intFile.close();
+}
 
 

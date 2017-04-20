@@ -2,7 +2,7 @@
 #define _domain_h_
 #include "structures.h"
 
-bool domainTruncation(Poly &newPoly, double *domainSize);
+bool domainTruncation(Poly &newPoly, double *domainSize, std::vector<IntPoints> &boundaryPts, int newPolyIndx);
 void printPoints(std::vector<double> &point);
 
 #endif
