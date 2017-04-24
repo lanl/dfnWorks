@@ -19,7 +19,7 @@
     Arg 2: Array for all accepted intersections
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
-void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints, std::vector<IntPoints> &boundaryPts) {
+void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints)  {
 
     std::cout << "\n" << nUserRect << " User Rectangles Defined\n";
 
@@ -71,7 +71,7 @@ void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &in
         // Translate newPoly to urtranslation 
         translate(newPoly, &urtranslation[index]); 
     
-        if (domainTruncation(newPoly, domainSize, boundaryPts) == 1) {
+        if (domainTruncation(newPoly, domainSize) == 1) {
             //poly completely outside domain
             delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;

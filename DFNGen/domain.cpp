@@ -16,7 +16,7 @@
 //              of poly truncation was not needed
 //          1 - If rejected due to being outside the domain or was truncated to
 //              less than 3 vertices
-bool domainTruncation(Poly &newPoly, double *domainSize, std::vector<IntPoints> &boundaryPts, int newPolyIndx) {
+bool domainTruncation(Poly &newPoly, double *domainSize) {
         
     std::vector<double> points; 
     points.reserve(18); // Initialize with enough room for 6 vertices
@@ -138,11 +138,6 @@ bool domainTruncation(Poly &newPoly, double *domainSize, std::vector<IntPoints> 
                 points.push_back(temp[1]);
                 points.push_back(temp[2]);
               
-                tmpPts.fract2=j;
-                tmpPts.x1=temp[0];
-                tmpPts.y1=temp[1];
-                tmpPts.z1=temp[2];
-                boundaryPts.push_back(tmpPts);
             }
             else { 
             
@@ -162,11 +157,6 @@ bool domainTruncation(Poly &newPoly, double *domainSize, std::vector<IntPoints> 
                 points.push_back(temp[1]);
                 points.push_back(temp[2]);
 
-                tmpPts.fract2=j; 
-                tmpPts.x2=temp[0];
-                tmpPts.y2=temp[1];
-                tmpPts.z2=temp[2];
-                boundaryPts.push_back(tmpPts);
             }
             if (currdist < 0) { // If from outside to inside - swap order
     

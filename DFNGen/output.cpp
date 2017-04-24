@@ -1,4 +1,4 @@
-#include "output.h"
+        einclude "output.h"
 #include <fstream>
 #include <stdlib.h> // remove dir
 #include <algorithm>
@@ -38,6 +38,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string intersectionFolder = output + "/intersections";
     std::string radiiFolder = output + "/radii/"; 
 
+    // Write out graph information 
+    /writeGraphData(finalFractures, acceptedPoly, intPts); 
     // Create intersections folder
     //makeDIR(intersectionFolder.c_str()); 
     // Write intersection files (must be first file written, rotates polys to x-y plane)
@@ -68,8 +70,6 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     writeRejectsPerAttempt(pstats, output);
     // Write all accepted radii, for Nataliia
     writeFinalPolyRadii(finalFractures, acceptedPoly, output);
-    // Write out graph information 
-    writeGraphData(finalFractures, acceptedPoly, intPts); 
 
     if (outputAcceptedRadiiPerFamily) {
         std::cout << "Writing Accepted Radii Files Per Family\n";
@@ -253,9 +253,8 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
     Point tempPoint1, tempPoint2; // Keeps track of current un-rotated points we are working with
 
     std::cout << "\nWriting Intersection Files\n";    
-
     adjustIntFractIDs(finalFractures,acceptedPoly, intPts);
- 
+   
     std::ofstream fractIntFile; 
 
     // Go through finalFractures. Rotate poly, intersections, and triple intersection points 
@@ -1212,7 +1211,11 @@ void writeRejectsPerAttempt(Stats &pstats, std::string &output) {
     Arg 5: Path to intersections folder
     Arg 6: Stats strcture. DFNGen running program stats (keeps track of total intersecion node count) */
 void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts) { 
-    
+        
+    double domainX = domainSize[0]*.5; 
+    double domainY = domainSize[1]*.5; 
+    double domainZ = domainSize[2]*.5;
+ 
     Point tempPoint1, tempPoint2, tempPoint3; // Keeps track of current un-rotated points we are working with
 
     std::cout << "\nWriting Graph Data Files\n";    
@@ -1233,11 +1236,6 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     // to XY plane. Discretize and write to file
     for (unsigned int i = 0; i < finalFractures.size(); i++){
         
-        // Starting positions for each intersection. Lets us know how to make the line connections
-        std::vector<unsigned int> intStart;         
-        // Used in writing which nodes belong to which two fractures in finishWritingOutput()
-        std::vector<unsigned int> intersectingFractures; 
-                                    
         // Go through each final fracture's intersections and write to output
         unsigned int size = acceptedPoly[finalFractures[i]].intersectionIndex.size();
         for (unsigned int j = 0; j < size; j++){        
@@ -1264,12 +1262,10 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
            if (-intPts[polyIntIdx].fract1 == i+1){
                 fract1 = -intPts[polyIntIdx].fract1;
                 fract2 = -intPts[polyIntIdx].fract2;
-                intersectingFractures.push_back(fract2);    
             }
             else {
 		        fract2 = -intPts[polyIntIdx].fract1;
 		        fract1 = -intPts[polyIntIdx].fract2;
-                intersectingFractures.push_back(fract2);
             }
             tempPoint1.x = intPts[polyIntIdx].x1;
             tempPoint1.y = intPts[polyIntIdx].y1;
@@ -1299,9 +1295,120 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
                 intFile << fract1 << " " << fract2 << " " << tempPoint3.x << " " << tempPoint3.y << " "<<tempPoint3.z << " " << curLength << "\n"; 
             }   
         }
+
+
+        bool right=false;
+        bool left=false;
+        bool top=false;
+        bool bottom=false;
+        bool front=false;
+        bool back=false;
+        int temp = acceptedPoly[finalFractures[i]].numberOfNodes;
+
+
+        std::cout << "Working on fracture " << i+1 << " that has " << temp <<  " points\n\n";
+        for (int k = 0; k < temp; k++){
+            int idx=k*3;
+            std::cout << "point " << k << " " << acceptedPoly[finalFractures[i]].vertices[idx] << " "  << acceptedPoly[finalFractures[i]].vertices[idx+1] << " " << acceptedPoly[finalFractures[i]].vertices[idx+2] << "\n"; 
+        }
+         
+
+       for (int k = 0; k < temp; k++){
+            // Check boundary faces
+            // Update which boundaries newPoly touches        
+
+            int idx = k*3;
+            if (acceptedPoly[finalFractures[i]].vertices[idx] >= domainX-eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx] >= domainX-eps && idx != iidx && !right){
+
+
+                        writePoint(intFile, i+1, -5, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        right=true;
+                        break; 
+                    }
+                }
+            }
+            else if (acceptedPoly[finalFractures[i]].vertices[idx] <= -domainX+eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx] <= -domainX+eps && idx != iidx && !left){
+                        writePoint(intFile, i+1, -6, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        left=true;
+                        break; 
+                    }
+                }
+            }
+            if (acceptedPoly[finalFractures[i]].vertices[idx+1] >= domainY-eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx+1] >= domainY-eps && idx != iidx && !front){
+                        
+                       // writePoint(intFile, i+1, -3, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        front=true;
+                        break; 
+                    }
+                }
+            }
+            else if (acceptedPoly[finalFractures[i]].vertices[idx+1] <= -domainY+eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx+1] <= -domainY+eps && idx != iidx && !back){
+                        //writePoint(intFile, i+1, -4, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        back=true;
+                        break; 
+                    }
+                }
+            }
+            if (acceptedPoly[finalFractures[i]].vertices[idx+2] >= domainZ-eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx+2] >= domainZ-eps && idx != iidx && !top){
+                        
+                        //writePoint(intFile, i+1, -1, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        top=true;
+                        break; 
+                    }
+                }
+            }
+            else if (acceptedPoly[finalFractures[i]].vertices[idx+2] <= -domainZ+eps) {
+                for (int kk=0; kk < temp; kk++){
+                    int iidx = kk*3;
+                    if (acceptedPoly[finalFractures[i]].vertices[iidx+2] <= -domainZ+eps && idx != iidx && !bottom){
+
+                        //writePoint(intFile, i+1, -2, acceptedPoly[finalFractures[i]].vertices[idx], acceptedPoly[finalFractures[i]].vertices[idx+1], acceptedPoly[finalFractures[i]].vertices[idx+2], acceptedPoly[finalFractures[i]].vertices[iidx], acceptedPoly[finalFractures[i]].vertices[iidx+1], acceptedPoly[finalFractures[i]].vertices[iidx+2]); 
+                        bottom=true;
+                        break; 
+                    }
+                }
+            }
+        }
     }
     // Done with fracture and intersections
     intFile.close();
 }
 
+void writePoint(std::ofstream &fp, int fract1, int fract2, double x1, double y1, double z1, double x2, double y2, double z2){
 
+    Point tempPoint1, tempPoint2, tempPoint3; // Keeps track of current un-rotated points we are working with
+    tempPoint1.x = x1; 
+    tempPoint1.y = y1; 
+    tempPoint1.z = z1; 
+    
+    tempPoint2.x = x2; 
+    tempPoint2.y = y2; 
+    tempPoint2.z = z2; 
+
+    tempPoint3.x = 0.5*(tempPoint1.x + tempPoint2.x); 
+    tempPoint3.y = 0.5*(tempPoint1.y + tempPoint2.y); 
+    tempPoint3.z = 0.5*(tempPoint1.z + tempPoint2.z);
+
+    std::cout << "Fracture Number " << fract1 << " intersecting " << fract2 << "\n";
+    std::cout << "point 1: (" << tempPoint1.x << ", "  << tempPoint1.z << ", "  << tempPoint1.z << ")\n"; 
+    std::cout << "point 2: (" << tempPoint2.x << ", "  << tempPoint2.y << ", "  << tempPoint2.y << ")\n\n"; 
+
+    double curLength = 0;                   
+    curLength = euclideanDistance(tempPoint1, tempPoint2);
+    fp << fract1  << " " << fract2 << " " << tempPoint3.x << " " << tempPoint3.y << " "<<tempPoint3.z << " " << curLength << "\n"; 
+}

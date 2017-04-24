@@ -68,10 +68,6 @@ int main (int argc, char **argv) {
     std::vector<IntPoints> intPts;
     intPts.reserve(250);
  
-    // Vector for storing intersection boundaries 
-    std::vector<IntPoints> boundaryPts;
-    boundaryPts.reserve(250);
-
     // Vector for storing triple intersection points
     std::vector<Point> triplePoints;
     
@@ -186,45 +182,41 @@ int main (int argc, char **argv) {
     if (insertUserRectanglesFirst == 1) {
         // Insert user rects first
         if (userRectanglesOnOff != 0) {
-            insertUserRects(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserRects(acceptedPoly, intPts, pstats, triplePoints);
         }
         // Insert all user rectangles by coordinates
         if (userRecByCoord !=0 ) {
-            insertUserRectsByCoord(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserRectsByCoord(acceptedPoly, intPts, pstats, triplePoints);
         }    
         // Insert all user ellipses 
         if (userEllipsesOnOff != 0) {
-            insertUserEll(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserEll(acceptedPoly, intPts, pstats, triplePoints);
         }
         // Insert all user ellipses by coordinates
         if (userEllByCoord != 0) {
-            insertUserEllByCoord(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserEllByCoord(acceptedPoly, intPts, pstats, triplePoints);
         }
     }
 
     else {
         // Insert all user ellipses first
         if (userEllipsesOnOff != 0) {
-            insertUserEll(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserEll(acceptedPoly, intPts, pstats, triplePoints);
         }
         // Insert all user ellipses by coordinates
         if (userEllByCoord != 0) {
-            insertUserEllByCoord(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserEllByCoord(acceptedPoly, intPts, pstats, triplePoints);
         }
         // Insert user rects
         if (userRectanglesOnOff != 0) {
-            insertUserRects(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserRects(acceptedPoly, intPts, pstats, triplePoints);
         }
         // Insert all user rectangles by coordinates
         if (userRecByCoord !=0 ) {
-            insertUserRectsByCoord(acceptedPoly, intPts, pstats, triplePoints, boundaryPts);
+            insertUserRectsByCoord(acceptedPoly, intPts, pstats, triplePoints);
         }    
     }        
    
-    int boundaryPtsIndx=boundaryPts.size();
-    for (int idx1=0; idx1<boundaryPtsIndx; idx1++){
-        std::cout << boundaryPts[idx1].x1 << "\n";
-    }
  
     /*********  Probabilities (famProb) setup, CDF init  *****************/
     
@@ -308,7 +300,7 @@ int main (int argc, char **argv) {
                 
                 // Truncate poly if needed
                 // 1 if poly is outside of domain or has less than 3 vertices
-                if ( domainTruncation(newPoly, domainSize, boundaryPts) == 1) {
+                if ( domainTruncation(newPoly, domainSize) == 1) {
                     // Poly was completely outside domain, or was truncated to less than 
                     // 3 vertices due to vertices being too close together   
                     pstats.rejectionReasons.outside++;
