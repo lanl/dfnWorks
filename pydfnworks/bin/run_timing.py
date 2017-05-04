@@ -16,22 +16,43 @@ define_paths()
 main_time = time()
 DFN = dfnworks.create_dfn()
 
+
 DFN.make_working_directory()
+
 DFN.check_input()
+tic=time()
 DFN.create_network()
-exit()
+toc=time()
+dump_time(DFN._local_jobname,'generation',toc-tic) 
 
-#DFN.output_report()
+
+##DFN.output_report()
+
+tic=time()
 DFN.mesh_network()
+toc=time()
+dump_time(DFN._local_jobname,'meshing',toc-tic) 
 
-#os.chdir(DFN._jobname)
-#DFN.lagrit2pflotran()
-#DFN.pflotran()
-#DFN.parse_pflotran_vtk_python()       
-#DFN.pflotran_cleanup()
+exit()
+tic=time()
+DFN.lagrit2pflotran()
+toc=time()
+dump_time(DFN._local_jobname,'conversion',toc-tic) 
 
-#DFN.copy_dfn_trans_files()
-#DFN.run_dfn_trans()
+tic=time()
+DFN.pflotran()
+toc=time()
+dump_time(DFN._local_jobname,'pflotran',toc-tic) 
+
+DFN.parse_pflotran_vtk_python()       
+DFN.pflotran_cleanup()
+
+DFN.copy_dfn_trans_files()
+
+tic=time()
+DFN.run_dfn_trans()
+toc=time()
+dump_time(DFN._local_jobname,'transport',toc-tic) 
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

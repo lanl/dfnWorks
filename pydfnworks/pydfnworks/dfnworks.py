@@ -106,22 +106,28 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     else:   
         if options.dfnGen != "":
             dfn._dfnGen_file = options.dfnGen
+            dfn._local_dfnGen_file = options.dfnGen.split('/')[-1]
         elif dfnGen_file != "":
             dfn._dfnGen_file = dfnGen_file  
+            dfn._local_dfnGen_file = dfnGen_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
         
         if options.dfnFlow != "":
             dfn._dfnFlow_file = options.dfnFlow
+            dfn._local_dfnFlow_file = options.dfnFlow.split('/')[-1]
         elif dfnFlow_file != "":
             dfn._dfnFlow_file = dfnFlow_file  
+            dfn._local_dfnFlow_file = dfnFlow_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
         
         if options.dfnTrans != "":
             dfn._dfnTrans_file = options.dfnTrans
+            dfn._local_dfnTrans_file = options.dfnTrans.split('/')[-1]
         elif dfnTrans_file != "":
             dfn._dfnTrans_file = dfnTrans_file  
+            dfn._local_dfnTrans_file = dfnTrans_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
@@ -139,6 +145,11 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     print '--> dfnGen input file: ',dfn._dfnGen_file
     print '--> dfnFlow input file: ',dfn._dfnFlow_file
     print '--> dfnTrans input file: ',dfn._dfnTrans_file
+
+    print '--> Local dfnGen input file: ',dfn._local_dfnGen_file
+    print '--> Local dfnFlow input file: ',dfn._local_dfnFlow_file
+    print '--> Local dfnTrans input file: ',dfn._local_dfnTrans_file
+
     if options.cell is True:
         print '--> Expecting Cell Based Aperture and Permeability'
     print("="*80+"\n")  

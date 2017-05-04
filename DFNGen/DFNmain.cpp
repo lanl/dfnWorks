@@ -67,7 +67,7 @@ int main (int argc, char **argv) {
     // Vector for storing intersections
     std::vector<IntPoints> intPts;
     intPts.reserve(250);
-
+ 
     // Vector for storing triple intersection points
     std::vector<Point> triplePoints;
     
@@ -122,6 +122,8 @@ int main (int argc, char **argv) {
                 dryRun(shapeFamilies, famProb, generator, distributions);
             }
         }
+
+
 
         // Add a percentage more radii to each radii
         // list using families' distribution.
@@ -214,7 +216,8 @@ int main (int argc, char **argv) {
             insertUserRectsByCoord(acceptedPoly, intPts, pstats, triplePoints);
         }    
     }        
-    
+   
+ 
     /*********  Probabilities (famProb) setup, CDF init  *****************/
     
     // 'CDF' size will shrink along when used with fracture intensity (P32) option
@@ -296,7 +299,7 @@ int main (int argc, char **argv) {
                 }
                 
                 // Truncate poly if needed
-                // Reutnrs 1 if poly is outside of domain or has less than 3 vertices
+                // 1 if poly is outside of domain or has less than 3 vertices
                 if ( domainTruncation(newPoly, domainSize) == 1) {
                     // Poly was completely outside domain, or was truncated to less than 
                     // 3 vertices due to vertices being too close together   
@@ -312,7 +315,7 @@ int main (int argc, char **argv) {
                         continue; // Go to next iteration of while loop, test new translation 
                     }                            
                 }
-
+                
                 // Create/assign bounding box 
                 createBoundingBox(newPoly);
            
@@ -403,7 +406,6 @@ int main (int argc, char **argv) {
                 
                     // SAVING POLYGON (intersection and triple points saved witchin intersectionChecking())        
                     acceptedPoly.push_back(newPoly); // SAVE newPoly to accepted polys list
-
                 }
             
                 else { // Poly rejected

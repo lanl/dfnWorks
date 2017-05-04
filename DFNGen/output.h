@@ -53,4 +53,8 @@ void writeFractureTranslations(std::vector<unsigned int> &finalFractures, std::v
 void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::string &output);
 void writeRejectsPerAttempt(Stats &pstats, std::string &output); 
 
+void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts); 
+void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double y1, double z1, double x2, double y2, double z2);
+void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly); 
+
 #endif
