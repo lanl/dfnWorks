@@ -6,6 +6,7 @@ bin/run.py
 bin/run_explicit.py
 bin/test.py
 pydfnworks/__init__.py
+pydfnworks/create_run_scripts.py
 pydfnworks/dfntools.py
 pydfnworks/dfnworks.py
 pydfnworks/distributions.py
@@ -14,6 +15,7 @@ pydfnworks/gen_input.py
 pydfnworks/gen_output.py
 pydfnworks/generator.py
 pydfnworks/helper.py
+pydfnworks/integrated.py
 pydfnworks/lagrit_scripts.py
 pydfnworks/legal.py
 pydfnworks/mesh_dfn_helper.py
@@ -21,6 +23,7 @@ pydfnworks/meshdfn.py
 pydfnworks/only_gen_output.py
 pydfnworks/paths.py
 pydfnworks/run_meshing.py
+pydfnworks/test.py
 pydfnworks/transport.py
 pydfnworks.egg-info/PKG-INFO
 pydfnworks.egg-info/SOURCES.txt
