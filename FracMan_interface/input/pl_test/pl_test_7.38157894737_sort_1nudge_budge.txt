@@ -1,0 +1,3 @@
+dfnGen /home/nknapp/dfnworks-main/FracMan_interface/input/pl_test/pl_test_7.38157894737_sort_1nudge_budge.dat
+dfnFlow /home/nknapp/dfnworks-main/tests/dfn_explicit.in 
+dfnTrans /home/nknapp/dfnworks-main/FracMan_interface/input/PTDFN_control_3frac.dat 

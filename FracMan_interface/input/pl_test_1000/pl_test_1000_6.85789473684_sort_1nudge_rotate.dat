@@ -1,0 +1,95 @@
+domainSize: {190.000000, 190.000000, 190.000000}
+domainSizeIncrease: {1.000000, 1.000000, 1.000000}
+h: 6.857895
+boundaryFaces: {1,1,0,0,0,0}
+ignoreBoundaryFaces: 1
+numOfLayers: 0
+layers: {0,0}
+stopCondition: 1
+nPoly: 0
+eAngleOption: 1
+rAngleOption: 1
+seed: 92731535
+visualizationMode: 0
+forceLargeFractures: 0
+removeFracturesLessThan: 0
+printRejectReasons: 0
+outputAllRadii: 1
+outputAcceptedRadiiPerFamily: 1
+outputFinalRadiiPerFamily: 1
+keepOnlyLargestCluster: 0
+tripleIntersections: 0
+disableFram: 0
+insertUserRectanglesFirst: 1
+radiiListIncrease: 0.10
+rejectsPerFracture: 10
+
+famProb: {}
+nFamEll: 0
+nFamRect: 0
+
+r_p32Targets : {}
+raspect : {}
+rbetaDistribution : {}
+rkappa : {}
+rtheta : {}
+rphi : {}
+rbeta : {}
+rLayer : {}
+rdistr : {}
+rLogMean : {}
+rsd : {}
+rLogMax : {}
+rLogMin : {}
+ralpha : {}
+rmin : {}
+rmax : {}
+rExpMean : {}
+rExpMin : {}
+rExpMax : {}
+rconst : {}
+
+e_p32Targets : {}
+easpect : {}
+ebetaDistribution : {}
+ekappa : {}
+etheta : {}
+ephi : {}
+ebeta : {}
+eLayer : {}
+edistr : {}
+eLogMean : {}
+esd : {}
+eLogMax : {}
+eLogMin : {}
+ealpha : {}
+emin : {}
+emax : {}
+eExpMean : {}
+eExpMin : {}
+eExpMax : {}
+econst : {}
+enumPoints : {}
+fabFileOnOff: 1
+Fab_File_Path: /home/nknapp/dfnworks-main/FracMan_interface/input/pl_min_30_1000_1.fab
+sortMethod: 1
+rotate: 1
+budge: 0
+userRectanglesOnOff: 0
+UserRect_Input_File_Path: ~/
+userEllipsesOnOff: 0
+UserEll_Input_File_Path: ~/
+userRecByCoord: 0
+RectByCoord_Input_File_Path: ~/
+userEllByCoord: 0
+EllByCoord_Input_File_Path: ~/
+aperture: 3
+apertureFromTransmissivity: {0.000000, 0.000000}
+constantAperture: 0.000010
+lengthCorrelatedAperture: {0.000000, 0.000000}
+meanAperture: 0.000000
+stdAperture: 0.000000
+permOption: 0
+constantPermeability: 0.000000
+
+
