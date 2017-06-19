@@ -1,6 +1,7 @@
 #CMake
 *CMakeFiles*
 *.cmake
+*FracMan_interface*
 
 # dfnWorks Executables
 ParticleTracking/DFNTrans
