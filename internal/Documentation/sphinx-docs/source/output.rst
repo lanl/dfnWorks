@@ -11,7 +11,7 @@ File locations
 
 Here is a list of file locations after dfnWorks has finished running:
 
-dfnworks-main
+dfnWorks-main
 ^^^^^^^^^^^^^^
 
 - allboundaries.zone_

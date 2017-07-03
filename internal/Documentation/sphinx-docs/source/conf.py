@@ -271,7 +271,7 @@ htmlhelp_basename = 'dfnWorksdoc'
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'dfnWorks.tex', u'dfnWorks Documentation',
-     u'Subsurface Flow and Transport Team, LANL, LA-UR-17-22216', 'manual'),
+     u'Subsurface Flow and Transport Team \n LANL \n LA-UR-17-22216', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

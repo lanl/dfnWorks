@@ -18,7 +18,7 @@ def run_test(input_file_name):
 if __name__ == '__main__':
 
     define_paths()
-    benchmark_dir = os.environ['DFNWORKS_PATH'] + 'tests'
+    benchmark_dir = os.environ['dfnworks_PATH'] + 'tests'
     subprocess.call('mkdir ~/test_output_files', shell=True)
     if len(sys.argv) == 2: 
         for input_file in os.listdir(benchmark_dir):

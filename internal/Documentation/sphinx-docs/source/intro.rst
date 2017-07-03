@@ -20,8 +20,8 @@ suite include nuclear waste repository science, hydraulic fracturing and
 
 .. |CO2| replace:: CO\ :sub:`2`    
 
-To run a workflow using the dfnWorks suite, the pydfnworks package is 
-highly recommended. pydfnworks calls various tools in the dfnWorks suite with 
+To run a workflow using the dfnWorks suite, the pydfnWorks package is 
+highly recommended. pydfnWorks calls various tools in the dfnWorks suite with 
 the aim to provide a seamless workflow for scientific applications of dfnWorks.
 
 Citing dfnWorks
@@ -35,7 +35,7 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 .. code-block:: none
 
-	@article{hyman2015dfnworks,
+	@article{hyman2015dfnWorks,
 	  title={dfnWorks: A discrete fracture network framework
       for modeling subsurface flow and transport},
 	  author={Hyman, Jeffrey D and Karra, Satish and Makedonska,
@@ -53,7 +53,7 @@ What's new in v2.0?
 -------------------
 - New dfnGen C++ code which is much faster than the Mathematica dfnGen. 
 This code has successfully generated networks with 350,000+ fractures. 
-- Increased functionality in the pydfnworks package for more streamlined 
+- Increased functionality in the pydfnWorks package for more streamlined 
 workflow from dfnGen through visualization.
 
 
@@ -75,15 +75,15 @@ processing using C++.
 Python 
 ^^^^^^
 
-pydfnworks is supported on Python 2.7. The software authors recommend using 
+pydfnWorks is supported on Python 2.7. The software authors recommend using 
 the Anaconda 2.7 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the ``numpy`` and ``h5py`` modules to be installed.
+pydfnWorks requires the ``numpy`` and ``h5py`` modules to be installed.
 
-pydfnworks
+pydfnWorks
 ^^^^^^^^^^^^^^^
 
-The source for pydfnworks can be found in the dfnWorks suite, in the folder 
-pydfnworks. 
+The source for pydfnWorks can be found in the dfnWorks suite, in the folder 
+pydfnWorks. 
 
 dfnGen
 ^^^^^^
@@ -173,28 +173,28 @@ http://www.paraview.org/download/
 
 .. _Paraview: http://www.paraview.org
 
-Using pydfnworks in your Python scripts
+Using pydfnWorks in your Python scripts
 --------------------------------------------
 
-To access the functionality of pydfnworks, the user must include the 
+To access the functionality of pydfnWorks, the user must include the 
 following line at the 
 top of any Python script
 
 .. code-block:: python
 	
-	import pydfnworks 
+	import pydfnWorks 
 
-Before doing this, one needs to ensure that the pydfnworks directory is in the 
+Before doing this, one needs to ensure that the pydfnWorks directory is in the 
 PYTHONPATH. This can be done by configuring ``cshrc`` or ``bashrc`` files. 
-Alternatively, one can add the pydfnworks path using ``sys.path.append()`` 
+Alternatively, one can add the pydfnWorks path using ``sys.path.append()`` 
 in their driver script.
 
 About this  manual
 ------------------
 
 This manual comprises of information on setting up inputs to dfnGen, dfnTrans 
-and PFLOTRAN, as well as details on the pydfnworks module: :ref:`pydfnworks 
-<dfnworks-python-chapter>`. Finally, the manual contains a short tutorial 
+and PFLOTRAN, as well as details on the pydfnWorks module: :ref:`pydfnWorks 
+<dfnWorks-python-chapter>`. Finally, the manual contains a short tutorial 
 with prepared examples that  can be found in the ``tests`` directory of the 
 dfnWorks repository, and a description of some applications of the dfnWorks 
 suite.
@@ -214,7 +214,7 @@ Contributors
 Contact
 --------
 
-For any questions about dfnWorks, please email dfnworks@lanl.gov.
+For any questions about dfnWorks, please email dfnWorks@lanl.gov.
 
 Copyright information
 ----------------------

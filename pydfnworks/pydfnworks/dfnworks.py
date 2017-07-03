@@ -9,7 +9,7 @@ from time import time
 from dfntools import *
 import helper
 
-class DFNWORKS(Frozen):
+class dfnworks(Frozen):
     """  Class for DFN Generation and meshing
     
     Attributes:
@@ -47,31 +47,31 @@ class DFNWORKS(Frozen):
 
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
-        self._jobname = jobname
-        self._ncpu = ncpu
-        self._local_jobname = self._jobname.split('/')[-1]
+        self.jobname = jobname
+        self.ncpu = ncpu
+        self.local_jobname = self.jobname.split('/')[-1]
 
-        self._dfnGen_file = dfnGen_file
-        self._local_dfnGen_file = self._dfnGen_file.split('/')[-1]
+        self.dfnGen_file = dfnGen_file
+        self.local_dfnGen_file = self.dfnGen_file.split('/')[-1]
         
-        self._output_file = self._dfnGen_file.split('/')[-1]
+        self.output_file = self.dfnGen_file.split('/')[-1]
         
-        self._dfnFlow_file = dfnFlow_file 
-        self._local_dfnFlow_file = self._dfnFlow_file.split('/')[-1]
+        self.dfnFlow_file = dfnFlow_file 
+        self.local_dfnFlow_file = self.dfnFlow_file.split('/')[-1]
 
-        self._dfnTrans_file = dfnTrans_file 
-        self._local_dfnTrans_file = self._dfnTrans_file.split('/')[-1]
+        self.dfnTrans_file = dfnTrans_file 
+        self.local_dfnTrans_file = self.dfnTrans_file.split('/')[-1]
 
-        self._vtk_file = vtk_file
-        self._inp_file = inp_file
-        self._uge_file = uge_file
-        self._mesh_type = mesh_type
-        self._perm_file = perm_file
-        self._aper_file = aper_file
-        self._perm_cell_file = perm_cell_file
-        self._aper_cell_file = aper_cell_file
-        self._dfnTrans_version= 2.0
-        self._freeze
+        self.vtk_file = vtk_file
+        self.inp_file = inp_file
+        self.uge_file = uge_file
+        self.mesh_type = mesh_type
+        self.perm_file = perm_file
+        self.aper_file = aper_file
+        self.perm_cell_file = perm_cell_file
+        self.aper_cell_file = aper_cell_file
+        self.dfnTrans_version= 2.0
+        self.freeze
         self.legal()
         options = helper.commandline_options()
 
@@ -84,7 +84,7 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     print("Command Line Inputs:")
     print options
     print("\n-->Creating DFN class")
-    dfn = DFNWORKS(jobname=options.jobname, ncpu=options.ncpu)
+    dfn = dfnworks(jobname=options.jobname, ncpu=options.ncpu)
 
     if options.input_file != "":
         with open(options.input_file) as f:

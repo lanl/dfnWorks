@@ -16,10 +16,10 @@ def define_paths():
     # ================================================
     
     # the dfnworks-main  repository 
-    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnworks-main/'
-    valid('DFNWORKS_PATH')
-    if not (os.path.isdir(os.path.abspath(os.environ['DFNWORKS_PATH'] + 'tests/'))):
-        print "INVALID VERSION OF DFNWORKS - does not have tests folder of official release 2.0"
+    os.environ['dfnworks_PATH'] = '/home/nknapp/dfnworks-main/'
+    valid('dfnworks_PATH')
+    if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
+        print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
         exit()
 
     # PETSC paths
@@ -33,12 +33,14 @@ def define_paths():
     valid('PFLOTRAN_DIR')
 
     # Python executable
-    os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
+    #os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
+    os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python/4.4.0/bin/python'
     valid('python_dfn')
     
     # LaGriT executable
 #    os.environ['lagrit_dfn'] = '/n/swqa/LAGRIT/lagrit.lanl.gov/downloads/lagrit_ulin3.2' 
-    os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/dev/gcc-4.8.4/lagrit'
+    os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit'
+    #os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/dev/gcc-4.8.4/lagrit'
     valid('lagrit_dfn')
 
     # =================================================== 
@@ -46,10 +48,10 @@ def define_paths():
     # ====================================================
    
     # Directories
-    os.environ['DFNGEN_PATH']=os.environ['DFNWORKS_PATH']+'DFNGen/'
-    os.environ['DFNTRANS_PATH']= os.environ['DFNWORKS_PATH'] +'ParticleTracking/'
-    os.environ['PYDFNWORKS_PATH'] = os.environ['DFNWORKS_PATH'] + 'pydfnworks/'
-    os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'DFN_Mesh_Connectivity_Test/'
-    os.environ['correct_uge_PATH'] = os.environ['DFNWORKS_PATH']+'C_uge_correct/' 
-    os.environ['VTK_PATH'] = os.environ['DFNWORKS_PATH'] + 'inp_2_vtk/'
+    os.environ['DFNGEN_PATH']=os.environ['dfnworks_PATH']+'DFNGen/'
+    os.environ['DFNTRANS_PATH']= os.environ['dfnworks_PATH'] +'ParticleTracking/'
+    os.environ['PYdfnworks_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
+    os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
+    os.environ['correct_uge_PATH'] = os.environ['dfnworks_PATH']+'C_uge_correct/' 
+    os.environ['VTK_PATH'] = os.environ['dfnworks_PATH'] + 'inp_2_vtk/'
 

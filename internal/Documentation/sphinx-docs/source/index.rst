@@ -14,7 +14,7 @@ Contents:
    dfngen
    dfnflow
    dfntrans
-   pydfnworks
+   pydfnWorks
    scripts
    output
    tutorial
