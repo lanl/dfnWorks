@@ -15,8 +15,7 @@ import run_meshing as run_mesh
 
 def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     '''
-    Mesh Fracture Network using ncpus and lagrit
-    meshing file is separate file: dfnGen_meshing.py
+    Mesh fracture network using LaGriT
     '''
     print('='*80)
     print("Meshing Network Using LaGriT : Starting")

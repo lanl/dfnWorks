@@ -20,8 +20,8 @@ suite include nuclear waste repository science, hydraulic fracturing and
 
 .. |CO2| replace:: CO\ :sub:`2`    
 
-To run a workflow using the dfnWorks suite, the pydfnWorks package is 
-highly recommended. pydfnWorks calls various tools in the dfnWorks suite with 
+To run a workflow using the dfnWorks suite, the pydfnworks package is 
+highly recommended. pydfnworks calls various tools in the dfnWorks suite with 
 the aim to provide a seamless workflow for scientific applications of dfnWorks.
 
 Citing dfnWorks
@@ -51,11 +51,9 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 What's new in v2.0?
 -------------------
-- New dfnGen C++ code which is much faster than the Mathematica dfnGen. 
-This code has successfully generated networks with 350,000+ fractures. 
-- Increased functionality in the pydfnWorks package for more streamlined 
-workflow from dfnGen through visualization.
 
+- New dfnGen C++ code which is much faster than the Mathematica dfnGen. This code has successfully generated networks with 350,000+ fractures. 
+- Increased functionality in the pydfnworks package for more streamlined workflow from dfnGen through visualization. 
 
 Where can one get dfnWorks?
 ---------------------------
@@ -75,25 +73,20 @@ processing using C++.
 Python 
 ^^^^^^
 
-pydfnWorks is supported on Python 2.7. The software authors recommend using 
+pydfnworks is supported on Python 2.7. The software authors recommend using 
 the Anaconda 2.7 distribution of Python, available at https://www.continuum.io/. 
-pydfnWorks requires the ``numpy`` and ``h5py`` modules to be installed.
+pydfnworks requires the ``numpy`` and ``h5py`` modules to be installed.
 
-pydfnWorks
+pydfnworks
 ^^^^^^^^^^^^^^^
 
-The source for pydfnWorks can be found in the dfnWorks suite, in the folder 
-pydfnWorks. 
+The source for pydfnworks can be found in the dfnWorks suite, in the folder 
+pydfnworks. 
 
 dfnGen
 ^^^^^^
-dfnGen primarily involves two steps:
-
-1. FRAM - Create DFN: Using the fractured site characterization networks are 
-constructed using the feature rejection algorithm for meshing
-2. LaGriT - Mesh DFN: The LaGriT meshing tool box is used to create a 
+dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for meshing) and LaGriT, the meshing tool box used to create a 
 conforming Delaunay triangulation of the network.
-
 
 FRAM
 ******
@@ -173,27 +166,27 @@ http://www.paraview.org/download/
 
 .. _Paraview: http://www.paraview.org
 
-Using pydfnWorks in your Python scripts
+Using pydfnworks in your Python scripts
 --------------------------------------------
 
-To access the functionality of pydfnWorks, the user must include the 
+To access the functionality of pydfnworks, the user must include the 
 following line at the 
 top of any Python script
 
 .. code-block:: python
 	
-	import pydfnWorks 
+	import pydfnworks 
 
-Before doing this, one needs to ensure that the pydfnWorks directory is in the 
+Before doing this, one needs to ensure that the pydfnworks directory is in the 
 PYTHONPATH. This can be done by configuring ``cshrc`` or ``bashrc`` files. 
-Alternatively, one can add the pydfnWorks path using ``sys.path.append()`` 
+Alternatively, one can add the pydfnworks path using ``sys.path.append()`` 
 in their driver script.
 
 About this  manual
 ------------------
 
 This manual comprises of information on setting up inputs to dfnGen, dfnTrans 
-and PFLOTRAN, as well as details on the pydfnWorks module: :ref:`pydfnWorks 
+and PFLOTRAN, as well as details on the pydfnworks module: :ref:`pydfnworks 
 <dfnWorks-python-chapter>`. Finally, the manual contains a short tutorial 
 with prepared examples that  can be found in the ``tests`` directory of the 
 dfnWorks repository, and a description of some applications of the dfnWorks 
@@ -201,15 +194,15 @@ suite.
 
 Contributors
 -------------
+- Jeffrey Hyman
 - Satish Karra
 - Nataliia Makedonska
-- Jeffrey Hyman
-- Jeremy Harrod (now at Spectra Logic)
-- Quan Bui (now at University of Maryland)
-- Carl Gable
-- Scott Painter (now at ORNL)
-- Hari Viswanathan
 - Nathaniel Knapp
+- Carl Gable
+- Hari Viswanathan
+- Quan Bui (now at University of Maryland)
+- Jeremy Harrod (now at Spectra Logic)
+- Scott Painter (now at ORNL)
 
 Contact
 --------

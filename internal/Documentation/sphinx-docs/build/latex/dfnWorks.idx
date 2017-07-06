@@ -1,4 +1,3 @@
-\indexentry{dfnworks (in module pydfnworks)|hyperpage}{29}
 \indexentry{pydfnworks.gen\_input (module)|hyperpage}{29}
 \indexentry{check\_input() (in module pydfnworks.gen\_input)|hyperpage}{29}
 \indexentry{pydfnworks.distributions (module)|hyperpage}{29}
@@ -28,7 +27,7 @@
 \indexentry{pydfnworks.transport (module)|hyperpage}{31}
 \indexentry{copy\_dfn\_trans\_files() (in module pydfnworks.transport)|hyperpage}{31}
 \indexentry{dfn\_trans() (in module pydfnworks.transport)|hyperpage}{31}
-\indexentry{run\_dfn\_trans() (in module pydfnworks.transport)|hyperpage}{32}
+\indexentry{run\_dfn\_trans() (in module pydfnworks.transport)|hyperpage}{31}
 \indexentry{pydfnworks.meshdfn (module)|hyperpage}{32}
 \indexentry{meshdfn.py (module)|hyperpage}{32}
 \indexentry{mesh\_network() (in module pydfnworks.meshdfn)|hyperpage}{32}
@@ -39,11 +38,11 @@
 \indexentry{create\_parameter\_mlgi\_file() (in module pydfnworks.lagrit\_scripts)|hyperpage}{32}
 \indexentry{create\_user\_functions() (in module pydfnworks.lagrit\_scripts)|hyperpage}{32}
 \indexentry{define\_zones() (in module pydfnworks.lagrit\_scripts)|hyperpage}{32}
-\indexentry{pydfnworks.run\_meshing (module)|hyperpage}{33}
-\indexentry{run\_meshing.py (module)|hyperpage}{33}
-\indexentry{merge\_the\_meshes() (in module pydfnworks.run\_meshing)|hyperpage}{33}
-\indexentry{mesh\_fracture() (in module pydfnworks.run\_meshing)|hyperpage}{33}
-\indexentry{mesh\_fractures\_header() (in module pydfnworks.run\_meshing)|hyperpage}{33}
+\indexentry{pydfnworks.run\_meshing (module)|hyperpage}{32}
+\indexentry{run\_meshing.py (module)|hyperpage}{32}
+\indexentry{merge\_the\_meshes() (in module pydfnworks.run\_meshing)|hyperpage}{32}
+\indexentry{mesh\_fracture() (in module pydfnworks.run\_meshing)|hyperpage}{32}
+\indexentry{mesh\_fractures\_header() (in module pydfnworks.run\_meshing)|hyperpage}{32}
 \indexentry{worker() (in module pydfnworks.run\_meshing)|hyperpage}{33}
 \indexentry{pydfnworks.mesh\_dfn\_helper (module)|hyperpage}{33}
 \indexentry{mesh\_dfn\_helper.py (module)|hyperpage}{33}
@@ -51,8 +50,8 @@
 \indexentry{cleanup\_dir() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{33}
 \indexentry{output\_meshing\_report() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{33}
 \indexentry{parse\_params\_file() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{33}
-\indexentry{pydfnworks.legal (module)|hyperpage}{34}
-\indexentry{legal() (in module pydfnworks.legal)|hyperpage}{34}
+\indexentry{pydfnworks.legal (module)|hyperpage}{33}
+\indexentry{legal() (in module pydfnworks.legal)|hyperpage}{33}
 \indexentry{pydfnworks.helper (module)|hyperpage}{34}
 \indexentry{commandline\_options() (in module pydfnworks.helper)|hyperpage}{34}
 \indexentry{dump\_time() (in module pydfnworks.helper)|hyperpage}{34}
@@ -65,7 +64,7 @@
 \indexentry{curly\_to\_list() (pydfnworks.helper.input\_helper method)|hyperpage}{34}
 \indexentry{error() (pydfnworks.helper.input\_helper method)|hyperpage}{34}
 \indexentry{extract\_parameters() (pydfnworks.helper.input\_helper method)|hyperpage}{34}
-\indexentry{find\_key() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
+\indexentry{find\_key() (pydfnworks.helper.input\_helper method)|hyperpage}{34}
 \indexentry{find\_val() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
 \indexentry{get\_groups() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
 \indexentry{has\_curlys() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
@@ -79,6 +78,6 @@
 \indexentry{verify\_float() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
 \indexentry{verify\_int() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
 \indexentry{verify\_list() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
-\indexentry{warning() (pydfnworks.helper.input\_helper method)|hyperpage}{36}
+\indexentry{warning() (pydfnworks.helper.input\_helper method)|hyperpage}{35}
 \indexentry{zero\_in\_std\_devs() (pydfnworks.helper.input\_helper method)|hyperpage}{36}
 \indexentry{print\_run\_time() (in module pydfnworks.helper)|hyperpage}{36}

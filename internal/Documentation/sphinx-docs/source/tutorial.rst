@@ -37,7 +37,7 @@ Fix the pathnames for all files in the folder /tests/ . This can be done automat
 
 .. code-block:: bash
 
-    $ cd /pydfnWorks/bin/
+    $ cd /pydfnworks/bin/
     $ python fix_paths.py 
 
 Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
@@ -53,7 +53,7 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 
 .. code-block:: bash
     
-    $ vi /pydfnWorks/pydfnWorks/paths.py
+    $ vi /pydfnworks/pydfnworks/paths.py
 
 For example:
 
@@ -61,7 +61,7 @@ For example:
     
     os.environ['dfnWorks_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'    
 
-Setup the Python package pydfnWorks
+Setup the Python package pydfnworks
 -------------------------------------
 
 Go up a directory:
@@ -87,7 +87,9 @@ Executing dfnWorks
 
 To run one of the test cases enter the following command:
 
-- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS]  
+.. code-block:: bash
+    
+    $ python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS]  
 
 The arguments are:
 
@@ -114,9 +116,9 @@ Here is a quick summary of the steps described above, with commands for the 4_us
 .. code-block:: bash
     
     $ ssh -X SERVER_NAME
-    $ cd ~/dfnWorks-Version2.0/pydfnWorks/bin/
+    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
     $ python fix_paths.py  
-    $ vi /pydfnWorks/pydfnWorks/paths.py
+    $ vi /pydfnworks/pydfnworks/paths.py
     $ cd .. 
     $ python setup.py install --user
     $ cd bin    

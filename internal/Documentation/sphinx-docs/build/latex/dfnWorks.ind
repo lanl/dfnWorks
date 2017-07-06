@@ -29,7 +29,6 @@
   \item dfn\_flow() (in module pydfnworks.flow), \hyperpage{31}
   \item dfn\_gen() (in module pydfnworks.generator), \hyperpage{30}
   \item dfn\_trans() (in module pydfnworks.transport), \hyperpage{31}
-  \item dfnworks (in module pydfnworks), \hyperpage{29}
   \item distr (class in pydfnworks.distributions), \hyperpage{29}
   \item distr() (pydfnworks.distributions.distr method), \hyperpage{30}
   \item dump\_time() (in module pydfnworks.helper), \hyperpage{34}
@@ -42,7 +41,7 @@
 
   \indexspace
   \bigletter F
-  \item find\_key() (pydfnworks.helper.input\_helper method), \hyperpage{35}
+  \item find\_key() (pydfnworks.helper.input\_helper method), \hyperpage{34}
   \item find\_val() (pydfnworks.helper.input\_helper method), \hyperpage{35}
 
   \indexspace
@@ -64,17 +63,17 @@
   \bigletter L
   \item lagrit2pflotran() (in module pydfnworks.flow), \hyperpage{31}
   \item lagrit\_scripts.py (module), \hyperpage{32}
-  \item legal() (in module pydfnworks.legal), \hyperpage{34}
+  \item legal() (in module pydfnworks.legal), \hyperpage{33}
   \item list\_to\_curly() (pydfnworks.helper.input\_helper method), \hyperpage{35}
   \item lognormal\_dist() (pydfnworks.distributions.distr method), \hyperpage{30}
 
   \indexspace
   \bigletter M
   \item make\_working\_directory() (in module pydfnworks.generator), \hyperpage{30}
-  \item merge\_the\_meshes() (in module pydfnworks.run\_meshing), \hyperpage{33}
+  \item merge\_the\_meshes() (in module pydfnworks.run\_meshing), \hyperpage{32}
   \item mesh\_dfn\_helper.py (module), \hyperpage{33}
-  \item mesh\_fracture() (in module pydfnworks.run\_meshing), \hyperpage{33}
-  \item mesh\_fractures\_header() (in module pydfnworks.run\_meshing), \hyperpage{33}
+  \item mesh\_fracture() (in module pydfnworks.run\_meshing), \hyperpage{32}
+  \item mesh\_fractures\_header() (in module pydfnworks.run\_meshing), \hyperpage{32}
   \item mesh\_network() (in module pydfnworks.meshdfn), \hyperpage{32}
   \item meshdfn.py (module), \hyperpage{32}
 
@@ -99,16 +98,16 @@
   \item pydfnworks.generator (module), \hyperpage{30}
   \item pydfnworks.helper (module), \hyperpage{34}
   \item pydfnworks.lagrit\_scripts (module), \hyperpage{32}
-  \item pydfnworks.legal (module), \hyperpage{34}
+  \item pydfnworks.legal (module), \hyperpage{33}
   \item pydfnworks.mesh\_dfn\_helper (module), \hyperpage{33}
   \item pydfnworks.meshdfn (module), \hyperpage{32}
-  \item pydfnworks.run\_meshing (module), \hyperpage{33}
+  \item pydfnworks.run\_meshing (module), \hyperpage{32}
   \item pydfnworks.transport (module), \hyperpage{31}
 
   \indexspace
   \bigletter R
-  \item run\_dfn\_trans() (in module pydfnworks.transport), \hyperpage{32}
-  \item run\_meshing.py (module), \hyperpage{33}
+  \item run\_dfn\_trans() (in module pydfnworks.transport), \hyperpage{31}
+  \item run\_meshing.py (module), \hyperpage{32}
 
   \indexspace
   \bigletter S
@@ -129,7 +128,7 @@
 
   \indexspace
   \bigletter W
-  \item warning() (pydfnworks.helper.input\_helper method), \hyperpage{36}
+  \item warning() (pydfnworks.helper.input\_helper method), \hyperpage{35}
   \item worker() (in module pydfnworks.run\_meshing), \hyperpage{33}
   \item write\_perms\_and\_correct\_volumes\_areas() (in module pydfnworks.flow), \hyperpage{31}
 
