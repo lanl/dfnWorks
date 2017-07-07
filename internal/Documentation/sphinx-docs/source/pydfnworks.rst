@@ -13,10 +13,10 @@ The pydfnworks must be setup by the user using the following command in the dire
 
 The documentation below includes all the methods and classes of the pydfnworks package. 
 
-dfnWorks
-----------
-.. autoclass:: pydfnworks.dfnWorks
-    :members:
+Overall Workflow
+----------------
+
+.. autofunction:: pydfnworks.create_dfn
 
 dfnGen
 -------

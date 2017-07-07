@@ -19,3 +19,4 @@ Contents:
    output
    tutorial
    applications
+   publications

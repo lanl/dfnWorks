@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.2)  6 JUL 2017 12:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.2)  6 JUL 2017 19:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1322,7 +1322,7 @@ Chapter 5.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
 [29] [30] [31]
-Underfull \hbox (badness 6978) in paragraph at lines 1785--1785
+Underfull \hbox (badness 6978) in paragraph at lines 1793--1793
 []\T1/ptm/m/it/10 num_poly\T1/ptm/m/n/10 , \T1/ptm/m/it/10 h\T1/ptm/m/n/10 , \T
 1/ptm/m/it/10 slope=2\T1/ptm/m/n/10 , \T1/ptm/m/it/10 re-
  []
@@ -1330,7 +1330,7 @@ Underfull \hbox (badness 6978) in paragraph at lines 1785--1785
 [32] [33] [34] [35] [36]
 Chapter 6.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1--2316
+Underfull \hbox (badness 10000) in paragraph at lines 1--2324
 []\T1/pcr/m/n/10 python run.py -name [JOBNAME] -input [INPUT_FILE_NAME] -ncpu [
 NUMBER OF CPUS
  []
@@ -1345,118 +1345,149 @@ Chapter 7.
 
 ]
 Chapter 8.
-[45] [46] <4_user_rectangles_mesh.png, id=825, 1969.3575pt x 855.195pt>
+[45] [46] <4_user_rectangles_mesh.png, id=826, 1969.3575pt x 855.195pt>
 File: 4_user_rectangles_mesh.png Graphic file (type png)
 
 <use 4_user_rectangles_mesh.png>
-Package pdftex.def Info: 4_user_rectangles_mesh.png used on input line 2957.
+Package pdftex.def Info: 4_user_rectangles_mesh.png used on input line 2967.
 (pdftex.def)             Requested size: 1969.3527pt x 855.19293pt.
- [47]
-<4_user_rectangles_pressure.png, id=830, 1969.3575pt x 855.195pt>
+
+<4_user_rectangles_pressure.png, id=827, 1969.3575pt x 855.195pt>
 File: 4_user_rectangles_pressure.png Graphic file (type png)
 
 <use 4_user_rectangles_pressure.png>
-Package pdftex.def Info: 4_user_rectangles_pressure.png used on input line 2963
+Package pdftex.def Info: 4_user_rectangles_pressure.png used on input line 2976
 .
 (pdftex.def)             Requested size: 1969.3527pt x 855.19293pt.
 
-<4_user_rectangles_trace.png, id=831, 2105.8675pt x 963.6pt>
+<4_user_rectangles_trace.png, id=828, 2105.8675pt x 963.6pt>
 File: 4_user_rectangles_trace.png Graphic file (type png)
 
 <use 4_user_rectangles_trace.png>
-Package pdftex.def Info: 4_user_rectangles_trace.png used on input line 2973.
+Package pdftex.def Info: 4_user_rectangles_trace.png used on input line 2989.
 (pdftex.def)             Requested size: 2105.86238pt x 963.59766pt.
- [48 <./4_user_rectangles_mesh.png (PNG copy)> <./4_user_rectangles_pressure.pn
-g (PNG copy)>]
-<4_user_ellipses_mesh.png, id=836, 1969.3575pt x 855.195pt>
+
+<4_user_ellipses_mesh.png, id=829, 1969.3575pt x 855.195pt>
 File: 4_user_ellipses_mesh.png Graphic file (type png)
 
 <use 4_user_ellipses_mesh.png>
-Package pdftex.def Info: 4_user_ellipses_mesh.png used on input line 2982.
+Package pdftex.def Info: 4_user_ellipses_mesh.png used on input line 3001.
 (pdftex.def)             Requested size: 1969.3527pt x 855.19293pt.
-
-<4_user_ellipses_pressure.png, id=837, 1969.3575pt x 855.195pt>
+ [47] [48 <./4_user_rectangles_mesh.png (PNG copy)> <./4_user_rectangles_pressu
+re.png (PNG copy)>]
+<4_user_ellipses_pressure.png, id=840, 1969.3575pt x 855.195pt>
 File: 4_user_ellipses_pressure.png Graphic file (type png)
 
 <use 4_user_ellipses_pressure.png>
-Package pdftex.def Info: 4_user_ellipses_pressure.png used on input line 2989.
+Package pdftex.def Info: 4_user_ellipses_pressure.png used on input line 3011.
 (pdftex.def)             Requested size: 1969.3527pt x 855.19293pt.
  [49 <./4_user_rectangles_trace.png (PNG copy)> <./4_user_ellipses_mesh.png (PN
 G copy)>]
-<4_user_ellipses_trace.png, id=842, 2105.8675pt x 963.6pt>
+<4_user_ellipses_trace.png, id=846, 2105.8675pt x 963.6pt>
 File: 4_user_ellipses_trace.png Graphic file (type png)
 
 <use 4_user_ellipses_trace.png>
-Package pdftex.def Info: 4_user_ellipses_trace.png used on input line 2996.
+Package pdftex.def Info: 4_user_ellipses_trace.png used on input line 3021.
 (pdftex.def)             Requested size: 2105.86238pt x 963.59766pt.
 
-<power_mesh.png, id=843, 2105.8675pt x 963.6pt>
+<power_mesh.png, id=847, 2105.8675pt x 963.6pt>
 File: power_mesh.png Graphic file (type png)
  <use power_mesh.png>
-Package pdftex.def Info: power_mesh.png used on input line 3008.
+Package pdftex.def Info: power_mesh.png used on input line 3036.
 (pdftex.def)             Requested size: 2105.86238pt x 963.59766pt.
  [50 <./4_user_ellipses_pressure.png (PNG copy)> <./4_user_ellipses_trace.png (
-PNG copy)>] <power_pressure.png, id=848, 2105.8675pt x 963.6pt>
+PNG copy)>] <power_pressure.png, id=852, 2105.8675pt x 963.6pt>
 File: power_pressure.png Graphic file (type png)
  <use power_pressure.png>
-Package pdftex.def Info: power_pressure.png used on input line 3015.
+Package pdftex.def Info: power_pressure.png used on input line 3046.
 (pdftex.def)             Requested size: 2105.86238pt x 963.59766pt.
 
-<power_trace.png, id=849, 2105.8675pt x 963.6pt>
+<power_trace.png, id=853, 2105.8675pt x 963.6pt>
 File: power_trace.png Graphic file (type png)
  <use power_trace.png>
-Package pdftex.def Info: power_trace.png used on input line 3022.
+Package pdftex.def Info: power_trace.png used on input line 3056.
 (pdftex.def)             Requested size: 2105.86238pt x 963.59766pt.
- [51 <./power_mesh.png (PNG copy)> <./power_pressure.png (PNG copy)>]
-<exp_mesh.png, id=855, 1872.9975pt x 1262.7175pt>
+
+<exp_mesh.png, id=854, 1872.9975pt x 1262.7175pt>
 File: exp_mesh.png Graphic file (type png)
  <use exp_mesh.png>
-Package pdftex.def Info: exp_mesh.png used on input line 3029.
+Package pdftex.def Info: exp_mesh.png used on input line 3066.
 (pdftex.def)             Requested size: 1872.99295pt x 1262.71443pt.
- [52 <./power_trace.png (PNG copy)> <./exp_mesh.png (PNG copy)>]
+ [51 <./power_mesh.png (PNG copy)> <./power_pressure.png (PNG copy)>]
 <exp_pressure.png, id=860, 1872.9975pt x 1262.7175pt>
 File: exp_pressure.png Graphic file (type png)
  <use exp_pressure.png>
-Package pdftex.def Info: exp_pressure.png used on input line 3036.
+Package pdftex.def Info: exp_pressure.png used on input line 3076.
 (pdftex.def)             Requested size: 1872.99295pt x 1262.71443pt.
 
 <exp_trace.png, id=861, 2105.8675pt x 1013.7875pt>
 File: exp_trace.png Graphic file (type png)
  <use exp_trace.png>
-Package pdftex.def Info: exp_trace.png used on input line 3043.
+Package pdftex.def Info: exp_trace.png used on input line 3086.
 (pdftex.def)             Requested size: 2105.86238pt x 1013.78505pt.
- [53 <./exp_pressure.png (PNG copy)>]
-<lognormal_mesh.png, id=866, 1872.9975pt x 1262.7175pt>
+
+<lognormal_mesh.png, id=862, 1872.9975pt x 1262.7175pt>
 File: lognormal_mesh.png Graphic file (type png)
 
 <use lognormal_mesh.png>
-Package pdftex.def Info: lognormal_mesh.png used on input line 3055.
+Package pdftex.def Info: lognormal_mesh.png used on input line 3101.
 (pdftex.def)             Requested size: 1872.99295pt x 1262.71443pt.
- [54 <./exp_trace.png (PNG copy)>]
-<lognormal_pressure.png, id=871, 1872.9975pt x 1262.7175pt>
+
+<lognormal_pressure.png, id=863, 1872.9975pt x 1262.7175pt>
 File: lognormal_pressure.png Graphic file (type png)
 
 <use lognormal_pressure.png>
-Package pdftex.def Info: lognormal_pressure.png used on input line 3062.
+Package pdftex.def Info: lognormal_pressure.png used on input line 3111.
 (pdftex.def)             Requested size: 1872.99295pt x 1262.71443pt.
- [55 <./lognormal_mesh.png (PNG copy)>]
+ [52 <./power_trace.png (PNG copy)>] [53 <./exp_mesh.png (PNG copy)> <./exp_pre
+ssure.png (PNG copy)>] [54 <./exp_trace.png (PNG copy)> <./lognormal_mesh.png (
+PNG copy)>]
 <lognormal_trace.png, id=876, 2105.8675pt x 1013.7875pt>
 File: lognormal_trace.png Graphic file (type png)
 
 <use lognormal_trace.png>
-Package pdftex.def Info: lognormal_trace.png used on input line 3069.
+Package pdftex.def Info: lognormal_trace.png used on input line 3121.
 (pdftex.def)             Requested size: 2105.86238pt x 1013.78505pt.
- [56 <./lognormal_pressure.png (PNG copy)> <./lognormal_trace.png (PNG copy)>] 
-[57] [58
-
-]
+ [55 <./lognormal_pressure.png (PNG copy)>] [56 <./lognormal_trace.png (PNG cop
+y)>]
 Chapter 9.
-[59] [60] [61
+<time_co2.png, id=885, 1316.92pt x 678.535pt>
+File: time_co2.png Graphic file (type png)
+ <use time_co2.png>
+Package pdftex.def Info: time_co2.png used on input line 3140.
+(pdftex.def)             Requested size: 1316.9168pt x 678.53334pt.
+ [57
 
+ <./time_co2.png>] <well-pressure.png, id=894, 3609.485pt x 3148.76375pt>
+File: well-pressure.png Graphic file (type png)
 
+<use well-pressure.png>
+Package pdftex.def Info: well-pressure.png used on input line 3151.
+(pdftex.def)             Requested size: 3609.47624pt x 3148.7561pt.
 
-] (./dfnWorks.ind [62
+<forsmark_trajectories.png, id=895, 5302.81125pt x 4190.65625pt>
+File: forsmark_trajectories.png Graphic file (type png)
 
+<use forsmark_trajectories.png>
+Package pdftex.def Info: forsmark_trajectories.png used on input line 3163.
+(pdftex.def)             Requested size: 5302.79839pt x 4190.64609pt.
+ [58 <./well-pressure.png>] [59 <./forsmark_trajectories.png>] [60]
+Chapter 10.
+<dfn_cite.pdf, id=912, 614.295pt x 794.97pt>
+File: dfn_cite.pdf Graphic file (type pdf)
+ <use dfn_cite.pdf>
+Package pdftex.def Info: dfn_cite.pdf used on input line 3195.
+(pdftex.def)             Requested size: 798.5834pt x 1033.4609pt.
+
+<dfn_cite_2.pdf, id=913, 614.295pt x 794.97pt>
+File: dfn_cite_2.pdf Graphic file (type pdf)
+ <use dfn_cite_2.pdf>
+Package pdftex.def Info: dfn_cite_2.pdf used on input line 3200.
+(pdftex.def)             Requested size: 798.5834pt x 1033.4609pt.
+
+(./dfnWorks.ind [61
+
+] [62 <./dfn_cite.pdf>] [63 <./dfn_cite_2.pdf>] [64
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 5--6
@@ -1479,110 +1510,114 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--15
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 19--20
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
 []\T1/ptm/m/n/10 create_lagrit_scripts() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--21
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
 []\T1/ptm/m/n/10 create_merge_poly_files() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--23
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
 []\T1/ptm/m/n/10 create_parameter_mlgi_file() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--24
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
 []\T1/ptm/m/n/10 create_user_functions() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
+Underfull \hbox (badness 10000) in paragraph at lines 40--41
 []\T1/ptm/m/n/10 exponential_dist() (pydfn-works.distributions.distr
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
 []\T1/ptm/m/n/10 extract_parameters() (pydfn-works.helper.input_helper
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
 []\T1/ptm/m/n/10 lognormal_dist() (pydfn-works.distributions.distr
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
 []\T1/ptm/m/n/10 make_working_directory() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
 []\T1/ptm/m/n/10 merge_the_meshes() (in mod-ule pydfn-
  []
 
-[63
+[65
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 76--77
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
 []\T1/ptm/m/n/10 mesh_fractures_header() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
+Underfull \hbox (badness 10000) in paragraph at lines 83--84
 []\T1/ptm/m/n/10 output_meshing_report() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 []\T1/ptm/m/n/10 parse_params_file() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 89--90
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
 []\T1/ptm/m/n/10 parse_pflotran_vtk_python() (in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--138
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
 []\T1/ptm/m/n/10 zero_in_std_devs() (pydfn-works.helper.input_helper
  []
 
-[64])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3148.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3148.
+[66])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3207.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 3207.
  (./dfnWorks.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3148.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3148.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3207.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3207.
 
 Package rerunfilecheck Info: File `dfnWorks.out' has not changed.
-(rerunfilecheck)             Checksum: 4EB40B01FCB9BE16A6A50FBEC8B2EBBB;10351.
+(rerunfilecheck)             Checksum: 80E43CF15DCE43A3FEF8180F317E046A;10351.
  ) 
 Here is how much of TeX's memory you used:
- 14664 strings out of 493029
- 205221 string characters out of 6136235
- 879413 words of memory out of 5000000
- 17568 multiletter control sequences out of 15000+600000
+ 14708 strings out of 493029
+ 205997 string characters out of 6136235
+ 880430 words of memory out of 5000000
+ 17598 multiletter control sequences out of 15000+600000
  55890 words of font info for 78 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 37i,12n,51p,1334b,571s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,12n,51p,1334b,567s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/ur
-w/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucr
-ro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
-ri8a.pfb>
-Output written on dfnWorks.pdf (68 pages, 2595970 bytes).
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmti8.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/urw/helvetic/uhvbo8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/he
+lvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on dfnWorks.pdf (70 pages, 4061248 bytes).
 PDF statistics:
- 1119 PDF objects out of 1200 (max. 8388607)
- 1005 compressed objects within 11 object streams
- 284 named destinations out of 1000 (max. 500000)
- 677 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1180 PDF objects out of 1200 (max. 8388607)
+ 1049 compressed objects within 11 object streams
+ 293 named destinations out of 1000 (max. 500000)
+ 702 words of extra memory for PDF output out of 10000 (max. 10000000)
 

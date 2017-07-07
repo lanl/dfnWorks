@@ -10,27 +10,28 @@ from dfntools import *
 import helper
 
 class dfnworks(Frozen):
-    """  Class for DFN Generation and meshing
+    '''
+    Class for DFN Generation and meshing
     
     Attributes:
-        * _jobname: name of job, also the folder where output files are stored
-        * _ncpu: number of CPUs used in the job
-        * _dfnGen file: the name of the dfnGen input file
-        * _dfnFlow file: the name of the dfnFlow input file
-        * _local prefix: indicates that the name contains only the most local directory
-        * _vtk_file: the name of the VTK file
-        * _inp_file: the name of the INP file
-        * _uge_file: the name of the UGE file
-        * _mesh_type: the type of mesh
-        * _perm_file: the name of the file containing permeabilities 
-        * _aper_file: the name of the file containing apertures 
-        * _perm_cell file: the name of the file containing cell permeabilities 
-        * _aper_cell_file: the name of the file containing cell apertures
-        * _dfnTrans_version: the version of dfnTrans to use
-        * _freeze: indicates whether the class attributes can be modified
-        * _large_network: indicates whether C++ or Python is used for file processing at the bottleneck
+        * jobname: name of job, also the folder where output files are stored
+        * ncpu: number of CPUs used in the job
+        * dfnGen file: the name of the dfnGen input file
+        * dfnFlow file: the name of the dfnFlow input file
+        * local prefix: indicates that the name contains only the most local directory
+        * vtk_file: the name of the VTK file
+        * inp_file: the name of the INP file
+        * uge_file: the name of the UGE file
+        * mesh_type: the type of mesh
+        * perm_file: the name of the file containing permeabilities 
+        * aper_file: the name of the file containing apertures 
+        * perm_cell file: the name of the file containing cell permeabilities 
+        * aper_cell_file: the name of the file containing cell apertures
+        * dfnTrans_version: the version of dfnTrans to use
+        * freeze: indicates whether the class attributes can be modified
+        * large_network: indicates whether C++ or Python is used for file processing at the bottleneck
         of inp to vtk conversion
-    """
+    '''
     from generator import dfn_gen
     from flow import dfn_flow
     from transport import dfn_trans

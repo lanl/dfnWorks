@@ -256,31 +256,31 @@ suite.
 \section{Contributors}
 \label{\detokenize{intro:contributors}}\begin{itemize}
 \item {} 
+Jeffrey Hyman
+
+\item {} 
 Satish Karra
 
 \item {} 
 Nataliia Makedonska
 
 \item {} 
-Jeffrey Hyman
-
-\item {} 
-Jeremy Harrod (now at Spectra Logic)
-
-\item {} 
-Quan Bui (now at University of Maryland)
+Nathaniel Knapp
 
 \item {} 
 Carl Gable
 
 \item {} 
-Scott Painter (now at ORNL)
-
-\item {} 
 Hari Viswanathan
 
 \item {} 
-Nathaniel Knapp
+Quan Bui (now at University of Maryland)
+
+\item {} 
+Jeremy Harrod (now at Spectra Logic)
+
+\item {} 
+Scott Painter (now at ORNL)
 
 \end{itemize}
 
@@ -987,7 +987,7 @@ The following is an example input file with all keywords and explanation of each
 
 \chapter{dfnFlow}
 \label{\detokenize{dfnflow:dfnflow}}\label{\detokenize{dfnflow::doc}}\label{\detokenize{dfnflow:dfnflow-chapter}}
-\sphinxstyleemphasis{dfnFlow} involves using flow solver such as PFLOTRAN or FEHM. PFLOTRAN is recommended if large number of fractures ( \textgreater{} O(1000)) are involved in a network. Using the function calls that are part of dfnWorks\_python, one can create the mesh files needed to run PFLOTRAN. This will involve creating unstructured mesh file \sphinxcode{*uge} as well as the boundary  \sphinxcode{*ex} files. Please see the PFLOTRAN user manual at \sphinxurl{http://www.pflotran.org} under unstructured \sphinxstyleemphasis{explicit} format usage for further details. An example input file for PFLOTRAN is provided in the repository. Please use this as a starting point to build your input deck.
+\sphinxstyleemphasis{dfnFlow} involves using flow solver such as PFLOTRAN or FEHM. PFLOTRAN is recommended if a large number of fractures ( \textgreater{} O(1000)) are involved in a network. Using the function calls that are part of pydfnworks, one can create the mesh files needed to run PFLOTRAN. This will involve creating unstructured mesh file \sphinxcode{*uge} as well as the boundary  \sphinxcode{*ex} files. Please see the PFLOTRAN user manual at \sphinxurl{http://www.pflotran.org} under unstructured \sphinxstyleemphasis{explicit} format usage for further details. An example input file for PFLOTRAN is provided in the repository. Please use this as a starting point to build your input deck.
 
 Below is a sample input file. Refer to the PFLOTRAN user manual at \sphinxurl{http://www.pflotran.org} for input parameter descriptions.
 
@@ -1380,8 +1380,16 @@ The pydfnworks must be setup by the user using the following command in the dire
 The documentation below includes all the methods and classes of the pydfnworks package.
 
 
-\section{dfnWorks}
-\label{\detokenize{pydfnworks:dfnworks}}
+\section{Overall Workflow}
+\label{\detokenize{pydfnworks:overall-workflow}}\index{create\_dfn() (in module pydfnworks)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pydfnworks:pydfnworks.create_dfn}}\pysiglinewithargsret{\sphinxcode{pydfnworks.}\sphinxbfcode{create\_dfn}}{\emph{dfnGen\_file='`}, \emph{dfnFlow\_file='`}, \emph{dfnTrans\_file='`}}{}
+Parse command line inputs and input files to create and populate dfnworks class
+
+\end{fulllineitems}
+
+
 
 \section{dfnGen}
 \label{\detokenize{pydfnworks:dfngen}}
@@ -2284,7 +2292,7 @@ Read in run times from file and and print to screen with percentages
 
 \chapter{Scripts}
 \label{\detokenize{scripts:scripts}}\label{\detokenize{scripts::doc}}\label{\detokenize{scripts:scripts-chapter}}
-The pydfnworks package has four Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder dfnWorks-Version2.0/pydfnworks/bin/ .
+The pydfnworks package has four Python scripts that assist with compiling, testing, and running the software. These scripts are all in the folder \sphinxcode{dfnWorks-Version2.0/pydfnworks/bin/} .
 
 
 \section{fix\_paths.py: fix the paths in the tests folder}
@@ -2305,7 +2313,7 @@ The \sphinxcode{test.py} script can be used to easily test functionality of dfnW
 
 \sphinxcode{python test.py {[}TEST\_NAME\_PART{]}}
 
-Here {[}TEST\_NAME\_PART{]} is all or part of the name of the tests the user wants to run.
+Here \sphinxcode{{[}TEST\_NAME\_PART{]}} is all or part of the name of the tests the user wants to run.
 
 
 \section{run.py: run dfnWorks}
@@ -2899,11 +2907,10 @@ Go up a directory:
 \section{Executing dfnWorks}
 \label{\detokenize{tutorial:executing-dfnworks}}
 To run one of the test cases enter the following command:
-\begin{itemize}
-\item {} 
-python run.py -name {[}JOBNAME{]} -input {[}INPUT\_FILE{]} -ncpu {[}NUMBER\_OF\_CPUS{]}
 
-\end{itemize}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYGZdl{} python run.py \PYGZhy{}name \PYG{o}{[}JOBNAME\PYG{o}{]} \PYGZhy{}input \PYG{o}{[}INPUT\PYGZus{}FILE\PYG{o}{]} \PYGZhy{}ncpu \PYG{o}{[}NUMBER\PYGZus{}OF\PYGZus{}CPUS\PYG{o}{]}
+\end{sphinxVerbatim}
 
 The arguments are:
 \begin{itemize}
@@ -2953,24 +2960,34 @@ Here is a quick summary of the steps described above, with commands for the 4\_u
 This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define\_4\_user\_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
 
 The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full\_mesh.inp. located in the folder 4\_user\_defined\_rectangles/LaGriT/, into Paraview.
+\begin{figure}[htbp]
+\centering
+\capstart
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_mesh}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_mesh}.png}
+\caption{\sphinxstyleemphasis{The meshed network of four fractures.}}\label{\detokenize{tutorial:id1}}\end{figure}
 
-The network of four fractures,  colored by pressure solution.
 High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
 This image is created by loading the file 4\_user\_defined\_rectangles/PFLOTRAN/parsed\_vtk/dfn\_explicit-001.vtk into Paraview.
+\begin{figure}[htbp]
+\centering
+\capstart
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_pressure}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_pressure}.png}
+\caption{\sphinxstyleemphasis{The network of four fractures, colored by pressure solution.}}\label{\detokenize{tutorial:id2}}\end{figure}
 
-Particle trajectories on the network of four fractures.
 Particles are inserted uniformly along the inlet fracture on the left side of the image.
 Particles exit the domain through the two horizontal fractures on the right side of the image.
 Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image.
 Trajectories are colored by the current velocity magnitude of the particle's velocity.
 Trajectories can be visualized by loading the files part\_*.inp, in the folder 4\_user\_rectangles/dfnTrans/trajectories/
 We have used the extract surface and tube filters in paraview for visual clarity.
+\begin{figure}[htbp]
+\centering
+\capstart
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_trace}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_rectangles_trace}.png}
+\caption{\sphinxstyleemphasis{Particle trajectories on the network of four fractures.}}\label{\detokenize{tutorial:id3}}\end{figure}
 
 In the other tests, only a brief description and pictures are provided.
 
@@ -2978,22 +2995,31 @@ In the other tests, only a brief description and pictures are provided.
 \section{4\_user\_defined\_ellipses}
 \label{\detokenize{tutorial:user-defined-ellipses}}
 This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define\_4\_user\_ellipses.dat.
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_mesh}.png}\hspace*{\fill}}
-
-\begin{DUlineblock}{0em}
-\item[] 
-\item[] 
-\end{DUlineblock}
-
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_pressure}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_mesh}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
 \item[] 
 \end{DUlineblock}
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_trace}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_pressure}.png}
+\end{figure}
+
+\begin{DUlineblock}{0em}
+\item[] 
+\item[] 
+\end{DUlineblock}
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.0]{{4_user_ellipses_trace}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
@@ -3004,43 +3030,61 @@ This test case consists of four user defined elliptical fractures within a a cub
 \section{truncated\_power\_law\_dist}
 \label{\detokenize{tutorial:truncated-power-law-dist}}
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 4m. The other input parameters can be found in tests/gen\_truncated\_power\_law\_dist.dat.
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{power_mesh}.png}\hspace*{\fill}}
-
-\begin{DUlineblock}{0em}
-\item[] 
-\item[] 
-\end{DUlineblock}
-
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{power_pressure}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{power_mesh}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
 \item[] 
 \end{DUlineblock}
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{power_trace}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{power_pressure}.png}
+\end{figure}
+
+\begin{DUlineblock}{0em}
+\item[] 
+\item[] 
+\end{DUlineblock}
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.0]{{power_trace}.png}
+\end{figure}
 
 
 \section{exponential\_dist}
 \label{\detokenize{tutorial:exponential-dist}}
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen\_exponential\_dist.dat.
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{exp_mesh}.png}\hspace*{\fill}}
-
-\begin{DUlineblock}{0em}
-\item[] 
-\item[] 
-\end{DUlineblock}
-
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{exp_pressure}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{exp_mesh}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
 \item[] 
 \end{DUlineblock}
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{exp_trace}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{exp_pressure}.png}
+\end{figure}
+
+\begin{DUlineblock}{0em}
+\item[] 
+\item[] 
+\end{DUlineblock}
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.0]{{exp_trace}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
@@ -3051,22 +3095,31 @@ This test case consists of a family of fractures whose size is exponentially dis
 \section{lognormal\_dist}
 \label{\detokenize{tutorial:lognormal-dist}}
 This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen\_lognormal\_dist.dat.
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{lognormal_mesh}.png}\hspace*{\fill}}
-
-\begin{DUlineblock}{0em}
-\item[] 
-\item[] 
-\end{DUlineblock}
-
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{lognormal_pressure}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{lognormal_mesh}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
 \item[] 
 \end{DUlineblock}
+\begin{figure}[htbp]
+\centering
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[scale=1.0]{{lognormal_trace}.png}\hspace*{\fill}}
+\noindent\sphinxincludegraphics[scale=1.0]{{lognormal_pressure}.png}
+\end{figure}
+
+\begin{DUlineblock}{0em}
+\item[] 
+\item[] 
+\end{DUlineblock}
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.0]{{lognormal_trace}.png}
+\end{figure}
 
 \begin{DUlineblock}{0em}
 \item[] 
@@ -3075,22 +3128,40 @@ This test case consists of two fracture families whose sizes have a lognormal di
 
 
 \chapter{Example Applications}
-\label{\detokenize{applications:applications-chapter}}\label{\detokenize{applications::doc}}\label{\detokenize{applications:example-applications}}
+\label{\detokenize{applications::doc}}\label{\detokenize{applications:example-applications}}
 
 \section{Carbon dioxide sequestration}
 \label{\detokenize{applications:carbon-dioxide-sequestration}}
 dfnWorks provides the framework necessary to perform multiphase simulations (such as flow and reactive transport) at the reservoir scale. A particular application, highlighted here, is sequestering CO2 from anthropogenic sources and disposing it in geological formations such as deep saline aquifers and abandoned oil fields. Geological CO2 sequestration is one of the principal methods under consideration to reduce carbon footprint in the atmosphere due to fossil fuels (Bachu, 2002; Pacala and Socolow, 2004). For safe and sustainable long-term storage of CO2 and to prevent leaks through existing faults and fractured rock (along with the ones created during the injection process), understanding the complex physical and chemical interactions between CO2, water (or brine) and fractured rock, is vital. dfnWorks capability to study multiphase flow in a DFN can be used to study potential CO2 migration through cap-rock, a potential risk associated with proposed subsurface storage of CO2 in saline aquifers or depleted reservoirs. Moreover, using the reactive transport capabilities of PFLOTRAN coupled with cell-based transmissivity of the DFN allows one to study dynamically changing permeability fields with mineral precipitation and dissolution due to CO2\textendash{}water interaction with rock.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\noindent\sphinxincludegraphics[scale=1.0]{{time_co2}.png}
+\caption{\sphinxstyleemphasis{Temporal evolution of supercritical CO2 displacing water in a meter cube DFN containing 24 fractures. The DFN is initially fully saturated with water, (top left time 0 hours) and supercritical CO2 is slowly injected into the system from the bottom of the domain to displace the water for a total time of 10 h. There is an initial flush through the system during the first hour of the simulation, and then the rate of displacement decreases.}}\label{\detokenize{applications:id1}}\end{figure}
 
 
 \section{Shale energy extraction}
 \label{\detokenize{applications:shale-energy-extraction}}
 Hydraulic fracturing (fracking) has provided access to hydrocarbon trapped in low-permeability media, such as tight shales. The process involves injecting water at high pressures to reactivate existing fractures and also create new fractures to increase permeability of the shale allowing hydrocarbons to be extracted. However, the fundamental physics of why fracking works and its long term ramifications are not well understood. Karra et al. (2015) used dfnWorks to generate a typical production site and simulate production. Using this physics based model, they found good agreement with production field data and determined what physical mechanisms control the decline in the production curve.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\noindent\sphinxincludegraphics[scale=1.0]{{well-pressure}.png}
+\caption{\sphinxstyleemphasis{Pressure in a well used for hydraulic fracturing.}}\label{\detokenize{applications:id2}}\end{figure}
 
 
 \section{Nuclear waste repository}
 \label{\detokenize{applications:nuclear-waste-repository}}
 The Swedish Nuclear Fuel and Waste Management Company (SKB) has undertaken a detailed investigation of the fractured granite at the Forsmark, Sweden site as a potential host formation for a subsurface repository for spent nuclear fuel (SKB, 2011; Hartley and Joyce, 2013). The Forsmark area is about 120 km north of Stockholm in northern Uppland, and the repository is proposed
 to be constructed in crystalline bedrock at a depth of approximately 500 m. Based on the SKB site investigation, a statistical fracture model with multiple fracture sets was developed; detailed parameters of the Forsmark site model are in SKB (2011). We adopt a subset of the model that consist of three sets of background (non-deterministic) circular fractures whose orientations follow a Fisher distribution, fracture radii are sampled from a truncated power-law distribution, the transmissivity of the fractures is estimated using a power-law model based on the fracture radius, and the fracture aperture is related to the fracture size using the cubic law (Adler et al., 2012). Under such a formulation, the fracture apertures are uniform on each fracture, but vary among fractures. The network is generated in a cubic domain with sides of length one-kilometer. Dirichlet boundary conditions are imposed on the top (1 MPa) and bottom (2 MPa) of the domain to create a pressure gradient aligned with the vertical axis, and noflow boundary conditions are enforced along lateral boundaries.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\noindent\sphinxincludegraphics[scale=1.0]{{forsmark_trajectories}.png}
+\caption{\sphinxstyleemphasis{Simulated particle trajectories in fractured granite at Forsmark, Sweden.}}\label{\detokenize{applications:id3}}\end{figure}
 
 Sources:
 \begin{itemize}
@@ -3115,33 +3186,21 @@ SKB, Long-Term Safety for the Final Repository for Spent Nuclear Fuel at Forsmar
 \end{itemize}
 
 
-\renewcommand{\indexname}{Python Module Index}
-\begin{sphinxtheindex}
-\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
-\bigletter{l}
-\item {\sphinxstyleindexentry{lagrit\_scripts.py}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-lagrit_scripts.py}}
-\indexspace
-\bigletter{m}
-\item {\sphinxstyleindexentry{mesh\_dfn\_helper.py}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-mesh_dfn_helper.py}}
-\item {\sphinxstyleindexentry{meshdfn.py}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-meshdfn.py}}
-\indexspace
-\bigletter{p}
-\item {\sphinxstyleindexentry{pydfnworks.distributions}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.distributions}}
-\item {\sphinxstyleindexentry{pydfnworks.flow}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.flow}}
-\item {\sphinxstyleindexentry{pydfnworks.gen\_input}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.gen_input}}
-\item {\sphinxstyleindexentry{pydfnworks.gen\_output}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.gen_output}}
-\item {\sphinxstyleindexentry{pydfnworks.generator}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.generator}}
-\item {\sphinxstyleindexentry{pydfnworks.helper}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.helper}}
-\item {\sphinxstyleindexentry{pydfnworks.lagrit\_scripts}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.lagrit_scripts}}
-\item {\sphinxstyleindexentry{pydfnworks.legal}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.legal}}
-\item {\sphinxstyleindexentry{pydfnworks.mesh\_dfn\_helper}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.mesh_dfn_helper}}
-\item {\sphinxstyleindexentry{pydfnworks.meshdfn}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.meshdfn}}
-\item {\sphinxstyleindexentry{pydfnworks.run\_meshing}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.run_meshing}}
-\item {\sphinxstyleindexentry{pydfnworks.transport}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-pydfnworks.transport}}
-\indexspace
-\bigletter{r}
-\item {\sphinxstyleindexentry{run\_meshing.py}}\sphinxstyleindexpageref{pydfnworks:\detokenize{module-run_meshing.py}}
-\end{sphinxtheindex}
+\chapter{Publications}
+\label{\detokenize{publications::doc}}\label{\detokenize{publications:publications-chapter}}\label{\detokenize{publications:publications}}
+The following are the publications that use \sphinxstyleemphasis{dfnWorks}:
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.3]{{dfn_cite}.pdf}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+
+\noindent\sphinxincludegraphics[scale=1.3]{{dfn_cite_2}.pdf}
+\end{figure}
+
+
 
 \renewcommand{\indexname}{Index}
 \printindex
