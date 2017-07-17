@@ -326,8 +326,8 @@ struct Poly generatePoly_withRadius(double radius,struct Shape &shapeFam, std::m
 // gravity = 9.8
 // water Visc = 8.9e-4
 // constant scalar = waterDesnsity*gravity/waterVisc = 48.3868
-// #define _CONSTSCALAR 1.1e7 
-#define _CONSTSCALAR 48.3868
+#define _CONSTSCALAR 1.1e7 
+//#define _CONSTSCALAR 48.3868
 
 void assignAperture(struct Poly &newPoly, std::mt19937_64 &generator) {
     
