@@ -5,6 +5,8 @@ import helper
 import glob
 import shutil
 from time import time 
+print "SYSSSSS DOT PATH"
+print sys.path
 import numpy as np
 import h5py
 

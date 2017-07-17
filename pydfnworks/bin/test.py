@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+sys.path.insert(0, '/home/nknapp/.local/lib/python2.7/site-packages')
 from pydfnworks import *
 
 def run_test(input_file_name):

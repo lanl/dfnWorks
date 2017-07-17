@@ -629,6 +629,7 @@ def check_input(self, input_file='',output_file=''):
             print "ERROR: cwd: ", os.getcwd(), " does not exist"
         if not os.path.exists(os.path.abspath(self.dfnGen_file)):
             print "ERROR: dfnGen input file path: ", os.path.abspath(self.dfnGen_file), " does not exist"
+        print os.path.abspath(self.dfnGen_file)
         shutil.copy(os.path.abspath(self.dfnGen_file), os.getcwd())
     except:
         sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self.dfnGen_file)
