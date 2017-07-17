@@ -30,7 +30,7 @@ def dfn_flow(self):
     helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    self.parse_pflotran_vtk_python()
+    #self.parse_pflotran_vtk_python()
     helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
     tic = time()    
@@ -543,7 +543,7 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
     print '--> Parsing PFLOTRAN output complete'
 
 def inp2vtk_python(self, inp_file=''):
-    import pyvtk as pv
+    #import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
     print("--> Using Python to convert inp files to VTK files")
@@ -590,9 +590,9 @@ def inp2vtk_python(self, inp_file=''):
 
     print('--> Writing inp data to vtk format')
 
-    vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
-                     'Unstructured pflotran grid')
-    vtk.tofile(vtk_file)
+    #vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
+                     #'Unstructured pflotran grid')
+    #vtk.tofile(vtk_file)
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
