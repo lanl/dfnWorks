@@ -5,6 +5,8 @@ import helper
 import glob
 import shutil
 from time import time 
+print "SYSSSSS DOT PATH"
+print sys.path
 import numpy as np
 import h5py
 
@@ -21,20 +23,20 @@ def dfn_flow(self):
 
     tic = time()
     self.lagrit2pflotran()
-    helper.dump_time(self._jobname, 'Function: lagrit2pflotran', time() - tic)   
+    helper.dump_time(self.jobname, 'Function: lagrit2pflotran', time() - tic)   
     
     tic = time()    
     self.pflotran()
-    helper.dump_time(self._jobname, 'Function: pflotran', time() - tic)  
+    helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    self.parse_pflotran_vtk_python()
-    helper.dump_time(self._jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+    #self.parse_pflotran_vtk_python()
+    helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
     tic = time()    
     self.pflotran_cleanup()
-    helper.dump_time(self._jobname, 'Function: parse_cleanup', time() - tic) 
-    helper.dump_time(self._jobname,'Process: dfnFlow',time() - tic_flow)    
+    helper.dump_time(self.jobname, 'Function: parse_cleanup', time() - tic) 
+    helper.dump_time(self.jobname,'Process: dfnFlow',time() - tic_flow)    
 
     print('='*80)
     print("\ndfnFlow Complete\n")
@@ -52,27 +54,27 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print("Starting conversion of files for PFLOTRAN ")
     print ('='*80)
     if inp_file:
-        self._inp_file = inp_file
+        self.inp_file = inp_file
     else:
-        inp_file = self._inp_file
+        inp_file = self.inp_file
 
     if inp_file == '':
         sys.exit('ERROR: Please provide inp filename!')
 
     if mesh_type:
         if mesh_type in mesh_types_allowed:
-            self._mesh_type = mesh_type
+            self.mesh_type = mesh_type
         else:
             sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
     else:
-        mesh_type = self._mesh_type
+        mesh_type = self.mesh_type
 
     if mesh_type == '':
         sys.exit('ERROR: Please provide mesh type!')
 
-    self._uge_file = inp_file[:-4] + '.uge'
+    self.uge_file = inp_file[:-4] + '.uge'
     # Check if UGE file was created by LaGriT, if it does not exists, exit
-    failure = os.path.isfile(self._uge_file)
+    failure = os.path.isfile(self.uge_file)
     if failure == False:
         sys.exit('Failed to run LaGrit to get initial .uge file')
 
@@ -104,12 +106,12 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
     '''
 
     print('--> Converting zone files to ex')    
-    if self._uge_file:
-        uge_file = self._uge_file
+    if self.uge_file:
+        uge_file = self.uge_file
     else:
-        self._uge_file = uge_file
+        self.uge_file = uge_file
 
-    uge_file = self._uge_file
+    uge_file = self.uge_file
     if uge_file == '':
         sys.exit('ERROR: Please provide uge filename!')
     # Opening uge file
@@ -231,9 +233,9 @@ def inp2gmv(self, inp_file=''):
     """
 
     if inp_file:
-        self._inp_file = inp_file
+        self.inp_file = inp_file
     else:
-        inp_file = self._inp_file
+        inp_file = self.inp_file
 
     if inp_file == '':
         sys.exit('ERROR: inp file must be specified in inp2gmv!')
@@ -257,35 +259,35 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
     """
     print("--> Writing Perms and Correct Volume Areas")
     if inp_file:
-        self._inp_file = inp_file
+        self.inp_file = inp_file
     else:
-        inp_file = self._inp_file
+        inp_file = self.inp_file
     
     if inp_file == '':
         sys.exit('ERROR: inp file must be specified!')
 
     if uge_file:
-        self._uge_file = uge_file
+        self.uge_file = uge_file
     else:
-        uge_file = self._uge_file
+        uge_file = self.uge_file
 
     if uge_file == '':
         sys.exit('ERROR: uge file must be specified!')
 
     if perm_file:
-        self._perm_file = perm_file
+        self.perm_file = perm_file
     else:
-        perm_file = self._perm_file
+        perm_file = self.perm_file
 
-    if perm_file == '' and self._perm_cell_file == '':
+    if perm_file == '' and self.perm_cell_file == '':
         sys.exit('ERROR: perm file must be specified!')
 
     if aper_file:
-        self._aper_file = aper_file
+        self.aper_file = aper_file
     else:
-        aper_file = self._aper_file
+        aper_file = self.aper_file
 
-    if aper_file == '' and self._aper_cell_file == '':
+    if aper_file == '' and self.aper_cell_file == '':
         sys.exit('ERROR: aperture file must be specified!')
 
     mat_file = 'materialid.dat'
@@ -296,11 +298,11 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
     f.write("%s\n"%mat_file)
     f.write("%s\n"%uge_file)
     f.write("%s"%(uge_file[:-4]+'_vol_area.uge\n'))
-    if self._aper_cell_file:
-            f.write("%s\n"%self._aper_cell_file)
+    if self.aper_cell_file:
+            f.write("%s\n"%self.aper_cell_file)
             f.write("1\n")
     else:
-            f.write("%s\n"%self._aper_file)
+            f.write("%s\n"%self.aper_file)
             f.write("-1\n")
     f.close()
 
@@ -353,7 +355,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
         print("--> Done writing permeability to h5 file")
         del perm_list
 
-    if self._perm_cell_file:
+    if self.perm_cell_file:
         filename = 'dfn_properties.h5'
         h5file = h5py.File(filename, mode='w')
 
@@ -370,7 +372,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
         perm = np.zeros(NumIntNodes, '=f8')
         print('--> reading permeability data')
         print('--> Note: this script assumes isotropic permeability')
-        f = open(self._perm_cell_file, 'r')
+        f = open(self.perm_cell_file, 'r')
         f.readline()
         perm_list = []
         while True:
@@ -396,16 +398,15 @@ def pflotran(self):
     Copy PFLOTRAN run file into working directory and run with ncpus
     '''
     try: 
-            shutil.copy(os.path.abspath(self._dfnFlow_file), os.path.abspath(os.getcwd()))
+            shutil.copy(os.path.abspath(self.dfnFlow_file), os.path.abspath(os.getcwd()))
     except:
             print("-->ERROR copying PFLOTRAN input file")
             exit()
     print("="*80)
     print("--> Running PFLOTRAN") 
-    cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self._ncpu) + \
-          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file + \
-          ' ' + ' –log_view' 
-    print cmd
+    cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
+          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self.local_dfnFlow_file 
+    print("Running: %s"%cmd)
     os.system(cmd)    
     print('='*80)
     print("--> Running PFLOTRAN Complete")
@@ -418,15 +419,15 @@ def pflotran_cleanup(self):
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
     os.system(cmd)
 
-    cmd = 'cat '+self._local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
     os.system(cmd)
 
-    for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
             os.remove(fl)    
-    for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
 def create_dfn_flow_links(self):
@@ -508,10 +509,10 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
               'PFLOTRAN output\n',
               'ASCII\n']
    
-    inp_file = self._inp_file
-    inp_file_copy = self._inp_file[:-4] + '_copy.inp'
+    inp_file = self.inp_file
+    inp_file_copy = self.inp_file[:-4] + '_copy.inp'
     subprocess.call('cp ' + inp_file + ' ' + inp_file_copy, shell=True)
-    jobname = self._jobname + '/'
+    jobname = self.jobname + '/'
 
     for fle in files:
 
@@ -543,23 +544,23 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
     print '--> Parsing PFLOTRAN output complete'
 
 def inp2vtk_python(self, inp_file=''):
-    import pyvtk as pv
+    #import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
     print("--> Using Python to convert inp files to VTK files")
-    if self._inp_file:
-        inp_file = self._inp_file
+    if self.inp_file:
+        inp_file = self.inp_file
     else:
-        self._inp_file = inp_file
+        self.inp_file = inp_file
 
     if inp_file == '':
         sys.exit('ERROR: Please provide inp filename!')
 
-    if self._vtk_file:
-        vtk_file = self._vtk_file
+    if self.vtk_file:
+        vtk_file = self.vtk_file
     else:
         vtk_file = inp_file[:-4]
-        self._vtk_file = vtk_file + '.vtk'
+        self.vtk_file = vtk_file + '.vtk'
 
     print("--> Reading inp data")
 
@@ -590,20 +591,20 @@ def inp2vtk_python(self, inp_file=''):
 
     print('--> Writing inp data to vtk format')
 
-    vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
-                     'Unstructured pflotran grid')
-    vtk.tofile(vtk_file)
+    #vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
+                     #'Unstructured pflotran grid')
+    #vtk.tofile(vtk_file)
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Replace CELL_DATA with POINT_DATA in the VTK output."""
     print '--> Parsing PFLOTRAN output with Python'
     if grid_vtk_file:
-        self._vtk_file = grid_vtk_file
+        self.vtk_file = grid_vtk_file
     else:
         self.inp2vtk_python()
 
-    grid_file = self._vtk_file
+    grid_file = self.vtk_file
     
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
     with open(grid_file, 'r') as f:

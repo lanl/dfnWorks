@@ -45,7 +45,7 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 
 **Before executing dfnWorks,** the following paths must be set:
 
-- DFNWORKS_PATH: the dfnWorks-Version2.0 repository folder
+- dfnWorks_PATH: the dfnWorks-Version2.0 repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
 - PFLOTRAN_DIR: The PFLOTRAN directory
 - python_dfn: The location of the Python distribution to use
@@ -59,7 +59,7 @@ For example:
 
 .. code-block:: python
     
-    os.environ['DFNWORKS_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'    
+    os.environ['dfnWorks_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'    
 
 Setup the Python package pydfnworks
 -------------------------------------
@@ -87,7 +87,9 @@ Executing dfnWorks
 
 To run one of the test cases enter the following command:
 
-- python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS]  
+.. code-block:: bash
+    
+    $ python run.py -name [JOBNAME] -input [INPUT_FILE] -ncpu [NUMBER_OF_CPUS]  
 
 The arguments are:
 
@@ -131,22 +133,24 @@ This test case consists of four user defined rectangular fractures within a a cu
 
 The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the folder 4_user_defined_rectangles/LaGriT/, into Paraview.
 
-.. image:: figures/4_user_rectangles_mesh.png
+.. figure:: figures/4_user_rectangles_mesh.png
    :scale: 100 %
    :alt: alternate text
    :align: center
 	
-The network of four fractures,  colored by pressure solution.  
+   *The meshed network of four fractures.*
+
 High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
 This image is created by loading the file 4_user_defined_rectangles/PFLOTRAN/parsed_vtk/dfn_explicit-001.vtk into Paraview.
 
 
-.. image:: figures/4_user_rectangles_pressure.png
+.. figure:: figures/4_user_rectangles_pressure.png
    :scale: 100 %
    :alt: alternate text
    :align: center
+   
+   *The network of four fractures, colored by pressure solution.*
 
-Particle trajectories on the network of four fractures.   
 Particles are inserted uniformly along the inlet fracture on the left side of the image. 
 Particles exit the domain through the two horizontal fractures on the right side of the image.  
 Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image. 
@@ -154,11 +158,12 @@ Trajectories are colored by the current velocity magnitude of the particle's vel
 Trajectories can be visualized by loading the files part\_*.inp, in the folder 4_user_rectangles/dfnTrans/trajectories/
 We have used the extract surface and tube filters in paraview for visual clarity. 
 
-.. image:: figures/4_user_rectangles_trace.png
+.. figure:: figures/4_user_rectangles_trace.png
    :scale: 100 %
    :alt: alternate text
    :align: center
-
+   
+   *Particle trajectories on the network of four fractures.*   
 
 In the other tests, only a brief description and pictures are provided. 
 
@@ -167,7 +172,7 @@ In the other tests, only a brief description and pictures are provided.
 
 This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_ellipses.dat. 
 
-.. image:: figures/4_user_ellipses_mesh.png
+.. figure:: figures/4_user_ellipses_mesh.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -175,7 +180,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 |
 
-.. image:: figures/4_user_ellipses_pressure.png
+.. figure:: figures/4_user_ellipses_pressure.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -183,7 +188,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 |
 
-.. image:: figures/4_user_ellipses_trace.png
+.. figure:: figures/4_user_ellipses_trace.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -196,7 +201,7 @@ truncated_power_law_dist
 
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 4m. The other input parameters can be found in tests/gen_truncated_power_law_dist.dat.
 
-.. image:: figures/power_mesh.png
+.. figure:: figures/power_mesh.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -204,7 +209,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 |
 
-.. image:: figures/power_pressure.png
+.. figure:: figures/power_pressure.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -212,7 +217,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 |
 
-.. image:: figures/power_trace.png
+.. figure:: figures/power_trace.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -222,7 +227,7 @@ exponential_dist
 
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat. 
 
-.. image:: figures/exp_mesh.png
+.. figure:: figures/exp_mesh.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -230,7 +235,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 |
 |
 
-.. image:: figures/exp_pressure.png
+.. figure:: figures/exp_pressure.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -239,7 +244,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 |
 
 
-.. image:: figures/exp_trace.png
+.. figure:: figures/exp_trace.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -253,7 +258,7 @@ lognormal_dist
 
 This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat.
 
-.. image:: figures/lognormal_mesh.png
+.. figure:: figures/lognormal_mesh.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -262,7 +267,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 |
 
 
-.. image:: figures/lognormal_pressure.png
+.. figure:: figures/lognormal_pressure.png
    :scale: 100 %
    :alt: alternate text
    :align: center
@@ -271,7 +276,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 |
 
 
-.. image:: figures/lognormal_trace.png
+.. figure:: figures/lognormal_trace.png
    :scale: 100%
    :alt: alternate text
    :align: center

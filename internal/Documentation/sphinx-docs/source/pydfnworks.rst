@@ -1,23 +1,22 @@
-.. _dfnworks-python-chapter:
+.. _dfnWorks-python-chapter:
 
 pydfnworks: the dfnWorks python package
 ========================================
 
 The pydfnworks package allows the user to easily run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package easily.
 
-The pydfnworks must be setup by the user using the following command in the directory dfnWorks-Version2.0/pydfnworks/ :
+The pydfnworks must be setup by the user using the following command in the directory ``dfnWorks-Version2.0/pydfnworks/`` :
 
-python setup.py install (if the user has admin privileges), OR:
+``python setup.py install`` (if the user has admin privileges), OR:
 
-python setup.py install --user (if the user does not have admin privileges):
+``python setup.py install --user`` (if the user does not have admin privileges):
 
 The documentation below includes all the methods and classes of the pydfnworks package. 
 
+Overall Workflow
+----------------
 
-DFNWORKS
-----------
-.. autoclass:: pydfnworks.DFNWORKS
-    :members:
+.. autofunction:: pydfnworks.create_dfn
 
 dfnGen
 -------

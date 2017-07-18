@@ -1,11 +1,12 @@
 #CMake
 *CMakeFiles*
 *.cmake
+*FracMan_interface*
 
 # dfnWorks Executables
 ParticleTracking/DFNTrans
 C_uge_correct/correct_uge
-DFN_MESH_Connectivity_Test/ConnectivityTest
+DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
 !inp_2_vtk/inp2vtk

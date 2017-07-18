@@ -35,7 +35,7 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 .. code-block:: none
 
-	@article{hyman2015dfnworks,
+	@article{hyman2015dfnWorks,
 	  title={dfnWorks: A discrete fracture network framework
       for modeling subsurface flow and transport},
 	  author={Hyman, Jeffrey D and Karra, Satish and Makedonska,
@@ -51,11 +51,9 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 What's new in v2.0?
 -------------------
-- New dfnGen C++ code which is much faster than the Mathematica dfnGen. 
-This code has successfully generated networks with 350,000+ fractures. 
-- Increased functionality in the pydfnworks package for more streamlined 
-workflow from dfnGen through visualization.
 
+- New dfnGen C++ code which is much faster than the Mathematica dfnGen. This code has successfully generated networks with 350,000+ fractures. 
+- Increased functionality in the pydfnworks package for more streamlined workflow from dfnGen through visualization. 
 
 Where can one get dfnWorks?
 ---------------------------
@@ -87,13 +85,8 @@ pydfnworks.
 
 dfnGen
 ^^^^^^
-dfnGen primarily involves two steps:
-
-1. FRAM - Create DFN: Using the fractured site characterization networks are 
-constructed using the feature rejection algorithm for meshing
-2. LaGriT - Mesh DFN: The LaGriT meshing tool box is used to create a 
+dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for meshing) and LaGriT, the meshing tool box used to create a 
 conforming Delaunay triangulation of the network.
-
 
 FRAM
 ******
@@ -194,27 +187,27 @@ About this  manual
 
 This manual comprises of information on setting up inputs to dfnGen, dfnTrans 
 and PFLOTRAN, as well as details on the pydfnworks module: :ref:`pydfnworks 
-<dfnworks-python-chapter>`. Finally, the manual contains a short tutorial 
+<dfnWorks-python-chapter>`. Finally, the manual contains a short tutorial 
 with prepared examples that  can be found in the ``tests`` directory of the 
 dfnWorks repository, and a description of some applications of the dfnWorks 
 suite.
 
 Contributors
 -------------
+- Jeffrey Hyman
 - Satish Karra
 - Nataliia Makedonska
-- Jeffrey Hyman
-- Jeremy Harrod (now at Spectra Logic)
-- Quan Bui (now at University of Maryland)
-- Carl Gable
-- Scott Painter (now at ORNL)
-- Hari Viswanathan
 - Nathaniel Knapp
+- Carl Gable
+- Hari Viswanathan
+- Quan Bui (now at University of Maryland)
+- Jeremy Harrod (now at Spectra Logic)
+- Scott Painter (now at ORNL)
 
 Contact
 --------
 
-For any questions about dfnWorks, please email dfnworks@lanl.gov.
+For any questions about dfnWorks, please email dfnWorks@lanl.gov.
 
 Copyright information
 ----------------------

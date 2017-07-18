@@ -181,7 +181,7 @@ html_logo = 'dfnworks_logo.png'
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
 #
-# html_use_smartypants = True
+# html_use_smartypants = False
 
 # Custom sidebar templates, maps document names to template names.
 #
@@ -194,11 +194,11 @@ html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 
 
 # If false, no module index is generated.
 #
-# html_domain_indices = True
+html_domain_indices = False
 
 # If false, no index is generated.
 #
-# html_use_index = True
+html_use_index = False
 
 # If true, the index is split into individual pages for each letter.
 #
@@ -271,7 +271,7 @@ htmlhelp_basename = 'dfnWorksdoc'
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'dfnWorks.tex', u'dfnWorks Documentation',
-     u'Subsurface Flow and Transport Team, LANL, LA-UR-17-22216', 'manual'),
+     u'Subsurface Flow and Transport Team \n LANL \n LA-UR-17-22216', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -300,11 +300,11 @@ latex_logo = 'dfnworks_logo.png'
 # \sphinxstrong, ..., \sphinxtitleref, ... To help avoid clash with user added
 # packages.
 #
-# latex_keep_old_macro_names = True
+# latex_keep_old_macro_names = False
 
 # If false, no module index is generated.
 #
-# latex_domain_indices = True
+latex_domain_indices = False
 
 
 # -- Options for manual page output ---------------------------------------
@@ -338,7 +338,7 @@ texinfo_documents = [
 
 # If false, no module index is generated.
 #
-# texinfo_domain_indices = True
+texinfo_domain_indices = False
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #
