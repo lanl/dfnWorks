@@ -403,7 +403,9 @@ def pflotran(self):
     print("="*80)
     print("--> Running PFLOTRAN") 
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self._ncpu) + \
-          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file 
+          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self._local_dfnFlow_file + \
+          ' ' + ' –log_view' 
+    print cmd
     os.system(cmd)    
     print('='*80)
     print("--> Running PFLOTRAN Complete")
@@ -427,7 +429,7 @@ def pflotran_cleanup(self):
     for fl in glob.glob(self._local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
-def create_dfn_flow_links():
+def create_dfn_flow_links(self):
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
     os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
     os.symlink('../full_mesh.inp', 'full_mesh.inp')
