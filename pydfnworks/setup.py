@@ -2,9 +2,6 @@
 import sys
 #from distutils.core import setup
 from setuptools import setup
-sys.path.insert(0, '/home/nknapp/.local/lib/python2.7/site-packages/')
-print sys.path
-
 import os
 #os.system('mv ~/.local ~/local_save')
 
