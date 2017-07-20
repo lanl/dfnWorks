@@ -563,14 +563,14 @@ finish \n
 read / lagrit / part%d.lg / junk / binary
 addmesh / merge / mo_all / mo_all / cmo_tmp 
 cmo / delete / cmo_tmp 
-
     """
     f = open('merge_rmpts.lgi','w')
     for j in range(1,len(endis)+1):
     	f.write(lagrit_input%(j))
 
     # Append meshes complete
-    lagrit_input = """ 
+    if not visual_mode: 
+    	lagrit_input = """
 # Appending the meshes complete 
 # LaGriT Code to remove duplicates and output the mesh
 cmo / select / mo_all 
@@ -591,9 +591,7 @@ sort / mo_all / index / ascending / ikey / imt xic yic zic
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
 """%(h*10**-5, h*10**-3)
-     
-    if not visual_mode: 
-    	lagrit_input += """
+        lagrit_input += """ 
 resetpts / itp 
 boundary_components 
 dump / full_mesh.gmv / mo_all
@@ -672,7 +670,6 @@ define / FOUT / boundary_back_n
 pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
 pset / back_n / zone / FOUT/ ascii / ZONE
 
-
 """
         eps = h*10**-3
         parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
@@ -682,15 +679,13 @@ pset / back_n / zone / FOUT/ ascii / ZONE
         lagrit_input=lagrit_input%parameters
 
     else:
-    	lagrit_input += """
+    	lagrit_input = """
 cmo / modatt / mo_all / icr1 / ioflag / l
 cmo / modatt / mo_all / isn1 / ioflag / l
 cmo / modatt / mo_all / itp1 / ioflag / l
-dump / reduced__mesh.gmv / mo_all 
+dump / reduced_mesh.gmv / mo_all 
 dump / reduced_mesh.inp / mo_all
 """
-
-
     lagrit_input += """
 quality 
 finish
