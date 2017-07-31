@@ -14,20 +14,19 @@ import subprocess
 
 define_paths()
 main_time = time()
-DFN = dfnworks.create_dfn()
+DFN = create_dfn()
 
-DFN.make_working_directory()
-DFN.check_input()
-DFN.create_network()
-exit()
+#DFN.make_working_directory()
+#DFN.check_input()
+#DFN.create_network()
 
 #DFN.output_report()
-DFN.mesh_network()
+#DFN.mesh_network()
 
-#os.chdir(DFN.jobname)
 #DFN.lagrit2pflotran()
 #DFN.pflotran()
 #DFN.parse_pflotran_vtk_python()       
+#os.chdir(DFN.jobname)
 #DFN.pflotran_cleanup()
 
 #DFN.copy_dfn_trans_files()
