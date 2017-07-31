@@ -417,16 +417,16 @@ def pflotran_cleanup(self):
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-004-rank*.dat > cellinfo.dat'
     os.system(cmd)
 
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-004-rank*.dat > darcyvel.dat'
     os.system(cmd)
 
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
-            os.remove(fl)    
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
-            os.remove(fl)    
+    #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
+    #        os.remove(fl)    
+    #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
+    #        os.remove(fl)    
 
 def create_dfn_flow_links(self):
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
@@ -542,7 +542,6 @@ def parse_pflotran_vtk(self, grid_vtk_file=''):
     print '--> Parsing PFLOTRAN output complete'
 
 def inp2vtk_python(self, inp_file=''):
-    
     import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
