@@ -417,10 +417,10 @@ def pflotran_cleanup(self):
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-004-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
     os.system(cmd)
 
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-004-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
     os.system(cmd)
 
     #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
