@@ -14,9 +14,9 @@ class Frozen(object):
                 value : the value of the attribute being set. 
             """
             if not self.frozen or hasattr(self, key):
-		object.__setattr__(self, key, value)
-	    else:
-		raise AttributeError(str(key) + ' is not a valid attribute for ' + self._class__.__name__)
+		        object.__setattr__(self, key, value)
+	        else:
+		        raise AttributeError(str(key) + ' is not a valid attribute for ' + self._class__.__name__)
 
 	def _freeze(self):
             """
