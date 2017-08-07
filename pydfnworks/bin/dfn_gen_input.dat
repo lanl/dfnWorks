@@ -1,12 +1,12 @@
-domainSize: {5.000000, 5.000000, 5.000000}
-domainSizeIncrease: {0.000000, 0.000000, 0.000000}
-h: 0.100000
-boundaryFaces: {0,0,0,0,1,1}
+domainSize: {100.000000, 10.000000, 10.000000}
+domainSizeIncrease: {0.500000, 0.500000, 0.500000}
+h: 0.010000
+boundaryFaces: {1,1,0,0,0,0}
 ignoreBoundaryFaces: 1
 numOfLayers: 0
 layers: {0,0}
-stopCondition: 0
-nPoly: 100
+stopCondition: 1
+nPoly: 0
 eAngleOption: 1
 rAngleOption: 1
 seed: 92731535
@@ -24,30 +24,30 @@ insertUserRectanglesFirst: 1
 radiiListIncrease: 0.10
 rejectsPerFracture: 10
 
-famProb: {0.500000,0.500000}
+famProb: {0.330000,0.330000,0.340000}
 nFamEll: 0
-nFamRect: 2
+nFamRect: 3
 
-r_p32Targets : { 0.000000,0.000000}
-raspect : { 1.000000,1.000000}
-rbetaDistribution : { 0,0}
-rkappa : { 20,20}
-rtheta : { 45,0}
-rphi : { 45,45}
-rbeta : { 0,0}
-rLayer : { 0,0}
-rdistr : { 2,4}
+r_p32Targets : { 1.750000,1.750000,1.750000}
+raspect : { 1.000000,1.000000,1.000000}
+rbetaDistribution : { 0,0,0}
+rkappa : { 20,20,20}
+rtheta : { 0,90,90}
+rphi : { 0,0,90}
+rbeta : { 0,0,0}
+rLayer : { 0,0,0}
+rdistr : { 4,4,2}
 rLogMean : {}
 rsd : {}
 rLogMax : {}
 rLogMin : {}
-ralpha : { 2.600000}
-rmin : { 2}
-rmax : { 6}
+ralpha : { 2.500000}
+rmin : { 1}
+rmax : { 5}
 rExpMean : {}
 rExpMin : {}
 rExpMax : {}
-rconst : { 1}
+rconst : { 0.500000,0.500000}
 
 e_p32Targets : {}
 easpect : {}

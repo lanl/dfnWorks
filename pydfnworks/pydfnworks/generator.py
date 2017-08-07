@@ -32,7 +32,7 @@ def dfn_gen(self):
     #helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
     tic = time()
     
-    self.output_report()
+    #self.output_report()
     #helper.dump_time(self.jobname, 'output_report', time() - tic)   
     
     # Mesh Network

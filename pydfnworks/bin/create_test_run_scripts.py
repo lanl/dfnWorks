@@ -18,10 +18,11 @@ if __name__ == '__main__':
 
     domain['stop_condition']['number']=True
 
-    domain['number_of_fractures']=25
+    domain['number_of_fractures']=100
     domain['number_of_particles']=100
     domain['number_of_layers']=0
-
+    
+    domain['ignore_boundary_faces']=1
 
     domain['layer']=[]
     domain['layer'].append([-5,0])
@@ -44,8 +45,8 @@ if __name__ == '__main__':
     f['fisher']['theta']=45
     f['fisher']['phi']=45
     f['fisher']['kappa']=20
-    f['min']=1
-    f['max']=5
+    f['min']=2
+    f['max']=6
     check_family_information(f)
     fractures.append(f)
 

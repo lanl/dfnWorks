@@ -6,7 +6,6 @@ bin/run.py
 bin/run_explicit.py
 bin/test.py
 pydfnworks/__init__.py
-pydfnworks/create_run_scripts.py
 pydfnworks/dfntools.py
 pydfnworks/dfnworks.py
 pydfnworks/distributions.py
@@ -16,7 +15,6 @@ pydfnworks/gen_output.py
 pydfnworks/generator.py
 pydfnworks/helper.py
 pydfnworks/integrated.py
-pydfnworks/integrated_test.py
 pydfnworks/lagrit_scripts.py
 pydfnworks/legal.py
 pydfnworks/mesh_dfn_helper.py

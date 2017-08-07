@@ -84,7 +84,7 @@ def create_dfnGen_input(domain, path, fractures=[], uf=[], gen_input_name='defau
     ''' convert fracture and domain dictionaries into dfnGen input'''
     
     boundary_list=['left_w', 'right_e', 'front_s', 'back_n', 'top', 'bottom']
-    domain['number_of_families']=len(uf)
+    domain['number_of_families']=len(fractures)
 
     # Dump Domain information
     gen_input='domainSize: {%f, %f, %f}\n'%(domain['x_length'],domain['y_length'],domain['z_length'])
@@ -201,8 +201,6 @@ def create_dfnGen_input(domain, path, fractures=[], uf=[], gen_input_name='defau
     if (gen_input_name == 'default'):
         gen_input_name = 'dfn_gen_input.dat'
     
-    print 'GEN INPUT NAME', gen_input_name
-    print 'PATH ', path
     f=open(path + gen_input_name,'w')
     f.write(gen_input)
     f.close()

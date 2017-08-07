@@ -37,7 +37,7 @@ if __name__ == '__main__':
     domain['aperture']['value']=10**-5
 
     domain['permeability']['cubic']=True
-
+    domain['ignore_boundary_faces']=1
     fractures=[]
 
     f=fracture_family(1)
@@ -82,13 +82,8 @@ if __name__ == '__main__':
     check_family_information(f)
     fractures.append(f)
 
-    user_fractures_list=[]
-    uf=user_fractures()
-    uf['type']['rect_by_input']=False
-    uf['path']='/home/jhyman/dfnworks/dfnworks-main/sample_inputs/4_fracture_test/4_user_rects.dat'
-    user_fractures_list.append(uf)
-
     #create_dfnGen_input(domain, fractures, user_fractures_list)
-    create_dfnGen_input(domain, fractures)
-    create_pflotran_input(domain)
-    create_dfntrans_input(domain)
+    path = '/home/nknapp/dfnworks-main/tests/integrated_test/' 
+    create_dfnGen_input(domain, path, fractures)
+    create_pflotran_input(domain, path)
+    create_dfntrans_input(domain, path)
