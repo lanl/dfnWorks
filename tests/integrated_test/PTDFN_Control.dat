@@ -1,3 +1,4 @@
+
 /***********************************************************************/
 /*   CONTROL FILE FOR PARTICLE TRACKING IN DISCRETE FRACTURE NETWORK   */
 /***********************************************************************/
@@ -13,8 +14,8 @@ boundary: allboundaries.zone
 out-flow boundaries. Should be consistent with those applied to obtain
 steady state pressure solution (PFLOTRAN)   */
 /*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
-in-flow-boundary: 3 
-out-flow-boundary: 5
+in-flow-boundary: 1 
+out-flow-boundary: 2 
 
 
 /**************** INPUT FILES: PFLOTRAN flow solution *******************/
@@ -43,11 +44,11 @@ out_init: no
 curvature of particles trajectory each segment, from intersection to intersection.
 If it's like a straight line, then the output is less frequent (in case of 
 "out_curv:yes", if "no",  the output file will contain every time step) */
-out_curv: yes 
+out_curv: no 
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs: yes 
+out_avs: no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
-out_traj: no
+out_traj: no 
 out_frac: no
 
 /************* output directories *************************************/
@@ -73,7 +74,7 @@ init_partn: 10
      each other on all over in-flow boundary edges ***********************/  
 init_eqd: yes
 //maximum number of particles that user expects on one boundary edge
-init_npart: 10
+init_npart: 100 
 
 /*** all particles start from the same region at in-flow boundary, in a range  
     {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/
@@ -118,7 +119,7 @@ aperture_file: aperture.dat
 /********************  TIME ********************************************/
 timesteps: 200000000
 //units of time (years, days, hours, minutes) 
-time_units: years 
+time_units: seconds 
 
 /**** flux weighted particles*/
 /**** in case of random initial positions of particles - it's aperture weighted **/

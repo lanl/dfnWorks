@@ -19,7 +19,10 @@ if __name__ == '__main__':
 
     define_paths()
     benchmark_dir = os.environ['dfnworks_PATH'] + 'tests'
-    subprocess.call('mkdir ~/test_output_files', shell=True)
+    try:
+        subprocess.call('mkdir ~/test_output_files', shell=True)
+    except:
+        pass
     if len(sys.argv) == 2: 
         for input_file in os.listdir(benchmark_dir):
             if '.txt' in input_file:
