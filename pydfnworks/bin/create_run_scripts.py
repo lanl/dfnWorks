@@ -41,10 +41,13 @@ def dump_fracture_type(obj, num_obj, prefix):
     #rphi: {0.0, 0.0}
     return line
 
-def dump_user_fractures(uf):
+def dump_user_fractures(uf, domain):
     '''write user fracture information into input file'''
     # User Defined Fratures
+    
+
     num_uf=len(uf)
+
     print("Number of user defined fractures: %d\n"%num_uf)
     flags={'rect_by_coord':False, 'ell_by_coord':False, 'rect_by_input':False, 'ell_by_input':False}
     paths={'rect_by_coord': '~/', 'ell_by_coord':'~/', 'rect_by_input':'~/', 'ell_by_input':'~/'}
@@ -61,7 +64,7 @@ def dump_user_fractures(uf):
         elif uf[i]['type']['ell_by_input']:
             flags['ell_by_input']=True 
             paths['ell_by_input']=uf[i]['path']
-
+    
     line='userRectanglesOnOff: %d\n'%int(flags['rect_by_input'])
     line+='UserRect_Input_File_Path: %s\n'%paths['rect_by_input'] 
 
@@ -77,7 +80,7 @@ def dump_user_fractures(uf):
     return line 
 
 
-def create_dfnGen_input(domain, fractures, uf=[]):
+def create_dfnGen_input(domain, path, fractures=[], uf=[], gen_input_name='default'):
     ''' convert fracture and domain dictionaries into dfnGen input'''
     
     boundary_list=['left_w', 'right_e', 'front_s', 'back_n', 'top', 'bottom']
@@ -153,7 +156,8 @@ def create_dfnGen_input(domain, fractures, uf=[]):
         elif fractures[i]['type']['rect']:
             num_rects+=1
     #Remove comma
-    gen_input=gen_input[:-1]
+    if (gen_input[-1] == ','): 
+        gen_input=gen_input[:-1]
     gen_input+='}\n'
 
     gen_input+="nFamEll: %d\n"%num_ell
@@ -166,7 +170,7 @@ def create_dfnGen_input(domain, fractures, uf=[]):
     gen_input+=dump_fracture_type(ell, num_ell, 'e')
     gen_input+=add_to_gen_input(num_ell, ell, 'enumPoints', 'number_of_points')
  
-    gen_input+=dump_user_fractures(uf)
+    gen_input+=dump_user_fractures(uf, domain)
 
     if domain['aperture']['log_normal']:
         gen_input+='aperture: 1\n'
@@ -194,12 +198,15 @@ def create_dfnGen_input(domain, fractures, uf=[]):
    
     gen_input+='constantPermeability: %f\n'%domain['permeability']['value']
     gen_input+='\n\n'
-    f=open('dfngen_input.dat','w')
+    if (gen_input_name == 'default'):
+        gen_input_name = 'dfn_gen_input.dat'
+    
+    f=open(path + gen_input_name,'w')
     f.write(gen_input)
     f.close()
     print("Generator input complete")
 
-def create_pflotran_input(domain):
+def create_pflotran_input(domain, path):
     """Create pflotran input file"""
     pflotran_input="""
 # Jan 13, 2014
@@ -354,12 +361,12 @@ END_SUBSURFACE
     initial=0.5*(domain['inflow_pressure'] + domain['outflow_pressure'])
     pflotran_input=pflotran_input%(inflow_ex, outflow_ex, initial, domain['inflow_pressure'], domain['outflow_pressure'])
 
-    f=open('dfn_explicit.in','w')
+    f=open(path + 'dfn_explicit.in','w')
     f.write(pflotran_input)
     f.close()
     print("PFLOTRAN input finished")
 
-def create_dfntrans_input(domain):
+def create_dfntrans_input(domain, path):
     '''Create DFNTrans input file'''
 
     dfntrans_input="""
@@ -517,9 +524,20 @@ END
     
     dfntrans_input=dfntrans_input%(inflow_index, outflow_index, domain['number_of_particles'])
 
-    f=open('PTDFN_Control.dat','w')
+    f=open(path + 'PTDFN_Control.dat','w')
     f.write(dfntrans_input)
     f.close()
 
     print("DFNTran input finished")
 
+def create_txt_input_file(path):
+    dfnGen = 'dfnGen ' + path + 'dfn_gen_input.dat \n'  
+    pflotran = 'dfnFlow ' + path + 'dfn_explicit.in \n'
+    dfntrans = 'dfnTrans ' + path + 'PTDFN_Control.dat \n'
+    txt_file_name = 'integrated.txt'
+    print 'writing ', path + txt_file_name
+    f = open(path + txt_file_name, 'w')
+    f.write(dfnGen) 
+    f.write(pflotran)
+    f.write(dfntrans)
+    f.close()
