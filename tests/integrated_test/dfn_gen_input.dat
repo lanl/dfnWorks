@@ -2,7 +2,7 @@ domainSize: {5.000000, 5.000000, 5.000000}
 domainSizeIncrease: {0.000000, 0.000000, 0.000000}
 h: 0.100000
 boundaryFaces: {0,0,0,0,1,1}
-ignoreBoundaryFaces: 1
+ignoreBoundaryFaces: 0
 numOfLayers: 0
 layers: {0,0}
 stopCondition: 0

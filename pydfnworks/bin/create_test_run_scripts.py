@@ -22,7 +22,6 @@ if __name__ == '__main__':
     domain['number_of_particles']=100
     domain['number_of_layers']=0
     
-    domain['ignore_boundary_faces']=1
 
     domain['layer']=[]
     domain['layer'].append([-5,0])
