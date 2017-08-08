@@ -1,0 +1,90 @@
+domainSize: {100.000000, 10.000000, 10.000000}
+domainSizeIncrease: {0.500000, 0.500000, 0.500000}
+h: 0.010000
+boundaryFaces: {1,1,0,0,0,0}
+ignoreBoundaryFaces: 0
+numOfLayers: 0
+layers: {0,0}
+stopCondition: 1
+nPoly: 0
+eAngleOption: 1
+rAngleOption: 1
+seed: 92731535
+visualizationMode: 0
+forceLargeFractures: 0
+removeFracturesLessThan: 0
+printRejectReasons: 0
+outputAllRadii: 1
+outputAcceptedRadiiPerFamily: 1
+outputFinalRadiiPerFamily: 1
+keepOnlyLargestCluster: 1
+tripleIntersections: 0
+disableFram: 0
+insertUserRectanglesFirst: 1
+radiiListIncrease: 0.10
+rejectsPerFracture: 10
+
+famProb: {0.330000,0.330000,0.340000}
+nFamEll: 0
+nFamRect: 3
+
+r_p32Targets : { 1.750000,1.750000,1.750000}
+raspect : { 1.000000,1.000000,1.000000}
+rbetaDistribution : { 0,0,0}
+rkappa : { 20,20,20}
+rtheta : { 0,90,90}
+rphi : { 0,0,90}
+rbeta : { 0,0,0}
+rLayer : { 0,0,0}
+rdistr : { 4,4,2}
+rLogMean : {}
+rsd : {}
+rLogMax : {}
+rLogMin : {}
+ralpha : { 2.500000}
+rmin : { 1}
+rmax : { 5}
+rExpMean : {}
+rExpMin : {}
+rExpMax : {}
+rconst : { 0.500000,0.500000}
+
+e_p32Targets : {}
+easpect : {}
+ebetaDistribution : {}
+ekappa : {}
+etheta : {}
+ephi : {}
+ebeta : {}
+eLayer : {}
+edistr : {}
+eLogMean : {}
+esd : {}
+eLogMax : {}
+eLogMin : {}
+ealpha : {}
+emin : {}
+emax : {}
+eExpMean : {}
+eExpMin : {}
+eExpMax : {}
+econst : {}
+enumPoints : {}
+userRectanglesOnOff: 0
+UserRect_Input_File_Path: ~/
+userEllipsesOnOff: 0
+UserEll_Input_File_Path: ~/
+userRecByCoord: 0
+RectByCoord_Input_File_Path: ~/
+userEllByCoord: 0
+EllByCoord_Input_File_Path: ~/
+aperture: 3
+apertureFromTransmissivity: {0.000000, 0.000000}
+constantAperture: 0.000010
+lengthCorrelatedAperture: {0.000000, 0.000000}
+meanAperture: 0.000000
+stdAperture: 0.000000
+permOption: 0
+constantPermeability: 0.000000
+
+
