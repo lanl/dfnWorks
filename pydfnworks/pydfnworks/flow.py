@@ -28,7 +28,7 @@ def dfn_flow(self):
     helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
 
     tic = time()    
-    #self.parse_pflotran_vtk_python()
+    self.parse_pflotran_vtk_python()
     helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
     tic = time()    
@@ -423,10 +423,10 @@ def pflotran_cleanup(self):
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
     os.system(cmd)
 
-    #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
-    #        os.remove(fl)    
-    #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
-    #        os.remove(fl)    
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
+            os.remove(fl)    
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
+            os.remove(fl)    
 
 def create_dfn_flow_links(self):
     os.symlink('../full_mesh.uge', 'full_mesh.uge')
