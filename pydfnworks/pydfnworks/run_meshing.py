@@ -12,7 +12,7 @@ import multiprocessing as mp
 from shutil import copy, rmtree
 from numpy import genfromtxt
 
-def mesh_fracture(fracture_id, visual_mode, num_poly):
+def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
     """Child function for parallelized meshing of fractures"""
 
     t = time.time()
@@ -28,8 +28,13 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
          + 'parameters_CPU%d.mlgi'
     os.system(cmd%(fracture_id,cpu_id))
 
-    cmd = 'ln -s intersections/intersections_%d.inp '\
-         + 'intersections_CPU%d.inp'
+    if prune:
+        cmd = 'ln -s intersections/intersections_%d_prune.inp '\
+            + 'intersections_CPU%d.inp'
+    else:
+        cmd = 'ln -s intersections/intersections_%d.inp '\
+            + 'intersections_CPU%d.inp'
+
     os.system(cmd%(fracture_id,cpu_id))
 
     cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
@@ -96,17 +101,17 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete' 
         print 'Time for meshing: %0.2f seconds\n'%elapsed
 
-def worker(work_queue, visual_mode, num_poly):
+def worker(work_queue, visual_mode, num_poly, prune):
     """ Worker function for parallelized meshing """    
     try:
         for fracture_id in iter(work_queue.get, 'STOP'):
-            mesh_fracture(fracture_id, visual_mode, num_poly)
+            mesh_fracture(fracture_id, visual_mode, num_poly, prune)
     except: 
         #print('Error on Fracture ',fracture_id)
         pass
     return True
 
-def mesh_fractures_header(num_poly, ncpu, visual_mode):
+def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
     """ Header function for Parallel meshing of fractures
     
     Creates a queue of fracture numbers ranging form 1, num_poly
@@ -125,7 +130,7 @@ def mesh_fractures_header(num_poly, ncpu, visual_mode):
     """ 
     t_all = time.time()
 
-    print "\nTriangulate Polygons:", num_poly
+    print "\nTriangulate %d fractures:"%len(fracture_list)
     try:
         rmtree('lagrit_logs')
     except OSError:
@@ -138,7 +143,7 @@ def mesh_fractures_header(num_poly, ncpu, visual_mode):
 
     print("Meshing using %d CPUS"%ncpu)
 
-    fracture_list = range(1, num_poly + 1)
+    #fracture_list = range(1, num_poly + 1)
     work_queue = mp.Queue()   # reader() reads from queue
     processes = []
 
@@ -147,7 +152,7 @@ def mesh_fractures_header(num_poly, ncpu, visual_mode):
 
     for i in xrange(ncpu):
         p = mp.Process(target=worker, args=(work_queue, \
-            visual_mode, num_poly))
+            visual_mode, len(fracture_list), prune))
         p.daemon = True
         p.start()        
         processes.append(p)

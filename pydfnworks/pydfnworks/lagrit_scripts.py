@@ -4,13 +4,60 @@
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-
 import os
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
+def edit_intersection_files(num_poly, fracture_list):
+    """ If pruning a DFN, this function walks through the intersection files
+    and removes refercences to files that are not included in the 
+    fractures that will remain in the network. Could be done in parallell.
+    Currently it is serial."""
 
-def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
+    pull_list = list(set(range(1,num_poly+ 1)) - set(fracture_list))
+    cwd = os.getcwd()
+    os.chdir('intersections')
+
+    print("Editing Intersection Files")    
+    for i in fracture_list:
+    	filename = 'intersections_%d.inp'%i
+    	print '--> Working on: ', filename
+    	lagrit_script = 'read / %s / mo1'%filename
+    	lagrit_script += '''
+pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
+'''%pull_list[0]    
+    	for j in pull_list[1:]:
+    		lagrit_script += '''
+pset / prune / attribute / b_a / 1,0,0 / eq / %d
+pset / pset2remove / union / pset2remove, prune
+#rmpoint / pset, get, prune
+pset / prune / delete
+ '''%j
+    	lagrit_script += '''
+rmpoint / pset, get, pset2remove 
+rmpoint / compress
+
+cmo / modatt / mo1 / imt / ioflag / l
+cmo / modatt / mo1 / itp / ioflag / l
+cmo / modatt / mo1 / isn / ioflag / l
+cmo / modatt / mo1 / icr / ioflag / l
+
+cmo / status / brief
+dump / intersections_%d_prune.inp / mo1
+finish
+'''%i
+    	
+    	file_name = 'prune_intersection.lgi'
+    	f = open(file_name, 'w')
+    	f.write(lagrit_script)
+    	f.flush()
+    	f.close()
+    	os.system(os.environ['lagrit_dfn'] +  '< prune_intersection.lgi > out_%d.txt'%i)
+    os.chdir(cwd)
+
+
+
+def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
     """create parameter_mgli_files
     Outputs parameteri.mlgi files used in running LaGriT Scripts
     
@@ -43,22 +90,23 @@ def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
-    for i in range(num_poly):
-    	
-    	frac_id = str(int(data[i,0]))
-    	long_name = str(int(data[i,0]))  	
-    	theta = data[i,2]	
-    	x1 = data[i,3]	
-    	y1 = data[i,4]	
-    	z1 = data[i,5]	
-    	x2 = data[i,6]	
-    	y2 = data[i,7]	
-    	z2 = data[i,8]	
-    	family = data[i,1]
+    for index, i in enumerate(fracture_list): 
+    	# using i - 1 do to python indexing from 0
+        # fracture index starts at 1
+        frac_id = str(int(data[i-1,0]))
+    	long_name = str(int(data[i-1,0]))  	
+    	theta = data[i-1,2]	
+    	x1 = data[i-1,3]	
+    	y1 = data[i-1,4]	
+    	z1 = data[i-1,5]	
+    	x2 = data[i-1,6]	
+    	y2 = data[i-1,7]	
+    	z2 = data[i-1,8]	
+    	family = data[i-1,1]
 
     	fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
     	f = open(fparameter_name, 'w')
-    	f.write('define / ID / ' + frac_id + '\n')
+    	f.write('define / ID / ' + str(index+1) + '\n')
     	f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
     	f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
     	f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
@@ -492,7 +540,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
+def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain):
     """
     Section 4 : Create merge_poly file
      Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -506,8 +554,14 @@ def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
     print "Writing : merge_poly.lgi"
 
     part_size = num_poly/ncpu + 1 ###v number of fractures in each part
-    endis = range(part_size, num_poly + part_size, part_size) 
-    endis[-1] = num_poly
+    endis = []
+    ii = 0
+    for i in fracture_list[:-1]:	
+    	ii += 1	
+    	if ii == part_size:
+    		endis.append(i)
+    		ii = 0	
+    endis.append(fracture_list[-1])
 
     lagrit_input = """
 # Change to read LaGriT
@@ -538,9 +592,8 @@ finish \n
     j = 0 # Counter for cpus 
     fout = 'merge_poly_part_1.lgi'
     f = open(fout, 'w')
-    for i in range(1,num_poly+1):
+    for i in fracture_list: 
     	tmp = 'mesh_'+str(i) +'.lg'
-
     	f.write(lagrit_input%(tmp,i,i,i,i,i))
     	# if i is the last fracture in the cpu set
     	# move to the next cpu set	
@@ -548,7 +601,6 @@ finish \n
     		f.write(lagrit_input_2%(j+1))
     		f.flush()
     		f.close()
-    		
     		j += 1
     		fout = 'merge_poly_part_'+str(j+1)+'.lgi'
     		f = open(fout,'w') 
@@ -766,43 +818,4 @@ def define_zones():
     os.remove('boundary_right_e.zone')
     os.remove('boundary_front_s.zone')
     os.remove('boundary_back_n.zone')
-
-def edit_intersection_files(num_poly, keep_list):
-
-    pull_list = list(set(range(1,num_poly+ 1)) - set(keep_list))
-    os.chdir('intersections')
-    for i in keep_list:
-    	filename = 'intersections_%s.inp'%str(i)
-    	print '--> Working on: ', filename
-    	lagrit_script = 'read / %s / mo1'%filename
-    	lagrit_script += '''
-pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
-'''%pull_list[0]    
-    	for j in pull_list[1:]:
-    		lagrit_script += '''
-pset / prune / attribute / b_a / 1,0,0 / eq / %d
-pset / pset2remove / union / pset2remove, prune
-#rmpoint / pset, get, prune
-pset / prune / delete
- '''%j
-    	lagrit_script += '''
-rmpoint / pset, get, pset2remove 
-rmpoint / compress
-
-cmo / modatt / mo1 / imt / ioflag / l
-cmo / modatt / mo1 / itp / ioflag / l
-cmo / modatt / mo1 / isn / ioflag / l
-cmo / modatt / mo1 / icr / ioflag / l
-
-cmo / status / brief
-dump / intersections_%d_prune.inp / mo1
-finish
-'''%i
-    	
-    	file_name = 'prune_intersection.lgi'
-    	f = open(file_name, 'w')
-    	f.write(lagrit_script)
-    	f.flush()
-    	f.close()
-    	os.system(lagrit_path +  '< prune_intersection.lgi > out.txt')
 
