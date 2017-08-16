@@ -1,5 +1,4 @@
-from integrated import *
-from create_run_scripts import *
+import pydfnworks 
 
 if __name__ == '__main__':
     path = sys.argv[1]

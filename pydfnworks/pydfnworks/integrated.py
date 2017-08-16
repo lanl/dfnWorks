@@ -1,4 +1,5 @@
 import sys
+
 def create_domain():
     ''' Create Dictionary for domain variables'''
     domain={}
