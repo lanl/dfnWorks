@@ -610,6 +610,15 @@ void ParticleTrack ()
                      
                     {
 		      capacity=2*capacity;
+			if (capacity >= 2*timesteps)
+                         {
+ //                        printf("overload\n");
+                         FLAG_OUT=0;
+                         t_end=t; 
+ 			break;
+ 			free(tempdata);
+                         }
+
 		      tempdata=(struct tempout*)realloc(tempdata, sizeof(struct tempout)*capacity);
 		      if (tempdata==NULL)
 			printf("REAllocation memory problem - tempdata\n");
