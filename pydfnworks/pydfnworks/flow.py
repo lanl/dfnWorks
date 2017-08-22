@@ -429,17 +429,22 @@ def pflotran_cleanup(self):
             os.remove(fl)    
 
 def create_dfn_flow_links(self, path = '../'):
-    os.symlink(path+'full_mesh.uge', 'full_mesh.uge')
-    os.symlink(path+'full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
-    os.symlink(path+'full_mesh.inp', 'full_mesh.inp')
-    os.symlink(path+'pboundary_back_n.zone', 'pboundary_back_n.zone')
-    os.symlink(path+'pboundary_front_s.zone', 'pboundary_front_s.zone')
-    os.symlink(path+'pboundary_left_w.zone', 'pboundary_left_w.zone')
-    os.symlink(path+'pboundary_right_e.zone', 'pboundary_right_e.zone')
-    os.symlink(path+'pboundary_top.zone', 'pboundary_top.zone')
-    os.symlink(path+'pboundary_bottom.zone', 'pboundary_bottom.zone')
-    os.symlink(path+'materialid.dat', 'materialid.dat')
-    
+    ''' create_dfn_flow_links
+    Create symlinks for files needed for a PFLOTRAN run
+
+    input:
+    path (optional), path to where files are located. default is parent directory
+    '''
+    files = ['full_mesh.uge', 'full_mesh_vol_area.uge', 'full_mesh.inp', \
+            'pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
+            'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone', \
+            'materialid.dat']
+    for f in files:
+        try:
+            os.symlink(path+f, f)
+        except:
+            print("--> Error Creating link for %s"%f)
+   
 def uncorrelated(sigma):
     print '--> Creating Uncorrelated Transmissivity Fields'
     print 'Variance: ', sigma
