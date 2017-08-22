@@ -6,7 +6,8 @@
 """
 
 import glob
-from os import remove
+from os import remove, symlink, unlink
+from numpy import genfromtxt, sort
 
 def parse_params_file():
     """ Reads params.txt file and parse information
@@ -146,4 +147,96 @@ def output_meshing_report(visual_mode):
     f.close()
 
 
+def clean_up_files_after_prune(self, keep_file, path = './'):
+    ''' after pruning a dfn to only include the fractures in keep_file
+    this function shoud be used to remove references to those fractures
+    from subsequent files 
+    
+    inputs: 
+    keep_file : List of fractures to remain in the network
+    path (optional) : path to files to be modified
+    '''
 
+    print("--> Editing Fracture Files based on file %s"%keep_file)
+    keep_list = sort(genfromtxt(keep_file).astype(int)) 
+    num_frac = len(keep_list)
+    
+    print("--> Editing params.txt file") 
+    fin = open(path+'/params.txt')
+    try:
+        unlink('params.txt')
+    except:
+        pass
+    fout = open('params.txt','w')
+    line = fin.readline()
+    fout.write('%d\n'%num_frac)
+    for i in range(7):
+    	line = fin.readline()
+    	fout.write(line)
+    fin.close()
+    fout.close()
+    print("--> Editing params.txt file complete") 
+ 
+    print("--> Editing poly_info.dat file")
+    poly_info = genfromtxt(path+'poly_info.dat')[keep_list-1,:]
+    try: 
+        unlink('poly_info.dat')
+    except:
+        pass
+    f = open('poly_info.dat','w')
+    for i in range(num_frac):
+    	f.write('%d %d %f %f %f %d %f %f %d\n'%(i+1, poly_info[i,1], poly_info[i,2], poly_info[i,3], poly_info[i,4], poly_info[i,5], poly_info[i,6], poly_info[i,7], poly_info[i,8]))	
+    f.close()
+    print("--> Editing poly_info.dat file complete")
+
+    print("--> Editing perm.dat file") 
+    perm = genfromtxt(path+'perm.dat', skip_header = 1)[keep_list-1, -1]
+    f = open('perm.dat', 'w+')
+    f.write('permeability\n')
+    for i in range(num_frac):
+    	f.write('-%d 0 0 %e %e %e\n'%(7 + i, perm[i], perm[i], perm[i]))
+    f.close()
+    print("--> Editing perm.dat file complete") 
+    
+    print("--> Editing aperture.dat file") 
+    aperture = genfromtxt(path+'aperture.dat', skip_header = 1)[keep_list-1, -1]
+    f = open('aperture.dat', 'w+')
+    f.write('aperture\n')
+    for i in range(num_frac):
+    	f.write('-%d 0 0 %e \n'%(7 + i, aperture[i]))
+    f.close()
+    print("--> Editing aperture.dat file complete") 
+    
+    print("--> Editing radii_Final.dat file") 
+    fin = open(path+'radii_Final.dat')
+    fout = open('radii_Final.dat','w')
+    # copy header
+    line = fin.readline()
+    fout.write(line)
+    line = fin.readline()
+    fout.write(line)
+    fin.close()
+    # write radii from remaining fractures
+    radii = genfromtxt(path+'radii_Final.dat',skip_header = 2 )[keep_list - 1,:]
+    for i in range(num_frac):
+    	fout.write('%f %f %d\n'%(radii[i,0], radii[i,1], radii[i,2]))	
+    fout.close()
+    print("--> Editing radii_Final.dat file complete") 
+
+    print("--> Editing Fracture Files Complete")
+
+
+def create_mesh_links(self, path):
+    ''' Makes symlinks for files in path required for meshing
+    input
+    path: path to where meshing files are located
+    '''
+    print("--> Creating links for meshing")
+    files = ['params.txt', 'poly_info.dat', 'polys', 'intersections']
+    for f in files:
+        try:
+            symlink(path+f,f)
+        except:
+            print("unable to make link for %s"%f)
+            pass
+    print("--> Creating links for meshing Complete")
