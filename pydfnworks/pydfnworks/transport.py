@@ -55,10 +55,10 @@ def run_dfn_trans(self):
     else:
         sys.exit("--> ERROR: dfnTrans did not complete\n")
 
-def create_dfn_trans_links():
-    os.symlink('../params.txt', 'params.txt')
-    os.symlink('../allboundaries.zone', 'allboundaries.zone')
-    os.symlink('../tri_fracture.stor', 'tri_fracture.stor')
-    os.symlink('../poly_info.dat','poly_info.dat')
+def create_dfn_trans_links(self, path = '../'):
+    os.symlink(path+'params.txt', 'params.txt')
+    os.symlink(path+'allboundaries.zone', 'allboundaries.zone')
+    os.symlink(path+'tri_fracture.stor', 'tri_fracture.stor')
+    os.symlink(path+'poly_info.dat','poly_info.dat')
 
 

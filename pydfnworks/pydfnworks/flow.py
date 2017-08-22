@@ -428,17 +428,17 @@ def pflotran_cleanup(self):
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
             os.remove(fl)    
 
-def create_dfn_flow_links(self):
-    os.symlink('../full_mesh.uge', 'full_mesh.uge')
-    os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
-    os.symlink('../full_mesh.inp', 'full_mesh.inp')
-    os.symlink('../pboundary_back_n.zone', 'pboundary_back_n.zone')
-    os.symlink('../pboundary_front_s.zone', 'pboundary_front_s.zone')
-    os.symlink('../pboundary_left_w.zone', 'pboundary_left_w.zone')
-    os.symlink('../pboundary_right_e.zone', 'pboundary_right_e.zone')
-    os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
-    os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
-    os.symlink('../materialid.dat', 'materialid.dat')
+def create_dfn_flow_links(self, path = '../'):
+    os.symlink(path+'full_mesh.uge', 'full_mesh.uge')
+    os.symlink(path+'full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
+    os.symlink(path+'full_mesh.inp', 'full_mesh.inp')
+    os.symlink(path+'pboundary_back_n.zone', 'pboundary_back_n.zone')
+    os.symlink(path+'pboundary_front_s.zone', 'pboundary_front_s.zone')
+    os.symlink(path+'pboundary_left_w.zone', 'pboundary_left_w.zone')
+    os.symlink(path+'pboundary_right_e.zone', 'pboundary_right_e.zone')
+    os.symlink(path+'pboundary_top.zone', 'pboundary_top.zone')
+    os.symlink(path+'pboundary_bottom.zone', 'pboundary_bottom.zone')
+    os.symlink(path+'materialid.dat', 'materialid.dat')
     
 def uncorrelated(sigma):
     print '--> Creating Uncorrelated Transmissivity Fields'
