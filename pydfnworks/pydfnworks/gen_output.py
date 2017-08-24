@@ -314,12 +314,16 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
 		xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
 		xVals = np.linspace(xmin, xmax, numXpoints)
-		mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
+		log_mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
 		normConstant = 1.0
+		mu = -1*np.exp(-1*log_mu) + 1
+                if (mu < 0):
+                    print 'ERROR: mean must be positive'
+                    exit()
 		try:       
-			normConstant = 1.0 / (lognorm_c_d_f(xmax, mu, sigma) - lognorm_c_d_f(xmin, mu, sigma))
+		    normConstant = 1.0 / (lognorm_c_d_f(xmax, log_mu, sigma) - lognorm_c_d_f(xmin, log_mu, sigma))
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
-			pass  
+		    pass  
 		lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
 
 		histHeights, binCenters = hist_and_p_d_f(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
