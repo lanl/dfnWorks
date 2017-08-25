@@ -6,7 +6,7 @@
 """
 
 import glob
-from os import remove, symlink, unlink
+from os import remove, symlink, unlink 
 from numpy import genfromtxt, sort
 
 def parse_params_file():
@@ -231,12 +231,20 @@ def create_mesh_links(self, path):
     input
     path: path to where meshing files are located
     '''
+    import os.path
+    from shutil import rmtree
     print("--> Creating links for meshing")
     files = ['params.txt', 'poly_info.dat', 'polys', 'intersections']
     for f in files:
+        if os.path.isfile(f) or os.path.isdir(f):
+            print("Removing %s"%f)
+            try:
+                rmtree(f)   
+            except:
+                print("Unable to remove %s"%f) 
         try:
             symlink(path+f,f)
-        except:
+        except: 
             print("unable to make link for %s"%f)
             pass
     print("--> Creating links for meshing Complete")
