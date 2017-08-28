@@ -216,7 +216,6 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 			if fam != 'all' and fam != 'notRemoved':
 				pass # families[fam].print_poly_fam()
 
-
 	def hist_and_p_d_f(radiiSizes, pdfArray, xmin, xmax, xVals):
 	        """
                 Histogram of sizes (from data) and PDF (from input parameters
@@ -234,9 +233,11 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		## histo = plt.ax_stack()
 
 		## plot hist, set xtick labels
-		histHeights, binEdges, patches = histo.hist(radiiSizes, numBuckets, normed=1, color='r',
+	        weights = np.ones_like(radiiSizes)/float(len(radiiSizes))	
+                histHeights, binEdges, patches = histo.hist(radiiSizes, numBuckets, weights=weights, normed=0, color='r',
 									alpha=0.75, label='Empirical data')
-		binCenters = [((binEdges[x] + binEdges[x+1]) / 2.0) for x in range(len(binEdges)-1)] ## need for cdf
+	
+                binCenters = [((binEdges[x] + binEdges[x+1]) / 2.0) for x in range(len(binEdges)-1)] ## need for cdf
 			     ## ^ -1 to prevent Index Error when calculating last bin Center
 		histo.set_xticks(binEdges)
 		histo.locator_params(tight = True, axis = 'x', nbins = numBuckets/8.0) ## num of axis value labels
@@ -305,7 +306,18 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
                 return 0.5 + (0.5 * special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
 	       
-	def graph_lognormal(famObj):
+        def lognormal_pdf(x, sigma, mu):
+                constant = 1 / ( x * sigma * np.sqrt(2*3.14159))
+                exp_term = -0.5*(pow((np.log(x) - mu) / sigma, 2.0))
+                return constant*np.exp(exp_term)
+        
+        def lognormal_pdf_list(xVals, sigma, mu):
+                lst = []
+                for x in xVals:
+                    lst.append(lognormal_pdf(x, sigma, mu))
+                return lst
+        
+        def graph_lognormal(famObj):
 		"""Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.
                 Args:
                     famObj (polyFam class): the polyFam object describing the truncated power law distribution.
@@ -314,18 +326,18 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
 		xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
 		xVals = np.linspace(xmin, xmax, numXpoints)
-		log_mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
-		normConstant = 1.0
-		mu = -1*np.exp(-1*log_mu) + 1
+		mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
                 if (mu < 0):
                     print 'ERROR: mean must be positive'
                     exit()
 		try:       
-		    normConstant = 1.0 / (lognorm_c_d_f(xmax, log_mu, sigma) - lognorm_c_d_f(xmin, log_mu, sigma))
+		    normConstant = 1.0 / (lognorm_c_d_f(xmax, mu, sigma) - lognorm_c_d_f(xmin, mu, sigma))
 		except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
 		    pass  
-		lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
-
+                lognormPDFVals = [x * normConstant for x in lognormal_pdf_list(xVals, sigma, mu)]
+                #lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
+                adj_factor = np.trapz(lognormPDFVals, xVals)
+                lognormPDFVals /= adj_factor
 		histHeights, binCenters = hist_and_p_d_f(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
 		plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
 			  "\nFamily #" + famObj.globFamNum)
@@ -335,8 +347,9 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 		cdfs(histHeights, binCenters, lognormPDFVals, xmin, xmax, xVals)
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
-
-		trueVals = [stats.lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
+                
+                trueVals = [lognormal_pdf(binCenters[i], sigma, mu) for i in range(len(binCenters))]
+		#trueVals = [stats.lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
 		qq(trueVals, histHeights)
 		plt.savefig(outputPDF, format='pdf')
 		if show: plt.show()
