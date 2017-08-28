@@ -234,7 +234,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
 
 		## plot hist, set xtick labels
 	        weights = np.ones_like(radiiSizes)/float(len(radiiSizes))	
-                histHeights, binEdges, patches = histo.hist(radiiSizes, numBuckets, weights=weights, normed=0, color='r',
+                histHeights, binEdges, patches = histo.hist(radiiSizes, numBuckets, weights=weights, normed=1, color='r',
 									alpha=0.75, label='Empirical data')
 	
                 binCenters = [((binEdges[x] + binEdges[x+1]) / 2.0) for x in range(len(binEdges)-1)] ## need for cdf
@@ -307,11 +307,23 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 return 0.5 + (0.5 * special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
 	       
         def lognormal_pdf(x, sigma, mu):
+		"""Get the analytical lognormal PDF value corresponding to x.
+                Args:
+                    xVals: values of x at which to calculate the lognormal PDF
+                    sigma: the standard deviation of the corresponding normal distribution
+                    mu: the mean of the corresponding normal distribution
+                """
                 constant = 1 / ( x * sigma * np.sqrt(2*3.14159))
                 exp_term = -0.5*(pow((np.log(x) - mu) / sigma, 2.0))
                 return constant*np.exp(exp_term)
         
         def lognormal_pdf_list(xVals, sigma, mu):
+		"""Get a list of the analytical lognormal PDF values corresponding to xVals.
+                Args:
+                    xVals: values of x at which to calculate the lognormal PDF
+                    sigma: the standard deviation of the corresponding normal distribution
+                    mu: the mean of the corresponding normal distribution
+                """
                 lst = []
                 for x in xVals:
                     lst.append(lognormal_pdf(x, sigma, mu))
