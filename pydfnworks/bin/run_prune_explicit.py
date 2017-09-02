@@ -15,15 +15,20 @@ import subprocess
 define_paths()
 main_time = time()
 DFN = create_dfn()
-
+#
 DFN.make_working_directory()
-DFN.check_input()
-DFN.create_network()
-
-DFN.output_report()
-DFN.mesh_network()
+##DFN.check_input()
+##DFN.create_network()
+#
+##DFN.output_report()
+##DFN.mesh_network()
 
 os.chdir(DFN.jobname)
+DFN.create_mesh_links(path='../')
+keep_file_path="../10_shortest_paths_bb.txt"
+DFN.mesh_network(prune=True, keep_file=keep_file_path)
+DFN.clean_up_files_after_prune(path='../', keep_file=keep_file_path)
+
 DFN.dfn_flow()
 
 #DFN.dfn_trans()

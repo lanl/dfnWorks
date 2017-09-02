@@ -16,26 +16,10 @@ define_paths()
 main_time = time()
 DFN = create_dfn()
 
-DFN.make_working_directory()
-DFN.check_input()
-DFN.create_network()
-
-DFN.output_report()
-DFN.mesh_network()
 
 os.chdir(DFN.jobname)
-DFN.dfn_flow()
+DFN.dfn_trans()
 
-#DFN.dfn_trans()
-
-#DFN.lagrit2pflotran()
-#DFN.pflotran()
-#DFN.parse_pflotran_vtk_python()       
-#os.chdir(DFN.jobname)
-#DFN.pflotran_cleanup()
-
-#DFN.copy_dfn_trans_files()
-#DFN.run_dfn_trans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
