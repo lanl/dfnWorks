@@ -601,6 +601,7 @@ void ParticleTrack ()
           
               
               if (no_out!=1)
+                 {
  		particle3dvelocity=CalculateVelocity3D();
                   if (tfile==1)
                      {
@@ -659,10 +660,10 @@ void ParticleTrack ()
 			}
 		    }
     
-                
+                 }       
 		 
 		}
-
+         
 
 	      //calculations for dispersivity: square of (xo-x) is calculated for transverse disersivity only
 	      // for longitudinal dispersivity we save the actual coordination of the particle (commented out)
@@ -921,7 +922,16 @@ void ParticleTrack ()
 	
 	      //	  	  printf("Done for particle %d in fracture %d at time %d, located at %f, %f; cell %d, Flag %d intc %d.  \n\n", np+1, particle[np].fracture, t_end,particle[np].position[0], particle[np].position[1], prevcell, FLAG_OUT, particle[np].intcell);  
 	  
-	    
+             if (tfile==1)
+               {
+                        fclose(tmp);
+                        int status;
+                  sprintf(filename,"%s/tempdata_%d",maindir,np);
+                  status = remove(filename);
+
+
+
+	        }
 	      if (out_control==1)
 		{	
 		  fclose(tmp2);  
