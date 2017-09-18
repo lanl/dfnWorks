@@ -30,7 +30,7 @@ for job in jobs:
 
 
 
-num_cpu = 10 
+num_cpu = 32 
 pool = mp.Pool(num_cpu)
 pool.map(spawn_dfn_job, data)
 pool.close()

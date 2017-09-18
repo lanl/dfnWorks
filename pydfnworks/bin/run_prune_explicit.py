@@ -25,9 +25,8 @@ DFN.make_working_directory()
 
 os.chdir(DFN.jobname)
 DFN.create_mesh_links(path='../')
-keep_file_path="../10_shortest_paths_bb.txt"
-DFN.mesh_network(prune=True, keep_file=keep_file_path)
-DFN.clean_up_files_after_prune(path='../', keep_file=keep_file_path)
+DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
+DFN.clean_up_files_after_prune(path='../', keep_file=DFN.prune_file)
 
 DFN.dfn_flow()
 
