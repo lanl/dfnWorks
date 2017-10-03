@@ -92,7 +92,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print ('='*80)
     print("\n\n")
 
-def zone2ex(self, uge_file='', zone_file='', face=''):
+def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-3):
     '''zone2ex    
     Convert zone files from LaGriT into ex format for LaGriT
     inputs:
@@ -191,7 +191,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 
             Boundary_cell_area = np.zeros(NumNodes, 'float')
             for i in range(NumNodes):
-                Boundary_cell_area[i] = 1.e20  # Fix the area to a large number
+                Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
 
             print('--> Finished calculating boundary connections')
 
