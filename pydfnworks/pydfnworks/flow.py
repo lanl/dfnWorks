@@ -411,16 +411,20 @@ def pflotran(self):
     print('='*80)
     print("\n")
 
-def pflotran_cleanup(self):
+def pflotran_cleanup(self, index = 1):
     '''pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
+    input: index, if PFLOTRAN has multiple dumps use this to pick which
+           dump is put into cellinfo.day and darcyvel.dat
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
+    print("Running >> %s"%cmd)
     os.system(cmd)
 
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
+    print("Running >> %s"%cmd)
     os.system(cmd)
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
