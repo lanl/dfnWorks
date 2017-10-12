@@ -427,9 +427,9 @@ def pflotran_cleanup(self, index = 1):
     print("Running >> %s"%cmd)
     os.system(cmd)
 
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
             os.remove(fl)    
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
             os.remove(fl)    
 
 def create_dfn_flow_links(self):
