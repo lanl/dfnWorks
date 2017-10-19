@@ -12,9 +12,15 @@ def edit_intersection_files(num_poly, fracture_list):
     """ If pruning a DFN, this function walks through the intersection files
     and removes refercences to files that are not included in the 
     fractures that will remain in the network. Could be done in parallell.
-    Currently it is serial."""
+    Currently it is serial.
+    also, the pull_list per fracture could be reduced by reading in the 
+    connectivity.dat file for each fracture and taking the intersection
+    of each fracture's row with the pull_list
+    """
 
     pull_list = list(set(range(1,num_poly+ 1)) - set(fracture_list))
+    print("Removing these fractures")
+    print pull_list
     cwd = os.getcwd()
     os.chdir('intersections')
 

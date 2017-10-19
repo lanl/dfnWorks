@@ -28,8 +28,9 @@ def mesh_network(self, prune = False,  keep_file = [], production_mode=True, ref
     if prune:
         print("Loading list of fractures to remain in network from %s"%keep_file)
         fracture_list = sort(genfromtxt(keep_file).astype(int))
-        num_poly = len(fracture_list)
+        print fracture_list
         lagrit.edit_intersection_files(num_poly, fracture_list)
+        num_poly = len(fracture_list)
     else:
         fracture_list = range(1, num_poly + 1)
 
