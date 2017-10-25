@@ -15,8 +15,8 @@ import subprocess
 define_paths()
 main_time = time()
 DFN = create_dfn()
-#
-DFN.make_working_directory()
+
+#DFN.make_working_directory()
 ##DFN.check_input()
 ##DFN.create_network()
 #
@@ -24,13 +24,12 @@ DFN.make_working_directory()
 ##DFN.mesh_network()
 
 os.chdir(DFN.jobname)
-DFN.create_mesh_links(path='../')
-DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
-DFN.clean_up_files_after_prune(path='../', keep_file=DFN.prune_file)
-
-DFN.dfn_flow()
-
-#DFN.dfn_trans()
+#DFN.create_mesh_links(path='../')
+#DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
+#DFN.clean_up_files_after_prune(path='../', keep_file=DFN.prune_file)
+#
+#DFN.dfn_flow()
+DFN.dfn_trans()
 
 #DFN.lagrit2pflotran()
 #DFN.pflotran()
