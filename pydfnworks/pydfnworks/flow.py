@@ -92,7 +92,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print ('='*80)
     print("\n\n")
 
-def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-3):
+def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1):
     '''zone2ex    
     Convert zone files from LaGriT into ex format for LaGriT
     inputs:
