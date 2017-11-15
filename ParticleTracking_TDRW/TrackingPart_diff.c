@@ -418,21 +418,31 @@ void ParticleTrack ()
     {
 
       t=0;
-               
-      if ((np >= (int)(0.25*numbpart)) && ( percent_done==0))
+     if ((np >= (int)(0.01*numbpart)) && ( percent_done==0))
         {
-	printf("Done %d particles, 25%%. \n", np); 
+        printf("Done %d particles, 1%%. \n", np);
         percent_done=1;
         }
-     if ((np >= (int)(0.5*numbpart)) && ( percent_done==1))
+    if ((np >= (int)(0.05*numbpart)) && ( percent_done==1))
         {
-        printf("Done %d particles, 50%%.  \n", np);
+        printf("Done %d particles, 5%%. \n", np);
         percent_done=2;
         }
-     if ((np >= (int)(0.75*numbpart)) && ( percent_done==2))
+
+     if ((np >= (int)(0.25*numbpart)) && ( percent_done==2))
+        {
+	printf("Done %d particles, 25%%. \n", np); 
+        percent_done=3;
+        }
+     if ((np >= (int)(0.5*numbpart)) && ( percent_done==3))
+        {
+        printf("Done %d particles, 50%%.  \n", np);
+        percent_done=4;
+        }
+     if ((np >= (int)(0.75*numbpart)) && ( percent_done==4))
         {
         printf("Done %d particles, 75%%. \n", np);
-        percent_done=3;
+        percent_done=5;
         }
 
 
@@ -809,7 +819,7 @@ void ParticleTrack ()
 	      /*** if particle's new cell was not found move to the next particle ***/ 
 	      if (particle[np].cell==0)
 		{
-	      
+	          
 		  break;
                 }
     
@@ -1038,7 +1048,7 @@ void ParticleTrack ()
 		  
 		    }
 
- 		if ((tdrw==1)&& (particle[np].cell !=0))
+ 		if (tdrw==1)
                        {
                       t_adv=particle[np].time-t_adv0;
                       timediff=TimeDomainRW(t_adv);
@@ -2872,7 +2882,11 @@ double TimeDomainRW (double time_advect)
 
   double term_a=0;
   double b=0;
-   
+ 
+if (particle[np].cell!=0)
+
+     {
+  
   if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12))
        b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
   else
@@ -2880,6 +2894,14 @@ double TimeDomainRW (double time_advect)
        b=node[cell[particle[np].cell-1].node_ind[1]-1].aperture;
    else
        b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
+
+ }
+  else
+    {
+      b=node[fracture[particle[np].fracture-1].firstnode-1].aperture;
+    }
+
+
 
   term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
   double inverse_erfc=0.0;
