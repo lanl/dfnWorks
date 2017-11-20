@@ -17,50 +17,64 @@ def edit_intersection_files(num_poly, fracture_list):
     connectivity.dat file for each fracture and taking the intersection
     of each fracture's row with the pull_list
     """
+    
+    # Make dictionary of connectivity.dat
+    connectivity = []  
+    fp = open("connectivity.dat", "r")
+    for i in range(num_poly):
+        tmp = []
+        line = fp.readline()
+        line = line.split()
+        for frac in line:
+            tmp.append(int(frac))
+        connectivity.append(tmp)
+    fp.close()
 
-    pull_list = list(set(range(1,num_poly+ 1)) - set(fracture_list))
-    print("Removing these fractures")
-    print pull_list
+    fractures_to_remove = list(set(range(1,num_poly+ 1)) - set(fracture_list))
     cwd = os.getcwd()
     os.chdir('intersections')
+    
 
     print("Editing Intersection Files")    
     for i in fracture_list:
     	filename = 'intersections_%d.inp'%i
     	print '--> Working on: ', filename
-    	lagrit_script = 'read / %s / mo1'%filename
-    	lagrit_script += '''
+        intersecting_fractures = connectivity[i-1]
+        pull_list = list(set(intersecting_fractures).intersection(set(fractures_to_remove)))
+        if len(pull_list) > 0:
+        	lagrit_script = 'read / %s / mo1'%filename
+        	lagrit_script += '''
 pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
-'''%pull_list[0]    
-    	for j in pull_list[1:]:
-    		lagrit_script += '''
+    '''%pull_list[0]    
+        	for j in pull_list[1:]:
+        		lagrit_script += '''
 pset / prune / attribute / b_a / 1,0,0 / eq / %d
 pset / pset2remove / union / pset2remove, prune
 #rmpoint / pset, get, prune
 pset / prune / delete
- '''%j
-    	lagrit_script += '''
+     '''%j
+        	lagrit_script += '''
 rmpoint / pset, get, pset2remove 
 rmpoint / compress
-
+    
 cmo / modatt / mo1 / imt / ioflag / l
 cmo / modatt / mo1 / itp / ioflag / l
 cmo / modatt / mo1 / isn / ioflag / l
 cmo / modatt / mo1 / icr / ioflag / l
-
+    
 cmo / status / brief
 dump / intersections_%d_prune.inp / mo1
 finish
-'''%i
-    	
-    	file_name = 'prune_intersection.lgi'
-    	f = open(file_name, 'w')
-    	f.write(lagrit_script)
-    	f.flush()
-    	f.close()
-    	os.system(os.environ['lagrit_dfn'] +  '< prune_intersection.lgi > out_%d.txt'%i)
-    os.chdir(cwd)
 
+'''%i
+        	
+        	file_name = 'prune_intersection.lgi'
+        	f = open(file_name, 'w')
+        	f.write(lagrit_script)
+        	f.flush()
+        	f.close()
+        	os.system(os.environ['lagrit_dfn'] +  '< prune_intersection.lgi > out_%d.txt'%i)
+    os.chdir(cwd)
 
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):

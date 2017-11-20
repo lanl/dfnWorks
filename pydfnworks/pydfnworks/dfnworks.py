@@ -47,7 +47,7 @@ class dfnworks(Frozen):
     from legal import legal
     from paths import define_paths
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', prune_file = '', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', prune_file = '', prune_path = '', dfnTrans_version ='', num_frac = ''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -142,6 +142,9 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
 
     if options.prune_file != "":
         dfn.prune_file = options.prune_file
+
+    if options.prune_path != "":
+        dfn.prune_path = options.prune_path
 
     print("\n-->Creating DFN class: Complete")
     print 'Jobname: ', dfn.jobname
