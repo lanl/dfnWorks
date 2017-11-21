@@ -5,6 +5,7 @@
 
 """
 import os
+import glob
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
@@ -33,12 +34,15 @@ def edit_intersection_files(num_poly, fracture_list):
     fractures_to_remove = list(set(range(1,num_poly+ 1)) - set(fracture_list))
     cwd = os.getcwd()
     os.chdir('intersections')
-    
+    # clean up directory 
+    fl_list = glob.glob("*prune.inp")
+    for fl in fl_list: 
+       os.remove(fl)    
 
     print("Editing Intersection Files")    
     for i in fracture_list:
     	filename = 'intersections_%d.inp'%i
-    	print '--> Working on: ', filename
+    	print '--> Working on:', filename
         intersecting_fractures = connectivity[i-1]
         pull_list = list(set(intersecting_fractures).intersection(set(fractures_to_remove)))
         if len(pull_list) > 0:
@@ -74,6 +78,11 @@ finish
         	f.flush()
         	f.close()
         	os.system(os.environ['lagrit_dfn'] +  '< prune_intersection.lgi > out_%d.txt'%i)
+        else:
+            try:
+                copy("intersections_%d.inp"%i, "intersections_%d_prune.inp"%i)
+            except:
+                pass
     os.chdir(cwd)
 
 
