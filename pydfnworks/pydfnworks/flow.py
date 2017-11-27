@@ -191,7 +191,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 
             Boundary_cell_area = np.zeros(NumNodes, 'float')
             for i in range(NumNodes):
-                Boundary_cell_area[i] = 1.e20  # Fix the area to a large number
+                Boundary_cell_area[i] = 1.e-1  # Fix the area to a large number
 
             print('--> Finished calculating boundary connections')
 
