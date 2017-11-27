@@ -92,7 +92,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print ('='*80)
     print("\n\n")
 
-def zone2ex(self, uge_file='', zone_file='', face=''):
+def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1):
     '''zone2ex    
     Convert zone files from LaGriT into ex format for LaGriT
     inputs:
@@ -191,7 +191,7 @@ def zone2ex(self, uge_file='', zone_file='', face=''):
 
             Boundary_cell_area = np.zeros(NumNodes, 'float')
             for i in range(NumNodes):
-                Boundary_cell_area[i] = 1.e-1  # Fix the area to a large number
+                Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
 
             print('--> Finished calculating boundary connections')
 
@@ -411,40 +411,39 @@ def pflotran(self):
     print('='*80)
     print("\n")
 
-def pflotran_cleanup(self):
+def pflotran_cleanup(self, index = 1):
     '''pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
+    input: index, if PFLOTRAN has multiple dumps use this to pick which
+           dump is put into cellinfo.day and darcyvel.dat
     '''
     print '--> Processing PFLOTRAN output' 
     
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-001-rank*.dat > cellinfo.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
+    print("Running >> %s"%cmd)
     os.system(cmd)
 
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-001-rank*.dat > darcyvel.dat'
+    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
+    print("Running >> %s"%cmd)
     os.system(cmd)
 
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
             os.remove(fl)    
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel*.dat'):
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
             os.remove(fl)    
 
-def create_dfn_flow_links(self, path = '../'):
-    ''' create_dfn_flow_links
-    Create symlinks for files needed for a PFLOTRAN run
-
-    input:
-    path (optional), path to where files are located. default is parent directory
-    '''
-    files = ['full_mesh.uge', 'full_mesh_vol_area.uge', 'full_mesh.inp', \
-            'pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
-            'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone', \
-            'materialid.dat']
-    for f in files:
-        try:
-            os.symlink(path+f, f)
-        except:
-            print("--> Error Creating link for %s"%f)
-   
+def create_dfn_flow_links(self):
+    os.symlink('../full_mesh.uge', 'full_mesh.uge')
+    os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
+    os.symlink('../full_mesh.inp', 'full_mesh.inp')
+    os.symlink('../pboundary_back_n.zone', 'pboundary_back_n.zone')
+    os.symlink('../pboundary_front_s.zone', 'pboundary_front_s.zone')
+    os.symlink('../pboundary_left_w.zone', 'pboundary_left_w.zone')
+    os.symlink('../pboundary_right_e.zone', 'pboundary_right_e.zone')
+    os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
+    os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
+    os.symlink('../materialid.dat', 'materialid.dat')
+    
 def uncorrelated(sigma):
     print '--> Creating Uncorrelated Transmissivity Fields'
     print 'Variance: ', sigma
