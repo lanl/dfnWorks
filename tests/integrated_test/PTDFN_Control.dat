@@ -14,8 +14,8 @@ boundary: allboundaries.zone
 out-flow boundaries. Should be consistent with those applied to obtain
 steady state pressure solution (PFLOTRAN)   */
 /*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
-in-flow-boundary: 3 
-out-flow-boundary: 5 
+in-flow-boundary: 1 
+out-flow-boundary: 2 
 
 
 /**************** INPUT FILES: PFLOTRAN flow solution *******************/

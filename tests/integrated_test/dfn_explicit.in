@@ -90,11 +90,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_left_w.ex 
+  FILE pboundary_top.ex 
 END
 
 REGION outflow
-  FILE pboundary_right_e.ex 
+  FILE pboundary_bottom.ex 
 END
 
 #=========================== flow conditions ==================================
@@ -102,7 +102,7 @@ FLOW_CONDITION initial
   TYPE
      PRESSURE dirichlet 
   /
-  PRESSURE 1500000.00 
+  PRESSURE 1750000.00 
 END
 
 
@@ -117,7 +117,7 @@ FLOW_CONDITION outflow
   TYPE 
      PRESSURE dirichlet
   /
-  PRESSURE 1000000.00 
+  PRESSURE 1500000.00 
 END
 
 #=========================== condition couplers ===============================

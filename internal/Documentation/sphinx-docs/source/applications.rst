@@ -21,7 +21,7 @@ Shale energy extraction
 Hydraulic fracturing (fracking) has provided access to hydrocarbon trapped in low-permeability media, such as tight shales. The process involves injecting water at high pressures to reactivate existing fractures and also create new fractures to increase permeability of the shale allowing hydrocarbons to be extracted. However, the fundamental physics of why fracking works and its long term ramifications are not well understood. Karra et al. (2015) used dfnWorks to generate a typical production site and simulate production. Using this physics based model, they found good agreement with production field data and determined what physical mechanisms control the decline in the production curve.
 
 .. figure:: ./figures/well-pressure.png
-   :scale: 100 %
+   :scale: 10 %
    :alt: alternate text
    :align: center
    
@@ -35,7 +35,7 @@ to be constructed in crystalline bedrock at a depth of approximately 500 m. Base
 
 
 .. figure:: ./figures/forsmark_trajectories.png
-   :scale: 100 %
+   :scale: 10 %
    :alt: alternate text
    :align: center
    

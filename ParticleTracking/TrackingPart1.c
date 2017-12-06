@@ -27,7 +27,7 @@ struct lagrangian{
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT=0; 
 unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0;
-unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0, frac_o=0;
+unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0, frac_o=0, tfile=0;
 struct intcoef {
   double weights[3];
 };
@@ -51,7 +51,7 @@ struct tempout{  // strucuture of the particle data, saved temporary for output 
 
 struct tempout *tempdata;
     
-
+static FILE *tmp;
 static FILE *wpt;
 static FILE *wpt_att;
 static FILE *wv;
@@ -209,6 +209,17 @@ void ParticleTrack ()
       mkdir(path, 0777);
       printf("\n All output trajectory files will be written in %s/ \n", path);
       printf(" Note: if the directory exists all the files in it will be replaced. \n \n");
+
+ // temporary otputs go to external file or memory buffer
+	inputfile=Control_File_Optional("out_filetemp:",13);
+  	if (inputfile.flag<0)
+    		tfile=0;
+  	else
+    	{
+      	res=strncmp(inputfile.filename,"yes",3);
+      		if (res==0)
+        tfile=1;
+  	  }
 
           
     }
@@ -386,7 +397,7 @@ void ParticleTrack ()
   for (np=0; np<numbpart; np++) 
     {
 
-     t=0;           
+      t=0;           
       if ((numbpart<100)&&(((np-1) % 10)==0)&&(np>2))
 	printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
       else
@@ -408,7 +419,7 @@ void ParticleTrack ()
           //open a separate file for attributes, will be attached to the original AVS later
 	  sprintf(filename,"%s/part3D_%d.att",path,curr_n);
 	  wpt_att = OpenFile(filename,"w");  
-	  fprintf(wpt_att,"0008   1    1     1    1    1     1    1    1\n");
+	  fprintf(wpt_att,"0008   1    1     1    1    1     1    1   1\n");
 	  fprintf(wpt_att,"fracture, integer\n");
 	  fprintf(wpt_att,"time, real\n");
 	  fprintf(wpt_att,"velocity, real\n");
@@ -416,7 +427,7 @@ void ParticleTrack ()
 	  fprintf(wpt_att,"vel_y, real\n");
 	  fprintf(wpt_att,"vel_z, real\n");
 	  fprintf(wpt_att,"aperture, real\n");
-          fprintf(wpt_att,"pressure, real\n"); 
+          fprintf(wpt_att,"pressure, real\n");
 	} 
        
       if (traj_o==1)
@@ -424,12 +435,12 @@ void ParticleTrack ()
 	  // ascii output of: 3d positions, 3d velocities, cell, fracture, time and beta     
 	  sprintf(filename,"%s/traject_%d",path,curr_n);
 	  wv = OpenFile(filename,"w");
-	  fprintf(wv,"    Current time step, x-, y-, z- pos., Vx, Vy, Vz at ths positions, # of cell, #of fracture, travel time, aperture, beta nters. fracture ID, pressure at particle position \n");
+	  fprintf(wv,"    Current time step, x-, y-, z- pos., Vx, Vy, Vz at this positions, # of cell, #of fracture, travel time, aperture, beta, intersect. fracture ID, fluid pressure at particle's position \n");
 
            // output data on intersections only
           sprintf(filename,"%s/inters_%d",path,curr_n);
           wint = OpenFile(filename,"w");
-          fprintf(wint,"     Current traj. length, travel time, x-, y-, z- pos., fracture ID, beta, pressure at particle's position \n");
+          fprintf(wint,"     Current traj. length, travel time, x-, y-, z- pos., fracture ID, beta, fluid pressure at part.pos. \n");
     
 
 	}
@@ -460,9 +471,15 @@ void ParticleTrack ()
       intersm=0; 
       /* define  an initial cell  */
       ins=0;
-      ins=InitCell();
+      //ins=InitCell();
        
-          
+     // printf("INS %d %d %d %d \n", ins, np, particle[np].cell, particle[np].fracture);
+       
+     if (particle[np].cell!=0) 
+               ins=1;
+            else
+               ins=InitCell();       
+  
       if (ins==0)
 	{
 	  printf("Initial cell is not found for particle %d %f %f in fract %d. \n", np+1, particle[np].position[0], particle[np].position[1], particle[np].fracture);
@@ -555,6 +572,13 @@ void ParticleTrack ()
 	     
 	    }
 
+      if (tfile>0)
+        {
+          sprintf(filename,"%s/tempdata_%d",maindir, np);
+          tmp=OpenFile(filename,"w");
+        }
+
+
           timecounter=0;
 	  /////////////////////////  TIME LOOP ///////////////////////////////////
 	         
@@ -575,19 +599,29 @@ void ParticleTrack ()
 	      ycop=particle3dposit.cord3[1];
 	      zcop=particle3dposit.cord3[2];    
           
+              
+              if (no_out!=1)
+                 {
+ 		particle3dvelocity=CalculateVelocity3D();
+                  if (tfile==1)
+                     {
+              fprintf(tmp,"%05d  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %05d  %05d  %5.12E  %5.12E  %5.12E  %5.12E \n",t, particle[np].position[0], particle[np].position[1], particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2],particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, beta, totallength, particle[np].pressure); 
+                     }
 
-	      if (no_out!=1)
+	           else
 		{
                 
 		  if (timecounter==0)
 		    tempdata=(struct tempout*) malloc (capacity*sizeof(struct tempout));
 
 		  if (tempdata==NULL)
+			{
 		    printf("Allocation memory problem - tempdata\n");
-    
-	   
+    printf("timecounter %d time %d capacity %d\n", timecounter, t, capacity);
+
+	   		}
 		  particle3dvelocity=CalculateVelocity3D();
-	//	       printf("timecounter %d time %d capacity %d\n", timecounter, t, capacity);
+	     //  printf("timecounter %d time %d capacity %d\n", timecounter, t, capacity);
 		  tempdata[timecounter].times=t;   
 		  tempdata[timecounter].position2d[0]= particle[np].position[0]; 
 		  tempdata[timecounter].position2d[1]= particle[np].position[1]; 
@@ -610,15 +644,26 @@ void ParticleTrack ()
                      
                     {
 		      capacity=2*capacity;
+                     if (capacity >= timesteps)
+                        {
+                        printf("overload\n");
+                        FLAG_OUT=0;
+                        t_end=t; 
+			break;
+			free(tempdata);
+                        }
 		      tempdata=(struct tempout*)realloc(tempdata, sizeof(struct tempout)*capacity);
 		      if (tempdata==NULL)
+                        {
 			printf("REAllocation memory problem - tempdata\n");
+                        printf("timecounter %d time %d capacity %d\n", timecounter, t, capacity);
+			}
 		    }
     
-                
+                 }       
 		 
 		}
-
+         
 
 	      //calculations for dispersivity: square of (xo-x) is calculated for transverse disersivity only
 	      // for longitudinal dispersivity we save the actual coordination of the particle (commented out)
@@ -797,7 +842,6 @@ void ParticleTrack ()
 		
 		  //		printf("current cell  %d  init pos %lf %lf %lf \n",particle[np].cell, lagvariable.initx, lagvariable.inity, lagvariable.initz);
 		  //		printf ("tau= %lf betta = %lf \n",tautau, beta);
-		
 		  counttimestep=0;
 	          prevcell=particle[np].cell;
 		  if (prevfract!=particle[np].fracture)
@@ -808,18 +852,18 @@ void ParticleTrack ()
 		      cur_node=0;
 		      prevfract=particle[np].fracture;
 		      fracthit=fracthit+1;
-                       if (fracthit > nfract)
+                      if (fracthit > nfract)
                           {
                             FLAG_OUT=0;
                              break;
                            }
-
                       fract_id[fracthit]=particle[np].fracture;
 
 		      //		   printf(" %d %d %15.8e \n",np+1, prevfract, particle[np].time); 
 		    }
 		}
-        
+             else        
+ 
 	      if (particle[np].cell==prevcell)
 		{
 		  counttimestep++;
@@ -828,36 +872,36 @@ void ParticleTrack ()
 		      //	                         printf("stuck %05d %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %d %d\n",t+1,particle[np].position[0], particle[np].position[1], particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2],particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, counttimestep, (int)timesteps/3.0);
                      FLAG_OUT=0;
 		      break;
-//		      if (particle[np].cell==stuckcell)
-//			stuck=cur_ind;
-//		      else
-//			{
-//                          stuck=0; 
-  //                        stuckcell=particle[np].cell;
-//			} 
-//		      if (cur_ind<node[cell[particle[np].cell-1].node_ind[cur_node]-1].numneighb)        
-//			cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
-//		      else
-//			{
-//			  if (cur_node<2)
-//			    {
-//			      cur_ind=0;
-//			      cur_node++;
-//			      cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
-//			    }
-//			  else
-//			    {
+		    //  if (particle[np].cell==stuckcell)
+		//	stuck=cur_ind;
+		  //    else
+		//	{
+                  //        stuck=0; 
+                    //      stuckcell=particle[np].cell;
+		//	} 
+		  //    if (cur_ind<node[cell[particle[np].cell-1].node_ind[cur_node]-1].numneighb)        
+		//	cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
+		  //    else
+		//	{
+		//	  if (cur_node<2)
+		//	    {
+		//	      cur_ind=0;
+		//	      cur_node++;
+		//	      cur_ind=Moving2NextCell(stuck, cell[particle[np].cell-1].node_ind[cur_node]);
+		//	    }
+		//	  else
+		//	    {
 			      //		      			      printf(" got stuck \n");
-//			      break;
-//			    }
-//			}
+		//	      break;
+		//	    }
+		//	}
 
 		      /** time correction step ***/    
-//		      double delt=CalculateCurrentDT();
-//		      particle[np].time=particle[np].time-counttimestep*delt;
+		  //    double delt=CalculateCurrentDT();
+		  //    particle[np].time=particle[np].time-counttimestep*delt;
 		      //		      printf(" cot %15.8e %d\n",counttimestep*delt, counttimestep); 
-//		      t=t-counttimestep;
-		    }
+		  //    t=t-counttimestep;
+		   }
 		}
 	      t_end=t;
 
@@ -878,7 +922,16 @@ void ParticleTrack ()
 	
 	      //	  	  printf("Done for particle %d in fracture %d at time %d, located at %f, %f; cell %d, Flag %d intc %d.  \n\n", np+1, particle[np].fracture, t_end,particle[np].position[0], particle[np].position[1], prevcell, FLAG_OUT, particle[np].intcell);  
 	  
-	    
+             if (tfile==1)
+               {
+                        fclose(tmp);
+                        int status;
+                  sprintf(filename,"%s/tempdata_%d",maindir,np);
+                  status = remove(filename);
+
+
+
+	        }
 	      if (out_control==1)
 		{	
 		  fclose(tmp2);  
@@ -900,6 +953,14 @@ void ParticleTrack ()
 		      particle3dposit=CalculatePosition3D();
 		      particle3dvelocity=CalculateVelocity3D();
 
+                       if (tfile==1)
+                       {
+                     fprintf(tmp,"%05d  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %05d  %05d  %5.12E  %5.12E  %5.12E  %5.12E \n",t, particle[np].position[0], particle[np].position[1], particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2],particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, beta, totallength, particle[np].pressure);
+                      
+			}
+                      else
+                      { 
+
 		      tempdata[timecounter].times=t;
 		      tempdata[timecounter].position2d[0]= particle[np].position[0];
 		      tempdata[timecounter].position2d[1]= particle[np].position[1];
@@ -914,12 +975,17 @@ void ParticleTrack ()
 		      tempdata[timecounter].timep= particle[np].time;
 		      tempdata[timecounter].betap= beta;
 		      tempdata[timecounter].length_t=totallength;
-		      tempdata[timecounter].pressure=particle[np].pressure;
-		    
+                      tempdata[timecounter].pressure=particle[np].pressure;
+		        }
 			  
 		      ParticleOutput(t, 0);
-            
-	  
+                     if (tfile==1)
+                      {
+                        fclose(tmp);
+			int status;
+                  sprintf(filename,"%s/tempdata_%d",maindir,np);
+                  status = remove(filename);
+	              } 
 		    }
 		  else
 		    {
@@ -1054,7 +1120,10 @@ void ParticleTrack ()
 	
 	}
 
-     
+     // if (no_out==0)
+       //    free(tempdata);
+
+   // free(&particle[np]);    
     } //end of particle loop
   printf("\n  Number of particles that went out through flow-out boundary: %d \n", curr_n-1); 
     
@@ -1236,9 +1305,6 @@ struct intcoef  CalculateWeights(int nn1, int nn2, int nn3)
   /****** function calculates weights for velocity interpolation *****************/
   double n1x,n1y,n2x,n2y,n3x,n3y, deter;
   struct intcoef lambda;
-   double eps=10e-5;
-
-
   n1x=node[nn1-1].coord_xy[Xindex(nn1,np)];
   n1y=node[nn1-1].coord_xy[Yindex(nn1,np)];
      
@@ -1252,7 +1318,9 @@ struct intcoef  CalculateWeights(int nn1, int nn2, int nn3)
 
   lambda.weights[0]=((n2y-n3y)*(particle[np].position[0]-n3x)+(n3x-n2x)*(particle[np].position[1]-n3y))/deter;
   lambda.weights[1]=((n3y-n1y)*(particle[np].position[0]-n3x)+(n1x-n3x)*(particle[np].position[1]-n3y))/deter;
-  
+  lambda.weights[2]=1-lambda.weights[0]-lambda.weights[1];
+
+  double eps=10e-5;
   if ((lambda.weights[0]>=-eps) && (lambda.weights[0]<=eps))
     lambda.weights[0]=0.0;
   if ((lambda.weights[1]>=-eps) && (lambda.weights[1]<=eps))
@@ -1310,8 +1378,8 @@ int InsideCell (int numc)
   nk_2=cell[numc-1].node_ind[1];
   nk_3=cell[numc-1].node_ind[2];
   double eps=1e-7;
-     
   lambda=CalculateWeights(nk_1, nk_2, nk_3);
+
   int intc=0;
   if (particle[np].intcell==4)
     intc=1;
@@ -1376,7 +1444,7 @@ void PredictorStep()
   particle[np].velocity[1]=particle[np].weight[0]*node[n1-1].velocity[v1][1]+particle[np].weight[1]*node[n2-1].velocity[v2][1]+particle[np].weight[2]*node[n3-1].velocity[v3][1];
    
  particle[np].pressure=particle[np].weight[0]*node[n1-1].pressure+particle[np].weight[1]*node[n2-1].pressure+particle[np].weight[2]*node[n3-1].pressure;
-       
+        
   particle[np].prev_pos[0]=particle[np].position[0];
   particle[np].prev_pos[1]=particle[np].position[1];
 
@@ -1478,7 +1546,6 @@ int CheckDistance()
   int ind_int2, fract_p;
   double px, py, dist, delta_t;
   double cx1=0,cy1=0,cx2=0,cy2=0;
-  struct intcoef lambda;
 
   dn1=cell[particle[np].cell-1].node_ind[0];
   dn2=cell[particle[np].cell-1].node_ind[1];
@@ -1602,8 +1669,6 @@ int CheckDistance()
                         fract_p=node[int1-1].fracture[0];
                       else
                          fract_p=node[int1-1].fracture[1];   
-
-
 			ParticleOutput(t, fract_p);
                         }
 		      AcrossIntersection (prevcell, int1, int2);
@@ -1679,7 +1744,7 @@ int CheckDistance()
 		    }
 		}      
 	      if (ind_int2==0)
-		printf("ind=0 \n");
+//		printf("ind=0 \n");
 	      for (i=0; i<4; i++)
 		{
 		  if (node[int1-1].fracts[ind_int2][i]==particle[np].fracture)
@@ -1713,6 +1778,8 @@ int CheckDistance()
                         fract_p=node[int1-1].fracture[0];
                       else
                          fract_p=node[int1-1].fracture[1];
+               
+     
 			ParticleOutput(t, fract_p);
                         }
 		      AcrossIntersection (prevcell, int1, int2);
@@ -2209,14 +2276,26 @@ void ParticleOutput (int currentt, int fract_p)
 {
   /****** function outputs particles data int external file *******************/
 
-
+FILE *tmpp;
   double posit[3]={0.0, 0.0, 0.0}, veloc[3]={0.0, 0.0, 0.0};
   double startx, starty, endx, endy, midx, midy, time, velocity_t=0.0, obeta=0.0, length_t=0.0;
   int i,tstart=-1, pcell=0, pfrac=0, tend=0, tmid; 
   int time_l, kdiv=2;
   double eps=0.05, pressure=0.0;
   struct posit3d particle3dp, particle3dv;
- 
+  char filename[125];
+   if (tfile==1)
+     {
+  fclose(tmp);
+
+
+  sprintf(filename,"%s/tempdata_%d",maindir,np);
+  
+  tmpp=OpenFile(filename,"r");
+  fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tstart, &startx, &starty, &posit[0], &posit[1], &posit[2], &veloc[0],&veloc[1], &veloc[2], &pcell, &pfrac, &time, &obeta, &length_t, &pressure);
+     }
+     else
+    {
   startx= tempdata[0].position2d[0];
   starty= tempdata[0].position2d[1];
   posit[0]= tempdata[0].position3d[0];
@@ -2230,13 +2309,14 @@ void ParticleOutput (int currentt, int fract_p)
   time= tempdata[0].timep;
   obeta= tempdata[0].betap;
   length_t=tempdata[0].length_t;
-  pressure=tempdata[0].pressure;
-
+ pressure=tempdata[0].pressure;
+tstart=tempdata[0].times;
+    }
   
- //             if (traj_o==1)
- //                   fprintf(wint,"%5.12E %5.12E  %5.12E   %5.12E  %5.12E %d %5.12E %5.12E\n", length_t, time, posit[0], posit[1], posit[2], pfrac, obeta, pressure);
+              if (traj_o==1)
+                    fprintf(wint,"%5.12E %5.12E  %5.12E   %5.12E  %5.12E %d %5.12E\n", length_t, time, posit[0], posit[1], posit[2], pfrac, obeta);
 
-  tstart=tempdata[0].times;
+ 
  
   if (tstart>=0)
     {
@@ -2256,7 +2336,7 @@ void ParticleOutput (int currentt, int fract_p)
   
   
   
-		  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E \n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time,node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0, pressure);
+		  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E\n", tstart, posit[0], posit[1], posit[2], veloc[0], veloc[1], veloc[2], pcell, pfrac, time,node[cell[pcell-1].node_ind[0]-1].aperture, obeta, 0, pressure);
 	
 		}
 	      nodeID++;
@@ -2265,7 +2345,7 @@ void ParticleOutput (int currentt, int fract_p)
 		  
 		  fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, posit[0], posit[1], posit[2]); 
 		  velocity_t=sqrt(pow(veloc[0],2)+pow(veloc[1],2)+pow(veloc[2],2));
-		  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
+		  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E  %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 		}
 	      int tstep, flag=0, isch=0; 
 	      double angle_m;
@@ -2276,10 +2356,17 @@ void ParticleOutput (int currentt, int fract_p)
 		  time_l=tend-tstart;
 		  kdiv=kdiv*2;
 		  tstep=(int) (time_l/2.0);
-		  
+		  if (tfile==1)
+                       rewind(tmp);
 	  
 		  for (isch=0; isch<time_l; isch++)
 		    {
+                      if (tfile==1)
+                    {
+                    fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tmid, &midx, &midy, &posit[0], &posit[1], &posit[2], &veloc[0],&veloc[1], &veloc[2], &pcell, &pfrac, &time, &obeta, &length_t, &pressure);
+                    }
+                     else
+                      {
 		      tmid= tempdata[isch].times;
 		      midx= tempdata[isch].position2d[0];
 		      midy= tempdata[isch].position2d[1];
@@ -2295,6 +2382,9 @@ void ParticleOutput (int currentt, int fract_p)
 		      obeta= tempdata[isch].betap;
                       pressure=tempdata[isch].pressure;
                       length_t=tempdata[isch].length_t;
+
+
+                         }
 		      if (tmid==tstart+tstep)
 			break;
  
@@ -2343,13 +2433,22 @@ void ParticleOutput (int currentt, int fract_p)
 		  kdiv=2;
 		  tstep=1;
 		}
+             if (tfile==1)
+                       rewind(tmp);
+
 	      for(i=0; i<kdiv-1; i++)
 		{
  
 		  for (isch=0; isch<time_l; isch++)
 		    
 		    {
-
+         
+                      if (tfile==1)
+                    {     
+fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tmid, &midx, &midy, &posit[0], &posit[1], &posit[2], &veloc[0],&veloc[1], &veloc[2], &pcell, &pfrac, &time, &obeta, &length_t, &pressure);
+                    }
+                       else
+                       {
 		      tmid= tempdata[isch].times;
 		      midx= tempdata[isch].position2d[0];
 		      midy= tempdata[isch].position2d[1];
@@ -2364,7 +2463,8 @@ void ParticleOutput (int currentt, int fract_p)
 		      time= tempdata[isch].timep;
 		      obeta= tempdata[isch].betap;
                       pressure=tempdata[isch].pressure;
-			length_t=tempdata[isch].length_t;
+                      length_t=tempdata[isch].length_t; 
+                         }
 		      if (tmid==tstart+tstep*(i+1))
 			break;
 
@@ -2383,7 +2483,7 @@ void ParticleOutput (int currentt, int fract_p)
 		      
 		      fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, posit[0], posit[1], posit[2]); 
 		      velocity_t=sqrt(pow(veloc[0],2)+pow(veloc[1],2)+pow(veloc[2],2));
-		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E  %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
+		      fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, pfrac, time, velocity_t, veloc[0], veloc[1], veloc[2], node[cell[pcell-1].node_ind[0]-1].aperture, pressure);
 
 		    }
 		}
@@ -2398,12 +2498,25 @@ void ParticleOutput (int currentt, int fract_p)
 	  if (curv_o!=1)
 	    {
 
+             if (tfile==1)
+             {
+ fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tstart, &startx, &starty, &posit[0], &posit[1], &posit[2], &veloc[0],&veloc[1], &veloc[2], &pcell, &pfrac, &time, &obeta, &length_t, &pressure);  
+              rewind(tmp);
+              time_l=currentt-tstart;
+             }
+            else
+             {
 	      tstart=tempdata[0].times;
 
 
 	      time_l=currentt-tstart;
+             }
 	      for (i=0; i<time_l; i++)
 		{
+                 if (tfile==1)
+		fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tstart, &startx, &starty, &posit[0], &posit[1], &posit[2], &veloc[0],&veloc[1], &veloc[2], &pcell, &pfrac, &time, &obeta, &length_t, &pressure);                
+                else
+                 {  
 
                   tstart= tempdata[i].times;
                   startx= tempdata[i].position2d[0];
@@ -2420,6 +2533,7 @@ void ParticleOutput (int currentt, int fract_p)
                   obeta= tempdata[i].betap;
                   pressure=tempdata[i].pressure;
                   length_t=tempdata[i].length_t;
+                  }
 		  nodeID++;
 		  if (avs_o==1)
 		    {
@@ -2435,12 +2549,12 @@ void ParticleOutput (int currentt, int fract_p)
 
 	    } 
 	}
+
       particle3dp=CalculatePosition3D();
       particle3dv=CalculateVelocity3D();
   
       if (traj_o==1)
 	{
-       fprintf(wint,"%5.12E %5.12E  %5.12E   %5.12E  %5.12E %d %5.12E %5.12E\n", length_t,particle[np].time, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2], particle[np].fracture, obeta, particle[np].pressure);
 
 	  fprintf(wv,"%05d  %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %05d %05d %5.12E %5.12E %5.12E %d %5.12E\n", t, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2],particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2],particle[np].cell, particle[np].fracture, particle[np].time, node[cell[pcell-1].node_ind[0]-1].aperture, obeta, fract_p, particle[np].pressure);
     
@@ -2448,18 +2562,39 @@ void ParticleOutput (int currentt, int fract_p)
       nodeID++;
       if (avs_o==1)
 	{
-	  
 	  fprintf(wpt,"%05d %5.12E %5.12E %5.12E \n",nodeID, particle3dp.cord3[0], particle3dp.cord3[1],particle3dp.cord3[2]); 
 	  
 	  velocity_t=sqrt(pow(particle3dv.cord3[0],2)+pow(particle3dv.cord3[1],2)+pow(particle3dv.cord3[2],2));
 	  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, particle[np].fracture, particle[np].time, velocity_t, particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2], node[cell[pcell-1].node_ind[0]-1].aperture, particle[np].pressure);
-	 
 	}
     }
-  
+ if (tfile==1)
+  {  
+  fclose(tmpp);
+  int status;
+  sprintf(filename,"%s/tempdata_%d",maindir,np);
+  status = remove(filename);
+  if (no_out!=1)
+    {
+      if( status != 0 )
+
+        {
+          printf("Unable to delete the file %s\n", filename);
+          perror("Error");
+        }
+      // if (FLAG_OUT!=1)
+      {
+        sprintf(filename,"%s/tempdata_%d",maindir,np);
+        tmp=OpenFile(filename,"w");
+      }
+    }
+
+   }
+  else
+{
   timecounter=0;
   free(tempdata);
-
+}
   return;
 }
 /////////////////////////////////////////////////////////////////////////////

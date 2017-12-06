@@ -224,7 +224,9 @@ def check_input(self, input_file='',output_file=''):
 
         errResult = input_helper_methods.verify_list(input_helper_methods.value_of('famProb', params), 'famProb', input_helper_methods.verify_float,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
-        if errResult != None:
+
+        if errResult != None: 
+            print errResult
             input_helper_methods.error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))

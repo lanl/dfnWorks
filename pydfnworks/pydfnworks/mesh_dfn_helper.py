@@ -49,7 +49,7 @@ def parse_params_file():
     else:
         visual_mode = False
         print("Visual mode is off")
-    print("Expected Number of duded points: %d"%dudded_points)
+    print("Expected Number of dudded points: %d"%dudded_points)
     print("X Domain Size %d m"%domain['x'])
     print("Y Domain Size %d m"%domain['y'])
     print("Z Domain Size %d m"%domain['z'])

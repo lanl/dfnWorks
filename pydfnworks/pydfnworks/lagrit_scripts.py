@@ -582,7 +582,7 @@ pset / pinter / attribute / dfield / 1,0,0 / lt / EPS
 #cmo / setatt / mo_all / inter / 1 0 0 / 0 
 #cmo / setatt / mo_all / inter / pset, get, pinter / 1 
 
-filter / pset get pinter / EPS_FILTER 
+filterkd / pset get pinter / EPS_FILTER / nocheck
 pset / pinter / delete
 
 rmpoint / compress 

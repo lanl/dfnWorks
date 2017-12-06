@@ -634,7 +634,6 @@ int main (int argc, char **argv) {
         printConnectivityError = 1;
         //if there is no fracture network connected useres liststed boundary faces
         //switch to ignore boundary faces option with notice to user that there is no connectivity
-        ignoreBoundaryFaces = 1; // NOW EXITING
         finalFractures =  getCluster(pstats);
         //if still no fractures, there is no fracture network
     }

@@ -38,10 +38,10 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
-    #if not visual_mode:    
-    #    if not mh.check_dudded_points(dudded_points):
-    #        mh.cleanup_dir()
-    #        sys.exit("Incorrect Number of dudded points.\nExitingin Program")
+    if not visual_mode:    
+        if not mh.check_dudded_points(dudded_points):
+            mh.cleanup_dir()
+            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
     if production_mode:
         mh.cleanup_dir()
