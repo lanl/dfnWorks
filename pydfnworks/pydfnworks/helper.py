@@ -61,8 +61,8 @@ def commandline_options():
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
     options = parser.parse_args()
-    if options.jobname is "":
-        sys.exit("Error: Jobname is required. Exiting.")
+#    if options.jobname is "":
+#        sys.exit("Error: Jobname is required. Exiting.")
     return options
 
 
