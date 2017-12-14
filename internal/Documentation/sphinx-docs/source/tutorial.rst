@@ -134,7 +134,7 @@ This test case consists of four user defined rectangular fractures within a a cu
 The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the folder 4_user_defined_rectangles/LaGriT/, into Paraview.
 
 .. figure:: figures/4_user_rectangles_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 	
@@ -145,7 +145,7 @@ This image is created by loading the file 4_user_defined_rectangles/PFLOTRAN/par
 
 
 .. figure:: figures/4_user_rectangles_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
    
@@ -159,7 +159,7 @@ Trajectories can be visualized by loading the files part\_*.inp, in the folder 4
 We have used the extract surface and tube filters in paraview for visual clarity. 
 
 .. figure:: figures/4_user_rectangles_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
    
@@ -173,7 +173,7 @@ In the other tests, only a brief description and pictures are provided.
 This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_ellipses.dat. 
 
 .. figure:: figures/4_user_ellipses_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -181,7 +181,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 
 .. figure:: figures/4_user_ellipses_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -189,7 +189,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 
 .. figure:: figures/4_user_ellipses_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -202,7 +202,7 @@ truncated_power_law_dist
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 4m. The other input parameters can be found in tests/gen_truncated_power_law_dist.dat.
 
 .. figure:: figures/power_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -210,7 +210,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 
 .. figure:: figures/power_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -218,7 +218,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 
 .. figure:: figures/power_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -228,7 +228,7 @@ exponential_dist
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat. 
 
 .. figure:: figures/exp_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -236,7 +236,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 |
 
 .. figure:: figures/exp_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -245,7 +245,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 
 
 .. figure:: figures/exp_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -259,7 +259,7 @@ lognormal_dist
 This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat.
 
 .. figure:: figures/lognormal_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -268,7 +268,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 
 
 .. figure:: figures/lognormal_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -277,7 +277,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 
 
 .. figure:: figures/lognormal_trace.png
-   :scale: 100%
+   :scale: 30 %
    :alt: alternate text
    :align: center
 

@@ -197,17 +197,18 @@ Contributors
 - Jeffrey Hyman
 - Satish Karra
 - Nataliia Makedonska
-- Nathaniel Knapp
 - Carl Gable
 - Hari Viswanathan
 - Quan Bui (now at University of Maryland)
 - Jeremy Harrod (now at Spectra Logic)
 - Scott Painter (now at ORNL)
+- Nathaniel Knapp
+
 
 Contact
 --------
 
-For any questions about dfnWorks, please email dfnWorks@lanl.gov.
+For any questions about dfnWorks, please email dfnworks@lanl.gov.
 
 Copyright information
 ----------------------
