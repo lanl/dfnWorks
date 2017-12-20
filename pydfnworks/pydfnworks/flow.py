@@ -427,6 +427,11 @@ def pflotran_cleanup(self, index = 1):
     print("Running >> %s"%cmd)
     os.system(cmd)
 
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
+            os.remove(fl)    
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'%index):
+            os.remove(fl)    
+
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
             os.remove(fl)    
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
@@ -458,8 +463,8 @@ def uncorrelated(self, sigma, path = '../'):
     perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
 
     aper = np.sqrt((12.0*perm))
-    aper -= np.mean(aper)
-    aper += np.mean(x)
+    #aper -= np.mean(aper)
+    #aper += np.mean(x)
 
     print '\nPerm Stats'
     print '\tMean:', np.mean(perm)
@@ -476,7 +481,6 @@ def uncorrelated(self, sigma, path = '../'):
     print '\tMinimum:',min(aper)
     print '\tMaximum:',max(aper)
 
-
     output_filename = 'aperture_' + str(sigma) + '.dat'
     f = open(output_filename,'w+')
     f.write('aperture\n')
@@ -492,7 +496,7 @@ def uncorrelated(self, sigma, path = '../'):
     	f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
     f.close()
 
-    os.symlink(output_filename, 'aperture.dat')
+    os.symlink(output_filename, 'perm.dat')
         
 
 def parse_pflotran_vtk(self, grid_vtk_file=''): 
