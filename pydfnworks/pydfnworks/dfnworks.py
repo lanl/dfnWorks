@@ -41,7 +41,7 @@ class dfnworks(Frozen):
     from generator import make_working_directory, create_network
     from gen_output import output_report 
     from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, create_dfn_flow_links 
-    from transport import copy_dfn_trans_files, run_dfn_trans
+    from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links
     from meshdfn import mesh_network
     from mesh_dfn_helper import clean_up_files_after_prune, create_mesh_links 
     from legal import legal

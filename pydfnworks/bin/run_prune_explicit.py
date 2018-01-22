@@ -16,28 +16,27 @@ define_paths()
 main_time = time()
 DFN = create_dfn()
 
-#DFN.make_working_directory()
+DFN.make_working_directory()
 ##DFN.check_input()
 ##DFN.create_network()
 #
 ##DFN.output_report()
 ##DFN.mesh_network()
-
-os.chdir(DFN.jobname)
-#DFN.create_mesh_links(path='../')
-#DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
-#DFN.clean_up_files_after_prune(path='../', keep_file=DFN.prune_file)
 #
-#DFN.dfn_flow()
-DFN.dfn_trans()
-
-#DFN.lagrit2pflotran()
-#DFN.pflotran()
-#DFN.parse_pflotran_vtk_python()       
-#os.chdir(DFN.jobname)
-#DFN.pflotran_cleanup()
-
-#DFN.copy_dfn_trans_files()
+os.chdir(DFN.jobname)
+DFN.create_mesh_links(path=DFN.prune_path)
+DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
+DFN.clean_up_files_after_prune(path=DFN.prune_path, keep_file=DFN.prune_file)
+##
+##DFN.dfn_flow()
+##DFN.dfn_trans()
+#
+DFN.lagrit2pflotran()
+DFN.pflotran()
+##DFN.parse_pflotran_vtk_python()       
+DFN.pflotran_cleanup()
+DFN.create_dfn_trans_links(path =DFN.prune_path)
+DFN.copy_dfn_trans_files()
 #DFN.run_dfn_trans()
 
 main_elapsed = time() - main_time
