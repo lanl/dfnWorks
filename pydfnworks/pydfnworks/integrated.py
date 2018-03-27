@@ -173,7 +173,7 @@ def check_family_information(f):
 
 def check_domain_information():
     '''Check for consistancy within domain dictionary'''
-    boundary_list=['top', 'bottom', 'left_w', 'front_s', 'right_e', 'back_n']
+    boundary_list=['top', 'bottom', 'left_w', 'front_n', 'right_e', 'back_s']
     if domain['inflow_boundary'] in boundary_list:
         print("Inflow boundary is %s"%domain['inflow_boundary'])
     else:

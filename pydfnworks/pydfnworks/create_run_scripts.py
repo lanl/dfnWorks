@@ -83,7 +83,7 @@ def dump_user_fractures(uf, domain):
 def create_dfnGen_input(domain, path, fractures=[], uf=[], gen_input_name='default'):
     ''' convert fracture and domain dictionaries into dfnGen input'''
     
-    boundary_list=['left_w', 'right_e', 'front_s', 'back_n', 'top', 'bottom']
+    boundary_list=['left_w', 'right_e', 'front_n', 'back_s', 'top', 'bottom']
     domain['number_of_families']=len(fractures)
 
     # Dump Domain information
@@ -384,7 +384,7 @@ boundary: allboundaries.zone
 /* boundary conditions: reading the nodes that belong to in-flow and 
 out-flow boundaries. Should be consistent with those applied to obtain
 steady state pressure solution (PFLOTRAN)   */
-/*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
+/*1 - top;  2 - bottom;  3 - left_w;  4 - front_n;  5 - right_e;  6 - back_s */
 in-flow-boundary: %d 
 out-flow-boundary: %d 
 
@@ -518,7 +518,7 @@ flowdir: 0
 END
 
 """
-    boundaries=['top', 'bottom', 'left_w', 'front_s', 'right_e', 'back_n']
+    boundaries=['top', 'bottom', 'left_w', 'front_n', 'right_e', 'back_s']
     inflow_index=boundaries.index(domain['inflow_boundary'])+1
     outflow_index=boundaries.index(domain['outflow_boundary'])+1
     

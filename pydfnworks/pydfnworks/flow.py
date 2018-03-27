@@ -80,8 +80,8 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
 
     # Convert zone files to ex format
-    #self.zone2ex(zone_file='boundary_back_n.zone',face='north')
-    #self.zone2ex(zone_file='boundary_front_s.zone',face='south')
+    #self.zone2ex(zone_file='boundary_back_s.zone',face='south')
+    #self.zone2ex(zone_file='boundary_front_n.zone',face='north')
     #self.zone2ex(zone_file='boundary_left_w.zone',face='west')
     #self.zone2ex(zone_file='boundary_right_e.zone',face='east')
     #self.zone2ex(zone_file='boundary_top.zone',face='top')
@@ -138,9 +138,9 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
     # loop through zone files
     if zone_file is 'all':
-            zone_files = ['pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
+            zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
                             'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
-            face_names = ['south', 'north', 'west', 'east', 'top', 'bottom']
+            face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else: 
             if zone_file == '':
                 sys.exit('ERROR: Please provide boundary zone filename!')
@@ -440,7 +440,7 @@ def pflotran_cleanup(self, index = 1):
 def create_dfn_flow_links(self, path = '../'):
     files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat','pboundary_bottom.zone', 'pboundary_top.zone', 
-        'pboundary_back_n.zone', 'pboundary_front_s.zone', 
+        'pboundary_back_s.zone', 'pboundary_front_n.zone', 
         'pboundary_left_w.zone', 'pboundary_right_e.zone']
     for f in files:
         try:
