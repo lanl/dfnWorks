@@ -23,8 +23,8 @@
     Arg 2: Angle to rotate to */
 void applyRotation2D(Poly &newPoly, float angle) {
         
-    float sinCalc = sin(angle); 
-    float cosCalc = cos(angle);
+    double sinCalc = sin(angle); 
+    double cosCalc = cos(angle);
     
     // Rotates polygon on x-y plane counter-clockwise
     for (int i = 0; i < newPoly.numberOfNodes; i++) {
@@ -219,13 +219,13 @@ void applyRotation3D(Poly &newPoly, double *normalB) {
 
     // Delete manually with delete[], created with new[]
     double *xProd = crossProduct(newPoly.normal, normalB); 
-    
+ 
     // If not parallel            
     if (!(std::abs(xProd[0]) < eps && std::abs(xProd[1]) < eps && std::abs(xProd[2]) < eps )) {
 
         // NOTE: rotationMatrix() requires normals to be normalized                
         double *R = rotationMatrix(newPoly.normal, normalB);
-        
+       
         // Apply rotation to all vertices
         for (int i = 0; i < newPoly.numberOfNodes; i++) {
             int idx = i*3;
@@ -239,7 +239,7 @@ void applyRotation3D(Poly &newPoly, double *normalB) {
             vertices[2] = newPoly.vertices[idx]   * R[6] 
                         + newPoly.vertices[idx+1] * R[7] 
                         + newPoly.vertices[idx+2] * R[8];
-        
+       
             newPoly.vertices[idx]   = vertices[0];
             newPoly.vertices[idx+1] = vertices[1];
             newPoly.vertices[idx+2] = vertices[2];                
@@ -283,7 +283,6 @@ struct IntPoints polyAndIntersection_RotationToXY(struct IntPoints &intersection
         
     // If not parallel (zero vector)
     if (!(std::abs(xProd[0]) < eps && std::abs(xProd[1]) < eps && std::abs(xProd[2]) < eps )) {
-        
         // rotationMatrix() requires normals to be normalized
         double *R = rotationMatrix(newPoly.normal, normalB);    
         
@@ -314,7 +313,7 @@ struct IntPoints polyAndIntersection_RotationToXY(struct IntPoints &intersection
                 // Save vertices back to poly struct, now on x-y plane
                 newPoly.vertices[idx]   = vertices[0];
                 newPoly.vertices[idx+1] = vertices[1];
-                newPoly.vertices[idx+2] = vertices[2];    
+                newPoly.vertices[idx+2] = vertices[2];   
             }
         }
         
@@ -374,7 +373,6 @@ struct IntPoints polyAndIntersection_RotationToXY(struct IntPoints &intersection
         tempIntpts.y2 = intersection.y2;
         tempIntpts.z2 = intersection.z2;
     } 
-
     newPoly.XYPlane = 1; // Mark poly being rotated to xy plane
     delete[] xProd; // xProd was created dynamically in crossProduct(), delete it        
     return tempIntpts;

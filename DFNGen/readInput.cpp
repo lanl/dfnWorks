@@ -1069,20 +1069,16 @@ void getInput(char* input, std::vector<Shape> &shapeFamily){
         urRadii = new float[nUserRect];
         getElements(uRectFile, urRadii, nUserRect);
 
-
         searchVar(uRectFile, "AngleOption:");
         uRectFile >> urAngleOption;
-
 
         searchVar(uRectFile, "Beta:");
         urBeta = new float[nUserRect];
         getElements(uRectFile, urBeta, nUserRect);
 
-
         searchVar(uRectFile, "Aspect_Ratio:");
         uraspect = new float[nUserRect];
         getElements(uRectFile, uraspect, nUserRect);
-
 
         searchVar(uRectFile, "Translation:");
         urtranslation = new double[3*nUserRect];
@@ -1153,7 +1149,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily){
         //4 vertices, 12 elements x,y,z per rectangle: 
         userRectCoordVertices = new double[12 * nRectByCoord];
         getRectCoords(uCoordFile, userRectCoordVertices, nRectByCoord);
-
         uCoordFile.close();
     } 
 

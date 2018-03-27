@@ -62,7 +62,7 @@ void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &in
 
         // Rotate vertices to urnormal[index] (new normal)
         applyRotation3D(newPoly, &urnormal[index]); 
-        
+       
         // Save newPoly's new normal vector
         newPoly.normal[0] = urnormal[index];
         newPoly.normal[1] = urnormal[index+1];
