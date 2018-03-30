@@ -57,7 +57,8 @@ def run_dfn_trans(self):
 
 def create_dfn_trans_links(self, path = '../'):
     files = ['params.txt', 'allboundaries.zone', 'tri_fracture.stor',
-        'poly_info.dat']
+        'poly_info.dat', 'full_mesh.inp', 'cellinfo.dat', 'darcyvel.dat',
+        'aperture.dat']
     for f in files:
         try:
             os.symlink(path+f, f)
