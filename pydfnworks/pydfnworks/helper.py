@@ -58,11 +58,13 @@ def commandline_options():
               help="Path to dfnFlow run file") 
     parser.add_argument("-trans", "--dfnTrans", default="", type=str,
               help="Path to dfnTrans run file") 
+    parser.add_argument("-path", "--path", default="", type=str,
+              help="Path to directory for sub-network runs") 
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
     options = parser.parse_args()
-    if options.jobname is "":
-        sys.exit("Error: Jobname is required. Exiting.")
+#    if options.jobname is "":
+#        sys.exit("Error: Jobname is required. Exiting.")
     return options
 
 

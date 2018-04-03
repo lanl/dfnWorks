@@ -16,7 +16,7 @@ def dfn_trans(self):
     tic=time()
     self.run_dfn_trans()
     #self.cleanup_files_at_end()
-    #helper.dump_time(self._jobname, 'Process: dfnTrans', time() - tic)   
+    helper.dump_time(self.jobname, 'Process: dfnTrans', time() - tic)   
 
 def copy_dfn_trans_files(self):
     '''create link to DFNTRANS and copy input file into local directory
@@ -33,21 +33,21 @@ def copy_dfn_trans_files(self):
     # Copy DFNTrans input file
     print(os.getcwd())
 
-    print("Attempting to Copy %s\n"%self._dfnTrans_file) 
+    print("Attempting to Copy %s\n"%self.dfnTrans_file) 
     try:
-        shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
+        shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd())) 
     except OSError:
-        print("--> Problem copying %s file"%self._local_dfnTrans_file)
+        print("--> Problem copying %s file"%self.local_dfnTrans_file)
         print("--> Trying to delete and recopy") 
-        os.remove(self._local_dfnTrans_file)
-        shutil.copy(self._dfnTrans_file, os.path.abspath(os.getcwd())) 
+        os.remove(self.local_dfnTrans_file)
+        shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd())) 
     except:
-        print("--> ERROR: Problem copying %s file"%self._dfnTrans_file)
+        print("--> ERROR: Problem copying %s file"%self.dfnTrans_file)
         sys.exit("Unable to replace. Exiting Program")
 
 def run_dfn_trans(self):
     '''run dfnTrans simulation'''
-    failure = os.system('./DFNTrans '+self._local_dfnTrans_file)
+    failure = os.system('./DFNTrans '+self.local_dfnTrans_file)
     if failure == 0:
         print('='*80)
         print("\ndfnTrans Complete\n")
@@ -55,10 +55,13 @@ def run_dfn_trans(self):
     else:
         sys.exit("--> ERROR: dfnTrans did not complete\n")
 
-def create_dfn_trans_links():
-    os.symlink('../params.txt', 'params.txt')
-    os.symlink('../allboundaries.zone', 'allboundaries.zone')
-    os.symlink('../tri_fracture.stor', 'tri_fracture.stor')
-    os.symlink('../poly_info.dat','poly_info.dat')
-
-
+def create_dfn_trans_links(self, path = '../'):
+    files = ['params.txt', 'allboundaries.zone', 'tri_fracture.stor',
+        'poly_info.dat', 'full_mesh.inp', 'cellinfo.dat', 'darcyvel.dat',
+        'aperture.dat']
+    for f in files:
+        try:
+            os.symlink(path+f, f)
+        except:
+            print("--> Error Creating link for %s"%f)
+ 

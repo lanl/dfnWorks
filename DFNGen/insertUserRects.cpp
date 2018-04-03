@@ -19,7 +19,7 @@
     Arg 2: Array for all accepted intersections
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
-void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints) {
+void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints)  {
 
     std::cout << "\n" << nUserRect << " User Rectangles Defined\n";
 
@@ -62,7 +62,7 @@ void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &in
 
         // Rotate vertices to urnormal[index] (new normal)
         applyRotation3D(newPoly, &urnormal[index]); 
-        
+       
         // Save newPoly's new normal vector
         newPoly.normal[0] = urnormal[index];
         newPoly.normal[1] = urnormal[index+1];

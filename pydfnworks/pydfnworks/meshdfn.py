@@ -15,8 +15,7 @@ import run_meshing as run_mesh
 
 def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     '''
-    Mesh Fracture Network using ncpus and lagrit
-    meshing file is separate file: dfnGen_meshing.py
+    Mesh fracture network using LaGriT
     '''
     print('='*80)
     print("Meshing Network Using LaGriT : Starting")
@@ -27,7 +26,7 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     # if number of fractures is greater than number of CPUS, 
     # only use num_poly CPUs. This change is only made here, so ncpus
     # is still used in PFLOTRAN
-    ncpu=min(self._ncpu, num_poly)
+    ncpu=min(self.ncpu, num_poly)
     lagrit.create_parameter_mlgi_file(num_poly, h, slope=slope)
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
@@ -36,20 +35,19 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode)
-
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
     if not visual_mode:    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            sys.exit("Incorrect Number of dudded points.\nExiting Program")
+            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
     if production_mode:
         mh.cleanup_dir()
 
     if not visual_mode: 
-        lagrit.define_zones(h,domain)
+        lagrit.define_zones()
 
     mh.output_meshing_report(visual_mode)
 
@@ -77,12 +75,12 @@ if __name__ == "__main__":
     refine_factor = 1
     ncpu = 4
 
-    os.environ['DFNWORKS_PATH'] = '/home/jhyman/dfnworks/dfnWorks-Release2.0/'
+    os.environ['dfnworks_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
 
     # Executables    
     os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
     os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'
-    os.environ['connect_test'] = os.environ['DFNWORKS_PATH']+'/DFN_Mesh_Connectivity_Test/ConnectivityTest'
+    os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
 
     try:
         python_path = os.environ['python_dfn']
@@ -125,23 +123,22 @@ if __name__ == "__main__":
     failure = run_mesh.mesh_fractures_header(num_poly, ncpu, visual_mode)
 
     if failure:
-        mesh.cleanup_dir()
+        mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, visual_mode)
-
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
     if not visual_mode:    
         if not mh.check_dudded_points(dudded_points):
-            mh.cleanup_dir()
-            sys.exit("Incorrect Number of dudded points.\nExiting Program")
+#            mh.cleanup_dir()
+            sys.exit("Incorrect Number of dudded points.\nExitingin Program")
 
     if production_mode:
         mh.cleanup_dir()
 
     if not visual_mode: 
-        lagrit.define_zones(h,domain)
+        lagrit.define_zones()
 
     mh.output_meshing_report(visual_mode)
 

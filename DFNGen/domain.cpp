@@ -20,6 +20,8 @@ bool domainTruncation(Poly &newPoly, double *domainSize) {
         
     std::vector<double> points; 
     points.reserve(18); // Initialize with enough room for 6 vertices
+    IntPoints tmpPts; // tmp intersection points                            
+
     int nNodes;    
     
     double domainX = domainSize[0]*.5; 
@@ -135,6 +137,7 @@ bool domainTruncation(Poly &newPoly, double *domainSize) {
                 points.push_back(temp[0]);
                 points.push_back(temp[1]);
                 points.push_back(temp[2]);
+              
             }
             else { 
             
@@ -153,6 +156,7 @@ bool domainTruncation(Poly &newPoly, double *domainSize) {
                 points.push_back(temp[0]);
                 points.push_back(temp[1]);
                 points.push_back(temp[2]);
+
             }
             if (currdist < 0) { // If from outside to inside - swap order
     

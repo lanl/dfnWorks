@@ -81,7 +81,7 @@ def check_input(self, input_file='',output_file=''):
     global warningFile
     warningFile = open("warningFileDFNGen.txt", 'w')        
     global jobname
-    jobname = self._jobname
+    jobname = self.jobname
 
     input_helper_methods=helper.input_helper(params, minFracSize)
 
@@ -224,7 +224,9 @@ def check_input(self, input_file='',output_file=''):
 
         errResult = input_helper_methods.verify_list(input_helper_methods.value_of('famProb', params), 'famProb', input_helper_methods.verify_float,
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
-        if errResult != None:
+
+        if errResult != None: 
+            print errResult
             input_helper_methods.error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))
@@ -251,28 +253,28 @@ def check_input(self, input_file='',output_file=''):
                 print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ecoordPath, params)
                 input_helper_methods.error(invalid.format(ecoordPath))
             else:
-                shutil.copy(input_helper_methods.value_of(ecoordPath, params), self._jobname)
+                shutil.copy(input_helper_methods.value_of(ecoordPath, params), self.jobname)
 
         if input_helper_methods.verify_flag(input_helper_methods.value_of(userEs, params), userEs) == 1:
             if not os.path.isfile(input_helper_methods.value_of(ePath, params)):
                 print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ePath, params)
                 input_helper_methods.error(invalid.format(ePath))
             else:
-                shutil.copy(input_helper_methods.value_of(ePath, params), self._jobname)
+                shutil.copy(input_helper_methods.value_of(ePath, params), self.jobname)
             
         if input_helper_methods.verify_flag(input_helper_methods.value_of(userRs, params), userRs) == 1:
             if not os.path.isfile(input_helper_methods.value_of(rPath, params)):
                 print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(rPath, params)
                 input_helper_methods.error(invalid.format(rPath))
             else:
-                shutil.copy(input_helper_methods.value_of(rPath, params), self._jobname)
+                shutil.copy(input_helper_methods.value_of(rPath, params), self.jobname)
             
         if input_helper_methods.verify_flag(input_helper_methods.value_of(recByCoord, params), recByCoord) == 1:
             if not os.path.isfile(input_helper_methods.value_of(coordPath, params)):
                 print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(coordPath, params) 
                 input_helper_methods.error(invalid.format(coordPath))    
             else:
-                shutil.copy(input_helper_methods.value_of(coordPath, params), self._jobname)
+                shutil.copy(input_helper_methods.value_of(coordPath, params), self.jobname)
 
     def aperture():
         """ Verify the int value used for aperture.
@@ -627,20 +629,21 @@ def check_input(self, input_file='',output_file=''):
     try:
         if not os.path.exists(os.getcwd()):
             print "ERROR: cwd: ", os.getcwd(), " does not exist"
-        if not os.path.exists(os.path.abspath(self._dfnGen_file)):
-            print "ERROR: dfnGen input file path: ", os.path.abspath(self._dfnGen_file), " does not exist"
-        shutil.copy(os.path.abspath(self._dfnGen_file), os.getcwd())
+        if not os.path.exists(os.path.abspath(self.dfnGen_file)):
+            print "ERROR: dfnGen input file path: ", os.path.abspath(self.dfnGen_file), " does not exist"
+        print os.path.abspath(self.dfnGen_file)
+        shutil.copy(os.path.abspath(self.dfnGen_file), os.getcwd())
     except:
-        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self._dfnGen_file)
+        sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self.dfnGen_file)
 
     ioPaths = {"input":"", "output":""}
     try:
-        ioPaths["input"] = self._dfnGen_file
+        ioPaths["input"] = self.dfnGen_file
     except IndexError:
         input_helper_methods.error("Please provide an input file path as the first command line argument.\n"\
               "    $ python3 inputParser.py [inputPath] [outputPath (Optional)]")
     try:
-        ioPaths["output"] = self._jobname + '/' + self._dfnGen_file.split('/')[-1][:-4] + '_clean.dat'
+        ioPaths["output"] = self.jobname + '/' + self.dfnGen_file.split('/')[-1][:-4] + '_clean.dat'
         ioPaths["output"] = os.path.abspath(ioPaths["output"])
         print ioPaths["output"] 
     except IndexError:

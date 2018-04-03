@@ -29,10 +29,10 @@ if __name__ == "__main__":
     main_elapsed = time() - main_time
     timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
     print timing
-    dump_time(DFN._local_jobname, DFN._jobname,main_elapsed) 
+    dump_time(DFN.local_jobname, DFN.jobname,main_elapsed) 
     #dfn.print_run_time()	
     print("*"*80)
-    print(DFN._jobname+' complete')
+    print(DFN.jobname+' complete')
     print("Thank you for using dfnWorks")
     print("*"*80)
 

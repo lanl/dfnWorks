@@ -11,15 +11,18 @@ def run_test(input_file_name):
     """
     
     name = '~/' + 'test_output_files/' + input_file_name.rsplit('/', 1)[-1][:-4]
-    arg_string = os.environ['python_dfn'] + " run_explicit.py -ncpu 32 -name  " + name+ " -input " + input_file_name 
+    arg_string = os.environ['python_dfn'] + " run.py -ncpu 32 -name  " + name+ " -input " + input_file_name 
     print "RUNNING ", arg_string 
     subprocess.call(arg_string, shell=True)
 
 if __name__ == '__main__':
 
     define_paths()
-    benchmark_dir = os.environ['DFNWORKS_PATH'] + 'tests'
-    subprocess.call('mkdir ~/test_output_files', shell=True)
+    benchmark_dir = os.environ['dfnworks_PATH'] + 'tests'
+    try:
+        subprocess.call('mkdir ~/test_output_files', shell=True)
+    except:
+        pass
     if len(sys.argv) == 2: 
         for input_file in os.listdir(benchmark_dir):
             if '.txt' in input_file:

@@ -19,32 +19,31 @@ def dfn_gen(self):
     # Create Working directory
     tic = time()
     self.make_working_directory()
-    #helper.dump_time(self._jobname, 'Function: make_working_directory', time()- tic) 
+    helper.dump_time(self.jobname, 'Function: make_working_directory', time()- tic) 
     
     # Check input file  
     tic = time()
     self.check_input()
-    #helper.dump_time(self._jobname, 'Function: check_input', time() - tic)   
+    helper.dump_time(self.jobname, 'Function: check_input', time() - tic)   
 
     # Create network    
     tic = time()
     self.create_network()
-    #helper.dump_time(self._jobname, 'Function: create_network', time() - tic)    
-    tic = time()
+    helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
     
+    tic = time()
     self.output_report()
-    #helper.dump_time(self._jobname, 'output_report', time() - tic)   
+    helper.dump_time(self.jobname, 'output_report', time() - tic)   
     
     # Mesh Network
     tic = time()
     self.mesh_network()
-
-    #helper.dump_time(self._jobname, 'Function: mesh_network', time() - tic)  
+    helper.dump_time(self.jobname, 'Function: mesh_network', time() - tic)  
     print ('='*80)
     print 'dfnGen Complete'
     print ('='*80)
     print ''
-    #helper.dump_time(self._jobname, 'Process: dfnGen',time() - tic_gen)  
+    helper.dump_time(self.jobname, 'Process: dfnGen',time() - tic_gen)  
 
 def make_working_directory(self):
     '''
@@ -52,33 +51,33 @@ def make_working_directory(self):
     '''    
 
     try:
-        os.mkdir(self._jobname)
+        os.mkdir(self.jobname)
     except OSError:
-        print '\nFolder ', self._jobname, ' exists'
+        print '\nFolder ', self.jobname, ' exists'
         keep = raw_input('Do you want to delete it? [yes/no] \n')
         if keep == 'yes' or keep == 'y':
-            print 'Deleting', self._jobname 
-            shutil.rmtree(self._jobname)
-            print 'Creating', self._jobname 
-            os.mkdir(self._jobname)    
+            print 'Deleting', self.jobname 
+            shutil.rmtree(self.jobname)
+            print 'Creating', self.jobname 
+            os.mkdir(self.jobname)    
         elif keep == 'no' or 'n':
             sys.exit("Not deleting folder. Exiting Program") 
         else:
             sys.exit("Unknown Response. Exiting Program") 
-    os.mkdir(self._jobname + '/radii')
-    os.mkdir(self._jobname + '/intersections')
-    os.mkdir(self._jobname + '/polys')
-    os.chdir(self._jobname)
+    os.mkdir(self.jobname + '/radii')
+    os.mkdir(self.jobname + '/intersections')
+    os.mkdir(self.jobname + '/polys')
+    os.chdir(self.jobname)
     cwd = os.getcwd()
     print("Current directory is now: %s\n"%cwd)
-    print "Jobname is ", self._jobname   
+    print "Jobname is ", self.jobname   
 
 def create_network(self):
     """ Execute dfnGen and print whether the generation of the fracture network failed or succeeded. The params.txt file must be there for success.
     """
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self._local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self._jobname )
+    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname )
 
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'

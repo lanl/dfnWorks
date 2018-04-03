@@ -9,7 +9,8 @@ import os
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
 
-def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
+
+def create_parameter_mlgi_file(num_poly, h, slope=2.0, refine_dist = 0.5):
     """create parameter_mgli_files
     Outputs parameteri.mlgi files used in running LaGriT Scripts
     
@@ -67,41 +68,41 @@ def create_parameter_mlgi_file(num_poly, h, slope = 2, refine_dist = 0.5):
     	f.write('define / PRE_FINAL_FILE / tmp_pre_final_'+frac_id + '.inp\n')
     	f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' + frac_id +'.gmv\n')
     	
-    	f.write('define / H_SCALE / ' + str(h) + '\n')
-    	f.write('define / H_EPS / ' + str(h*10**-7) + '\n')
-    	f.write('define / H_SCALE2 / ' + str(1.5*h) + '\n')
+    	f.write('define / H_SCALE / %e \n'%h)
+    	f.write('define / H_EPS / %e \n'%(h*10**-7))
+    	f.write('define / H_SCALE2 / %e \n'%(1.5*h))
 
-    	f.write('define / H_EXTRUDE / ' + str(h_extrude) + '\n')
-    	f.write('define / H_TRANS / ' + str(h_trans) + '\n')
+    	f.write('define / H_EXTRUDE / %e \n'%(h_extrude))
+    	f.write('define / H_TRANS / %e \n'%(h_trans))
 
-    	f.write('define / H_PRIME / ' + str(0.8*h) + '\n')
-    	f.write('define / H_PRIME2 / ' + str(0.3*h) + '\n')
+    	f.write('define / H_PRIME / %e \n'%(0.8*h))
+    	f.write('define / H_PRIME2 / %e \n'%(0.3*h))
     	
-    	f.write('define / H_SCALE3 / ' + str(3*h) + '\n')
-    	f.write('define / H_SCALE8 / ' + str(8*h) + '\n')
-    	f.write('define / H_SCALE16 / ' + str(16*h) + '\n')
-    	f.write('define / H_SCALE32 / ' + str(32*h) + '\n')
-    	f.write('define / H_SCALE64 / ' + str(64*h) + '\n')
+    	f.write('define / H_SCALE3 / %e \n'%(3.0*h))
+    	f.write('define / H_SCALE8 / %e \n'%(8.0*h))
+    	f.write('define / H_SCALE16 / %e \n'%(16.0*h))
+    	f.write('define / H_SCALE32 / %e \n'%(32.0*h))
+    	f.write('define / H_SCALE64 / %e \n' %(64.0*h))
 
-    	f.write('define / PURTURB8 / ' + str(8*0.05*h) + '\n')
-    	f.write('define / PURTURB16 / ' + str(16*0.05*h) + '\n')
-    	f.write('define / PURTURB32 / ' + str(32*0.05*h) + '\n')
-    	f.write('define / PURTURB64 / ' + str(64*0.05*h) + '\n')
+    	f.write('define / PERTURB8 / %e \n'%(8*0.05*h))
+    	f.write('define / PERTURB16 / %e \n'%(16*0.05*h))
+    	f.write('define / PERTURB32 / %e \n'%(32*0.05*h))
+    	f.write('define / PERTURB64 / %e \n'%(64*0.05*h))
 
-    	f.write('define / PARAM_A / '+str(slope)+'\n')	
-    	f.write('define / PARAM_B / '+str(h*(1-slope*refine_dist))+'\n')	
+    	f.write('define / PARAM_A / %f \n'%slope)	
+    	f.write('define / PARAM_B / %f \n'%(h*(1-slope*refine_dist)))	
 
-    	f.write('define / PARAM_A2 / '+str(0.5*slope)+'\n')	
-    	f.write('define / PARAM_B2 / '+str(h*(1 - 0.5*slope*refine_dist))+'\n')	
+    	f.write('define / PARAM_A2 / %f \n'%(0.5*slope))	
+    	f.write('define / PARAM_B2 / %f \n'%(h*(1 - 0.5*slope*refine_dist)))	
     	
-    	f.write('define / THETA  / '+str(theta)+'\n')
-    	f.write('define / X1 / '+str(x1)+'\n')
-    	f.write('define / Y1 / '+str(y1)+'\n')
-    	f.write('define / Z1 / '+str(z1)+'\n')
-    	f.write('define / X2 / '+str(x2)+'\n')
-    	f.write('define / Y2 / '+str(y2)+'\n')
-    	f.write('define / Z2 / '+str(z2)+'\n')
-    	f.write('define / family / '+str(family)+'\n')
+    	f.write('define / THETA  / %0.12f \n'%theta)
+    	f.write('define / X1 /  %0.12f \n'%x1)
+    	f.write('define / Y1 / %0.12f \n'%y1)
+    	f.write('define / Z1 / %0.12f \n'%z1)
+    	f.write('define / X2 / %0.12f \n'%x2)
+    	f.write('define / Y2 / %0.12f \n'%y2)
+    	f.write('define / Z2 / %0.12f \n'%z2)
+    	f.write('define / FAMILY / %d \n'%family)
     	f.write('finish \n')
     	f.flush()
     	f.close()
@@ -201,28 +202,28 @@ massage / H_SCALE64 / H_EPS  / H_EPS
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB64 PURTURB64 0.0
+perturb / pset get p_move / PERTURB64 PERTURB64 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE32 / H_EPS / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB32 PURTURB32 0.0
+perturb / pset get p_move / PERTURB32 PERTURB32 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE16 / H_EPS  / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB16 PURTURB16 0.0
+perturb / pset get p_move / PERTURB16 PERTURB16 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
 massage / H_SCALE8 / H_EPS / H_EPS
 resetpts / itp
 pset / p_move / attribute / itp / 1 0 0 / 0 / eq
-perturb / pset get p_move / PURTURB8 PURTURB8 0.0
+perturb / pset get p_move / PERTURB8 PERTURB8 0.0
 recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 smooth;recon 0;smooth;recon 0;smooth;recon 0
 
@@ -405,7 +406,7 @@ cmo / modatt / mo_final / isn1 / ioflag / l
     
 # Create Family element set
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
-cmo / setatt / mo_final / family_id / 1 0 0 / family
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
     
 """
     	lagrit_input += """
@@ -427,7 +428,7 @@ cmo / delete / mo_line_work
     
 # Create Family element set
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
-cmo / setatt / mo_final / family_id / 1 0 0 / family
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
 
 cmo / select / mo_final 
 # Rotate 
@@ -491,7 +492,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, num_poly, h, visual_mode):
+def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
     """
     Section 4 : Create merge_poly file
      Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -562,14 +563,14 @@ finish \n
 read / lagrit / part%d.lg / junk / binary
 addmesh / merge / mo_all / mo_all / cmo_tmp 
 cmo / delete / cmo_tmp 
-
     """
     f = open('merge_rmpts.lgi','w')
     for j in range(1,len(endis)+1):
     	f.write(lagrit_input%(j))
 
     # Append meshes complete
-    lagrit_input = """ 
+    if not visual_mode: 
+    	lagrit_input = """
 # Appending the meshes complete 
 # LaGriT Code to remove duplicates and output the mesh
 cmo / select / mo_all 
@@ -577,17 +578,20 @@ cmo / select / mo_all
 define / EPS / %e 
 define / EPS_FILTER / %e 
 pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
-filter / pset get pinter / EPS_FILTER 
+#cmo / addatt / mo_all / inter / vint / scalar / nnodes 
+#cmo / setatt / mo_all / inter / 1 0 0 / 0 
+#cmo / setatt / mo_all / inter / pset, get, pinter / 1 
+
+filterkd / pset get pinter / EPS_FILTER / nocheck
 pset / pinter / delete
+
 rmpoint / compress 
 # SORT can affect a_b attribute
 sort / mo_all / index / ascending / ikey / imt xic yic zic 
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
 """%(h*10**-5, h*10**-3)
-     
-    if not visual_mode: 
-    	lagrit_input += """
+        lagrit_input += """ 
 resetpts / itp 
 boundary_components 
 dump / full_mesh.gmv / mo_all
@@ -627,13 +631,59 @@ cmo / modatt / mo_all / family_id / ioflag / l
 cmo / modatt / mo_all / evol_onen / ioflag / l
 # Dump mesh with no attributes for viz
 dump / full_mesh_viz.inp / mo_all
+
+# Dump out zone files
+define / XMAX / %e 
+define / XMIN / %e 
+define / YMAX / %e 
+define / YMIN / %e 
+define / ZMAX / %e 
+define / ZMIN / %e 
+
+define / ZONE / 1
+define / FOUT / boundary_top
+pset / top / attribute / zic / 1,0,0/ gt / ZMAX
+pset / top / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / boundary_bottom
+pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
+pset / bottom / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / boundary_left_w
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / left_w / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / boundary_front_n
+pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
+pset / front_n / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / boundary_right_e
+pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
+pset / right_e / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / boundary_back_s
+pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
+pset / back_s / zone / FOUT/ ascii / ZONE
+
 """
+        eps = h*10**-3
+        parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
+    	    0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
+    	    0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
+
+        lagrit_input=lagrit_input%parameters
+
     else:
-    	lagrit_input += """
+    	lagrit_input = """
 cmo / modatt / mo_all / icr1 / ioflag / l
 cmo / modatt / mo_all / isn1 / ioflag / l
 cmo / modatt / mo_all / itp1 / ioflag / l
-dump / reduced__mesh.gmv / mo_all 
+dump / reduced_mesh.gmv / mo_all 
 dump / reduced_mesh.inp / mo_all
 """
     lagrit_input += """
@@ -646,46 +696,16 @@ finish
 
     return len(endis)
 
-def define_zones(h, domain):
+def define_zones():
     """	
-    Creates and runs LaGriT script to define domain size
+    Processes zone file for particle tracking 
     """	
-    eps = h*10**-3
-    parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
-    	0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
-    	0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
-
-    lagrit_input = '''
-read / lagrit / full_mesh.lg / mo_all / binary 
-define / XMAX / %e 
-define / XMIN / %e 
-define / YMAX / %e 
-define / YMIN / %e 
-define / ZMAX / %e 
-define / ZMIN / %e 
-
-pset / top/ attribute / zic / 1,0,0/ gt /ZMAX 
-pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN 
-pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
-pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
-pset / right_e / attribute/ xic/1,0,0/ gt/XMAX
-pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
-pset/-all-/ zone / boundary / ascii
-finish
-'''
-
-    f=open('bound_zones.lgi','w')
-    f.write(lagrit_input%parameters)
-    f.flush()
-    f.close()
-    os.system(os.environ['lagrit_dfn']+ " < bound_zones.lgi > boundary_output.txt ")
-    
     # copies boundary zone files for PFLOTRAN 
     copy('boundary_bottom.zone','pboundary_bottom.zone')
     copy('boundary_left_w.zone','pboundary_left_w.zone')
-    copy('boundary_front_s.zone','pboundary_front_s.zone')
+    copy('boundary_front_n.zone','pboundary_front_n.zone')
     copy('boundary_right_e.zone','pboundary_right_e.zone')
-    copy('boundary_back_n.zone','pboundary_back_n.zone')
+    copy('boundary_back_s.zone','pboundary_back_s.zone')
     copy('boundary_top.zone','pboundary_top.zone')
     
     fall=open("allboundaries.zone","w")
@@ -696,14 +716,14 @@ finish
     fzone.close() 
     fall.writelines(lines)
     #copy all but frist and last 2 lines of boundary_bottom.zone in allboundaries.zone
-    files=['bottom','left_w','front_s','right_e']
+    files=['bottom','left_w','front_n','right_e']
     for f in files:
             fzone=open("boundary_%s.zone"%f,"rb")
             lines=fzone.readlines()
             lines=lines[1:-2]
             fzone.close() 
             fall.writelines(lines)
-    fzone=open("boundary_back_n.zone","rb")
+    fzone=open("boundary_back_s.zone","rb")
     lines=fzone.readlines()
     lines=lines[1:]
     fzone.close() 
@@ -715,8 +735,8 @@ finish
     os.remove('boundary_top.zone')
     os.remove('boundary_left_w.zone')
     os.remove('boundary_right_e.zone')
-    os.remove('boundary_front_s.zone')
-    os.remove('boundary_back_n.zone')
+    os.remove('boundary_front_n.zone')
+    os.remove('boundary_back_s.zone')
 
 def edit_intersection_files(num_poly, keep_list):
 

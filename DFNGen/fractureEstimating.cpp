@@ -221,6 +221,9 @@ void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64
 
         // Truncate poly if needed
         // Returns 1 if poly is outside of domain or truncated to less than 3 vertices
+         
+        // Vector for storing intersection boundaries 
+
         bool reject = false;
         while (domainTruncation(newPoly, domainSize) == 1) {
             // Poly is completely outside domain, or was truncated to 
@@ -237,7 +240,6 @@ void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64
                 reTranslatePoly(newPoly, shapeFamilies[familyIndex], generator);
             }                           
         }
-        
         if (reject == true) {
             // Restart while loop
             // Generate new fracture

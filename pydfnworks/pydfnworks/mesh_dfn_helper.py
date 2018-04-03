@@ -49,7 +49,7 @@ def parse_params_file():
     else:
         visual_mode = False
         print("Visual mode is off")
-    print("Expected Number of duded points: %d"%dudded_points)
+    print("Expected Number of dudded points: %d"%dudded_points)
     print("X Domain Size %d m"%domain['x'])
     print("Y Domain Size %d m"%domain['y'])
     print("Z Domain Size %d m"%domain['z'])
@@ -74,8 +74,17 @@ def check_dudded_points(dudded):
         pts = int(line.split()[1])
     except:
         pts = int(line.split()[-1])
-    if pts == dudded:
+    print("Expected Number of points: %d"%dudded)
+    print("Actual Number of points: %d"%pts)
+    diff = abs(dudded - pts)
+    if diff == 0:
         print '--> Correct Number of points removed \n'
+        return True
+    elif diff < 5: 
+        print('--> WARNING!!! Number of points removed does not \
+            match expected value')
+        print("However value is small: %d"%diff)
+        print("Proceeding\n")
         return True
     else:
         print 'ERROR! Incorrect Number of points removed'

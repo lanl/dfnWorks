@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/Projects/BES/dfn_print/gen_4_user_rectangles.dat 
+dfnFlow /project/bes_dfn/jhyman/dfn2graph_networks/backbone_x01/dfn_explicit.in 
+dfnTrans /project/bes_dfn/jhyman/dfn2graph_networks/backbone_x01/PTDFN_control.dat
