@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/tests/integrated_test/dfn_gen_input.dat 
+dfnFlow /Users/jhyman/src/dfnworks-main/tests/integrated_test/dfn_explicit.in 
+dfnTrans /Users/jhyman/src/dfnworks-main/tests/integrated_test/PTDFN_Control.dat 
