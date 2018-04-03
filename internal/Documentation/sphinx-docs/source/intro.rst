@@ -55,9 +55,16 @@ What's new in v2.0?
 - New dfnGen C++ code which is much faster than the Mathematica dfnGen. This code has successfully generated networks with 350,000+ fractures. 
 - Increased functionality in the pydfnworks package for more streamlined workflow from dfnGen through visualization. 
 
+What's new in v2.1?
+-------------------
+
+- Bug fixes in LaGrit Meshing 
+- Increased functionalities in pydfnworks including the path option
+
+
 Where can one get dfnWorks?
 ---------------------------
-dfnWorks 2.0 can be downloaded from https://github.com/dfnWorks/dfnWorks-Version2.0
+dfnWorks 2.1 can be downloaded from https://github.com/lanl/dfnWorks/
 
 v1.0 can be downloaded from https://github.com/dfnWorks/dfnWorks-Version1.0  
 
@@ -202,8 +209,6 @@ Contributors
 - Quan Bui (now at University of Maryland)
 - Jeremy Harrod (now at Spectra Logic)
 - Scott Painter (now at ORNL)
-- Nathaniel Knapp
-
 
 Contact
 --------

@@ -2,7 +2,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to dfnWorks 2.0 documentation!
+Welcome to dfnWorks 2.1 documentation!
 =======================================
 
 Contents:
@@ -11,12 +11,12 @@ Contents:
    :maxdepth: 3
 
    intro 
-   dfngen
-   dfnflow
-   dfntrans
-   pydfnworks
-   scripts
-   output
    tutorial
    applications
    publications
+   pydfnworks
+   dfngen
+   dfnflow
+   dfntrans
+   scripts
+   output
