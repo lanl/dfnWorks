@@ -656,19 +656,19 @@ pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
 pset / left_w / zone / FOUT/ ascii / ZONE
 
 define / ZONE / 4
-define / FOUT / boundary_front_s
-pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
-pset / front_s / zone / FOUT/ ascii / ZONE
+define / FOUT / boundary_front_n
+pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
+pset / front_n / zone / FOUT/ ascii / ZONE
 
 define / ZONE / 5
 define / FOUT / boundary_right_e
-pset / right_e / attribute/ xic / 1,0,0/ gt/XMAX
+pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
 pset / right_e / zone / FOUT/ ascii / ZONE
 
 define / ZONE / 6
-define / FOUT / boundary_back_n
-pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
-pset / back_n / zone / FOUT/ ascii / ZONE
+define / FOUT / boundary_back_s
+pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
+pset / back_s / zone / FOUT/ ascii / ZONE
 
 """
         eps = h*10**-3
@@ -700,41 +700,12 @@ def define_zones():
     """	
     Processes zone file for particle tracking 
     """	
-#    eps = h*10**-3
-#    parameters = (0.5*domain['x'] - eps, -0.5*domain['x'] + eps, \
-#    	0.5*domain['y'] - eps, -0.5*domain['y'] + eps, \
-#    	0.5*domain['z'] - eps, -0.5*domain['z'] + eps)
-#
-#    lagrit_input = '''
-#read / lagrit / full_mesh.lg / mo_all / binary 
-#define / XMAX / %e 
-#define / XMIN / %e 
-#define / YMAX / %e 
-#define / YMIN / %e 
-#define / ZMAX / %e 
-#define / ZMIN / %e 
-#
-#pset / top/ attribute / zic / 1,0,0/ gt /ZMAX 
-#pset / bottom/ attribute/ zic/ 1,0,0/ lt/ZMIN 
-#pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
-#pset / front_s / attribute/ yic / 1,0,0 / gt/YMAX
-#pset / right_e / attribute/ xic/1,0,0/ gt/XMAX
-#pset / back_n / attribute/ yic/ 1,0,0 / lt/YMIN
-#pset/-all-/ zone / boundary / ascii
-#finish
-#'''
-#
-#    f=open('bound_zones.lgi','w')
-#    f.write(lagrit_input%parameters)
-#    f.flush()
-#    f.close()
-#    os.system(os.environ['lagrit_dfn']+ " < bound_zones.lgi > boundary_output.txt ")
-      # copies boundary zone files for PFLOTRAN 
+    # copies boundary zone files for PFLOTRAN 
     copy('boundary_bottom.zone','pboundary_bottom.zone')
     copy('boundary_left_w.zone','pboundary_left_w.zone')
-    copy('boundary_front_s.zone','pboundary_front_s.zone')
+    copy('boundary_front_n.zone','pboundary_front_n.zone')
     copy('boundary_right_e.zone','pboundary_right_e.zone')
-    copy('boundary_back_n.zone','pboundary_back_n.zone')
+    copy('boundary_back_s.zone','pboundary_back_s.zone')
     copy('boundary_top.zone','pboundary_top.zone')
     
     fall=open("allboundaries.zone","w")
@@ -745,14 +716,14 @@ def define_zones():
     fzone.close() 
     fall.writelines(lines)
     #copy all but frist and last 2 lines of boundary_bottom.zone in allboundaries.zone
-    files=['bottom','left_w','front_s','right_e']
+    files=['bottom','left_w','front_n','right_e']
     for f in files:
             fzone=open("boundary_%s.zone"%f,"rb")
             lines=fzone.readlines()
             lines=lines[1:-2]
             fzone.close() 
             fall.writelines(lines)
-    fzone=open("boundary_back_n.zone","rb")
+    fzone=open("boundary_back_s.zone","rb")
     lines=fzone.readlines()
     lines=lines[1:]
     fzone.close() 
@@ -764,8 +735,8 @@ def define_zones():
     os.remove('boundary_top.zone')
     os.remove('boundary_left_w.zone')
     os.remove('boundary_right_e.zone')
-    os.remove('boundary_front_s.zone')
-    os.remove('boundary_back_n.zone')
+    os.remove('boundary_front_n.zone')
+    os.remove('boundary_back_s.zone')
 
 def edit_intersection_files(num_poly, keep_list):
 

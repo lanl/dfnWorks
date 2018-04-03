@@ -399,8 +399,8 @@ void assignPermeability(struct Poly &newPoly) {
     Arg 2: Radius (1/2 x dimension length)
     Arg 3: Aspect ratio */
 void initializeRectVertices(struct Poly &newPoly, float radius, float aspectRatio) {
-    float x = radius;
-    float y = radius * aspectRatio;
+    double x = radius;
+    double y = radius * aspectRatio;
     newPoly.xradius = x;
     newPoly.yradius = y;
     newPoly.aspectRatio = aspectRatio;

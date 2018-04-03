@@ -80,8 +80,8 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
 
     # Convert zone files to ex format
-    #self.zone2ex(zone_file='boundary_back_n.zone',face='north')
-    #self.zone2ex(zone_file='boundary_front_s.zone',face='south')
+    #self.zone2ex(zone_file='boundary_back_s.zone',face='south')
+    #self.zone2ex(zone_file='boundary_front_n.zone',face='north')
     #self.zone2ex(zone_file='boundary_left_w.zone',face='west')
     #self.zone2ex(zone_file='boundary_right_e.zone',face='east')
     #self.zone2ex(zone_file='boundary_top.zone',face='top')
@@ -92,7 +92,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print ('='*80)
     print("\n\n")
 
-def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-3):
+def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1):
     '''zone2ex    
     Convert zone files from LaGriT into ex format for LaGriT
     inputs:
@@ -138,9 +138,9 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-3
 
     # loop through zone files
     if zone_file is 'all':
-            zone_files = ['pboundary_front_s.zone', 'pboundary_back_n.zone', 'pboundary_left_w.zone', \
+            zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
                             'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
-            face_names = ['south', 'north', 'west', 'east', 'top', 'bottom']
+            face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else: 
             if zone_file == '':
                 sys.exit('ERROR: Please provide boundary zone filename!')
@@ -427,29 +427,33 @@ def pflotran_cleanup(self, index = 1):
     print("Running >> %s"%cmd)
     os.system(cmd)
 
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
+            os.remove(fl)    
+    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'):
+            os.remove(fl)    
+
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
             os.remove(fl)    
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
             os.remove(fl)    
 
-def create_dfn_flow_links(self):
-    os.symlink('../full_mesh.uge', 'full_mesh.uge')
-    os.symlink('../full_mesh_vol_area.uge', 'full_mesh_vol_area.uge')
-    os.symlink('../full_mesh.inp', 'full_mesh.inp')
-    os.symlink('../pboundary_back_n.zone', 'pboundary_back_n.zone')
-    os.symlink('../pboundary_front_s.zone', 'pboundary_front_s.zone')
-    os.symlink('../pboundary_left_w.zone', 'pboundary_left_w.zone')
-    os.symlink('../pboundary_right_e.zone', 'pboundary_right_e.zone')
-    os.symlink('../pboundary_top.zone', 'pboundary_top.zone')
-    os.symlink('../pboundary_bottom.zone', 'pboundary_bottom.zone')
-    os.symlink('../materialid.dat', 'materialid.dat')
-    
-def uncorrelated(sigma):
+def create_dfn_flow_links(self, path = '../'):
+    files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
+        'materialid.dat','pboundary_bottom.zone', 'pboundary_top.zone', 
+        'pboundary_back_s.zone', 'pboundary_front_n.zone', 
+        'pboundary_left_w.zone', 'pboundary_right_e.zone']
+    for f in files:
+        try:
+            os.symlink(path+f, f)
+        except:
+            print("--> Error Creating link for %s"%f)
+ 
+def uncorrelated(self, sigma, path = '../'):
     print '--> Creating Uncorrelated Transmissivity Fields'
     print 'Variance: ', sigma
     print 'Running un-correlated'
-    x = np.genfromtxt('../aperture.dat', skip_header = 1)[:,-1]
-    k = np.genfromtxt('../perm.dat', skip_header = 1)[0,-1]
+    x = np.genfromtxt(path + 'aperture.dat', skip_header = 1)[:,-1]
+    k = np.genfromtxt(path + '/perm.dat', skip_header = 1)[0,-1]
     n = len(x)
 
     print np.mean(x)
@@ -459,8 +463,8 @@ def uncorrelated(sigma):
     perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
 
     aper = np.sqrt((12.0*perm))
-    aper -= np.mean(aper)
-    aper += np.mean(x)
+    #aper -= np.mean(aper)
+    #aper += np.mean(x)
 
     print '\nPerm Stats'
     print '\tMean:', np.mean(perm)
@@ -477,16 +481,13 @@ def uncorrelated(sigma):
     print '\tMinimum:',min(aper)
     print '\tMaximum:',max(aper)
 
-
     output_filename = 'aperture_' + str(sigma) + '.dat'
     f = open(output_filename,'w+')
     f.write('aperture\n')
     for i in range(n):
     	f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
     f.close()
-
-    cmd = 'ln -s ' + output_filename + ' aperture.dat '
-    os.system(cmd)
+    os.symlink(output_filename, 'aperture.dat')
 
     output_filename = 'perm_' + str(sigma) + '.dat'
     f = open(output_filename,'w+')
@@ -495,8 +496,7 @@ def uncorrelated(sigma):
     	f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
     f.close()
 
-    cmd = 'ln -s ' + output_filename + ' perm.dat '
-    os.system(cmd) 
+    os.symlink(output_filename, 'perm.dat')
         
 
 def parse_pflotran_vtk(self, grid_vtk_file=''): 

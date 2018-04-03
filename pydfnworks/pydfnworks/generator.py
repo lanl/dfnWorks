@@ -19,32 +19,31 @@ def dfn_gen(self):
     # Create Working directory
     tic = time()
     self.make_working_directory()
-    #helper.dump_time(self.jobname, 'Function: make_working_directory', time()- tic) 
+    helper.dump_time(self.jobname, 'Function: make_working_directory', time()- tic) 
     
     # Check input file  
     tic = time()
     self.check_input()
-    #helper.dump_time(self.jobname, 'Function: check_input', time() - tic)   
+    helper.dump_time(self.jobname, 'Function: check_input', time() - tic)   
 
     # Create network    
     tic = time()
     self.create_network()
-    #helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
-    tic = time()
+    helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
     
-    #self.output_report()
-    #helper.dump_time(self.jobname, 'output_report', time() - tic)   
+    tic = time()
+    self.output_report()
+    helper.dump_time(self.jobname, 'output_report', time() - tic)   
     
     # Mesh Network
     tic = time()
     self.mesh_network()
-
-    #helper.dump_time(self.jobname, 'Function: mesh_network', time() - tic)  
+    helper.dump_time(self.jobname, 'Function: mesh_network', time() - tic)  
     print ('='*80)
     print 'dfnGen Complete'
     print ('='*80)
     print ''
-    #helper.dump_time(self.jobname, 'Process: dfnGen',time() - tic_gen)  
+    helper.dump_time(self.jobname, 'Process: dfnGen',time() - tic_gen)  
 
 def make_working_directory(self):
     '''

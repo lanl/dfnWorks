@@ -139,8 +139,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
 void writePoints(std::ostream &output, std::vector<Point> &points, int start, unsigned int &count){
     int n=points.size();
     for (int i = start; i < n; i++) {
-        output << std::setprecision(12) << count << " " << float(points[i].x) 
-               << " " << float(points[i].y) << " " << float (points[i].z) << "\n";
+        output << std::setprecision(12) << count << " " << points[i].x 
+               << " " << points[i].y << " " << points[i].z << "\n";
         count++;
     }
 }
@@ -300,6 +300,7 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
             // one for each intersecting poly. We can't change the original data so we must use temp data    
             IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[polyIntIdx], 
                                          acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
+
             // poly and intersection now rotated
         
             int triplePtsSize = tempTripPts.size();
@@ -480,7 +481,7 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
         // Write vertices    
         for (int i = 0; i < acceptedPoly[finalFractures[j]].numberOfNodes; i++) {
                 int idx = i*3;        
-                polyOutput << std::setprecision(15) << count << " " 
+                polyOutput << std::setprecision(12) << count << " " 
                            << acceptedPoly[finalFractures[j]].vertices[idx] << " " 
                            << acceptedPoly[finalFractures[j]].vertices[idx+1] << " " 
                            << acceptedPoly[finalFractures[j]].vertices[idx+2] << "\n"; 
@@ -528,10 +529,10 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
         int numberOfNodes = acceptedPoly[finalFractures[j]].numberOfNodes; 
         for (int i = 0; i < numberOfNodes; i++) {
             int idx = i*3;        
-            polyOutput << std::setprecision(12) << i+1 << " " 
-                       << float(acceptedPoly[finalFractures[j]].vertices[idx]) << " " 
-                       << float(acceptedPoly[finalFractures[j]].vertices[idx+1]) << " " 
-                       << float(acceptedPoly[finalFractures[j]].vertices[idx+2]) << "\n"; 
+                polyOutput << std::setprecision(12) << i+1 << " " 
+                       << acceptedPoly[finalFractures[j]].vertices[idx] << " " 
+                       << acceptedPoly[finalFractures[j]].vertices[idx+1] << " " 
+                       << acceptedPoly[finalFractures[j]].vertices[idx+2] << "\n"; 
         }
 
         // Write line connectivity
@@ -540,7 +541,6 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
         }
         polyOutput.close();
     }    
-        
         
 }
 

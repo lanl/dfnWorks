@@ -40,13 +40,13 @@ class dfnworks(Frozen):
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
-    from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, create_dfn_flow_links 
-    from transport import copy_dfn_trans_files, run_dfn_trans
+    from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, create_dfn_flow_links, uncorrelated 
+    from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links
     from meshdfn import mesh_network
     from legal import legal
     from paths import define_paths
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -131,6 +131,9 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
             dfn.local_dfnTrans_file = dfnTrans_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
+
+    if options.path != "":
+        dfn.path = options.path
 
     if options.cell is True:
         dfn.aper_cell_file = 'aper_node.dat'

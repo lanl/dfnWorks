@@ -11,7 +11,7 @@ This document contains a short, five example, tutorial for dfnWorks. The five te
 - truncated_power_law_dist: The user specifies the parameters for two families of fractures with a truncated power-law distribution of fracture size. 
 
 
-All required input files for these examples are contained in the folder dfnWorks-Version2.0/tests/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
+All required input files for these examples are contained in the folder dfnWorks/tests/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
 
 Turn on X forwarding if on server
@@ -23,12 +23,12 @@ Ensure that X forwarding is turned on if you are running dfnWorks from an ssh co
    
     $ ssh -X SERVER_NAME 
 
-Go to the dnfWorks-Version2.0 repository
+Go to the dnfWorks repository
 ------------------------------------------
 
 .. code-block:: bash
 
-    $ cd ~/dfnWorks-Version2.0/
+    $ cd ~/dfnWorks/
 
 Fix paths in test directory 
 ----------------------------
@@ -45,7 +45,7 @@ Set the PETSC, PFLOTRAN, Python, and LaGriT paths correctly
 
 **Before executing dfnWorks,** the following paths must be set:
 
-- dfnWorks_PATH: the dfnWorks-Version2.0 repository folder
+- dfnWorks_PATH: the dfnWorks repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
 - PFLOTRAN_DIR: The PFLOTRAN directory
 - python_dfn: The location of the Python distribution to use
@@ -59,7 +59,7 @@ For example:
 
 .. code-block:: python
     
-    os.environ['dfnWorks_PATH'] = '/home/nknapp/dfnWorks-Version2.0/'    
+    os.environ['dfnWorks_PATH'] = '/home/username/dfnWorks/'    
 
 Setup the Python package pydfnworks
 -------------------------------------
@@ -102,8 +102,8 @@ For example, to run the 4_user_defined rectangles test below, on 4 CPUs,  the co
 .. code-block:: bash
     
     $ cd bin    
-    $ python run.py -name /home/nknapp/4_user_defined_rectangles
-     -input /home/nknapp/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+    $ python run.py -name /home/username/4_user_defined_rectangles
+     -input /home/username/dfnWorks/tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 This command will run the 4_user_defined_rectangles test and create a new folder 4_user_defined_rectangles where all output files will be located. Descriptions of each output file are in the documentation. In the following sections, we provide descriptions of the output you should expect for each of the five examples.
@@ -116,25 +116,25 @@ Here is a quick summary of the steps described above, with commands for the 4_us
 .. code-block:: bash
     
     $ ssh -X SERVER_NAME
-    $ cd ~/dfnWorks-Version2.0/pydfnworks/bin/
+    $ cd ~/dfnWorks/pydfnworks/bin/
     $ python fix_paths.py  
     $ vi /pydfnworks/pydfnworks/paths.py
     $ cd .. 
     $ python setup.py install --user
     $ cd bin    
-    $ python run.py -name /home/nknapp/4_user_defined_rectangles
-     -input /home/nknapp/dfnWorks-Version2.0/tests/4_user_defined_rectangles.txt
+    $ python run.py -name /home/username/4_user_defined_rectangles
+     -input /home/username/dfnWorks/tests/4_user_defined_rectangles.txt
      -ncpu 4  
 
 4_user_defined_rectangles
 --------------------------
 
-This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
+This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The input file specifiying the ellipses is in dfnWorks/tests, and is named define_4_user_rectangles.dat. To run the test on 4 cpus, enter the following command line input:
 
 The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the folder 4_user_defined_rectangles/LaGriT/, into Paraview.
 
 .. figure:: figures/4_user_rectangles_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 	
@@ -145,7 +145,7 @@ This image is created by loading the file 4_user_defined_rectangles/PFLOTRAN/par
 
 
 .. figure:: figures/4_user_rectangles_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
    
@@ -159,7 +159,7 @@ Trajectories can be visualized by loading the files part\_*.inp, in the folder 4
 We have used the extract surface and tube filters in paraview for visual clarity. 
 
 .. figure:: figures/4_user_rectangles_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
    
@@ -170,10 +170,10 @@ In the other tests, only a brief description and pictures are provided.
 4_user_defined_ellipses
 --------------------------
 
-This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks-Version2.0/tests, and is named define_4_user_ellipses.dat. 
+This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 5 vertices. The input file specifiying the ellipses is in dfnWorks/tests, and is named define_4_user_ellipses.dat. 
 
 .. figure:: figures/4_user_ellipses_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -181,7 +181,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 
 .. figure:: figures/4_user_ellipses_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -189,7 +189,7 @@ This test case consists of four user defined elliptical fractures within a a cub
 |
 
 .. figure:: figures/4_user_ellipses_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -202,7 +202,7 @@ truncated_power_law_dist
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 4m. The other input parameters can be found in tests/gen_truncated_power_law_dist.dat.
 
 .. figure:: figures/power_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -210,7 +210,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 
 .. figure:: figures/power_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -218,7 +218,7 @@ This test case consists of two families whose sizes have a truncated power law d
 |
 
 .. figure:: figures/power_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -228,7 +228,7 @@ exponential_dist
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat. 
 
 .. figure:: figures/exp_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -236,7 +236,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 |
 
 .. figure:: figures/exp_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -245,7 +245,7 @@ This test case consists of a family of fractures whose size is exponentially dis
 
 
 .. figure:: figures/exp_trace.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -259,7 +259,7 @@ lognormal_dist
 This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat.
 
 .. figure:: figures/lognormal_mesh.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -268,7 +268,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 
 
 .. figure:: figures/lognormal_pressure.png
-   :scale: 100 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
@@ -277,7 +277,7 @@ This test case consists of two fracture families whose sizes have a lognormal di
 
 
 .. figure:: figures/lognormal_trace.png
-   :scale: 100%
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
