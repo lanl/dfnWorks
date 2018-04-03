@@ -16,7 +16,7 @@ def define_paths():
     # ================================================
     
     # the dfnworks-main  repository 
-    os.environ['dfnworks_PATH'] = 'DUMMY/dfnworks-main/'
+    os.environ['dfnworks_PATH'] = 'DUMMY/dfnWorks/'
     valid('dfnworks_PATH')
     if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
         print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
@@ -50,7 +50,7 @@ def define_paths():
     # Directories
     os.environ['DFNGEN_PATH']=os.environ['dfnworks_PATH']+'DFNGen/'
     os.environ['DFNTRANS_PATH']= os.environ['dfnworks_PATH'] +'ParticleTracking/'
-    os.environ['PYdfnworks_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
+    os.environ['PYDFNWORKS_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
     os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
     os.environ['correct_uge_PATH'] = os.environ['dfnworks_PATH']+'C_uge_correct/' 
     os.environ['VTK_PATH'] = os.environ['dfnworks_PATH'] + 'inp_2_vtk/'
