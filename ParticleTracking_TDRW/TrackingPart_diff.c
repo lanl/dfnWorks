@@ -161,7 +161,7 @@ void ParticleTrack ()
   inputfile = Control_File("out_time:",9 );
   sprintf(filename,"%s/%s",maindir,inputfile.filename);
   FILE *tp = OpenFile (filename,"w");
-  fprintf(tp,"# of time steps, flux weights, total advective travel time, total advective +diffusion time, total disffusion time, beta, total length[m] \n");
+  fprintf(tp,"# of time steps, flux weights, total advective travel time, total advective + diffusion time, total diffusion time, beta, total length[m] \n");
   
 // Add diffusion time (TDRW) 
   inputfile=Control_File_Optional("tdrw:",5);
@@ -418,6 +418,8 @@ void ParticleTrack ()
     {
 
       t=0;
+   
+     
      if ((np >= (int)(0.01*numbpart)) && ( percent_done==0))
         {
         printf("Done %d particles, 1%%. \n", np);
@@ -431,7 +433,7 @@ void ParticleTrack ()
 
      if ((np >= (int)(0.25*numbpart)) && ( percent_done==2))
         {
-	printf("Done %d particles, 25%%. \n", np); 
+        printf("Done %d particles, 25%%. \n", np);
         percent_done=3;
         }
      if ((np >= (int)(0.5*numbpart)) && ( percent_done==3))
@@ -444,7 +446,6 @@ void ParticleTrack ()
         printf("Done %d particles, 75%%. \n", np);
         percent_done=5;
         }
-
 
          
       if (avs_o==1)
@@ -485,7 +486,7 @@ void ParticleTrack ()
          {
           sprintf(filename,"%s/tdrw_%d",path,curr_n);
           diff = OpenFile(filename,"w");
-          fprintf(diff,"       Advective travel time on the fracture, Diffusion time on the fracture, Total travel time on the fracture, fracture ID, Accumulative advective travel time, Accumilative total time, Accumulative diffusion time \n");
+          fprintf(diff,"       Advective travel time on the fracture, Diffusion time on the fracture, Total travel time on the fracture, fracture ID, Accumulative advective travel time, Accumulative total time, Accumulative diffusion time \n");
 
          }
       // define capacity for temp data used for outputs
@@ -595,13 +596,29 @@ void ParticleTrack ()
 	      sprintf(filename,"%s/part_control_%d",pathcontrol, curr_n);
 	  
 	      tmp2=OpenFile(filename,"w");
-	      fprintf(tmp2," travel time, x-, y-, z- position, Vx, Vy, Vz, trajectory length, #  of current fracture, aperture \n");
-	     
+
+              if (tdrw==1)
+
+	      fprintf(tmp2," x-, y-, z- position, Vx, Vy, Vz, trajectory length, fracture ID , aperture,   Accumulative advective travel time, Accumulative total time, Accumulative diffusion time \n");
+              else
+            fprintf(tmp2," travel time, x-, y-, z- position, Vx, Vy, Vz, trajectory length, #  of current fracture, aperture \n");	     
+
+
 	      if (out_plane==1)
 		{    
-		  fprintf(tmp2,  "%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, xcop, ycop,zcop, 0.0, 0.0,0.0, totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
 	    
-	  
+	          if (tdrw==1)
+                     {
+
+                      fprintf(tmp2,"  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
+                      }
+                    else
+
+                     {  
+                        fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[
+2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
+                      }
+ 
 		  // in case of inflow is negative 
 		  if (inflowcoord<0) 
 		    current_CP=inflowcoord+deltaCP;
@@ -763,7 +780,24 @@ void ParticleTrack ()
 			  if (no_out==1)
 			    particle3dvelocity=CalculateVelocity3D();
 	         
-			  fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, xcop, ycop,zcop, particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
+			if (tdrw==1)
+                     {
+                      t_adv=particle[np].time-t_adv0;
+                      timediff=TimeDomainRW(t_adv);
+                      t_adv0=particle[np].time;
+                      particle[np].t_diff=particle[np].t_diff +timediff;
+                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
+
+                      fprintf(tmp2,"%5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
+                      }
+                    else
+
+                     {  
+                        fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[
+2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
+                      }
+
+
 	         
 			  if (inflowcoord<0)
 			    current_CP=current_CP+deltaCP;
@@ -819,7 +853,7 @@ void ParticleTrack ()
 	      /*** if particle's new cell was not found move to the next particle ***/ 
 	      if (particle[np].cell==0)
 		{
-	          
+	      
 		  break;
                 }
     
@@ -955,12 +989,11 @@ void ParticleTrack ()
 	      /*** if particle's new cell was not found move to the next particle ***/ 
 	      if (particle[np].cell==0)
 		{
-	      
+	          FLAG_OUT=0;
 		  break;
                 }
 	    } //loop on time
  
-	
 
 	  /** if particle did not go out through flow-out zone ****/ 
 	  if (FLAG_OUT!=1)
@@ -1048,9 +1081,12 @@ void ParticleTrack ()
 		  
 		    }
 
- 		if (tdrw==1)
-                       {
+ 	//	if ((tdrw==1)&& (particle[np].cell !=0))
+                       if (tdrw==1)  
+	             {
                       t_adv=particle[np].time-t_adv0;
+                    //  printf("%d  %lf   %lf   %lf \n", np+1, t_adv, particle[np].time, t_adv0);
+                          
                       timediff=TimeDomainRW(t_adv);
                       t_adv0=particle[np].time;
                       particle[np].t_diff=particle[np].t_diff +timediff;
@@ -1128,10 +1164,22 @@ void ParticleTrack ()
            
 		      particle3dvelocity=CalculateVelocity3D();
           
-            
-		      fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
-           
-           
+                     if (tdrw==1)
+                     {
+
+                      t_adv=particle[np].time-t_adv0;
+                      timediff=TimeDomainRW(t_adv);
+                      t_adv0=particle[np].time;
+                      particle[np].t_diff=particle[np].t_diff +timediff;
+                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
+
+		      fprintf(tmp2,"%5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture,  particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
+                      }
+                    else
+
+                     {
+			fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
+                      }
 		      fclose(tmp2);
            
 	        
@@ -2882,11 +2930,9 @@ double TimeDomainRW (double time_advect)
 
   double term_a=0;
   double b=0;
+   if (particle[np].cell!=0)
  
-if (particle[np].cell!=0)
-
-     {
-  
+     {  
   if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12))
        b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
   else
@@ -2895,14 +2941,11 @@ if (particle[np].cell!=0)
    else
        b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
 
- }
+     }
   else
     {
       b=node[fracture[particle[np].fracture-1].firstnode-1].aperture;
     }
-
-
-
   term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
   double inverse_erfc=0.0;
   double z;
