@@ -418,11 +418,6 @@ void ParticleTrack ()
     {
 
       t=0;
-<<<<<<< HEAD
-   
-     
-=======
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
      if ((np >= (int)(0.01*numbpart)) && ( percent_done==0))
         {
         printf("Done %d particles, 1%%. \n", np);
@@ -436,11 +431,7 @@ void ParticleTrack ()
 
      if ((np >= (int)(0.25*numbpart)) && ( percent_done==2))
         {
-<<<<<<< HEAD
-        printf("Done %d particles, 25%%. \n", np);
-=======
-	printf("Done %d particles, 25%%. \n", np); 
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
+	        printf("Done %d particles, 25%%. \n", np); 
         percent_done=3;
         }
      if ((np >= (int)(0.5*numbpart)) && ( percent_done==3))
@@ -453,10 +444,6 @@ void ParticleTrack ()
         printf("Done %d particles, 75%%. \n", np);
         percent_done=5;
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
 
          
       if (avs_o==1)
@@ -1092,14 +1079,8 @@ void ParticleTrack ()
 		  
 		    }
 
-<<<<<<< HEAD
- 	//	if ((tdrw==1)&& (particle[np].cell !=0))
-                       if (tdrw==1)  
-	             {
-=======
  		if (tdrw==1)
                        {
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
                       t_adv=particle[np].time-t_adv0;
                     //  printf("%d  %lf   %lf   %lf \n", np+1, t_adv, particle[np].time, t_adv0);
                           
@@ -2946,17 +2927,10 @@ double TimeDomainRW (double time_advect)
 
   double term_a=0;
   double b=0;
-<<<<<<< HEAD
-   if (particle[np].cell!=0)
- 
-     {  
-=======
- 
 if (particle[np].cell!=0)
 
      {
   
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
   if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12))
        b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
   else
@@ -2965,21 +2939,11 @@ if (particle[np].cell!=0)
    else
        b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
 
-<<<<<<< HEAD
-     }
-=======
  }
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
   else
     {
       b=node[fracture[particle[np].fracture-1].firstnode-1].aperture;
     }
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 9628bdfd0cc13ccfcdef28ac3457f2beb4fdd39f
   term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
   double inverse_erfc=0.0;
   double z;
