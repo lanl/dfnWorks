@@ -78,6 +78,11 @@ def fracture_family(family_number):
     family['constant']={'value':-1}
     family['min']=-1
     family['max']=-1
+    # Parameters for aperture/radii correlations
+    family['a']=float()
+    family['b']=float()
+
+
     return family
 
 def user_fractures():

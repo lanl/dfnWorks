@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.0"
+__version__ = "2.1"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
@@ -8,6 +8,8 @@ import os
 from time import time
 from dfntools import *
 import helper
+from integrated import *
+from create_run_scripts import * 
 
 class dfnworks(Frozen):
     '''
