@@ -22,16 +22,16 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     cpu_id = int(cpu_id)
    
     # Create Symbolic Links 
-    os.symlink("polys/poly_%d.inp"%fracture_id, "poly_CPU%d.inp"cpu_id)    
+    os.symlink("polys/poly_%d.inp"%fracture_id, "poly_CPU%d.inp"%cpu_id)    
     os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
         "parameters_CPU%d.mlgi"%cpu_id)
-    os.symlink("intersections/intersections_%d.inp"%fracture_id, \ 
+    os.symlink("intersections/intersections_%d.inp"%fracture_id,\
         "intersections_CPU%d.inp"%cpu_id)
 
     cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
          + ' > lagrit_logs/log_lagrit_%d'
-    os.system(cmd%(cpu_id,fracture_id))
-    #subprocess.check_call(cmd)
+    #os.system(cmd%(cpu_id,fracture_id))
+    subprocess.call(cmd%(cpu_id,fracture_id), shell = True)
 
     if not visual_mode:
         cmd_check = os.environ['connect_test'] + 'ConnectivityTest' \
@@ -40,8 +40,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         + ' mesh_%d.inp' \
         + ' %d'
         cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id,fracture_id)
-        #failure = subprocess.call(cmd_check)
-        failure = os.system(cmd_check)
+        failure = subprocess.call(cmd_check, shell = True)
+        #failure = os.system(cmd_check)
         if failure > 0:
             print("MESH CHECKING HAS FAILED!!!!")
             print 'Fracture number ', fracture_id, '\trunning on ', p.name, '\n'
@@ -187,7 +187,8 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
         if pid == 0: # clone a child job
             cmd = os.environ['lagrit_dfn']+ ' < merge_poly_part_%d.lgi ' \
                 + '> log_merge_poly_part%d' 
-            os.system(cmd%(j,j))
+            subprocess.call(cmd%(j,j), shell = True)
+            #os.system(cmd%(j,j))
             os._exit(0)
         else:
             print 'Merging part ', j, ' of ', n_jobs 
@@ -201,9 +202,11 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
             j += 1 
 
     print("Starting Final Merge")
-    os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
-        + ' > log_merge_all.txt') # run remove points
+    #os.system(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
+    #    + ' > log_merge_all.txt') # run remove points
 
+    subprocess.call(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
+        + ' > log_merge_all.txt', shell=True) # run remove points
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:
         if(os.stat("full_mesh.lg").st_size > 0):
