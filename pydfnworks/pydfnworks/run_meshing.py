@@ -5,7 +5,7 @@
 
 """
 
-
+import subprocess
 import os
 import time
 import multiprocessing as mp 
@@ -20,21 +20,18 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     print 'Fracture ', fracture_id, '\tstarting on ', p.name, '\n' 
     a, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
-    
-    cmd = 'ln -s polys/poly_%d.inp poly_CPU%d.inp'
-    os.system(cmd%(fracture_id,cpu_id))
-
-    cmd = 'ln -s parameters/parameters_%d.mlgi '\
-         + 'parameters_CPU%d.mlgi'
-    os.system(cmd%(fracture_id,cpu_id))
-
-    cmd = 'ln -s intersections/intersections_%d.inp '\
-         + 'intersections_CPU%d.inp'
-    os.system(cmd%(fracture_id,cpu_id))
+   
+    # Create Symbolic Links 
+    os.symlink("polys/poly_%d.inp"%fracture_id, "poly_CPU%d.inp"cpu_id)    
+    os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
+        "parameters_CPU%d.mlgi"%cpu_id)
+    os.symlink("intersections/intersections_%d.inp"%fracture_id, \ 
+        "intersections_CPU%d.inp"%cpu_id)
 
     cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
          + ' > lagrit_logs/log_lagrit_%d'
     os.system(cmd%(cpu_id,fracture_id))
+    #subprocess.check_call(cmd)
 
     if not visual_mode:
         cmd_check = os.environ['connect_test'] + 'ConnectivityTest' \
@@ -43,6 +40,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         + ' mesh_%d.inp' \
         + ' %d'
         cmd_check = cmd_check%(cpu_id,cpu_id,fracture_id,fracture_id)
+        #failure = subprocess.call(cmd_check)
         failure = os.system(cmd_check)
         if failure > 0:
             print("MESH CHECKING HAS FAILED!!!!")
