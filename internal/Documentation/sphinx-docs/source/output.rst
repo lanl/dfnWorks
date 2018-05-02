@@ -240,7 +240,7 @@ Full DFN mesh in GMV (general mesh viewer) format.
 
 .. _full_mesh.lg:
 
-Information: Full DFN mesh in LaGriT binary format. 
+Full DFN mesh in LaGriT binary format. 
 
 **intersections:**
 
@@ -450,39 +450,40 @@ Input file for DFNTrans.
 
 **pboundary_back_n.zone:**
 
-.. _pboundary_back_n.zone:
+.. _pboundary_back_s.zone:
 
-Boundary zone file for the back of the domain. 
+Boundary zone file for the back of the domain. Normal vector (0,1,0) +- pi/2 
 
 **pboundary_bottom.zone:**
 
 .. _pboundary_bottom.zone:
 
-Boundary zone file for the bottom of the domain. 
+Boundary zone file for the bottom of the domain. Normal vector (0,0,-1) +- pi/2 
 
 **pboundary_front_s.zone:**
 
-.. _pboundary_front_s.zone:
+.. _pboundary_front_n.zone:
 
-Boundary zone file for the front of the domain. 
+Boundary zone file for the front of the domain. Normal vector (0,-1,0) +- pi/2 
 
 
 **pboundary_left_w.zone:**
 
 .. _pboundary_left_w.zone:
 
-Boundary zone file for the left side of the domain. 
+Boundary zone file for the left side of the domain. Normal vector (-1,0,0) +- pi/2 
 
 
 **pboundary_right_e.zone:**
 
 .. _pboundary_right_e.zone:
 
-Boundary zone file for the bottom of the domain. 
+
+Boundary zone file for the bottom of the domain. Normal  vector (1,0,0) +- pi/2 
 
 **pboundary_top.zone:**
 
 .. _pboundary_top.zone:
 
-Boundary zone file for the top of the domain. 
+Boundary zone file for the top of the domain. Normal vector (0,0,1) +- pi/2 
 
