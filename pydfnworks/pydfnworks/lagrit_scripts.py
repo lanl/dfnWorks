@@ -602,17 +602,17 @@ dump / lagrit / full_mesh.lg / mo_all
             print("Dumping output for %s"%flow_solver)
             lagrit_input += """
 dump / pflotran / full_mesh / mo_all / nofilter_zero
-dump / stor / tri_fracture / mo_all / ascii
+dump / stor / full_mesh / mo_all / ascii
     """
         elif flow_solver == "FEHM":
             print("Dumping output for %s"%flow_solver)
             lagrit_input += """
-dump / stor / tri_fracture / mo_all / ascii
-dump / coord / tri_fracture / mo_all 
+dump / stor / full_mesh / mo_all / ascii
+dump / coord / full_mesh / mo_all 
 # matid start at 1, but we need them to start at 7 for FEHM due to zone files
 # So we do a little addition
 math / add / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
-dump / zone_imt / tri_fracture / mo_all
+dump / zone_imt / full_mesh / mo_all
 # and then we subtract 6 back 
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """

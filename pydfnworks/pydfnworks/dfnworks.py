@@ -43,13 +43,13 @@ class dfnworks(Frozen):
     from generator import make_working_directory, create_network
     from gen_output import output_report 
     from flow import lagrit2pflotran, pflotran, parse_pflotran_vtk, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, create_dfn_flow_links, uncorrelated, set_flow_solver 
-    from flow import fehm
+    from flow import correct_stor_file, fehm
     from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links
     from meshdfn import mesh_network
     from legal import legal
     from paths import define_paths
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -72,6 +72,7 @@ class dfnworks(Frozen):
         self.mesh_type = mesh_type
         self.perm_file = perm_file
         self.aper_file = aper_file
+        self.stor_file = stor_file 
         self.perm_cell_file = perm_cell_file
         self.aper_cell_file = aper_cell_file
         self.dfnTrans_version= 2.0

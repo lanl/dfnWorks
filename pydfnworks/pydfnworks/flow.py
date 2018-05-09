@@ -52,6 +52,7 @@ def dfn_flow(self):
         helper.dump_time(self.jobname, 'Function: parse_cleanup', time() - tic) 
     elif self.flow_solver == "FEHM":
         print("Using flow solver: %s"%self.flow_solver)
+        self.correct_stor_file()
         self.fehm()
 
     helper.dump_time(self.jobname,'Process: dfnFlow',time() - tic_flow)    
@@ -674,10 +675,30 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
 def correct_stor_file(self):
     """corrects volumes in stor file to account for apertures"""
+     # Make input file for C Stor converter
+    if self.flow_solver != "FEHM":
+        sys.exit("ERROR! Wrong flow solver requested")
+    self.stor_file = self.inp_file[:-4] + '.stor'
+    self.mat_file= self.inp_file[:-4] + '_material.zone'
+    f = open("convert_stor_params.txt", "w")
+    f.write("%s\n"%self.mat_file)
+    f.write("%s\n"%self.stor_file)
+    f.write("%s"%(self.stor_file[:-4]+'_vol_area.uge\n'))
+    f.write("%s\n"%self.aper_file)
+    f.close()
 
+    t = time()
+    cmd = os.environ['correct_stor_PATH']+ 'correct_stor' + ' convert_stor_params.txt' 
+    failure = subprocess.call(cmd, shell = True)
+    if failure > 0:
+            sys.exit('ERROR: stor conversion failed\nExiting Program')
+    elapsed = time() - t
+    print '--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed
 
 def fehm(self):
     """ runs fehm """
+    if self.flow_solver != "FEHM":
+        sys.exit("ERROR! Wrong flow solver requested")
     print("Here is where I'll run FEHM") 
     subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm", shell = True)
 

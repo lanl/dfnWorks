@@ -54,5 +54,6 @@ def define_paths():
     os.environ['PYdfnworks_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
     os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
     os.environ['correct_uge_PATH'] = os.environ['dfnworks_PATH']+'C_uge_correct/' 
+    os.environ['correct_stor_PATH'] = os.environ['dfnworks_PATH']+'C_stor_correct/' 
     os.environ['VTK_PATH'] = os.environ['dfnworks_PATH'] + 'inp_2_vtk/'
 
