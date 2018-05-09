@@ -3,6 +3,7 @@ import sys
 import shutil
 import helper
 from time import time
+import subprocess
 
 def dfn_trans(self):
     '''dfnTrans
@@ -47,7 +48,7 @@ def copy_dfn_trans_files(self):
 
 def run_dfn_trans(self):
     '''run dfnTrans simulation'''
-    failure = os.system('./DFNTrans '+self.local_dfnTrans_file)
+    failure = subprocess.calll('./DFNTrans '+self.local_dfnTrans_file, shell = True)
     if failure == 0:
         print('='*80)
         print("\ndfnTrans Complete\n")

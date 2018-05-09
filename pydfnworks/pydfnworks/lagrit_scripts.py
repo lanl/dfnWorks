@@ -794,5 +794,5 @@ finish
     	f.write(lagrit_script)
     	f.flush()
     	f.close()
-    	os.system(lagrit_path +  '< prune_intersection.lgi > out.txt')
+    	subprocess.call(lagrit_path +  '< prune_intersection.lgi > out.txt', shell = True)
 

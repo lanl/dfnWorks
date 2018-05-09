@@ -55,7 +55,6 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
 
 if __name__ == "__main__":
     print ('='*80)
-    os.system("date")
     print '''Python Script to parse DFNGEN output and mesh it using LaGriT 
 
     Last Update August 1 2016 by Jeffrey Hyman

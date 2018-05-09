@@ -267,8 +267,8 @@ def inp2gmv(self, inp_file=''):
         fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
         fid.write('finish \n\n')
 
-    cmd = lagrit_path + ' <inp2gmv.lgi ' + '>lagrit_inp2gmv.txt'
-    failure = os.system(cmd)
+    cmd = lagrit_path + ' <inp2gmv.lgi ' + '> lagrit_inp2gmv.txt'
+    failure = subprocess.call(cmd, shell = True)
     if failure:
         sys.exit('ERROR: Failed to run LaGrit to get gmv from inp file!')
     print("--> Finished writing gmv format from avs format")
@@ -327,7 +327,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
     f.close()
 
     cmd = os.environ['correct_uge_PATH']+ 'correct_uge' + ' convert_uge_params.txt' 
-    failure = os.system(cmd)
+    failure = subprocess.call(cmd, shell = True)
     if failure > 0:
             sys.exit('ERROR: UGE conversion failed\nExiting Program')
     elapsed = time() - t
@@ -429,7 +429,7 @@ def pflotran(self):
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self.local_dfnFlow_file 
     print("Running: %s"%cmd)
-    os.system(cmd)    
+    subprocess.call(cmd, shell = True)
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
@@ -447,11 +447,11 @@ def pflotran_cleanup(self, index = 1):
     
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
     print("Running >> %s"%cmd)
-    os.system(cmd)
+    subprocess.call(cmd, shell = True)
 
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
     print("Running >> %s"%cmd)
-    os.system(cmd)
+    subprocess.call(cmd, shell = True)
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
             os.remove(fl)    
