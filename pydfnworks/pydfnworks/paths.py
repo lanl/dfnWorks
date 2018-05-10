@@ -1,7 +1,4 @@
-from tempfile import mkstemp
-from shutil import move
 import os
-import subprocess
 
 def valid(name):
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
@@ -32,7 +29,7 @@ def define_paths():
     os.environ['PFLOTRAN_DIR']='/Users/jhyman/src/pflotran'
     valid('PFLOTRAN_DIR')
 
-    # PFLOTRAN path
+    # FEHM path
     os.environ['FEHM_DIR']='/Users/jhyman/src/fehm'
     valid('FEHM_DIR')
     
