@@ -678,6 +678,7 @@ def correct_stor_file(self):
      # Make input file for C Stor converter
     if self.flow_solver != "FEHM":
         sys.exit("ERROR! Wrong flow solver requested")
+
     self.stor_file = self.inp_file[:-4] + '.stor'
     self.mat_file= self.inp_file[:-4] + '_material.zone'
     f = open("convert_stor_params.txt", "w")
@@ -693,7 +694,7 @@ def correct_stor_file(self):
     if failure > 0:
             sys.exit('ERROR: stor conversion failed\nExiting Program')
     elapsed = time() - t
-    print '--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed
+    print('--> Time elapsed for STOR file conversion: %0.3f seconds\n'%elapsed)
 
 def fehm(self):
     """ runs fehm """
