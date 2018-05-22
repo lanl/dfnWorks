@@ -1874,7 +1874,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   double  products[4]={0.0, 0.0, 0.0, 0.0};
   int neighborcellind[4]; //Thomas edit: a list of cell indices of all the neighbors 
   int neighborfracind[4]; // Thomas edit: a list of fractures of all the neighbors
-  int rule =1; //Thomas edit: if 0 steamline, 1 complete mixing 
+  int rule =0; //Thomas edit: if 0 steamline, 1 complete mixing 
   printf("Particle number:  %d \n",np); 
 
   if ((int1!=0)&&(int2!=0))
@@ -1976,6 +1976,11 @@ void AcrossIntersection (int prevcell, int int1, int int2)
       cell_win=RandomSampling(products, speedsq, indj, int1, indk);  
       }
 
+      if(rule == 0){
+      printf("We are in Streamline Routing Case \n");
+      cell_win =StreamlineRandomSampling(products, speedsq, indj, int1, indk, neighborcellind, neighborfracind);    
+       }
+
       ChangeFracture(cell_win);
       particle[np].intcell=4;
       particle[np].prev_pos[0]=particle[np].position[0];
@@ -1988,13 +1993,17 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   return;
 }
 //////////////////////////////////////////////////////////////////////////////
-int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk)
+int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4])
 {
   /*********** Weighted Random Sampling ****************/
-  int win_cell=0, k;
+  int win_cell=0, k, jj;
   int count=0, outc[4]={0,0,0,0};
+  int oppcellind; // the index of the opposite cell
+  int oppflag; // opp flag set to 1 is we have outflow on the opposite cell
   double random_number, totalspeed=0, minsp=0.0;
-
+ // printf("RS Neighbor Cell index: (%d, %d, %d, %d) \n", neighborcellind[0], neighborcellind[1], neighborcellind[2], neighborcellind[3]);
+ // printf("RS Neighbor Fracture index: (%d, %d, %d, %d) \n", neighborfracind[0], neighborfracind[1], neighborfracind[2], neighborfracind[3]);
+    printf("index of previous cell: %d \n", indk);
 
   /* find outgoing flow cells */
   for (k=0; k<4; k++)
@@ -2030,9 +2039,28 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
 
   if (count==2)
     {
-      printf("Case 2 \n");
+      // Thomas edit: loop
+      // loop to find adjacent cell
+      
+      for (jj=0; jj<4; jj++){
+        //printf("RS %d: cell in %d cell from %d: frac in %d frac from %d \n", jj, neighborcellind[jj], neighborcellind[indk], neighborfracind[jj], neighborfracind[indk]);
+        if(!(neighborcellind[jj]==neighborcellind[indk]) && neighborfracind[jj] == neighborfracind[indk]){
+            oppcellind = neighborcellind[jj];
+            printf("The opposite cell is %d \n",oppcellind);
+            oppflag = 1; //we are in the continous case 
+           }
+
+      } // end of jj loop
+     
+     // printf("Case 2 \n");
+     // printf("The cell we are coming from is %d, \n", neighborcellind[indk]);
       printf("Outflowing Cells: %d, %d \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]]);
       random_number=drand48();
+     if (oppflag == 1){       
+           printf("We are in the continous case \n");           
+            }
+
+ 
       if (random_number<=(speedsq[outc[0]]/totalspeed))
         //  if (random_number<0.5)
         win_cell=node[int1-1].cells[indj][outc[0]];
