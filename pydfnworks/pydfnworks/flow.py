@@ -684,7 +684,7 @@ def correct_stor_file(self):
     f = open("convert_stor_params.txt", "w")
     f.write("%s\n"%self.mat_file)
     f.write("%s\n"%self.stor_file)
-    f.write("%s"%(self.stor_file[:-4]+'_vol_area.uge\n'))
+    f.write("%s"%(self.stor_file[:-5]+'_vol_area.stor\n'))
     f.write("%s\n"%self.aper_file)
     f.close()
 
