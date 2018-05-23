@@ -1874,7 +1874,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   double  products[4]={0.0, 0.0, 0.0, 0.0};
   int neighborcellind[4]; //Thomas edit: a list of cell indices of all the neighbors 
   int neighborfracind[4]; // Thomas edit: a list of fractures of all the neighbors
-  int rule =0; //Thomas edit: if 0 steamline, 1 complete mixing 
+  int rule =0; //Thomas edit: if 0 streamline, 1 complete mixing 
   printf("Particle number:  %d \n",np); 
 
   if ((int1!=0)&&(int2!=0))
@@ -1914,7 +1914,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
               // printf("Node 2: %d (%d, %d)   \n",n2n, node[n2n-1].coord_xy[0],node[n2n-1].coord_xy[1]);
               // printf("Node 3: %d (%d, %d)   \n",n3n, node[n3n-1].coord_xy[0],node[n3n-1].coord_xy[1]);
               
-             /* printf("Previous Cell is: %d \n ",prevcell);  */
+              // printf("Previous Cell is: %d \n ",prevcell);  
              /* printf("Current Cell in loop: %d: \n", cell[indcell-1]); */ 
 
 	      v1v=cell[indcell-1].veloc_ind[0];
@@ -1933,24 +1933,25 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 
 	      tnx=node[thirdnode-1].coord_xy[0];
 	      tny=node[thirdnode-1].coord_xy[1];
-              printf("Cell %d = %d: third node is on facture: %d \n",k, indcell, node[thirdnode-1].fracture[0]); 
+             // printf("Cell %d = %d: third node is on facture: %d \n",k, indcell, node[thirdnode-1].fracture[0]); 
               /*printf("Third Node is %d: (%d, %d) \n", thirdnode, tnx, tny);*/
-              neighborfracind[k] = node[thirdnode-1].fracture[0];   
+              neighborfracind[k] = node[thirdnode-1].fracture[0]; // find the fracture of third node:   
                
 	      double product, vintx=0, vinty=0;
 
 	      vintx=node[int1-1].coord_xy[XindexC(int1,indcell-1)];
 	      vinty=node[int1-1].coord_xy[YindexC(int1,indcell-1)];
  
-	      if ((indcell) == prevcell){
+	     /* if ((indcell) == prevcell){
               prevfrac = node[thirdnode-1].fracture[0];
               printf("The starting fracture is %d \n",prevfrac);  
-              }
+              }*/
 
-	      if ((indcell)==prevcell)
+	      if ((indcell)==prevcell){
                 indk=k;
-              //  prevfrac = node[thirdnode-1].fracture[0];
-              //  printf("Starting Fracture is %d \n", prevfrac);
+                printf("Found index cell \n");
+                }
+              
 	      /** move to the intersecting  fracture and recalculate coordinations  ***/
 	      ChangeFracture(indcell);
 
@@ -1965,13 +1966,14 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      products[k]=(velocx*(particle[np].position[1]-vinty))-((particle[np].position[0]-vintx)*velocy);
 	      products[k]=products[k]*product;
 	      speedsq[k]=velocx*velocx+velocy*velocy;
+             // printf("Velocity x: %d Velocity y: %d \n", velocx, velocy);
               // printf("The product of this cell is: (%d, %d, %d, %d) \n", products[0], products[1], products[2], products[3]);
 	    }    
         }//loop on k
  
      
-
-
+      
+      // printf("Speed of each cell: %d, %d, %d, %d \n", speedsq[0], speedsq[1], speedsq[2], speedsq[3]);
       if (rule == 1){
       cell_win=RandomSampling(products, speedsq, indj, int1, indk);  
       }
@@ -2003,9 +2005,11 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
   double random_number, totalspeed=0, minsp=0.0;
  // printf("RS Neighbor Cell index: (%d, %d, %d, %d) \n", neighborcellind[0], neighborcellind[1], neighborcellind[2], neighborcellind[3]);
  // printf("RS Neighbor Fracture index: (%d, %d, %d, %d) \n", neighborfracind[0], neighborfracind[1], neighborfracind[2], neighborfracind[3]);
-    printf("index of previous cell: %d \n", indk);
+ // printf("index of previous cell: %d \n", indk);
+  //  printf("Speed of each cell: %d, %d, %d, %d \n", speedsq[0], speedsq[1], speedsq[2], speedsq[3]);
+ 
 
-  /* find outgoing flow cells */
+ /* find outgoing flow cells */
   for (k=0; k<4; k++)
     {
       if (products[k]<0)
@@ -2040,7 +2044,7 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
   if (count==2)
     {
       // Thomas edit: loop
-      // loop to find adjacent cell
+      // loop to find opposite cell
       
       for (jj=0; jj<4; jj++){
         //printf("RS %d: cell in %d cell from %d: frac in %d frac from %d \n", jj, neighborcellind[jj], neighborcellind[indk], neighborfracind[jj], neighborfracind[indk]);
@@ -2056,18 +2060,51 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
      // printf("The cell we are coming from is %d, \n", neighborcellind[indk]);
       printf("Outflowing Cells: %d, %d \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]]);
       random_number=drand48();
-     if (oppflag == 1){       
-           printf("We are in the continous case \n");           
-            }
-
- 
+     if (oppflag == 1){ // if oppflag is 1 then one of the outflow cells is opposite (on the same fracture) as the cell we are coming from: The other outflowing cell must be adjacent      
+           printf("We are in the continous case \n");
+           // We need to find which outflowing cell is opposite
+           if (node[int1-1].cells[indj][outc[0]] == oppcellind) { // opposite cell has index outc[0] and outc[1] is adjacent
+                 // printf("The oppsite cell is the first case %d \n", speedsq[outc[1]]);
+                 // printf("Speed test %d %d %d %d \n", speedsq[0], speedsq[1], speedsq[2], speedsq[3]);
+                  if (speedsq[indk] <= speedsq[outc[1]]) // The adjacent cell has large velocity and so we are forced to this the adjacent branch
+                      {
+                       win_cell = node[int1-1].cells[indj][outc[1]];
+                      } 
+                   else { // the adjacent velocity is not bigger the incoming
+                       if (random_number <= speedsq[outc[1]]/speedsq[indk]){
+                           win_cell = node[int1-1].cells[indj][outc[1]];
+                            }                       
+                       else {
+                           win_cell = node[int1-1].cells[indj][outc[0]];  
+                            }
+                       } 
+                   } // end first if regarding opposite cell has index outc[0]
+            else { // other Continous case scenario: opposite has index outc[1] and adjacent is outc[0]
+                 if (speedsq[indk]<= speedsq[outc[0]]) //The adjacent cell has large velocity than incoming
+                        {
+                         win_cell = node[int1-1].cells[indj][outc[0]];                      
+                        }
+                 else { // the adjacent (outc[0]) velocity is smaller than incoming
+                      if (random_number <= speedsq[outc[0]]/speedsq[indk]){
+                         win_cell = node[int1-1].cells[indj][outc[0]];
+                         }
+                      else{
+                          win_cell = node[int1-1].cells[indj][outc[1]];
+                          }
+                      }
+                  }//end case where outc[1] is opposite     
+             } // end continous case
+    else{  // start discontinous case now: assume complete mixing for now
+          printf("We are in the discontinous case \n");
+       
       if (random_number<=(speedsq[outc[0]]/totalspeed))
         //  if (random_number<0.5)
         win_cell=node[int1-1].cells[indj][outc[0]];
 
       else
         win_cell=node[int1-1].cells[indj][outc[1]];
-    }
+        } // end discontinous case
+     }
 
 
    if (count==3)
