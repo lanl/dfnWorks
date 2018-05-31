@@ -418,6 +418,7 @@ void ParticleTrack ()
     {
 
       t=0;
+
    
      
      if ((np >= (int)(0.01*numbpart)) && ( percent_done==0))
@@ -1081,9 +1082,8 @@ void ParticleTrack ()
 		  
 		    }
 
- 	//	if ((tdrw==1)&& (particle[np].cell !=0))
-                       if (tdrw==1)  
-	             {
+ 		if (tdrw==1)
+                       {
                       t_adv=particle[np].time-t_adv0;
                     //  printf("%d  %lf   %lf   %lf \n", np+1, t_adv, particle[np].time, t_adv0);
                           
@@ -2925,39 +2925,40 @@ double TimeDomainRW (double time_advect)
 /**** calculates time domain random walk ****/
 /***** function is called at each intersection ***/
 
-  double randomnumber=0.0;
-  randomnumber=drand48();
 
-  double term_a=0;
-  double b=0;
-   if (particle[np].cell!=0)
- 
-     {  
-  if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12))
-       b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
-  else
- if ((node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=12))
-       b=node[cell[particle[np].cell-1].node_ind[1]-1].aperture;
-   else
-       b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
-
-     }
-  else
-    {
+    double randomnumber=0.0;
+    randomnumber=drand48();
+    
+    double term_a=0;
+    double b=0;
+    if (particle[np].cell!=0){
+      if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12)){
+           b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
+        }
+      else{
+        if ((node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=12)){
+           b=node[cell[particle[np].cell-1].node_ind[1]-1].aperture;
+          }
+       else{
+          b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
+          }
+      }
+    }  
+    else{ 
       b=node[fracture[particle[np].fracture-1].firstnode-1].aperture;
     }
-  term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
-  double inverse_erfc=0.0;
-  double z;
-  z=1.0-randomnumber;  
-  inverse_erfc=0.5*sqrt(pi)*(z+(pi/12)*pow(z,3)+((7*pow(pi,2))/480)*pow(z,5)+((127*pow(pi,3))/40320)*pow(z,7)+((4369*pow(pi,4))/5806080)*pow(z,9)+((34807*pow(pi,5))/182476800)*pow(z,11));
-
-  double timediff=0.0;
-
-  timediff=pow(((term_a*time_advect)/inverse_erfc),2);
-//  printf("%lf %lf %5.12E %lf %lf %lf\n", z, tdrw_porosity, tdrw_diffcoeff,inverse_erfc, time_advect, b); 
-
-return timediff;
-
+    term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
+    double inverse_erfc=0.0;
+    double z;
+    z=1.0-randomnumber;  
+    
+      inverse_erfc=0.5*sqrt(pi)*(z+(pi/12)*pow(z,3)+((7*pow(pi,2))/480)*pow(z,5)+((127*pow(pi,3))/40320)*pow(z,7)+((4369*pow(pi,4))/5806080)*pow(z,9)+((34807*pow(pi,5))/182476800)*pow(z,11));
+      double timediff=0.0;
+    
+    timediff=pow(((term_a*time_advect)/inverse_erfc),2);
+    //  printf("%lf %lf %5.12E %lf %lf %lf\n", z, tdrw_porosity, tdrw_diffcoeff,inverse_erfc, time_advect, b); 
+    
+    return timediff;
+    
 }
 /////////////////////////////////////////////////////////////////////////////
