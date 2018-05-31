@@ -49,6 +49,8 @@ unsigned long int timesteps;
 double thickness;   
 double saturation;
 double timeunit;
+double totalFluxIn;
+
 
 struct inpfile {
   char filename[120];

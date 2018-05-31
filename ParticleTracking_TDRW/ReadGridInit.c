@@ -707,7 +707,7 @@ void ReadBoundaryNodes()
       sum_in=sum_in+node[nodezonein[i]-1].flux[j];
        }
      }
-    
+    totalFluxIn=sum_in;
       printf ("Total in-flow volumetric flux = %12.5e [m^3/s]\n", sum_in);
 
   for (i=0; i<nzone_out; i++)

@@ -9,6 +9,7 @@ extern double thickness;
 extern double saturation; 
 extern double timeunit;
 extern char controlfile[120];  
+extern double totalFluxIn;
 
 /* parts_fracture: initial number of particles per fracture */
 /* Global variables: nnodes - number of nodes     */
@@ -161,3 +162,5 @@ void OutputMarPlumDisp (int currentnum, char path[125]);
 int String_Compare(char string1[], char string2[]);  
 struct inpfile Control_File_Optional(char fileobject[], int ctr);
 double TimeDomainRW (double time_advect);
+int InitParticles_flux (int k_current, int firstn, int lastn, double weight_p);
+
