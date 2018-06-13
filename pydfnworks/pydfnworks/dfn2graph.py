@@ -180,7 +180,23 @@ def create_graph_bipartite(inflow, outflow):
     return nx.Graph()
 
 
+def k_shortest_paths(G, k, source='s', target='t', weight=None):
+    return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
-
-
+def k_shortest_path_backbone(G,k):
+    print("--> Determining %d shortest paths in the network"%k)
+    k_shortest= set([])
+    for path in k_shortest_paths(G, 's', 't', k):
+        k_shortest |= set(path)
+    paths = sorted(list(k_shortest))
+    paths.remove('s')
+    paths.remove('t')
+    backbone = []
+    for n in paths:
+        backbone.append(int(n) +1)
+    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(backbone))
+    filename_out = '%d_sp_fractures.txt'%k
+    print("--> Writting union of fracture in %d shortest path fractures into %s"%(k,filename_out)
+    np.savetxt(filename_out, backbone, fmt = "%d")
+    print("--> Complete")
 
