@@ -176,7 +176,7 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
 
 
 def create_graph_bipartite(inflow, outflow):
-    print("Not supported yet, returning empty graph"):
+    print("Not supported yet, returning empty graph")
     return nx.Graph()
 
 def k_shortest_paths(G, k, source='s', target='t', weight=None):
