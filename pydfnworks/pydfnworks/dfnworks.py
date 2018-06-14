@@ -46,6 +46,7 @@ class dfnworks(Frozen):
     from mesh_dfn_helper import clean_up_files_after_prune, create_mesh_links 
     from legal import legal
     from paths import define_paths
+    from dfn2graph import create_graph, k_shortest_paths_backbone
 
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', inp_file='full_mesh.inp', uge_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', prune_file = '', prune_path = '', dfnTrans_version ='', num_frac = ''):
 
