@@ -45,8 +45,8 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
             for j in conn:
                 G.add_edge(i,j-1) 
     ## Create Source and Target and add edges
-    inflow_filename = inflow + ".txt"
-    outflow_filename = outflow + ".txt"
+    inflow_filename = inflow + ".dat"
+    outflow_filename = outflow + ".dat"
     inflow = np.genfromtxt(inflow_filename) - 1
     outflow = np.genfromtxt(outflow_filename) - 1
     inflow = list(inflow)
