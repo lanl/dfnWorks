@@ -193,9 +193,9 @@ def k_shortest_paths_backbone(G,k):
     backbone = []
     for n in paths:
         backbone.append(int(n) +1)
-    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(backbone))
+    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(backbone)))
     filename_out = '%d_sp_fractures.txt'%k
-    print("--> Writting union of fracture in %d shortest path fractures into %s"%(k,filename_out)
+    print("--> Writting union of fracture in %d shortest path fractures into %s"%(k,filename_out))
     np.savetxt(filename_out, backbone, fmt = "%d")
     print("--> Complete")
 
