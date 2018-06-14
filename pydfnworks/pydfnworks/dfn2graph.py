@@ -182,7 +182,7 @@ def create_graph_bipartite(inflow, outflow):
 def k_shortest_paths(G, k, source='s', target='t', weight=None):
     return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
-def k_shortest_paths_backbone(G,k):
+def k_shortest_paths_backbone(self, G,k):
     print("--> Determining %d shortest paths in the network"%k)
     k_shortest= set([])
     for path in k_shortest_paths(G, 's', 't', k):
