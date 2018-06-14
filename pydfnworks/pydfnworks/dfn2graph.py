@@ -9,7 +9,8 @@ from networkx.readwrite import json_graph
 import matplotlib.pylab as plt
 from itertools import islice
 
-def create_graph(self, graph_type, inflow, outflow):
+#def create_graph(self, graph_type, inflow, outflow):
+def create_graph(graph_type, inflow, outflow):
 
     if graph_type == "fracture":
         G = create_graph_fracture(inflow, outflow)
@@ -182,10 +183,11 @@ def create_graph_bipartite(inflow, outflow):
 def k_shortest_paths(G, k, source='s', target='t', weight=None):
     return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
-def k_shortest_paths_backbone(self, G,k):
+#def k_shortest_paths_backbone(self, G,k):
+def k_shortest_paths_backbone(G,k):
     print("--> Determining %d shortest paths in the network"%k)
     k_shortest= set([])
-    for path in k_shortest_paths(G, 's', 't', k):
+    for path in k_shortest_paths(G, k):
         k_shortest |= set(path)
     paths = sorted(list(k_shortest))
     paths.remove('s')
@@ -198,4 +200,35 @@ def k_shortest_paths_backbone(self, G,k):
     print("--> Writting union of fracture in %d shortest path fractures into %s"%(k,filename_out))
     np.savetxt(filename_out, backbone, fmt = "%d")
     print("--> Complete")
+
+def plot_graph(G, output_name="dfn_graph"):
+
+    # get positions for all nodes
+    pos=nx.spring_layout(G)
+
+    nodes=list(G.nodes)
+    print nodes
+    # draw nodes
+    nx.draw_networkx_nodes(G,pos,
+                           nodelist=nodes,
+                           node_color='k',
+                           node_size=100,
+                       alpha=1.0)
+    nx.draw_networkx_nodes(G,pos,
+                           nodelist=['s'],
+                           node_color='b',
+                           node_size=100,
+                       alpha=1.0)
+    nx.draw_networkx_nodes(G,pos,
+                           nodelist=['t'],
+                           node_color='r',
+                           node_size=100,
+                       alpha=1.0)
+    
+    nx.draw_networkx_edges(G,pos,width=1.0,alpha=0.5)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(output_name+".png")
+    plt.clf()
+
 
