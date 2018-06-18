@@ -36,10 +36,10 @@ DFN.dfn_flow()
 toc  = time()
 dump_time(DFN.local_jobname, 'flow', toc-tic)
 
-#tic = time()
-#DFN.dfn_trans() # for parallel, comment this section
-#toc = time()
-#dump_time(DFN.local_jobname, 'trans', toc-tic)
+tic = time()
+DFN.dfn_trans() # for parallel, comment this section
+toc = time()
+dump_time(DFN.local_jobname, 'trans', toc-tic)
 
 
 #os.chdir(DFN.jobname)

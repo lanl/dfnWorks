@@ -1679,7 +1679,7 @@ int CheckDistance()
 		    }
 		}      
 	      if (ind_int2==0)
-		printf("ind=0 \n");
+	//	printf("ind=0 \n"); // Commented out on Nataliia's suggestion
 	      for (i=0; i<4; i++)
 		{
 		  if (node[int1-1].fracts[ind_int2][i]==particle[np].fracture)
