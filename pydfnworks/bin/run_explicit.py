@@ -15,15 +15,15 @@ import subprocess
 define_paths()
 main_time = time()
 DFN = create_dfn()
-
+#
 #DFN.make_working_directory()
 #DFN.check_input()
 #DFN.create_network()
-#
-#DFN.output_report()
+##
+##DFN.output_report()
 #DFN.mesh_network()
-#
-#os.chdir(DFN.jobname)
+##
+##os.chdir(DFN.jobname)
 #DFN.dfn_flow()
 
 #DFN.dfn_trans()
@@ -35,7 +35,7 @@ DFN = create_dfn()
 
 os.chdir(DFN.jobname)
 DFN.copy_dfn_trans_files()
-DFN.run_dfn_trans()
+#DFN.run_dfn_trans()
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)

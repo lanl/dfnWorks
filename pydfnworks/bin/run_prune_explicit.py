@@ -17,17 +17,21 @@ main_time = time()
 DFN = create_dfn()
 
 DFN.make_working_directory()
-##DFN.check_input()
-##DFN.create_network()
-#
+#DFN.check_input()
+#DFN.create_network()
+##exit()
+os.chdir(DFN.jobname)
+#G = DFN.create_graph("fracture", "left", "right")
+#for k in [1, 5, 10, 20, 50]:
+#    DFN.k_shortest_paths_backbone(G, k)
+#exit()
 ##DFN.output_report()
 ##DFN.mesh_network()
 #
-os.chdir(DFN.jobname)
 DFN.create_mesh_links(path=DFN.prune_path)
 DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
 DFN.clean_up_files_after_prune(path=DFN.prune_path, keep_file=DFN.prune_file)
-##
+#
 ##DFN.dfn_flow()
 ##DFN.dfn_trans()
 #
