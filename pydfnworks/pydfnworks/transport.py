@@ -23,10 +23,10 @@ def copy_dfn_trans_files(self):
     '''
     #Create Path to DFNTrans   
     try:
-        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
     except OSError:
         os.remove('DFNTrans')   
-        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans', './DFNTrans')
+        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
     except:
         sys.exit("Cannot create link to DFNTrans. Exiting Program")
     
@@ -47,7 +47,7 @@ def copy_dfn_trans_files(self):
 
 def run_dfn_trans(self):
     '''run dfnTrans simulation'''
-    failure = os.system('./DFNTrans '+self.local_dfnTrans_file)
+    failure = os.system('./DFNTrans_TDRW '+self.local_dfnTrans_file)
     if failure == 0:
         print('='*80)
         print("\ndfnTrans Complete\n")

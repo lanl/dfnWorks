@@ -6,7 +6,7 @@ import os
 #os.system('mv ~/.local ~/local_save')
 
 setup(name='pydfnworks',
-      version='2.0',
+      version='2.1.1',
       description='Python methods for running dfnWorks',
       url='TBD',
       author='Jeffrey Hyman, Satish Karra, Nathaniel Knapp, Nataliia Makedonska',

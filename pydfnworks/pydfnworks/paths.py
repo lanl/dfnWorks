@@ -1,7 +1,4 @@
-from tempfile import mkstemp
-from shutil import move
 import os
-import subprocess
 
 def valid(name):
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
@@ -49,9 +46,8 @@ def define_paths():
    
     # Directories
     os.environ['DFNGEN_PATH']=os.environ['dfnworks_PATH']+'DFNGen/'
-    os.environ['DFNTRANS_PATH']= os.environ['dfnworks_PATH'] +'ParticleTracking/'
+    os.environ['DFNTRANS_PATH']= os.environ['dfnworks_PATH'] +'ParticleTracking_TDRW/'
     os.environ['PYdfnworks_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
     os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
     os.environ['correct_uge_PATH'] = os.environ['dfnworks_PATH']+'C_uge_correct/' 
-    os.environ['VTK_PATH'] = os.environ['dfnworks_PATH'] + 'inp_2_vtk/'
 
