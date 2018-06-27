@@ -82,7 +82,7 @@ Python
 
 pydfnworks is supported on Python 2.7. The software authors recommend using 
 the Anaconda 2.7 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the ``numpy`` and ``h5py`` modules to be installed.
+pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, and ``re``.
 
 pydfnworks
 ^^^^^^^^^^^^^^^
