@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include <random>
 #include <algorithm>
 #include <iterator> // std::copy
@@ -486,11 +487,16 @@ int main (int argc, char **argv) {
     file << "\n========================================================\n";
     file << "            Network Generation Complete\n";
     file << "========================================================\n"; 
+    file << "Version of DFNGen: 2.1\n"; 
+    std::time_t result = std::time(nullptr);
+    file << "Time Stamp:"<< std::asctime(std::localtime(&result))<<"\n"; 
    
 
     std::cout << "\n========================================================\n";
     std::cout << "            Network Generation Complete\n";
     std::cout << "========================================================\n"; 
+    std::cout << "Version of DFNGen: 2.1\n"; 
+    std::cout << "Time Stamp:"<< std::asctime(std::localtime(&result))<<"\n"; 
 
    
     if (stopCondition == 1 ) {
