@@ -190,16 +190,17 @@ def k_shortest_paths(G, k, source, target, weight):
 
 def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     print("\n--> Determining %d shortest paths in the network"%k)
+    H = G.copy()
     k_shortest= set([])
-    for path in k_shortest_paths(G, k, source, target,weight):
+    for path in k_shortest_paths(G, k, source, target, weight):
         k_shortest |= set(path)
     path_nodes = sorted(list(k_shortest))
-    path_nodes = pull_source_and_target(source, target, path_nodes)
-    filename_out = 'sp_%02d_fractures.txt'%k
-    dump_backbone(path_nodes,filename_out)
-    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(path_nodes)))
+    nodes = list(G.nodes())
+    secondary = list(set(nodes) - set(path_nodes)) 
+    for n in secondary:
+        H.remove_node(n)
+    return H
     print("--> Complete\n")
-    return filename_out
 
 def pull_source_and_target(nodes,source='s',target='t'):
     for node in [source, target]:
@@ -217,7 +218,7 @@ def dump_fractures(self, G, filename):
     outputs
     none
     '''
-    
+     
     if G.graph['representation'] == "fracture":
         nodes = list(G.nodes())
     elif G.graph['representation'] == "intersection":
@@ -249,6 +250,7 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
         return nx.Graph()
     Gprime = G.copy()
     Hprime = nx.Graph()
+    Hprime.graph['representation'] = G.graph['representation']
     while nx.has_path(Gprime, source, target):
         path = nx.shortest_path(Gprime, source, target, weight=weight)
         H = Gprime.subgraph(path)
