@@ -39,7 +39,7 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
     Output: G (NetworkX Graph)
     ''' 
     print("Loading Graph based on topology in "+topology_file)
-    G = nx.Graph()
+    G = nx.Graph(representation="fracture")
     with open(topology_file, "r") as infile:
         for i,line in enumerate(infile):
             conn = [int(n) for n in line.split()]
@@ -59,9 +59,19 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
     print("Graph loaded")
     return G
 
-
 def boundary_index(bc):
- 
+    ''' determines boundary index in intersections_list.dat from name
+
+    input : bc name
+    output : bc index
+
+    top = -1
+    bottom = -2
+    left = -3
+    front = -4
+    right = -5
+    back = -6
+    ''' 
     if bc == 'top':
         return -1
     elif bc == 'bottom':
@@ -106,7 +116,7 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
     f.close()
 
     # Tag mapping
-    G = nx.Graph()
+    G = nx.Graph(representation="intersections")
     remove_list=[]
 
     # each edge in the DFN is a node in the graph
@@ -239,4 +249,44 @@ def plot_graph(G, source='s', target='t',output_name="dfn_graph"):
     plt.savefig(output_name+".png")
     plt.clf()
     print("--> Plotting Graph Complete") 
+
+def dump_json_graph(G, name):
+    print("Dumping Graph into file: "+name+".json")
+    jsondata = json_graph.node_link_data(G)
+    with open(name+'.json', 'w') as fp:
+        json.dump(jsondata, fp)
+    print("Complete")
+
+def load_json_graph(name):
+    print("Loading Graph in file: "+name+".json")
+    fp = open(name+'.json')
+    G = json_graph.node_link_graph(json.load(fp))
+    print("Complete")
+    return G
+
+def add_perm(G):
+    ''' Add fracture permeability to Graph. If Graph represenation is
+    fracture, then permeability is a node attribute. If graph represenation 
+    is intersection, then permeability is an edge attribute '''
+
+    perm = np.genfromtxt('fracture_info.dat', skip_header =1)[:,1]
+    if G.graph['representaion'] == "fracture":
+        nodes = list(nx.nodes(G))
+        for n in nodes:
+            if n != 's' and n != 't':
+                G.node[n]['perm'] = perm[n]
+            else:
+                G.node[n]['perm'] = 1.0
+
+    elif G.graph['represenation'] == "intersection":
+        edges = list(nx.edges(G))
+        for u,v in edges:
+            x = G[u][v]['frac']
+            if x != 's' and x != 't':
+                G[u][v]['perm'] = perm[x]
+            else:   
+                G[u][v]['perm'] = 1.0
+
+
+
 
