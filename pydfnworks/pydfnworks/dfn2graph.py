@@ -98,8 +98,6 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
     --> File Format
     fracture 1, fracture 2, x center, y center, z center, intersection length
 
-    source can be either -1 or s, target can be either -2 or t
-    
     Output: G (NetworkX Graph)
     ''' 
 
@@ -116,7 +114,7 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
     f.close()
 
     # Tag mapping
-    G = nx.Graph(representation="intersections")
+    G = nx.Graph(representation="intersection")
     remove_list=[]
 
     # each edge in the DFN is a node in the graph
@@ -157,8 +155,6 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
                     # Check for Boundary Intersections
                     # This stops boundary fractures from being incorrectly
                     # connected 
-                    #if x is 's' or x is 't':
-                    #      k = 1
                     # If not, add edge between
                     if x != 's' and x != 't':
                         xi = G.node[i]['x']
@@ -185,32 +181,82 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
     print("Graph Construction Complete")
     return G
 
-
 def create_graph_bipartite(inflow, outflow):
     print("Not supported yet, returning empty graph")
     return nx.Graph()
 
-def k_shortest_paths(G, k, source='s', target='t', weight=None):
+def k_shortest_paths(G, k, source, target, weight):
     return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
-def k_shortest_paths_backbone(self, G,k):
-#def k_shortest_paths_backbone(G,k):
+def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     print("\n--> Determining %d shortest paths in the network"%k)
     k_shortest= set([])
-    for path in k_shortest_paths(G, k):
+    for path in k_shortest_paths(G, k, source, target,weight):
         k_shortest |= set(path)
-    paths = sorted(list(k_shortest))
-    paths.remove('s')
-    paths.remove('t')
-    backbone = []
-    for n in paths:
-        backbone.append(int(n) +1)
-    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(backbone)))
+    path_nodes = sorted(list(k_shortest))
+    path_nodes = pull_source_and_target(source, target, path_nodes)
     filename_out = 'sp_%02d_fractures.txt'%k
-    print("--> Writting union of fracture in %d shortest path fractures into %s"%(k,filename_out))
-    np.savetxt(filename_out, backbone, fmt = "%d")
+    dump_backbone(path_nodes,filename_out)
+    print('--> Number of Fractures in %d shortest Paths Backbone %d: '%(k,len(path_nodes)))
     print("--> Complete\n")
     return filename_out
+
+def pull_source_and_target(nodes,source='s',target='t'):
+    for node in [source, target]:
+        try:
+           nodes.remove(node)
+        except:
+            pass 
+    return nodes 
+
+def dump_fractures(self, G, filename):
+    '''Write fracture numbers assocaited with the graph G out into an ASCII file
+    inputs 
+    G: networkX graph
+    filename: output filename 
+    outputs
+    none
+    '''
+    
+    if G.graph['representation'] == "fracture":
+        nodes = list(G.nodes())
+    elif G.graph['representation'] == "intersection":
+        nodes = []
+        for u,v,d in G.edges(data=True):
+            nodes.append(G[u][v]['frac'])
+        nodes = list(set(nodes))
+    nodes = pull_source_and_target(nodes) 
+    fractures = [int(i) + 1 for i in nodes] 
+    fractures = sorted(fractures)
+    print("--> Dumping %s"%filename)
+    np.savetxt(filename, fractures, fmt = "%d")
+
+def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
+    '''
+    Greedy Algorithm to find edge disjoint subgraph from s to t. 
+    See Hyman et al. 2018 SIAM MMS
+
+    Inputs: 
+    networkX Graph G
+    source: source nodes
+    target: target nodes
+    weight: edge weight
+    Output: Subgraph composed of edge-disjoint paths
+    '''
+    print("--> Identifying edge disjoint paths")
+    if G.graph['representation'] == "fracture":
+        print("--> ERROR!!! Wrong type of DFN graph represenation\nRepresentation must be intersection\nReturning Empty Graph\n")
+        return nx.Graph()
+    Gprime = G.copy()
+    Hprime = nx.Graph()
+    while nx.has_path(Gprime, source, target):
+        path = nx.shortest_path(Gprime, source, target, weight=weight)
+        H = Gprime.subgraph(path)
+        Hprime.add_edges_from(H.edges(data=True))
+        for u,v,d in H.edges(data = True):
+            Gprime.remove_edge(u,v)
+    print("--> Complete")
+    return Hprime
 
 def plot_graph(G, source='s', target='t',output_name="dfn_graph"):
     ''' Create a png of a graph with source nodes colored blue, target red, and all over nodes black
@@ -250,43 +296,47 @@ def plot_graph(G, source='s', target='t',output_name="dfn_graph"):
     plt.clf()
     print("--> Plotting Graph Complete") 
 
-def dump_json_graph(G, name):
+def dump_json_graph(self, G, name):
     print("Dumping Graph into file: "+name+".json")
     jsondata = json_graph.node_link_data(G)
     with open(name+'.json', 'w') as fp:
         json.dump(jsondata, fp)
     print("Complete")
 
-def load_json_graph(name):
+def load_json_graph(self,name):
     print("Loading Graph in file: "+name+".json")
     fp = open(name+'.json')
     G = json_graph.node_link_graph(json.load(fp))
     print("Complete")
     return G
 
-def add_perm(G):
+def add_perm(self,G):
     ''' Add fracture permeability to Graph. If Graph represenation is
     fracture, then permeability is a node attribute. If graph represenation 
     is intersection, then permeability is an edge attribute '''
 
     perm = np.genfromtxt('fracture_info.dat', skip_header =1)[:,1]
-    if G.graph['representaion'] == "fracture":
+    if G.graph['representation'] == "fracture":
         nodes = list(nx.nodes(G))
         for n in nodes:
             if n != 's' and n != 't':
                 G.node[n]['perm'] = perm[n]
+                G.node[n]['iperm'] = 1.0/perm[n]
             else:
                 G.node[n]['perm'] = 1.0
+                G.node[n]['iperm'] = 1.0
 
-    elif G.graph['represenation'] == "intersection":
+    elif G.graph['representation'] == "intersection":
         edges = list(nx.edges(G))
         for u,v in edges:
             x = G[u][v]['frac']
             if x != 's' and x != 't':
                 G[u][v]['perm'] = perm[x]
+                G[u][v]['iperm'] = 1.0/perm[x]
             else:   
                 G[u][v]['perm'] = 1.0
+                G[u][v]['iperm'] = 1.0
 
-
+ 
 
 
