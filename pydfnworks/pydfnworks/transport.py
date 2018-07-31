@@ -25,7 +25,7 @@ def copy_dfn_trans_files(self):
     try:
         os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
     except OSError:
-        os.remove('DFNTrans')   
+        os.remove('DFNTrans_TDRW')   
         os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
     except:
         sys.exit("Cannot create link to DFNTrans. Exiting Program")
