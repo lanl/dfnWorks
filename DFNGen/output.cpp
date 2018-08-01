@@ -68,8 +68,10 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     writeNormalVectors(acceptedPoly, finalFractures, shapeFamilies, output);
     // Write rejects per fracture insertion attempt data
     writeRejectsPerAttempt(pstats, output);
-    // Write all accepted radii, for Nataliia
+    // Write all accepted radii
     writeFinalPolyRadii(finalFractures, acceptedPoly, output);
+    // Write all accepted Surface Area
+    writeFinalPolyArea(finalFractures, acceptedPoly, output);
     // Write out which fractures touch which boundaries
     writeBoundaryFiles(finalFractures, acceptedPoly); 
 
@@ -716,6 +718,25 @@ void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<
                    << acceptedPoly[finalFractures[i]].familyNum + 1 << "\n";
     }
     radiiFinal.close();
+}
+
+/* writeFinalPolyArea() **********************************************************************/
+/*! Deprecated Function
+    Writes final radii file (after isoloated fractures have been removed) 
+    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
+    Arg 2: std::vector array of all accetped fractures
+    Arg 3: Path to output folder */
+void writeFinalPolyArea(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output){
+    std::string file = output + "/surface_area_Final.dat";
+    std::ofstream areaFinal;
+    areaFinal.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
+    checkIfOpen(areaFinal, file);
+    areaFinal << "Fracture Surface Area After Isolated Fracture and Cluster Removal\n";
+    int size = finalFractures.size();
+    for (int i = 0; i < size; i++) {
+        areaFinal << acceptedPoly[finalFractures[i]].area << "\n"; 
+    }
+    areaFinal.close();
 }
 
 

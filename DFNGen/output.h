@@ -40,6 +40,7 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
 void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
+void writeFinalPolyArea(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeAllAcceptedRadii(std::vector<Poly> &acceptedPoly, std::string &output);
 void writeAllAcceptedRadii_OfFamily(int familyNum, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeFinalRadii_OfFamily(std::vector<unsigned int> &finalFractures, int familyNum, std::vector<Poly> &acceptedPoly, std::string &output);
