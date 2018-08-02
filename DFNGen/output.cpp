@@ -1127,7 +1127,7 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
         // Rotation angle in radians
         double theta = std::acos(dotProduct(normal, e3));
         // rad to deg
-        theta = theta * (180/M_PI);
+        theta = theta * (180.0/M_PI);
     
         // Rotation into xy plane
         double *v = crossProduct(e3, normal);
@@ -1171,7 +1171,7 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
 
 }
 /* writeNormalVectors() ******************************************************************************/
-/*! Writes poly_info.dat
+/*! Writes normal_vectors.dat
     Writes fracture rotation data. Also includes shape families each fracture belongs to.
     Arg 1: Array off all polygons in DFN before isolated fracture removal
     Arg 2: Array of indices to polys in 'acceptedPoly' which are left after isolated fracture removal
@@ -1189,6 +1189,8 @@ void writeNormalVectors(std::vector<Poly> &acceptedPoly, std::vector<unsigned in
     for (unsigned int i = 0; i < finalFractures.size(); i++ ) {
         // poly's normal is already normalized at this point
         // Format: nx, ny, nz 
+        //std::cout <<  std::setprecision(15) << acceptedPoly[finalFractures[i]].normal[0] << " " 
+		//<< acceptedPoly[finalFractures[i]].normal[1] << " " << acceptedPoly[finalFractures[i]].normal[2]  << "\n";
         file <<  std::setprecision(15) << " " << acceptedPoly[finalFractures[i]].normal[0] << " " 
 		<< acceptedPoly[finalFractures[i]].normal[1] << " " << acceptedPoly[finalFractures[i]].normal[2]  << "\n";
     }    

@@ -34,7 +34,7 @@ inline T* crossProduct(const T *v1, const T *v2) {
     Arg 1: Vector (3 element array) to be normalized. */
 template <typename T>
 inline void normalize(T *vec){
-	float invMag = 1.0f / sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+	double invMag = 1.0f / sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 
 	if (!std::isinf(invMag)){
 	    vec[0] = vec[0] * invMag;

@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iomanip> // std::setprecision()
 #include <iostream>
 #include "insertShape.h"
 #include "vectorFunctions.h"
@@ -85,8 +86,9 @@ void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoin
         newPoly.normal[1] = xProd1[1]; //y
         newPoly.normal[2] = xProd1[2]; //z
 
+        //std::cout << "Normal Vector " << std::setprecision(12)<< newPoly.normal[0] << " " << newPoly.normal[1] << " " << newPoly.normal[2] << "\n"; 
         normalize(newPoly.normal);
-       
+        //std::cout << "Normal Vector " << std::setprecision(12)<< newPoly.normal[0] << " " << newPoly.normal[1] << " " << newPoly.normal[2] << "\n"; 
         delete[] xProd1;
         delete[] xProd2;
         delete[] xProd3;
