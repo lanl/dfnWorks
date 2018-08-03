@@ -696,10 +696,41 @@ def correct_stor_file(self):
     elapsed = time() - t
     print('--> Time elapsed for STOR file conversion: %0.3f seconds\n'%elapsed)
 
+def correct_perm_for_fehm():
+    """ FEHM wants an empty line at the end of the perm file
+    This functions adds that"""
+
+    fp = open("perm.dat")
+    lines = fp.readlines()
+    fp.close()
+    # Check if the last line of file is just a new line
+    # If it is not, then add a new line at the end of the file
+    if len(lines[-1].split()) != 0:
+        print("--> Adding line to perm.dat")
+        fp = open("perm.dat","a")
+        fp.write("\n")
+        fp.close()
+
 def fehm(self):
     """ runs fehm """
+    print("--> Running FEHM")
     if self.flow_solver != "FEHM":
         sys.exit("ERROR! Wrong flow solver requested")
-    print("Here is where I'll run FEHM") 
-    subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm", shell = True)
-
+    try: 
+        shutil.copy(self.dfnFlow_file, os.getcwd())
+    except:
+        print("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
+        exit()
+    path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
+    fp = open(self.local_dfnFlow_file)
+    line = fp.readline()
+    fehm_input = line.split()[-1]
+    fp.close()
+    try: 
+        shutil.copy(path+fehm_input, os.getcwd())
+    except:
+        print("-->ERROR copying FEHM input file:"%fehm_input)
+        exit()
+    correct_perm_for_fehm()
+    subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm "+self.local_dfnFlow_file, shell = True)
+    print("--> FEHM Complete")
