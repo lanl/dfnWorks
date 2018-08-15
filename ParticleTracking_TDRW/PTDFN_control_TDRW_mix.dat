@@ -55,7 +55,7 @@ out_traj: yes
 out_filetemp: no
 
 /************* output directories *************************************/
-out_dir: traj_CM /* path and name of directory where all the particle 
+out_dir: traj_SR /* path and name of directory where all the particle 
                      tracking results will be written*/
 
 
@@ -66,18 +66,22 @@ out_path: trajectories /*name of directory where all particle
 				final positions of particles */
 out_time: partime
 
+/*************** Intersection Mixing Rule **********************************/
+/****streamline_routing: if yes - streamline routing is the selected subgrid process
+     otherwise the complete mixing rule is selected ****/
+streamline_routing: yes 
 
 /**************** PARTICLES INITIAL POSITIONS ******************************/
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 
      equidistant from each other ****/
 init_nf: yes 
-init_partn: 100
+init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
      each other on all over in-flow boundary edges ***********************/  
 init_eqd: no  //maximum number of particles that user expects on one boundary edge
-init_npart: 100000
+init_npart: 100
 
 /*** all particles start from the same region at in-flow boundary, in a range  
     {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/

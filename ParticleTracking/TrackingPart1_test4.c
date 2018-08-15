@@ -26,9 +26,9 @@ struct lagrangian{
 
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT=0; 
-unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0, tdrw=0;
+unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0, transitions12=0, transitions11 =0, transitions21 =0, transitions22=0;
+unsigned int TransitionMatrix[10][10];
 unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0, frac_o=0, tfile=0;
-double tdrw_porosity=0.0, tdrw_diffcoeff=0.0, t_adv0=0.0, t_adv=0.0, timediff=0.0;
 struct intcoef {
   double weights[3];
 };
@@ -57,7 +57,7 @@ static FILE *wpt;
 static FILE *wpt_att;
 static FILE *wv;
 static FILE *wint;
-static FILE *diff; 
+
 
 //////////////////////////////////////////////////////////////////////////////
 void ParticleTrack ()
@@ -71,6 +71,7 @@ void ParticleTrack ()
   struct inpfile inputfile;
   char filename[125];
   unsigned int tort_o=0;
+ 
 
   // Output of tortuosity file 
   inputfile=Control_File_Optional("out_tort:",9);
@@ -161,28 +162,8 @@ void ParticleTrack ()
   inputfile = Control_File("out_time:",9 );
   sprintf(filename,"%s/%s",maindir,inputfile.filename);
   FILE *tp = OpenFile (filename,"w");
-  fprintf(tp,"# of time steps, flux weights, total advective travel time, total advective + diffusion time, total diffusion time, beta, total length[m] \n");
+  fprintf(tp,"# of time steps, flux weights, total travel time, x-, y-, z-final pos, beta, total length[m] \n");
   
-// Add diffusion time (TDRW) 
-  inputfile=Control_File_Optional("tdrw:",5);
-  if (inputfile.flag<0)
-    tdrw=0;
-  else
-    {
-      res=strncmp(inputfile.filename,"yes",3);
-      if (res==0)
-        {
-        tdrw=1;
-  inputfile=Control_Param("tdrw_porosity:",14);
-  tdrw_porosity=inputfile.param;
-  inputfile=Control_Param("tdrw_diffcoeff:",15);
-  tdrw_diffcoeff=inputfile.param;
-         }
-    }
-
-
-
-
   /* initial positions of particle, output file****/
   FILE *inp;
   int outinit=0;
@@ -204,7 +185,7 @@ void ParticleTrack ()
     {
       sprintf(filename,"%s/torts.dat",maindir);
       tort =  OpenFile (filename,"w");
-      fprintf(tort,"Data for tortuosity calculation: total length of trajectory, x-,y-, z- of initial pos., x-, y-, z- final pos., number of intersections. \n");
+      fprintf(tort,"Data for trortuosity calculation: total length of trajectory, x-,y-, z- of initial pos., x-, y-, z- final pos., number of intersections. \n");
     } 
  
  // open FractureID file
@@ -218,7 +199,7 @@ void ParticleTrack ()
 
      }
   // Create path for trajectory outputs
-  if ((no_out!=1)||(tdrw==1))
+  if (no_out!=1)
     {
       //out_path:
  
@@ -411,43 +392,24 @@ void ParticleTrack ()
       FlowInWeight(numbpart);
    
     }
-  unsigned int percent_done=0;
+  
 
   /************ LOOP ON PARTICLES  **********/
   for (np=0; np<numbpart; np++) 
     {
 
-      t=0;
-
-   
-     
-     if ((np >= (int)(0.01*numbpart)) && ( percent_done==0))
-        {
-        printf("Done %d particles, 1%%. \n", np);
-        percent_done=1;
-        }
-    if ((np >= (int)(0.05*numbpart)) && ( percent_done==1))
-        {
-        printf("Done %d particles, 5%%. \n", np);
-        percent_done=2;
-        }
-
-     if ((np >= (int)(0.25*numbpart)) && ( percent_done==2))
-        {
-        printf("Done %d particles, 25%%. \n", np);
-        percent_done=3;
-        }
-     if ((np >= (int)(0.5*numbpart)) && ( percent_done==3))
-        {
-        printf("Done %d particles, 50%%.  \n", np);
-        percent_done=4;
-        }
-     if ((np >= (int)(0.75*numbpart)) && ( percent_done==4))
-        {
-        printf("Done %d particles, 75%%. \n", np);
-        percent_done=5;
-        }
-
+      t=0;           
+      if ((numbpart<100)&&(((np-1) % 10)==0)&&(np>2))
+	printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
+      else
+	if ((numbpart<10000)&&(((np-1) % 100)==0)&&(np>2))
+	  printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
+	else
+	  if ((numbpart<100000)&&(((np-1) % 1000)==0)&&(np>2))
+	    printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
+	  else
+	    if ((((np-1)%10000)==0)&&(np>2))
+	      printf("Done %.1f %% of particles. \n", ((float)(np-1)/numbpart)*100);
          
       if (avs_o==1)
 	{
@@ -483,13 +445,7 @@ void ParticleTrack ()
     
 
 	}
-        if (tdrw==1)
-         {
-          sprintf(filename,"%s/tdrw_%d",path,curr_n);
-          diff = OpenFile(filename,"w");
-          fprintf(diff,"       Advective travel time on the fracture, Diffusion time on the fracture, Total travel time on the fracture, fracture ID, Accumulative advective travel time, Accumulative total time, Accumulative diffusion time \n");
-
-         }
+ 
       // define capacity for temp data used for outputs
       int capacity= (int) timesteps/10;
       
@@ -597,29 +553,13 @@ void ParticleTrack ()
 	      sprintf(filename,"%s/part_control_%d",pathcontrol, curr_n);
 	  
 	      tmp2=OpenFile(filename,"w");
-
-              if (tdrw==1)
-
-	      fprintf(tmp2," x-, y-, z- position, Vx, Vy, Vz, trajectory length, fracture ID , aperture,   Accumulative advective travel time, Accumulative total time, Accumulative diffusion time \n");
-              else
-            fprintf(tmp2," travel time, x-, y-, z- position, Vx, Vy, Vz, trajectory length, #  of current fracture, aperture \n");	     
-
-
+	      fprintf(tmp2," travel time, x-, y-, z- position, Vx, Vy, Vz, trajectory length, #  of current fracture, aperture \n");
+	     
 	      if (out_plane==1)
 		{    
+		  fprintf(tmp2,  "%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, xcop, ycop,zcop, 0.0, 0.0,0.0, totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
 	    
-	          if (tdrw==1)
-                     {
-
-                      fprintf(tmp2,"  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
-                      }
-                    else
-
-                     {  
-                        fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[
-2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
-                      }
- 
+	  
 		  // in case of inflow is negative 
 		  if (inflowcoord<0) 
 		    current_CP=inflowcoord+deltaCP;
@@ -640,11 +580,7 @@ void ParticleTrack ()
         }
 
 
-          timecounter=0; //for temp data allocation
-          t_adv0=0; //for tdrw calculation; starting time
-         particle[np].t_diff=0.0;
-         particle[np].t_adv_diff=0.0;
-
+          timecounter=0;
 	  /////////////////////////  TIME LOOP ///////////////////////////////////
 	         
 	  for (t=0; t<timesteps; t++)
@@ -781,24 +717,7 @@ void ParticleTrack ()
 			  if (no_out==1)
 			    particle3dvelocity=CalculateVelocity3D();
 	         
-			if (tdrw==1)
-                     {
-                      t_adv=particle[np].time-t_adv0;
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time;
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-
-                      fprintf(tmp2,"%5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
-                      }
-                    else
-
-                     {  
-                        fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[
-2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
-                      }
-
-
+			  fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, xcop, ycop,zcop, particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
 	         
 			  if (inflowcoord<0)
 			    current_CP=current_CP+deltaCP;
@@ -990,11 +909,12 @@ void ParticleTrack ()
 	      /*** if particle's new cell was not found move to the next particle ***/ 
 	      if (particle[np].cell==0)
 		{
-	          FLAG_OUT=0;
+	      
 		  break;
                 }
 	    } //loop on time
  
+	
 
 	  /** if particle did not go out through flow-out zone ****/ 
 	  if (FLAG_OUT!=1)
@@ -1059,8 +979,7 @@ void ParticleTrack ()
                       tempdata[timecounter].pressure=particle[np].pressure;
 		        }
 			  
-		     ParticleOutput(t, 0);
-
+		      ParticleOutput(t, 0);
                      if (tfile==1)
                       {
                         fclose(tmp);
@@ -1068,7 +987,6 @@ void ParticleTrack ()
                   sprintf(filename,"%s/tempdata_%d",maindir,np);
                   status = remove(filename);
 	              } 
-
 		    }
 		  else
 		    {
@@ -1078,21 +996,9 @@ void ParticleTrack ()
 			  FinalPosition(); 
 			}         
 		      particle3dposit=CalculatePosition3D();
-
+		  
 		  
 		    }
-
- 		if (tdrw==1)
-                       {
-                      t_adv=particle[np].time-t_adv0;
-                    //  printf("%d  %lf   %lf   %lf \n", np+1, t_adv, particle[np].time, t_adv0);
-                          
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time;
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-                      fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
-                        }
 		  //adding data to dispersivity
 
 
@@ -1131,7 +1037,7 @@ void ParticleTrack ()
 	  
 	   
 		  /**  output travel time *****/ 
-		  fprintf(tp,"%d  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  \n",t_end, particle[np].fl_weight, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff, beta, totallength);
+		  fprintf(tp,"%d  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E \n",t_end, particle[np].fl_weight, particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], beta, totallength);
 		  if (tort_o>0)
 		    {
 		      fprintf(tort,"%5.12E %5.12E %5.12E %5.12E %5.12E %5.12E %5.12E  %d\n",totallength, xinit, yinit, zinit, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], fracthit);
@@ -1164,22 +1070,10 @@ void ParticleTrack ()
            
 		      particle3dvelocity=CalculateVelocity3D();
           
-                     if (tdrw==1)
-                     {
-
-                      t_adv=particle[np].time-t_adv0;
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time;
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-
-		      fprintf(tmp2,"%5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E   %5.12E  %5.12E  %5.12E \n", particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture,  particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
-                      }
-                    else
-
-                     {
-			fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
-                      }
+            
+		      fprintf(tmp2,"%5.12E  %5.12E   %5.12E  %5.12E   %5.12E   %5.12E   %5.12E  %5.12E  %05d  %5.12E\n",particle[np].time, particle3dposit.cord3[0], particle3dposit.cord3[1],particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1],particle3dvelocity.cord3[2], totallength, particle[np].fracture, node[cell[particle[np].cell-1].node_ind[0]-1].aperture);
+           
+           
 		      fclose(tmp2);
            
 	        
@@ -1227,12 +1121,6 @@ void ParticleTrack ()
 	
 	}
 
-       if (tdrw==1)
-        {
-        fclose(diff);
-
-         }
-
      // if (no_out==0)
        //    free(tempdata);
 
@@ -1258,7 +1146,7 @@ void ParticleTrack ()
       printf("\n    Working on additional outputs    \n");
       OutputMarPlumDisp (curr_n-1, path);
     }
-
+    
     
   return;
 }
@@ -1659,6 +1547,8 @@ int CheckDistance()
   int ind_int2, fract_p;
   double px, py, dist, delta_t;
   double cx1=0,cy1=0,cx2=0,cy2=0;
+  int transitionstats=0; 
+ 
 
   dn1=cell[particle[np].cell-1].node_ind[0];
   dn2=cell[particle[np].cell-1].node_ind[1];
@@ -1784,21 +1674,12 @@ int CheckDistance()
                          fract_p=node[int1-1].fracture[1];   
 			ParticleOutput(t, fract_p);
                         }
-            
-                     if (tdrw==1)
-                       {
-                      t_adv=particle[np].time-t_adv0;
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time; 
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-                       fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
-			}
 		      AcrossIntersection (prevcell, int1, int2);
+                      
 		    }
 		  else
 		    {
-		      //		    printf("Particle is lost on intersection. \n");
+		      		    printf("Particle is lost on intersection. \n");
 		    }
          
 		}
@@ -1848,15 +1729,6 @@ int CheckDistance()
 
 		    ParticleOutput(t, fract_p);
                      }
-                  if (tdrw==1)
-                       {
-                      t_adv=particle[np].time-t_adv0;
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time;
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-			 fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);                     
-                       }
 		  AcrossIntersection (prevcell, int1, int2);
 		   
 		}
@@ -1914,20 +1786,12 @@ int CheckDistance()
      
 			ParticleOutput(t, fract_p);
                         }
-                      if (tdrw==1)
-                       {
-                      t_adv=particle[np].time-t_adv0;
-                      timediff=TimeDomainRW(t_adv);
-                      t_adv0=particle[np].time;
-                      particle[np].t_diff=particle[np].t_diff +timediff;
-                      particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
-		 	fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);                      
- }
-		      AcrossIntersection (prevcell, int1, int2);		
+		      AcrossIntersection (prevcell, int1, int2);
+		 
 		    }
 		  else
 		    {
-		      //		    printf("Particle is lost on end of intersection. \n");
+		      		    printf("Particle is lost on end of intersection. \n");
 		    }
 		}
 	    }
@@ -2002,7 +1866,6 @@ double InOutFlowCell(int indcell, int int1, double nposx, double nposy)
 	      
   return inoutf;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 /***** Function moves particle through  intersection ********/
 void AcrossIntersection (int prevcell, int int1, int int2)
@@ -2054,9 +1917,9 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      n3n=cell[indcell-1].node_ind[2];
                
               // printf("Cell %d = %d \n",k, indcell); // indcell is the cell index
-               //printf("Node 1: %d (%d, %d)   \n",n1n, node[n1n-1].coord_xy[0],node[n1n-1].coord_xy[1]);
-               //printf("Node 2: %d (%d, %d)   \n",n2n, node[n2n-1].coord_xy[0],node[n2n-1].coord_xy[1]);
-               //printf("Node 3: %d (%d, %d)   \n",n3n, node[n3n-1].coord_xy[0],node[n3n-1].coord_xy[1]);
+              // printf("Node 1: %d (%d, %d)   \n",n1n, node[n1n-1].coord_xy[0],node[n1n-1].coord_xy[1]);
+              // printf("Node 2: %d (%d, %d)   \n",n2n, node[n2n-1].coord_xy[0],node[n2n-1].coord_xy[1]);
+              // printf("Node 3: %d (%d, %d)   \n",n3n, node[n3n-1].coord_xy[0],node[n3n-1].coord_xy[1]);
               
               // printf("Previous Cell is: %d \n ",prevcell);  
              /* printf("Current Cell in loop: %d: \n", cell[indcell-1]); */ 
@@ -2064,7 +1927,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      v1v=cell[indcell-1].veloc_ind[0];
 	      v2v=cell[indcell-1].veloc_ind[1];
 	      v3v=cell[indcell-1].veloc_ind[2];
-              //printf("v1 = %lf, v2 = %lf, v3 =%lf \n", v1v, v2v,v3v);  
+
 	      int thirdnode=0;
 	      double tnx=0,tny=0;
 
@@ -2110,22 +1973,21 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      products[k]=(velocx*(particle[np].position[1]-vinty))-((particle[np].position[0]-vintx)*velocy);
 	      products[k]=products[k]*product;
 	      speedsq[k]=velocx*velocx+velocy*velocy;
-              //printf("Velocity x: %lf Velocity y: %lf \n", velocx, velocy);
+             // printf("Velocity x: %d Velocity y: %d \n", velocx, velocy);
               // printf("The product of this cell is: (%d, %d, %d, %d) \n", products[0], products[1], products[2], products[3]);
 	    }    
         }//loop on k
  
      
       
-      //printf("Speed of each cell: %lf, %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]),(speedsq[3]), sqrt(4));
+     // printf("Speed of each cell: %lf, %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]),(speedsq[3]), sqrt(4));
       if (rule == 1){
-      //printf("Complete Mixing \n");
       cell_win=RandomSampling(products, speedsq, indj, int1, indk);  
       }
 
       if(rule == 0){
-      //printf("We are in Streamline Routing Case \n");
-      cell_win =StreamlineRandomSampling(products, speedsq, indj, int1, indk, neighborcellind, neighborfracind, prevfrac, prevcell);    
+    //  printf("We are in Streamline Routing Case \n");
+      cell_win =StreamlineRandomSampling(products, speedsq, indj, int1, indk, neighborcellind, neighborfracind, prevfrac);    
        }
 
       ChangeFracture(cell_win);
@@ -2137,20 +1999,20 @@ void AcrossIntersection (int prevcell, int int1, int int2)
       //printf("Particle jumped from cell to  %d cell  %d:  \n",prevcell, cell_win);
       finalfrac = cell[cell_win-1].fracture;
                     
-      //transitions12 = TransitionStats12(prevfrac, finalfrac, transitions12); 
-      //transitions22 = TransitionStats22(prevfrac, finalfrac, transitions22);
-      //transitions11 = TransitionStats11(prevfrac, finalfrac, transitions11);
-      //transitions21 = TransitionStats21(prevfrac, finalfrac, transitions21);
-      //TransitionMat(prevfrac, finalfrac, TransitionMatrix);
+      transitions12 = TransitionStats12(prevfrac, finalfrac, transitions12); 
+      transitions22 = TransitionStats22(prevfrac, finalfrac, transitions22);
+      transitions11 = TransitionStats11(prevfrac, finalfrac, transitions11);
+      transitions21 = TransitionStats21(prevfrac, finalfrac, transitions21);
+      TransitionMat(prevfrac, finalfrac, TransitionMatrix);
       //printf("TM 1-1 = %d \n", TransitionMatrix[0][0]);
       //printf("1-2: %d, 2-1: %d, 1-1: %d, 2-2: %d \n", transitions12, transitions21, transitions11, transitions22);
-      //printf("Particle %d  went from fracture %d to %d \n \n", np, prevfrac, finalfrac);
+      printf("Particle %d  went from fracture %d to %d \n \n", np, prevfrac, finalfrac);
       if(np==999){
-       // printf("TransitionMatrix \n");
-       // printf("%d %d %d %d \n ", TransitionMatrix[0][0], TransitionMatrix[0][1],TransitionMatrix[0][2],TransitionMatrix[0][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[1][0], TransitionMatrix[1][1],TransitionMatrix[1][2],TransitionMatrix[1][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[2][0], TransitionMatrix[2][1],TransitionMatrix[2][2],TransitionMatrix[2][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[3][0], TransitionMatrix[3][1],TransitionMatrix[3][2],TransitionMatrix[3][3]);
+        printf("TransitionMatrix \n");
+        printf("%d %d %d %d \n ", TransitionMatrix[0][0], TransitionMatrix[0][1],TransitionMatrix[0][2],TransitionMatrix[0][3]);
+        printf("%d %d %d %d \n ", TransitionMatrix[1][0], TransitionMatrix[1][1],TransitionMatrix[1][2],TransitionMatrix[1][3]);
+        printf("%d %d %d %d \n ", TransitionMatrix[2][0], TransitionMatrix[2][1],TransitionMatrix[2][2],TransitionMatrix[2][3]);
+        printf("%d %d %d %d \n ", TransitionMatrix[3][0], TransitionMatrix[3][1],TransitionMatrix[3][2],TransitionMatrix[3][3]);
           }
        
  
@@ -2164,7 +2026,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   return;
 }
 //////////////////////////////////////////////////////////////////////////////
-int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac, int prevcell)
+int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac)
 {
   /*********** Weighted Random Sampling ****************/
   int win_cell=0, k, jj;
@@ -2175,8 +2037,8 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
  // printf("RS Neighbor Cell index: (%d, %d, %d, %d) \n", neighborcellind[0], neighborcellind[1], neighborcellind[2], neighborcellind[3]);
  // printf("RS Neighbor Fracture index: (%d, %d, %d, %d) \n", neighborfracind[0], neighborfracind[1], neighborfracind[2], neighborfracind[3]);
  // printf("index of previous cell: %d \n", indk);
-  //printf("Speed of each cell: %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]), sqrt(speedsq[3]));
- //printf("Speed of each cell: %lf, %lf, %lf, %lf \n", (speedsq[0]), (speedsq[1]), (speedsq[2]), (speedsq[3]));
+  printf("Speed of each cell: %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]), sqrt(speedsq[3]));
+ 
 
  /* find outgoing flow cells */
   for (k=0; k<4; k++)
@@ -2195,7 +2057,7 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
      (this should not happen, it will mean we have a physical flow sink)*/
   if (count==0)
     {
-      printf("Case 0 \n");
+
       minsp=0.0;
       for (k=0; k<4; k++)
         if ((speedsq[k]>minsp)&&(k!=indk))
@@ -2228,15 +2090,8 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
 //note this next case only will work if we have continuous case. 
           if ((neighborfracind[jj]==prevfrac) && neighborcellind[jj]!=node[int1-1].cells[indj][outc[0]] && neighborcellind[jj]!=node[int1-1].cells[indj][outc[1]]){ // We find the incoming speed by finding the neighbor cell that shares a fracture with previous cell, and has no outgoing flow
              incomingspeedsq = speedsq[jj];
-            // printf("The incoming speed is %lf \n", incomingspeedsq);              
+             //printf("The incoming speed is %lf \n", incomingspeedsq);              
             }
-
-           if(neighborcellind[jj] == prevcell){
-            incomingspeedsq = speedsq[jj];
-            //printf("The incoming speed is %lf \n", incomingspeedsq);
-              }
-
-         
       } // end of jj loop
      
 
@@ -2253,17 +2108,17 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
            if (node[int1-1].cells[indj][outc[0]] == oppcellind) { // opposite cell has index outc[0] and outc[1] is adjacent
                  // printf("The oppsite cell is the first case %d \n", speedsq[outc[1]]);
                  // printf("Speed test %d %d %d %d \n", speedsq[0], speedsq[1], speedsq[2], speedsq[3]);
-                 // printf("Case A \n");
+                  printf("Case A \n");
                  // if (speedsq[indk] <= speedsq[outc[1]]) // The adjacent cell has large velocity and so we are forced to the adjacent branch
                   if (incomingspeedsq <= speedsq[outc[1]]) // The adjacent cell has large velocity and so we are forced to the adjacent branch
                       {
-                      // printf("case 1 \n");
+                       printf("case 1 \n");
                        win_cell = node[int1-1].cells[indj][outc[1]];
                       } 
                    else { // the adjacent velocity is not bigger the incoming
                       // if (random_number <= speedsq[outc[1]]/speedsq[indk]){
-                        // printf("case 2, Random = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq));
-                        // printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[1]]),sqrt(speedsq[outc[0]]));
+                         printf("case 2, Random = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq));
+                         printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[1]]),sqrt(speedsq[outc[0]]));
                          if (random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq)){
                            win_cell = node[int1-1].cells[indj][outc[1]];
                             }                       
@@ -2273,17 +2128,17 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
                        } 
                    } // end first if regarding opposite cell has index outc[0]
             else { // other Continous case scenario: opposite has index outc[1] and adjacent is outc[0]
-                 // printf("Case B \n");
+                  printf("Case B \n");
                 // if (speedsq[indk]<= speedsq[outc[0]]) //The adjacent cell has large velocity than incoming
                  if (incomingspeedsq<= speedsq[outc[0]]) //The adjacent cell has large velocity than incoming     
                        {
-                        // printf("case 3, \n");
+                         printf("case 3, \n");
                          win_cell = node[int1-1].cells[indj][outc[0]];                      
                         }
                  else { // the adjacent (outc[0]) velocity is smaller than incoming
                      // if (random_number <= speedsq[outc[0]]/speedsq[indk])
-                     // printf("case 4, Random Number = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq));
-                     // printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[0]]),sqrt(speedsq[outc[1]]));
+                      printf("case 4, Random Number = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq));
+                      printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[0]]),sqrt(speedsq[outc[1]]));
                       if (random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
                          {
                          win_cell = node[int1-1].cells[indj][outc[0]];
@@ -2296,44 +2151,13 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
              } // end continous case
     else{  // start discontinous case now: assume complete mixing for now
           printf("We are in the discontinous case \n");
-      //New Rule
-        //if(sqrt(incomingspeedsq)>=(sqrt(speedsq[outc[0]]) +sqrt(speedsq[outc[1]]))/2){ //the incoming speed is bigger than oppposite incoming
-          //  if(speedsq[outc[1]]>= speedsq[outc[0]]) //outgoing cell 1 is bigger than outgoint cell 0
-            //   {
-              // if(random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq))
-                //    {win_cell = node[int1-1].cells[indj][outc[1]];}
-               // else{win_cell = node[int1-1].cells[indj][outc[0]];}
-              // }          
-            // else{ //outgoing cell 0 is bigger
-              //    if(random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
-                //     {win_cell = node[int1-1].cells[indj][outc[0]];}
-                 // else{win_cell = node[int1-1].cells[indj][outc[1]];}
-                // }
-              // }
-       // else{ // the incoming speed is smaller than oppoiste incoming
-         //    if(speedsq[outc[1]]<= speedsq[outc[0]]) //outgoing cell 1 is smaller than outgoint cell 0
-           //     {
-             //   if(random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq))
-               //      {win_cell = node[int1-1].cells[indj][outc[1]];}
-                // else{win_cell = node[int1-1].cells[indj][outc[0]];}
-               // }          
-             // else{ //outgoing cell 1 is bigger
-               //    if(random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
-                 //     {win_cell = node[int1-1].cells[indj][outc[0]];}
-                  // else{win_cell = node[int1-1].cells[indj][outc[1]];}
-                 // }      
-          //  }
+       
+      if (random_number<=(speedsq[outc[0]]/totalspeed))
+        //  if (random_number<0.5)
+        win_cell=node[int1-1].cells[indj][outc[0]];
 
-     // End New Rule
-     //Start Old Rule 
-      if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
-         win_cell=node[int1-1].cells[indj][outc[0]];
       else
         win_cell=node[int1-1].cells[indj][outc[1]];
-     // End old rulw
-
-
-
         } // end discontinous case
      }
 
@@ -2376,6 +2200,49 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
   return win_cell;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+ void TransitionMat(int prevfrac, int finalfrac, int transfrac[10][10])
+ {
+ /***************Tracks transitions between fractures*****************/
+  transfrac[prevfrac-1][finalfrac-1] = transfrac[prevfrac-1][finalfrac-1]+1;
+    }
+
+int TransitionStats12(int prevfrac, int finalfrac, int onetotwo)
+{
+/***************Tracks transitions between fractures*****************/
+ if(prevfrac==1 && finalfrac==2){
+   onetotwo=onetotwo+1;
+       }
+   return onetotwo;
+}
+
+ int TransitionStats11(int prevfrac, int finalfrac, int onetotwo)
+ {
+ /***************Tracks transitions between fractures*****************/
+  if(prevfrac==1 && finalfrac==1){
+    onetotwo=onetotwo+1;
+       }
+    return onetotwo;
+ }
+
+ int TransitionStats22(int prevfrac, int finalfrac, int onetotwo)
+ {
+ /***************Tracks transitions between fractures*****************/
+  if(prevfrac==2 && finalfrac==2){
+    onetotwo=onetotwo+1;
+        }
+    return onetotwo;
+ }
+
+ int TransitionStats21(int prevfrac, int finalfrac, int onetotwo)
+ {
+ /***************Tracks transitions between fractures*****************/
+  if(prevfrac==2 && finalfrac==1){
+    onetotwo=onetotwo+1;
+        }
+    return onetotwo;
+ }
+
 ////////////////////////////////////////////////////////////////////////////// 
 int RandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk)
 {    
@@ -2387,71 +2254,66 @@ int RandomSampling(double products[4], double speedsq[4], int indj, int int1, in
   
   
   /* find outgoing flow cells */  
-  for (k=0; k<4; k++) 
-    {    
+  for (k=0; k<4; k++)
+    {
       if (products[k]<0)
-        {
-          outc[count]=k;
-          count++;
-          totalspeed=totalspeed+speedsq[k];
+	{
+	  outc[count]=k;
+	  count++;
+	  totalspeed=totalspeed+speedsq[k];
           totalmag = totalmag + sqrt(speedsq[k]);
 
-        }
+	}
 
-    }    
- //printf("out going cell %d \n", count);
+    }
   /* if no outgoing flow cells found - move to cell with largest velocity magnitude 
      (this should not happen, it will mean we have a physical flow sink)*/
   if (count==0)
-    {    
+    {
     
       minsp=0.0;
-      for (k=0; k<4; k++) 
-        if ((speedsq[k]>minsp)&&(k!=indk)) 
-          {
-            minsp=speedsq[k];
-            win_cell=node[int1-1].cells[indj][k];
-          }
-    }    
+      for (k=0; k<4; k++)
+	if ((speedsq[k]>minsp)&&(k!=indk)) 
+	  {
+	    minsp=speedsq[k];
+	    win_cell=node[int1-1].cells[indj][k];
+	  }
+    }
   /* if only one cell found */
   if (count==1)
-    {    
+    {
       win_cell=node[int1-1].cells[indj][outc[0]];
-    }    
+    }
 
 
   if (count==2)
-    {    
+    {
       //printf("Case 2 \n");
-      //printf("Outflowing Cells: %d, %d, Speed: %lf, %lf \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]], sqrt(speedsq[outc[0]]), sqrt(speedsq[outc[0]]));
+      //printf("Outflowing Cells: %d, %d \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]]);
       random_number=drand48();
       if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
-        //  if (random_number<0.5)
-        win_cell=node[int1-1].cells[indj][outc[0]];
-     
-      else 
-        win_cell=node[int1-1].cells[indj][outc[1]];
-    }    
+	//  if (random_number<0.5)
+	win_cell=node[int1-1].cells[indj][outc[0]];
+        
+      else
+	win_cell=node[int1-1].cells[indj][outc[1]];
+    }
+
 
   if (count==3)
-    {    
+    {
       random_number=drand48();
-      //printf("Random = %lf \n", random_number);
-      //printf("Probabilities %lf, %lf  \n",(sqrt(speedsq[outc[0]])+sqrt(speedsq[outc[1]]))/totalmag, sqrt(speedsq[outc[0]])/totalmag);
-      if (random_number>((sqrt(speedsq[outc[0]])+sqrt(speedsq[outc[1]]))/totalmag)){
-        //      if (random_number<0.3)
-        win_cell=node[int1-1].cells[indj][outc[2]];
-        //printf("winning cell = %d \n", win_cell);
-           }
+      if (random_number>((sqrt(speedsq[outc[0]])+sqrt(speedsq[outc[1]]))/totalmag))
+	//      if (random_number<0.3)
+	win_cell=node[int1-1].cells[indj][outc[2]];
       else
-        {
+	{
           if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
-            //         if (random_number<0.6)
+	    //         if (random_number<0.6)
             win_cell=node[int1-1].cells[indj][outc[0]];
-          else
+	  else
             win_cell=node[int1-1].cells[indj][outc[1]];
-
-        }
+	}
     }
 
 
@@ -2459,23 +2321,22 @@ int RandomSampling(double products[4], double speedsq[4], int indj, int int1, in
     {
       random_number=drand48();
       if (random_number>((speedsq[outc[0]]+speedsq[outc[1]]+speedsq[outc[2]])/totalspeed))
-        win_cell=node[int1-1].cells[indj][outc[3]];
+	win_cell=node[int1-1].cells[indj][outc[3]];
       else
-        {
+	{
           if (random_number>((speedsq[outc[0]]+speedsq[outc[1]])/totalspeed))
             win_cell=node[int1-1].cells[indj][outc[2]];
-          else
-            {
-              if (random_number<=(speedsq[outc[0]]/totalspeed))
-                win_cell=node[int1-1].cells[indj][outc[0]];
-              else
-                win_cell=node[int1-1].cells[indj][outc[1]];
-            }
-        }
+	  else
+	    {
+	      if (random_number<=(speedsq[outc[0]]/totalspeed))
+		win_cell=node[int1-1].cells[indj][outc[0]];
+	      else
+		win_cell=node[int1-1].cells[indj][outc[1]];
+	    }
+	}
     }
   return win_cell;
 }
-    
 //////////////////////////////////////////////////////////////////////////////
 void Moving2Center (int nnp, int cellnumber)
 {
@@ -3002,7 +2863,6 @@ fscanf(tmpp,"%d %lf %lf %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf\n ", &tmid
 	  
 	  velocity_t=sqrt(pow(particle3dv.cord3[0],2)+pow(particle3dv.cord3[1],2)+pow(particle3dv.cord3[2],2));
 	  fprintf(wpt_att,"%010d  %06d  %5.12E  %5.12E  %5.12E %5.12E  %5.12E  %5.12E %5.12E\n", nodeID, particle[np].fracture, particle[np].time, velocity_t, particle3dv.cord3[0], particle3dv.cord3[1],particle3dv.cord3[2], node[cell[pcell-1].node_ind[0]-1].aperture, particle[np].pressure);
-
 	}
     }
  if (tfile==1)
@@ -3214,47 +3074,3 @@ struct lagrangian CalculateLagrangian(double xcurrent, double ycurrent, double z
 
   return lagvariable;
 }
-////////////////////////////////////////////////////////////////////////////
-
-double TimeDomainRW (double time_advect)
-{
-/**** calculates time domain random walk ****/
-/***** function is called at each intersection ***/
-
-
-    double randomnumber=0.0;
-    randomnumber=drand48();
-    
-    double term_a=0;
-    double b=0;
-    if (particle[np].cell!=0){
-      if ((node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[0]-1].typeN!=12)){
-           b=node[cell[particle[np].cell-1].node_ind[0]-1].aperture;
-        }
-      else{
-        if ((node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=2) && (node[cell[particle[np].cell-1].node_ind[1]-1].typeN!=12)){
-           b=node[cell[particle[np].cell-1].node_ind[1]-1].aperture;
-          }
-       else{
-          b=node[cell[particle[np].cell-1].node_ind[2]-1].aperture;
-          }
-      }
-    }  
-    else{ 
-      b=node[fracture[particle[np].fracture-1].firstnode-1].aperture;
-    }
-    term_a= (tdrw_porosity*sqrt(tdrw_diffcoeff))/b;
-    double inverse_erfc=0.0;
-    double z;
-    z=1.0-randomnumber;  
-    
-      inverse_erfc=0.5*sqrt(pi)*(z+(pi/12)*pow(z,3)+((7*pow(pi,2))/480)*pow(z,5)+((127*pow(pi,3))/40320)*pow(z,7)+((4369*pow(pi,4))/5806080)*pow(z,9)+((34807*pow(pi,5))/182476800)*pow(z,11));
-      double timediff=0.0;
-    
-    timediff=pow(((term_a*time_advect)/inverse_erfc),2);
-    //  printf("%lf %lf %5.12E %lf %lf %lf\n", z, tdrw_porosity, tdrw_diffcoeff,inverse_erfc, time_advect, b); 
-    
-    return timediff;
-    
-}
-/////////////////////////////////////////////////////////////////////////////
