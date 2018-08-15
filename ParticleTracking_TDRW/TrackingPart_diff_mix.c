@@ -26,7 +26,7 @@ struct lagrangian{
 
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT=0; 
-unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0, tdrw=0;
+unsigned int np, t, nodeID=0, avs_o=0, traj_o=0, curv_o=0, no_out=0, tdrw=0, mixing_rule=1;
 unsigned int marfa=0, plumec=0, disp_o=0, timecounter=0, frac_o=0, tfile=0;
 double tdrw_porosity=0.0, tdrw_diffcoeff=0.0, t_adv0=0.0, t_adv=0.0, timediff=0.0;
 struct intcoef {
@@ -93,6 +93,14 @@ void ParticleTrack ()
       if (res==0)
         frac_o=1;
     }
+  
+  // Determine the subgrid process for particle motion at fracture intersections       
+  inputfile=Control_File("streamline_routing:",19);
+  res=strncmp(inputfile.filename,"yes",3);
+  if (res==0){
+    mixing_rule=0;
+    printf("Fracture Intersection Rule: Streamline Routing \n"); }
+  else{printf("Fracture Intersection Rule: Complete Mixing \n");}
 
   // Output according to trajectory curvature (not every time step)  
   inputfile=Control_File("out_curv:",9);
@@ -1794,7 +1802,7 @@ int CheckDistance()
                       particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
                        fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);
 			}
-		      AcrossIntersection (prevcell, int1, int2);
+		      AcrossIntersection (prevcell, int1, int2, mixing_rule);
 		    }
 		  else
 		    {
@@ -1857,7 +1865,7 @@ int CheckDistance()
                       particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
 			 fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);                     
                        }
-		  AcrossIntersection (prevcell, int1, int2);
+		  AcrossIntersection (prevcell, int1, int2, mixing_rule);
 		   
 		}
 	      else
@@ -1923,7 +1931,7 @@ int CheckDistance()
                       particle[np].t_adv_diff=particle[np].t_adv_diff+t_adv+timediff;
 		 	fprintf(diff, "%5.12E  %5.12E  %5.12E  %d  %5.12E  %5.12E  %5.12E \n", t_adv, timediff, timediff+t_adv, particle[np].fracture, particle[np].time, particle[np].t_adv_diff, particle[np].t_diff);                      
  }
-		      AcrossIntersection (prevcell, int1, int2);		
+		      AcrossIntersection (prevcell, int1, int2, mixing_rule);		
 		    }
 		  else
 		    {
@@ -2005,7 +2013,7 @@ double InOutFlowCell(int indcell, int int1, double nposx, double nposy)
 
 //////////////////////////////////////////////////////////////////////////////
 /***** Function moves particle through  intersection ********/
-void AcrossIntersection (int prevcell, int int1, int int2)
+void AcrossIntersection (int prevcell, int int1, int int2, int mixing_rule)
 {
   struct intcoef lambda;
   int  indj=-1, k,  indcell, cell_win=0, indk=0;
@@ -2016,10 +2024,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   double  products[4]={0.0, 0.0, 0.0, 0.0};
   int neighborcellind[4]; //Thomas edit: a list of cell indices of all the neighbors 
   int neighborfracind[4]; // Thomas edit: a list of fractures of all the neighbors
-  int rule =0; //Thomas edit: if 0 streamline, 1 complete mixing
-  //int onetotwo; 
- // int transitionstats[4]; // {1 to 1, 1 to 2, 2 to 1, 2 to 2} keeps track of transitions between fractures. 
-  // printf("Particle number: %d \n",np);
+  //int rule =1; //Thomas edit: if 0 streamline, 1 complete mixing
   prevfrac = cell[prevcell-1].fracture;
   if ((int1!=0)&&(int2!=0))
     {
@@ -2047,24 +2052,16 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	    {
 	      indcell=node[int1-1].cells[indj][k];
 
-	      neighborcellind[k] = indcell; // Thomas edit
+	      neighborcellind[k] = indcell; 
 
               n1n=cell[indcell-1].node_ind[0];
 	      n2n=cell[indcell-1].node_ind[1];
 	      n3n=cell[indcell-1].node_ind[2];
                
-              // printf("Cell %d = %d \n",k, indcell); // indcell is the cell index
-               //printf("Node 1: %d (%d, %d)   \n",n1n, node[n1n-1].coord_xy[0],node[n1n-1].coord_xy[1]);
-               //printf("Node 2: %d (%d, %d)   \n",n2n, node[n2n-1].coord_xy[0],node[n2n-1].coord_xy[1]);
-               //printf("Node 3: %d (%d, %d)   \n",n3n, node[n3n-1].coord_xy[0],node[n3n-1].coord_xy[1]);
-              
-              // printf("Previous Cell is: %d \n ",prevcell);  
-             /* printf("Current Cell in loop: %d: \n", cell[indcell-1]); */ 
 
 	      v1v=cell[indcell-1].veloc_ind[0];
 	      v2v=cell[indcell-1].veloc_ind[1];
 	      v3v=cell[indcell-1].veloc_ind[2];
-              //printf("v1 = %lf, v2 = %lf, v3 =%lf \n", v1v, v2v,v3v);  
 	      int thirdnode=0;
 	      double tnx=0,tny=0;
 
@@ -2077,8 +2074,6 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 
 	      tnx=node[thirdnode-1].coord_xy[0];
 	      tny=node[thirdnode-1].coord_xy[1];
-             // printf("Cell %d = %d: third node is on facture: %d \n",k, indcell, node[thirdnode-1].fracture[0]); 
-              /*printf("Third Node is %d: (%d, %d) \n", thirdnode, tnx, tny);*/
               neighborfracind[k] = node[thirdnode-1].fracture[0]; // find the fracture of third node:   
                
 	      double product, vintx=0, vinty=0;
@@ -2086,10 +2081,6 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      vintx=node[int1-1].coord_xy[XindexC(int1,indcell-1)];
 	      vinty=node[int1-1].coord_xy[YindexC(int1,indcell-1)];
  
-	     /* if ((indcell) == prevcell){
-              prevfrac = node[thirdnode-1].fracture[0];
-              printf("The starting fracture is %d \n",prevfrac);  
-              }*/
 
 	      if ((indcell)==prevcell){
                 indk=k;
@@ -2110,21 +2101,19 @@ void AcrossIntersection (int prevcell, int int1, int int2)
 	      products[k]=(velocx*(particle[np].position[1]-vinty))-((particle[np].position[0]-vintx)*velocy);
 	      products[k]=products[k]*product;
 	      speedsq[k]=velocx*velocx+velocy*velocy;
-              //printf("Velocity x: %lf Velocity y: %lf \n", velocx, velocy);
-              // printf("The product of this cell is: (%d, %d, %d, %d) \n", products[0], products[1], products[2], products[3]);
 	    }    
         }//loop on k
  
      
       
       //printf("Speed of each cell: %lf, %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]),(speedsq[3]), sqrt(4));
-      if (rule == 1){
+      if (mixing_rule == 1){
       //printf("Complete Mixing \n");
-      cell_win=RandomSampling(products, speedsq, indj, int1, indk);  
+      cell_win=CompleteMixingRandomSampling(products, speedsq, indj, int1, indk);  
       }
 
-      if(rule == 0){
-      //printf("We are in Streamline Routing Case \n");
+      if(mixing_rule == 0){
+      //printf("Streamline Routing \n");
       cell_win =StreamlineRandomSampling(products, speedsq, indj, int1, indk, neighborcellind, neighborfracind, prevfrac, prevcell);    
        }
 
@@ -2132,29 +2121,7 @@ void AcrossIntersection (int prevcell, int int1, int int2)
       particle[np].intcell=4;
       particle[np].prev_pos[0]=particle[np].position[0];
       particle[np].prev_pos[1]=particle[np].position[1];
-      //printf("Neighbor Cell index: (%d, %d, %d, %d) \n", neighborcellind[0], neighborcellind[1], neighborcellind[2], neighborcellind[3]);
-      //printf("Neighbor Fracture index: (%d, %d, %d, %d) \n", neighborfracind[0], neighborfracind[1], neighborfracind[2], neighborfracind[3]);
-      //printf("Particle jumped from cell to  %d cell  %d:  \n",prevcell, cell_win);
       finalfrac = cell[cell_win-1].fracture;
-                    
-      //transitions12 = TransitionStats12(prevfrac, finalfrac, transitions12); 
-      //transitions22 = TransitionStats22(prevfrac, finalfrac, transitions22);
-      //transitions11 = TransitionStats11(prevfrac, finalfrac, transitions11);
-      //transitions21 = TransitionStats21(prevfrac, finalfrac, transitions21);
-      //TransitionMat(prevfrac, finalfrac, TransitionMatrix);
-      //printf("TM 1-1 = %d \n", TransitionMatrix[0][0]);
-      //printf("1-2: %d, 2-1: %d, 1-1: %d, 2-2: %d \n", transitions12, transitions21, transitions11, transitions22);
-      //printf("Particle %d  went from fracture %d to %d \n \n", np, prevfrac, finalfrac);
-      if(np==999){
-       // printf("TransitionMatrix \n");
-       // printf("%d %d %d %d \n ", TransitionMatrix[0][0], TransitionMatrix[0][1],TransitionMatrix[0][2],TransitionMatrix[0][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[1][0], TransitionMatrix[1][1],TransitionMatrix[1][2],TransitionMatrix[1][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[2][0], TransitionMatrix[2][1],TransitionMatrix[2][2],TransitionMatrix[2][3]);
-       // printf("%d %d %d %d \n ", TransitionMatrix[3][0], TransitionMatrix[3][1],TransitionMatrix[3][2],TransitionMatrix[3][3]);
-          }
-       
- 
-      
      
 
    
@@ -2164,19 +2131,28 @@ void AcrossIntersection (int prevcell, int int1, int int2)
   return;
 }
 //////////////////////////////////////////////////////////////////////////////
+/**************************************************************************/
+/******************** Streamline Routing Intersection Rule  ***************************/
+/*! Particle motion at a fracture intersection is determined by the streamline routing rule
+    Arg 1: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection
+    Arg 2: Vector of the speed squared for each cell at the intersection
+    Arg 3: index of current cell in int1 node list 
+    Arg 4: int1 is the index of the node of the incoming cell that lies on the intersection
+    Arg 5: indk gives the position in the list of the 4 intersection cells that is previous cell
+    Arg 6: Vector of the indicies for the 4 neighboring cells
+    Arg 7: Vector of the fracture index for the 4 neighboring cells 
+    Arg 8: Fracture a particle is coming from
+    Arg 9: Cell index a particle is coming from  
+    Return: The Exit cell at the intersection */
+
 int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac, int prevcell)
 {
-  /*********** Weighted Random Sampling ****************/
+  /*********** Streamline Routing Sampling ****************/
   int win_cell=0, k, jj;
   int count=0, outc[4]={0,0,0,0};
   int oppcellind; // the index of the opposite cell
-  int oppflag; // opp flag set to 1 is we have outflow on the opposite cell
-  double random_number, totalspeed=0, minsp=0.0, incomingspeedsq=0, totalmag=0;
- // printf("RS Neighbor Cell index: (%d, %d, %d, %d) \n", neighborcellind[0], neighborcellind[1], neighborcellind[2], neighborcellind[3]);
- // printf("RS Neighbor Fracture index: (%d, %d, %d, %d) \n", neighborfracind[0], neighborfracind[1], neighborfracind[2], neighborfracind[3]);
- // printf("index of previous cell: %d \n", indk);
-  //printf("Speed of each cell: %lf, %lf, %lf, %lf \n", sqrt(speedsq[0]), sqrt(speedsq[1]), sqrt(speedsq[2]), sqrt(speedsq[3]));
- //printf("Speed of each cell: %lf, %lf, %lf, %lf \n", (speedsq[0]), (speedsq[1]), (speedsq[2]), (speedsq[3]));
+  int oppflag = 1; // opp flag set to 1 is we have outflow on the opposite cell
+  double random_number, totalspeed=0, minsp=0.0, incomingspeedsq=0, speedopp =0, totalmag=0;
 
  /* find outgoing flow cells */
   for (k=0; k<4; k++)
@@ -2185,8 +2161,8 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
         {
           outc[count]=k;
           count++;
-          totalspeed=totalspeed+speedsq[k];
-          totalmag = totalmag + sqrt(speedsq[k]);
+          totalspeed=totalspeed+speedsq[k]; //the sum of the speed square of outflowing cells
+          totalmag = totalmag + sqrt(speedsq[k]); // the sum of speeds of outflowing cells
 
         }
 
@@ -2213,57 +2189,39 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
 
   if (count==2)
     {
-      // Thomas edit: loop
-      // loop to find opposite cell. If we find an outflowing opposite cell, then we are in continuous case and oppflag is set to 1;
+      // loop to find opposite cell. If we find an outflowing opposite cell(cell with same fracture as previous cell), then we are in continuous case and oppflag is set to 1;
       
       for (jj=0; jj<4; jj++){
-        //printf("RS %d: cell in %d cell from %d: frac in %d frac from %d \n", jj, neighborcellind[jj], neighborcellind[indk], neighborfracind[jj], neighborfracind[indk]);
-       // if(!(neighborcellind[jj]==neighborcellind[indk]) && neighborfracind[jj] == neighborfracind[indk]){ 
-         if ((neighborfracind[jj]==prevfrac) && (neighborcellind[jj]==node[int1-1].cells[indj][outc[0]] || neighborcellind[jj]==node[int1-1].cells[indj][outc[1]])){ //We have an opposite flag if the neighboring cell has the same fracture and that cell is one of the two outflowing cells
+         if ((neighborfracind[jj]==prevfrac) && (neighborcellind[jj]==node[int1-1].cells[indj][outc[0]] || neighborcellind[jj]==node[int1-1].cells[indj][outc[1]])){ //Opposite flag turned on if: the neighboring cell has the same fracture as the previous cell and that cell is one of the two outflowing cells
             oppcellind = neighborcellind[jj];
-           // printf("The opposite cell is %d \n",oppcellind);
             oppflag = 1; //we are in the continous case 
            }
 
 //note this next case only will work if we have continuous case. 
-          if ((neighborfracind[jj]==prevfrac) && neighborcellind[jj]!=node[int1-1].cells[indj][outc[0]] && neighborcellind[jj]!=node[int1-1].cells[indj][outc[1]]){ // We find the incoming speed by finding the neighbor cell that shares a fracture with previous cell, and has no outgoing flow
+          if ((neighborfracind[jj]==prevfrac) && neighborcellind[jj]!=node[int1-1].cells[indj][outc[0]] && neighborcellind[jj]!=node[int1-1].cells[indj][outc[1]]){ // We find the incoming speed by finding the neighbor cell that shares a fracture with previous cell, and is not outflowing. Note we code this way because in special cases the previous cell is not in the list of cells neighboring the intersection. In this case, we say the incoming velocity is the inflowing cell and has the same fracture of the previous cell. 
              incomingspeedsq = speedsq[jj];
-            // printf("The incoming speed is %lf \n", incomingspeedsq);              
             }
 
-           if(neighborcellind[jj] == prevcell){
+           if(neighborcellind[jj] == prevcell){ //This is the easier way to find incoming speed: We find the neighboring cell equal to the previous cell and take the speed of that cell. 
             incomingspeedsq = speedsq[jj];
-            //printf("The incoming speed is %lf \n", incomingspeedsq);
               }
 
          
       } // end of jj loop
-     
+     if (cell[node[int1-1].cells[indj][outc[1]]].fracture == cell[node[int1-1].cells[indj][outc[0]]].fracture){// if the two outflowing cells have the same fracture we are in the discontinuous case
+        oppflag = 0; 
+           }
 
-
-
-     // printf("Case 2 \n");
-     // printf("The cell we are coming from is %d, \n", neighborcellind[indk]);
-      //printf("Outflowing Cells: %d, %d \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]]);
       random_number=drand48();
-    //  printf("The Random Number is: %lf \n", random_number); 
      if (oppflag == 1){ // if oppflag is 1 then one of the outflow cells is opposite (on the same fracture) as the cell we are coming from: The other outflowing cell must be adjacent      
-         //  printf("We are in the continous case \n");
+          // printf("We are in the continous case \n");
            // We need to find which outflowing cell is opposite
            if (node[int1-1].cells[indj][outc[0]] == oppcellind) { // opposite cell has index outc[0] and outc[1] is adjacent
-                 // printf("The oppsite cell is the first case %d \n", speedsq[outc[1]]);
-                 // printf("Speed test %d %d %d %d \n", speedsq[0], speedsq[1], speedsq[2], speedsq[3]);
-                 // printf("Case A \n");
-                 // if (speedsq[indk] <= speedsq[outc[1]]) // The adjacent cell has large velocity and so we are forced to the adjacent branch
                   if (incomingspeedsq <= speedsq[outc[1]]) // The adjacent cell has large velocity and so we are forced to the adjacent branch
                       {
-                      // printf("case 1 \n");
                        win_cell = node[int1-1].cells[indj][outc[1]];
                       } 
                    else { // the adjacent velocity is not bigger the incoming
-                      // if (random_number <= speedsq[outc[1]]/speedsq[indk]){
-                        // printf("case 2, Random = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq));
-                        // printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[1]]),sqrt(speedsq[outc[0]]));
                          if (random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq)){
                            win_cell = node[int1-1].cells[indj][outc[1]];
                             }                       
@@ -2273,17 +2231,11 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
                        } 
                    } // end first if regarding opposite cell has index outc[0]
             else { // other Continous case scenario: opposite has index outc[1] and adjacent is outc[0]
-                 // printf("Case B \n");
-                // if (speedsq[indk]<= speedsq[outc[0]]) //The adjacent cell has large velocity than incoming
                  if (incomingspeedsq<= speedsq[outc[0]]) //The adjacent cell has large velocity than incoming     
                        {
-                        // printf("case 3, \n");
                          win_cell = node[int1-1].cells[indj][outc[0]];                      
                         }
                  else { // the adjacent (outc[0]) velocity is smaller than incoming
-                     // if (random_number <= speedsq[outc[0]]/speedsq[indk])
-                     // printf("case 4, Random Number = %lf, Adjacent Prob = %lf \n", random_number, sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq));
-                     // printf("Incoming Speed = %lf, Adjacent speed = %lf, Opposite Speed = %lf, \n ", sqrt(incomingspeedsq), sqrt(speedsq[outc[0]]),sqrt(speedsq[outc[1]]));
                       if (random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
                          {
                          win_cell = node[int1-1].cells[indj][outc[0]];
@@ -2295,44 +2247,50 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
                   }//end case where outc[1] is opposite     
              } // end continous case
     else{  // start discontinous case now: assume complete mixing for now
-          printf("We are in the discontinous case \n");
+          //printf("We are in the discontinous case \n");
+          //printf("Speed incoming = %lf: Other Speed incoming = %lf, Outflowing1 =%lf: Outflowing2 =%lf: \n", sqrt(incomingspeedsq), sqrt(speedsq[outc[0]]) +sqrt(speedsq[outc[1]]) - sqrt(incomingspeedsq),sqrt(speedsq[outc[0]]),sqrt(speedsq[outc[1]]) );
       //New Rule
-        //if(sqrt(incomingspeedsq)>=(sqrt(speedsq[outc[0]]) +sqrt(speedsq[outc[1]]))/2){ //the incoming speed is bigger than oppposite incoming
-          //  if(speedsq[outc[1]]>= speedsq[outc[0]]) //outgoing cell 1 is bigger than outgoint cell 0
-            //   {
-              // if(random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq))
-                //    {win_cell = node[int1-1].cells[indj][outc[1]];}
-               // else{win_cell = node[int1-1].cells[indj][outc[0]];}
-              // }          
-            // else{ //outgoing cell 0 is bigger
-              //    if(random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
-                //     {win_cell = node[int1-1].cells[indj][outc[0]];}
-                 // else{win_cell = node[int1-1].cells[indj][outc[1]];}
-                // }
-              // }
-       // else{ // the incoming speed is smaller than oppoiste incoming
-         //    if(speedsq[outc[1]]<= speedsq[outc[0]]) //outgoing cell 1 is smaller than outgoint cell 0
-           //     {
-             //   if(random_number <= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq))
-               //      {win_cell = node[int1-1].cells[indj][outc[1]];}
-                // else{win_cell = node[int1-1].cells[indj][outc[0]];}
-               // }          
-             // else{ //outgoing cell 1 is bigger
-               //    if(random_number <= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
-                 //     {win_cell = node[int1-1].cells[indj][outc[0]];}
-                  // else{win_cell = node[int1-1].cells[indj][outc[1]];}
-                 // }      
-          //  }
+        if(sqrt(incomingspeedsq)>=(sqrt(speedsq[outc[0]]) +sqrt(speedsq[outc[1]]))/2){ //the incoming speed is bigger than oppposite incoming: we are on the larger incoming fracture
+            if(speedsq[outc[1]]>= speedsq[outc[0]]) //outgoing cell 1 is bigger than outgoint cell 0
+               {
+               //printf("On high; Prob of switching to high frac: %lf \n", sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq));
+               if(random_number >= sqrt(speedsq[outc[1]])/sqrt(incomingspeedsq))
+                    {win_cell = node[int1-1].cells[indj][outc[0]];}
+                else{win_cell = node[int1-1].cells[indj][outc[1]];}
+               }          
+             else{ //outgoing cell 0 is bigger
+                //printf("On high; Prob of switching to high frac: %lf \n", sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq));
+                  if(random_number >= sqrt(speedsq[outc[0]])/sqrt(incomingspeedsq))
+                     {win_cell = node[int1-1].cells[indj][outc[1]];}
+                  else{win_cell = node[int1-1].cells[indj][outc[0]];}
+                 }
+               }
+        else{ // the incoming speed is smaller than oppoiste incoming
+             speedopp = sqrt(speedsq[outc[0]]) +sqrt(speedsq[outc[1]]) - sqrt(incomingspeedsq); // the speed of the larger incoming branch 
+             if(speedsq[outc[1]]<= speedsq[outc[0]]) //outgoing cell 1 is smaller than outgoing cell 0
+                {
+                //printf("On low; Prob of switching to high frac: %lf \n", (sqrt(speedsq[outc[0]])-speedopp)/sqrt(incomingspeedsq));
+                if(random_number <= (sqrt(speedsq[outc[0]])-speedopp)/sqrt(incomingspeedsq) && sqrt(speedsq[outc[0]])>= speedopp)
+                     {win_cell = node[int1-1].cells[indj][outc[0]];}
+                 else{win_cell = node[int1-1].cells[indj][outc[1]];}
+                }          
+              else{ //outgoing cell 1 is bigger
+                  // printf("On low; Prob of switching to high frac: %lf \n", (sqrt(speedsq[outc[1]])-speedopp)/sqrt(incomingspeedsq));
+                   if(random_number <= (sqrt(speedsq[outc[1]])-speedopp)/sqrt(incomingspeedsq) && sqrt(speedsq[outc[1]])>= speedopp)
+                      {win_cell = node[int1-1].cells[indj][outc[1]];}
+                   else{win_cell = node[int1-1].cells[indj][outc[0]];}
+                  }      
+            }
 
      // End New Rule
-     //Start Old Rule 
-      if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
+
+
+     //Start Old Rule: Complete mixing 
+      /****if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
          win_cell=node[int1-1].cells[indj][outc[0]];
       else
-        win_cell=node[int1-1].cells[indj][outc[1]];
-     // End old rulw
-
-
+        win_cell=node[int1-1].cells[indj][outc[1]]; ****/
+     // End old rule
 
         } // end discontinous case
      }
@@ -2377,9 +2335,21 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
 }
 
 ////////////////////////////////////////////////////////////////////////////// 
-int RandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk)
+/**************************************************************************/
+/******************** Complete Mixing  Intersection Rule  ***************************/
+/*! Particle motion at a fracture intersection is determined by the streamline routing rule
+    Arg 1: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection
+    Arg 2: Vector of the speed squared for each cell at the intersection
+    Arg 3: index of current cell in int1 node list 
+    Arg 4: int1 is the index of the node of the incoming cell that lies on the intersection
+    Arg 5: indk gives the position in the list of the 4 intersection cells that is previous cell
+    Return: The Exit cell at the intersection */
+
+
+
+int CompleteMixingRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk)
 {    
-  /*********** Weighted Random Sampling ****************/ 
+  /***********Complete Mixing Sampling ****************/ 
   int win_cell=0, k;
   int count=0, outc[4]={0,0,0,0};
   double random_number, totalspeed=0, minsp=0.0, totalmag=0;
@@ -2399,7 +2369,6 @@ int RandomSampling(double products[4], double speedsq[4], int indj, int int1, in
         }
 
     }    
- //printf("out going cell %d \n", count);
   /* if no outgoing flow cells found - move to cell with largest velocity magnitude 
      (this should not happen, it will mean we have a physical flow sink)*/
   if (count==0)
@@ -2423,7 +2392,6 @@ int RandomSampling(double products[4], double speedsq[4], int indj, int int1, in
   if (count==2)
     {    
       //printf("Case 2 \n");
-      //printf("Outflowing Cells: %d, %d, Speed: %lf, %lf \n", node[int1-1].cells[indj][outc[0]], node[int1-1].cells[indj][outc[1]], sqrt(speedsq[outc[0]]), sqrt(speedsq[outc[0]]));
       random_number=drand48();
       if (random_number<=(sqrt(speedsq[outc[0]])/totalmag))
         //  if (random_number<0.5)
@@ -2436,8 +2404,6 @@ int RandomSampling(double products[4], double speedsq[4], int indj, int int1, in
   if (count==3)
     {    
       random_number=drand48();
-      //printf("Random = %lf \n", random_number);
-      //printf("Probabilities %lf, %lf  \n",(sqrt(speedsq[outc[0]])+sqrt(speedsq[outc[1]]))/totalmag, sqrt(speedsq[outc[0]])/totalmag);
       if (random_number>((sqrt(speedsq[outc[0]])+sqrt(speedsq[outc[1]]))/totalmag)){
         //      if (random_number<0.3)
         win_cell=node[int1-1].cells[indj][outc[2]];

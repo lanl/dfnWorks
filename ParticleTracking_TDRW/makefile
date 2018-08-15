@@ -5,7 +5,7 @@ CC=gcc
 CFLAGS =  -lm   -Wall -g -O3
 
 
-OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart_diff.o InitialPartPositions.o output.o
+OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart_diff_mix.o InitialPartPositions.o output.o
 
 
 
