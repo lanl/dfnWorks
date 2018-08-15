@@ -31,11 +31,12 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
     failure = run_mesh.mesh_fractures_header(num_poly, ncpu, visual_mode)
+    
     if failure:
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain)
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain, self.flow_solver)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
     if not visual_mode:    
@@ -54,7 +55,6 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
 
 if __name__ == "__main__":
     print ('='*80)
-    os.system("date")
     print '''Python Script to parse DFNGEN output and mesh it using LaGriT 
 
     Last Update August 1 2016 by Jeffrey Hyman

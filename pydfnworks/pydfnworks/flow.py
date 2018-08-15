@@ -8,6 +8,20 @@ from time import time
 import numpy as np
 import h5py
 
+
+def set_flow_solver(self, flow_solver):
+    ''' set_flow_solver: sets DFN.flow_solver
+        
+    Kwargs:
+        * flow_solver: name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
+    '''
+    if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
+        print("Using flow solver %s"%flow_solver)
+        self.flow_solver = flow_solver
+    else:
+        sys.exit("ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"%flow_solver)
+
+
 def dfn_flow(self):
     ''' dfnFlow
     Run the dfnFlow portion of the workflow.
@@ -18,22 +32,29 @@ def dfn_flow(self):
     print('='*80)
 
     tic_flow = time()
-
-    tic = time()
-    self.lagrit2pflotran()
-    helper.dump_time(self.jobname, 'Function: lagrit2pflotran', time() - tic)   
     
-    tic = time()    
-    self.pflotran()
-    helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
+    if self.flow_solver == "PFLOTRAN":
+        print("Using flow solver: %s"%self.flow_solver)
+        tic = time()
+        self.lagrit2pflotran()
+        helper.dump_time(self.jobname, 'Function: lagrit2pflotran', time() - tic)   
+        
+        tic = time()    
+        self.pflotran()
+        helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
 
-    tic = time()    
-    self.parse_pflotran_vtk_python()
-    helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+        tic = time()    
+        self.parse_pflotran_vtk_python()
+        helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
 
-    tic = time()    
-    self.pflotran_cleanup()
-    helper.dump_time(self.jobname, 'Function: parse_cleanup', time() - tic) 
+        tic = time()    
+        self.pflotran_cleanup()
+        helper.dump_time(self.jobname, 'Function: parse_cleanup', time() - tic) 
+    elif self.flow_solver == "FEHM":
+        print("Using flow solver: %s"%self.flow_solver)
+        self.correct_stor_file()
+        self.fehm()
+
     helper.dump_time(self.jobname,'Process: dfnFlow',time() - tic_flow)    
 
     print('='*80)
@@ -48,6 +69,8 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         * mesh_type (str): the type of mesh
         * hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
     """
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     print ('='*80)
     print("Starting conversion of files for PFLOTRAN ")
     print ('='*80)
@@ -245,8 +268,8 @@ def inp2gmv(self, inp_file=''):
         fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
         fid.write('finish \n\n')
 
-    cmd = lagrit_path + ' <inp2gmv.lgi ' + '>lagrit_inp2gmv.txt'
-    failure = os.system(cmd)
+    cmd = lagrit_path + ' <inp2gmv.lgi ' + '> lagrit_inp2gmv.txt'
+    failure = subprocess.call(cmd, shell = True)
     if failure:
         sys.exit('ERROR: Failed to run LaGrit to get gmv from inp file!')
     print("--> Finished writing gmv format from avs format")
@@ -305,7 +328,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
     f.close()
 
     cmd = os.environ['correct_uge_PATH']+ 'correct_uge' + ' convert_uge_params.txt' 
-    failure = os.system(cmd)
+    failure = subprocess.call(cmd, shell = True)
     if failure > 0:
             sys.exit('ERROR: UGE conversion failed\nExiting Program')
     elapsed = time() - t
@@ -395,6 +418,8 @@ def pflotran(self):
     ''' Run pflotran
     Copy PFLOTRAN run file into working directory and run with ncpus
     '''
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     try: 
             shutil.copy(os.path.abspath(self.dfnFlow_file), os.path.abspath(os.getcwd()))
     except:
@@ -405,7 +430,7 @@ def pflotran(self):
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self.local_dfnFlow_file 
     print("Running: %s"%cmd)
-    os.system(cmd)    
+    subprocess.call(cmd, shell = True)
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
@@ -417,15 +442,17 @@ def pflotran_cleanup(self, index = 1):
     input: index, if PFLOTRAN has multiple dumps use this to pick which
            dump is put into cellinfo.day and darcyvel.dat
     '''
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     print '--> Processing PFLOTRAN output' 
     
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
     print("Running >> %s"%cmd)
-    os.system(cmd)
+    subprocess.call(cmd, shell = True)
 
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
     print("Running >> %s"%cmd)
-    os.system(cmd)
+    subprocess.call(cmd, shell = True)
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
             os.remove(fl)    
@@ -502,6 +529,8 @@ def uncorrelated(self, sigma, path = '../'):
 def parse_pflotran_vtk(self, grid_vtk_file=''): 
     """ Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.
     """
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     print '--> Parsing PFLOTRAN output using C++'
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
     out_dir = 'parsed_vtk'
@@ -549,6 +578,8 @@ def inp2vtk_python(self, inp_file=''):
     import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
     """
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     print("--> Using Python to convert inp files to VTK files")
     if self.inp_file:
         inp_file = self.inp_file
@@ -601,6 +632,8 @@ def inp2vtk_python(self, inp_file=''):
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Replace CELL_DATA with POINT_DATA in the VTK output."""
     print '--> Parsing PFLOTRAN output with Python'
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
     else:
@@ -639,3 +672,65 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
             for line in pflotran_out:
                 f.write(line)
     print '--> Parsing PFLOTRAN output complete'
+
+def correct_stor_file(self):
+    """corrects volumes in stor file to account for apertures"""
+     # Make input file for C Stor converter
+    if self.flow_solver != "FEHM":
+        sys.exit("ERROR! Wrong flow solver requested")
+
+    self.stor_file = self.inp_file[:-4] + '.stor'
+    self.mat_file= self.inp_file[:-4] + '_material.zone'
+    f = open("convert_stor_params.txt", "w")
+    f.write("%s\n"%self.mat_file)
+    f.write("%s\n"%self.stor_file)
+    f.write("%s"%(self.stor_file[:-5]+'_vol_area.stor\n'))
+    f.write("%s\n"%self.aper_file)
+    f.close()
+
+    t = time()
+    cmd = os.environ['correct_stor_PATH']+ 'correct_stor' + ' convert_stor_params.txt' 
+    failure = subprocess.call(cmd, shell = True)
+    if failure > 0:
+            sys.exit('ERROR: stor conversion failed\nExiting Program')
+    elapsed = time() - t
+    print('--> Time elapsed for STOR file conversion: %0.3f seconds\n'%elapsed)
+
+def correct_perm_for_fehm():
+    """ FEHM wants an empty line at the end of the perm file
+    This functions adds that"""
+
+    fp = open("perm.dat")
+    lines = fp.readlines()
+    fp.close()
+    # Check if the last line of file is just a new line
+    # If it is not, then add a new line at the end of the file
+    if len(lines[-1].split()) != 0:
+        print("--> Adding line to perm.dat")
+        fp = open("perm.dat","a")
+        fp.write("\n")
+        fp.close()
+
+def fehm(self):
+    """ runs fehm """
+    print("--> Running FEHM")
+    if self.flow_solver != "FEHM":
+        sys.exit("ERROR! Wrong flow solver requested")
+    try: 
+        shutil.copy(self.dfnFlow_file, os.getcwd())
+    except:
+        print("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
+        exit()
+    path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
+    fp = open(self.local_dfnFlow_file)
+    line = fp.readline()
+    fehm_input = line.split()[-1]
+    fp.close()
+    try: 
+        shutil.copy(path+fehm_input, os.getcwd())
+    except:
+        print("-->ERROR copying FEHM input file:"%fehm_input)
+        exit()
+    correct_perm_for_fehm()
+    subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm "+self.local_dfnFlow_file, shell = True)
+    print("--> FEHM Complete")

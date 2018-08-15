@@ -77,7 +77,9 @@ def create_network(self):
     """
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    os.system(os.environ['DFNGEN_PATH']+'/./DFNGen ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname )
+    cmd = os.environ['DFNGEN_PATH']+'DFNGen ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
+    print("Running %s"%cmd)
+    subprocess.call(cmd, shell = True) 
 
     if os.path.isfile("params.txt") is False:
         print '--> Generation Failed'

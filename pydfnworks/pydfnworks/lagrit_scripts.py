@@ -492,7 +492,7 @@ finish
 
 
 
-def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
+def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain, flow_solver):
     """
     Section 4 : Create merge_poly file
      Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
@@ -504,7 +504,7 @@ def create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain):
     # This needs to be re-written using PyLaGriT so we can check 
     # that the number of dudded points is that which we expect
     print "Writing : merge_poly.lgi"
-
+    
     part_size = num_poly/ncpu + 1 ###v number of fractures in each part
     endis = range(part_size, num_poly + part_size, part_size) 
     endis[-1] = num_poly
@@ -594,12 +594,31 @@ cmo / DELATT / mo_all / ikey
         lagrit_input += """ 
 resetpts / itp 
 boundary_components 
-dump / full_mesh.gmv / mo_all
+#dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
+"""
+        if flow_solver == "PFLOTRAN":
+            print("Dumping output for %s"%flow_solver)
+            lagrit_input += """
 dump / pflotran / full_mesh / mo_all / nofilter_zero
-dump / stor / tri_fracture / mo_all / ascii
-
+dump / stor / full_mesh / mo_all / ascii
+    """
+        elif flow_solver == "FEHM":
+            print("Dumping output for %s"%flow_solver)
+            lagrit_input += """
+dump / stor / full_mesh / mo_all / ascii
+dump / coord / full_mesh / mo_all 
+# matid start at 1, but we need them to start at 7 for FEHM due to zone files
+# So we do a little addition
+math / add / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
+dump / zone_imt / full_mesh / mo_all
+# and then we subtract 6 back 
+math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
+"""
+        else:
+            print("WARNING!!!!!!!\nUnkown flow solver selection: %s"%flow_solver)
+        lagrit_input += """ 
 # Dump out Material ID Dat file
 cmo / modatt / mo_all / isn / ioflag / l
 cmo / modatt / mo_all / x_four / ioflag / l
@@ -775,5 +794,5 @@ finish
     	f.write(lagrit_script)
     	f.flush()
     	f.close()
-    	os.system(lagrit_path +  '< prune_intersection.lgi > out.txt')
+    	subprocess.call(lagrit_path +  '< prune_intersection.lgi > out.txt', shell = True)
 

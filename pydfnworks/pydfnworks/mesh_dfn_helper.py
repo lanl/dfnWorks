@@ -123,7 +123,7 @@ def output_meshing_report(visual_mode):
         f.write(str(NumIntNodes)+'  nodes / control volume cells; \n')
         finp.close()
         
-        fstor=open('tri_fracture.stor','r')
+        fstor=open('full_mesh.stor','r')
         fstor.readline()
         fstor.readline()
         gs = fstor.readline()
