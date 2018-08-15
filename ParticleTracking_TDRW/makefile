@@ -5,9 +5,7 @@ CC=gcc
 CFLAGS =  -lm   -Wall -g -O3
 
 
-OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart_diff_mix.o InitialPartPositions.o output.o
-
-
+OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
 DFNTrans_TDRW: $(OBJECTS)
        
@@ -15,4 +13,6 @@ DFNTrans_TDRW: $(OBJECTS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
+clean:
+	rm -rf DFNTrans_TDRW main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
