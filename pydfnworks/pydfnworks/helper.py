@@ -39,11 +39,12 @@ def commandline_options():
         * -name : Jobname (Mandatory)
         * -ncpu : Number of CPUS (Optional, default=4)
         * -input : input file with paths to run files (Mandatory if the next three options are not specified)
-        * -gen : Generator Input File (Mandatory, can be included within this file)
-        * -flow : PFLORAN Input File (Mandatory, can be included within this file)
-        * -trans: Transport Input File (Mandatory, can be included within this file)
+        * -gen   : Generator Input File (Mandatory, can be included within this file)
+        * -flow  : PFLORAN Input File (Mandatory, can be included within this file)
+        * -trans : Transport Input File (Mandatory, can be included within this file)
+        * -prune : Prune Input File 
+        * -path  : Prune Path 
         * -cell: True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
-    
     """
     parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
     parser.add_argument("-name", "--jobname", default="", type=str,
@@ -62,6 +63,10 @@ def commandline_options():
               help="Path to directory for sub-network runs") 
     parser.add_argument("-cell", "--cell", default=False, action="store_true",
               help="Binary For Cell Based Apereture / Perm")
+    parser.add_argument("-prune_file", "--prune_file", default="", type=str, 
+              help="Path to prune DFN list file") 
+    parser.add_argument("-prune_path", "--prune_path", default="", type=str, 
+              help="Path to original DFN files") 
     options = parser.parse_args()
 #    if options.jobname is "":
 #        sys.exit("Error: Jobname is required. Exiting.")

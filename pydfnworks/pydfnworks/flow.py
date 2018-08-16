@@ -455,14 +455,14 @@ def pflotran_cleanup(self, index = 1):
     subprocess.call(cmd, shell = True)
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
-            os.remove(fl)    
+        os.remove(fl)    
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'):
-            os.remove(fl)    
+        os.remove(fl)    
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
-            os.remove(fl)    
+        os.remove(fl)    
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
-            os.remove(fl)    
+        os.remove(fl)    
 
 def create_dfn_flow_links(self, path = '../'):
     files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',

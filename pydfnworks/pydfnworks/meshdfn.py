@@ -8,12 +8,14 @@
 import os
 import sys
 from time import time
+from numpy import genfromtxt, sort
 
 import mesh_dfn_helper as mh 
 import lagrit_scripts as lagrit 
 import run_meshing as run_mesh 
 
-def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
+
+def mesh_network(self, prune = False,  keep_file = [], production_mode=True, refine_factor=1, slope=2):
     '''
     Mesh fracture network using LaGriT
     '''
@@ -23,23 +25,31 @@ def mesh_network(self, production_mode=True, refine_factor=1, slope=2):
     
     num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
 
+    if prune:
+        print("Loading list of fractures to remain in network from %s"%keep_file)
+        fracture_list = sort(genfromtxt(keep_file).astype(int))
+        print fracture_list
+        lagrit.edit_intersection_files(num_poly, fracture_list)
+        num_poly = len(fracture_list)
+    else:
+        fracture_list = range(1, num_poly + 1)
+
     # if number of fractures is greater than number of CPUS, 
     # only use num_poly CPUs. This change is only made here, so ncpus
     # is still used in PFLOTRAN
-    ncpu=min(self.ncpu, num_poly)
-    lagrit.create_parameter_mlgi_file(num_poly, h, slope=slope)
+    ncpu = min(self.ncpu, num_poly)
+    lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
-    failure = run_mesh.mesh_fractures_header(num_poly, ncpu, visual_mode)
-    
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode, prune)
     if failure:
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, h, visual_mode, domain, self.flow_solver)
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain,flow_solver)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
-    if not visual_mode:    
+    if (not visual_mode and not prune):    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
             sys.exit("Incorrect Number of dudded points.\nExitingin Program")

@@ -16,28 +16,30 @@ define_paths()
 main_time = time()
 DFN = create_dfn()
 #
-#DFN.make_working_directory()
+DFN.make_working_directory()
 #DFN.check_input()
 #DFN.create_network()
-##
-##DFN.output_report()
-#DFN.mesh_network()
-##
-##os.chdir(DFN.jobname)
-#DFN.dfn_flow()
-#tic = time()
-#DFN.dfn_trans() # for parallel, comment this section
-#toc = time()
-#dump_time(DFN.local_jobname, 'trans', toc-tic)
-
-
-#os.chdir(DFN.jobname)
-##DFN.lagrit2pflotran()
-#DFN.pflotran()
-##DFN.parse_pflotran_vtk_python()       
-#DFN.pflotran_cleanup()
-
+##exit()
 os.chdir(DFN.jobname)
+#G = DFN.create_graph("fracture", "left", "right")
+#for k in [1, 5, 10, 20, 50]:
+#    DFN.k_shortest_paths_backbone(G, k)
+#exit()
+##DFN.output_report()
+##DFN.mesh_network()
+#
+DFN.create_mesh_links(path=DFN.prune_path)
+DFN.mesh_network(prune=True, keep_file=DFN.prune_file)
+DFN.clean_up_files_after_prune(path=DFN.prune_path, keep_file=DFN.prune_file)
+#
+##DFN.dfn_flow()
+##DFN.dfn_trans()
+#
+DFN.lagrit2pflotran()
+DFN.pflotran()
+##DFN.parse_pflotran_vtk_python()       
+DFN.pflotran_cleanup()
+DFN.create_dfn_trans_links(path =DFN.prune_path)
 DFN.copy_dfn_trans_files()
 #DFN.run_dfn_trans()
 

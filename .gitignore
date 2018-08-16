@@ -3,6 +3,10 @@
 *.cmake
 *FracMan_interface*
 
+
+pydfnworks/pydfnworks/only_gen_output.py
+pydfnworks/pydfnworks/paths.py
+
 # dfnWorks Executables
 ParticleTracking/DFNTrans
 ParticleTracking_TDRW/DFNTrans_TDRW

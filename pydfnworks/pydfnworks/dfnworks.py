@@ -46,8 +46,10 @@ class dfnworks(Frozen):
     from flow import correct_stor_file, fehm
     from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links
     from meshdfn import mesh_network
+    from mesh_dfn_helper import clean_up_files_after_prune, create_mesh_links 
     from legal import legal
     from paths import define_paths
+    from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
 
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
@@ -146,7 +148,6 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     else:
         dfn.aper_file = 'aperture.dat'
         dfn.perm_file = 'perm.dat'
-
 
     print("\n-->Creating DFN class: Complete")
     print 'Jobname: ', dfn.jobname
