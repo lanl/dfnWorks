@@ -7,6 +7,7 @@
 ParticleTracking/DFNTrans
 ParticleTracking_TDRW/DFNTrans_TDRW
 C_uge_correct/correct_uge
+C_uge_stor/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 

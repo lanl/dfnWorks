@@ -7,25 +7,25 @@
 param: params.txt
 poly: poly_info.dat
 inp: full_mesh.inp
-stor: full_mesh.stor
+stor: full_mesh_vol_area.stor
 boundary: allboundaries.zone
 /* boundary conditions: reading the nodes that belong to in-flow and 
 out-flow boundaries. Should be consistent with those applied to obtain
 steady state pressure solution (PFLOTRAN)   */
 /*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
-in-flow-boundary: 3 
-out-flow-boundary: 5
+in-flow-boundary: 2 
+out-flow-boundary: 1
 
 
 /**************** INPUT FILES: PFLOTRAN flow solution *******************/
-PFLOTRAN: yes
+PFLOTRAN: no 
 PFLOTRAN_vel: darcyvel.dat 
 PFLOTRAN_cell: cellinfo.dat
 PFLOTRAN_uge: full_mesh_vol_area.uge
 
 /**************** INPUT FILES: FEHM flow solution ***********************/
 /*currently we are using PFLOTRAN , but the code would work with FEHM, too */ 
-FEHM: no
+FEHM: yes 
 FEHM_fin:  tri_frac.fin
 
 /************************  OUTPUT FILES  ********************************/

@@ -48,7 +48,7 @@ def copy_dfn_trans_files(self):
 
 def run_dfn_trans(self):
     '''run dfnTrans simulation'''
-    failure = subprocess.calll('./DFNTrans_TDRW '+self.local_dfnTrans_file, shell = True)
+    failure = subprocess.call('./DFNTrans_TDRW '+self.local_dfnTrans_file, shell = True)
     if failure == 0:
         print('='*80)
         print("\ndfnTrans Complete\n")
