@@ -482,7 +482,7 @@ def uncorrelated(self, sigma, path = '../'):
     print 'Variance: ', sigma
     print 'Running un-correlated'
     x = np.genfromtxt(path + 'aperture.dat', skip_header = 1)[:,-1]
-    k = np.genfromtxt(path + '/perm.dat', skip_header = 1)[0,-1]
+    k = np.genfromtxt(path + 'perm.dat', skip_header = 1)[0,-1]
     n = len(x)
 
     print np.mean(x)
