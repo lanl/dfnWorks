@@ -466,7 +466,9 @@ def pflotran_cleanup(self, index = 1):
 
 def create_dfn_flow_links(self, path = '../'):
     files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
-        'materialid.dat','pboundary_bottom.zone', 'pboundary_top.zone', 
+        'materialid.dat','full_mesh.stor','full_mesh_material.zone',
+        'full_mesh.fehmn', 'allboundaries.zone', 
+        'pboundary_bottom.zone', 'pboundary_top.zone',
         'pboundary_back_s.zone', 'pboundary_front_n.zone', 
         'pboundary_left_w.zone', 'pboundary_right_e.zone']
     for f in files:
