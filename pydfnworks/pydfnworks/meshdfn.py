@@ -46,7 +46,7 @@ def mesh_network(self, prune = False,  keep_file = [], production_mode=True, ref
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain,flow_solver)
+    n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain,self.flow_solver)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
     
     if (not visual_mode and not prune):    

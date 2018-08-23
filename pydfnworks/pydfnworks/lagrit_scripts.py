@@ -601,7 +601,7 @@ define / MO_NAME_FRAC / mo_%d
 """
     if not visual_mode:
     	lagrit_input += """
-cmo / addatt / MO_NAME_FRAC / volume / evol_onen
+cmo / addatt / MO_NAME_FRAC / volume / evol_one
 math / sum / MO_NAME_FRAC / evol_sum / 1 0 0 / MO_NAME_FRAC / evol_one 
 """ 
     lagrit_input += """

@@ -25,9 +25,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
     os.symlink("polys/poly_%d.inp"%fracture_id, "poly_CPU%d.inp"%cpu_id)    
     os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
         "parameters_CPU%d.mlgi"%cpu_id)
-    os.symlink("intersections/intersections_%d.inp"%fracture_id,\
-        "intersections_CPU%d.inp"%cpu_id)
-    
+   
     if prune:
         os.symlink('intersections/intersections_%d_prune.inp'%fracture_id,\
             'intersections_CPU%d.inp'%cpu_id)

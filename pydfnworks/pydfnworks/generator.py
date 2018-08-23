@@ -5,7 +5,7 @@ from time import time
 import helper
 import subprocess
 
-def dfn_gen(self):
+def dfn_gen(self,output=True):
     ''' 
     
     Run the dfnGen workflow: 
@@ -31,9 +31,10 @@ def dfn_gen(self):
     self.create_network()
     helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
     
-    tic = time()
-    self.output_report()
-    helper.dump_time(self.jobname, 'output_report', time() - tic)   
+    if output:
+        tic = time()
+        self.output_report()
+        helper.dump_time(self.jobname, 'output_report', time() - tic)   
     
     # Mesh Network
     tic = time()
