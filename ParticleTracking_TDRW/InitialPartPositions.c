@@ -1056,7 +1056,7 @@ int InitParticles_flux (int k_current, int first_ind, int last_ind, double weigh
    sumflux=0.0;
 // calculate the flux of the current cell
    for (jj=0; jj<node[nodezonein[j]-1].numneighb; jj++)
-		 sumflux=sumflux+fabs(node[nodezonein[j]-1].flux[jj]);
+		 sumflux=sumflux+(node[nodezonein[j]-1].flux[jj]);
 // approximate number of particles in cell nodezonein[j-1]
     pf=(int)(sumflux/weight_p);
    
@@ -1064,29 +1064,29 @@ int InitParticles_flux (int k_current, int first_ind, int last_ind, double weigh
 if ((j>first_ind) && (j<last_ind))
 {
  //calculate distance between nodes        
-     deltax=fabs(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
-  deltay=fabs(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
+     deltax=(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
+  deltay=(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
 
 
 
   //define starting position of first particle
-    if ((node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])<1e-12)
+    if (fabs(node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])<1e-12)
          startpos_x=node[nodezonein[j-1]-1].coord_xy[0];
     else
-    startpos_x=fabs(fabs(node[nodezonein[j]-1].coord_xy[0])-fabs(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
+    startpos_x=((node[nodezonein[j]-1].coord_xy[0])-(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
 
  
- if ((node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])<1e-12)     
+ if (fabs(node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])<1e-12)     
           startpos_y=node[nodezonein[j-1]-1].coord_xy[1];
      else
-   startpos_y=fabs(fabs(node[nodezonein[j]-1].coord_xy[1])-fabs(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
+   startpos_y=((node[nodezonein[j]-1].coord_xy[1])-(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
  }
 
 if (j==first_ind)
   {   
  //calculate distance between nodes        
-  deltax=fabs(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j]-1].coord_xy[0])/2.0;
- deltay=fabs(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j]-1].coord_xy[1])/2.0;
+ deltax=(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j]-1].coord_xy[0])/2.0;
+ deltay=(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j]-1].coord_xy[1])/2.0;
    
  
   
@@ -1101,8 +1101,8 @@ if (j==first_ind)
 if (j==last_ind)
    {
   //calculate distance between nodes        
-   deltax=fabs(node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
-  deltay=fabs(node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
+   deltax=(node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
+  deltay=(node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
          
          
      
@@ -1111,13 +1111,13 @@ if (j==last_ind)
     if ((node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])<1e-12)
           startpos_x=node[nodezonein[j-1]-1].coord_xy[0];
      else
-     startpos_x=fabs(fabs(node[nodezonein[j]-1].coord_xy[0])-fabs(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
+     startpos_x=((node[nodezonein[j]-1].coord_xy[0])-(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
  
  
   if ((node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])<1e-12)     
            startpos_y=node[nodezonein[j-1]-1].coord_xy[1];
       else 
-    startpos_y=fabs(fabs(node[nodezonein[j]-1].coord_xy[1])-fabs(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
+    startpos_y=((node[nodezonein[j]-1].coord_xy[1])-(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
     
      
  }     
