@@ -6,15 +6,22 @@ import glob
 import shutil
 from time import time 
 import numpy as np
-import h5py
 
 
 def set_flow_solver(self, flow_solver):
-    ''' set_flow_solver: sets DFN.flow_solver
-        
-    Kwargs:
-        * flow_solver: name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
-    '''
+    """sets DFN.flow_solver
+       
+    Parameters
+    ----------
+    flow_solver: name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
+
+    Returns
+    ---------
+    None
+
+    Notes
+    --------
+    """
     if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
         print("Using flow solver %s"%flow_solver)
         self.flow_solver = flow_solver
@@ -23,9 +30,19 @@ def set_flow_solver(self, flow_solver):
 
 
 def dfn_flow(self):
-    ''' dfnFlow
-    Run the dfnFlow portion of the workflow.
-    ''' 
+    """ Run the dfnFlow portion of the workflow
+       
+    Parameters
+    ----------
+    None
+ 
+    Returns
+    ---------
+    None
+
+    Notes
+    --------
+    """
 
     print('='*80)
     print("\ndfnFlow Starting\n")
@@ -55,19 +72,32 @@ def dfn_flow(self):
         self.correct_stor_file()
         self.fehm()
 
-    helper.dump_time(self.jobname,'Process: dfnFlow',time() - tic_flow)    
+    delta_time = time() - tic_flow 
+    helper.dump_time(self.jobname,'Process: dfnFlow',delta_time)    
 
     print('='*80)
-    print("\ndfnFlow Complete\n")
+    print("\ndfnFlow Complete")
+    print("Time Required for dfnFlow %0.2f"%delta_time)
     print('='*80)
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
+    Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex
+   
+    Parameters    
+    ------- 
+    inp_file (str): name of the inp (AVS) file produced by LaGriT 
+    mesh_type (str): the type of mesh
+    hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
+
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    None
     
-    Kwargs:
-        * inp_file (str): name of the inp (AVS) file produced by LaGriT 
-        * mesh_type (str): the type of mesh
-        * hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
     """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
@@ -116,15 +146,26 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print("\n\n")
 
 def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1):
-    '''zone2ex    
+    """
     Convert zone files from LaGriT into ex format for LaGriT
-    inputs:
+    
+    Parameters
+    -----------
     uge_file: name of uge file
     zone_file: name of zone file
     face: face of the plane corresponding to the zone file
 
     zone_file='all' processes all directions, top, bottom, left, right, front, back
-    '''
+    boundary_cell_area=1e-1
+
+    Returns
+    ----------
+    None
+
+    Notes
+    ----------
+    the boundary_cell_area should be a function of h, the mesh resolution
+    """
 
     print('--> Converting zone files to ex')    
     if self.uge_file:
@@ -247,10 +288,19 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
     print('--> Converting zone files to ex complete')    
 
 def inp2gmv(self, inp_file=''):
-    """ Convert inp file to gmv file, for general mesh viewer .
-    
-    Kwargs:
-        inp_file (str): name of inp file
+    """ Convert inp file to gmv file, for general mesh viewer.
+    Name of output file for base.inp is base.gmv
+
+    Parameters
+    ----------
+    inp_file (str): name of inp file if not an attribure of self
+
+    Returns
+    ----------
+    None
+
+    Notes
+    ---------
     """
 
     if inp_file:
@@ -275,39 +325,39 @@ def inp2gmv(self, inp_file=''):
     print("--> Finished writing gmv format from avs format")
 
 
-def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_file='', aper_file=''):
+def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
+
+    Parameters
+    ---------
+    DFN Class
+
+    Returns
+    ---------
+    None
+
+    Notes
+    ----------
+    Calls executable correct_uge
     """
+    import h5py
+    if self.flow_solver != "PFLOTRAN":
+        sys.exit("ERROR! Wrong flow solver requested")
     print("--> Writing Perms and Correct Volume Areas")
-    if inp_file:
-        self.inp_file = inp_file
-    else:
-        inp_file = self.inp_file
-    
+    inp_file = self.inp_file
     if inp_file == '':
         sys.exit('ERROR: inp file must be specified!')
 
-    if uge_file:
-        self.uge_file = uge_file
-    else:
-        uge_file = self.uge_file
-
+    uge_file = self.uge_file
     if uge_file == '':
         sys.exit('ERROR: uge file must be specified!')
 
-    if perm_file:
-        self.perm_file = perm_file
-    else:
-        perm_file = self.perm_file
-
+    perm_file = self.perm_file
     if perm_file == '' and self.perm_cell_file == '':
         sys.exit('ERROR: perm file must be specified!')
 
-    if aper_file:
-        self.aper_file = aper_file
-    else:
-        aper_file = self.aper_file
-
+    aper_file = self.aper_file
+    aper_cell_file = self.aper_cell_file
     if aper_file == '' and self.aper_cell_file == '':
         sys.exit('ERROR: aperture file must be specified!')
 
@@ -332,8 +382,7 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
     if failure > 0:
             sys.exit('ERROR: UGE conversion failed\nExiting Program')
     elapsed = time() - t
-    print '--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed
-
+    print('--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed)
     # need number of nodes and mat ID file
     print('--> Writing HDF5 File')
     materialid = np.genfromtxt(mat_file, skip_header = 3).astype(int)
@@ -413,11 +462,23 @@ def write_perms_and_correct_volumes_areas(self, inp_file='', uge_file='', perm_f
         h5file.close()
         print('--> Done writing permeability to h5 file')
 
-
 def pflotran(self):
-    ''' Run pflotran
+    """ Run pflotran
     Copy PFLOTRAN run file into working directory and run with ncpus
-    '''
+
+    Parameters
+    ----------
+    DFN Class
+
+    Returns
+    ----------
+    None
+
+    Notes
+    ----------
+    Runs PFLOTRAN Executable
+
+    """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
     try: 
@@ -437,15 +498,26 @@ def pflotran(self):
     print("\n")
 
 def pflotran_cleanup(self, index = 1):
-    '''pflotran_cleanup
+    """pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
-    input: index, if PFLOTRAN has multiple dumps use this to pick which
-           dump is put into cellinfo.day and darcyvel.dat
-    '''
+    
+    Parameters
+    -----------
+    DFN Class
+    index, if PFLOTRAN has multiple dumps use this to pick which
+           dump is put into cellinfo.dat and darcyvel.dat
+    Returns 
+    ----------
+    None
+
+    Notes
+    ----------
+    Can be run in a loop
+    """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
-    print '--> Processing PFLOTRAN output' 
-    
+    print('--> Processing PFLOTRAN output') 
+   
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
     print("Running >> %s"%cmd)
     subprocess.call(cmd, shell = True)
@@ -465,6 +537,21 @@ def pflotran_cleanup(self, index = 1):
         os.remove(fl)    
 
 def create_dfn_flow_links(self, path = '../'):
+    """ Create symlinks to files required to run dfnFlow that are in another directory. 
+
+    Paramters
+    ---------
+    path: Absolute path to primary directory. 
+   
+    Returns
+    --------
+    None
+
+    Notes
+    -------
+    Typically, the path is DFN.path, which is set by the command line argument -path
+    Currently only supported for PFLOTRAN
+    """
     files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat','full_mesh.stor','full_mesh_material.zone',
         'full_mesh.fehmn', 'allboundaries.zone', 
@@ -478,23 +565,35 @@ def create_dfn_flow_links(self, path = '../'):
         except:
             print("--> Error Creating link for %s"%f)
  
-def uncorrelated(self, sigma, path = '../'):
+def uncorrelated(self, mu, sigma, path = '../'):
+    """
+    Creates Fracture Based Log-Normal Permeability field with mean mu and variance mu
+    Aperture is dervived using the cubic law
+    Parameters
+    -----------
+    mu: Mean of Permeability field
+    sigma: Variance of permeability field
+    path: path to original network. Can be current directory
+
+    Returns
+    ----------
+    None
+
+    Notes
+    ----------
+    mu is the actual value of perm, not log(perm)
+
+    """
     print '--> Creating Uncorrelated Transmissivity Fields'
+    print 'Mean: ', mu  
     print 'Variance: ', sigma
     print 'Running un-correlated'
-    x = np.genfromtxt(path + 'aperture.dat', skip_header = 1)[:,-1]
-    k = np.genfromtxt(path + 'perm.dat', skip_header = 1)[0,-1]
     n = len(x)
 
-    print np.mean(x)
-
-    perm = np.log(k)*np.ones(n) 
+    perm = np.log(mu)*np.ones(n) 
     perturbation = np.random.normal(0.0, 1.0, n)
     perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
-
     aper = np.sqrt((12.0*perm))
-    #aper -= np.mean(aper)
-    #aper += np.mean(x)
 
     print '\nPerm Stats'
     print '\tMean:', np.mean(perm)
@@ -511,13 +610,17 @@ def uncorrelated(self, sigma, path = '../'):
     print '\tMinimum:',min(aper)
     print '\tMaximum:',max(aper)
 
+    # Write out new aperture.dat and perm.dat files
     output_filename = 'aperture_' + str(sigma) + '.dat'
     f = open(output_filename,'w+')
     f.write('aperture\n')
     for i in range(n):
     	f.write('-%d 0 0 %0.5e\n'%(i + 7, aper[i]))
     f.close()
-    os.symlink(output_filename, 'aperture.dat')
+    try:
+        os.symlink(output_filename, 'aperture.dat')
+    except:
+        print("WARNING!!!! Could not make symlink to aperture.dat file")
 
     output_filename = 'perm_' + str(sigma) + '.dat'
     f = open(output_filename,'w+')
@@ -525,69 +628,32 @@ def uncorrelated(self, sigma, path = '../'):
     for i in range(n):
     	f.write('-%d 0 0 %0.5e %0.5e %0.5e\n'%(i+7, perm[i], perm[i], perm[i]))
     f.close()
-
-    os.symlink(output_filename, 'perm.dat')
-        
-
-def parse_pflotran_vtk(self, grid_vtk_file=''): 
-    """ Using C++ VTK library, convert inp file to VTK file, then change name of CELL_DATA to POINT_DATA.
-    """
-    if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
-    print '--> Parsing PFLOTRAN output using C++'
-    files = glob.glob('*-[0-9][0-9][0-9].vtk')
-    out_dir = 'parsed_vtk'
-    vtk_filename_list = []
-    replacements = {'CELL_DATA':'POINT_DATA'} 
-    header = ['# vtk DataFile Version 2.0\n',
-              'PFLOTRAN output\n',
-              'ASCII\n']
-   
-    inp_file = self.inp_file
-    inp_file_copy = self.inp_file[:-4] + '_copy.inp'
-    subprocess.call('cp ' + inp_file + ' ' + inp_file_copy, shell=True)
-    jobname = self.jobname + '/'
-
-    for fle in files:
-
-        if os.stat(fle).st_size == 0:
-            print 'ERROR: opening an empty pflotran output file'
-            exit()
-        
-        temp_file = fle[:-4] + '_temp.vtk'
-        with open(fle, 'r') as infile, open(temp_file, 'w') as outfile:
-            ct = 0 
-            for line in infile:
-                if 'CELL_DATA' in line:
-                    num_cells = line.strip(' ').split()[1]
-                    outfile.write('POINT_DATA\t ' + num_cells + '\n')
-                else: 
-                    outfile.write(line)
-        infile.close()
-        outfile.close()
-        vtk_filename = out_dir + '/' + fle.split('/')[-1]
-        if not os.path.exists(os.path.dirname(vtk_filename)):
-            os.makedirs(os.path.dirname(vtk_filename))
-        arg_string = os.environ['VTK_PATH'] + ' '  +  jobname + inp_file + ' ' + jobname + vtk_filename  
-        subprocess.call(arg_string, shell=True)
-        arg_string = 'tail -n +6 ' + jobname + temp_file + ' > ' + jobname + temp_file + '.tmp && mv ' + jobname + temp_file +  '.tmp ' + jobname + temp_file  
-        subprocess.call(arg_string, shell=True)
-        arg_string = 'cat ' +  jobname + temp_file + ' >> ' + jobname + vtk_filename
-        subprocess.call(arg_string, shell=True) 
-
-    print '--> Parsing PFLOTRAN output complete'
-
-def inp2vtk_python(self, inp_file=''):
+    try:
+        os.symlink(output_filename, 'perm.dat')
+    except:
+        print("WARNING!!!! Could not make symlink to perm.dat file")
+    
+def inp2vtk_python(self):
     import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
+
+    Parameters
+    ----------
+    DFN Class
+
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    For a mesh base.inp, this dumps a VTK file named base.vtk
     """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
     print("--> Using Python to convert inp files to VTK files")
     if self.inp_file:
         inp_file = self.inp_file
-    else:
-        self.inp_file = inp_file
 
     if inp_file == '':
         sys.exit('ERROR: Please provide inp filename!')
@@ -626,17 +692,16 @@ def inp2vtk_python(self, inp_file=''):
                 elem_list_tetra.append([int(i) - 1 for i in line])
 
     print('--> Writing inp data to vtk format')
-
-    vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),
-                     'Unstructured pflotran grid')
+    vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),'Unstructured pflotran grid')
     vtk.tofile(vtk_file)
-
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Replace CELL_DATA with POINT_DATA in the VTK output."""
     print '--> Parsing PFLOTRAN output with Python'
+
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
+
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
     else:
@@ -677,7 +742,20 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     print '--> Parsing PFLOTRAN output complete'
 
 def correct_stor_file(self):
-    """corrects volumes in stor file to account for apertures"""
+    """corrects volumes in stor file to account for apertures
+
+    Parameters
+    ----------
+    DFN Class
+
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    Currently does not work with cell based aperture
+    """
      # Make input file for C Stor converter
     if self.flow_solver != "FEHM":
         sys.exit("ERROR! Wrong flow solver requested")
@@ -701,8 +779,20 @@ def correct_stor_file(self):
 
 def correct_perm_for_fehm():
     """ FEHM wants an empty line at the end of the perm file
-    This functions adds that"""
+    This functions adds that line return
+    
+    Parameters
+    ----------
+    None
 
+    Returns
+    ---------
+    None
+
+    Notes
+    ------------
+    Only adds a new line if the last line is not empty
+    """
     fp = open("perm.dat")
     lines = fp.readlines()
     fp.close()
@@ -715,15 +805,27 @@ def correct_perm_for_fehm():
         fp.close()
 
 def fehm(self):
-    """ runs fehm """
+    """ runs fehm 
+    Parameters
+    ---------
+    DFN Class
+   
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    See https://fehm.lanl.gov/ for details about FEHM
+
+    """
     print("--> Running FEHM")
     if self.flow_solver != "FEHM":
         sys.exit("ERROR! Wrong flow solver requested")
     try: 
         shutil.copy(self.dfnFlow_file, os.getcwd())
     except:
-        print("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
-        exit()
+        sys.error("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
     path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
     fp = open(self.local_dfnFlow_file)
     line = fp.readline()
@@ -732,8 +834,12 @@ def fehm(self):
     try: 
         shutil.copy(path+fehm_input, os.getcwd())
     except:
-        print("-->ERROR copying FEHM input file:"%fehm_input)
-        exit()
+        sys.exit("-->ERROR copying FEHM input file:"%fehm_input)
+    
     correct_perm_for_fehm()
+    tic = time()
     subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm "+self.local_dfnFlow_file, shell = True)
-    print("--> FEHM Complete")
+    print('='*80)
+    print("FEHM Complete")
+    print("Time Required %0.2f Seconds"(time()-tic)
+    print('='*80)
