@@ -841,5 +841,6 @@ def fehm(self):
     subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm "+self.local_dfnFlow_file, shell = True)
     print('='*80)
     print("FEHM Complete")
-    print("Time Required %0.2f Seconds"(time()-tic)
+    print("Time Required %0.2f Seconds" % (time()-tic))
     print('='*80)
+
