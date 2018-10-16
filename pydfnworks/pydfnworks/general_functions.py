@@ -1,15 +1,7 @@
 import os
 import sys
-import re
 import argparse
-import subprocess
 
-def move_files(file_list, dir_name):
-    os.mkdir(dir_name) 
-    for fle in os.listdir(os.getcwd()):
-        for name in file_list:
-            if name in fle:
-                subprocess.call('mv ' + fle + ' ' + dir_name, shell=True)
 def commandline_options():
     """Read command lines for use in dfnWorks.
     
