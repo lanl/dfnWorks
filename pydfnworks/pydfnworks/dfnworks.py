@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.1"
+__version__ = "2.2"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
@@ -38,7 +38,7 @@ class dfnworks(Frozen):
     from flow import dfn_flow
     from transport import dfn_trans
     # Specific functions
-    from helper import * # scale, cleanup_files, cleanup_end, commandline_options
+    from general_functions import commandline_options, dump_time, print_run_time, move_files
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
