@@ -38,7 +38,7 @@ class dfnworks(Frozen):
     from flow import dfn_flow
     from transport import dfn_trans
     # Specific functions
-    from general_functions import commandline_options, dump_time, print_run_time, move_files
+    from general_functions import commandline_options, dump_time, print_run_time 
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
