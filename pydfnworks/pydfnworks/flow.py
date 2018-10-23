@@ -520,11 +520,13 @@ def pflotran_cleanup(self, index = 1):
    
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
     print("Running >> %s"%cmd)
-    subprocess.call(cmd, shell = True)
+    if subprocess.call(cmd, shell = True):
+        sys.exit("ERROR!!! %s failed"%cmd)
 
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
     print("Running >> %s"%cmd)
-    subprocess.call(cmd, shell = True)
+    if subprocess.call(cmd, shell = True):
+        sys.exit("ERROR!!! %s failed"%cmd)
 
     for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
         os.remove(fl)    
