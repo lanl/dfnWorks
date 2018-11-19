@@ -1,4 +1,7 @@
+from tempfile import mkstemp
+from shutil import move
 import os
+import subprocess
 
 def valid(name):
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
@@ -15,11 +18,15 @@ def define_paths():
     # the dfnworks-main  repository 
     os.environ['dfnworks_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
     valid('dfnworks_PATH')
+    if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
+        print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
+        exit()
 
     # PETSC paths
     os.environ['PETSC_DIR']='/home/satkarra/src/petsc-3.10.2'
     os.environ['PETSC_ARCH']='/Ubuntu-18.04-nodebug'
     valid('PETSC_DIR')
+#    valid('PETSC_ARCH')
 
     # PFLOTRAN EXE 
     os.environ['PFLOTRAN_EXE']='/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran'
@@ -46,4 +53,6 @@ def define_paths():
     os.environ['pyfnworks_PATH'] = os.environ['dfnworks_PATH'] + 'pydfnworks/'
     os.environ['connect_test'] = os.environ['dfnworks_PATH']+'DFN_Mesh_Connectivity_Test/'
     os.environ['correct_uge_PATH'] = os.environ['dfnworks_PATH']+'C_uge_correct/' 
-    os.environ['correct_stor_PATH'] = os.environ['dfnworks_PATH']+'C_stor_correct/'
+    os.environ['correct_stor_PATH'] = os.environ['dfnworks_PATH']+'C_stor_correct/' 
+    os.environ['VTK_PATH'] = os.environ['dfnworks_PATH'] + 'inp_2_vtk/'
+

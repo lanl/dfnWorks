@@ -2,7 +2,7 @@ import os
 import sys
 import shutil
 import distributions as distr_module
-import helper 
+import gen_input_helper 
 import numpy as np
 import scipy.integrate
 
@@ -83,7 +83,7 @@ def check_input(self, input_file='',output_file=''):
     global jobname
     jobname = self.jobname
 
-    input_helper_methods=helper.input_helper(params, minFracSize)
+    input_helper_methods=gen_input_helper.input_helper(params, minFracSize)
 
     ## ===================================================================== ##
     ##                      Mandatory Parameters                             ##
