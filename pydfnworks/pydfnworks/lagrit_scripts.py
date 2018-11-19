@@ -8,6 +8,7 @@ import os
 import glob
 from shutil import copy, rmtree
 from numpy import genfromtxt, sqrt, cos, arcsin
+import subprocess
 
 def edit_intersection_files(num_poly, fracture_list):
     """ If pruning a DFN, this function walks through the intersection files
@@ -77,8 +78,8 @@ finish
         	f.write(lagrit_script)
         	f.flush()
         	f.close()
-        	subproces.call(os.environ['lagrit_dfn'] + \
-                '< prune_intersection.lgi > out_%d.txt'%i,shell+True)
+        	subprocess.call(os.environ['LAGRIT_EXE'] + \
+                '< prune_intersection.lgi > out_%d.txt'%i,shell=True)
         else:
             try:
                 copy("intersections_%d.inp"%i, "intersections_%d_prune.inp"%i)

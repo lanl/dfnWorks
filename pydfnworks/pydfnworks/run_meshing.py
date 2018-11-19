@@ -33,7 +33,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
         os.symlink('intersections/intersections_%d.inp'%fracture_id,\
             'intersections_CPU%d.inp'%cpu_id)
 
-    cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
+    cmd = os.environ['LAGRIT_EXE']+ ' < mesh_poly_CPU%d.lgi' \
          + ' > lagrit_logs/log_lagrit_%d'
     subprocess.call(cmd%(cpu_id,fracture_id), shell = True)
 
@@ -188,7 +188,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     for j in range(1, n_jobs + 1):
         pid = os.fork()
         if pid == 0: # clone a child job
-            cmd = os.environ['lagrit_dfn']+ ' < merge_poly_part_%d.lgi ' \
+            cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
                 + '> log_merge_poly_part%d' 
             subprocess.call(cmd%(j,j), shell = True)
             os._exit(0)
@@ -205,7 +205,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     print("Starting Final Merge")
 
-    subprocess.call(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
+    subprocess.call(os.environ['LAGRIT_EXE'] +' < merge_rmpts.lgi '\
         + ' > log_merge_all.txt', shell=True) # run remove points
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:

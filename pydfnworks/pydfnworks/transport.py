@@ -101,6 +101,7 @@ def create_dfn_trans_links(self, path = '../'):
     if self.flow_solver == 'PFLOTRAN':
         files.append('cellinfo.dat')
         files.append('darcyvel.dat')
+        files.append('full_mesh_vol_area.uge')
     if self.flow_solver == 'FEHM':
         files.append('tri_frac.fin')
  

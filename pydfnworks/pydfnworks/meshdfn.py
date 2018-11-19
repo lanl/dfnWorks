@@ -86,7 +86,6 @@ if __name__ == "__main__":
     ncpu = 4
 
     os.environ['dfnworks_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
-
     # Executables    
     os.environ['python_dfn'] = '/n/swdev/packages/Ubuntu-14.04-x86_64/anaconda-python/2.4.1/bin/python'
     os.environ['lagrit_dfn'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-14.04-x86_64/3.2.0/release/gcc-4.8.4/bin/lagrit'

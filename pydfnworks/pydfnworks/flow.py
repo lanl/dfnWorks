@@ -489,7 +489,7 @@ def pflotran(self):
     print("="*80)
     print("--> Running PFLOTRAN") 
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
-          ' ' + os.environ['PFLOTRAN_DIR']+'/src/pflotran/pflotran -pflotranin ' + self.local_dfnFlow_file 
+          ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file 
     print("Running: %s"%cmd)
     subprocess.call(cmd, shell = True)
     print('='*80)
@@ -838,8 +838,8 @@ def fehm(self):
     
     correct_perm_for_fehm()
     tic = time()
-    subprocess.call(os.environ["FEHM_DIR"]+os.sep+"xfehm "+self.local_dfnFlow_file, shell = True)
+    subprocess.call(os.environ["FEHM_EXE"]+" "+self.local_dfnFlow_file, shell = True)
     print('='*80)
     print("FEHM Complete")
-    print("Time Required %0.2f Seconds"(time()-tic)
+    print("Time Required %0.2f Seconds"%(time()-tic))
     print('='*80)

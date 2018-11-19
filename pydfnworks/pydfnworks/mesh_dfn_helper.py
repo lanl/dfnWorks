@@ -113,7 +113,7 @@ def output_meshing_report(visual_mode):
         print "--> full_mesh.inp"
         print "--> full_mesh.lg"
         print "--> full_mesh.uge"
-        print "--> tri_fracture.stor"
+        print "--> full_mesh.stor"
 
         finp=open('full_mesh.inp','r')
         g = finp.readline()
