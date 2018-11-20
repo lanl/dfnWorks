@@ -239,7 +239,7 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
                 node_array = [int(id) for id in node_array]
                 Node_array = np.asarray(node_array)
             else:
-                for i in range(NumNodes / 10 + 1):
+                for i in range(NumNodes / 10 + (NumNodes%10!=0)):
                     g = fzone.readline()
                     node_array = g.split()
                     # Convert string to integer array
