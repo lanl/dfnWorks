@@ -3,13 +3,13 @@ __version__ = "2.2"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
-import  sys 
+import sys 
 import os
 from time import time
 from dfntools import *
 import helper
-from integrated import *
-from create_run_scripts import * 
+#from integrated import *
+#from create_run_scripts import * 
 
 class dfnworks(Frozen):
     '''
@@ -140,6 +140,8 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
             sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
     if options.path != "":
+        if not options.path.endswith('/'):
+            options.path += os.sep
         dfn.path = options.path
 
     if options.prune_file != "":
