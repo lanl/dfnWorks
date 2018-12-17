@@ -1,15 +1,15 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.1"
+__version__ = "2.2"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 
-import  sys 
+import sys 
 import os
 from time import time
 from dfntools import *
 import helper
-from integrated import *
-from create_run_scripts import * 
+#from integrated import *
+#from create_run_scripts import * 
 
 class dfnworks(Frozen):
     '''
@@ -38,7 +38,7 @@ class dfnworks(Frozen):
     from flow import dfn_flow
     from transport import dfn_trans
     # Specific functions
-    from helper import * # scale, cleanup_files, cleanup_end, commandline_options
+    from general_functions import commandline_options, dump_time, print_run_time 
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
@@ -51,7 +51,7 @@ class dfnworks(Frozen):
     from paths import define_paths
     from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -140,7 +140,12 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
             sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
     if options.path != "":
+        if not options.path.endswith('/'):
+            options.path += os.sep
         dfn.path = options.path
+
+    if options.prune_file != "":
+        dfn.prune_file = options.prune_file
 
     if options.cell is True:
         dfn.aper_cell_file = 'aper_node.dat'
