@@ -37,8 +37,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
          + ' > lagrit_logs/log_lagrit_%d'
     subprocess.call(cmd%(cpu_id,fracture_id), shell = True)
 
+
     if not visual_mode:
-        cmd_check = os.environ['connect_test'] + 'ConnectivityTest' \
+        cmd_check = os.environ['CONNECT_TEST_EXE'] \
         + ' intersections_CPU%d.inp' \
         + ' id_tri_node_CPU%d.list ' \
         + ' mesh_%d.inp' \

@@ -1,7 +1,6 @@
 import os 
 import subprocess
 import sys
-import helper
 import glob
 import shutil
 from time import time 
@@ -54,26 +53,29 @@ def dfn_flow(self):
         print("Using flow solver: %s"%self.flow_solver)
         tic = time()
         self.lagrit2pflotran()
-        helper.dump_time(self.jobname, 'Function: lagrit2pflotran', time() - tic)   
+        self.dump_time('Function: lagrit2pflotran', time() - tic)   
         
         tic = time()    
         self.pflotran()
-        helper.dump_time(self.jobname, 'Function: pflotran', time() - tic)  
+        self.dump_time('Function: pflotran', time() - tic)  
 
         tic = time()    
         self.parse_pflotran_vtk_python()
-        helper.dump_time(self.jobname, 'Function: parse_pflotran_vtk', time() - tic)    
+        self.dump_time('Function: parse_pflotran_vtk', time() - tic)    
 
         tic = time()    
         self.pflotran_cleanup()
-        helper.dump_time(self.jobname, 'Function: parse_cleanup', time() - tic) 
+        self.dump_time('Function: parse_cleanup', time() - tic) 
+
     elif self.flow_solver == "FEHM":
         print("Using flow solver: %s"%self.flow_solver)
+        tic = time()
         self.correct_stor_file()
         self.fehm()
+        self.dump_time('Function: FEHM', time() - tic) 
 
     delta_time = time() - tic_flow 
-    helper.dump_time(self.jobname,'Process: dfnFlow',delta_time)    
+    self.dump_time('Process: dfnFlow',delta_time)    
 
     print('='*80)
     print("\ndfnFlow Complete")
@@ -377,7 +379,7 @@ def write_perms_and_correct_volumes_areas(self):
             f.write("-1\n")
     f.close()
 
-    cmd = os.environ['correct_uge_PATH']+ 'correct_uge' + ' convert_uge_params.txt' 
+    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt' 
     failure = subprocess.call(cmd, shell = True)
     if failure > 0:
             sys.exit('ERROR: UGE conversion failed\nExiting Program')
@@ -634,7 +636,6 @@ def uncorrelated(self, mu, sigma, path = '../'):
         print("WARNING!!!! Could not make symlink to perm.dat file")
     
 def inp2vtk_python(self):
-    import pyvtk as pv
     """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
 
     Parameters
@@ -649,6 +650,7 @@ def inp2vtk_python(self):
     --------
     For a mesh base.inp, this dumps a VTK file named base.vtk
     """
+    import pyvtk as pv
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
     print("--> Using Python to convert inp files to VTK files")
@@ -696,8 +698,21 @@ def inp2vtk_python(self):
     vtk.tofile(vtk_file)
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
-    """ Replace CELL_DATA with POINT_DATA in the VTK output."""
-    print '--> Parsing PFLOTRAN output with Python'
+    """ Replace CELL_DATA with POINT_DATA in the VTK output.
+    Parameters
+    ----------
+    DFN Class
+    grid_vtk_file
+
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    If DFN class does not have a vtk file, inp2vtk_python is called
+    """
+    print('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
@@ -770,7 +785,7 @@ def correct_stor_file(self):
     f.close()
 
     t = time()
-    cmd = os.environ['correct_stor_PATH']+ 'correct_stor' + ' convert_stor_params.txt' 
+    cmd = os.environ['CORRECT_STOR_EXE']+' convert_stor_params.txt' 
     failure = subprocess.call(cmd, shell = True)
     if failure > 0:
             sys.exit('ERROR: stor conversion failed\nExiting Program')

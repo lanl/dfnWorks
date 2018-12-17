@@ -4,7 +4,17 @@ import argparse
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
+
+    Parameters
+    ----------
+    None
     
+    Returns
+    ---------
+    options (argparse function)
+   
+    Notes
+    ---------
     Options:
         * -name : Jobname (Mandatory)
         * -ncpu : Number of CPUS (Optional, default=4)
@@ -38,32 +48,56 @@ def commandline_options():
     parser.add_argument("-prune_path", "--prune_path", default="", type=str, 
               help="Path to original DFN files") 
     options = parser.parse_args()
-#    if options.jobname is "":
-#        sys.exit("Error: Jobname is required. Exiting.")
+    if options.jobname is "":
+        sys.exit("Error: Jobname is required. Exiting.")
     return options
 
+def dump_time(self, function_name, time):
+    '''Write run time for a funcion to the jobname_run_time.txt file 
 
-def dump_time(local_jobname, section_name, time):
-    '''dump_time
-    keeps log of cpu run time, current formulation is not robust
+    Parameters
+    ----------
+    DFN Class 
+
+    Returns
+    ----------
+    None
+    
+    Notes
+    --------- 
+    While this function is working, the current formulation is not robust through the entire workflow
     '''
-    if (os.path.isfile(local_jobname+"_run_time.txt") is False):    
-        f = open(local_jobname+"_run_time.txt", "w")
-        f.write("Runs times for " + local_jobname + "\n")
+    run_time_file=self.jobname+os.sep+self.local_jobname+"_run_time.txt"
+    # Check if time file exists, if not create it
+    if not os.path.isfile(run_time_file):    
+        f = open(run_time_file, "w")
+        f.write("Runs times for " + self.local_jobname + "\n")
     else:
-        f = open(local_jobname+"_run_time.txt", "a")
+        f = open(run_time_file, "a")
+    # Write Time
     if time < 60.0:
-        line = section_name + " :  %f seconds\n"%time
+        f.write(function_name+" : %0.2f seconds\n"%time)
     else:
-        line = section_name + " :  %f minutes\n"%(time/60.0)
-    f.write(line)
+        f.write(function_name+" : %0.2f minutes\n"%(time/60.0))
     f.close()
 
-def print_run_time(local_jobname):
-    '''print_run_time
-    Read in run times from file and and print to screen with percentages
+def print_run_time(self):
+    '''Read in run times from file and and print to screen with percentages
+
+    Parameters
+    ---------
+    DFN Class
+
+    Returns
+    --------
+    None
+
+    Notes
+    --------
+    This will dump out all values in the run file, not just those from the most recent run
     '''
-    f=open(local_jobname+"_run_time.txt").readlines()
+    run_time_file=self.jobname+os.sep+self.local_jobname+"_run_time.txt"
+    f=open(run_time_file).readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
     if unit is 'minutes':
@@ -81,20 +115,10 @@ def print_run_time(local_jobname):
         percent.append(100.0*(time/total))
         name.append(f[i].split(':')[1])
         print f[i], '\t--> Percent if total %0.2f \n'%percent[i-1]
-    print("Primary Function Percentages")
 
+    print("Primary Function Percentages")
     for i in range(1,len(f) - 1):
         if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
             print(name[i-1]+"\t"+"*"*int(percent[i-1]))
     print("\n")
-
-def get_num_frac():
-    """ Get the number of fractures from the params.txt file.
-    """
-    try: 
-        f = open('params.txt')
-        _num_frac = int(f.readline())
-        f.close()
-    except:
-        print '-->ERROR getting number of fractures, no params.txt file'
 

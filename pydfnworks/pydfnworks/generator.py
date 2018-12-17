@@ -2,7 +2,6 @@ import os
 import sys
 import shutil
 from time import time
-import helper
 import subprocess
 
 def dfn_gen(self,output=True):
@@ -19,32 +18,32 @@ def dfn_gen(self,output=True):
     # Create Working directory
     tic = time()
     self.make_working_directory()
-    helper.dump_time(self.jobname, 'Function: make_working_directory', time()- tic) 
+    self.dump_time('Function: make_working_directory', time()- tic) 
     
     # Check input file  
     tic = time()
     self.check_input()
-    helper.dump_time(self.jobname, 'Function: check_input', time() - tic)   
+    self.dump_time('Function: check_input', time() - tic)   
 
     # Create network    
     tic = time()
     self.create_network()
-    helper.dump_time(self.jobname, 'Function: create_network', time() - tic)    
+    self.dump_time('Function: create_network', time() - tic)    
     
     if output:
         tic = time()
         self.output_report()
-        helper.dump_time(self.jobname, 'output_report', time() - tic)   
+        self.dump_time('output_report', time() - tic)   
     
     # Mesh Network
     tic = time()
     self.mesh_network()
-    helper.dump_time(self.jobname, 'Function: mesh_network', time() - tic)  
+    self.dump_time('Function: mesh_network', time() - tic)  
     print ('='*80)
     print 'dfnGen Complete'
     print ('='*80)
     print ''
-    helper.dump_time(self.jobname, 'Process: dfnGen',time() - tic_gen)  
+    self.dump_time('Process: dfnGen',time() - tic_gen)  
 
 def make_working_directory(self):
     '''
@@ -78,7 +77,7 @@ def create_network(self):
     """
     print '--> Running DFNGEN'    
     # copy input file into job folder    
-    cmd = os.environ['DFNGEN_PATH']+'DFNGen ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
+    cmd = os.environ['DFNGEN_EXE']+' '+ self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
     print("Running %s"%cmd)
     subprocess.call(cmd, shell = True) 
 

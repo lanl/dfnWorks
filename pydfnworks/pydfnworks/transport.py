@@ -1,7 +1,6 @@
 import os
 import sys
 import shutil
-import helper
 from time import time
 import subprocess
 
@@ -19,12 +18,12 @@ def dfn_trans(self):
     print('='*80)
     print("\ndfnTrans Starting\n")
     print('='*80)
+    tic=time()
     self.copy_dfn_trans_files()
     self.check_dfn_trans_run_files()
-    tic=time()
     self.run_dfn_trans()
     delta_time = time() - tic
-    helper.dump_time(self.jobname, 'Process: dfnTrans', delta_time)   
+    self.dump_time('Process: dfnTrans', delta_time)   
     print('='*80)
     print("\ndfnTrans Complete\n")
     print("Time Required for dfnTrans: %0.2f Seconds\n"%delta_time)
@@ -42,14 +41,13 @@ def copy_dfn_trans_files(self):
     None
     """
     #Create Path to DFNTrans   
-    try:
-        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
-    except OSError:
-        os.remove('DFNTrans_TDRW')   
-        os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
-    except:
-        sys.exit("Cannot create link to DFNTrans. Exiting Program")
-    
+    #try:
+    #    os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
+    #except OSError:
+    #    os.remove('DFNTrans_TDRW')   
+    #    os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
+    #except:
+    #    sys.exit("Cannot create link to DFNTrans. Exiting Program")
     # Copy DFNTrans input file
     print(os.getcwd())
 
@@ -76,7 +74,9 @@ def run_dfn_trans(self):
     --------
     None
     """
-    failure = subprocess.call('./DFNTrans_TDRW '+self.local_dfnTrans_file, shell = True)
+    tic = time()
+    failure = subprocess.call(os.environ['DFNTRANS_EXE']+' '+self.local_dfnTrans_file, shell = True)
+    self.dump_time("Function: DFNTrans_TDRW",time()-tic)
     if failure != 0:
         sys.exit("--> ERROR: dfnTrans did not complete\n")
 

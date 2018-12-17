@@ -92,7 +92,7 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     print("Command Line Inputs:")
     print options
     print("\n-->Creating DFN class")
-    dfn = dfnworks(jobname=options.jobname, ncpu=options.ncpu)
+    DFN=dfnworks(jobname=options.jobname, ncpu=options.ncpu)
 
     if options.input_file != "":
         with open(options.input_file) as f:
@@ -101,73 +101,73 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
                 line=line.split()
 
                 if line[0].find("dfnGen") == 0:
-                    dfn.dfnGen_file = line[1]
-                    dfn.local_dfnGen_file = line[1].split('/')[-1]
+                    DFN.dfnGen_file = line[1]
+                    DFN.local_dfnGen_file = line[1].split('/')[-1]
 
                 elif line[0].find("dfnFlow") == 0:
-                    dfn.dfnFlow_file = line[1]
-                    dfn.local_dfnFlow_file = line[1].split('/')[-1]
+                    DFN.dfnFlow_file = line[1]
+                    DFN.local_dfnFlow_file = line[1].split('/')[-1]
 
                 elif line[0].find("dfnTrans") == 0:
-                    dfn.dfnTrans_file = line[1]
-                    dfn.local_dfnTrans_file = line[1].split('/')[-1]
+                    DFN.dfnTrans_file = line[1]
+                    DFN.local_dfnTrans_file = line[1].split('/')[-1]
     else:   
         if options.dfnGen != "":
-            dfn.dfnGen_file = options.dfnGen
-            dfn.local_dfnGen_file = options.dfnGen.split('/')[-1]
+            DFN.dfnGen_file = options.dfnGen
+            DFN.local_dfnGen_file = options.dfnGen.split('/')[-1]
         elif dfnGen_file != "":
-            dfn.dfnGen_file = dfnGen_file  
-            dfn.local_dfnGen_file = dfnGen_file.split('/')[-1]
+            DFN.dfnGen_file = dfnGen_file  
+            DFN.local_dfnGen_file = dfnGen_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
         
         if options.dfnFlow != "":
-            dfn.dfnFlow_file = options.dfnFlow
-            dfn.local_dfnFlow_file = options.dfnFlow.split('/')[-1]
+            DFN.dfnFlow_file = options.dfnFlow
+            DFN.local_dfnFlow_file = options.dfnFlow.split('/')[-1]
         elif dfnFlow_file != "":
-            dfn.dfnFlow_file = dfnFlow_file  
-            dfn.local_dfnFlow_file = dfnFlow_file.split('/')[-1]
+            DFN.dfnFlow_file = dfnFlow_file  
+            DFN.local_dfnFlow_file = dfnFlow_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
         
         if options.dfnTrans != "":
-            dfn.dfnTrans_file = options.dfnTrans
-            dfn.local_dfnTrans_file = options.dfnTrans.split('/')[-1]
+            DFN.dfnTrans_file = options.dfnTrans
+            DFN.local_dfnTrans_file = options.dfnTrans.split('/')[-1]
         elif dfnTrans_file != "":
-            dfn.dfnTrans_file = dfnTrans_file  
-            dfn.local_dfnTrans_file = dfnTrans_file.split('/')[-1]
+            DFN.dfnTrans_file = dfnTrans_file  
+            DFN.local_dfnTrans_file = dfnTrans_file.split('/')[-1]
         else:
             sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
 
     if options.path != "":
         if not options.path.endswith('/'):
             options.path += os.sep
-        dfn.path = options.path
+        DFN.path = options.path
 
     if options.prune_file != "":
-        dfn.prune_file = options.prune_file
+        DFN.prune_file = options.prune_file
 
     if options.cell is True:
-        dfn.aper_cell_file = 'aper_node.dat'
-        dfn.perm_cell_file = 'perm_node.dat'
+        DFN.aper_cell_file = 'aper_node.dat'
+        DFN.perm_cell_file = 'perm_node.dat'
     else:
-        dfn.aper_file = 'aperture.dat'
-        dfn.perm_file = 'perm.dat'
+        DFN.aper_file = 'aperture.dat'
+        DFN.perm_file = 'perm.dat'
 
     print("\n-->Creating DFN class: Complete")
-    print 'Jobname: ', dfn.jobname
-    print 'Number of cpus requested: ', dfn.ncpu 
-    print '--> dfnGen input file: ',dfn.dfnGen_file
-    print '--> dfnFlow input file: ',dfn.dfnFlow_file
-    print '--> dfnTrans input file: ',dfn.dfnTrans_file
+    print 'Jobname: ', DFN.jobname
+    print 'Number of cpus requested: ', DFN.ncpu 
+    print '--> dfnGen input file: ',DFN.dfnGen_file
+    print '--> dfnFlow input file: ',DFN.dfnFlow_file
+    print '--> dfnTrans input file: ',DFN.dfnTrans_file
 
-    print '--> Local dfnGen input file: ',dfn.local_dfnGen_file
-    print '--> Local dfnFlow input file: ',dfn.local_dfnFlow_file
-    print '--> Local dfnTrans input file: ',dfn.local_dfnTrans_file
+    print '--> Local dfnGen input file: ',DFN.local_dfnGen_file
+    print '--> Local dfnFlow input file: ',DFN.local_dfnFlow_file
+    print '--> Local dfnTrans input file: ',DFN.local_dfnTrans_file
 
     if options.cell is True:
         print '--> Expecting Cell Based Aperture and Permeability'
-    print("="*80+"\n")  
 
-    return dfn
+    print("="*80+"\n")  
+    return DFN
 
