@@ -6,21 +6,29 @@
 """
 import os
 import glob
-from shutil import copy, rmtree
+from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
 import subprocess
 
 def edit_intersection_files(num_poly, fracture_list):
     """ If pruning a DFN, this function walks through the intersection files
     and removes refercences to files that are not included in the 
-    fractures that will remain in the network. Could be done in parallell.
-    Currently it is serial.
-    also, the pull_list per fracture could be reduced by reading in the 
-    connectivity.dat file for each fracture and taking the intersection
-    of each fracture's row with the pull_list
+    fractures that will remain in the network.
+ 
+    Paramters
+    ---------
+    num_poly (int): Number of Fractures in the original DFN
+    fracture_list (list of int): List of fractures to keep in the DFN
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    Currently running in serial, but it could be parallelized
     """
-    
-    # Make dictionary of connectivity.dat
+    # Make list of connectivity.dat
     connectivity = []  
     fp = open("connectivity.dat", "r")
     for i in range(num_poly):
@@ -89,15 +97,22 @@ finish
 
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
-    """create parameter_mgli_files
-    Outputs parameteri.mlgi files used in running LaGriT Scripts
+    """create parameteri.mlgi files used in running LaGriT Scripts
     
-    Inputs:
-        * num_poly: Number of polygons
-        * h: meshing length scale
-        * slope: Slope of coarsening function, default = 2, 
-    	  set to 0 for uniform mesh resolution
-        * refine_dist: distance used in coarsing function, default = 0.5,
+    Parameters
+    ----------
+    num_poly (int): Number of polygons
+    h (float): meshing length scale
+    slope (float): Slope of coarsening function, default = 2
+    refine_dist (float):  distance used in coarsing function, default = 0.5
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    Set slope = 0 for uniform mesh
     """
     
     print("\nCreating parameter*.mlgi files")
@@ -188,13 +203,23 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
     print("Creating parameter*.mlgi files: Complete\n")
 
 def create_lagrit_scripts(visual_mode, ncpu, refine_factor=1, production_mode=True): 
-    """ Creates LaGriT script to be run for each polygon
+    """ Creates LaGriT script to be mesh each polygon
     
-    Inputs: 
-        * visual_mode (True / False)
-        * ncpu: number of cpus
-        * refine_fractor: used rectangles
-        * production_mode (True/False)
+    Parameters
+    ---------- 
+    visual_mode (bool): determines if running if visual mode or in full msh
+    ncpu (int): number of cpus
+    refine_fractor(float): used rectangles
+    production_mode (bool): Determines if clean up of work files occurs on the fly. 
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    1. Only ncpu of these files are created
+    2. Symbolic links are used to rotate through fractures on different CPUs 
     """
 
     #Section 2 : Creates LaGriT script to be run for each polygon
@@ -541,7 +566,22 @@ finish
     print 'Writing LaGriT Control Files: Complete'
 
 def create_user_functions():
-    """ Create user_function.lgi files for meshing"""
+    """ Create user_function.lgi files for meshing
+    
+    Parameters
+    ----------
+    None
+    
+    Returns
+    -------
+    None
+    
+    Notes
+    -----
+    This function is called within LaGriT. It controls the mesh resolution using slope and refine_dist
+
+    """
+
 
     # user_function.lgi useing PARAM_A and PARAM_B for slope and intercept
     lagrit_input = """
@@ -572,18 +612,27 @@ finish
 
 
 def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain, flow_solver):
-    """
-    Section 4 : Create merge_poly file
-     Creates a lagrit script that reads in each mesh, appends it to the main mesh, and then deletes that mesh object
-     Then duplicate points are removed from the main mesh using EPS_FILTER 
-     The points are compressed, and then written in the files full_mesh.gmv, full_mesh.inp, and an FEHM dump is preformed.
+    """ Creates a lagrit script that reads in each fracture mesh, appends it to the main mesh, and then deletes that mesh object. Then duplicate points are removed from the main mesh using EPS_FILTER.  The points are compressed, and then written to file.
+
+    Parameters
+    ----------
+    ncpu (int): Number of Processors used for meshing
+    fracture_list (list of int): list of fracture numbers in the DFN
+    h (float): Meshing length scale
+    visual_mode (bool): If True, reduced_mesh.inp/gmv will be output. If False, full_mesh.inp is output
+    domain (dict): Dictionary of x,y,z domain size
+    flow_solver (string): Name of target flow solver
+
+    Returns
+    -------
+    endis (list of int): Number of last fracture merged into a partition of the DFN
+
+    Notes
+    -----
+    1. Fracture mesh objects are read into different part_*.lg files. This allows for merging of the mesh to be performed in batches.  
     """
 
-
-    # This needs to be re-written using PyLaGriT so we can check 
-    # that the number of dudded points is that which we expect
-    print "Writing : merge_poly.lgi"
-    
+    print("--> Writing : merge_poly.lgi")
     part_size = num_poly/ncpu + 1 ###v number of fractures in each part
     endis = []
     ii = 0
@@ -799,17 +848,21 @@ finish
     return len(endis)
 
 def define_zones():
-    """	
-    Processes zone file for particle tracking 
-    """	
-    # copies boundary zone files for PFLOTRAN 
-    copy('boundary_bottom.zone','pboundary_bottom.zone')
-    copy('boundary_left_w.zone','pboundary_left_w.zone')
-    copy('boundary_front_n.zone','pboundary_front_n.zone')
-    copy('boundary_right_e.zone','pboundary_right_e.zone')
-    copy('boundary_back_s.zone','pboundary_back_s.zone')
-    copy('boundary_top.zone','pboundary_top.zone')
+    """	 Processes zone file for particle tracking 
     
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+
+    """	
+   
     fall=open("allboundaries.zone","w")
     #copy all but last 2 lines of boundary_top.zone in allboundaries.zone
     fzone=open("boundary_top.zone","rb")
@@ -831,12 +884,19 @@ def define_zones():
     fzone.close() 
     fall.writelines(lines)
     fall.close()
-
-    # Remove Left over zone files
-    os.remove('boundary_bottom.zone')
-    os.remove('boundary_top.zone')
-    os.remove('boundary_left_w.zone')
-    os.remove('boundary_right_e.zone')
-    os.remove('boundary_front_n.zone')
-    os.remove('boundary_back_s.zone')
+    # copies boundary zone files for PFLOTRAN 
+    move('boundary_bottom.zone','pboundary_bottom.zone')
+    move('boundary_left_w.zone','pboundary_left_w.zone')
+    move('boundary_front_n.zone','pboundary_front_n.zone')
+    move('boundary_right_e.zone','pboundary_right_e.zone')
+    move('boundary_back_s.zone','pboundary_back_s.zone')
+    move('boundary_top.zone','pboundary_top.zone')
+ 
+    ## Remove Left over zone files
+    #os.remove('boundary_bottom.zone')
+    #os.remove('boundary_top.zone')
+    #os.remove('boundary_left_w.zone')
+    #os.remove('boundary_right_e.zone')
+    #os.remove('boundary_front_n.zone')
+    #os.remove('boundary_back_s.zone')
 
