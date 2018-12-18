@@ -1,5 +1,17 @@
 def legal(self):
     """Print the legal LANL statement for dfnWorks.
+
+    Parameters
+    ----------
+    DFN Class
+
+    Returns
+    -------
+    None
+
+    Notes 
+    ----
+    None
     """
     lanl_statement = '''
 ===================================================================
