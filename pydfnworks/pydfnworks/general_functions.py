@@ -58,6 +58,8 @@ def dump_time(self, function_name, time):
     Parameters
     ----------
     DFN Class 
+    function_name (string): Name of function that was timed
+    time (float): Run time of function in seconds
 
     Returns
     ----------
