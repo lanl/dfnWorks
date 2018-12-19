@@ -301,7 +301,7 @@ def create_mesh_links(path):
     import os.path
     from shutil import rmtree
     print("--> Creating links for meshing from %s"%path)
-    files = ['params.txt', 'poly_info.dat', 'polys', 'intersections', 'connectivity.dat', 'left.dat', 'right.dat', 'front.dat', 'back.dat', 'top.dat', 'bottom.dat']
+    files = ['params.txt', 'poly_info.dat', 'connectivity.dat', 'left.dat', 'right.dat', 'front.dat', 'back.dat', 'top.dat', 'bottom.dat', 'polys']
     for f in files:
         if os.path.isfile(f) or os.path.isdir(f):
             print("Removing %s"%f)

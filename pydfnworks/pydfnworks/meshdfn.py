@@ -52,7 +52,7 @@ did not provide file of fractures to keep.\nExiting program.")
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print fracture_list
         
-        lagrit.edit_intersection_files(num_poly, fracture_list)
+        lagrit.edit_intersection_files(num_poly, fracture_list,self.path)
         num_poly = len(fracture_list)
     else:
         num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
@@ -65,7 +65,7 @@ did not provide file of fractures to keep.\nExiting program.")
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
     lagrit.create_user_functions()
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode, prune)
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
     if failure:
         mh.cleanup_dir()
         sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
