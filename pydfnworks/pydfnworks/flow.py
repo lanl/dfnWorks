@@ -12,6 +12,7 @@ def set_flow_solver(self, flow_solver):
        
     Parameters
     ----------
+    DFN Class
     flow_solver: name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
 
     Returns
@@ -20,6 +21,8 @@ def set_flow_solver(self, flow_solver):
 
     Notes
     --------
+    Default is PFLOTRAN 
+
     """
     if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
         print("Using flow solver %s"%flow_solver)
@@ -27,13 +30,13 @@ def set_flow_solver(self, flow_solver):
     else:
         sys.exit("ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"%flow_solver)
 
-
-def dfn_flow(self):
+def dfn_flow(self,dump_vtk=True):
     """ Run the dfnFlow portion of the workflow
        
     Parameters
     ----------
-    None
+    DFN Class
+    dump_vtk (bool): True - Write out vtk files for flow solutions 
  
     Returns
     ---------
@@ -41,6 +44,7 @@ def dfn_flow(self):
 
     Notes
     --------
+    Information on individual functions is found therein 
     """
 
     print('='*80)
@@ -59,13 +63,18 @@ def dfn_flow(self):
         self.pflotran()
         self.dump_time('Function: pflotran', time() - tic)  
 
-        tic = time()    
-        self.parse_pflotran_vtk_python()
-        self.dump_time('Function: parse_pflotran_vtk', time() - tic)    
+        if dump_vtk:
+            tic = time()    
+            self.parse_pflotran_vtk_python()
+            self.dump_time('Function: parse_pflotran_vtk', time() - tic)    
 
         tic = time()    
         self.pflotran_cleanup()
         self.dump_time('Function: parse_cleanup', time() - tic) 
+
+        tic = time()    
+        self.effective_perm()
+        self.dump_time('Function: effective_perm', time() - tic) 
 
     elif self.flow_solver == "FEHM":
         print("Using flow solver: %s"%self.flow_solver)
@@ -79,7 +88,7 @@ def dfn_flow(self):
 
     print('='*80)
     print("\ndfnFlow Complete")
-    print("Time Required for dfnFlow %0.2f"%delta_time)
+    print("Time Required for dfnFlow %0.2f seconds\n"%delta_time)
     print('='*80)
        
 def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
@@ -125,8 +134,8 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     if mesh_type == '':
         sys.exit('ERROR: Please provide mesh type!')
 
-    self.uge_file = inp_file[:-4] + '.uge'
     # Check if UGE file was created by LaGriT, if it does not exists, exit
+    self.uge_file = inp_file[:-4] + '.uge'
     failure = os.path.isfile(self.uge_file)
     if failure == False:
         sys.exit('Failed to run LaGrit to get initial .uge file')

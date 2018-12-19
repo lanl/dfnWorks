@@ -50,6 +50,8 @@ class dfnworks(Frozen):
     from legal import legal
     from paths import define_paths
     from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
+    from mass_balance import effective_perm
+
 
     def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
 
