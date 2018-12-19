@@ -26,7 +26,9 @@ def edit_intersection_files(num_poly, fracture_list, path):
 
     Notes
     -----
-    Currently running in serial, but it could be parallelized
+    1. Currently running in serial, but it could be parallelized
+    2. Assumes the pruning directory is not the original directory
+
     """
     # Make list of connectivity.dat
     connectivity = []  
