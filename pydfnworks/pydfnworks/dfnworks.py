@@ -142,10 +142,14 @@ def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
     if options.path != "":
         if not options.path.endswith('/'):
             options.path += os.sep
-        DFN.path = options.path
+        DFN.path = options.path 
+    else:
+        DFN.path = ""
 
     if options.prune_file != "":
         DFN.prune_file = options.prune_file
+    else:
+        DFN.prune_file = ""
 
     if options.cell is True:
         DFN.aper_cell_file = 'aper_node.dat'
