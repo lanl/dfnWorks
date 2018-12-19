@@ -15,14 +15,13 @@ import lagrit_scripts as lagrit
 import run_meshing as run_mesh 
 
 
-def mesh_network(self, prune=False, keep_file="", production_mode=True, refine_factor=1, slope=2):
+def mesh_network(self, prune=False, production_mode=True, refine_factor=1, slope=2):
     ''' Mesh fracture network using LaGriT
 
     Parameters
     ---------
     DFN Class
-    prune (bool): If prune is False, mesh entire network. If prune is True, mesh only fractures in keep_file
-    keep_file (string): path to file that is a ASCII column of fracture numbers to keep
+    prune (bool): If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file 
     production_mode (bool): If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
     refine_factor (float): determines distance for mesh refine meant (default=1)
     slope (float): slope of piecewise linear function determining rate of coarsening. 
@@ -34,25 +33,29 @@ def mesh_network(self, prune=False, keep_file="", production_mode=True, refine_f
     Notes
     ------
     1. For uniform resolution mesh, set slope = 0
-    2. All fractures in keep_file must intersect at least 1 other fracture
+    2. All fractures in self.prune_file must intersect at least 1 other fracture
 
     '''
     print('='*80)
     print("Meshing Network Using LaGriT : Starting")
     print('='*80)
     
-    num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
-
     if prune:
-        if keep_file == "":
-            sys.exit("ERROR!!!!! User requested pruning in meshin but\
-did not provide file of fractures to keep. Exiting.")
-        print("Loading list of fractures to remain in network from %s"%keep_file)
-        fracture_list = sort(genfromtxt(keep_file).astype(int))
+        if self.prune_file== "":
+            sys.exit("ERROR!! User requested pruning in meshing but \
+did not provide file of fractures to keep.\nExiting program.")
+
+        mh.create_mesh_links(self.path)
+        num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
+
+        print("Loading list of fractures to remain in network from %s"%self.prune_file)
+        fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print fracture_list
+        
         lagrit.edit_intersection_files(num_poly, fracture_list)
         num_poly = len(fracture_list)
     else:
+        num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
         fracture_list = range(1, num_poly + 1)
 
     # if number of fractures is greater than number of CPUS, 
@@ -82,6 +85,9 @@ did not provide file of fractures to keep. Exiting.")
     if not visual_mode: 
         lagrit.define_zones()
 
-    mh.output_meshing_report(visual_mode)
+    if prune:
+        mh.clean_up_files_after_prune(self.prune_file,self.path)        
+    
+    mh.output_meshing_report(self.local_jobname,visual_mode)
     print("--> Meshing Complete")
 
