@@ -334,6 +334,7 @@ def pull_source_and_target(nodes,source='s',target='t'):
 
     Notes
     -----
+
 """
     for node in [source, target]:
         try:
@@ -347,9 +348,12 @@ def dump_fractures(self, G, filename):
 
     Parameters
     ----------
-    DFN Class 
-    G (networkX graph) : NetworkX Graph based on the DFN
-    filename (string): Output filename 
+        self : object
+            DFN Class
+        G : NetworkX graph
+            NetworkX Graph based on the DFN
+        filename : string
+            Output filename 
 
     Returns
     -------

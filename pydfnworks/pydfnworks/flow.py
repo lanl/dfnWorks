@@ -8,22 +8,23 @@ import numpy as np
 
 
 def set_flow_solver(self, flow_solver):
-    """sets DFN.flow_solver
+    """Sets flow solver to be used 
        
     Parameters
     ----------
-    DFN Class
-    flow_solver: name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
+        self : object
+            DFN Class
+        flow_solver: string  
+            Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
 
     Returns
     ---------
-    None
 
     Notes
     --------
     Default is PFLOTRAN 
 
-    """
+"""
     if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
         print("Using flow solver %s"%flow_solver)
         self.flow_solver = flow_solver
@@ -35,12 +36,14 @@ def dfn_flow(self,dump_vtk=True):
        
     Parameters
     ----------
-    DFN Class
-    dump_vtk (bool): True - Write out vtk files for flow solutions 
+        self : object
+            DFN Class
+        dump_vtk : bool
+            True - Write out vtk files for flow solutions 
+            False  - Does not write out vtk files for flow solutions 
  
     Returns
     ---------
-    None
 
     Notes
     --------
@@ -829,17 +832,18 @@ def correct_perm_for_fehm():
         fp.close()
 
 def fehm(self):
-    """ runs fehm 
+    """Run FEHM 
+
     Parameters
-    ---------
+    ----------
     DFN Class
    
     Returns
-    --------
+    -------
     None
 
     Notes
-    --------
+    -----
     See https://fehm.lanl.gov/ for details about FEHM
 
     """

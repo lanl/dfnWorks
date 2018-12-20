@@ -12,17 +12,19 @@ import subprocess
 
 def edit_intersection_files(num_poly, fracture_list, path):
     """ If pruning a DFN, this function walks through the intersection files
-    and removes refercences to files that are not included in the 
+    and removes references to files that are not included in the 
     fractures that will remain in the network.
  
-    Paramters
+    Parameters
     ---------
-    num_poly (int): Number of Fractures in the original DFN
-    fracture_list (list of int): List of fractures to keep in the DFN
+        num_poly : int 
+            Number of Fractures in the original DFN
+        fracture_list :list of int
+            List of fractures to keep in the DFN
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -108,14 +110,18 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
     
     Parameters
     ----------
-    num_poly (int): Number of polygons
-    h (float): meshing length scale
-    slope (float): Slope of coarsening function, default = 2
-    refine_dist (float):  distance used in coarsing function, default = 0.5
+        num_poly : int
+            Number of polygons
+        h : float 
+            Meshing length scale
+        slope : float 
+            Slope of coarsening function, default = 2
+        refine_dist : float 
+            Distance used in coarsening function, default = 0.5
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -131,7 +137,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
 
     # Extrude and Translate computation
     # Parameters, delta: buffer zone, amount of h/2 we remove from around line
-    # h_extrude hieght of rectangle extruded from line of intersection
+    # h_extrude height of rectangle extruded from line of intersection
     # r_radius: Upper bound on radius of circumscribed circle around rectangle
     # h_trans : amount needed to translate to create delta buffer
     # It's  just a little trig! 
@@ -214,14 +220,18 @@ def create_lagrit_scripts(visual_mode, ncpu, refine_factor=1, production_mode=Tr
     
     Parameters
     ---------- 
-    visual_mode (bool): determines if running if visual mode or in full msh
-    ncpu (int): number of cpus
-    refine_fractor(float): used rectangles
-    production_mode (bool): Determines if clean up of work files occurs on the fly. 
+        visual_mode : bool 
+            Sets if running if visual mode or in full dump
+        ncpu : int
+            Number of cpus
+        refine_factor : int 
+            Number of times original polygon gets refined 
+        production_mode : bool
+            Determines if clean up of work files occurs on the fly. 
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -577,15 +587,15 @@ def create_user_functions():
     
     Parameters
     ----------
-    None
+        None
     
     Returns
     -------
-    None
+        None
     
     Notes
     -----
-    This function is called within LaGriT. It controls the mesh resolution using slope and refine_dist
+    These functions are called within LaGriT. It controls the mesh resolution using slope and refine_dist
 
     """
 
@@ -619,20 +629,27 @@ finish
 
 
 def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain, flow_solver):
-    """ Creates a lagrit script that reads in each fracture mesh, appends it to the main mesh, and then deletes that mesh object. Then duplicate points are removed from the main mesh using EPS_FILTER.  The points are compressed, and then written to file.
+    """ Creates a LaGriT script that reads in each fracture mesh, appends it to the main mesh, and then deletes that mesh object. Then duplicate points are removed from the main mesh using EPS_FILTER.  The points are compressed, and then written to file.
 
     Parameters
     ----------
-    ncpu (int): Number of Processors used for meshing
-    fracture_list (list of int): list of fracture numbers in the DFN
-    h (float): Meshing length scale
-    visual_mode (bool): If True, reduced_mesh.inp/gmv will be output. If False, full_mesh.inp is output
-    domain (dict): Dictionary of x,y,z domain size
-    flow_solver (string): Name of target flow solver
+        ncpu : int 
+            Number of Processors used for meshing
+        fracture_list : list of int
+            List of fracture numbers in the DFN
+        h : float 
+            Meshing length scale
+        visual_mode : bool
+            If True, reduced_mesh.inp will be output. If False, full_mesh.inp is output
+        domain : dict
+            Dictionary of x,y,z domain size
+        flow_solver : string
+            Name of target flow solver (Changes output files)
 
     Returns
     -------
-    endis (list of int): Number of last fracture merged into a partition of the DFN
+        endis : list of int
+            Number of last fracture merged into a partition of the DFN
 
     Notes
     -----
@@ -841,7 +858,7 @@ pset / back_s / zone / FOUT/ ascii / ZONE
 cmo / modatt / mo_all / icr1 / ioflag / l
 cmo / modatt / mo_all / isn1 / ioflag / l
 cmo / modatt / mo_all / itp1 / ioflag / l
-dump / reduced_mesh.gmv / mo_all 
+#dump / reduced_mesh.gmv / mo_all 
 dump / reduced_mesh.inp / mo_all
 """
     lagrit_input += """
@@ -855,19 +872,19 @@ finish
     return len(endis)
 
 def define_zones():
-    """     Processes zone file for particle tracking 
+    """Processes zone files for particle tracking. All zone files are combined into allboundaries.zone 
     
     Parameters
     ----------
-    None
+        None
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
-
+        None 
     """    
    
     fall=open("allboundaries.zone","w")

@@ -8,8 +8,6 @@ import os
 from time import time
 from dfntools import *
 import helper
-#from integrated import *
-#from create_run_scripts import * 
 
 class dfnworks(Frozen):
     '''
@@ -86,8 +84,19 @@ class dfnworks(Frozen):
         options = helper.commandline_options()
 
 def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
-    '''
-    Parse command line inputs and input files to create and populate dfnworks class
+    '''Parse command line inputs and input files to create and populate dfnworks class
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+        DFN : object 
+            DFN class object populated with information parsed from the command line
+
+    Notes
+    -----
+    None
     '''
     
     options = helper.commandline_options()

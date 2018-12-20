@@ -19,16 +19,20 @@ def mesh_network(self, prune=False, production_mode=True, refine_factor=1, slope
     ''' Mesh fracture network using LaGriT
 
     Parameters
-    ---------
-    DFN Class
-    prune (bool): If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file 
-    production_mode (bool): If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
-    refine_factor (float): determines distance for mesh refine meant (default=1)
-    slope (float): slope of piecewise linear function determining rate of coarsening. 
+    ----------
+        self : object 
+            DFN Class
+        prune : bool
+            If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file 
+        production_mode : bool
+            If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
+        refine_factor : float
+            Determines distance for mesh refinement (default=1)
+        slope float : Slope of piecewise linear function determining rate of coarsening. 
 
     Returns
     -------
-    None
+        None
 
     Notes
     ------
@@ -76,8 +80,7 @@ did not provide file of fractures to keep.\nExiting program.")
     if (not visual_mode and not prune):    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            sys.exit("ERROR!!! Incorrect Number of dudded points.\
-\nExitingin Program")
+            sys.exit("ERROR!!! Incorrect Number of dudded points.\nExiting Program")
 
     if production_mode:
         mh.cleanup_dir()

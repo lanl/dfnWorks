@@ -7,24 +7,26 @@ import subprocess
 def dfn_gen(self,output=True):
     ''' Wrapper script the runs the dfnGen workflow.     
     Run the dfnGen workflow: 
-        * 1) make_working_directory: Create a directory with name of job
-        * 2) check_input: Check input parameters and create a clean version of the input file
-        * 3) create_network: Create network. DFNGEN v2.0 is called and creates the network
-        * 4) output_report: Generate a PDF summary of the DFN generation
-        * 5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN
+        1) make_working_directory: Create a directory with name of job
+        2) check_input: Check input parameters and create a clean version of the input file
+        3) create_network: Create network. DFNGEN v2.0 is called and creates the network
+        4) output_report: Generate a PDF summary of the DFN generation
+        5) mesh_network: calls module dfnGen_meshing and runs LaGriT to mesh the DFN
 
     Parameters
     ----------
-    DFN Class
-    output (bool): If True, output pdf will be created. If False, no pdf is made 
+        self : object
+            DFN Class object
+        output : bool
+            If True, output pdf will be created. If False, no pdf is made 
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
-    Details of each portion of the routine are in those sections
+        Details of each portion of the routine are in those sections
 
     '''
     tic_gen = time()
@@ -63,11 +65,12 @@ def make_working_directory(self):
 
     Parameters
     ----------
-    DFN Class
+        self : object
+            DFN Class object
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -101,11 +104,12 @@ def create_network(self):
 
     Parameters
     ----------
-    None
+        self : object
+            DFN Class 
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----

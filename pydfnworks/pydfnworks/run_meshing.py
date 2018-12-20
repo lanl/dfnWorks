@@ -17,13 +17,16 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     Parameters
     ----------
-    fracture_id (int): Current Fracture ID number
-    visual_mode (bool): True/False for reduced meshing
-    num_poly (int): Total Number of Fractures
+        fracture_id : int
+            Current Fracture ID number
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int 
+            Total Number of Fractures in the DFN
     
     Returns
     -------
-    None
+        None
     
     Notes
     -----
@@ -42,10 +45,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
         "parameters_CPU%d.mlgi"%cpu_id)
    
-    #if prune:
-    #    os.symlink('intersections/intersections_%d_prune.inp'%fracture_id,\
-    #        'intersections_CPU%d.inp'%cpu_id)
-    #else:
+    
     os.symlink('intersections/intersections_%d.inp'%fracture_id,\
         'intersections_CPU%d.inp'%cpu_id)
 
@@ -113,19 +113,24 @@ def worker(work_queue, visual_mode, num_poly):
     
     Parameters
     ----------
-    work_queue (multiprocessing queue): Queue fractures still to be meshed
-    visual_mode (bool): True/False for reduced meshing
-    num_poly (int): Total Number of Fractures
+        work_queue : multiprocessing queue
+            Queue of fractures to be meshed
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int
+            Total Number of Fractures
 
     Returns
     -------
-    True if job is complete
+        True : bool
+            If job is complete
+
 
     Notes:
     -----
     None   
     
-    """    
+"""    
     try:
         for fracture_id in iter(work_queue.get, 'STOP'):
             mesh_fracture(fracture_id, visual_mode, num_poly )
@@ -137,7 +142,7 @@ def worker(work_queue, visual_mode, num_poly):
 def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     """ Header function for Parallel meshing of fractures
     
-    Creates a queue of fracture numbers ranging form 1, num_poly
+    Creates a queue of fracture numbers ranging from 1, num_poly
     
     Each fractures is meshed using mesh_fracture called within the
     worker function.
@@ -148,14 +153,18 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
 
     Parameters
     ----------
-    fracture_list (list): Fractures to be meshed
-    visual_mode (bool): True/False for reduced meshing
-    num_poly (int): Total Number of Fractures
+        fracture_list : list
+            Fractures to be meshed
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int
+            Total Number of Fractures
 
     Returns
     -------
-    True: If failure.txt is empty meaning all fractures meshed correctly
-    False: If failure.txt is not empty, then at least one fracture failed.  
+        True/False : bool
+            True - If failure.txt is empty then all fractures have been meshed correctly
+            False - If failure.txt is not empty, then at least one fracture failed.  
 
     Notes
     -----
@@ -220,21 +229,24 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     Parameters
     ----------
-    num_poly (int): Number of Fractures
-    npcu (int): Number of Processors
-    n_jobs (int): Number of mesh pieces
-    visual_mode (bool): True/False for reduced meshing
+        num_poly : int
+            Number of Fractures
+        ncpu : int
+            Number of Processors
+        n_jobs : int
+            Number of mesh pieces
+        visual_mode : bool
+            True/False for reduced meshing
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
-    None
-
+        Meshes are merged in batches for efficiency  
     """
-    print "\nMerging triangulated polygon meshes"
+    print("\nMerging triangulated polygon meshes")
 
     # should be converted to using multiprocessing 
     for j in range(1, n_jobs + 1):
