@@ -38,17 +38,6 @@ Graphing generator output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.gen_output
     :members:
-
-dfnFlow
---------
-.. automodule:: pydfnworks.flow
-    :members:
-
-dfnTrans
----------
-.. automodule:: pydfnworks.transport
-    :members:
-
 LaGriT (meshing)
 -----------------
 
@@ -67,9 +56,6 @@ Run meshing in parallel
 .. automodule:: pydfnworks.run_meshing
     :members:
 
-Helper methods
-----------------
-
 Mesh helper methods
 ^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.mesh_dfn_helper
@@ -80,9 +66,20 @@ Print legal statement
 .. automodule:: pydfnworks.legal
     :members:
  
-Other helper methods
-^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.helper
+
+dfnFlow
+--------
+.. automodule:: pydfnworks.flow
+    :members:
+
+dfnTrans
+---------
+.. automodule:: pydfnworks.transport
+    :members:
+
+dfn2graph
+---------
+.. automodule:: pydfnworks.dfn2graph
     :members:
 
 
