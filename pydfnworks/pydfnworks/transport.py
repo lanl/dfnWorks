@@ -152,8 +152,5 @@ def check_dfn_trans_run_files(self):
             sys.exit("ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program"%files[key])
     print("--> All files required for dfnTrans have been found in current directory\n\n")
 
-    # Add check for TDRW requires seconds
-    # Add check for only one inflow condition
-
 
 
