@@ -10,6 +10,30 @@ import matplotlib.pylab as plt
 from itertools import islice
 
 def create_graph(self, graph_type, inflow, outflow):
+    """Header function to create a graph based on a DFN
+
+    Parameters
+    ----------
+        self : object
+            DFN Class object 
+        graph_type : string
+            Option for what graph represenation of the DFN is requested. Currently supported are fracture and intersection. 
+        inflow : string
+            Name of inflow boundary (connect to source)
+        outflow : string
+            Name of outflow boundary (connect to target)
+
+    Returns
+    -------
+        G : NetworkX Graph
+            Graph based on DFN 
+
+    Notes
+    -----
+    Bipartite graph is not yet supported
+
+"""
+
 
     if graph_type == "fracture":
         G = create_graph_fracture(inflow, outflow)
@@ -23,7 +47,7 @@ def create_graph(self, graph_type, inflow, outflow):
     return G
 
 def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
-    """ Create a graph based on topology of network. Fractures 
+    """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
     
@@ -31,13 +55,17 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
     
     Parameters
     ----------
-    inflow (string): name of inflow boundary (connect to source)
-    outflow (sring):  name of outflow boundary (connect to target)
-    topology_file (string): default=connectivity.dat  
+        inflow : string
+            Name of inflow boundary (connect to source)
+        outflow : string
+            Name of outflow boundary (connect to target)
+        topology_file : string
+            Name of adjacency matrix file for a DFN default=connectivity.dat  
 
     Returns
     -------
-    G (NetworkX Graph)
+        G : NetworkX Graph
+            NetworkX Graph where vertices in the graph correspond to fractures and edges indicated two fractures intersect  
 
     Notes
     -----
@@ -69,20 +97,31 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
     print("--> Graph loaded")
     return G
 
-def boundary_index(bc):
+def boundary_index(bc_name):
     """Determines boundary index in intersections_list.dat from name
 
-    Parameters 
-    bc (string): Boundary condition name
+    Parameters
+    ----------
+        bc_name : string
+            Boundary condition name
 
     Returns
     -------
-    bc index
+        bc_index : int
+            integer indexing of cube faces
 
+    Notes
+    -----
+    top = 1
+    bottom = 2
+    left = 3
+    front = 4
+    right = 5
+    back = 6
     """
     bc_dict ={"top":-1,"bottom":-2,"left":-3,"front":-4,"right":-5,"back":-6}
     try:
-        return bc_dict[bc]
+        return bc_dict[bc_name]
     except:
         sys.exit("Unknown boundary condition: %s\nExiting"%bc)
 
@@ -95,15 +134,19 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
    
     Parameters
     ----------
-    inflow (string): Name of inflow boundary
-    outflow (string): Name of outflow boundary
-    intersection_file (string): File containing intersection information
-    --> File Format
-    fracture 1, fracture 2, x center, y center, z center, intersection length
+        inflow : string
+            Name of inflow boundary
+        outflow : string
+            Name of outflow boundary
+        intersection_file : string
+             File containing intersection information
+             File Format:
+             fracture 1, fracture 2, x center, y center, z center, intersection length
 
     Returns
     -------
-    G (NetworkX Graph): Vertices have attributes x,y,z location and length. Edges has attribute length
+        G : NetworkX Graph
+            Vertices have attributes x,y,z location and length. Edges has attribute length
 
     Notes
     -----
@@ -191,7 +234,19 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
     return G
 
 def create_graph_bipartite(inflow, outflow):
-    """Creates a Bipartie Graph of the DFN - Not currently supported. 
+    """Creates a Bipartie Graph of the DFN - Not currently supported.
+
+    Parameters
+    ---------
+         inflow : string
+            Name of inflow boundary (connect to source)
+        outflow : string
+            Name of outflow boundary (connect to target)
+    Returns
+    -------
+        G : NetworkX Graph
+            Currently empty networkX graph
+
 """
     print("Not supported yet, returning empty graph")
     return nx.Graph()
@@ -201,15 +256,21 @@ def k_shortest_paths(G, k, source, target, weight):
     
     Parameters
     ----------
-    G NetworkX Graph
-    k (int): number of requested paths
-    source (node): Starting node
-    target (node): Ending node
-    weight (string): Edge weight used for finding the shortest path
+        G : NetworkX Graph
+            NetworkX Graph based on a DFN 
+        k : int
+            Number of requested paths
+        source : node 
+            Starting node
+        target : node
+            Ending node
+        weight : string
+            Edge weight used for finding the shortest path
 
     Returns 
     -------
-    path
+        paths : sets of nodes
+            a list of lists of nodes in the k shortest paths
 
     Notes
     -----
@@ -219,22 +280,27 @@ def k_shortest_paths(G, k, source, target, weight):
 
 def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     """Returns the subgraph made up of the k shortest paths in a graph 
-    
+   
     Parameters
     ----------
-    G NetworkX Graph
-    k (int): number of requested paths
-    source (node): Starting node
-    target (node): Ending node
-    weight (string): Edge weight used for finding the shortest path
+        G : NetworkX Graph
+            NetworkX Graph based on a DFN 
+        k : int
+            Number of requested paths
+        source : node 
+            Starting node
+        target : node
+            Ending node
+        weight : string
+            Edge weight used for finding the shortest path
 
     Returns 
     -------
-    G (NetworkX Graph) : Subgraph of G made up of the k shortest paths 
+        H : NetworkX Graph
+            Subgraph of G made up of the k shortest paths 
 
     Notes
     -----
-    None
 """
 
     print("\n--> Determining %d shortest paths in the network"%k)
@@ -255,17 +321,19 @@ def pull_source_and_target(nodes,source='s',target='t'):
 
     Parameters
     ----------
-    nodes (list): List of nodes in the graph
-    source (node): Name of source node to be removed - default = 's'
-    target (node): Name of target node to be removed - default = 't'
-
+        nodes :list 
+            List of nodes in the graph
+        source : node 
+            Starting node
+        target : node
+            Ending node
     Returns
     -------
-    nodes (list): List of nodes with source and target nodes removed
+        nodes : list
+            List of nodes with source and target nodes removed
 
     Notes
     -----
-    None 
 """
     for node in [source, target]:
         try:
@@ -285,11 +353,9 @@ def dump_fractures(self, G, filename):
 
     Returns
     -------
-    None
 
     Notes
     ----- 
-    None
     """
      
     if G.graph['representation'] == "fracture":
@@ -312,15 +378,21 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
 
     Parameters
     ----------
-    DFN Class 
-    G (networkX graph) : NetworkX Graph based on the DFN
-    source (node): Name of source node to be removed - default = 's'
-    target (node): Name of targer node to be removed - default = 't'
-    weight (string): Edge weight used for finding the shortest path
-    
+        self : object 
+            DFN Class Object
+        G : NetworkX graph
+            NetworkX Graph based on the DFN
+        source : node 
+            Starting node
+        target : node
+            Ending node
+        weight : string
+            Edge weight used for finding the shortest path
     
     Returns
-    H (NetworkX Graph) Subgraph composed of edge-disjoint paths
+    -------
+        H : NetworkX Graph
+            Subgraph of G made up of the k shortest of all edge-disjoint paths from source to target
 
     Notes
     -----
@@ -347,14 +419,17 @@ def plot_graph(self,G, source='s', target='t',output_name="dfn_graph"):
     
     Parameters
     ---------- 
-    G (networkX graph) : NetworkX Graph based on the DFN
-    source (node): Name of source node to be removed - default = 's'
-    target (node): Name of targer node to be removed - default = 't'
-    output_name (string): name of output file (no .png)
+        G : NetworkX graph
+            NetworkX Graph based on the DFN
+        source : node 
+            Starting node
+        target : node
+            Ending node
+        output_name : string
+            Name of output file (no .png)
 
     Returns
     -------
-    None
 
     Notes
     -----
@@ -395,17 +470,18 @@ def dump_json_graph(self, G, name):
  
     Parameters
     ---------- 
-    DFN Class
-    G (networkX graph) : NetworkX Graph based on the DFN
-    name (string): name of output file (no .json)
+        self : object 
+            DFN Class
+        G :networkX graph
+            NetworkX Graph based on the DFN
+        name : string
+             Name of output file (no .json)
 
     Returns
     -------
-    None
 
     Notes
     -----
-    None
 
 """
     print("--> Dumping Graph into file: "+name+".json")
@@ -417,18 +493,20 @@ def dump_json_graph(self, G, name):
 def load_json_graph(self,name):
     """Read in graph from json format
 
-   Parameters
-   ---------- 
-   DFN Class
-   name (string): name of input file (no .json)
+    Parameters
+    ---------- 
+        self : object 
+            DFN Class
+        name : string
+             Name of input file (no .json)
 
-   Returns
-   -------
-   G (networkX graph) : NetworkX Graph based on the DFN
+    Returns
+    -------
+        G :networkX graph
+            NetworkX Graph based on the DFN
 
    Notes
    -----
-   None
 
 """
     print("Loading Graph in file: "+name+".json")
@@ -445,16 +523,16 @@ def add_perm(self,G):
 
     Parameters
     ---------- 
-    DFN Class
-    G (networkX graph) : NetworkX Graph based on the DFN
-
+        self : object 
+            DFN Class
+        G :networkX graph
+            NetworkX Graph based on the DFN
+   
     Returns
     -------
-    None 
  
     Notes
     -----
-    None
 
 """
 
