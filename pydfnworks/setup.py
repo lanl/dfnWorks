@@ -5,13 +5,14 @@ from setuptools import setup
 import os
 #os.system('mv ~/.local ~/local_save')
 
+
 setup(name='pydfnworks',
-      version='2.1.5',
+      version='2.2',
       description='Python methods for running dfnWorks',
-      url='TBD',
+      url='https://dfnworks.lanl.gov',
       author='Jeffrey Hyman, Satish Karra, Daniel Livingston, Nataliia Makedonska',
       author_email='dfnworks@lanl.gov',
-      #licenses='MIT',
+      licenses='GNU BSD',
       packages=['pydfnworks'],
       install_requires=[
           'numpy',
@@ -24,5 +25,5 @@ setup(name='pydfnworks',
       include_package_data=True, 
       test_suite='nose.collector',
       tests_require=['nose'],
-      scripts=['bin/compile.py', 'bin/test.py', 'bin/run.py', 'bin/run_explicit.py'],
+      scripts=['bin/test.py', 'bin/run.py', 'bin/run_explicit.py'],
       zip_safe=False)
