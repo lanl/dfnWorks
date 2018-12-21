@@ -3,15 +3,16 @@ def legal(self):
 
     Parameters
     ----------
-    DFN Class
+        self : object
+            DFN Class
 
     Returns
     -------
-    None
+        None
 
     Notes 
     ----
-    None
+        None
     """
     lanl_statement = '''
 ===================================================================

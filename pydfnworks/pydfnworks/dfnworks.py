@@ -7,7 +7,6 @@ import sys
 import os
 from time import time
 from dfntools import *
-import helper
 
 class dfnworks(Frozen):
     '''
@@ -18,6 +17,7 @@ class dfnworks(Frozen):
         * ncpu: number of CPUs used in the job
         * dfnGen file: the name of the dfnGen input file
         * dfnFlow file: the name of the dfnFlow input file
+        * dfnTrans file: the name of the dfnFlow input file
         * local prefix: indicates that the name contains only the most local directory
         * vtk_file: the name of the VTK file
         * inp_file: the name of the INP file
@@ -27,16 +27,17 @@ class dfnworks(Frozen):
         * aper_file: the name of the file containing apertures 
         * perm_cell file: the name of the file containing cell permeabilities 
         * aper_cell_file: the name of the file containing cell apertures
-        * dfnTrans_version: the version of dfnTrans to use
         * freeze: indicates whether the class attributes can be modified
-        * large_network: indicates whether C++ or Python is used for file processing at the bottleneck
-        of inp to vtk conversion
-    '''
+        * h : FRAM length scale 
+'''
     from generator import dfn_gen
     from flow import dfn_flow
     from transport import dfn_trans
     # Specific functions
-    from general_functions import commandline_options, dump_time, print_run_time 
+    from create_dfn_functions import commandline_options
+    from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
+    from general_functions import dump_time, print_run_time 
+   
     from gen_input import check_input
     from generator import make_working_directory, create_network
     from gen_output import output_report 
@@ -47,11 +48,10 @@ class dfnworks(Frozen):
     from mesh_dfn_helper import clean_up_files_after_prune, create_mesh_links 
     from legal import legal
     from paths import define_paths
-    from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
     from mass_balance import effective_perm
 
 
-    def __init__(self, jobname='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='',ncpu='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = ''):
+    def __init__(self, jobname='', ncpu='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = '', h = ''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -81,108 +81,5 @@ class dfnworks(Frozen):
         self.dfnTrans_version= 2.2
         self.freeze = False
         self.legal()
-        options = helper.commandline_options()
-
-def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
-    '''Parse command line inputs and input files to create and populate dfnworks class
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-        DFN : object 
-            DFN class object populated with information parsed from the command line
-
-    Notes
-    -----
-    None
-    '''
-    
-    options = helper.commandline_options()
-    print("Command Line Inputs:")
-    print options
-    print("\n-->Creating DFN class")
-    DFN=dfnworks(jobname=options.jobname, ncpu=options.ncpu)
-
-    if options.input_file != "":
-        with open(options.input_file) as f:
-            for line in f:
-                line=line.rstrip('\n')
-                line=line.split()
-
-                if line[0].find("dfnGen") == 0:
-                    DFN.dfnGen_file = line[1]
-                    DFN.local_dfnGen_file = line[1].split('/')[-1]
-
-                elif line[0].find("dfnFlow") == 0:
-                    DFN.dfnFlow_file = line[1]
-                    DFN.local_dfnFlow_file = line[1].split('/')[-1]
-
-                elif line[0].find("dfnTrans") == 0:
-                    DFN.dfnTrans_file = line[1]
-                    DFN.local_dfnTrans_file = line[1].split('/')[-1]
-    else:   
-        if options.dfnGen != "":
-            DFN.dfnGen_file = options.dfnGen
-            DFN.local_dfnGen_file = options.dfnGen.split('/')[-1]
-        elif dfnGen_file != "":
-            DFN.dfnGen_file = dfnGen_file  
-            DFN.local_dfnGen_file = dfnGen_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
-        
-        if options.dfnFlow != "":
-            DFN.dfnFlow_file = options.dfnFlow
-            DFN.local_dfnFlow_file = options.dfnFlow.split('/')[-1]
-        elif dfnFlow_file != "":
-            DFN.dfnFlow_file = dfnFlow_file  
-            DFN.local_dfnFlow_file = dfnFlow_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
-        
-        if options.dfnTrans != "":
-            DFN.dfnTrans_file = options.dfnTrans
-            DFN.local_dfnTrans_file = options.dfnTrans.split('/')[-1]
-        elif dfnTrans_file != "":
-            DFN.dfnTrans_file = dfnTrans_file  
-            DFN.local_dfnTrans_file = dfnTrans_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
-
-    if options.path != "":
-        if not options.path.endswith('/'):
-            options.path += os.sep
-        DFN.path = options.path 
-    else:
-        DFN.path = ""
-
-    if options.prune_file != "":
-        DFN.prune_file = options.prune_file
-    else:
-        DFN.prune_file = ""
-
-    if options.cell is True:
-        DFN.aper_cell_file = 'aper_node.dat'
-        DFN.perm_cell_file = 'perm_node.dat'
-    else:
-        DFN.aper_file = 'aperture.dat'
-        DFN.perm_file = 'perm.dat'
-
-    print("\n-->Creating DFN class: Complete")
-    print 'Jobname: ', DFN.jobname
-    print 'Number of cpus requested: ', DFN.ncpu 
-    print '--> dfnGen input file: ',DFN.dfnGen_file
-    print '--> dfnFlow input file: ',DFN.dfnFlow_file
-    print '--> dfnTrans input file: ',DFN.dfnTrans_file
-
-    print '--> Local dfnGen input file: ',DFN.local_dfnGen_file
-    print '--> Local dfnFlow input file: ',DFN.local_dfnFlow_file
-    print '--> Local dfnTrans input file: ',DFN.local_dfnTrans_file
-
-    if options.cell is True:
-        print '--> Expecting Cell Based Aperture and Permeability'
-
-    print("="*80+"\n")  
-    return DFN
+        #options = create_dfn.commandline_options()
 

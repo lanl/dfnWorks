@@ -4,12 +4,45 @@ import os
 import subprocess
 
 def valid(name):
+    """" Check that path is valid for a executable
+
+    Parameters
+    ----------
+        name : string
+            Path to file or executable
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        If file is not found, program exits
+
+"""
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
         error_msg = "ERROR: " + name  + " has an invalid path name: " + os.environ[name]
         print error_msg
         exit()
 
 def compile_dfn_exe(directory):
+    """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
+
+    Parameters
+    ----------
+        directory : string
+            Path to dfnWorks executable 
+
+    Returns
+    -------
+        None
+    
+    Notes
+    -----
+        This function is only called if an executable is not found. 
+
+"""
+
 
     print("Compiling %s"%directory)
     cwd = os.getcwd()
@@ -19,6 +52,24 @@ def compile_dfn_exe(directory):
     print("Complete")
 
 def define_paths():
+    """Defines enviromental variables for use in dfnWorks. The user must change these to match their workspace.
+
+    Parameters
+    ----------
+        None
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        Enviromental variables are set to executables
+
+
+"""
+
+
 
     # ================================================
     # THESE PATHS MUST BE SET BY THE USER.

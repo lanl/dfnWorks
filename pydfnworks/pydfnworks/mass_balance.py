@@ -31,7 +31,7 @@ def get_domain():
     -----
     parse_params_file() is in mesh_dfn_helper.py
 '''
-    _,_,_,_,domain = parse_params_file()
+    _,_,_,_,domain = parse_params_file(quite=True)
     return domain
 
 def parse_pflotran_input(pflotran_input_file):

@@ -5,15 +5,16 @@ from time import time
 import subprocess
 
 def dfn_trans(self):
-    """Setup and run dfnTrans 
+    """Primary driver for dfnTrans. 
 
     Paramters
     ---------
-    None
+        self : object
+            DFN Class 
    
     Returns
     --------
-    None
+        None
     """
     print('='*80)
     print("\ndfnTrans Starting\n")
@@ -34,22 +35,13 @@ def copy_dfn_trans_files(self):
 
     Paramters
     ---------
-    None
-   
+        self : object
+            DFN Class
+ 
     Returns
     --------
-    None
+        None
     """
-    #Create Path to DFNTrans   
-    #try:
-    #    os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
-    #except OSError:
-    #    os.remove('DFNTrans_TDRW')   
-    #    os.symlink(os.environ['DFNTRANS_PATH']+'DFNTrans_TDRW', './DFNTrans_TDRW')
-    #except:
-    #    sys.exit("Cannot create link to DFNTrans. Exiting Program")
-    # Copy DFNTrans input file
-    print(os.getcwd())
 
     print("Attempting to Copy %s\n"%self.dfnTrans_file) 
     try:
@@ -68,8 +60,9 @@ def run_dfn_trans(self):
 
     Paramters
     ---------
-    None
-   
+        self : object
+            DFN Class  
+ 
     Returns
     --------
     None
@@ -85,7 +78,10 @@ def create_dfn_trans_links(self, path = '../'):
 
     Paramters
     ---------
-    path: Absolute path to primary directory. 
+        self : object 
+            DFN Class
+        path : string 
+            Absolute path to primary directory. 
    
     Returns
     --------
@@ -116,15 +112,16 @@ def check_dfn_trans_run_files(self):
  
     Paramters
     ---------
-    None 
+        self : object 
+            DFN Class
    
     Returns
     --------
-    None
+        None
 
     Notes
     -------
-    None
+        None
     """
     cwd = os.getcwd()
     print("\nChecking that all files required for dfnTrans are in the current directory")
@@ -151,6 +148,3 @@ def check_dfn_trans_run_files(self):
         if not os.path.isfile(files[key]) or os.stat(files[key]).st_size == 0:
             sys.exit("ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program"%files[key])
     print("--> All files required for dfnTrans have been found in current directory\n\n")
-
-
-

@@ -9,26 +9,33 @@ import glob
 from os import remove, symlink, unlink 
 from numpy import genfromtxt, sort
 
-def parse_params_file():
+def parse_params_file(quite=False):
     """ Reads params.txt file from DFNGen and parses information
 
     Parameters
     ---------
-    None
+        quite : bool
+            If True details are not printed to screen, if False they area 
 
     Returns
     -------
-    num_poly: (int) Number of Polygons
-    h: (float) meshing length scale h
-    dudded_points: (int) Expected number of dudded points in Filter (LaGriT)
-    visual_mode (bool): If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-    domain: dict: x,y,z domain sizes 
+        num_poly: int
+            Number of Polygons
+        h: float 
+            Meshing length scale h
+        dudded_points: int 
+            Expected number of dudded points in Filter (LaGriT)
+        visual_mode : bool
+            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
+        domain: dict
+             x,y,z domain sizes 
     
     Notes
     -----
-    None
+        None
     """
-    print("\n--> Parsing  params.txt")
+    if not quite:
+        print("\n--> Parsing  params.txt")
     fparams = open('params.txt', 'r')
     # Line 1 is the number of polygons
     num_poly=int(fparams.readline())
@@ -51,35 +58,39 @@ def parse_params_file():
     domain['z']=(float(fparams.readline()))
     fparams.close()
     
-    print("Number of Polygons: %d"%num_poly)
-    print("H_SCALE %f"%h)
-    if visual_mode > 0:
-        visual_mode = True 
-        print("Visual mode is on")
-    else:
-        visual_mode = False
-        print("Visual mode is off")
-    print("Expected Number of dudded points: %d"%dudded_points)
-    print("X Domain Size %d m"%domain['x'])
-    print("Y Domain Size %d m"%domain['y'])
-    print("Z Domain Size %d m"%domain['z'])
-    print("--> Parsing params.txt complete\n")
+    if not quite: 
+        print("Number of Polygons: %d"%num_poly)
+        print("H_SCALE %f"%h)
+        if visual_mode > 0:
+            visual_mode = True 
+            print("Visual mode is on")
+        else:
+            visual_mode = False
+            print("Visual mode is off")
+        print("Expected Number of dudded points: %d"%dudded_points)
+        print("X Domain Size %d m"%domain['x'])
+        print("Y Domain Size %d m"%domain['y'])
+        print("Z Domain Size %d m"%domain['z'])
+        print("--> Parsing params.txt complete\n")
     return(num_poly, h, visual_mode, dudded_points, domain)
     
-def check_dudded_points(dudded):
-    """Parses Lagrit log_merge_all.txt and checks if number of dudded points is the expected number
+def check_dudded_points(dudded,hard = False):
+    """Parses LaGrit log_merge_all.txt and checks if number of dudded points is the expected number
 
     Parameters
     ---------
-    dudded (int): Expected number of dudded points from params.txt
-
+        dudded : int 
+            Expected number of dudded points from params.txt
+        hard : bool
+            If hard is false, up to 1% of nodes in the mesh can be missed. If hard is True, no points can be missed. 
     Returns
     ---------
-    bool: True if the number of dudded points is correct and  False if the number of dudded points is incorrect 
+        True/False : bool
+            True if the number of dudded points is correct and  False if the number of dudded points is incorrect 
     
     Notes
     -----
-    If number of dudded points is incorrect, program will exit
+    If number of dudded points is incorrect, program will exit. 
 
     """
     print("Checking that number of Dudded points is correct")
@@ -108,7 +119,7 @@ def check_dudded_points(dudded):
         print('--> WARNING!!! Number of points removed does not \
             match expected value')
         diff_ratio = float(diff)/float(total_points)
-        if diff_ratio < 0.01:
+        if diff_ratio < 0.01 or hard == False:
             print("However value is small: %d"%diff)
             print("Proceeding\n")
             return True
@@ -122,11 +133,11 @@ def cleanup_dir():
 
     Parameters
     ----------
-    None
+        None
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -144,18 +155,19 @@ def output_meshing_report(local_jobname,visual_mode):
     
     Parameters
     ----------
-    DFN jobname (string): Name of current DFN job (not path) 
-    visual_mode (bool): Determines is reduced_mesh or full_mesh is dumped
+        local_jobname : string
+            Name of current DFN job (not path) 
+    visual_mode : bool
+        Determines is reduced_mesh or full_mesh is dumped
 
     Returns
     -------
-    None
+        None
    
     Notes
     -----
-    None 
-
-    """
+        None 
+"""
 
     f=open(local_jobname+'_mesh_information.txt','w')
     f.write('The final mesh of DFN consists of: \n')
@@ -197,21 +209,22 @@ def output_meshing_report(local_jobname,visual_mode):
 
 
 def clean_up_files_after_prune(prune_file,path):
-    ''' After pruning a DFN to only include the fractures in prune_file
-    this function removex references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
+    ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
     
     Parameters
     ----------
-    prune_file (string): List of fractures to remain in the network
-    path (string) : Path to files to be modified
+        prune_file : string
+            Name for file with list of fractures to remain in the network
+        path : string 
+            Path to files to be modified
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
-    This function should always be run after prunining if flow solution is going to be run
+    This function should always be run after pruning if flow solution is going to be run
  
     '''
 
@@ -287,15 +300,16 @@ def create_mesh_links(path):
     
     Parameters
     ----------
-    path (string): Path to where meshing files are located
+        path : string
+            Path to where meshing files are located
 
     Returns
     -------
-    None
+        None
     
     Notes
     -----
-    None
+        None
 
     '''
     import os.path

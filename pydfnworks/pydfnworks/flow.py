@@ -100,17 +100,20 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
    
     Parameters    
     ------- 
-    inp_file (str): name of the inp (AVS) file produced by LaGriT 
-    mesh_type (str): the type of mesh
-    hex2tet (boolean): True if hex mesh elements should be converted to tet elements, False otherwise.
+        inp_file : str
+            Name of the inp (AVS) file produced by LaGriT 
+        mesh_type : str
+            The type of mesh
+        hex2tet : bool
+            True if hex mesh elements should be converted to tet elements, False otherwise.
 
     Returns
     --------
-    None
+        None
 
     Notes
     --------
-    None
+        None
     
     """
     if self.flow_solver != "PFLOTRAN":
@@ -165,12 +168,15 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
     
     Parameters
     -----------
-    uge_file: name of uge file
-    zone_file: name of zone file
-    face: face of the plane corresponding to the zone file
-
-    zone_file='all' processes all directions, top, bottom, left, right, front, back
-    boundary_cell_area=1e-1
+        uge_file : string
+            Name of uge file
+        zone_file : string
+            Name of zone file
+        Face : Face of the plane corresponding to the zone file
+        zone_file : string
+            Name of zone file to work on. Can be 'all' processes all directions, top, bottom, left, right, front, back
+        boundary_cell_area : double 
+            Boundary cells are moved a distance of boundary_cell_area 1e-1
 
     Returns
     ----------
@@ -271,10 +277,12 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             for i in range(NumNodes):
                 Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
 
-            print('--> Finished calculating boundary connections')
+            
 
+            print('--> Finished calculating boundary connections')
             boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
-            epsilon = 1e-0  # Make distance really small
+            epsilon = self.h * 10**-3
+ 
             if (face == 'top'):
                 boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
             elif (face == 'bottom'):
@@ -302,12 +310,14 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
     print('--> Converting zone files to ex complete')    
 
 def inp2gmv(self, inp_file=''):
-    """ Convert inp file to gmv file, for general mesh viewer.
-    Name of output file for base.inp is base.gmv
+    """ Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv
 
     Parameters
     ----------
-    inp_file (str): name of inp file if not an attribure of self
+        self : object
+            DFN Class
+        inp_file : str
+            Name of inp file if not an attribure of self
 
     Returns
     ----------
@@ -343,12 +353,13 @@ def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
 
     Parameters
-    ---------
-    DFN Class
+    ----------
+        self : object
+            DFN Class
 
     Returns
     ---------
-    None
+        None
 
     Notes
     ----------
@@ -477,21 +488,20 @@ def write_perms_and_correct_volumes_areas(self):
         print('--> Done writing permeability to h5 file')
 
 def pflotran(self):
-    """ Run pflotran
-    Copy PFLOTRAN run file into working directory and run with ncpus
+    """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
 
     Parameters
     ----------
-    DFN Class
+        self : object
+            DFN Class
 
     Returns
     ----------
-    None
+        None
 
     Notes
     ----------
-    Runs PFLOTRAN Executable
-
+    Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards
     """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
@@ -517,16 +527,17 @@ def pflotran_cleanup(self, index = 1):
     
     Parameters
     -----------
-    DFN Class
-    index, if PFLOTRAN has multiple dumps use this to pick which
-           dump is put into cellinfo.dat and darcyvel.dat
+        self : object 
+            DFN Class
+        index : int
+             Iif PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat
     Returns 
     ----------
-    None
+        None
 
     Notes
     ----------
-    Can be run in a loop
+        Can be run in a loop over all pflotran dumps
     """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
@@ -555,16 +566,19 @@ def create_dfn_flow_links(self, path = '../'):
 
     Paramters
     ---------
-    path: Absolute path to primary directory. 
+        self : object
+            DFN Class
+        path : string 
+            Absolute path to primary directory. 
    
     Returns
     --------
-    None
+        None
 
     Notes
     -------
-    Typically, the path is DFN.path, which is set by the command line argument -path
-    Currently only supported for PFLOTRAN
+        1. Typically, the path is DFN.path, which is set by the command line argument -path
+        2. Currently only supported for PFLOTRAN
     """
     files = ['full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat','full_mesh.stor','full_mesh_material.zone',
@@ -580,22 +594,24 @@ def create_dfn_flow_links(self, path = '../'):
             print("--> Error Creating link for %s"%f)
  
 def uncorrelated(self, mu, sigma, path = '../'):
-    """
-    Creates Fracture Based Log-Normal Permeability field with mean mu and variance mu
-    Aperture is dervived using the cubic law
+    """ Creates Fracture Based Log-Normal Permeability field with mean mu and variance sigma. Aperture is dervived using the cubic law
+    
     Parameters
     -----------
-    mu: Mean of Permeability field
-    sigma: Variance of permeability field
-    path: path to original network. Can be current directory
+        mu : double 
+            Mean of LogNormal Permeability field
+        sigma : double
+             Variance of permeability field
+        path : string 
+            path to original network. Can be current directory
 
     Returns
     ----------
-    None
+        None
 
     Notes
     ----------
-    mu is the actual value of perm, not log(perm)
+    mu is the mean of perm not log(perm)
 
     """
     print '--> Creating Uncorrelated Transmissivity Fields'
@@ -652,15 +668,16 @@ def inp2vtk_python(self):
 
     Parameters
     ----------
-    DFN Class
+        self : object 
+            DFN Class
 
     Returns
     --------
-    None
+        None
 
     Notes
     --------
-    For a mesh base.inp, this dumps a VTK file named base.vtk
+        For a mesh base.inp, this dumps a VTK file named base.vtk
     """
     import pyvtk as pv
     if self.flow_solver != "PFLOTRAN":
@@ -713,12 +730,14 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Replace CELL_DATA with POINT_DATA in the VTK output.
     Parameters
     ----------
-    DFN Class
-    grid_vtk_file
+        self : object 
+            DFN Class
+        grid_vtk_file : string
+            Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
 
     Returns
     --------
-    None
+        None
 
     Notes
     --------
@@ -769,15 +788,16 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     print '--> Parsing PFLOTRAN output complete'
 
 def correct_stor_file(self):
-    """corrects volumes in stor file to account for apertures
+    """Corrects volumes in stor file to account for apertures
 
     Parameters
     ----------
-    DFN Class
+        self : object
+            DFN Class
 
     Returns
     --------
-    None
+        None
 
     Notes
     --------
@@ -810,15 +830,15 @@ def correct_perm_for_fehm():
     
     Parameters
     ----------
-    None
+        None
 
     Returns
     ---------
-    None
+        None
 
     Notes
     ------------
-    Only adds a new line if the last line is not empty
+        Only adds a new line if the last line is not empty
     """
     fp = open("perm.dat")
     lines = fp.readlines()
@@ -836,11 +856,12 @@ def fehm(self):
 
     Parameters
     ----------
-    DFN Class
+        self : object 
+            DFN Class
    
     Returns
     -------
-    None
+        None
 
     Notes
     -----

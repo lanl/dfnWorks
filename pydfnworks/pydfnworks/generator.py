@@ -124,6 +124,9 @@ def create_network(self):
     if os.path.isfile("params.txt") is False:
         sys.exit("ERROR! Generation Failed\nExiting Program.")
     else:
+        num_poly,h,_,_,_=parse_params_file(quite=True)
+        DFN.num_frac = num_poly
+        DFN.h = h 
         print('-'*80)
         print("Generation Succeeded")
         print('-'*80)
