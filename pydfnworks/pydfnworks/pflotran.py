@@ -2,7 +2,12 @@
 """
 functions for using pflotran in dfnworks
 """
-
+import os 
+import subprocess
+import sys
+import glob
+import shutil
+from time import time 
 import numpy as np
 
 

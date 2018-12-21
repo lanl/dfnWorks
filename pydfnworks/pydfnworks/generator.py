@@ -3,6 +3,7 @@ import sys
 import shutil
 from time import time
 import subprocess
+from mesh_dfn_helper import parse_params_file
 
 def dfn_gen(self,output=True):
     ''' Wrapper script the runs the dfnGen workflow.     
@@ -125,8 +126,8 @@ def create_network(self):
         sys.exit("ERROR! Generation Failed\nExiting Program.")
     else:
         num_poly,h,_,_,_=parse_params_file(quite=True)
-        DFN.num_frac = num_poly
-        DFN.h = h 
+        self.num_frac = num_poly
+        self.h = h 
         print('-'*80)
         print("Generation Succeeded")
         print('-'*80)
