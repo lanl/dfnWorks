@@ -78,6 +78,16 @@ Running Flow
 .. automodule:: pydfnworks.flow
     :members:
 
+Running Flow: PFLOTRAN
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.pflotran
+    :members:
+
+Running Flow: FEHM 
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.fehm
+    :members:
+
 Processing Flow
 ^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.mass_balance

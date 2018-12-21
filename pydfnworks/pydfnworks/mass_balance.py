@@ -21,15 +21,15 @@ def get_domain():
 
     Parameters
     ----------
-    None
+        None
 
     Returns
     -------
-    domain (dict): Dictionary of domain sizes in x, y, z
+        domain (dict): Dictionary of domain sizes in x, y, z
 
     Notes
     -----
-    parse_params_file() is in mesh_dfn_helper.py
+        parse_params_file() is in mesh_dfn_helper.py
 '''
     _,_,_,_,domain = parse_params_file(quite=True)
     return domain
@@ -39,14 +39,19 @@ def parse_pflotran_input(pflotran_input_file):
 
     Parameters
     ----------
-    pflotran_input_file (string): Name of PFLOTRAN input file
+        pflotran_input_file : string
+            Name of PFLOTRAN input file
 
     Returns
     -------
-    inflow_pressure (float) : Inflow Pressure boundary condition
-    outflow_pressure (float) : Outflow pressure boundary condition
-    inflow_file (sting) : Name of inflow boundary *.ex file 
-    direction (string) : direction of flow x, y, or z
+        inflow_pressure : double
+            Inflow Pressure boundary condition
+        outflow_pressure : float
+            Outflow pressure boundary condition
+        inflow_file : string
+            Name of inflow boundary *.ex file 
+        direction : string 
+            Primary direction of flow x, y, or z
 
     Notes
     -----
@@ -130,13 +135,17 @@ def flow_rate(darcy_vel_file, boundary_file):
 
     Parameters
     ----------
-    darcy_vel_file (string): Name of concatenated Darcy velocity file
-    boundary_file (string): *ex file for the inflow boundary
+        darcy_vel_file : string
+            Name of concatenated Darcy velocity file
+        boundary_file : string
+             *ex file for the inflow boundary
 
     Returns
     -------
-    mass_rate (float): Mass flow rate across the inflow boundary
-    volume_rate (float): Volumetric flow rate across the inflow boundary
+        mass_rate : float
+            Mass flow rate across the inflow boundary
+        volume_rate : float
+            Volumetric flow rate across the inflow boundary
 
     Notes
     -----
@@ -190,17 +199,24 @@ def dump_effective_perm(local_jobname,mass_rate,volume_rate,domain,direction, in
 
     Parameters
     ----------
-    local_jobname (string): Jobname
-    mass_rate (float): Mass flow rate through inflow boundary
-    volume_rate (float): Volumetric flow rate through inflow boundary
-    direction (string): Primary direction of flow (x, y, or z)
-    domain (dict): Dictionary of domain sizes in x, y, z
-    inflow_pressure (float): Inflow boundary pressure
-    outflow_pressure (float): Outflow boundary pressure
+        local_jobname  : string
+            Jobname
+        mass_rate : float
+            Mass flow rate through inflow boundary
+        volume_rate : float
+            Volumetric flow rate through inflow boundary
+        direction : string
+            Primary direction of flow (x, y, or z)
+        domain : dict
+            Dictionary of domain sizes in x, y, z
+        inflow_pressure : float
+            Inflow boundary pressure
+        outflow_pressure : float
+            Outflow boundary pressure
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----
@@ -260,11 +276,12 @@ def effective_perm(self):
 
     Parameters
     ----------
-    DFN Class
+        self : object 
+            DFN Class
 
     Returns
     -------
-    None
+        None
 
     Notes
     -----

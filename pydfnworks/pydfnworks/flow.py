@@ -93,45 +93,6 @@ def dfn_flow(self,dump_vtk=True):
     print("Time Required for dfnFlow %0.2f seconds\n"%delta_time)
     print('='*80)
 
-def inp2gmv(self, inp_file=''):
-    """ Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv
-
-    Parameters
-    ----------
-        self : object
-            DFN Class
-        inp_file : str
-            Name of inp file if not an attribure of self
-
-    Returns
-    ----------
-    None
-
-    Notes
-    ---------
-    """
-
-    if inp_file:
-        self.inp_file = inp_file
-    else:
-        inp_file = self.inp_file
-
-    if inp_file == '':
-        sys.exit('ERROR: inp file must be specified in inp2gmv!')
-
-    gmv_file = inp_file[:-4] + '.gmv'
-
-    with open('inp2gmv.lgi', 'w') as fid:
-        fid.write('read / avs / ' + inp_file + ' / mo\n')
-        fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
-        fid.write('finish \n\n')
-
-    cmd = lagrit_path + ' <inp2gmv.lgi ' + '> lagrit_inp2gmv.txt'
-    failure = subprocess.call(cmd, shell = True)
-    if failure:
-        sys.exit('ERROR: Failed to run LaGrit to get gmv from inp file!')
-    print("--> Finished writing gmv format from avs format")
-
 def create_dfn_flow_links(self, path = '../'):
     """ Create symlinks to files required to run dfnFlow that are in another directory. 
 
@@ -233,41 +194,4 @@ def uncorrelated(self, mu, sigma, path = '../'):
         os.symlink(output_filename, 'perm.dat')
     except:
         print("WARNING!!!! Could not make symlink to perm.dat file")
-
-def correct_stor_file(self):
-    """Corrects volumes in stor file to account for apertures
-
-    Parameters
-    ----------
-        self : object
-            DFN Class
-
-    Returns
-    --------
-        None
-
-    Notes
-    --------
-    Currently does not work with cell based aperture
-    """
-     # Make input file for C Stor converter
-    if self.flow_solver != "FEHM":
-        sys.exit("ERROR! Wrong flow solver requested")
-
-    self.stor_file = self.inp_file[:-4] + '.stor'
-    self.mat_file= self.inp_file[:-4] + '_material.zone'
-    f = open("convert_stor_params.txt", "w")
-    f.write("%s\n"%self.mat_file)
-    f.write("%s\n"%self.stor_file)
-    f.write("%s"%(self.stor_file[:-5]+'_vol_area.stor\n'))
-    f.write("%s\n"%self.aper_file)
-    f.close()
-
-    t = time()
-    cmd = os.environ['CORRECT_STOR_EXE']+' convert_stor_params.txt' 
-    failure = subprocess.call(cmd, shell = True)
-    if failure > 0:
-            sys.exit('ERROR: stor conversion failed\nExiting Program')
-    elapsed = time() - t
-    print('--> Time elapsed for STOR file conversion: %0.3f seconds\n'%elapsed)
 
