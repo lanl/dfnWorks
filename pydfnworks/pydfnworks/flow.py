@@ -96,7 +96,7 @@ def dfn_flow(self,dump_vtk=True):
 def create_dfn_flow_links(self, path = '../'):
     """ Create symlinks to files required to run dfnFlow that are in another directory. 
 
-    Paramters
+    Parameters
     ---------
         self : object
             DFN Class

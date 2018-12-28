@@ -409,7 +409,7 @@ def pflotran_cleanup(self, index = 1):
         self : object 
             DFN Class
         index : int
-             Iif PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat
+             If PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat
     Returns 
     ----------
         None
@@ -442,7 +442,7 @@ def pflotran_cleanup(self, index = 1):
 
     
 def inp2vtk_python(self):
-    """ Using Python VTK library, convert inp file to VTK file.  then change name of CELL_DATA to POINT_DATA.
+    """ Using Python VTK library, convert inp file to VTK file.  
 
     Parameters
     ----------
@@ -502,6 +502,7 @@ def inp2vtk_python(self):
 
     print('--> Writing inp data to vtk format')
     vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),'Unstructured pflotran grid')
+    
     vtk.tofile(vtk_file)
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):

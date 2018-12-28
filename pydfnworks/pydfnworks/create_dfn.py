@@ -11,6 +11,7 @@ def commandline_options():
     Returns
     ---------
         options : argparse function
+            command line options 
    
     Notes
     ---------
@@ -27,8 +28,8 @@ def commandline_options():
                 PFLORAN Input File (Mandatory, can be included within the input file)
             -trans : string
                 Transport Input File (Mandatory, can be included within the input file)
-            -prune : string
-                Prune Input File 
+            -prune_file : string
+                Absolute path to the prune Input File 
             -path : string
                 Path to another DFN run that you want to base the current run from 
             -cell : bool
@@ -60,15 +61,13 @@ def commandline_options():
         sys.exit("Error: Jobname is required. Exiting.")
     return options
 
-def create_dfn(dfnGen_file="", dfnFlow_file="", dfnTrans_file=""):
+def create_dfn():
     '''Parse command line inputs and input files to create and populate dfnworks class
 
     Parameters
     ----------
-        dfnGen_file : string
-        dfnFlow_file : string
-        dfnTrans_file : string
-            
+        None
+ 
     Returns
     -------
         DFN : object 

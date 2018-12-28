@@ -125,11 +125,6 @@ def worker(work_queue, visual_mode, num_poly):
         True : bool
             If job is complete
 
-
-    Notes:
-    -----
-    None   
-    
 """    
     try:
         for fracture_id in iter(work_queue.get, 'STOP'):
@@ -168,7 +163,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
 
     Notes
     -----
-    None
+        If one fracture fails meshing, program will exit. 
 
     """ 
     t_all = time.time()

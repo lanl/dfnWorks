@@ -17,7 +17,7 @@ __email__ = 'satkarra@lanl.gov'
 
 
 def get_domain():
-    ''' Return dictionary of domain x,y,z
+    ''' Return dictionary of domain x,y,z by calling parse_params_file
 
     Parameters
     ----------
@@ -25,7 +25,8 @@ def get_domain():
 
     Returns
     -------
-        domain (dict): Dictionary of domain sizes in x, y, z
+        domain : dict
+            Dictionary of domain sizes in x, y, z
 
     Notes
     -----

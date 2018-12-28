@@ -6,8 +6,7 @@ import subprocess
 from mesh_dfn_helper import parse_params_file
 
 def dfn_gen(self,output=True):
-    ''' Wrapper script the runs the dfnGen workflow.     
-    Run the dfnGen workflow: 
+    ''' Wrapper script the runs the dfnGen workflow:    
         1) make_working_directory: Create a directory with name of job
         2) check_input: Check input parameters and create a clean version of the input file
         3) create_network: Create network. DFNGEN v2.0 is called and creates the network

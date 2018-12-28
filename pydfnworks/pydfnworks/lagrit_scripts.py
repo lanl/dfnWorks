@@ -106,7 +106,7 @@ finish
 
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
-    """create parameteri.mlgi files used in running LaGriT Scripts
+    """Create parameteri.mlgi files used in running LaGriT Scripts
     
     Parameters
     ----------

@@ -7,7 +7,7 @@ import subprocess
 def dfn_trans(self):
     """Primary driver for dfnTrans. 
 
-    Paramters
+    Parameters
     ---------
         self : object
             DFN Class 
@@ -33,7 +33,7 @@ def dfn_trans(self):
 def copy_dfn_trans_files(self):
     """Creates symlink to dfnTrans Execuateble and copies input files for dfnTrans into working directory
 
-    Paramters
+    Parameters
     ---------
         self : object
             DFN Class
@@ -58,7 +58,7 @@ def copy_dfn_trans_files(self):
 def run_dfn_trans(self):
     """ Execute dfnTrans
 
-    Paramters
+    Parameters
     ---------
         self : object
             DFN Class  
@@ -76,7 +76,7 @@ def run_dfn_trans(self):
 def create_dfn_trans_links(self, path = '../'):
     """ Create symlinks to files required to run dfnTrans that are in another directory. 
 
-    Paramters
+    Parameters
     ---------
         self : object 
             DFN Class
@@ -110,7 +110,7 @@ def create_dfn_trans_links(self, path = '../'):
 def check_dfn_trans_run_files(self):
     """ Ensures that all files required for dfnTrans run are in the current directory
  
-    Paramters
+    Parameters
     ---------
         self : object 
             DFN Class

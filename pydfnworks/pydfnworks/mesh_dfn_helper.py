@@ -90,7 +90,7 @@ def check_dudded_points(dudded,hard = False):
     
     Notes
     -----
-    If number of dudded points is incorrect, program will exit. 
+    If number of dudded points is incorrect by over 1%, program will exit. 
 
     """
     print("Checking that number of Dudded points is correct")

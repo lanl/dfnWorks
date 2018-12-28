@@ -19,7 +19,7 @@ def check_input(self, input_file='',output_file=''):
     ----------
         input_file : string
             name of dfnGen input file
-        output_file : name 
+        output_file : string 
             Name of stripped down input file for DFNGen (input_file_clean.dat) 
 
     Returns
