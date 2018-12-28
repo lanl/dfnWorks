@@ -15,7 +15,7 @@ if __name__ == "__main__":
     define_paths()
     main_time = time()
     print 'Compiling executables'
-    subprocess.call(os.environ['python_dfn'] + ' compile.py', shell=True)  
+    subprocess.call(os.environ['PYTHON_EXE'] + ' compile.py', shell=True)  
     DFN = create_dfn()
     if type(DFN) is ' NoneType':
         print 'ERROR: DFN object not created correctly'
@@ -24,7 +24,6 @@ if __name__ == "__main__":
     DFN.dfn_gen()
     DFN.dfn_flow()
     DFN.dfn_trans()
-    DFN.cleanup_files_at_end()
 
     main_elapsed = time() - main_time
     timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
