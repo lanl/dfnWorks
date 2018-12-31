@@ -17,7 +17,7 @@ def create_graph(self, graph_type, inflow, outflow):
         self : object
             DFN Class object 
         graph_type : string
-            Option for what graph represenation of the DFN is requested. Currently supported are fracture and intersection. 
+            Option for what graph representation of the DFN is requested. Currently supported are fracture and intersection. 
         inflow : string
             Name of inflow boundary (connect to source)
         outflow : string
@@ -30,23 +30,22 @@ def create_graph(self, graph_type, inflow, outflow):
 
     Notes
     -----
-    Bipartite graph is not yet supported
 
 """
 
 
     if graph_type == "fracture":
-        G = create_graph_fracture(inflow, outflow)
+        G = create_fracture_graph(inflow, outflow)
     elif graph_type == "intersection":
-        G = create_graph_intersection(inflow, outflow)
+        G = create_intersection_graph(inflow, outflow)
     elif graph_type == "bipartite":
-        G = create_graph_bipartite(inflow, outflow)
+        G = create_bipartite_graph(inflow, outflow)
     else:
         print("ERROR! Unknown graph type")
         return [] 
     return G
 
-def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
+def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat"):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -93,7 +92,8 @@ def create_graph_fracture(inflow, outflow, topology_file = "connectivity.dat"):
     G.add_node('s')
     G.add_node('t')
     G.add_edges_from(zip(['s']*(len(inflow)),inflow))
-    G.add_edges_from(zip(outflow,['t']*(len(outflow))))    
+    G.add_edges_from(zip(outflow,['t']*(len(outflow))))   
+    add_pem(G) 
     print("--> Graph loaded")
     return G
 
@@ -125,7 +125,7 @@ def boundary_index(bc_name):
     except:
         sys.exit("Unknown boundary condition: %s\nExiting"%bc)
 
-def create_graph_intersection(inflow, outflow, intersection_file="intersection_list.dat"):
+def create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat"):
     """ Create a graph based on topology of network.
     Edges are represented as nodes and if two intersections
     are on the same fracture, there is an edge between them in the graph. 
@@ -230,26 +230,73 @@ def create_graph_intersection(inflow, outflow, intersection_file="intersection_l
             G.add_edge(i,'s',frac='s', length=0.0)
         if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
             G.add_edge(i,'t',frac='t', length=0.0)     
+    add_pem(G) 
     print("Graph Construction Complete")
     return G
 
-def create_graph_bipartite(inflow, outflow):
-    """Creates a Bipartie Graph of the DFN - Not currently supported.
+def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.dat'):
+    """Creates a bipartite graph of the DFN.
+    Nodes are in two sets, fractures and intersections, with edges connecting them.
 
     Parameters
-    ---------
-         inflow : string
-            Name of inflow boundary (connect to source)
-        outflow : string
-            Name of outflow boundary (connect to target)
+    ----------
+        inflow : str
+            name of inflow boundary
+        outflow : str
+            name of outflow boundary
+        intersection_list: str
+             filename of intersections generated from DFN
+
     Returns
     -------
-        G : NetworkX Graph
-            Currently empty networkX graph
+        B : NetworkX Graph
 
+    Notes
+    -----
+    See Hyman et al. 2018 "Identifying Backbones in Three-Dimensional Discrete Fracture Networks: A Bipartite Graph-Based Approach" SIAM Multiscale Modeling and Simulation for more details 
 """
-    print("Not supported yet, returning empty graph")
-    return nx.Graph()
+    # generate sequential letter sequence as ids for fractures
+    # e..g aaaaa aaaaab aaaaac
+    from itertools import product
+    def intersection_id_generator(length=5):
+        chars='abcdefghijklmnopqrstuvwxyz'
+        for p in  product(chars, repeat=length):
+            yield(''.join(p))
+
+    B = nx.Graph(representation="bipartite")
+
+    # keep track of the sets of fractures and intersections
+    B.fractures = set()
+    B.intersections = set()
+    intersection_id= intersection_id_generator()
+
+    # translation table for source and sink  labels
+    inflow_index=boundary_index(inflow)
+    outflow_index=boundary_index(outflow)
+    source_or_sink = {inflow_index:'source', outflow_index:'sink'}
+
+    with open(intersection_list) as f:
+        header = f.readline()
+        data = f.read().strip()
+        for line in data.split('\n'):
+            tmp = line.split(' ')
+            fracture1 = tmp[0]
+            fracture2 = tmp[1]
+            #fracture1,fracture2,*extra = line.split(' ')
+            fracture1 = int(fracture1)
+            if fracture1 < 0:
+                fracture1 = source_or_sink[fracture1]
+            fracture2 = int(fracture2)
+            if fracture2 < 0:
+                fracture2 = source_or_sink[fracture2]
+            intersection = next(intersection_id)
+            B.add_edge(intersection, fracture1)
+            B.add_edge(intersection, fracture2)
+            B.intersections.add(intersection)
+            B.fractures.add(fracture1)
+            B.fractures.add(fracture2)
+    return B
+
 
 def k_shortest_paths(G, k, source, target, weight):
     """Returns the k shortest paths in a graph 
@@ -301,6 +348,7 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
 
     Notes
     -----
+        See Hyman et al. 2017 "Predictions of first passage times in sparse discrete fracture networks using graph-based reductions" Physical Review E for more details
 """
 
     print("\n--> Determining %d shortest paths in the network"%k)
@@ -519,16 +567,14 @@ def load_json_graph(self,name):
     print("Complete")
     return G
 
-def add_perm(self,G):
-    """ Add fracture permeability to Graph. If Graph represenation is
-    fracture, then permeability is a node attribute. If graph represenation 
+def add_perm(G):
+    """ Add fracture permeability to Graph. If Graph representation is
+    fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
 
 
     Parameters
     ---------- 
-        self : object 
-            DFN Class
         G :networkX graph
             NetworkX Graph based on the DFN
    
@@ -561,3 +607,6 @@ def add_perm(self,G):
             else:   
                 G[u][v]['perm'] = 1.0
                 G[u][v]['iperm'] = 1.0
+    elif G.graph['representation'] == "bipartite":
+        print("Not supported for bipartite")
+

@@ -39,7 +39,7 @@ class dfnworks(Frozen):
     from transport import dfn_trans
     # Specific functions
     from create_dfn_functions import commandline_options
-    from dfn2graph import create_graph, k_shortest_paths_backbone, add_perm, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
+    from dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
     from general_functions import dump_time, print_run_time 
    
     from gen_input import check_input
