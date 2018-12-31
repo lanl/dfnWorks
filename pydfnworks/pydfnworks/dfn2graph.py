@@ -17,7 +17,7 @@ def create_graph(self, graph_type, inflow, outflow):
         self : object
             DFN Class object 
         graph_type : string
-            Option for what graph representation of the DFN is requested. Currently supported are fracture and intersection. 
+            Option for what graph representation of the DFN is requested. Currently supported are fracture, intersection, and bipartitie 
         inflow : string
             Name of inflow boundary (connect to source)
         outflow : string
