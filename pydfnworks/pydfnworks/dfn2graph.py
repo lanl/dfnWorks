@@ -255,6 +255,7 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
     -----
     See Hyman et al. 2018 "Identifying Backbones in Three-Dimensional Discrete Fracture Networks: A Bipartite Graph-Based Approach" SIAM Multiscale Modeling and Simulation for more details 
 """
+    print("--> Creating bipartite graph")
     # generate sequential letter sequence as ids for fractures
     # e..g aaaaa aaaaab aaaaac
     from itertools import product
@@ -273,7 +274,7 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
     # translation table for source and sink  labels
     inflow_index=boundary_index(inflow)
     outflow_index=boundary_index(outflow)
-    source_or_sink = {inflow_index:'source', outflow_index:'sink'}
+    #source_or_sink = {inflow_index:'source', outflow_index:'sink'}
 
     with open(intersection_list) as f:
         header = f.readline()
@@ -284,17 +285,20 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
             fracture2 = tmp[1]
             #fracture1,fracture2,*extra = line.split(' ')
             fracture1 = int(fracture1)
-            if fracture1 < 0:
-                fracture1 = source_or_sink[fracture1]
             fracture2 = int(fracture2)
             if fracture2 < 0:
-                fracture2 = source_or_sink[fracture2]
+                if fracture2 == inflow_index:
+                    fracture2 = 's'
+                elif fracture2 == outflow_index:
+                    fracture2 = 't'
+ 
             intersection = next(intersection_id)
             B.add_edge(intersection, fracture1)
             B.add_edge(intersection, fracture2)
             B.intersections.add(intersection)
             B.fractures.add(fracture1)
             B.fractures.add(fracture2)
+    print("--> Complete")
     return B
 
 
