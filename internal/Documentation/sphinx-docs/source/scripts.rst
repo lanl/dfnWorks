@@ -12,10 +12,6 @@ The tests that come with dfnWorks depend on pathnames which vary depending on wh
 
 ``python fix_paths.py`` 
 
-compile.py: compile dfnWorks components
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``compile.py`` script is called by ``run.py``, but can also be called on its own. This script compiles the C and C++ components of dfnWorks. Without arguments, the script performs the compiling. With the argument 'clean,' the script cleans up C and C++ object files, before compiling.
 
 test.py: test dfnWorks 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
