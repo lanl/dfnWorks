@@ -234,9 +234,11 @@ def create_intersection_graph(inflow, outflow, intersection_file="intersection_l
     print("Graph Construction Complete")
     return G
 
-def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.dat'):
+def create_bipartite_graph(inflow, outflow, intersection_list='intersection_list.dat',
+                           fracture_info='fracture_info.dat'):
     """Creates a bipartite graph of the DFN.
     Nodes are in two sets, fractures and intersections, with edges connecting them.
+
 
     Parameters
     ----------
@@ -246,6 +248,8 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
             name of outflow boundary
         intersection_list: str
              filename of intersections generated from DFN
+        fracture_infor : str
+                filename for fracture information
 
     Returns
     -------
@@ -255,7 +259,9 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
     -----
     See Hyman et al. 2018 "Identifying Backbones in Three-Dimensional Discrete Fracture Networks: A Bipartite Graph-Based Approach" SIAM Multiscale Modeling and Simulation for more details 
 """
-    print("--> Creating bipartite graph")
+
+    print("--> Creating Bipartite Graph")
+
     # generate sequential letter sequence as ids for fractures
     # e..g aaaaa aaaaab aaaaac
     from itertools import product
@@ -264,26 +270,21 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
         for p in  product(chars, repeat=length):
             yield(''.join(p))
 
-    B = nx.Graph(representation="bipartite")
-
+    B = nx.Graph()
     # keep track of the sets of fractures and intersections
     B.fractures = set()
     B.intersections = set()
     intersection_id= intersection_id_generator()
 
-    # translation table for source and sink  labels
     inflow_index=boundary_index(inflow)
     outflow_index=boundary_index(outflow)
-    #source_or_sink = {inflow_index:'source', outflow_index:'sink'}
+
 
     with open(intersection_list) as f:
         header = f.readline()
         data = f.read().strip()
         for line in data.split('\n'):
-            tmp = line.split(' ')
-            fracture1 = tmp[0]
-            fracture2 = tmp[1]
-            #fracture1,fracture2,*extra = line.split(' ')
+            fracture1,fracture2,x,y,z,length = line.split(' ')
             fracture1 = int(fracture1)
             fracture2 = int(fracture2)
             if fracture2 < 0:
@@ -291,14 +292,30 @@ def create_bipartite_graph(inflow, outflow,intersection_list='intersection_list.
                     fracture2 = 's'
                 elif fracture2 == outflow_index:
                     fracture2 = 't'
- 
             intersection = next(intersection_id)
+            # add intersection node explicitly to include intersection properties
+            B.add_node(intersection, x=float(x), y=float(y), z=float(z), length=float(length))
             B.add_edge(intersection, fracture1)
             B.add_edge(intersection, fracture2)
             B.intersections.add(intersection)
             B.fractures.add(fracture1)
             B.fractures.add(fracture2)
+
+    # add  source and sink for intersections so they will appear in intersection projection
+    B.add_edge('intersection_s','s')
+    B.add_edge('intersection_t','t')
+
+    # add fracture info
+    with open(fracture_info) as f:
+        header = f.readline()
+        data = f.read().strip()
+        for fracture,line in enumerate(data.split('\n'),1):
+            c,perm,aperture = line.split(' ')
+            B.node[fracture]['perm']=float(perm)
+            B.node[fracture]['aperture']=float(aperture)
+
     print("--> Complete")
+
     return B
 
 
@@ -612,5 +629,13 @@ def add_perm(G):
                 G[u][v]['perm'] = 1.0
                 G[u][v]['iperm'] = 1.0
     elif G.graph['representation'] == "bipartite":
-        print("Not supported for bipartite")
+        # add fracture info
+        with open('fracture_info.dat') as f:
+            header = f.readline()
+            data = f.read().strip()
+            for fracture,line in enumerate(data.split('\n'),1):
+                c,perm,aperture = line.split(' ')
+                G.node[fracture]['perm']=float(perm)
+                G.node[fracture]['iperm']=1.0/float(perm)
+                G.node[fracture]['aperture']=float(aperture)
 
