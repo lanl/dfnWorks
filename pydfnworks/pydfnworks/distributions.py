@@ -1,5 +1,5 @@
-import helper
 import gen_input
+import gen_input_helper
 
 class distr():
     """ 
@@ -19,7 +19,7 @@ class distr():
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self.params = params
         global distr_helper_methods  
-        distr_helper_methods = helper.input_helper(params, minFracSize) 
+        distr_helper_methods = gen_input_helper.input_helper(params, minFracSize) 
         self.ellipseFams = distr_helper_methods.value_of('nFamEll')
         self.rectFams = distr_helper_methods.value_of('nFamRect')
         self.numEdistribs = numEdistribs
