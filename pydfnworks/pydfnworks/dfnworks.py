@@ -51,7 +51,7 @@ class dfnworks(Frozen):
     from fehm import correct_stor_file, fehm
 
     from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
-    from meshdfn import mesh_network
+    from mesh_dfn import mesh_network
     from mesh_dfn_helper import clean_up_files_after_prune, create_mesh_links, inp2gmv 
     from legal import legal
     from paths import define_paths
