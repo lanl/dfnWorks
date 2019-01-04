@@ -12,7 +12,7 @@ setup(name='pydfnworks',
       url='https://dfnworks.lanl.gov',
       author='Jeffrey Hyman, Satish Karra, Daniel Livingston, Nataliia Makedonska',
       author_email='dfnworks@lanl.gov',
-      licenses='GNU BSD',
+      licenses='BSD',
       packages=['pydfnworks'],
       install_requires=[
           'numpy',
