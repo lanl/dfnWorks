@@ -229,7 +229,7 @@ def clean_up_files_after_prune(self):
     '''
 
     print("--> Editing DFN file based on fractures in %s"%self.prune_file)
-    keep_list = sort(genfromtxt(prune_file).astype(int)) 
+    keep_list = sort(genfromtxt(self.prune_file).astype(int)) 
     num_frac = len(keep_list)
     
     print("--> Editing params.txt file") 
