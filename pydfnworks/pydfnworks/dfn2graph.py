@@ -438,7 +438,7 @@ def dump_fractures(self, G, filename):
         for u,v,d in G.edges(data=True):
             nodes.append(G[u][v]['frac'])
         nodes = list(set(nodes))
-    elif G.graph['represenation'] == "bipartite":
+    elif G.graph['representation'] == "bipartite":
         H = nx.projected_graph(B, B.fractures, multigraph=multigraph)
         nodes = list(H.nodes()) 
     nodes = pull_source_and_target(nodes) 
