@@ -52,7 +52,7 @@ class dfnworks(Frozen):
 
     from transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
     from mesh_dfn import mesh_network
-    from mesh_dfn_helper import np2gmv 
+    from mesh_dfn_helper import inp2gmv 
     from legal import legal
     from paths import define_paths
     from mass_balance import effective_perm
