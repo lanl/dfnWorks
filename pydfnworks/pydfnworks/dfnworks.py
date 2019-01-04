@@ -38,7 +38,7 @@ class dfnworks(Frozen):
     from flow import dfn_flow
     from transport import dfn_trans
     # Specific functions
-    from create_dfn_functions import commandline_options
+    #from create_dfn import commandline_options
     from dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
     from general_functions import dump_time, print_run_time 
    
@@ -89,4 +89,53 @@ class dfnworks(Frozen):
         self.freeze = False
         self.legal()
         #options = create_dfn.commandline_options()
+ 
+def commandline_options():
+    """Read command lines for use in dfnWorks.
 
+    Parameters
+    ----------
+        None
+    
+    Returns
+    ---------
+        options : argparse function
+            command line options 
+   
+    Notes
+    ---------
+        Options:
+            -name : string
+                Path to working directory (Mandatory) 
+            -ncpu : int 
+                Number of CPUS (Optional, default=4)
+            -input : string 
+                Input file with paths to run files (Mandatory if the next three options are not specified)
+            -gen : string 
+                Generator Input File (Mandatory, can be included within the input file)
+            -flow : string 
+                PFLORAN Input File (Mandatory, can be included within the input file)
+            -trans : string
+                Transport Input File (Mandatory, can be included within the input file)
+            -prune_file : string
+                Absolute path to the prune Input File 
+            -path : string
+                Path to another DFN run that you want to base the current run from 
+            -cell : bool
+                True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
+    """
+    parser = argparse.ArgumentParser(description="Command Line Arguments for dfnWorks")
+    parser.add_argument("-name", "--jobname", default="", type=str,
+              help="jobname") 
+    parser.add_argument("-ncpu", "--ncpu", default=4, type=int, 
+              help="Number of CPUs")
+    parser.add_argument("-input", "--input_file", default="", type=str,
+              help="input file with paths to run files") 
+    parser.add_argument("-gen", "--dfnGen", default="", type=str,
+              help="Path to dfnGen run file") 
+    parser.add_argument("-flow", "--dfnFlow", default="", type=str,
+              help="Path to dfnFlow run file") 
+    parser.add_argument("-trans", "--dfnTrans", default="", type=str,
+              help="Path to dfnTrans run file") 
+    parser.add_argument("-path", "--path", default="", type=str,
+              help="Path to directory for sub-network runs") 
