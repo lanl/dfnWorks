@@ -64,7 +64,7 @@ did not provide file of fractures to keep.\nExiting program.")
         lagrit.edit_intersection_files(num_poly, fracture_list,self.path)
         num_poly = len(fracture_list)
     else:
-        num_poly, h, visual_mode, dudded_points, domain = mh.parse_params_file()
+        num_poly, h, params_visual_mode, dudded_points, domain = mh.parse_params_file()
         if visual_mode == None:
             visual_mode = params_visual_mode 
         fracture_list = range(1, num_poly + 1)
