@@ -96,7 +96,7 @@ did not provide file of fractures to keep.\nExiting program.")
         lagrit.define_zones()
 
     if prune:
-        mh.clean_up_files_after_prune(self.prune_file,self.path)        
+        mh.clean_up_files_after_prune(self)        
     
     mh.output_meshing_report(self.local_jobname,visual_mode)
     print("--> Meshing Complete")
