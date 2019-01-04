@@ -93,7 +93,7 @@ def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat"):
     G.add_node('t')
     G.add_edges_from(zip(['s']*(len(inflow)),inflow))
     G.add_edges_from(zip(outflow,['t']*(len(outflow))))   
-    add_pem(G) 
+    add_perm(G) 
     print("--> Graph loaded")
     return G
 
@@ -230,7 +230,7 @@ def create_intersection_graph(inflow, outflow, intersection_file="intersection_l
             G.add_edge(i,'s',frac='s', length=0.0)
         if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
             G.add_edge(i,'t',frac='t', length=0.0)     
-    add_pem(G) 
+    add_perm(G) 
     print("Graph Construction Complete")
     return G
 
