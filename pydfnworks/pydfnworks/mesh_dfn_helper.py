@@ -208,7 +208,7 @@ def output_meshing_report(local_jobname,visual_mode):
     f.close()
 
 
-def clean_up_files_after_prune(prune_file,path):
+def clean_up_files_after_prune(self):
     ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
     
     Parameters
@@ -228,12 +228,12 @@ def clean_up_files_after_prune(prune_file,path):
  
     '''
 
-    print("--> Editing DFN file based on fractures in %s"%prune_file)
+    print("--> Editing DFN file based on fractures in %s"%self.prune_file)
     keep_list = sort(genfromtxt(prune_file).astype(int)) 
     num_frac = len(keep_list)
     
     print("--> Editing params.txt file") 
-    fin = open(path+'/params.txt')
+    fin = open(self.path+'/params.txt')
     try:
         unlink('params.txt')
     except:
@@ -249,7 +249,7 @@ def clean_up_files_after_prune(prune_file,path):
     print("--> Complete") 
  
     print("--> Editing poly_info.dat file")
-    poly_info = genfromtxt(path+'poly_info.dat')[keep_list-1,:]
+    poly_info = genfromtxt(self.path+'poly_info.dat')[keep_list-1,:]
     try: 
         unlink('poly_info.dat')
     except:
@@ -261,7 +261,7 @@ def clean_up_files_after_prune(prune_file,path):
     print("--> Complete")
 
     print("--> Editing perm.dat file") 
-    perm = genfromtxt(path+'perm.dat', skip_header = 1)[keep_list-1, -1]
+    perm = genfromtxt(self.path+'perm.dat', skip_header = 1)[keep_list-1, -1]
     f = open('perm.dat', 'w+')
     f.write('permeability\n')
     for i in range(num_frac):
@@ -270,7 +270,7 @@ def clean_up_files_after_prune(prune_file,path):
     print("--> Complete") 
     
     print("--> Editing aperture.dat file") 
-    aperture = genfromtxt(path+'aperture.dat', skip_header = 1)[keep_list-1, -1]
+    aperture = genfromtxt(self.path+'aperture.dat', skip_header = 1)[keep_list-1, -1]
     f = open('aperture.dat', 'w+')
     f.write('aperture\n')
     for i in range(num_frac):
@@ -279,7 +279,7 @@ def clean_up_files_after_prune(prune_file,path):
     print("--> Complete") 
     
     print("--> Editing radii_Final.dat file") 
-    fin = open(path+'radii_Final.dat')
+    fin = open(self.path+'radii_Final.dat')
     fout = open('radii_Final.dat','w')
     # copy header
     line = fin.readline()
@@ -288,7 +288,7 @@ def clean_up_files_after_prune(prune_file,path):
     fout.write(line)
     fin.close()
     # write radii from remaining fractures
-    radii = genfromtxt(path+'radii_Final.dat',skip_header = 2 )[keep_list - 1,:]
+    radii = genfromtxt(self.path+'radii_Final.dat',skip_header = 2 )[keep_list - 1,:]
     for i in range(num_frac):
     	fout.write('%f %f %d\n'%(radii[i,0], radii[i,1], radii[i,2]))	
     fout.close()
