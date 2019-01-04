@@ -270,7 +270,7 @@ def create_bipartite_graph(inflow, outflow, intersection_list='intersection_list
         for p in  product(chars, repeat=length):
             yield(''.join(p))
 
-    B = nx.Graph()
+    B = nx.Graph(representation="bipartite")
     # keep track of the sets of fractures and intersections
     B.fractures = set()
     B.intersections = set()
