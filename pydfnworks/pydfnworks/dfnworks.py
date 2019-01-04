@@ -85,6 +85,9 @@ class dfnworks(Frozen):
         self.perm_cell_file = perm_cell_file
         self.aper_cell_file = aper_cell_file
         self.flow_solver = flow_solver
+
+        self.h = "" 
+
         self.dfnTrans_version= 2.2
         self.freeze = False
         self.legal()
