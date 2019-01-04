@@ -198,7 +198,12 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
             print('--> Finished calculating boundary connections')
             boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
-            epsilon = self.h * 10**-3
+            if self.h != "":
+                epsilon = self.h * 10**-3
+            else:
+                from mesh_dfn_helper import parse_params_file
+                _,self.h,_,_,_=parse_params_file(quite=True)
+                epsilon = self.h * 10**-3
  
             if (face == 'top'):
                 boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
