@@ -477,7 +477,7 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
     Edge weights must be numerical and non-negative
     """
     print("--> Identifying edge disjoint paths")
-    if G.graph['representation'] == "fracture":
+    if G.graph['representation'] != "intersection":
         print("--> ERROR!!! Wrong type of DFN graph represenation\nRepresentation must be intersection\nReturning Empty Graph\n")
         return nx.Graph()
     Gprime = G.copy()
