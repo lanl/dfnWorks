@@ -297,10 +297,10 @@ def create_bipartite_graph(inflow, outflow, intersection_list='intersection_list
             B.add_node(intersection, x=float(x), y=float(y), z=float(z), length=float(length))
             B.intersections.add(intersection)
             
-            B.add_edge(intersection, fracture1)
+            B.add_edge(intersection, fracture1,frac=fracture1)
             B.fractures.add(fracture1)
             if fracture2 > 0 or fracture2 == 's' or fracture2 == 't':
-                B.add_edge(intersection, fracture2)
+                B.add_edge(intersection, fracture2,frac=fracture2)
                 B.fractures.add(fracture2)
 
     # add  source and sink for intersections so they will appear in intersection projection
@@ -441,8 +441,11 @@ def dump_fractures(self, G, filename):
             nodes.append(G[u][v]['frac'])
         nodes = list(set(nodes))
     elif G.graph['representation'] == "bipartite":
-        H = nx.projected_graph(G, G.fractures, multigraph=multigraph)
-        nodes = list(H.nodes()) 
+        nodes = []
+        for u,v,d in G.edges(data=True):
+            nodes.append(G[u][v]['frac'])
+        nodes = list(set(nodes))
+
     nodes = pull_source_and_target(nodes) 
     fractures = [int(i) + 1 for i in nodes] 
     fractures = sorted(fractures)
