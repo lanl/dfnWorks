@@ -293,6 +293,39 @@ def clean_up_files_after_prune(self):
     	fout.write('%f %f %d\n'%(radii[i,0], radii[i,1], radii[i,2]))	
     fout.close()
     print("--> Complete") 
+
+    print("--> Editing normal_vectors.dat file") 
+    fin = open(self.path+'normal_vectors.dat')
+    fout = open('normal_vectors.dat','w')
+    # copy header
+    normal_vect = genfromtxt(self.path+'normal_vectors.dat')[keep_list - 1,:]
+    for i in range(num_frac):
+    	fout.write('%f %f %f\n'%(normal_vect[i,0], normal_vect[i,1], normal_vect[i,2]))	
+    fout.close()
+    print("--> Complete") 
+
+    print("--> Editing translations.dat file") 
+    fin = open(self.path+'translations.dat')
+    fout = open('translations.dat','w')
+    # copy header 
+    line = fin.readline()
+    fout.write(line)
+    i = 0
+    for line in fin.readlines():
+        tmp = line.split(' ')
+        if tmp[-1] != R:
+            points.append( (float(tmp[0]),float(tmp[1]),float(tmp[2]) ) 
+            i += 1
+    print points
+
+    points = points[keep_list-1,:]
+ 
+    for i in range(num_frac):
+    	fout.write('%f %f %f\n'%(points[i,0], points[i,1], points[i,2]))	
+    fout.close()
+    print("--> Complete") 
+
+
     print("--> Editing Fracture Files Complete")
 
 def create_mesh_links(path):
