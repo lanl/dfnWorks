@@ -491,9 +491,12 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None',k=''):
     Hprime = nx.Graph()
     Hprime.graph['representation'] = G.graph['representation']
     cnt = 0
+
     # if a number of paths in not provided k will equal the min cut between s and t
-    if k != '':
-        k = len(nx.minimum_edge_cut(G,'s','t'))
+    min_cut = len(nx.minimum_edge_cut(G,'s','t'))
+    if k == '' or k > min_cut: 
+        k = min_cut 
+
     while nx.has_path(Gprime, source, target):
         path = nx.shortest_path(Gprime, source, target, weight=weight)
         H = Gprime.subgraph(path)
