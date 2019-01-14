@@ -310,16 +310,14 @@ def clean_up_files_after_prune(self):
     # copy header 
     line = fin.readline()
     fout.write(line)
-    i = 0
+    points = []
     for line in fin.readlines():
         tmp = line.split(' ')
-        if tmp[-1] != R:
-            points.append( (float(tmp[0]),float(tmp[1]),float(tmp[2]) ) 
-            i += 1
-    print points
-
+        if tmp[-1] != 'R':
+            points.append( (float(tmp[0]),float(tmp[1]),float(tmp[2])) )
+    from numpy import asarray
+    points = asarray(points)
     points = points[keep_list-1,:]
- 
     for i in range(num_frac):
     	fout.write('%f %f %f\n'%(points[i,0], points[i,1], points[i,2]))	
     fout.close()
