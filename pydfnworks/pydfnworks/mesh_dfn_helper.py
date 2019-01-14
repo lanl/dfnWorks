@@ -119,7 +119,7 @@ def check_dudded_points(dudded,hard = False):
         print('--> WARNING!!! Number of points removed does not \
             match expected value')
         diff_ratio = float(diff)/float(total_points)
-        if diff_ratio < 0.01 or hard == False:
+        if diff_ratio < 0.002 or hard == False:
             print("However value is small: %d"%diff)
             print("Proceeding\n")
             return True
