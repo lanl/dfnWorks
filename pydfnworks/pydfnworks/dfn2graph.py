@@ -452,7 +452,7 @@ def dump_fractures(self, G, filename):
     print("--> Dumping %s"%filename)
     np.savetxt(filename, fractures, fmt = "%d")
 
-def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
+def greedy_edge_disjoint(self, G, source='s', target='t', weight='None',k=''):
     """
     Greedy Algorithm to find edge disjoint subgraph from s to t. 
     See Hyman et al. 2018 SIAM MMS
@@ -469,6 +469,8 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
             Ending node
         weight : string
             Edge weight used for finding the shortest path
+        k : int
+            Number of edge disjoint paths requested
     
     Returns
     -------
@@ -477,21 +479,30 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None'):
 
     Notes
     -----
-    Edge weights must be numerical and non-negative
+        1. Edge weights must be numerical and non-negative.
+        2. See Hyman et al. 2018 "Identifying Backbones in Three-Dimensional Discrete Fracture Networks: A Bipartite Graph-Based Approach" SIAM Multiscale Modeling and Simulation for more details 
+
     """
     print("--> Identifying edge disjoint paths")
     if G.graph['representation'] != "intersection":
-        print("--> ERROR!!! Wrong type of DFN graph represenation\nRepresentation must be intersection\nReturning Empty Graph\n")
+        print("--> ERROR!!! Wrong type of DFN graph representation\nRepresentation must be intersection\nReturning Empty Graph\n")
         return nx.Graph()
     Gprime = G.copy()
     Hprime = nx.Graph()
     Hprime.graph['representation'] = G.graph['representation']
+    cnt = 0
+    # if a number of paths in not provided k will equal the min cut between s and t
+    if k != '':
+        k = len(nx.minimum_edge_cut(G,'s','t'))
     while nx.has_path(Gprime, source, target):
         path = nx.shortest_path(Gprime, source, target, weight=weight)
         H = Gprime.subgraph(path)
         Hprime.add_edges_from(H.edges(data=True))
         for u,v,d in H.edges(data = True):
             Gprime.remove_edge(u,v)
+        cnt += 1
+        if cnt > k:
+            break
     print("--> Complete")
     return Hprime
 
