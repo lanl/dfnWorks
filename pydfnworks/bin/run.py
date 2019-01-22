@@ -27,8 +27,7 @@ if __name__ == "__main__":
 
     main_elapsed = time() - main_time
     timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-    print timing
-    dump_time(DFN.local_jobname, DFN.jobname,main_elapsed) 
+    DFN.dump_time("Total run time",main_elapsed)
     #dfn.print_run_time()	
     print("*"*80)
     print(DFN.jobname+' complete')

@@ -26,7 +26,7 @@ int InitPos()
   int  zonenumb_in=0, first_ind=0, last_ind=0;
   double ixmin=0, ixmax=0, iymin=0, iymax=0, izmin=0, izmax=0; 
   double px[4]={0.0, 0.0, 0.0, 0.0}, py[4]={0.0, 0.0, 0.0, 0.0};
-  
+     double weight_p=0.0;
    
   /* calculate number of fractures in in-flow boundary face of domain ****/
   // printf("fract %d ", node[nodezonein[0]-1].fracture[0]);
@@ -243,7 +243,55 @@ int InitPos()
 			  flag_in=5;	
 			  InitInMatrix(); 
 			  k_new=npart;
-			}
+			} // end if flag_in=5
+                           else
+                        {
+                        initfile=Control_File("init_fluxw:",11);
+                        res=strncmp(initfile.filename,"yes",3);
+                           if (res==0)
+                            {
+    /* Sixth option: place particles according to flux weights. Each particle has the same weight. The number of particles are placed propportionally to inflow flux on each cell */
+                                      	flag_in=6;
+					flag_w=1;
+                         initfile = Control_Param("init_delta:",12 );
+                         double deltaw = 0.0;
+                         
+                         deltaw=initfile.param;
+
+          frc=node[nodezonein[0]-1].fracture[0];
+          firstn=nodezonein[0];
+          lastn=nodezonein[0];
+// calculate total length of fractures at inflow boundary face
+          double length2=0.0, t_length=0.0;
+          for (i=0; i<nzone_in; i++)
+            {
+              if ((node[nodezonein[i]-1].fracture[0]!=frc)&&(node[nodezonein[i]-1].fracture[1]!=frc))
+                {
+                  lastn=nodezonein[i-1];
+                  length2=pow((node[firstn-1].coord[0]-node[lastn-1].coord[0]),2)+pow((node[firstn-1].coord[1]-node[lastn-1].coord[1]),2)+pow((node[firstn-1].coord[2]-node[lastn-1].coord[2]),2);
+                  t_length=t_length+sqrt(length2);
+
+                  frc=node[nodezonein[i]-1].fracture[0];
+                  firstn=nodezonein[i];
+                }
+            }
+          lastn=nodezonein[nzone_in-1];
+          length2=pow((node[firstn-1].coord[0]-node[lastn-1].coord[0]),2)+pow((node[firstn-1].coord[1]-node[lastn-1].coord[1]),2)+pow((node[firstn-1].coord[2]-node[lastn-1].coord[2]),2);
+          t_length=t_length+sqrt(length2);
+
+//calculate number of particles and flux weight per particle
+          npart = (int) (t_length/deltaw); 
+          printf("\n  Particles placed on %f [m]  from each other in total length  %f \n", deltaw, t_length);
+
+            weight_p=totalFluxIn/npart;
+            printf("\n  Requested number of particles %d with flux weight %5.12e (Total Flux %5.12e) \n", npart, weight_p, totalFluxIn); 
+         int npart_alloc=0;
+            npart_alloc=npart*2;
+       /*  memory allocatation for particle structures */
+      particle=(struct contam*) malloc (npart_alloc*sizeof(struct contam));
+                              }
+                         }//end if/else flag_in=6
+
 		    } //end if/else flag_in=5
            
 		} //end if flag_in=4
@@ -264,7 +312,7 @@ int InitPos()
   int firstcoor=0, secondcoor=0, frc_count=0;
   if (node[nodezonein[1]-1].fracture[0]==frc)
     {
-      if (fabs(node[nodezonein[0]-1].coord[0])-fabs(node[nodezonein[1]-1].coord[0])<1e-10)
+      if (fabs(node[nodezonein[0]-1].coord[0])-fabs(node[nodezonein[1]-1].coord[0])<1e-12)
 	{   
 	  firstcoor=1;
 	  secondcoor=2;
@@ -272,7 +320,7 @@ int InitPos()
       else
 	{
 	  firstcoor=0;
-	  if (fabs(node[nodezonein[0]-1].coord[1])-fabs(node[nodezonein[1]-1].coord[1])<1e-10)
+	  if (fabs(node[nodezonein[0]-1].coord[1])-fabs(node[nodezonein[1]-1].coord[1])<1e-12)
 	    secondcoor=2;
 	  else
 	    secondcoor=1;
@@ -343,7 +391,11 @@ int InitPos()
 		}
 	      if (flag_in==1)
 		k_new=InitParticles_np (k_current, firstn, lastn, parts_fracture, first_ind, last_ind);
-	      
+	
+              if (flag_in==6)
+                 k_new=InitParticles_flux(k_current, first_ind, last_ind, weight_p);
+
+      
 	      k_current=k_new;
 	   
 	      if (flag_in==3)
@@ -352,10 +404,10 @@ int InitPos()
 		  double cx1=0, cx2=0, cy1=0, cy2=0;
            
 		  /* define ends points of fracture edge, then calculate an intersection with starting region */ 
-		  inter_p[frc_count][0]=1e-10;
-		  inter_p[frc_count][1]=1e-10;
-		  inter_p[frc_count][2]=1e-10;
-		  inter_p[frc_count][3]=1e-10;
+		  inter_p[frc_count][0]=1e-12;
+		  inter_p[frc_count][1]=1e-12;
+		  inter_p[frc_count][2]=1e-12;
+		  inter_p[frc_count][3]=1e-12;
 		  if ((zonenumb_in==1)||(zonenumb_in==2)) 
 		    {
 		      cx1=node[firstn-1].coord[0];
@@ -521,6 +573,7 @@ int InitPos()
       printf("\n Program is terminated. \n");
       exit(1);
     }
+
   return k_new;
 }
 
@@ -537,12 +590,16 @@ int InitCell ()
       curcel=fracture[particle[np].fracture-1].firstcell+i;
       insc=InsideCell (curcel);
 
+
       if (insc==1)
 	{
 	  //	     printf("\n Particle %d is in initial cell number is %d in fracture %d\n",np+1, particle[np].cell, particle[np].fracture);
 	  break;
 	}
     }
+    if (insc==0)
+  
+
   return insc;  
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -574,10 +631,7 @@ int InitParticles_np (int k_current, int firstn, int lastn, int parts_fracture, 
       //      printf("%d %d %d %d \n", k_current, firstn, lastn, node[firstn-1].fracture[0]);
       particle[k_current].intcell=0;
       particle[k_current].time=0.0; 
-      if (flag_w==1)
-	particle[k_current].fl_weight=0.0;
-      else
-	particle[k_current].fl_weight=0.;
+      particle[k_current].fl_weight=0.0;
    
 
       k_current++;
@@ -596,9 +650,9 @@ int InitParticles_np (int k_current, int firstn, int lastn, int parts_fracture, 
 
 int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, int first_ind, int last_ind)
 {
-  /***********function defines particle's initial positions inside one fracture ***/
-  /***** here the given distance between particles dictates how many particles **/
-  /******************will be placed in one fracture*****************************/
+  /*********** function defines particle's initial positions inside one fracture ***/
+  /*****  here the given distance between particles dictates how many particles ***/
+  /****************** will be placed in one fracture *****************************/
   double deltax, deltay, edgelength, eqdist_x, eqdist_y;
   unsigned int j, pf;
   
@@ -635,10 +689,7 @@ int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, i
       particle[k_current].fracture=node[firstn-1].fracture[0];
       particle[k_current].intcell=0;
       particle[k_current].time=0.0; 
-      if (flag_w==1)
 	particle[k_current].fl_weight=0.0;
-      else
-	particle[k_current].fl_weight=0.;
     
  
       k_current++;
@@ -929,11 +980,19 @@ void InitInMatrix()
       particle[ii].cell=0;
       particle[ii].position[0]=node[number-1].coord_xy[0];
       particle[ii].position[1]=node[number-1].coord_xy[1];
-      particle[ii].time=0.0;    
+      particle[ii].time=0.0; 
+      particle[ii].weight[0]=0.0;
+      particle[ii].weight[1]=0.0;
+      particle[ii].weight[2]=0.0; 
+      particle[ii].prev_pos[0]=0.0;
+      particle[ii].prev_pos[1]=0.0;
+      particle[ii].intcell=0;
+      particle[ii].fl_weight=0.0;  
       // define a time that took for particle to reach fracture from a rock matrix 
       particle[ii].time=TimeFromMatrix(distance[ii]);
       sum_distance=sum_distance+distance[ii];
       //    	   fprintf(mdf," %5.9e %5.9e \n",distance[ii], particle[ii].time);
+
     }	   
   fclose(mc);
   fclose(mn);
@@ -981,3 +1040,136 @@ double TimeFromMatrix(double pdist)
   return ptime;
 } 
 //////////////////////////////////////////////////////////////////////////
+
+int InitParticles_flux (int k_current, int first_ind, int last_ind, double weight_p)
+
+{
+  /*********** function defines particle's initial positions inside one fracture ***/
+  /*****  according to input flux weights. The particles haev the same flux weight, ***/
+  /********** defined from total flux, given distance between paticles and total input length *****/
+  double deltax, deltay, edgelength, eqdist_x, eqdist_y, sumflux=0, startpos_x, startpos_y, sumdelta=0.0;
+  unsigned int j, jj, pf;
+
+ //  printf("firstn %d lastn %d \n", first_ind, last_ind);
+   for (j=first_ind; j<last_ind+1; j++)
+   {
+   sumflux=0.0;
+// calculate the flux of the current cell
+   for (jj=0; jj<node[nodezonein[j]-1].numneighb; jj++)
+		 sumflux=sumflux+(node[nodezonein[j]-1].flux[jj]);
+// approximate number of particles in cell nodezonein[j-1]
+    pf=(int)(sumflux/weight_p);
+   
+
+if ((j>first_ind) && (j<last_ind))
+{
+ //calculate distance between nodes        
+     deltax=(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
+  deltay=(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
+
+
+
+  //define starting position of first particle
+    if (fabs(node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])<1e-12)
+         startpos_x=node[nodezonein[j-1]-1].coord_xy[0];
+    else
+    startpos_x=((node[nodezonein[j]-1].coord_xy[0])-(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
+
+ 
+ if (fabs(node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])<1e-12)     
+          startpos_y=node[nodezonein[j-1]-1].coord_xy[1];
+     else
+   startpos_y=((node[nodezonein[j]-1].coord_xy[1])-(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
+ }
+
+if (j==first_ind)
+  {   
+ //calculate distance between nodes        
+ deltax=(node[nodezonein[j+1]-1].coord_xy[0]-node[nodezonein[j]-1].coord_xy[0])/2.0;
+ deltay=(node[nodezonein[j+1]-1].coord_xy[1]-node[nodezonein[j]-1].coord_xy[1])/2.0;
+   
+ 
+  
+   //define starting position of first particle
+          startpos_x=node[nodezonein[j]-1].coord_xy[0];
+ 
+ 
+           startpos_y=node[nodezonein[j]-1].coord_xy[1];
+
+}
+
+if (j==last_ind)
+   {
+  //calculate distance between nodes        
+   deltax=(node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])/2.0;
+  deltay=(node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])/2.0;
+         
+         
+     
+    //define starting position of first particle
+      
+    if ((node[nodezonein[j]-1].coord_xy[0]-node[nodezonein[j-1]-1].coord_xy[0])<1e-12)
+          startpos_x=node[nodezonein[j-1]-1].coord_xy[0];
+     else
+     startpos_x=((node[nodezonein[j]-1].coord_xy[0])-(node[nodezonein[j-1]-1].coord_xy[0]))/2.0+node[nodezonein[j-1]-1].coord_xy[0];
+ 
+ 
+  if ((node[nodezonein[j]-1].coord_xy[1]-node[nodezonein[j-1]-1].coord_xy[1])<1e-12)     
+           startpos_y=node[nodezonein[j-1]-1].coord_xy[1];
+      else 
+    startpos_y=((node[nodezonein[j]-1].coord_xy[1])-(node[nodezonein[j-1]-1].coord_xy[1]))/2.0+node[nodezonein[j-1]-1].coord_xy[1];
+    
+     
+ }     
+
+
+
+if (pf<2)
+      {
+        pf=1;
+        eqdist_x=deltax/2.0;
+        eqdist_y=deltay/2.0;
+      }
+    else
+      {
+        eqdist_x=deltax/pf;
+        eqdist_y=deltay/pf;
+      }
+ 
+
+
+  for (jj=0; jj<pf; jj++)
+    {
+
+
+      particle[k_current].position[0]=startpos_x+eqdist_x*(jj);
+      particle[k_current].position[1]=startpos_y+eqdist_y*(jj);
+
+
+      // first particle will be on boundary node
+      //      particle[k_current].position[0]=node[firstn-1].coord_xy[0]+(deltax/(pf-1))*(j);
+      //      particle[k_current].position[1]=node[firstn-1].coord_xy[1]+(deltay/(pf-1))*(j);
+
+      particle[k_current].velocity[0]=0.;
+      particle[k_current].velocity[1]=0.;
+      particle[k_current].fracture=node[nodezonein[first_ind]-1].fracture[0];
+      particle[k_current].intcell=0;
+      particle[k_current].time=0.0;
+      particle[k_current].fl_weight=weight_p/totalFluxIn;
+
+     
+      k_current++;
+
+      if (k_current>npart*2)
+        {
+          printf("\n Number of particles with allocated memory (%d) is less than number of particles set up initially (%d).  \n", k_current, npart);
+          printf(" Increase the number of particles. Program is terminated. \n");
+          exit(1);
+        }
+    }
+
+   } 
+  return k_current;
+}
+////////////////////////////////////////////////////////////////////////////
+

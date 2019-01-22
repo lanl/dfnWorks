@@ -64,9 +64,9 @@ void OutputMarPlumDisp (int currentnum, char path[125])
     traj_o=1;
     
     
-  double posx=0.0, posy=0.0, posz=0.0, vx=0.0, vy=0.0, vz=0.0, ttime=0.0, apert=0.0, beta=0.0, ntime, bbet=0.0, pressure=0.0; 
+  double posx=0.0, posy=0.0, posz=0.0, vx=0.0, vy=0.0, vz=0.0, ttime=0.0, apert=0.0, beta=0.0, ntime, bbet=0.0; 
    
-  unsigned int cell, fr, ts, numtimes, fr_in; 
+  unsigned int cell, fr, ts, numtimes, inters; 
   // lopp on particles trajectories files
   for (i=1; i<=currentnum; i++)
     {
@@ -87,11 +87,9 @@ void OutputMarPlumDisp (int currentnum, char path[125])
   
       for (j=1; j<=numtimes; j++)
 	{
-	  if (fscanf(tr,"%d %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %d %lf\n",&ts, &posx, &posy, &posz, &vx, &vy, &vz, &cell, &fr, &ttime, &apert, &beta, &fr_in, &pressure)!=14)
-	    printf("Error");
- 
-
-   
+	  if (fscanf(tr,"%d %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %d \n",&ts, &posx, &posy, &posz, &vx, &vy, &vz, &cell, &fr, &ttime, &apert, &beta, &inters )!=13)
+	    printf("ErrorTr");
+    
 	  // MARFA output
 	  if (marfa == 1)
 	    {
