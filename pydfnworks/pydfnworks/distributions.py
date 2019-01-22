@@ -1,21 +1,25 @@
-import helper
 import gen_input
+import gen_input_helper
 
 class distr():
     """ 
     Verifies the fracture distribution input parameters for dfnGen.
     
     Attributes:
-        * params (list): parameters for dfnGen
-        * numEdistribs (int): number of ellipse family distributions
-        * numRdistribs (int): number of rectangle family distributions
-        * minFracSize (double): minimum fracture size
+        params :list
+            Parameters for dfnGen
+        numEdistribs : int
+            Number of ellipse family distributions
+        numRdistribs : int
+            Number of rectangle family distributions
+        minFracSize : double
+            Minimum fracture size
     """
 
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self.params = params
         global distr_helper_methods  
-        distr_helper_methods = helper.input_helper(params, minFracSize) 
+        distr_helper_methods = gen_input_helper.input_helper(params, minFracSize) 
         self.ellipseFams = distr_helper_methods.value_of('nFamEll')
         self.rectFams = distr_helper_methods.value_of('nFamRect')
         self.numEdistribs = numEdistribs
@@ -27,8 +31,9 @@ class distr():
         indicating contant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
         also verified. 
         
-        Args:
-            prefix (str): Indicates shapes that the beta distribution describes. 'e' if they are ellipses, 'r' if they are rectangles.
+        Parameters:
+            prefix : str
+                Indicates shapes that the beta distribution describes. 'e' if they are ellipses, 'r' if they are rectangles.
         """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
@@ -145,7 +150,7 @@ class distr():
 
     def constant_dist(self, prefix):
         """
-        Verifies paramters for constant distribution of fractures
+        Verifies parameters for constant distribution of fractures
         """
         paramName = prefix + "const"
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams

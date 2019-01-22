@@ -2,23 +2,33 @@ import os
 import sys
 import shutil
 import distributions as distr_module
-import helper 
+import gen_input_helper 
 import numpy as np
 import scipy.integrate
 
 def check_input(self, input_file='',output_file=''):
-    
-    """ 
-    Input Format Requirements:  
+    """Check input file for DFNGen to make sure all necessary parameters are defined
+
+     Input Format Requirements:  
         * Each parameter must be defined on its own line (separate by newline)
         * A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
         * Values may also be placed on lines after the 'key'
         * Comment Format:  On a line containing  // or / ``*``, nothing after ``*`` / or // will be processed  but text before a comment will be processed 
     
-    Kwargs:
-        * input_file (name): name of dfnGen input file
-        * output_file (name): stripped down input file for DFNGen 
-    
+    Parameters
+    ----------
+        input_file : string
+            name of dfnGen input file
+        output_file : string 
+            Name of stripped down input file for DFNGen (input_file_clean.dat) 
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+    There are warnings and errors raised in this function. Warning will let you continue while errors will stop the run. Continue past warnings are your own risk.     
     """ 
     global params 
     ## BIG TODO s -----
@@ -83,7 +93,7 @@ def check_input(self, input_file='',output_file=''):
     global jobname
     jobname = self.jobname
 
-    input_helper_methods=helper.input_helper(params, minFracSize)
+    input_helper_methods=gen_input_helper.input_helper(params, minFracSize)
 
     ## ===================================================================== ##
     ##                      Mandatory Parameters                             ##

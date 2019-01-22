@@ -3,6 +3,19 @@
 class Frozen(object):
     """
     Prevents adding new attributes to classes once _freeze() is called on the class.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    None
+
     """
     frozen = False
 

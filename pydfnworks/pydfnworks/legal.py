@@ -1,5 +1,18 @@
 def legal(self):
     """Print the legal LANL statement for dfnWorks.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+    Returns
+    -------
+        None
+
+    Notes 
+    ----
+        None
     """
     lanl_statement = '''
 ===================================================================
@@ -16,7 +29,7 @@ def legal(self):
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.0 ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.2 ~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This program was prepared at Los Alamos National Laboratory (LANL),

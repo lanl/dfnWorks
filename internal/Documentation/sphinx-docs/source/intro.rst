@@ -48,12 +48,14 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 	  publisher={Elsevier}
 	}
 
-
-What's new in v2.0?
+What's new in v2.2?
 -------------------
 
-- New dfnGen C++ code which is much faster than the Mathematica dfnGen. This code has successfully generated networks with 350,000+ fractures. 
-- Increased functionality in the pydfnworks package for more streamlined workflow from dfnGen through visualization. 
+- Bug fixes in LaGrit Meshing 
+- Increased functionalities in pydfnworks including the path option
+- dfn2graph capabilities
+- FEHM flow solver
+- Streamline routing option in dfnTrans 
 
 What's new in v2.1?
 -------------------
@@ -61,10 +63,16 @@ What's new in v2.1?
 - Bug fixes in LaGrit Meshing 
 - Increased functionalities in pydfnworks including the path option
 
+What's new in v2.0?
+-------------------
+
+- New dfnGen C++ code which is much faster than the Mathematica dfnGen. This code has successfully generated networks with 350,000+ fractures. 
+- Increased functionality in the pydfnworks package for more streamlined workflow from dfnGen through visualization. 
+
 
 Where can one get dfnWorks?
 ---------------------------
-dfnWorks 2.1 can be downloaded from https://github.com/lanl/dfnWorks/
+dfnWorks 2.2 can be downloaded from https://github.com/lanl/dfnWorks/
 
 v1.0 can be downloaded from https://github.com/dfnWorks/dfnWorks-Version1.0  
 
@@ -76,6 +84,14 @@ this section. VisIt and ParaView, which enable visualization of desired
 quantities on the DFNs, are optional, but at least one of them is highly 
 recommended for visualization. CMake is also optional but allows faster IO 
 processing using C++. 
+
+
+Operating Systems
+^^^^^^^^^^^^^^^^^^
+dfnWorks currently runs on Macs and Unix machine running Ubuntu. 
+
+
+
 
 Python 
 ^^^^^^
@@ -149,17 +165,6 @@ Details on how to use C++ for file processing are in the scripts section of
 this documentation.
 
 .. _CMake: https://cmake.org
-
-VisIt
-^^^^^
-
-VisIt_ is a parallel, open-source visualisation software. PFLOTRAN can output 
-in ``.xmf`` and ``.vtk`` format. These can be imported in VisIt for visualization. 
-
-Instructions for downloading and installing VisIt_ can be found at 
-https://wci.llnl.gov/codes/visit/download.html 
-
-.. _VisIt: https://wci.llnl.gov/codes/visit
 
 Paraview
 ^^^^^^^^

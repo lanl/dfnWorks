@@ -3,7 +3,7 @@
 pydfnworks: the dfnWorks python package
 ========================================
 
-The pydfnworks package allows the user to easily run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package easily.
+The pydfnworks package allows the user to run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package.
 
 The pydfnworks must be setup by the user using the following command in the directory ``dfnWorks-Version2.0/pydfnworks/`` :
 
@@ -13,10 +13,18 @@ The pydfnworks must be setup by the user using the following command in the dire
 
 The documentation below includes all the methods and classes of the pydfnworks package. 
 
-Overall Workflow
+DFN Class
 ----------------
 
-.. autofunction:: pydfnworks.create_dfn
+.. automodule:: pydfnworks.dfnworks
+    :members:
+
+
+DFN setup 
+----------------
+
+.. automodule:: pydfnworks.create_dfn
+    :members:
 
 dfnGen
 -------
@@ -39,17 +47,7 @@ Graphing generator output
 .. automodule:: pydfnworks.gen_output
     :members:
 
-dfnFlow
---------
-.. automodule:: pydfnworks.flow
-    :members:
-
-dfnTrans
----------
-.. automodule:: pydfnworks.transport
-    :members:
-
-LaGriT (meshing)
+Meshing - LaGriT
 -----------------
 
 Mesh DFN
@@ -67,22 +65,63 @@ Run meshing in parallel
 .. automodule:: pydfnworks.run_meshing
     :members:
 
-Helper methods
-----------------
-
 Mesh helper methods
 ^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.mesh_dfn_helper
     :members:
+
+dfnFlow
+--------
+
+Running Flow
+^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.flow
+    :members:
+
+Running Flow: PFLOTRAN
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.pflotran
+    :members:
+
+Running Flow: FEHM 
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.fehm
+    :members:
+
+Processing Flow
+^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.mass_balance
+    :members:
+
+
+dfnTrans
+---------
+
+Running Transport 
+^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.transport
+    :members:
+
+dfn2graph
+---------
+.. automodule:: pydfnworks.dfn2graph
+    :members:
+
+General Workflow functions
+--------------------------
 
 Print legal statement
 ^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.legal
     :members:
  
-Other helper methods
-^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.helper
+Helper functions
+^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.general_functions
     :members:
-
-
+ 
+Set up run paths
+^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.paths
+    :members:
+ 

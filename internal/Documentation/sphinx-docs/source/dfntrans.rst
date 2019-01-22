@@ -174,6 +174,14 @@ explanation of each parameter setting:
     // total number of particles
     in_randpart: 110000    
 
+    /*****  particles positions according to in-flow flux weight *********/
+    init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
+    init_delta: 0.001 // distance [m] between particles at inflow face for equal flux weight calculation
+
+    /*************** Intersection Mixing Rule **********************************/
+    /****streamline_routing: if yes - streamline routing is the selected subgrid process
+     otherwise the complete mixing rule is selected ****/
+    streamline_routing: no 
 
     // 5. Flow and Fracture Parameters
 

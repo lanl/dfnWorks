@@ -12,12 +12,31 @@ import multiprocessing as mp
 from shutil import copy, rmtree
 from numpy import genfromtxt
 
-def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
-    """Child function for parallelized meshing of fractures"""
+def mesh_fracture(fracture_id, visual_mode, num_poly):
+    """Child function for parallelized meshing of fractures
+
+    Parameters
+    ----------
+        fracture_id : int
+            Current Fracture ID number
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int 
+            Total Number of Fractures in the DFN
+    
+    Returns
+    -------
+        None
+    
+    Notes
+    -----
+    If meshing fails, information about that fracture will be put into a directory failure_(fracture_id)
+
+    """
 
     t = time.time()
     p = mp.current_process()
-    print 'Fracture ', fracture_id, '\tstarting on ', p.name, '\n' 
+    print('Fracture %d \tstarting on %s\n'%(fracture_id,p.name)) 
     a, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
    
@@ -26,19 +45,16 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
     os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
         "parameters_CPU%d.mlgi"%cpu_id)
    
-    if prune:
-        os.symlink('intersections/intersections_%d_prune.inp'%fracture_id,\
-            'intersections_CPU%d.inp'%cpu_id)
-    else:
-        os.symlink('intersections/intersections_%d.inp'%fracture_id,\
-            'intersections_CPU%d.inp'%cpu_id)
+    
+    os.symlink('intersections/intersections_%d.inp'%fracture_id,\
+        'intersections_CPU%d.inp'%cpu_id)
 
-    cmd = os.environ['lagrit_dfn']+ ' < mesh_poly_CPU%d.lgi' \
+    cmd = os.environ['LAGRIT_EXE']+ ' < mesh_poly_CPU%d.lgi' \
          + ' > lagrit_logs/log_lagrit_%d'
     subprocess.call(cmd%(cpu_id,fracture_id), shell = True)
 
     if not visual_mode:
-        cmd_check = os.environ['connect_test'] + 'ConnectivityTest' \
+        cmd_check = os.environ['CONNECT_TEST_EXE'] \
         + ' intersections_CPU%d.inp' \
         + ' id_tri_node_CPU%d.list ' \
         + ' mesh_%d.inp' \
@@ -47,7 +63,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
         failure = subprocess.call(cmd_check, shell = True)
         if failure > 0:
             print("MESH CHECKING HAS FAILED!!!!")
-            print 'Fracture number ', fracture_id, '\trunning on ', p.name, '\n'
+            print('Fracture %d \tstarting on %s\n'%(fracture_id,p.name)) 
 
             with open("failure.txt", "a") as failure_file:
                 failure_file.write("%d\n"%fracture_id)
@@ -65,52 +81,63 @@ def mesh_fracture(fracture_id, visual_mode, num_poly, prune):
             copy('user_function.lgi', folder +'/')    
             copy('user_function2.lgi', folder +'/')   
         try:
-            os.remove('id_tri_node_CPU' + str(cpu_id) + '.list')
+            os.remove('id_tri_node_CPU%d.list'%cpu_id)
         except: 
-            print 'Could not remove id_tri_node_CPU' + str(cpu_id) + '.list'
+            print('Could not remove id_tri_node_CPU%d.list'%cpu_id)
         try:
-            os.remove('mesh_' + str(fracture_id) + '.inp')
+            os.remove('mesh_%d.inp'%fracture_id)
         except:
-            print 'Could not remove mesh' + str(cpu_id) + '.inp'
+            print('Could not remove mesh_%d.inp'%fracture_id)
     else:
         failure = 0
 
     # Remove old links and files
-    try:
-        os.remove('poly_CPU' + str(cpu_id) + '.inp')
-    except:
-        print 'Could not remove poly_CPU' + str(cpu_id) + '.inp'
-    try: 
-        os.remove('intersections_CPU' + str(cpu_id) + '.inp')
-    except:
-        print 'Could not remove intersections_CPU' + str(cpu_id) + '.inp'
-    try:
-        os.remove('parameters_CPU' + str(cpu_id) + '.mlgi')
-    except:
-        print 'Could not remove parameters_CPU' + str(cpu_id) + '.mlgi'
+    files = ['poly_CPU%d.inp', 'intersections_CPU%d.inp', 'parameters_CPU%d.mlgi']
+    for f in files:
+        fp=f%cpu_id
+        try:
+            os.remove(fp)
+        except:
+            print('Could not remove %s'%fp)
     elapsed = time.time() - t
 
     if failure > 0:
-        print 'Fracture ', fracture_id, ' out of ',  num_poly, ' complete, but mesh checking failed' 
+        print('Fracture %d out of %d complete, but mesh checking failed'%(fracture_id,num_poly))
         sys.exit("Exiting Program")
     else:
-        print 'Fracture ', fracture_id, 'out of ',  num_poly, ' complete' 
-        print 'Time for meshing: %0.2f seconds\n'%elapsed
+        print('Fracture %d out of %d complete'%(fracture_id,num_poly))
+        print('Time for meshing: %0.2f seconds\n'%elapsed)
 
-def worker(work_queue, visual_mode, num_poly, prune):
-    """ Worker function for parallelized meshing """    
+def worker(work_queue, visual_mode, num_poly):
+    """ Worker function for parallelized meshing 
+    
+    Parameters
+    ----------
+        work_queue : multiprocessing queue
+            Queue of fractures to be meshed
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int
+            Total Number of Fractures
+
+    Returns
+    -------
+        True : bool
+            If job is complete
+
+"""    
     try:
         for fracture_id in iter(work_queue.get, 'STOP'):
-            mesh_fracture(fracture_id, visual_mode, num_poly, prune)
+            mesh_fracture(fracture_id, visual_mode, num_poly )
     except: 
         #print('Error on Fracture ',fracture_id)
         pass
     return True
 
-def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
+def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     """ Header function for Parallel meshing of fractures
     
-    Creates a queue of fracture numbers ranging form 1, num_poly
+    Creates a queue of fracture numbers ranging from 1, num_poly
     
     Each fractures is meshed using mesh_fracture called within the
     worker function.
@@ -119,9 +146,24 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
     that fracture information and the fracture number is written into
     failure.txt.
 
-    Returns:
-        * True: If failure.txt is empty meaning all fractures meshed correctly
-        * False: If failure.txt is not empty, then at least one fracture failed.  
+    Parameters
+    ----------
+        fracture_list : list
+            Fractures to be meshed
+        visual_mode : bool
+            True/False for reduced meshing
+        num_poly : int
+            Total Number of Fractures
+
+    Returns
+    -------
+        True/False : bool
+            True - If failure.txt is empty then all fractures have been meshed correctly
+            False - If failure.txt is not empty, then at least one fracture failed.  
+
+    Notes
+    -----
+        If one fracture fails meshing, program will exit. 
 
     """ 
     t_all = time.time()
@@ -148,7 +190,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
 
     for i in xrange(ncpu):
         p = mp.Process(target=worker, args=(work_queue, \
-            visual_mode, len(fracture_list), prune))
+            visual_mode, len(fracture_list)))
         p.daemon = True
         p.start()        
         processes.append(p)
@@ -158,9 +200,9 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
         p.join()
 
     elapsed = time.time() - t_all
-    print 'Total Time to Mesh Network: %0.2f seconds'%elapsed
+    print('Total Time to Mesh Network: %0.2f seconds'%elapsed)
     elapsed /= 60.
-    print '--> %0.2f Minutes'%elapsed
+    print('--> %0.2f Minutes'%elapsed)
 
     if os.stat("failure.txt").st_size > 0:
         failure_list = genfromtxt("failure.txt")
@@ -168,27 +210,44 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, prune):
         if type(failure_list) is list:
             failure_list = sort(failure_list)
         else: 
-            print 'Fractures:', failure_list , 'Failed'
-        print 'Main process exiting.'
+            print('Fractures:', failure_list , 'Failed')
+        print('Main process exiting.')
     else:
         failure_flag = False 
         os.remove("failure.txt");
-        print 'Triangulating Polygons: Complete'
+        print('Triangulating Polygons: Complete')
     return failure_flag    
 
 
 def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
-    """ 
-     Merges all the meshes together, deletes duplicate points, 
-        dumps the .gmv and fehm files
+    """Runs the LaGrit Scripts to merge meshes into final mesh 
+
+    Parameters
+    ----------
+        num_poly : int
+            Number of Fractures
+        ncpu : int
+            Number of Processors
+        n_jobs : int
+            Number of mesh pieces
+        visual_mode : bool
+            True/False for reduced meshing
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        Meshes are merged in batches for efficiency  
     """
-    print "\nMerging triangulated polygon meshes"
+    print("\nMerging triangulated polygon meshes")
 
     # should be converted to using multiprocessing 
     for j in range(1, n_jobs + 1):
         pid = os.fork()
         if pid == 0: # clone a child job
-            cmd = os.environ['lagrit_dfn']+ ' < merge_poly_part_%d.lgi ' \
+            cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
                 + '> log_merge_poly_part%d' 
             subprocess.call(cmd%(j,j), shell = True)
             os._exit(0)
@@ -205,7 +264,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     print("Starting Final Merge")
 
-    subprocess.call(os.environ['lagrit_dfn'] +' < merge_rmpts.lgi '\
+    subprocess.call(os.environ['LAGRIT_EXE'] +' < merge_rmpts.lgi '\
         + ' > log_merge_all.txt', shell=True) # run remove points
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:
