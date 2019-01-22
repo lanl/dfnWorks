@@ -8,6 +8,11 @@ def replace(old, new):
     subprocess.call("find ../../tests -type f -print0 | xargs -0 sed -i -e 's@" + old + "@" + new + "@g'", shell=True)
 
 old = 'DUMMY'
-new = os.getcwd().split('/dfnworks-main')[0]
+ 
+dir_name = os.getcwd().split('/')
+n = len(dir_name)
+new = ''
+for i in range(n-2):
+    new += dir_name[i]+'/'
 print 'replacing ', old, ' with ', new 
 replace(old, new)
