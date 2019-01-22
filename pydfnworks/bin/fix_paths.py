@@ -12,7 +12,7 @@ old = 'DUMMY'
 dir_name = os.getcwd().split('/')
 n = len(dir_name)
 new = ''
-for i in range(n-2):
+for i in range(n-3):
     new += dir_name[i]+'/'
 print 'replacing ', old, ' with ', new 
 replace(old, new)
