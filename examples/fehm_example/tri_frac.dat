@@ -1,0 +1,65 @@
+***** Structured grid: one 2d fracture in 3D domain; uniformly meshed *****
+# type of physics
+airwater
+    1
+    20.    0.1
+ctrl
+   50   1.e-16    1   100   bcgs
+   1     0    0    3
+
+   1.0   0   1.0
+   9    2.0  1.e-12   1e8
+   0  +1
+iter
+   1.e-11  1.e-11  1.e-5   -1.e-12   1.1
+   13   0  0  0    1.e11
+# time control
+time
+   1e-7   20000   100   1   1993   02   0.0
+
+# material properties
+rock
+  1   0  0  2700.   1e-15   0.1
+
+zone
+file
+full_mesh_material.zone
+perm
+file
+perm.dat
+#   1   0  0   2.5e-11   2.5e-11  2.5e-11
+pres
+    1   0   0  1.5   20.   1
+
+#    -1  0  0  1.0  20.   -1
+#    -2  0  0  5.0  20. -1
+zone
+file
+allboundaries.zone
+flow
+     -5 0 0   1.0    1    1000.
+     -3 0 0    2.0    1    1000.
+
+# flow goes from top side boundary of domain into bottom
+# output control
+restart
+ascii
+lflux
+
+cont
+tec 100000 5500000.
+geom
+density
+pres
+temp
+sat
+liquid
+material
+endavs
+stea
+sper
+spres 1.0e-15
+sflux 1.0e-11
+smult 2
+end
+stop    

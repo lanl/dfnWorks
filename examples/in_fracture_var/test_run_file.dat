@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/examples/in_fracture_var/gen_4_user_rectangles.dat
+dfnFlow /Users/jhyman/src/dfnworks-main/examples/in_fracture_var/dfn_explicit.in
+dfnTrans /Users/jhyman/src/dfnworks-main/examples/in_fracture_var/PTDFN_control.dat

@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/tests/pruning/gen_truncated_power_law_dist.dat
+dfnFlow /Users/jhyman/src/dfnworks-main/tests/pruning/dfn_explicit.in
+dfnTrans /Users/jhyman/src/dfnworks-main/tests/pruning/PTDFN_control.dat

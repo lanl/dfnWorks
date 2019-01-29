@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/examples/exp/gen_exponential_dist.dat
+dfnFlow /Users/jhyman/src/dfnworks-main/examples/exp/dfn_explicit.in
+dfnTrans /Users/jhyman/src/dfnworks-main/examples/exp/PTDFN_control.dat
