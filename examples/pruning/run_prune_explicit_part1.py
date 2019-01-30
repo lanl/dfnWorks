@@ -19,9 +19,13 @@ DFN = create_dfn()
 DFN.make_working_directory()
 DFN.check_input()
 DFN.create_network()
+DFN.mesh_network(visual_mode=True)
+
 G = DFN.create_graph("fracture", "left", "right")
+DFN.plot_graph(G,output_name="full_dfn")
 H = nx.k_core(G,2)
 DFN.dump_fractures(H,"2_core.dat") 
+DFN.plot_graph(H,output_name="dfn_2_core")
 
 main_elapsed = time() - main_time
 timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
