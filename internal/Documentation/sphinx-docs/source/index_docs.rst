@@ -11,7 +11,8 @@ Contents:
    :maxdepth: 3
 
    intro 
-   tutorial
+   setup
+   examples 
    applications
    publications
    pydfnworks
