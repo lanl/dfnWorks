@@ -1,5 +1,6 @@
 import re
 import sys
+
 class input_helper():
     """ Functions to help parse the input file and check input parameters.
         

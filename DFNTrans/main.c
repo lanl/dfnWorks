@@ -49,6 +49,8 @@ unsigned long int timesteps;
 double thickness;   
 double saturation;
 double timeunit;
+double totalFluxIn;
+
 
 struct inpfile {
   char filename[120];
@@ -105,7 +107,7 @@ int main (int argc, char* controlf[]) {
   int res;    
   struct inpfile inputfile;
     
-  inputfile = Control_Data("seed:",5 );
+  inputfile = Control_Data("seed:\0",5 );
   srand48(inputfile.flag);
      
   inputfile=Control_Param("density:",8);
@@ -154,7 +156,7 @@ int main (int argc, char* controlf[]) {
 		} } } } 
   printf(" \n Particles velocities are calculated in [m/%s]. \n", inputfile.filename); 
    
-      
+     
       
   inputfile = Control_File("out_dir:",8 );
   strcpy(maindir,inputfile.filename);

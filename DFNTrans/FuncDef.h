@@ -9,6 +9,7 @@ extern double thickness;
 extern double saturation; 
 extern double timeunit;
 extern char controlfile[120];  
+extern double totalFluxIn;
 
 /* parts_fracture: initial number of particles per fracture */
 /* Global variables: nnodes - number of nodes     */
@@ -77,9 +78,11 @@ struct contam{
   unsigned int cell; //the number of cell where particle is on current time step
   unsigned int intcell; // flag: =1 if cell is on intersection; =0 if not
   double weight[3]; // weights, that are calculated for velocity interpolation from cell vertexes  
-  double time; //calculated time that particle in travel  
+  double time; //calculated advective time  
   double fl_weight; //weight of particle according to flow fluxes in in-flow boundary /or aperture weight/
   double pressure; //fluid pressure 
+  double t_adv_diff; //in case of TDRW - total travel time
+  double t_diff; // in case of TDRW - accumulative diffusion time
 };
 
 extern    struct material *fracture;
@@ -111,7 +114,8 @@ void PredictorStep();
 void CorrectorStep(); 
 void DefineTimeStep();
 int CheckDistance();
-void AcrossIntersection (int prevcell, int int1, int int2 );
+//void AcrossIntersection (int prevcell, int int1, int int2);
+void AcrossIntersection (int prevcell, int int1, int int2, int mixing_rule);
 void ChangeFracture(int cell_win);
 struct posit3d CalculatePosition3D();
 int InitCell ();
@@ -131,7 +135,8 @@ void Velocity3D();
 double CalculateCurrentDT();
 int Yindex(int nodenum, int np);
 int Xindex(int nodenum, int np);
-int RandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk);
+int CompleteMixingRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk);
+int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac, int prevcell);
 void OutputVelocities();
 int XindexC(int nodenum, int ii);
 int YindexC(int nodenum, int ii);
@@ -158,3 +163,6 @@ struct lagrangian CalculateLagrangian(double xcurrent, double ycurrent, double z
 void OutputMarPlumDisp (int currentnum, char path[125]);
 int String_Compare(char string1[], char string2[]);  
 struct inpfile Control_File_Optional(char fileobject[], int ctr);
+double TimeDomainRW (double time_advect);
+int InitParticles_flux (int k_current, int firstn, int lastn, double weight_p);
+

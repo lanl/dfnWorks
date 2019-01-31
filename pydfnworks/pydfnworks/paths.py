@@ -76,7 +76,7 @@ def define_paths():
     # ================================================
     
     # the dfnworks-main  repository 
-    os.environ['dfnworks_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+    os.environ['dfnworks_PATH'] = 'DUMMY/dfnworks-main/'
     valid('dfnworks_PATH')
     if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
         print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
@@ -100,8 +100,8 @@ def define_paths():
     os.environ['LAGRIT_EXE'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit'
     valid('LAGRIT_EXE')
 
-    os.environ['FEHM_EXE'] = 'home//jhyman/bin/xfehm'
-    valid('FEHM_EXE')
+    #os.environ['FEHM_EXE'] = 'home//jhyman/bin/xfehm'
+    #valid('FEHM_EXE')
     # =================================================== 
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
     # ====================================================
@@ -111,7 +111,7 @@ def define_paths():
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
         compile_dfn_exe(os.environ['dfnworks_PATH']+'DFNGen/')
 
-    os.environ['DFNTRANS_EXE']= os.environ['dfnworks_PATH'] +'ParticleTracking_TDRW/DFNTrans_TDRW'
+    os.environ['DFNTRANS_EXE']= os.environ['dfnworks_PATH'] +'DFNTrans/DFNTrans_TDRW'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
         compile_dfn_exe(os.environ['dfnworks_PATH']+'ParticleTracking_TDRW/')
     
