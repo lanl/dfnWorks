@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import networkx as nx
 import numpy as np
 import numpy.random 
@@ -7,14 +6,22 @@ import graph_flow
 
 
 def create_neighbour_list(Gtilde):
-    ''' Create a list of downstream neighbour vertices for every vertex on NetworkX graph obtained after running GraphFlow
+    """ Create a list of downstream neighbour vertices for every vertex on NetworkX graph obtained after running graph_flow
 
-    Input: NetworkX graph obtained after GraphFlow
+    Parameters
+    ----------
+        Gtilde: NetworkX graph 
+            obtained from output of graph_flow
 
-    Output: A nested dictionary. 
+    Returns
+    -------
+        dict : nested dictionary.
+
+    Notes
+    -----
     dict[n]['child'] is a list of vertices downstream to vertex n
     dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
-    '''
+    """
 
     nbrs_dict = {}
 
@@ -44,8 +51,12 @@ def create_neighbour_list(Gtilde):
     
     return nbrs_dict 
 
+
+
 class Particle():
-    ''' Class instantiated for each particle
+    ''' 
+    Class for graph particle tracking, instantiated for each particle
+
 
     Attributes:
         * time : Total time of travel of particle [s]
@@ -61,11 +72,44 @@ class Particle():
         self.dist = float
         self.flag = bool
 
+
+
     def set_start_time_dist(self, t, L):
+        """ Set initial value for travel time and distance
+
+        Parameters
+        ----------
+            self: object
+            t : double
+                time in seconds
+            L : double
+                distance in metres
+
+        Returns
+        -------
+
+        """
+
         self.time = t
         self.dist = L
     
+    
+    
     def track(self, Gtilde, nbrs_dict):
+        """ track a particle from inlet vertex to outlet vertex
+
+        Parameters
+        ----------
+            Gtilde : NetworkX graph
+                graph obtained from graph_flow
+
+            nbrs_dict: nested dictionary
+                dictionary of downstream neighbours for each vertex
+
+        Returns
+        -------
+
+        """
 
         Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
         
@@ -90,15 +134,53 @@ class Particle():
             curr_v = next_v
 
 
+    
     def add_frac_data(self, frac, t, L):
+        """ add details of fracture through which particle traversed
+
+        Parameters
+        ----------
+            self: object
+
+            frac: int
+                index of fracture in graph
+
+            t : double
+                time in seconds
+
+            L : double
+                distance in metres
+
+        Returns
+        -------
+
+        """
+
         self.frac_seq.update({frac : {'time':0.0, 'dist':0.0}})
         self.frac_seq[frac]['time'] += t
         self.frac_seq[frac]['dist'] += L 
         self.time += t
         self.dist += L
 
+    
+    
     def write_file(self, partime_file=None, frac_id_file=None):
+        """ write particle data to output files, if supplied
+
+        Parameters
+        ----------
+            self: object
+
+            partime_file : string
+                name of file to  which the total travel times and lengths will be written for each particle, default is None
+
+            frac_id_file : string
+                name of file to which detailed information of each particle's travel will be written, default is None
         
+        Returns
+        -------
+        """
+
         if partime_file is not None:
             with open(partime_file, "a") as f1:
                 f1.write("{:3.3E}  {:3.3E} \n".format(self.time, self.dist))
@@ -119,15 +201,36 @@ class Particle():
 
 
 
-def run_graph_transport(self, Gtilde, nparticles, partime_file=None, frac_id_file=None):
-    ''' Simulate particle tracking on the given NetworkX graph
 
-    Inputs:
-    Gtilde: NetworkX graph obtained from GraphFlow
-    nparticles: Number of particles
-    partime_file: File to  which the total travel times and lengths will be written for each particle. default is None
-    frac_id_file: File to which detailed information of each particle's travel will be written. Default is None
-    '''
+
+
+def run_graph_transport(self, Gtilde, nparticles, partime_file=None, frac_id_file=None):
+    """ Run  particle tracking on the given NetworkX graph
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+            
+        Gtilde : NetworkX graph 
+            obtained from graph_flow
+
+        nparticles: int 
+            number of particles
+
+        partime_file : string
+            name of file to  which the total travel times and lengths will be written for each particle, default is None
+
+        frac_id_file : string
+            name of file to which detailed information of each particle's travel will be written, default is None
+
+    Returns
+    -------
+
+    Notes
+    -----
+    Information on individual functions is found therein
+    """
     
     
     if partime_file is not None:

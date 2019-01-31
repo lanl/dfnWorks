@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import networkx as nx
 import numpy as np
 import dfn2graph
@@ -9,16 +7,33 @@ import scipy.sparse
 
 
 def get_laplacian_sparse_mat(G, nodelist=None, weight=None, dtype=None, format='lil'):
-    ''' Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Useful if boundary conditions have to be enforced  by modifying rows of L = D - A
+    """ Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Used to enforce boundary conditions by modifying rows of L = D - A
 
-    Inputs:
-    G: NetworkX graph equipped with weight attribute
-    nodelist: list of nodes of G for which laplacian is desired. Default is None in which case, all the nodes
-    weight: For weighted Laplacian, else all weights assumed unity
-    dtype: default is None, cooresponds to float
-    format: sparse matrix format, csr, csc, coo, lil_matrix with default being lil
-    Outputs: D, A
-    '''
+    Parameters
+    ----------
+
+        G : object
+            NetworkX graph equipped with weight attribute
+
+        nodelist : list
+            list of nodes of G for which laplacian is desired. Default is None in which case, all the nodes
+        
+        weight : string
+            For weighted Laplacian, else all weights assumed unity
+        
+        dtype :  default is None, cooresponds to float
+        
+        format: string
+            sparse matrix format, csr, csc, coo, lil_matrix with default being lil
+
+    Returns
+    -------
+        D : sparse 2d float array       
+            Diagonal part of Laplacian
+            
+        A : sparse 2d float array
+            Adjacency matrix of graph
+    """
 
     A = nx.to_scipy_sparse_matrix(G, nodelist=nodelist, weight=weight, dtype=dtype, format=format)
 
@@ -29,14 +44,20 @@ def get_laplacian_sparse_mat(G, nodelist=None, weight=None, dtype=None, format='
 
  
 def prepare_graph_with_attributes(inflow, outflow):
-    ''' Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
+    """ Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
     
-        Inputs:
-        inflow: file containing list of DFN fractures on inflow boundary
-        outflow: file containing list of DFN fractures on outflow boundary
+    Parameters
+    ----------
+        inflow : string
+            name of file containing list of DFN fractures on inflow boundary
 
-        Output: G (NetworkX graph)
-    '''
+        outflow: string
+            name of file containing list of DFN fractures on outflow boundary
+
+    Returns
+    -------
+        Gtilde : NetworkX graph
+    """
 
 
 
@@ -73,15 +94,26 @@ def prepare_graph_with_attributes(inflow, outflow):
 
 
 def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
-    ''' Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
+    """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
 
-    Inputs:
-    Gtilde: Prepared NetworkX graph
-    Pin: Value of pressure (in Pa) at inlet
-    Pout: Value of pressure (in Pa) at outlet
-    fluid_viscosity: optional, in Pa-s, assumed to be that of water as if not provided
-    Output: NetworkX graph updated with vertex pressures, edge fluxes and travel times
-    '''
+    Parameters
+    ----------
+        Gtilde : NetworkX graph
+
+        Pin : double
+            Value of pressure (in Pa) at inlet
+        
+        Pout : double
+            Value of pressure (in Pa) at outlet
+        
+        fluid_viscosity : double
+            optional, in Pa-s, default is for water
+    
+    Returns
+    -------
+        Gtilde : NetworkX graph 
+            Gtilde is updated with vertex pressures, edge fluxes and travel times
+    """
 
 
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
@@ -129,8 +161,46 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
     return Gtilde
 
 
+
+
 def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4):
+    """ Run the graph flow portion of the workflow
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+
+        inflow : string
+            name of file containing list of DFN fractures on inflow boundary
+
+        outflow: string
+            name of file containing list of DFN fractures on outflow boundary
+
+        Pin : double
+            Value of pressure (in Pa) at inlet
+        
+        Pout : double
+            Value of pressure (in Pa) at outlet
+        
+        fluid_viscosity : double
+            optional, in Pa-s, default is for water
+    
+    Returns
+    -------
+        Gtilde : NetworkX graph 
+            Grtilde is updated with vertex pressures, edge fluxes and travel times
+
+    Notes
+    -----
+    Information on individual functions in found therein
+    """
 
     Gtilde = prepare_graph_with_attributes(inflow, outflow)
+
+    
     Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout,fluid_viscosity) 
+    
+    
     return Gtilde
