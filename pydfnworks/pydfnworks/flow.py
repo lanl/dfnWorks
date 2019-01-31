@@ -72,7 +72,7 @@ def dfn_flow(self,dump_vtk=True):
 
         tic = time()    
         self.pflotran_cleanup()
-        self.dump_time('Function: parse_cleanup', time() - tic) 
+        self.dump_time('Function: pflotran_cleanup', time() - tic) 
 
         tic = time()    
         self.effective_perm()
