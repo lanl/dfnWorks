@@ -1,5 +1,0 @@
-The mass flow rate [kg/s]: 9.333980e-02
-The volume flow rate [m3/s]: 9.352639270735532e-05
-The darcy flow rate over 1.000000 x 1.000000 m2 area [m3/m2/s]: 9.352639e-05
-The darcy flow rate over 1.000000 x 1.000000 m2 area [m3/m2/y]: 2.951468e+03
-The effective permeability of the domain [m2]: 8.323849e-14

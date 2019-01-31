@@ -1,9 +1,0 @@
-Runs times for in_fracture_var_example
-Function: lagrit2pflotran : 0.19 seconds
-Function: pflotran : 0.53 seconds
-Function: parse_pflotran_vtk : 0.40 seconds
-Function: pflotran_cleanup : 0.05 seconds
-Function: effective_perm : 0.21 seconds
-Process: dfnFlow : 1.38 seconds
-Function: DFNTrans_TDRW : 3.15 seconds
-Process: dfnTrans : 3.16 seconds
