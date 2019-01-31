@@ -661,3 +661,26 @@ def add_perm(G):
                 G.node[fracture]['iperm']=1.0/float(perm)
                 G.node[fracture]['aperture']=float(aperture)
 
+
+def add_area(G):
+    ''' Read Fracture aperture from fracture_info.dat and 
+    load on the edges in the graph. Graph must be intersection to node
+    representation'''
+
+    aperture = np.genfromtxt('fracture_info.dat', skip_header =1)[:,2]
+    edges = list(nx.edges(G))
+    for u,v in edges:
+        x = G.edges[u, v]['frac']
+        if x != 's' and x != 't':
+            G.edges[u, v]['area'] = aperture[x] * (G.nodes[u]['length'] + G.nodes[v]['length'] )/ 2.0
+        else:   
+            G.edges[u, v]['area'] = 1.0
+    return
+
+def add_weight(G):
+    '''Compute weight w = K*A/L associated with each edge '''
+    edges = list(nx.edges(G))
+    for u,v in edges:
+        if G.edges[u, v]['length']>0:
+            G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v]['area'] / G.edges[u, v]['length']
+    return

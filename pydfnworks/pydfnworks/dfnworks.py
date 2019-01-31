@@ -57,6 +57,8 @@ class dfnworks(Frozen):
     from paths import define_paths
     from mass_balance import effective_perm
 
+    from graph_flow import run_graph_flow 
+    from graph_transport import run_graph_transport 
 
     def __init__(self, jobname='', ncpu='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = '', h = ''):
 
