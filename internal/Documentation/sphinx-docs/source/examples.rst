@@ -15,7 +15,7 @@ Location: examples/4_user_defined_rects/
 
 This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the job folder into Paraview.
 
-.. figure:: figures/4_user_rectangles_mesh.png
+.. figure:: figures/4_user_rectangles.png
    :scale: 10 %
    :alt: alternate text
    :align: center
@@ -26,13 +26,6 @@ High pressure (red) Dirichlet boundary conditions are applied on the edge of the
 This image is created by loading the file parsed_vtk/dfn_explicit-001.vtk into Paraview.
 
 
-.. figure:: figures/4_user_rectangles_pressure.png 
-   :scale: 10 %
-   :alt: alternate text
-   :align: center
-   
-   *The network of four fractures, colored by pressure solution.*
-
 Particles are inserted uniformly along the inlet fracture on the left side of the image. 
 Particles exit the domain through the two horizontal fractures on the right side of the image.  
 Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image. 
@@ -40,12 +33,6 @@ Trajectories are colored by the current velocity magnitude of the particle's vel
 Trajectories can be visualized by loading the files part\_*.inp, in the folder 4_user_rectangles/traj/trajectories/
 We have used the extract surface and tube filters in paraview for visual clarity. 
 
-.. figure:: figures/4_user_rectangles_trace.png
-   :scale: 8 %
-   :alt: alternate text
-   :align: center
-   
-   *Particle trajectories on the network of four fractures.*   
 
 
 4_user_defined_ell_uniform
@@ -56,28 +43,12 @@ Location: examples/4_user_defined_ell_uniform/
 
 This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 8 vertices. We have set the meshing resolution to be uniform by including the argument slope=0 into the mesh_networks function in run_explicit.py. 
 
-.. figure:: figures/4_user_ellipses_mesh.png
+.. figure:: figures/4_user_ellipses.png
    :scale: 10 %
    :alt: alternate text
    :align: center
 
    *The uniformly meshed network of four circular fractures.*
-
-
-.. figure:: figures/4_user_ellipses_pressure.png
-   :scale: 10 %
-   :alt: alternate text
-   :align: center
-
-   *The network of four circular fractures, colored by pressure solution. Contours in the pressure are shown as black lines.*
-
-
-.. figure:: figures/4_user_ellipses_trace.png
-   :scale: 10 %
-   :alt: alternate text
-   :align: center
-
-   *Particle trajectories on the network of four circular fractures.*   
 
 
 
@@ -88,48 +59,13 @@ Location: examples/exp/
 
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat.  We have changed the flow direction to be aligned with the y-axis by modifying the PFLOTRAN input card dfn_explicit.in
 
-.. figure:: figures/exp_mesh.png
-   :scale: 10 %
-   :alt: alternate text
-   :align: center
-
-   *Network with rectangular fractures whose lengths following a exponential distribution.*
-
-
 .. figure:: figures/exp_pressure.png
-   :scale: 10 %
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
    *Pressure solution on with rectangular fractures whose lengths following a exponential distribution. Gradient is aligned with the Y-Axis*
 
-
-
-lognormal
-------------------
-
-Location: examples/lognormal/
-
-
-This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat. We have changed the flow direction to be aligned with the z-axis by modifying the PFLOTRAN input card dfn_explicit.in
-
-
-.. figure:: figures/lognormal_mesh.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-
-.. figure:: figures/lognormal_pressure.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
 
 
 
@@ -140,23 +76,7 @@ Location: examples/TPL/
 
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m. 
 
-.. figure:: figures/power_mesh.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-.. figure:: figures/power_pressure.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-.. figure:: figures/power_trace.png
+.. figure:: figures/TPL_pathlines.png
    :scale: 30 %
    :alt: alternate text
    :align: center
@@ -193,18 +113,9 @@ Location: examples/in_fracture_var/
 
 This example runs the four rectangular fracture case with variable fracture aperture in each plane. The aperture field is modeled as a correlated multi-variant Gaussian random field. The aperture values are in the aper_node.dat file and the permeabilities are in perm_node.dat. The command line argument indicating that there is spatially variable aperture field is -cell.  In fracture variability is not supported for FEHM runs at this time. 
 
-.. figure:: figures/in_fracture_var_perm.png
-   :scale: 10 %
+.. figure:: figures/in_fracture_var.png
+   :scale: 30 %
    :alt: alternate text
    :align: center
 
-   *The meshed network of four rectangular fractures colored by permeability, which is spatially variable on each fracture.*
-
-
-
-.. figure:: figures/in_fracture_var_pressure.png
-   :scale: 10 %
-   :alt: alternate text
-   :align: center
-
-   *The network of four fractures, colored by pressure solution. Black lines are contours in the pressure field.*
+   *(left) The meshed network of four rectangular fractures colored by permeability, which is spatially variable on each fracture. (right) The network of four fractures, colored by pressure solution. Black lines are contours in the pressure field.*
