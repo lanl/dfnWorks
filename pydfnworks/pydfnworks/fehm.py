@@ -1,3 +1,11 @@
+import os 
+import subprocess
+import sys
+import glob
+import shutil
+from time import time 
+import numpy as np
+
 """
 Functions for using FEHM in dfnWorks
 """

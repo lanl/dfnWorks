@@ -1,0 +1,3 @@
+dfnGen DUMMY/dfnworks-main/tests/gen_lognormal_dist.dat
+dfnFlow DUMMY/dfnworks-main/tests/dfn_explicit.in
+dfnTrans DUMMY/dfnworks-main/tests/PTDFN_control.dat

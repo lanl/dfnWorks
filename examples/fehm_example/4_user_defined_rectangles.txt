@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/tests/gen_4_user_rectangles.dat
+dfnFlow /Users/jhyman/src/dfnworks-main/tests/fehm_example/fehmn.files
+dfnTrans /Users/jhyman/src/dfnworks-main/tests/fehm_example/PTDFN_control.dat

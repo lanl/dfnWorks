@@ -73,6 +73,7 @@ def print_run_time(self):
     print("Primary Function Percentages")
     for i in range(1,len(f) - 1):
         if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
-            print(name[i-1]+"\t"+"*"*int(percent[i-1]))
+            tmp = int(percent[i-1])/10    
+            print(name[i-1]+"\t"+"*"*tmp)
     print("\n")
 

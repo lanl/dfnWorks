@@ -1,0 +1,1 @@
+python run.py -name ~/test_output_files/4_user_rects -input 4_user_defined_rectangles_run_file.txt  
