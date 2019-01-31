@@ -1,0 +1,1 @@
+python run.py -name $PWD/lognormal -input lognormal_dist_run_file.txt -ncpu 8

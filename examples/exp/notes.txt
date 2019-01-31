@@ -1,1 +1,1 @@
-python run.py -name ~/test_output_files/exp -input exponential_dist_run_file.txt -ncpu 16 
+python run.py -name $PWD/exp -input exponential_dist_run_file.txt -ncpu 16 

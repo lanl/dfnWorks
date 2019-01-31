@@ -1,0 +1,3 @@
+dfnGen DUMMY/dfnworks-main/examples/lognormal/gen_lognormal_dist.dat
+dfnFlow DUMMY/dfnworks-main/examples/lognormal/dfn_explicit.in
+dfnTrans DUMMY/dfnworks-main/examples/lognormal/PTDFN_control.dat

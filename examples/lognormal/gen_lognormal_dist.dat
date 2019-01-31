@@ -8,14 +8,14 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 20
+nPoly: 300
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {10,10,10} 
+domainSize: {50,50,50} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -148,12 +148,12 @@ visualizationMode: 0
             modeling of flow and transport is possible. 
 */ 
 
-seed: 92731535
+seed: 2
 /*  Seed for random generator. 
     Enter 0 for time based seed.
 */        
 
-domainSizeIncrease: {0,0,0} 
+domainSizeIncrease: {20,20,20} 
 /*  Size increase for inserting fracture centers outside the domain.
     Fracture will be truncated based on domainSize above. 
     Increases the entire width by this ammount. So, {1,1,1} will increase
@@ -170,7 +170,7 @@ keepOnlyLargestCluster: 0
     cluster which connects at least any two sides of the domain.
 */
 
-ignoreBoundaryFaces: 1
+ignoreBoundaryFaces: 0
   
 /*
      0 - Use boundaryFaces option below 
@@ -178,7 +178,7 @@ ignoreBoundaryFaces: 1
          and remove fractures with no intersections               
 */
           
-boundaryFaces: {1,1,1,1,1,1}
+boundaryFaces: {0,0,0,0,1,1}
 /*  DFN will only keep clusters with connections to 
     domain boundaries which are set to 1:
 
@@ -456,10 +456,10 @@ rkappa:{25.78, 32}
 // Mandatory Parameters if using rectangles with log-normal distribution     */
 /*===========================================================================*/
 
-rLogMean: {1.250,1.250 }    
+rLogMean: {1.,1. }    
 //  Mean of the underlying normal distribution
 
-rsd: {0.877, 0.877 }     
+rsd: {0.5, 0.5 }     
 //  Standard deviation of the underlying normal distribution
                       
 rLogMin: {0.5, 0.5}
