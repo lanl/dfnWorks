@@ -15,7 +15,7 @@ import lagrit_scripts as lagrit
 import run_meshing as run_mesh 
 
 
-def mesh_network(self, prune=False, production_mode=True, refine_factor=1, slope=2, visual_mode=None):
+def mesh_network(self, prune=False, uniform_mesh=False, production_mode=True, refine_factor=1, slope=2, visual_mode=None):
     ''' Mesh fracture network using LaGriT
 
     Parameters
@@ -24,6 +24,8 @@ def mesh_network(self, prune=False, production_mode=True, refine_factor=1, slope
             DFN Class
         prune : bool
             If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file 
+        uniform_mesh : bool
+            If true, mesh is uniform resolution. If False, mesh is spatially variable            
         production_mode : bool
             If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
         refine_factor : float
@@ -46,7 +48,10 @@ def mesh_network(self, prune=False, production_mode=True, refine_factor=1, slope
     print('='*80)
     print("Meshing Network Using LaGriT : Starting")
     print('='*80)
-    
+   
+    if uniform_mesh:
+        slope = 0 # Setting slope = 0, results in a uniform mesh
+     
     if prune:
         if self.prune_file== "":
             sys.exit("ERROR!! User requested pruning in meshing but \
