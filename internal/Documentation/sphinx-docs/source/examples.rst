@@ -2,7 +2,7 @@ Examples
 =============================
 
 
-This document contains examples for using dfnWorks. All required input files for these examples are contained in the folder dfnWorks/examples/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simplest so it is recommended that the user proceed in the order presented here. 
+This section contains a few examples of DFN generated using dfnWorks. All required input files for these examples are contained in the folder dfnWorks/examples/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simplest so it is recommended that the user proceed in the order presented here. 
 
 All examples are in the examples/ directory. Within each subdirectory are the files required to run the example. The command line input is found in notes.txt. Be sure that you have created ~/test_output_files prior to running the examples. 
 
@@ -88,8 +88,6 @@ Location: examples/pruning/
 
 
 This example uses a graph representation of a DFN to isolate the 2-core. The pruned DFN has all dead end fractures of the network are removed. This example has two run_explicit.py scripts. The first creates the original DFN and identifies the 2-core using networkx (https://networkx.github.io/). The second meshes the DFN corresponding to the 2-core of the graph and then runs flow and transport. The 2 core network is in a sub-directory 2-core. The original network has 207 fractures and the 2-core has 79 fractures.
-
-
 
 .. figure:: figures/dfn_2_core.png
    :scale: 30 %
