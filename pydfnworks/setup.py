@@ -4,7 +4,9 @@ import sys
 from setuptools import setup
 import os
 #os.system('mv ~/.local ~/local_save')
+from shutil import rmtree 
 
+rmtree("build")
 
 setup(name='pydfnworks',
       version='2.2',
