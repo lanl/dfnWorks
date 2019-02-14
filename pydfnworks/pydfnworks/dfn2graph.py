@@ -125,7 +125,8 @@ def boundary_index(bc_name):
     except:
         sys.exit("Unknown boundary condition: %s\nExiting"%bc)
 
-def create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat"):
+def create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat",
+                              fracture_info='fracture_info.dat'):
     """ Create a graph based on topology of network.
     Edges are represented as nodes and if two intersections
     are on the same fracture, there is an edge between them in the graph. 
@@ -143,6 +144,8 @@ def create_intersection_graph(inflow, outflow, intersection_file="intersection_l
              File Format:
              fracture 1, fracture 2, x center, y center, z center, intersection length
 
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
         G : NetworkX Graph
@@ -230,7 +233,7 @@ def create_intersection_graph(inflow, outflow, intersection_file="intersection_l
             G.add_edge(i,'s',frac='s', length=0.0)
         if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
             G.add_edge(i,'t',frac='t', length=0.0)     
-    add_perm(G) 
+    add_perm(G,fracture_info) 
     print("Graph Construction Complete")
     return G
 
@@ -610,7 +613,7 @@ def load_json_graph(self,name):
     print("Complete")
     return G
 
-def add_perm(G):
+def add_perm(G,fracture_info="fracture_info.dat"):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
@@ -621,6 +624,8 @@ def add_perm(G):
         G :networkX graph
             NetworkX Graph based on the DFN
    
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
  
@@ -629,7 +634,7 @@ def add_perm(G):
 
 """
 
-    perm = np.genfromtxt('fracture_info.dat', skip_header =1)[:,1]
+    perm = np.genfromtxt(fracture_info, skip_header =1)[:,1]
     if G.graph['representation'] == "fracture":
         nodes = list(nx.nodes(G))
         for n in nodes:
@@ -662,12 +667,24 @@ def add_perm(G):
                 G.node[fracture]['aperture']=float(aperture)
 
 
-def add_area(G):
+def add_area(G,fracture_info="fracture_info.dat"):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
-    representation'''
+    representation
+    
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+        fracture_info : str
+            filename for fracture information
+    
+    Returns
+    -------
+        None
+'''
 
-    aperture = np.genfromtxt('fracture_info.dat', skip_header =1)[:,2]
+    aperture = np.genfromtxt(fracture_info, skip_header =1)[:,2]
     edges = list(nx.edges(G))
     for u,v in edges:
         x = G.edges[u, v]['frac']
@@ -678,9 +695,19 @@ def add_area(G):
     return
 
 def add_weight(G):
-    '''Compute weight w = K*A/L associated with each edge '''
+    '''Compute weight w = K*A/L associated with each edge 
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+    
+    Returns
+    -------
+        None
+'''
     edges = list(nx.edges(G))
     for u,v in edges:
         if G.edges[u, v]['length']>0:
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v]['area'] / G.edges[u, v]['length']
-    return
+    return:w
+
