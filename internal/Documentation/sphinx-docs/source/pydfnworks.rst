@@ -107,6 +107,12 @@ dfn2graph
 .. automodule:: pydfnworks.dfn2graph
     :members:
 
+.. automodule:: pydfnworks.graph_flow
+    :members:
+
+.. automodule:: pydfnworks.graph_transport
+    :members:
+
 General Workflow functions
 --------------------------
 
