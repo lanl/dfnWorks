@@ -45,7 +45,7 @@ def create_graph(self, graph_type, inflow, outflow):
         return [] 
     return G
 
-def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat"):
+def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat", fracture_info_file="fracture_info.dat"):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -60,6 +60,8 @@ def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat"):
             Name of outflow boundary (connect to target)
         topology_file : string
             Name of adjacency matrix file for a DFN default=connectivity.dat  
+        fracture_infor : str
+                filename for fracture information
 
     Returns
     -------
@@ -93,7 +95,7 @@ def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat"):
     G.add_node('t')
     G.add_edges_from(zip(['s']*(len(inflow)),inflow))
     G.add_edges_from(zip(outflow,['t']*(len(outflow))))   
-    add_perm(G) 
+    add_perm(G,fracture_info_file) 
     print("--> Graph loaded")
     return G
 
@@ -709,5 +711,5 @@ def add_weight(G):
     for u,v in edges:
         if G.edges[u, v]['length']>0:
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v]['area'] / G.edges[u, v]['length']
-    return:w
+    return
 
