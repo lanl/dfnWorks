@@ -6,7 +6,11 @@ import os
 #os.system('mv ~/.local ~/local_save')
 from shutil import rmtree 
 
+print("Removing dir build")
 rmtree("build")
+
+print("Removing dir pydfnworks.egg-info")
+rmtree("pydfnworks.egg-info")
 
 setup(name='pydfnworks',
       version='2.2',
@@ -27,5 +31,5 @@ setup(name='pydfnworks',
       include_package_data=True, 
       test_suite='nose.collector',
       tests_require=['nose'],
-      scripts=['bin/test.py', 'bin/run.py', 'bin/run_explicit.py'],
+      scripts=['bin/run.py', 'bin/run_explicit.py'],
       zip_safe=False)
