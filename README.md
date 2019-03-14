@@ -19,7 +19,8 @@ While docker run is still live, you can execute an arbitrary command with
 
     docker exec -i -t NAME COMMAND
 
-where `COMMAND` is the command, such as `python`, `ls`, etc.
+where `COMMAND` is the command, such as `python`, `ls`, etc, and `NAME` is
+an arbitrary name for this instance (i.e., `dfn`).
 
 (*Note:* if you are doing many dfnWorks Docker builds, you may have dangling
 images taking up disk space. Use `docker system prune` to clean them)
@@ -33,22 +34,22 @@ For example, my proxy file looks like:
 
 ```
 {
-        "auths": {
-                "https://index.docker.io/v1/": {}
-        },
-        "HttpHeaders": {
-                "User-Agent": "Docker-Client/18.09.2 (darwin)"
-        },
-        "credsStore": "osxkeychain",
-        "stackOrchestrator": "swarm",
-        "proxies": {
-            "default": {
-                "httpProxy": "http://proxyout.lanl.gov:8080",
-                "httpsProxy": "http://proxyout.lanl.gov:8080"
+    "auths": {
+            "https://index.docker.io/v1/": {}
+    },
+    "HttpHeaders": {
+            "User-Agent": "Docker-Client/18.09.2 (darwin)"
+    },
+    "credsStore": "osxkeychain",
+    "stackOrchestrator": "swarm",
+    "proxies": {
+        "default": {
+            "httpProxy": "http://proxyout.lanl.gov:8080",
+            "httpsProxy": "http://proxyout.lanl.gov:8080"
         }
     }
 }
 ```
 
 In addition, you may have to also change proxy settings under 
-*Docker -> Proxies -> Manual proxy configuration*.
+*Docker -> Preferences -> Proxies -> Manual proxy configuration*.
