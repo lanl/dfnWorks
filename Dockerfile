@@ -29,10 +29,11 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com:
 
 ENV DFNHOME=$APP_PATH
 
-RUN ["git","clone","--depth","1","https://github.com/lanl/FEHM.git","FEHM"]
-WORKDIR $APP_PATH/FEHM/src
-RUN ["make","-f","Makefile"]
-WORKDIR $APP_PATH
+# NOTE: FEHM support is not enabled yet!
+#RUN ["git","clone","--depth","1","https://github.com/lanl/FEHM.git","FEHM"]
+#WORKDIR $APP_PATH/FEHM/src
+#RUN ["make","-f","Makefile"]
+#WORKDIR $APP_PATH
 
 # 3.1 Install and configure LaGriT
 RUN ["git","clone","--depth","1","https://github.com/lanl/LaGriT.git"]
