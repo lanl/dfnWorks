@@ -83,21 +83,21 @@ def define_paths():
         exit()
 
     # PETSC paths
-    os.environ['PETSC_DIR']='/home/satkarra/src/petsc-3.10.2'
-    os.environ['PETSC_ARCH']='/Ubuntu-18.04-nodebug/'
+    os.environ['PETSC_DIR'] = '/dfnWorks/petsc'
+    os.environ['PETSC_ARCH'] = '/arch-linux2-c-debug/'
     valid('PETSC_DIR')
 #    valid('PETSC_ARCH')
 
     # PFLOTRAN path
-    os.environ['PFLOTRAN_EXE']='/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran'
+    os.environ['PFLOTRAN_EXE'] = '/dfnWorks/pflotran/src/pflotran/pflotran'
     valid('PFLOTRAN_EXE')
 
     # Python executable
-    os.environ['PYTHON_EXE'] = '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python/4.4.0/bin/python'
+    os.environ['PYTHON_EXE'] = 'python'
     valid('PYTHON_EXE')
     
     # LaGriT executable
-    os.environ['LAGRIT_EXE'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit'
+    os.environ['LAGRIT_EXE'] = '/dfnWorks/LaGriT/src/lagrit'
     valid('LAGRIT_EXE')
 
     #os.environ['FEHM_EXE'] = 'home//jhyman/bin/xfehm'
