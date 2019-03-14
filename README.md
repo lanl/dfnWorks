@@ -35,10 +35,10 @@ For example, my proxy file looks like:
 ```
 {
     "auths": {
-            "https://index.docker.io/v1/": {}
+        "https://index.docker.io/v1/": {}
     },
     "HttpHeaders": {
-            "User-Agent": "Docker-Client/18.09.2 (darwin)"
+        "User-Agent": "Docker-Client/18.09.2 (darwin)"
     },
     "credsStore": "osxkeychain",
     "stackOrchestrator": "swarm",
