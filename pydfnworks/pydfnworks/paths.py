@@ -93,7 +93,7 @@ def define_paths():
     valid('PFLOTRAN_EXE')
 
     # Python executable
-    os.environ['PYTHON_EXE'] = 'python'
+    os.environ['PYTHON_EXE'] = '/usr/bin/python'
     valid('PYTHON_EXE')
     
     # LaGriT executable

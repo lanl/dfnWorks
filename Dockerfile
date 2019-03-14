@@ -21,8 +21,6 @@ RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","wget",
 RUN ["pip","install","-U","pip","setuptools"]
 RUN ["pip","install","numpy","h5py","matplotlib","scipy"]
 
-RUN ["which","python"]
-
 # ---------------------------------------------------------------------------- #
 # OPTIONAL: Use if you are behind proxy!
 RUN git config --global url."https://github.com/".insteadOf git@github.com:
