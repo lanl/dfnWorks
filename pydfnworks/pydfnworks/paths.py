@@ -76,7 +76,7 @@ def define_paths():
     # ================================================
     
     # the dfnworks-main  repository 
-    os.environ['dfnworks_PATH'] = 'DUMMY/dfnworks-main/'
+    os.environ['dfnworks_PATH'] = '/dfnWorks/'
     valid('dfnworks_PATH')
     if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
         print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
