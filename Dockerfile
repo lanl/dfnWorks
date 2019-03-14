@@ -1,4 +1,4 @@
-##=====================================================##
+pydfnworks/pydfnworks/paths.py##=====================================================##
 ## dfnWorks Dockerfile
 ## dfnworks.lanl.gov
 ## 
@@ -17,7 +17,7 @@ RUN ["apt-get","update","-y"]
 # 2. Add pre-required packages
 #    TESTING: rm curl and everything after
 ENV DEBIAN_FRONTEND=noninteractive
-RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","wget","libz-dev","m4","bison","python","python-pip","python-tk","curl","pkg-config","openssh-client","openssh-server"]
+RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","wget","libz-dev","m4","bison","python","python-pip","python-tk","vim","curl","pkg-config","openssh-client","openssh-server"]
 RUN ["pip","install","-U","pip","setuptools"]
 RUN ["pip","install","numpy","h5py","matplotlib","scipy"]
 
@@ -29,8 +29,13 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com:
 
 ENV DFNHOME=$APP_PATH
 
+RUN ["git","clone","--depth","1","https://github.com/lanl/FEHM.git","FEHM"]
+WORKDIR $APP_PATH/FEHM/src
+RUN ["make","-f","Makefile"]
+WORKDIR $APP_PATH
+
 # 3.1 Install and configure LaGriT
-RUN ["git","clone","https://github.com/lanl/LaGriT.git"]
+RUN ["git","clone","--depth","1","https://github.com/lanl/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
 RUN ["make","exodus"]
 RUN ["make","release"]
@@ -50,7 +55,7 @@ RUN ["make","all"]
 WORKDIR $APP_PATH
 
 # 3.3 Install and configure PFLOTRAN
-RUN ["git","clone","https://bitbucket.org/pflotran/pflotran"]
+RUN ["git","clone","--depth","1","https://bitbucket.org/pflotran/pflotran"]
 WORKDIR $APP_PATH/pflotran/src/pflotran
 RUN ["make","pflotran"]
 WORKDIR $APP_PATH
@@ -60,8 +65,9 @@ RUN ["ls","-al","/dfnWorks/"]
 
 ENV dfnWorks_PATH=$APP_PATH
 ENV PFLOTRAN_DIR=$APP_PATH/pflotran
-#ENV python_dfn=NONE
+ENV python_dfn=/usr/bin/python
 ENV lagrit_dfn=$APP_PATH/LaGriT/src/lagrit
+ENV FEHM_EXE=$APP_PATH/FEHM/src/xfehm_v3.3.1
 
 WORKDIR $APP_PATH/pydfnworks/bin/
 RUN ["python","fix_paths.py"]
@@ -69,11 +75,8 @@ WORKDIR $APP_PATH/pydfnworks/
 RUN ["python","setup.py","install"]
 WORKDIR $APP_PATH
 
-# 5. Run dfnWorks test
-WORKDIR $APP_PATH/pydfnworks/bin/
-#RUN ["python","run.py","-name","${APP_PATH}/4_user_defined_rectangles","-input","${APP_PATH}/tests/4_user_defined_rectangles.txt","-ncpu","4"]
 
-# Run (something??) on container launch
-CMD ["python"]
+# Run bash on container launch
+CMD ["bash"]
 
 
