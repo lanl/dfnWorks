@@ -1,1 +1,1 @@
-python run.py -name ~/test_output_files/tdrw -input tdrw_run_file.txt -ncpu 8
+python run.py -name $PWD/tdrw_example/ -input tdrw_run_file.txt -ncpu 8
