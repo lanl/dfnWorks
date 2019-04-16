@@ -1,3 +1,3 @@
-dfnGen DUMMY/dfnworks-main/examples/fehm_example/small_network_cir.dat
-dfnFlow DUMMY/dfnworks-main/examples/fehm_example/fehmn.files
-dfnTrans DUMMY/dfnworks-main/examples/fehm_example/PTDFN_control.dat
+dfnGen /dfnWorks/examples/fehm_example/small_network_cir.dat
+dfnFlow /dfnWorks/examples/fehm_example/fehmn.files
+dfnTrans /dfnWorks/examples/fehm_example/PTDFN_control.dat

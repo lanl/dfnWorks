@@ -20,18 +20,12 @@ DFN.make_working_directory()
 DFN.check_input()
 DFN.create_network()
 
-#DFN.output_report()
+# Run FEHM
 DFN.set_flow_solver("FEHM")
 DFN.mesh_network()
 DFN.correct_stor_file()
 DFN.fehm()
 
-#DFN.lagrit2pflotran()
-#DFN.pflotran()
-#DFN.parse_pflotran_vtk_python()       
-#DFN.pflotran_cleanup()
-
-os.chdir(DFN.jobname)
 DFN.copy_dfn_trans_files()
 DFN.run_dfn_trans()
 
