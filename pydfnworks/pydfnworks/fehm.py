@@ -97,7 +97,7 @@ def fehm(self):
     try: 
         shutil.copy(self.dfnFlow_file, os.getcwd())
     except:
-        sys.error("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
+        sys.exit("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
     path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
     fp = open(self.local_dfnFlow_file)
     line = fp.readline()
