@@ -6,11 +6,15 @@ import os
 #os.system('mv ~/.local ~/local_save')
 from shutil import rmtree 
 
-print("Removing dir build")
-rmtree("build")
 
-print("Removing dir pydfnworks.egg-info")
-rmtree("pydfnworks.egg-info")
+dirs = ["build", "pydfnworks.egg-info"]
+for d in dirs:
+    
+    print("Removing dir %s"%d)
+    try:
+        rmtree(d)
+    except:
+        print("Unable to remove %s"%d)
 
 setup(name='pydfnworks',
       version='2.2',
