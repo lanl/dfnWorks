@@ -30,7 +30,7 @@ def set_flow_solver(self, flow_solver):
     else:
         sys.exit("ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"%flow_solver)
 
-def dfn_flow(self,dump_vtk=True):
+def dfn_flow(self,dump_vtk=True,effective_perm=True):
     """ Run the dfnFlow portion of the workflow
        
     Parameters
@@ -69,14 +69,14 @@ def dfn_flow(self,dump_vtk=True):
             tic = time()    
             self.parse_pflotran_vtk_python()
             self.dump_time('Function: parse_pflotran_vtk', time() - tic)    
-
         tic = time()    
         self.pflotran_cleanup()
         self.dump_time('Function: pflotran_cleanup', time() - tic) 
 
-        tic = time()    
-        self.effective_perm()
-        self.dump_time('Function: effective_perm', time() - tic) 
+        tic = time()
+        if effective_perm: 
+            self.effective_perm()
+            self.dump_time('Function: effective_perm', time() - tic) 
 
     elif self.flow_solver == "FEHM":
         print("Using flow solver: %s"%self.flow_solver)
