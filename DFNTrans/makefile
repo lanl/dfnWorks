@@ -7,12 +7,12 @@ CFLAGS =  -lm   -Wall -g -O3
 
 OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
-DFNTrans_TDRW: $(OBJECTS)
+DFNTrans: $(OBJECTS)
        
-	$(CC)  $(OBJECTS) -o DFNTrans_TDRW $(CFLAGS)
+	$(CC)  $(OBJECTS) -o DFNTrans $(CFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 clean:
-	rm -rf DFNTrans_TDRW main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
+	rm -rf DFNTrans main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
