@@ -69,7 +69,7 @@ def run_dfn_trans(self):
     """
     tic = time()
     failure = subprocess.call(os.environ['DFNTRANS_EXE']+' '+self.local_dfnTrans_file, shell = True)
-    self.dump_time("Function: DFNTrans_TDRW",time()-tic)
+    self.dump_time("Function: DFNTrans ",time()-tic)
     if failure != 0:
         sys.exit("--> ERROR: dfnTrans did not complete\n")
 
