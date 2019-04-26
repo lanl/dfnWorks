@@ -7,7 +7,7 @@
 param: params.txt
 poly: poly_info.dat
 inp: full_mesh.inp
-stor: tri_fracture.stor
+stor: full_mesh.stor
 boundary: allboundaries.zone
 /* boundary conditions: reading the nodes that belong to in-flow and 
 out-flow boundaries. Should be consistent with those applied to obtain
