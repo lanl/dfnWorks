@@ -46,7 +46,7 @@ If it's like a straight line, then the output is less frequent (in case of
 "out_curv:yes", if "no",  the output file will contain every time step) */
 out_curv: yes 
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs:  yes 
+out_avs: no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no 
 
