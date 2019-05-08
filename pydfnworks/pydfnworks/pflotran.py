@@ -35,9 +35,9 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     """
     if self.flow_solver != "PFLOTRAN":
         sys.exit("ERROR! Wrong flow solver requested")
-    print ('='*80)
+    print('='*80)
     print("Starting conversion of files for PFLOTRAN ")
-    print ('='*80)
+    print('='*80)
     if inp_file:
         self.inp_file = inp_file
     else:
@@ -74,7 +74,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     #self.zone2ex(zone_file='boundary_top.zone',face='top')
     #self.zone2ex(zone_file='boundary_bottom.zone',face='bottom')
     self.zone2ex(zone_file='all')
-    print ('='*80)
+    print('='*80)
     print("Conversion of files for PFLOTRAN complete")
     print ('='*80)
     print("\n\n")
@@ -156,7 +156,7 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             ex_file = zone_file.strip('zone') + 'ex'
 
             # Opening the input file
-            print '--> Opening zone file: ', zone_file
+            print('--> Opening zone file: ', zone_file)
             fzone = open(zone_file, 'r')
             fzone.readline()
             fzone.readline()
@@ -567,6 +567,6 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
                 f.write('POINT_DATA\t ' + num_cells + '\n')
             for line in pflotran_out:
                 f.write(line)
-    print '--> Parsing PFLOTRAN output complete'
+    print('--> Parsing PFLOTRAN output complete')
 
 
