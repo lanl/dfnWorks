@@ -400,7 +400,6 @@ def pflotran(self):
     subprocess.call(cmd, shell = True)
     if not check_pflotran_convergence(self.local_dfnFlow_file):
         sys.exit("ERROR!!!! PFLOTRAN did not convergence. Consider running in transient mode to march to steady-state")
-
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
@@ -408,7 +407,7 @@ def pflotran(self):
 
 
 def check_pflotran_convergence(pflotran_input_file):
-    """ checks flow_file.out for convergence 
+    """ checks pflotran_input_file.out for convergence 
 
     Parameters
     ----------
@@ -422,7 +421,7 @@ def check_pflotran_convergence(pflotran_input_file):
     Notes
     ----------
 """
-
+    # check if PFLOTRAN ran in steady-state mode
     steady=False
     with open(pflotran_input_file,"r") as fp:
         for line in fp.readlines():
