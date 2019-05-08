@@ -146,31 +146,33 @@ def uncorrelated(self, mu, sigma, path = '../'):
     mu is the mean of perm not log(perm)
 
     """
-    print '--> Creating Uncorrelated Transmissivity Fields'
-    print 'Mean: ', mu  
-    print 'Variance: ', sigma
-    print 'Running un-correlated'
-    n = len(x)
+    print('--> Creating Uncorrelated Transmissivity Fields')
+    print('Mean: ', mu)
+    print('Variance: ', sigma)
+    print('Running un-correlated')
+
+    #note, need to know number of fractures, use parse_params from mesh_helper to get n
+    # JDH 5/8/2019
 
     perm = np.log(mu)*np.ones(n) 
     perturbation = np.random.normal(0.0, 1.0, n)
     perm = np.exp(perm + np.sqrt(sigma)*perturbation) 
     aper = np.sqrt((12.0*perm))
 
-    print '\nPerm Stats'
-    print '\tMean:', np.mean(perm)
-    print '\tMean:', np.mean(np.log(perm))
-    print '\tVariance:',np.var(np.log(perm))
-    print '\tMinimum:',min(perm)
-    print '\tMaximum:',max(perm)
-    print '\tMinimum:',min(np.log(perm))
-    print '\tMaximum:',max(np.log(perm))
+    print('\nPerm Stats')
+    print('\tMean:', np.mean(perm))
+    print('\tMean:', np.mean(np.log(perm)))
+    print('\tVariance:',np.var(np.log(perm)))
+    print('\tMinimum:',min(perm))
+    print('\tMaximum:',max(perm))
+    print('\tMinimum:',min(np.log(perm)))
+    print('\tMaximum:',max(np.log(perm)))
 
-    print '\nAperture Stats'
-    print '\tMean:', np.mean(aper)
-    print '\tVariance:',np.var(aper)
-    print '\tMinimum:',min(aper)
-    print '\tMaximum:',max(aper)
+    print('\nAperture Stats')
+    print('\tMean:', np.mean(aper))
+    print('\tVariance:',np.var(aper))
+    print('\tMinimum:',min(aper))
+    print('\tMaximum:',max(aper))
 
     # Write out new aperture.dat and perm.dat files
     output_filename = 'aperture_' + str(sigma) + '.dat'

@@ -18,14 +18,14 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
             * NOTE future developers of this code should add functionality for radiiList of size 0. 
 
 	"""
-	print '--> Creating Report of DFN generation'
+	print('--> Creating Report of DFN generation')
 	families = {'all':[], 'notRemoved':[]} ## families['all'] contains all radii.   
 					       ## families['notRemoved'] contains all non-isolated fractures. 
 					       ##   Isolated fracs get removed from DFN and have 'R' at end  
 					       ##   of input file line
 					       ## families['1','2','3' etc] correspond to a polyFam object\
 	output_name = self.local_jobname + '_output_report.pdf'
-	print 'Writing output into: ', output_name
+	print('Writing output into: ', output_name)
 	outputPDF = PdfPages(output_name) ## TODO to make this cmd line option --> outputPDF = PdfPages(sys.argv[5])
 	show = False ## Set to true for showing plots immediately instead of having to open pdf. Still makes pdf
 

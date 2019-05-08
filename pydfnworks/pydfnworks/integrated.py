@@ -174,7 +174,6 @@ def check_family_information(f):
         print("--> Maximum fracture radius: %0.2f"%f['max'])
     else:
         sys.exit("ERROR: Minimum fracture radius not specified") 
-    print ''
 
 def check_domain_information():
     '''Check for consistancy within domain dictionary'''

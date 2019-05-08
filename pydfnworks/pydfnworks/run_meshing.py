@@ -168,7 +168,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     """ 
     t_all = time.time()
 
-    print "\nTriangulate %d fractures:"%len(fracture_list)
+    print("\nTriangulate %d fractures:"%len(fracture_list))
     try:
         rmtree('lagrit_logs')
     except OSError:
@@ -252,14 +252,14 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
             subprocess.call(cmd%(j,j), shell = True)
             os._exit(0)
         else:
-            print 'Merging part ', j, ' of ', n_jobs 
+            print('Merging part ', j, ' of ', n_jobs)
 
     # wait for all child processes to complete
     j = 0
     while j < n_jobs:
         (pid, status) = os.waitpid(0,os.WNOHANG)
         if pid > 0:
-            print 'Process ' + str(j+1) + ' finished'
+            print('Process ' + str(j+1) + ' finished')
             j += 1 
 
     print("Starting Final Merge")

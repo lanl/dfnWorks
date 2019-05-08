@@ -64,7 +64,7 @@ did not provide file of fractures to keep.\nExiting program.")
 
         print("Loading list of fractures to remain in network from %s"%self.prune_file)
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
-        print fracture_list
+        print(fracture_list)
         
         lagrit.edit_intersection_files(num_poly, fracture_list,self.path)
         num_poly = len(fracture_list)

@@ -580,7 +580,7 @@ finish
         f.write(lagrit_input%parameters)
         f.flush()
         f.close()
-    print 'Writing LaGriT Control Files: Complete'
+    print('--> Writing LaGriT Control Files: Complete')
 
 def create_user_functions():
     """ Create user_function.lgi files for meshing

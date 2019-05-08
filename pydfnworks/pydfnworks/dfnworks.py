@@ -177,7 +177,7 @@ def create_dfn():
     
     options = commandline_options()
     print("Command Line Inputs:")
-    print options
+    print(options)
     print("\n-->Creating DFN class")
     DFN=dfnworks(jobname=options.jobname, ncpu=options.ncpu)
 
@@ -246,18 +246,18 @@ def create_dfn():
         DFN.perm_file = 'perm.dat'
 
     print("\n-->Creating DFN class: Complete")
-    print 'Jobname: ', DFN.jobname
-    print 'Number of cpus requested: ', DFN.ncpu 
-    print '--> dfnGen input file: ',DFN.dfnGen_file
-    print '--> dfnFlow input file: ',DFN.dfnFlow_file
-    print '--> dfnTrans input file: ',DFN.dfnTrans_file
+    print('Jobname: ', DFN.jobname)
+    print('Number of cpus requested: ', DFN.ncpu)
+    print('--> dfnGen input file: ',DFN.dfnGen_file)
+    print('--> dfnFlow input file: ',DFN.dfnFlow_file)
+    print('--> dfnTrans input file: ',DFN.dfnTrans_file)
 
-    print '--> Local dfnGen input file: ',DFN.local_dfnGen_file
-    print '--> Local dfnFlow input file: ',DFN.local_dfnFlow_file
-    print '--> Local dfnTrans input file: ',DFN.local_dfnTrans_file
+    print('--> Local dfnGen input file: ',DFN.local_dfnGen_file)
+    print('--> Local dfnFlow input file: ',DFN.local_dfnFlow_file)
+    print('--> Local dfnTrans input file: ',DFN.local_dfnTrans_file)
 
     if options.cell is True:
-        print '--> Expecting Cell Based Aperture and Permeability'
+        print('--> Expecting Cell Based Aperture and Permeability')
 
     print("="*80+"\n")  
     return DFN

@@ -236,7 +236,7 @@ def check_input(self, input_file='',output_file=''):
                        desiredLength = ellipseFams + rectFams, noZeros = True, noNegs = True)
 
         if errResult != None: 
-            print errResult
+            print(errResult)
             input_helper_methods.error("\"famProb\" must have {} (nFamEll + nFamRect) non-zero elements,"\
                   "one for each family of ellipses and rectangles. {} probabiliies have "\
                   "been defined.".format(ellipseFams + rectFams, -errResult))
@@ -260,7 +260,7 @@ def check_input(self, input_file='',output_file=''):
 
         if input_helper_methods.verify_flag(input_helper_methods.value_of(ellByCoord, params), ellByCoord) == 1:
             if not os.path.isfile(input_helper_methods.value_of(ecoordPath, params)):
-                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ecoordPath, params)
+                print('THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ecoordPath, params))
                 input_helper_methods.error(invalid.format(ecoordPath))
             else:
                 shutil.copy(input_helper_methods.value_of(ecoordPath, params), self.jobname)

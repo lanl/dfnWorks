@@ -21,8 +21,7 @@ def valid(name):
 
 """
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
-        error_msg = "ERROR: " + name  + " has an invalid path name: " + os.environ[name]
-        print error_msg
+        print("ERROR: " + name  + " has an invalid path name: " + os.environ[name])
         exit()
 
 def compile_dfn_exe(directory):
@@ -78,9 +77,6 @@ def define_paths():
     # the dfnworks-main  repository 
     os.environ['dfnworks_PATH'] = '/dfnWorks/'
     valid('dfnworks_PATH')
-    if not (os.path.isdir(os.path.abspath(os.environ['dfnworks_PATH'] + 'tests/'))):
-        print "INVALID VERSION OF dfnworks - does not have tests folder of official release 2.0"
-        exit()
 
     # PETSC paths
     os.environ['PETSC_DIR'] = '/dfnWorks/petsc'

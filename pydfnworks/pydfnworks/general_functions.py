@@ -57,7 +57,7 @@ def print_run_time(self):
     if unit is 'minutes':
         total *= 60.0
 
-    print 'Runs times for ', f[0]
+    print('Runs times for ', f[0])
     percent = []
     name = []
     for i in range(1,len(f)):
@@ -68,7 +68,7 @@ def print_run_time(self):
             time *= 60.0
         percent.append(100.0*(time/total))
         name.append(f[i].split(':')[1])
-        print f[i], '\t--> Percent if total %0.2f \n'%percent[i-1]
+        print(f[i], '\t--> Percent if total %0.2f \n'%percent[i-1])
 
     print("Primary Function Percentages")
     for i in range(1,len(f) - 1):

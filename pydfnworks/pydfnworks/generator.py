@@ -54,10 +54,9 @@ def dfn_gen(self,output=True):
     tic = time()
     self.mesh_network()
     self.dump_time('Function: mesh_network', time() - tic)  
-    print ('='*80)
-    print 'dfnGen Complete'
-    print ('='*80)
-    print ''
+    print('='*80)
+    print('dfnGen Complete')
+    print('='*80)
     self.dump_time('Process: dfnGen',time() - tic_gen)  
 
 def make_working_directory(self):
@@ -80,12 +79,12 @@ def make_working_directory(self):
     try:
         os.mkdir(self.jobname)
     except OSError:
-        print '\nFolder ', self.jobname, ' exists'
+        print('\nFolder ', self.jobname, ' exists')
         keep = raw_input('Do you want to delete it? [yes/no] \n')
         if keep == 'yes' or keep == 'y':
-            print 'Deleting', self.jobname 
+            print('Deleting', self.jobname)
             shutil.rmtree(self.jobname)
-            print 'Creating', self.jobname 
+            print('Creating', self.jobname)
             os.mkdir(self.jobname)    
         elif keep == 'no' or 'n':
             sys.exit("Not deleting folder. Exiting Program") 
