@@ -423,13 +423,24 @@ def check_pflotran_convergence(pflotran_input_file):
     ----------
 """
 
-    pflotran_output_file = pflotran_input_file[:-2] + "out"
-    print("Opening %s to check for convergence"%pflotran_output_file)
-    with open(pflotran_output_file,"r") as fp:
+    steady=False
+    with open(pflotran_input_file,"r") as fp:
         for line in fp.readlines():
-            if "STEADY-SOLVE      1 snes_conv_reason:" in line:
-                return True
-    return False
+            if "STEADY_STATE" in line:
+                steady = True
+
+    if steady:
+        pflotran_output_file = pflotran_input_file[:-2] + "out"
+        print("Opening %s to check for convergence"%pflotran_output_file)
+        with open(pflotran_output_file,"r") as fp:
+            for line in fp.readlines():
+                if "STEADY-SOLVE      1 snes_conv_reason:" in line:
+                    return True
+        return False
+    else:
+        print("PFLOTRAN ran in transient mode, unable to check for steady-state convergence")
+        return True
+
 
 def pflotran_cleanup(self, index = 1):
     """pflotran_cleanup
