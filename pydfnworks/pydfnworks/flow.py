@@ -118,7 +118,7 @@ def create_dfn_flow_links(self, path = '../'):
         'pboundary_bottom.zone', 'pboundary_top.zone',
         'pboundary_back_s.zone', 'pboundary_front_n.zone', 
         'pboundary_left_w.zone', 'pboundary_right_e.zone',
-        'perm.dat','aperture.dat']
+        'perm.dat','aperture.dat', 'params.txt']
     for f in files:
         try:
             os.symlink(path+f, f)

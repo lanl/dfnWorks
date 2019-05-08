@@ -111,9 +111,9 @@ def define_paths():
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
         compile_dfn_exe(os.environ['dfnworks_PATH']+'DFNGen/')
 
-    os.environ['DFNTRANS_EXE']= os.environ['dfnworks_PATH'] +'DFNTrans/DFNTrans_TDRW'
+    os.environ['DFNTRANS_EXE']= os.environ['dfnworks_PATH'] +'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH']+'ParticleTracking_TDRW/')
+        compile_dfn_exe(os.environ['dfnworks_PATH']+'DFNTrans')
     
     os.environ['CORRECT_UGE_EXE'] = os.environ['dfnworks_PATH']+'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):

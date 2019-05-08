@@ -398,10 +398,50 @@ def pflotran(self):
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file 
     print("Running: %s"%cmd)
     subprocess.call(cmd, shell = True)
+    if not check_pflotran_convergence(self.local_dfnFlow_file):
+        sys.exit("ERROR!!!! PFLOTRAN did not convergence. Consider running in transient mode to march to steady-state")
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
     print("\n")
+
+
+def check_pflotran_convergence(pflotran_input_file):
+    """ checks pflotran_input_file.out for convergence 
+
+    Parameters
+    ----------
+        pflotran_input_file : string 
+            pflotran_input_file 
+
+    Returns
+    ----------
+        bool 
+        True if solver converged / False if not 
+    Notes
+    ----------
+"""
+    # check if PFLOTRAN ran in steady-state mode
+    steady=False
+    with open(pflotran_input_file,"r") as fp:
+        for line in fp.readlines():
+            if "STEADY_STATE" in line:
+                steady = True
+
+    if steady:
+        pflotran_output_file = pflotran_input_file[:-2] + "out"
+        print("\n--> Opening %s to check for convergence"%pflotran_output_file)
+        with open(pflotran_output_file,"r") as fp:
+            for line in fp.readlines():
+                if "STEADY-SOLVE      1 snes_conv_reason:" in line:
+                    print("--> PFLOTRAN converged")
+                    print(line+"\n")
+                    return True
+        return False
+    else:
+        print("PFLOTRAN ran in transient mode, unable to check for steady-state convergence")
+        return True
+
 
 def pflotran_cleanup(self, index = 1):
     """pflotran_cleanup
