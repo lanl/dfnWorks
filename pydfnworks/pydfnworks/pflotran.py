@@ -156,7 +156,7 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             ex_file = zone_file.strip('zone') + 'ex'
 
             # Opening the input file
-            print '--> Opening zone file: ', zone_file
+            print('--> Opening zone file: ', zone_file)
             fzone = open(zone_file, 'r')
             fzone.readline()
             fzone.readline()
@@ -431,10 +431,12 @@ def check_pflotran_convergence(pflotran_input_file):
 
     if steady:
         pflotran_output_file = pflotran_input_file[:-2] + "out"
-        print("Opening %s to check for convergence"%pflotran_output_file)
+        print("\n--> Opening %s to check for convergence"%pflotran_output_file)
         with open(pflotran_output_file,"r") as fp:
             for line in fp.readlines():
                 if "STEADY-SOLVE      1 snes_conv_reason:" in line:
+                    print("--> PFLOTRAN converged")
+                    print(line+"\n")
                     return True
         return False
     else:
