@@ -1,9 +1,9 @@
 import networkx as nx
 import numpy as np
-import dfn2graph
 import sys
 import scipy.sparse
-
+# pydfnworks modules
+import pydfnworks.dfn2graph
 
 
 def get_laplacian_sparse_mat(G, nodelist=None, weight=None, dtype=None, format='lil'):

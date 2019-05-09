@@ -1,5 +1,6 @@
-import gen_input
-import gen_input_helper
+# pydfnwork modules
+import pydfnworks.gen_input as gen_input
+import pydfnworks.gen_input_helper as gen_input_helper
 
 class distr():
     """ 

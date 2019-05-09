@@ -70,10 +70,10 @@ def print_run_time(self):
         name.append(f[i].split(':')[1])
         print(f[i], '\t--> Percent if total %0.2f \n'%percent[i-1])
 
-    print("Primary Function Percentages")
-    for i in range(1,len(f) - 1):
-        if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
-            tmp = int(percent[i-1])/10    
-            print(name[i-1]+"\t"+"*"*tmp)
+    #print("Primary Function Percentages")
+    #for i in range(1,len(f) - 1):
+    #    if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
+    #        tmp = int(percent[i-1])/10    
+    #        print(name[i-1]+"\t"+"*"tmp)
     print("\n")
 

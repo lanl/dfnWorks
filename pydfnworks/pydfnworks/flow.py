@@ -146,6 +146,8 @@ def uncorrelated(self, mu, sigma, path = '../'):
     mu is the mean of perm not log(perm)
 
     """
+    from pydfnworks.mesh_dfn_helper import parse_params_file 
+    
     print('--> Creating Uncorrelated Transmissivity Fields')
     print('Mean: ', mu)
     print('Variance: ', sigma)
@@ -153,6 +155,7 @@ def uncorrelated(self, mu, sigma, path = '../'):
 
     #note, need to know number of fractures, use parse_params from mesh_helper to get n
     # JDH 5/8/2019
+    n = parse_params_file(quite=True)[0]
 
     perm = np.log(mu)*np.ones(n) 
     perturbation = np.random.normal(0.0, 1.0, n)

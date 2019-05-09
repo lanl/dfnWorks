@@ -8,8 +8,7 @@
 
 import numpy as np
 import glob
-from StringIO import StringIO
-from mesh_dfn_helper import parse_params_file 
+from pydfnworks.mesh_dfn_helper import parse_params_file 
 
 
 __author__ = 'Satish Karra'

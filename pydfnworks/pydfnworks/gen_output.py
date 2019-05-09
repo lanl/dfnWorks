@@ -1,4 +1,3 @@
-import generator
 from scipy import stats, special 
 import numpy as np
 import re
@@ -6,6 +5,8 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
+#pydfnworks modules
+import pydfnworks.generator
 
 def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
     """

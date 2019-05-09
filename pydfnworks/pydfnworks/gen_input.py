@@ -1,10 +1,11 @@
 import os
 import sys
 import shutil
-import distributions as distr_module
-import gen_input_helper 
 import numpy as np
 import scipy.integrate
+#pydfnworks modules
+import pydfnworks.distributions as distr_module
+import pydfnworks.gen_input_helper as gen_input_helper
 
 def check_input(self, input_file='',output_file=''):
     """Check input file for DFNGen to make sure all necessary parameters are defined

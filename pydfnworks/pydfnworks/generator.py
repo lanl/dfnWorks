@@ -3,7 +3,7 @@ import sys
 import shutil
 from time import time
 import subprocess
-from mesh_dfn_helper import parse_params_file
+from pydfnworks.mesh_dfn_helper import parse_params_file
 
 def dfn_gen(self,output=True):
     ''' Wrapper script the runs the dfnGen workflow:    
@@ -80,7 +80,7 @@ def make_working_directory(self):
         os.mkdir(self.jobname)
     except OSError:
         print('\nFolder ', self.jobname, ' exists')
-        keep = raw_input('Do you want to delete it? [yes/no] \n')
+        keep = input('Do you want to delete it? [yes/no] \n')
         if keep == 'yes' or keep == 'y':
             print('Deleting', self.jobname)
             shutil.rmtree(self.jobname)

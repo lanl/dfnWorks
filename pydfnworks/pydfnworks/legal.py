@@ -51,7 +51,7 @@ LA-CC-17-027
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-© (or copyright) 2017 Triad National Security, LLC. All rights reserved.
+(or copyright) 2017 Triad National Security, LLC. All rights reserved.
  
 This program was produced under U.S. Government contract 89233218CNA000001
  for Los Alamos National Laboratory (LANL), which is operated by Triad 

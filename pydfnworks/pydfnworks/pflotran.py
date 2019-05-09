@@ -164,25 +164,25 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
             # Read number of boundary nodes
             print('--> Calculating number of nodes')
-            NumNodes = int(fzone.readline())
-            Node_array = np.zeros(NumNodes, 'int')
+            num_nodes = int(fzone.readline())
+            Node_array = np.zeros(num_nodes, 'int')
             # Read the boundary node ids
             print('--> Reading boundary node ids')
 
-            if (NumNodes < 10):
+            if (num_nodes < 10):
                 g = fzone.readline()
                 node_array = g.split()
                 # Convert string to integer array
                 node_array = [int(id) for id in node_array]
                 Node_array = np.asarray(node_array)
             else:
-                for i in range(NumNodes / 10 + (NumNodes%10!=0)):
+                for i in range(int(num_nodes / 10 + (num_nodes%10!=0))):
                     g = fzone.readline()
                     node_array = g.split()
                     # Convert string to integer array
                     node_array = [int(id) for id in node_array]
-                    if (NumNodes - 10 * i < 10):
-                        for j in range(NumNodes % 10):
+                    if (num_nodes - 10 * i < 10):
+                        for j in range(num_nodes % 10):
                             Node_array[i * 10 + j] = node_array[j]
                     else:
                         for j in range(10):
@@ -190,8 +190,8 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             fzone.close()
             print('--> Finished with zone file')
 
-            Boundary_cell_area = np.zeros(NumNodes, 'float')
-            for i in range(NumNodes):
+            Boundary_cell_area = np.zeros(num_nodes, 'float')
+            for i in range(num_nodes):
                 Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
 
             

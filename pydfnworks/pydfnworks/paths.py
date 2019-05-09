@@ -1,7 +1,7 @@
-from tempfile import mkstemp
-from shutil import move
 import os
 import subprocess
+import sys
+
 
 def valid(name):
     """" Check that path is valid for a executable
@@ -21,8 +21,7 @@ def valid(name):
 
 """
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
-        print("ERROR: " + name  + " has an invalid path name: " + os.environ[name])
-        exit()
+        sys.exit("ERROR: " + name  + " has an invalid path name: " + os.environ[name])
 
 def compile_dfn_exe(directory):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
@@ -75,29 +74,29 @@ def define_paths():
     # ================================================
     
     # the dfnworks-main  repository 
-    os.environ['dfnworks_PATH'] = '/dfnWorks/'
+    os.environ['dfnworks_PATH'] = '/Users/jhyman/src/dfnworks-main/'
     valid('dfnworks_PATH')
 
     # PETSC paths
-    os.environ['PETSC_DIR'] = '/dfnWorks/petsc'
-    os.environ['PETSC_ARCH'] = '/arch-linux2-c-debug/'
+    os.environ['PETSC_DIR']='/Users/jhyman/src/petsc/'
+    os.environ['PETSC_ARCH']='/arch-darwin-c-debug/'
     valid('PETSC_DIR')
 #    valid('PETSC_ARCH')
 
     # PFLOTRAN path
-    os.environ['PFLOTRAN_EXE'] = '/dfnWorks/pflotran/src/pflotran/pflotran'
+    os.environ['PFLOTRAN_EXE']='/Users/jhyman/src/pflotran/src/pflotran/pflotran'
     valid('PFLOTRAN_EXE')
 
     # Python executable
-    os.environ['PYTHON_EXE'] = '/usr/bin/python'
+    os.environ['PYTHON_EXE'] = '/Users/jhyman/anaconda2/bin/python'
     valid('PYTHON_EXE')
     
     # LaGriT executable
-    os.environ['LAGRIT_EXE'] = '/dfnWorks/LaGriT/src/lagrit'
+    os.environ['LAGRIT_EXE'] = '/Users/jhyman/src/LaGriT/src/lagrit'
     valid('LAGRIT_EXE')
 
-    #os.environ['FEHM_EXE'] = 'home//jhyman/bin/xfehm'
-    #valid('FEHM_EXE')
+    os.environ['FEHM_EXE'] = '/Users/jhyman/bin/xfehm'
+    valid('FEHM_EXE')
     # =================================================== 
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
     # ====================================================
@@ -109,7 +108,7 @@ def define_paths():
 
     os.environ['DFNTRANS_EXE']= os.environ['dfnworks_PATH'] +'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH']+'DFNTrans')
+        compile_dfn_exe(os.environ['dfnworks_PATH']+'DFNTrans/')
     
     os.environ['CORRECT_UGE_EXE'] = os.environ['dfnworks_PATH']+'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):

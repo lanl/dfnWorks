@@ -889,7 +889,7 @@ def define_zones():
    
     fall=open("allboundaries.zone","w")
     #copy all but last 2 lines of boundary_top.zone in allboundaries.zone
-    fzone=open("boundary_top.zone","rb")
+    fzone=open("boundary_top.zone","r")
     lines=fzone.readlines()
     lines=lines[:-2]
     fzone.close() 
@@ -897,18 +897,19 @@ def define_zones():
     #copy all but frist and last 2 lines of boundary_bottom.zone in allboundaries.zone
     files=['bottom','left_w','front_n','right_e']
     for f in files:
-            fzone=open("boundary_%s.zone"%f,"rb")
+            fzone=open("boundary_%s.zone"%f,"r")
             lines=fzone.readlines()
             lines=lines[1:-2]
             fzone.close() 
             fall.writelines(lines)
-    fzone=open("boundary_back_s.zone","rb")
+    fzone=open("boundary_back_s.zone","r")
     lines=fzone.readlines()
     lines=lines[1:]
     fzone.close() 
     fall.writelines(lines)
     fall.close()
     # copies boundary zone files for PFLOTRAN 
+    # This can be deleted once we clean up the flow 
     move('boundary_bottom.zone','pboundary_bottom.zone')
     move('boundary_left_w.zone','pboundary_left_w.zone')
     move('boundary_front_n.zone','pboundary_front_n.zone')

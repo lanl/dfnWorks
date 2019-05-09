@@ -94,18 +94,18 @@ def check_dudded_points(dudded,hard = False):
 
     """
     print("Checking that number of Dudded points is correct")
-    datafile = file('log_merge_all.txt')
-    for line in datafile:
-        if 'Dudding' in line:
-            print('From LaGriT: %s'%line)
-            try:
-                pts = int(line.split()[1])
-            except:
-                pts = int(line.split()[-1])
-        if 'RMPOINT:' in line:
-            print('From LaGriT: %s'%line)
-            total_pts = int(line.split()[-1])
-            break
+    with open("log_merge_all.txt","r") as fp:
+        for line in fp.readlines():
+            if 'Dudding' in line:
+                print('From LaGriT: %s'%line)
+                try:
+                    pts = int(line.split()[1])
+                except:
+                    pts = int(line.split()[-1])
+            if 'RMPOINT:' in line:
+                print('From LaGriT: %s'%line)
+                total_pts = int(line.split()[-1])
+                break
 
     diff = abs(dudded - pts)
     print("Expected Number of dudded points: %d"%dudded)

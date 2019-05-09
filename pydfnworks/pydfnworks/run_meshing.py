@@ -188,7 +188,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     for i in fracture_list:
         work_queue.put(i)
 
-    for i in xrange(ncpu):
+    for i in range(ncpu):
         p = mp.Process(target=worker, args=(work_queue, \
             visual_mode, len(fracture_list)))
         p.daemon = True
