@@ -183,8 +183,14 @@ def create_dfn():
     print("\n-->Creating DFN class")
     DFN=DFNWORKS(jobname=options.jobname, ncpu=options.ncpu)
 
+    print("="*80+"\n")  
+    print('--> Jobname: ', DFN.jobname)
+    print('--> Number of cpus requested: ', DFN.ncpu)
+    
     if options.input_file == "":
         sys.exit("ERROR!!! Input file must be provided.")
+    else:
+        print("--> Reading Input from "+options.input_file)
 
     with open(options.input_file,"r") as f:
         for line in f.readlines():
@@ -192,12 +198,15 @@ def create_dfn():
             line=line.split()
             if "dfnGen" in line:
                 DFN.dfnGen_file = line[1]
+                print('--> dfnGen input file: ',DFN.dfnGen_file)
                 DFN.local_dfnGen_file = line[1].split('/')[-1]
             elif "dfnFlow" in line:
                 DFN.dfnFlow_file = line[1]
+                print('--> dfnFlow input file: ',DFN.dfnFlow_file)
                 DFN.local_dfnFlow_file = line[1].split('/')[-1]
             elif "dfnTrans" in line:
                 DFN.dfnTrans_file = line[1]
+                print('--> dfnTrans input file: ',DFN.dfnTrans_file)
                 DFN.local_dfnTrans_file = line[1].split('/')[-1]
             else:
                 sys.exit("ERROR Reading Input File\nUnknown line: %s"%line)
@@ -206,33 +215,24 @@ def create_dfn():
         if not options.path.endswith('/'):
             options.path += os.sep
         DFN.path = options.path 
+        print('--> DFN Path: ',DFN.path)
     else:
         DFN.path = ""
 
     if options.prune_file != "":
         DFN.prune_file = options.prune_file
+        print('--> DFN prune file: ',DFN.prune_file)
     else:
         DFN.prune_file = ""
 
     if options.cell is True:
+        print('--> Expecting Cell Based Aperture and Permeability')
         DFN.aper_cell_file = 'aper_node.dat'
         DFN.perm_cell_file = 'perm_node.dat'
     else:
         DFN.aper_file = 'aperture.dat'
         DFN.perm_file = 'perm.dat'
 
-    print("\n-->Creating DFN class: Complete")
-    print('Jobname: ', DFN.jobname)
-    print('Number of cpus requested: ', DFN.ncpu)
-    print('--> dfnGen input file: ',DFN.dfnGen_file)
-    print('--> dfnFlow input file: ',DFN.dfnFlow_file)
-    print('--> dfnTrans input file: ',DFN.dfnTrans_file)
-
-    print('--> Local dfnGen input file: ',DFN.local_dfnGen_file)
-    print('--> Local dfnFlow input file: ',DFN.local_dfnFlow_file)
-    print('--> Local dfnTrans input file: ',DFN.local_dfnTrans_file)
-
-    if options.cell is True:
-        print('--> Expecting Cell Based Aperture and Permeability')
+    print("\n -->Creating DFN class: Complete")
     print("="*80+"\n")  
     return DFN
