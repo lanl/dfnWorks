@@ -3,7 +3,7 @@ import numpy as np
 import sys
 import scipy.sparse
 # pydfnworks modules
-import pydfnworks.dfnGraph.dfn2graph
+import pydfnworks.dfnGraph.dfn2graph as d2g
 
 def get_laplacian_sparse_mat(G, nodelist=None, weight=None, dtype=None, format='lil'):
     """ Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Used to enforce boundary conditions by modifying rows of L = D - A
@@ -60,13 +60,11 @@ def prepare_graph_with_attributes(inflow, outflow):
 
 
 
-    G = dfn2graph.create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat")
-
+    G = d2g.create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat")
     Gtilde = G.copy()
-
-    dfn2graph.add_perm(Gtilde)
-    dfn2graph.add_area(Gtilde)
-    dfn2graph.add_weight(Gtilde)
+    d2g.add_perm(Gtilde)
+    d2g.add_area(Gtilde)
+    d2g.add_weight(Gtilde)
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag']= False
@@ -191,11 +189,6 @@ def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4):
     -----
     Information on individual functions in found therein
     """
-
     Gtilde = prepare_graph_with_attributes(inflow, outflow)
-
-    
     Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout,fluid_viscosity) 
-    
-    
     return Gtilde

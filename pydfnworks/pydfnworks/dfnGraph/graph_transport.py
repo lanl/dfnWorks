@@ -6,7 +6,6 @@ import sys
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow 
 
-
 def create_neighbour_list(Gtilde):
     """ Create a list of downstream neighbour vertices for every vertex on NetworkX graph obtained after running graph_flow
 
@@ -74,8 +73,6 @@ class Particle():
         self.dist = float
         self.flag = bool
 
-
-
     def set_start_time_dist(self, t, L):
         """ Set initial value for travel time and distance
 
@@ -95,8 +92,6 @@ class Particle():
         self.time = t
         self.dist = L
     
-    
-    
     def track(self, Gtilde, nbrs_dict):
         """ track a particle from inlet vertex to outlet vertex
 
@@ -114,27 +109,22 @@ class Particle():
         """
 
         Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
-        
         curr_v = numpy.random.choice(Inlet)
-        
         while True:
-            
             if Gtilde.nodes[curr_v]['outletflag']:
                 self.flag = True
                 break
-
             if nbrs_dict[curr_v]['child'] is None:
+                print("Warning!!! No child found")
                 self.flag = False
                 break
-
             next_v =  numpy.random.choice(nbrs_dict[curr_v]['child'], p=nbrs_dict[curr_v]['prob'])
-            
+
             frac = Gtilde.edges[curr_v, next_v]['frac']
             t = Gtilde.edges[curr_v, next_v]['time']
             L  = Gtilde.edges[curr_v, next_v]['length']
             self.add_frac_data(frac, t, L)
             curr_v = next_v
-
 
     
     def add_frac_data(self, frac, t, L):
@@ -249,18 +239,15 @@ def run_graph_transport(self, Gtilde, nparticles, partime_file=None, frac_id_fil
         except:
             sys.exit("ERROR: Unable to open supplied frac_id_file file {}".format(frac_id_file))
     
-
     nbrs_dict = create_neighbour_list(Gtilde)
-    
     print("Creating downstream neighbour list")
-
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
     
     pfailcount = 0
-    printr("Starting particle tracking")
+    print("Starting particle tracking")
 
     for i in range(nparticles):
-        
+        print(i)
         particle_i = Particle()
         particle_i.set_start_time_dist(0, 0)
         particle_i.track(Gtilde, nbrs_dict)
@@ -276,5 +263,3 @@ def run_graph_transport(self, Gtilde, nparticles, partime_file=None, frac_id_fil
     else:
         print("Out of {} particles, {} particles did not exit".format(nparticles, pfailcount))
     return
-
-

@@ -57,10 +57,9 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                
 
     def graph_rejections():
-        """
-                Graph the fractures that were rejected by the Feature Rejection Algorithm for Meshing (FRAM) in dfnGen, using a histogram of rejection reasons.
+        """ Graph the fractures that were rejected by the Feature Rejection Algorithm for Meshing (FRAM) in dfnGen, using a histogram of rejection reasons.
             Rejection File line format:   "118424 Short Intersections" --> {"Short Intersections": 118424}
-                """
+        """
         rejects = {}
         plt.subplots()
 
@@ -79,8 +78,8 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
         offset = 2
         h = 0.35   # height of horiz bar (vertical thickness)
 
-        horizBar = plt.barh(np.arange(len(rejects)) + offset, rejects.values(), height=h, align='center')
-        plt.yticks(np.arange(len(rejects)) + offset, rejects.keys(), fontsize=6)
+        horizBar = plt.barh(np.arange(len(rejects)) + offset, list(rejects.values()), height=h, align='center')
+        plt.yticks(np.arange(len(rejects)) + offset, list(rejects.keys()), fontsize=6)
         plt.title("Rejection Reasons", fontsize=18)
         plt.xlim(xmin=0, xmax=figWidth if figWidth != 0 else 1)        
 
@@ -113,8 +112,8 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
         plt.savefig(outputPDF, format='pdf')
         if show: plt.show()
 
-        def graph_translations():
-                """ Graphs position of fractures as histogram for x, y and z dimensions
+    def graph_translations():
+        """ Graphs position of fractures as histogram for x, y and z dimensions
                 Input file format:    Xpos Ypos Zpos (R) [R is optional, indicates it was removed due to isolation]
                 """
         xAll = []
@@ -307,7 +306,7 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
                 """
         return 0.5 + (0.5 * special.erf( (np.log(x) - mu) / (np.sqrt(2) * sigma) ) )
            
-        def lognormal_pdf(x, sigma, mu):
+    def lognormal_pdf(x, sigma, mu):
             """Get the analytical lognormal PDF value corresponding to x.
                 Args:
                     xVals: values of x at which to calculate the lognormal PDF
@@ -318,47 +317,47 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
             exp_term = -0.5*(pow((np.log(x) - mu) / sigma, 2.0))
             return constant*np.exp(exp_term)
         
-        def lognormal_pdf_list(xVals, sigma, mu):
-            """Get a list of the analytical lognormal PDF values corresponding to xVals.
+    def lognormal_pdf_list(xVals, sigma, mu):
+        """Get a list of the analytical lognormal PDF values corresponding to xVals.
                 Args:
                     xVals: values of x at which to calculate the lognormal PDF
                     sigma: the standard deviation of the corresponding normal distribution
                     mu: the mean of the corresponding normal distribution
-            """
-            lst = []
-            for x in xVals:
-               lst.append(lognormal_pdf(x, sigma, mu))
-            return lst
+        """
+        lst = []
+        for x in xVals:
+           lst.append(lognormal_pdf(x, sigma, mu))
+        return lst
         
-        def graph_lognormal(famObj):
-            """Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.
+    def graph_lognormal(famObj):
+        """Graph the PDF, CDF and QQ plot of the lognormal  distribution agianst the expected analytical lognormal  values.
                 Args:
                     famObj (polyFam class): the polyFam object describing the truncated power law distribution.
-            """
-            numXpoints = 1000
-            xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
-            xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
-            xVals = np.linspace(xmin, xmax, numXpoints)
-            mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
-            if (mu < 0):
-                sys.error('ERROR: mean must be positive')
-            try:       
-                normConstant = 1.0 / (lognorm_c_d_f(xmax, mu, sigma) - lognorm_c_d_f(xmin, mu, sigma))
-            except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
-                pass  
-            lognormPDFVals = [x * normConstant for x in lognormal_pdf_list(xVals, sigma, mu)]
-            #lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
-            adj_factor = np.trapz(lognormPDFVals, xVals)
-            lognormPDFVals /= adj_factor
-            histHeights, binCenters = hist_and_p_d_f(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
-            plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
+        """
+        numXpoints = 1000
+        xmin = min(famObj.radiiList) ##parameters["Minimum Radius"] Use list max because distrib doesnt always get
+        xmax = max(famObj.radiiList) ##parameters["Maximum Radius"]   the desired max value.
+        xVals = np.linspace(xmin, xmax, numXpoints)
+        mu, sigma = famObj.parameters["Mean"], famObj.parameters["Standard Deviation"]
+        if (mu < 0):
+            sys.error('ERROR: mean must be positive')
+        try:       
+            normConstant = 1.0 / (lognorm_c_d_f(xmax, mu, sigma) - lognorm_c_d_f(xmin, mu, sigma))
+        except ZeroDivisionError: ## happens when there is only one fracture in family so ^ has 0 in denominator
+            pass  
+        lognormPDFVals = [x * normConstant for x in lognormal_pdf_list(xVals, sigma, mu)]
+        #lognormPDFVals = [x * normConstant for x in stats.lognorm.pdf(xVals, sigma, loc=mu)]
+        adj_factor = np.trapz(lognormPDFVals, xVals)
+        lognormPDFVals /= adj_factor
+        histHeights, binCenters = hist_and_p_d_f(famObj.radiiList, lognormPDFVals, xmin, xmax, xVals) 
+        plt.title("Histogram of Obtained Radii Sizes & Lognormal Distribution PDF."\
               "\nFamily #" + famObj.globFamNum)
-            plt.savefig(outputPDF, format='pdf')
-            if show: plt.show()
+        plt.savefig(outputPDF, format='pdf')
+        if show: plt.show()
 
-            cdfs(histHeights, binCenters, lognormPDFVals, xmin, xmax, xVals)
-            plt.savefig(outputPDF, format='pdf')
-            if show: plt.show()
+        cdfs(histHeights, binCenters, lognormPDFVals, xmin, xmax, xVals)
+        plt.savefig(outputPDF, format='pdf')
+        if show: plt.show()
                 
         trueVals = [lognormal_pdf(binCenters[i], sigma, mu) for i in range(len(binCenters))]
         #trueVals = [stats.lognorm.pdf(binCenters[i], sigma, loc=mu) for i in range(len(binCenters))]
@@ -366,7 +365,6 @@ def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transF
         plt.savefig(outputPDF, format='pdf')
         if show: plt.show()
       
-          
     def pow_law_p_d_f(normConst, xmin, x, a):
         """ Get the analytical power laws PDF value for a given x.
                 Args:

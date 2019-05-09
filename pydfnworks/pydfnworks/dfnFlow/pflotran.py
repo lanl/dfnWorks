@@ -194,12 +194,10 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             for i in range(num_nodes):
                 Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
 
-            
-
             print('--> Finished calculating boundary connections')
             boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
             if self.h == "":
-                from mesh_dfn_helper import parse_params_file
+                from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
                 _,self.h,_,_,_=parse_params_file(quite=True)
             epsilon = self.h * 10**-3
  
