@@ -12,7 +12,7 @@ import os
 from time import time
 from pydfnworks.general.dfntools import *
 
-class dfnworks(Frozen):
+class DFNWORKS(Frozen):
     '''
     Class for DFN Generation and meshing
     
@@ -181,52 +181,26 @@ def create_dfn():
     print("Command Line Inputs:")
     print(options)
     print("\n-->Creating DFN class")
-    DFN=dfnworks(jobname=options.jobname, ncpu=options.ncpu)
+    DFN=DFNWORKS(jobname=options.jobname, ncpu=options.ncpu)
 
-    if options.input_file != "":
-        with open(options.input_file) as f:
-            for line in f:
-                line=line.rstrip('\n')
-                line=line.split()
+    if options.input_file == "":
+        sys.exit("ERROR!!! Input file must be provided.")
 
-                if line[0].find("dfnGen") == 0:
-                    DFN.dfnGen_file = line[1]
-                    DFN.local_dfnGen_file = line[1].split('/')[-1]
-
-                elif line[0].find("dfnFlow") == 0:
-                    DFN.dfnFlow_file = line[1]
-                    DFN.local_dfnFlow_file = line[1].split('/')[-1]
-
-                elif line[0].find("dfnTrans") == 0:
-                    DFN.dfnTrans_file = line[1]
-                    DFN.local_dfnTrans_file = line[1].split('/')[-1]
-    else:   
-        if options.dfnGen != "":
-            DFN.dfnGen_file = options.dfnGen
-            DFN.local_dfnGen_file = options.dfnGen.split('/')[-1]
-        elif dfnGen_file != "":
-            DFN.dfnGen_file = dfnGen_file  
-            DFN.local_dfnGen_file = dfnGen_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnGen not provided. Exiting")
-        
-        if options.dfnFlow != "":
-            DFN.dfnFlow_file = options.dfnFlow
-            DFN.local_dfnFlow_file = options.dfnFlow.split('/')[-1]
-        elif dfnFlow_file != "":
-            DFN.dfnFlow_file = dfnFlow_file  
-            DFN.local_dfnFlow_file = dfnFlow_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnFlow not provided. Exiting")
-        
-        if options.dfnTrans != "":
-            DFN.dfnTrans_file = options.dfnTrans
-            DFN.local_dfnTrans_file = options.dfnTrans.split('/')[-1]
-        elif dfnTrans_file != "":
-            DFN.dfnTrans_file = dfnTrans_file  
-            DFN.local_dfnTrans_file = dfnTrans_file.split('/')[-1]
-        else:
-            sys.exit("ERROR: Input File for dfnTrans not provided. Exiting")
+    with open(options.input_file,"r") as f:
+        for line in f.readlines():
+            line=line.rstrip('\n')
+            line=line.split()
+            if "dfnGen" in line:
+                DFN.dfnGen_file = line[1]
+                DFN.local_dfnGen_file = line[1].split('/')[-1]
+            elif "dfnFlow" in line:
+                DFN.dfnFlow_file = line[1]
+                DFN.local_dfnFlow_file = line[1].split('/')[-1]
+            elif "dfnTrans" in line:
+                DFN.dfnTrans_file = line[1]
+                DFN.local_dfnTrans_file = line[1].split('/')[-1]
+            else:
+                sys.exit("ERROR Reading Input File\nUnknown line: %s"%line)
 
     if options.path != "":
         if not options.path.endswith('/'):
@@ -260,7 +234,5 @@ def create_dfn():
 
     if options.cell is True:
         print('--> Expecting Cell Based Aperture and Permeability')
-
     print("="*80+"\n")  
     return DFN
-
