@@ -267,21 +267,21 @@ def check_input(self, input_file='',output_file=''):
 
         if input_helper_methods.verify_flag(input_helper_methods.value_of(userEs, params), userEs) == 1:
             if not os.path.isfile(input_helper_methods.value_of(ePath, params)):
-                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ePath, params)
+                print('THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(ePath, params))
                 input_helper_methods.error(invalid.format(ePath))
             else:
                 shutil.copy(input_helper_methods.value_of(ePath, params), self.jobname)
             
         if input_helper_methods.verify_flag(input_helper_methods.value_of(userRs, params), userRs) == 1:
             if not os.path.isfile(input_helper_methods.value_of(rPath, params)):
-                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(rPath, params)
+                print('THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(rPath, params))
                 input_helper_methods.error(invalid.format(rPath))
             else:
                 shutil.copy(input_helper_methods.value_of(rPath, params), self.jobname)
             
         if input_helper_methods.verify_flag(input_helper_methods.value_of(recByCoord, params), recByCoord) == 1:
             if not os.path.isfile(input_helper_methods.value_of(coordPath, params)):
-                print 'THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(coordPath, params) 
+                print('THIS PATH IS NOT A VALID FILE PATH: ', input_helper_methods.value_of(coordPath, params))
                 input_helper_methods.error(invalid.format(coordPath))    
             else:
                 shutil.copy(input_helper_methods.value_of(coordPath, params), self.jobname)
@@ -638,10 +638,10 @@ def check_input(self, input_file='',output_file=''):
     #print "--> Checking input files"    
     try:
         if not os.path.exists(os.getcwd()):
-            print "ERROR: cwd: ", os.getcwd(), " does not exist"
+            print("ERROR: cwd: ", os.getcwd(), " does not exist")
         if not os.path.exists(os.path.abspath(self.dfnGen_file)):
-            print "ERROR: dfnGen input file path: ", os.path.abspath(self.dfnGen_file), " does not exist"
-        print os.path.abspath(self.dfnGen_file)
+            print("ERROR: dfnGen input file path: ", os.path.abspath(self.dfnGen_file), " does not exist")
+        print(os.path.abspath(self.dfnGen_file))
         shutil.copy(os.path.abspath(self.dfnGen_file), os.getcwd())
     except:
         sys.exit("Unable to copy dfnGen input file\n%s\nExiting"%self.dfnGen_file)
@@ -655,7 +655,7 @@ def check_input(self, input_file='',output_file=''):
     try:
         ioPaths["output"] = self.jobname + '/' + self.dfnGen_file.split('/')[-1][:-4] + '_clean.dat'
         ioPaths["output"] = os.path.abspath(ioPaths["output"])
-        print ioPaths["output"] 
+        print(ioPaths["output"]) 
     except IndexError:
         ioPaths["output"] = "polishedOutput.txt"
         input_helper_methods.warning("No output path has been provided so output will be written to "\
@@ -670,12 +670,12 @@ def check_input(self, input_file='',output_file=''):
         input_helper_methods.error("Check that the path of your output file is valid.")
     
     inputIterator = iter(reader)  
-    print '--> Checking input data'
-    print '--> Input Data: ', ioPaths["input"] 
-    print '--> Output File: ',ioPaths["output"] 
+    print('--> Checking input data')
+    print('--> Input Data: ', ioPaths["input"])
+    print('--> Output File: ',ioPaths["output"]) 
 
     parse_input()
     verify_params()
     write_back()
 
-    print '--> Checking Input Data Complete'
+    print('--> Checking Input Data Complete')

@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/Desktop/two_fractures/gen_2_fractures.dat 
+dfnFlow /project/bes_dfn/jhyman/dfn2graph_networks/backbone_x01/dfn_explicit.in
+dfnTrans /project/bes_dfn/jhyman/dfn2graph_networks/PTDFN_Control.dat

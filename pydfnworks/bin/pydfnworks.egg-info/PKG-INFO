@@ -1,8 +1,8 @@
 Metadata-Version: 1.0
 Name: pydfnworks
-Version: 2.2
-Summary: Python wrapper for dfnWorks
-Home-page: https://dfnworks.lanl.gov
+Version: 2.1.5
+Summary: Python methods for running dfnWorks
+Home-page: TBD
 Author: Jeffrey Hyman, Satish Karra, Daniel Livingston, Nataliia Makedonska
 Author-email: dfnworks@lanl.gov
 License: UNKNOWN

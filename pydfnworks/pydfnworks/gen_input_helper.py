@@ -307,7 +307,7 @@ class input_helper():
         if type(valList) is not list:
             self.error("\"{}\"'s value must be a list encolsed in curly brackets {{}}.".format(key))
         if desiredLength != 0 and int(len(valList)) != int(desiredLength):
-            print 'list desired length is ', desiredLength, 'but valList is ', valList, 'with length ', len(valList)
+            print('list desired length is ', desiredLength, 'but valList is ', valList, 'with length ', len(valList))
             return -len(valList)
         for i, value in enumerate(valList):
             value = value.strip()

@@ -1,18 +1,20 @@
-# to run tests: python setup.py test
 import sys
-#from distutils.core import setup
-from setuptools import setup
 import os
-#os.system('mv ~/.local ~/local_save')
+import shutil 
+from setuptools import setup
 
+dirs = ["build", "pydfnworks.egg-info", "dist"]
+for d in dirs:
+    if os.path.isdir(d):
+        shutil.rmtree(d)
 
 setup(name='pydfnworks',
       version='2.2',
-      description='Python methods for running dfnWorks',
+      description='Python wrapper for dfnWorks',
       url='https://dfnworks.lanl.gov',
       author='Jeffrey Hyman, Satish Karra, Daniel Livingston, Nataliia Makedonska',
       author_email='dfnworks@lanl.gov',
-      licenses='BSD',
+      #licenses='BSD',
       packages=['pydfnworks'],
       install_requires=[
           'numpy',
