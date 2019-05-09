@@ -1,5 +1,7 @@
 import os
 import sys
+
+
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file 
 

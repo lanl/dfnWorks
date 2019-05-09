@@ -4,7 +4,7 @@ import numpy.random
 import sys
 
 # pydfnworks modules
-import pydfnworks.graph_flow 
+import pydfnworks.dfnGraph.graph_flow 
 
 
 def create_neighbour_list(Gtilde):

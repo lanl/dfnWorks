@@ -6,7 +6,7 @@ from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
 #pydfnworks modules
-import pydfnworks.generator
+import pydfnworks.dfnGen.generator
 
 def output_report(self, radiiFile = 'radii.dat', famFile ='families.dat', transFile='translations.dat', rejectFile = 'rejections.dat', output_name = ''):
     """

@@ -38,8 +38,11 @@ Released under the 3-Clause BSD license::
     Daniel Livingston <livingston@lanl.gov>
 """
 
-from pydfnworks.dfnworks import *
-from pydfnworks.paths import *
+import pydfnworks.general
+from pydfnworks.general.dfnworks import *
+from pydfnworks.general.paths import *
+
+import pydfnworks.dfnGen
 
 
 

@@ -10,7 +10,7 @@ DFN object class.
 import sys 
 import os
 from time import time
-from pydfnworks.dfntools import *
+from pydfnworks.general.dfntools import *
 
 class dfnworks(Frozen):
     '''
@@ -34,30 +34,32 @@ class dfnworks(Frozen):
         * freeze: indicates whether the class attributes can be modified
         * h : FRAM length scale 
 '''
-    from pydfnworks.generator import dfn_gen
-    from pydfnworks.flow import dfn_flow
-    from pydfnworks.transport import dfn_trans
-    # Specific functions
-    from pydfnworks.general_functions import dump_time, print_run_time 
-    from pydfnworks.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
-   
-    from pydfnworks.gen_input import check_input
-    from pydfnworks.generator import make_working_directory, create_network
-    from pydfnworks.gen_output import output_report
+    # genearl functions
+    from pydfnworks.general.legal import legal
+    from pydfnworks.general.paths import define_paths
+    from pydfnworks.general.general_functions import dump_time, print_run_time 
+  
+    # dfnGen functions 
+    from pydfnworks.dfnGen.gen_input import check_input
+    from pydfnworks.dfnGen.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.gen_output import output_report
+    from pydfnworks.dfnGen.mesh_dfn import mesh_network
+    from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv 
+    
+    # dfnFlow
+    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver, uncorrelated  
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
+    from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
+    from pydfnworks.dfnFlow.mass_balance import effective_perm
 
-    from pydfnworks.flow import create_dfn_flow_links, set_flow_solver, uncorrelated  
-    from pydfnworks.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
-    from pydfnworks.fehm import correct_stor_file, fehm
+    # dfnTrans
+    from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
 
-    from pydfnworks.transport import copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
-    from pydfnworks.mesh_dfn import mesh_network
-    from pydfnworks.mesh_dfn_helper import inp2gmv 
-    from pydfnworks.legal import legal
-    from pydfnworks.paths import define_paths
-    from pydfnworks.mass_balance import effective_perm
 
-    from pydfnworks.graph_flow import run_graph_flow 
-    from pydfnworks.graph_transport import run_graph_transport 
+    # dfnGraph
+    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
+    from pydfnworks.dfnGraph.graph_flow import run_graph_flow 
+    from pydfnworks.dfnGraph.graph_transport import run_graph_transport 
 
     def __init__(self, jobname='', ncpu='', local_jobname='',dfnGen_file='',output_file='',local_dfnGen_file='', dfnFlow_file = '', local_dfnFlow_file = '', dfnTrans_file = '', path = '', prune_file = '', flow_solver = "PFLOTRAN", inp_file='full_mesh.inp', uge_file='', stor_file='', vtk_file='', mesh_type='dfn', perm_file='', aper_file='',perm_cell_file='',aper_cell_file='', dfnTrans_version ='', num_frac = '', h = ''):
 
