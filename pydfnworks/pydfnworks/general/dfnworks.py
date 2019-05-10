@@ -180,10 +180,11 @@ def create_dfn():
     options = commandline_options()
     print("Command Line Inputs:")
     print(options)
-    print("\n-->Creating DFN class")
+    print("\n-->Creating DFN class\n")
     DFN=DFNWORKS(jobname=options.jobname, ncpu=options.ncpu)
 
     print("="*80+"\n")  
+    print("\n--> Creating DFN class")
     print('--> Jobname: ', DFN.jobname)
     print('--> Number of cpus requested: ', DFN.ncpu)
     
@@ -233,6 +234,6 @@ def create_dfn():
         DFN.aper_file = 'aperture.dat'
         DFN.perm_file = 'perm.dat'
 
-    print("\n -->Creating DFN class: Complete")
+    print("\n--> Creating DFN class: Complete")
     print("="*80+"\n")  
     return DFN
