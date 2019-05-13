@@ -586,7 +586,7 @@ def dump_json_graph(self, G, name):
     print("--> Complete")
 
 def load_json_graph(self,name):
-    """Read in graph from json format
+    """ Read in graph from json format
 
     Parameters
     ---------- 
@@ -599,11 +599,9 @@ def load_json_graph(self,name):
     -------
         G :networkX graph
             NetworkX Graph based on the DFN
-
-   Notes
-   -----
-
 """
+
+
     print("Loading Graph in file: "+name+".json")
     fp = open(name+'.json')
     G = json_graph.node_link_graph(json.load(fp))

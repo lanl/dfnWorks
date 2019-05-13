@@ -49,14 +49,13 @@ def parse_pflotran_input(pflotran_input_file):
         outflow_pressure : float
             Outflow pressure boundary condition
         inflow_file : string
-            Name of inflow boundary *.ex file 
+            Name of inflow boundary .ex file 
         direction : string 
             Primary direction of flow x, y, or z
 
     Notes
     -----
     Currently only works for Dirichlet Boundary Conditions
-
 '''
 
     with open(pflotran_input_file) as fp:
@@ -75,7 +74,6 @@ def parse_pflotran_input(pflotran_input_file):
                 if "REGION" in line:
                     inflow = line.split()[-1]
                     inflow_found = False
-
 
     with open(pflotran_input_file) as fp:
         inflow_name_found = False
@@ -138,7 +136,7 @@ def flow_rate(darcy_vel_file, boundary_file):
         darcy_vel_file : string
             Name of concatenated Darcy velocity file
         boundary_file : string
-             *ex file for the inflow boundary
+             ex file for the inflow boundary
 
     Returns
     -------
