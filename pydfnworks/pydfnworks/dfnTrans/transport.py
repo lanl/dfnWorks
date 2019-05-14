@@ -229,20 +229,24 @@ def check_dfn_trans_run_files(self):
         ( "init_random:","in_randpart:"),
         ("init_matrix:","inm_coord:","inm_nodeID:","inm_porosity:")
         ]
-    cnt = 0
+    ic_selected=[]
     for ic in initial_conditions:
         if params[ic[0]] == "yes":
-            cnt+=1
+            ic_selected.append(ic[0])
             for i in ic:
                 if params[i] == None:
                     error="Initial condition %s selected but %s not provided"%(ic[0],i)
                     sys.stderr.write(error)
                     sys.exit(1)
-    if cnt > 1:
-        error="ERROR!!! More than one initial condition defined\nExiting"
+    if len(ic_selected) > 1:
+        error="ERROR!!! More than one initial condition defined\nExiting\n"
         sys.stderr.write(error)
+        print("Selected Initial Conditions:\n:")
+        for ic in ic_selected:
+            print(ic)
+        print()
         sys.exit(1)
-    elif cnt == 0:
+    elif len(ic_selected) == 0:
         error="ERROR!!! No initial condition defined\nExiting"
         sys.stderr.write(error)
         sys.exit(1)

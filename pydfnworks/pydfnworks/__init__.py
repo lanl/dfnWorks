@@ -4,9 +4,9 @@ pydfnWorks
 ==========
 
 pydfnWorks is a python wrapper for the discrete fracture network
-modelling suite dfnWorks
+modeling suite dfnWorks
 
-Website (includeing Documentation)::
+Website (including Documentation)::
 
     http://dfnworks.lanl.gov
 
@@ -36,13 +36,35 @@ Released under the 3-Clause BSD license::
     Copyright (C) 20015-2019 dfnWorks Developers
     Jeffrey Hyman <jhyman@lanl.gov>
     Daniel Livingston <livingston@lanl.gov>
+    Satish Karra < satkarra@lanl.gov>
+    
+"""
+from pydfnworks import release
+
+__author__ = '%s <%s>\n%s <%s>\n%s <%s>' % \
+    (release.authors['Hyman'] + release.authors['Livingston'] +
+        release.authors['Karra'])
+
+__license__ = release.license
+
+__date__ = release.date
+
+__version__ = release.version
+
+__bibtex__ = """@article{hyman2015dfnworks,
+  title={dfnWorks: A discrete fracture network framework for modeling subsurface flow and transport},
+  author={Hyman, Jeffrey D and Karra, Satish and Makedonska, Nataliia and Gable, Carl W and Painter, Scott L and Viswanathan, Hari S},
+  journal={Computers \& Geosciences},
+  volume={84},
+  pages={10--19},
+  year={2015},
+  publisher={Elsevier}
+}
 """
 
 import pydfnworks.general
 from pydfnworks.general.dfnworks import *
 from pydfnworks.general.paths import *
-
-import pydfnworks.dfnGen
 
 
 
