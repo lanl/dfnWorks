@@ -69,7 +69,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     # Check if UGE file was created by LaGriT, if it does not exists, exit
     self.uge_file = inp_file[:-4] + '.uge'
     if not os.path.isfile(self.uge_file):
-        error='Failed to run LaGrit to get initial .uge file'
+        error='ERROR!!! Cannot find .uge file\nExiting\n'
         sys.stderr.write(error)
         sys.exit(1)  
 

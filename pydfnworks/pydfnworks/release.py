@@ -12,7 +12,7 @@ long_description = \
 pydfnWorks is a a Python package interactively working with the 
 dfnWorks DFN simulate suite. 
 """
-license = 'BSD'
+license = 'GPL'
 
 authors = {'Hyman': ('Jeffrey Hyman', 'jhyman@lanl.gov'),
   'Livingston': ('Daniel Livingston', 'livingston@lanl.gov'),

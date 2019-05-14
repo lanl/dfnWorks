@@ -5,7 +5,7 @@ from time import time
 import subprocess
 from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
 
-def dfn_gen(self,output=True):
+def dfn_gen(self,output=True,visual_mode=None):
     ''' Wrapper script the runs the dfnGen workflow:    
         1) make_working_directory: Create a directory with name of job
         2) check_input: Check input parameters and create a clean version of the input file
@@ -19,6 +19,8 @@ def dfn_gen(self,output=True):
             DFN Class object
         output : bool
             If True, output pdf will be created. If False, no pdf is made 
+        visual_mode : None
+            If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode
 
     Returns
     -------
@@ -52,7 +54,7 @@ def dfn_gen(self,output=True):
     
     # Mesh Network
     tic = time()
-    self.mesh_network()
+    self.mesh_network(visual_mode=visual_mode)
     self.dump_time('Function: mesh_network', time() - tic)  
     print('='*80)
     print('dfnGen Complete')

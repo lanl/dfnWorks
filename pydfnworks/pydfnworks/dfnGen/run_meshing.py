@@ -220,6 +220,35 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     return failure_flag    
 
 
+def merge_worker(job):
+    """Parallel worker for merge meshes into final mesh 
+
+    Parameters
+    ----------
+        job : int
+            job number
+
+    Returns
+    -------
+        bool : True if failed / False if successful
+
+    Notes
+    -----
+    """
+
+    print("--> Starting merge: {}\n".format(job))
+    tic = time.time()
+    cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
+                + '> log_merge_poly_part%d' 
+    if subprocess.call(cmd%(job,job), shell = True):
+        print("Error "+job+" failed!!!")
+        return True
+
+    toc = time.time()
+    elapsed = toc-tic
+    print("--> Merge Number %d Complete. Time elapsed: %0.2e seconds\n"%(job,elapsed))
+    return False
+
 def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     """Runs the LaGrit Scripts to merge meshes into final mesh 
 
@@ -242,44 +271,57 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     -----
         Meshes are merged in batches for efficiency  
     """
-    print("\nMerging triangulated polygon meshes")
+    print("\nMerging triangulated polygon meshes using %d processors"%n_jobs)
 
-    # should be converted to using multiprocessing 
-    for j in range(1, n_jobs + 1):
-        pid = os.fork()
-        if pid == 0: # clone a child job
-            cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
-                + '> log_merge_poly_part%d' 
-            subprocess.call(cmd%(j,j), shell = True)
-            os._exit(0)
-        else:
-            print('Merging part ', j, ' of ', n_jobs)
+    jobs=range(1,n_jobs+1)
 
-    # wait for all child processes to complete
-    j = 0
-    while j < n_jobs:
-        (pid, status) = os.waitpid(0,os.WNOHANG)
-        if pid > 0:
-            print('Process ' + str(j+1) + ' finished')
-            j += 1 
+    num_cpu = len(jobs)
+    pool = mp.Pool(num_cpu)
+    outputs = pool.map(merge_worker, jobs)
+    pool.close()
+    pool.join()
+    pool.terminate()
 
-    print("Starting Final Merge")
+    for output in outputs:
+        if output:
+            error="ERROR!!! One of the merges failed\nExiting"
+            sys.stderr.write(error)
+            sys.exit(1)
 
+    # for j in range(1, n_jobs + 1):
+    #     pid = os.fork()
+    #     if pid == 0: # clone a child job
+    #         cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
+    #             + '> log_merge_poly_part%d' 
+    #         subprocess.call(cmd%(j,j), shell = True)
+    #         os._exit(0)
+    #     else:
+    #         print('Merging part ', j, ' of ', n_jobs)
+
+    # # wait for all child processes to complete
+    # j = 0
+    # while j < n_jobs:
+    #     (pid, status) = os.waitpid(0,os.WNOHANG)
+    #     if pid > 0:
+    #         print('Process ' + str(j+1) + ' finished')
+    #         j += 1 
+
+    print("\n--> Starting Final Merge")
     subprocess.call(os.environ['LAGRIT_EXE'] +' < merge_rmpts.lgi '\
         + ' > log_merge_all.txt', shell=True) # run remove points
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:
         if(os.stat("full_mesh.lg").st_size > 0):
-            print("Final Merge Complete")
-            print("Merging triangulated polygon meshes: Complete\n")
+            print("--> Final Merge Complete")
+            print("--> Merging triangulated polygon meshes: Complete\n")
         else:
             error = "Final Merge Failed"
             sys.stderr.write(error)
             sys.exit(1)
     else:
         if os.stat("reduced_mesh.inp").st_size > 0:
-            print("Final Merge Complete")
-            print("Merging triangulated polygon meshes: Complete\n")
+            print("--> Final Merge Complete")
+            print("--> Merging triangulated polygon meshes: Complete\n")
         else:
             error = "Final Merge Failed"
             sys.stderr.write(error)

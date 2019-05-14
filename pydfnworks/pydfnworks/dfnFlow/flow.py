@@ -52,7 +52,7 @@ def dfn_flow(self,dump_vtk=True,effective_perm=True):
     """
 
     print('='*80)
-    print("\ndfnFlow Starting\n")
+    print("dfnFlow Starting")
     print('='*80)
 
     tic_flow = time()
@@ -91,7 +91,7 @@ def dfn_flow(self,dump_vtk=True,effective_perm=True):
     self.dump_time('Process: dfnFlow',delta_time)    
 
     print('='*80)
-    print("\ndfnFlow Complete")
+    print("dfnFlow Complete")
     print("Time Required for dfnFlow %0.2f seconds\n"%delta_time)
     print('='*80)
 
