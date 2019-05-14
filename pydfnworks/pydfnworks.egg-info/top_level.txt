@@ -1,6 +1,0 @@
-pydfnworks
-pydfnworks/dfnFlow
-pydfnworks/dfnGen
-pydfnworks/dfnGraph
-pydfnworks/dfnTrans
-pydfnworks/general
