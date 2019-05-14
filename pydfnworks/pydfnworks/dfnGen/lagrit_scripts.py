@@ -128,7 +128,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
     Set slope = 0 for uniform mesh
     """
     
-    print("\nCreating parameter*.mlgi files")
+    print("\n--> Creating parameter*.mlgi files")
     try:
         os.mkdir('parameters')
     except OSError:
@@ -213,7 +213,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist = 0.5):
         f.write('finish \n')
         f.flush()
         f.close()
-    print("Creating parameter*.mlgi files: Complete\n")
+    print("--> Creating parameter*.mlgi files: Complete\n")
 
 def create_lagrit_scripts(visual_mode, ncpu, refine_factor=1, production_mode=True): 
     """ Creates LaGriT script to be mesh each polygon
@@ -246,7 +246,7 @@ def create_lagrit_scripts(visual_mode, ncpu, refine_factor=1, production_mode=Tr
     #the network structure instead of outputing the appropriate values
     #for computation
 
-    print("Writing LaGriT Control Files")
+    print("--> Writing LaGriT Control Files")
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
 

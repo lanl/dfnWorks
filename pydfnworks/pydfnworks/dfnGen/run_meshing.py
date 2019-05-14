@@ -246,7 +246,7 @@ def merge_worker(job):
 
     toc = time.time()
     elapsed = toc-tic
-    print("--> Merge Number %d Complete. Time elapsed: %0.2e seconds\n"%(job,elapsed))
+    print("--> Merge Number %d Complete. Time elapsed: %0.2f seconds\n"%(job,elapsed))
     return False
 
 def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
