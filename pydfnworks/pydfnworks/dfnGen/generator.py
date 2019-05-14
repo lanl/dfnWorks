@@ -87,9 +87,13 @@ def make_working_directory(self):
             print('Creating', self.jobname)
             os.mkdir(self.jobname)    
         elif keep == 'no' or 'n':
-            sys.exit("Not deleting folder. Exiting Program") 
+            error = "Not deleting folder. Exiting Program"
+            sys.stderr.write(error)
+            sys.exit(1) 
         else:
-            sys.exit("Unknown Response. Exiting Program") 
+            error="Unknown Response. Exiting Program"
+            sys.stderr.write(error)
+            sys.exit(1) 
     os.mkdir(self.jobname + '/radii')
     os.mkdir(self.jobname + '/intersections')
     os.mkdir(self.jobname + '/polys')
@@ -121,7 +125,9 @@ def create_network(self):
     subprocess.call(cmd, shell = True) 
 
     if os.path.isfile("params.txt") is False:
-        sys.exit("ERROR! Generation Failed\nExiting Program.")
+        error="ERROR! Generation Failed\nExiting Program."
+        sys.stderr.write(error)
+        sys.exit(1)
     else:
         num_poly,h,_,_,_=parse_params_file(quite=True)
         self.num_frac = num_poly

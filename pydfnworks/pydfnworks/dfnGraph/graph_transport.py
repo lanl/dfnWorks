@@ -61,7 +61,7 @@ class Particle():
 
     Attributes:
         * time : Total time of travel of particle [s]
-        * dist : total distance travelled [m]
+        * dist : total distance traveled [m]
         * flag : True if particle exited system, else False
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
@@ -230,15 +230,19 @@ def run_graph_transport(self, Gtilde, nparticles, partime_file=None, frac_id_fil
             with open(partime_file, "w") as f1:
                 f1.write("# exit time (s)  total distance covered (m)\n")
         except:
-            sys.exit("ERROR: Unable to open supplied partime_file file {}".format(partime_file))
+            error="ERROR: Unable to open supplied partime_file file {}".format(partime_file)
+            sys.stderr.write(error)
+            sys.exit(1)
 
     if frac_id_file is not None:        
         try:
             with open(frac_id_file, "w") as f2:
                 f2.write("# Line has (n+n+n) entries, consisting of all frac_ids (from 0), times spent (s), dist covered (m)\n")
         except:
-            sys.exit("ERROR: Unable to open supplied frac_id_file file {}".format(frac_id_file))
-    
+            error="ERROR: Unable to open supplied frac_id_file file {}".format(frac_id_file)
+            sys.stderr.write(error)
+            sys.exit(1) 
+
     nbrs_dict = create_neighbour_list(Gtilde)
     print("Creating downstream neighbour list")
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]

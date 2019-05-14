@@ -83,8 +83,8 @@ class input_helper():
         Args:
             errString (str): a string describing the error
         """
-        print("\nERROR --- " + errString)
-        print("\n----Program terminated while parsing input----\n")
+        error = "\nERROR --- " + errString + "\n----Program terminated while parsing input----\n"
+        sys.stderr.write(error)
         sys.exit(1)
 
     def warning(self, warnString):
@@ -152,7 +152,7 @@ class input_helper():
                       "(4) instead.".format(minParam, maxParam, shape, minParam, maxParam))
             if minV > maxV:
                 self.error("\"{}\" is greater than \"{}\" in a(n) {} family.".format(minParam, maxParam, shape))
-                sys.exit()
+                sys.exit(1)
 
     def check_mean(self, minParam, maxParam, meanParam, warningFile=''):
         """ Warns the user if the minimum value of a parameter is greater than the family's mean value, or if the

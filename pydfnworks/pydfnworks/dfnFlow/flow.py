@@ -28,7 +28,9 @@ def set_flow_solver(self, flow_solver):
         print("Using flow solver %s"%flow_solver)
         self.flow_solver = flow_solver
     else:
-        sys.exit("ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"%flow_solver)
+        error="ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"%flow_solver
+        sys.stderr.write(error)
+        sys.exit(1)
 
 def dfn_flow(self,dump_vtk=True,effective_perm=True):
     """ Run the dfnFlow portion of the workflow

@@ -28,7 +28,9 @@ def correct_stor_file(self):
     """
      # Make input file for C Stor converter
     if self.flow_solver != "FEHM":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error = "ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     self.stor_file = self.inp_file[:-4] + '.stor'
     self.mat_file= self.inp_file[:-4] + '_material.zone'
@@ -43,7 +45,9 @@ def correct_stor_file(self):
     cmd = os.environ['CORRECT_STOR_EXE']+' convert_stor_params.txt' 
     failure = subprocess.call(cmd, shell = True)
     if failure > 0:
-            sys.exit('ERROR: stor conversion failed\nExiting Program')
+        error = 'ERROR: stor conversion failed\nExiting Program'
+        sys.stderr.write(error)
+        sys.exit(1)
     elapsed = time() - t
     print('--> Time elapsed for STOR file conversion: %0.3f seconds\n'%elapsed)
 
@@ -93,11 +97,17 @@ def fehm(self):
     """
     print("--> Running FEHM")
     if self.flow_solver != "FEHM":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     try: 
         shutil.copy(self.dfnFlow_file, os.getcwd())
     except:
-        sys.exit("-->ERROR copying FEHM run file: %s"%self.dfnFlow_file)
+        error="-->ERROR copying FEHM run file: %s"%self.dfnFlow_file
+        std.stderr.write(error)
+        sys.exit(1)
+
     path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
     fp = open(self.local_dfnFlow_file)
     line = fp.readline()
@@ -106,7 +116,9 @@ def fehm(self):
     try: 
         shutil.copy(path+fehm_input, os.getcwd())
     except:
-        sys.exit("-->ERROR copying FEHM input file:"%fehm_input)
+        error = "-->ERROR copying FEHM input file:"%fehm_input
+        sys.stderr.write(error)
+        sys.exit(1)
     
     correct_perm_for_fehm()
     tic = time()

@@ -53,8 +53,10 @@ def mesh_network(self, prune=False, uniform_mesh=False, production_mode=True, re
      
     if prune:
         if self.prune_file== "":
-            sys.exit("ERROR!! User requested pruning in meshing but \
-did not provide file of fractures to keep.\nExiting program.")
+            error="ERROR!! User requested pruning in meshing but \
+did not provide file of fractures to keep.\nExiting program."
+            sys.stderr.write(error)
+            sys.exit(1)
 
         mh.create_mesh_links(self.path)
         num_poly, h, params_visual_mode, dudded_points, domain = mh.parse_params_file()
@@ -83,7 +85,9 @@ did not provide file of fractures to keep.\nExiting program.")
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
     if failure:
         mh.cleanup_dir()
-        sys.exit("One or more fractures failed to mesh properly.\nExiting Program")
+        error="One or more fractures failed to mesh properly.\nExiting Program"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domain,self.flow_solver)
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
@@ -91,7 +95,9 @@ did not provide file of fractures to keep.\nExiting program.")
     if (not visual_mode and not prune):    
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            sys.exit("ERROR!!! Incorrect Number of dudded points.\nExiting Program")
+            error="ERROR!!! Incorrect Number of dudded points.\nExiting Program"
+            sys.stderr.write(error)
+            sys.exit(1)
 
     if production_mode:
         mh.cleanup_dir()

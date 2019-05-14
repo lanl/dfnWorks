@@ -385,7 +385,9 @@ def inp2gmv(self, inp_file=''):
         inp_file = self.inp_file
 
     if inp_file == '':
-        sys.exit('ERROR: inp file must be specified in inp2gmv!')
+        error = 'ERROR: inp file must be specified in inp2gmv!'
+        sys.stderr.write(error)
+        sys.exit(1)
 
     gmv_file = inp_file[:-4] + '.gmv'
 
@@ -397,7 +399,9 @@ def inp2gmv(self, inp_file=''):
     cmd = lagrit_path + ' <inp2gmv.lgi ' + '> lagrit_inp2gmv.txt'
     failure = subprocess.call(cmd, shell = True)
     if failure:
-        sys.exit('ERROR: Failed to run LaGrit to get gmv from inp file!')
+        error = 'ERROR: Failed to run LaGrit to get gmv from inp file!'
+        sys.stderr.write(error)
+        sys.exit(1)
     print("--> Finished writing gmv format from avs format")
 
 

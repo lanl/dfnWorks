@@ -102,8 +102,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     elapsed = time.time() - t
 
     if failure > 0:
-        print('Fracture %d out of %d complete, but mesh checking failed'%(fracture_id,num_poly))
-        sys.exit("Exiting Program")
+        error = 'Fracture %d out of %d complete, but mesh checking failed'%(fracture_id,num_poly)
+        sys.stderr.write(error)
+        sys.exit(1)
     else:
         print('Fracture %d out of %d complete'%(fracture_id,num_poly))
         print('Time for meshing: %0.2f seconds\n'%elapsed)
@@ -272,10 +273,14 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
             print("Final Merge Complete")
             print("Merging triangulated polygon meshes: Complete\n")
         else:
-            sys.exit("Final Merge Failed")
+            error = "Final Merge Failed"
+            sys.stderr.write(error)
+            sys.exit(1)
     else:
         if os.stat("reduced_mesh.inp").st_size > 0:
             print("Final Merge Complete")
             print("Merging triangulated polygon meshes: Complete\n")
         else:
-            sys.exit("Final Merge Failed")
+            error = "Final Merge Failed"
+            sys.stderr.write(error)
+            sys.exit(1)

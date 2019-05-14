@@ -118,7 +118,9 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
 
 
     if not set(Inlet).isdisjoint(set(Outlet)):
-        sys.exit("Incompatible graph: Vertex connected to both source and target")
+        error="Incompatible graph: Vertex connected to both source and target"
+        sys.stderr.write(error)
+        sys.exit(1)
 
 
     D, A = get_laplacian_sparse_mat(Gtilde, weight='weight', format='lil')

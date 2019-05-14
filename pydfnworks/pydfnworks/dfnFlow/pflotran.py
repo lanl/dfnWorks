@@ -34,7 +34,10 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     
     """
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     print('='*80)
     print("Starting conversion of files for PFLOTRAN ")
     print('='*80)
@@ -44,24 +47,31 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         inp_file = self.inp_file
 
     if inp_file == '':
-        sys.exit('ERROR: Please provide inp filename!')
+        error = 'ERROR: Please provide inp filename!'
+        sys.stderr.write(error)
+        sys.exit(1)
 
     if mesh_type:
         if mesh_type in mesh_types_allowed:
             self.mesh_type = mesh_type
         else:
-            sys.exit('ERROR: Unknown mesh type. Select one of dfn, volume or mixed!')
+            error='ERROR: Unknown mesh type. Select one of dfn, volume or mixed!'
+            sys.stderr.write(error)
+            sys.exit(1)
     else:
         mesh_type = self.mesh_type
 
     if mesh_type == '':
-        sys.exit('ERROR: Please provide mesh type!')
+        error='ERROR: Please provide mesh type!'
+        sys.stderr.write(error)
+        sys.exit(1)
 
     # Check if UGE file was created by LaGriT, if it does not exists, exit
     self.uge_file = inp_file[:-4] + '.uge'
-    failure = os.path.isfile(self.uge_file)
-    if failure == False:
-        sys.exit('Failed to run LaGrit to get initial .uge file')
+    if not os.path.isfile(self.uge_file):
+        error='Failed to run LaGrit to get initial .uge file'
+        sys.stderr.write(error)
+        sys.exit(1)  
 
     if mesh_type == 'dfn':
         self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
@@ -112,7 +122,10 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
     uge_file = self.uge_file
     if uge_file == '':
-        sys.exit('ERROR: Please provide uge filename!')
+        error='ERROR: Please provide uge filename!'
+        sys.stderr.write(error)
+        sys.exit(1)
+
     # Opening uge file
     print('\n--> Opening uge file')
     fuge = open(uge_file, 'r')
@@ -144,9 +157,13 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else: 
             if zone_file == '':
-                sys.exit('ERROR: Please provide boundary zone filename!')
+                error='ERROR: Please provide boundary zone filename!'
+                sys.stderr.write(error)
+                sys.exit(1)
             if face == '':
-                sys.exit('ERROR: Please provide face name among: top, bottom, north, south, east, west !')
+                error='ERROR: Please provide face name among: top, bottom, north, south, east, west !'
+                sys.stderr.write(error)
+                sys.exit(1)
             zone_files = [zone_file]
             face_names = [face]
             
@@ -216,7 +233,9 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             elif (face == 'none'):
                 boundary_cell_coord = [[cell[0], cell[1], cell[2]] for cell in boundary_cell_coord]
             else:
-                sys.exit('ERROR: unknown face. Select one of: top, bottom, east, west, north, south.')
+                error='ERROR: unknown face. Select one of: top, bottom, east, west, north, south.'
+                sys.stderr.write(error)
+                sys.exit(1)
 
             with open(ex_file, 'w') as f:
                 f.write('CONNECTIONS\t%i\n' % Node_array.size)
@@ -226,7 +245,6 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
             print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file+'\n')
 
     print('--> Converting zone files to ex complete')    
-
 
 
 def write_perms_and_correct_volumes_areas(self):
@@ -247,25 +265,36 @@ def write_perms_and_correct_volumes_areas(self):
     """
     import h5py
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     print("--> Writing Perms and Correct Volume Areas")
     inp_file = self.inp_file
     if inp_file == '':
-        sys.exit('ERROR: inp file must be specified!')
+        error='ERROR: inp file must be specified!'
+        sys.stderr.write(error)
+        sys.exit(1)
 
     uge_file = self.uge_file
     if uge_file == '':
-        sys.exit('ERROR: uge file must be specified!')
-
+        error='ERROR: uge file must be specified!'
+        sys.stderr.write(error)
+        sys.exit(1)
+        
     perm_file = self.perm_file
     if perm_file == '' and self.perm_cell_file == '':
-        sys.exit('ERROR: perm file must be specified!')
-
+        error='ERROR: perm file must be specified!'
+        sys.stderr.write(error)
+        sys.exit(1)
+        
     aper_file = self.aper_file
     aper_cell_file = self.aper_cell_file
     if aper_file == '' and self.aper_cell_file == '':
-        sys.exit('ERROR: aperture file must be specified!')
-
+        error='ERROR: aperture file must be specified!'
+        sys.stderr.write(error)
+        sys.exit(1)
+        
     mat_file = 'materialid.dat'
     t = time()
     # Make input file for C UGE converter
@@ -285,7 +314,10 @@ def write_perms_and_correct_volumes_areas(self):
     cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt' 
     failure = subprocess.call(cmd, shell = True)
     if failure > 0:
-            sys.exit('ERROR: UGE conversion failed\nExiting Program')
+        error='ERROR: UGE conversion failed\nExiting Program'
+        sys.stderr.write(error)
+        sys.exit(1)
+        
     elapsed = time() - t
     print('--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed)
     # need number of nodes and mat ID file
@@ -319,9 +351,12 @@ def write_perms_and_correct_volumes_areas(self):
         for i in range(NumIntNodes):
             j = matid_index[i]
             if int(perm_list[j,0]) == materialid[i]:
-                    perm[i] = perm_list[j, 1]
+                perm[i] = perm_list[j, 1]
             else:
-                    sys.exit('Indexing Error in Perm File')
+                error='Indexing Error in Perm File'
+                sys.stderr.write(error)
+                sys.exit(1)
+        
 
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=perm)
@@ -384,12 +419,18 @@ def pflotran(self):
     Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards
     """
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+        
     try: 
-            shutil.copy(os.path.abspath(self.dfnFlow_file), os.path.abspath(os.getcwd()))
+        shutil.copy(os.path.abspath(self.dfnFlow_file), os.path.abspath(os.getcwd()))
     except:
-            print("-->ERROR copying PFLOTRAN input file")
-            exit()
+        error="--> ERROR!! Unable to copy PFLOTRAN input file"
+        sys.stderr.write(error)
+        sys.exit(1)
+        
+
     print("="*80)
     print("--> Running PFLOTRAN") 
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
@@ -397,7 +438,10 @@ def pflotran(self):
     print("Running: %s"%cmd)
     subprocess.call(cmd, shell = True)
     if not check_pflotran_convergence(self.local_dfnFlow_file):
-        sys.exit("ERROR!!!! PFLOTRAN did not convergence. Consider running in transient mode to march to steady-state")
+        error="ERROR!!!! PFLOTRAN did not convergence. Consider running in transient mode to march to steady-state"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     print('='*80)
     print("--> Running PFLOTRAN Complete")
     print('='*80)
@@ -460,7 +504,10 @@ def pflotran_cleanup(self, index = 1):
         Can be run in a loop over all pflotran dumps
     """
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     print('--> Processing PFLOTRAN output') 
    
     cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
@@ -500,13 +547,18 @@ def inp2vtk_python(self):
     """
     import pyvtk as pv
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     print("--> Using Python to convert inp files to VTK files")
     if self.inp_file:
         inp_file = self.inp_file
 
     if inp_file == '':
-        sys.exit('ERROR: Please provide inp filename!')
+        error='ERROR: Please provide inp filename!'
+        sys.stderr.write(error)
+        sys.exit(1)
 
     if self.vtk_file:
         vtk_file = self.vtk_file
@@ -566,7 +618,9 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     print('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
-        sys.exit("ERROR! Wrong flow solver requested")
+        error="ERROR! Wrong flow solver requested"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file

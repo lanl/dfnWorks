@@ -123,7 +123,9 @@ def boundary_index(bc_name):
     try:
         return bc_dict[bc_name]
     except:
-        sys.exit("Unknown boundary condition: %s\nExiting"%bc)
+        error="Unknown boundary condition: %s\nExiting"%bc
+        sys.stderr.write(error)
+        sys.exit(1)
 
 def create_intersection_graph(inflow, outflow, intersection_file="intersection_list.dat"):
     """ Create a graph based on topology of network.

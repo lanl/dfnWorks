@@ -1,0 +1,6 @@
+numpy
+scipy
+h5py
+pyvtk
+networkx
+matplotlib<3.0

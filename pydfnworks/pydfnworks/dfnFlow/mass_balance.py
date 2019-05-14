@@ -122,7 +122,7 @@ def parse_pflotran_input(pflotran_input_file):
         direction = 'z'
 
     print("Inflow file: %s"%inflow_file)
-    print("Inflow Presure %e"%inflow_pressure)
+    print("Inflow Pressure %e"%inflow_pressure)
     print("Outflow Pressure %e"%outflow_pressure)
     print("Primary Flow Direction : %s"%direction)
 
