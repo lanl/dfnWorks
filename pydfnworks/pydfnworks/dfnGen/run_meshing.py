@@ -106,10 +106,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        print('Fracture %d out of %d complete'%(fracture_id,num_poly))
-        print('Time for meshing: %0.2f seconds\n'%elapsed)
+        print('Fracture %d of %d took %0.2f seconds to mesh\n'%(fracture_id,num_poly,elapsed))
 
-def worker(work_queue, visual_mode, num_poly):
+def single_worker(work_queue, visual_mode, num_poly):
     """ Worker function for parallelized meshing 
     
     Parameters
@@ -168,8 +167,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
 
     """ 
     t_all = time.time()
-
-    print("\nTriangulate %d fractures:"%len(fracture_list))
+    print("\n--> Triangulating %d fractures using %d CPUS"%(len(fracture_list),ncpu))
     try:
         rmtree('lagrit_logs')
     except OSError:
@@ -180,8 +178,6 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     f = open('failure.txt', 'w')
     f.close()
 
-    print("Meshing using %d CPUS"%ncpu)
-
     #fracture_list = range(1, num_poly + 1)
     work_queue = mp.Queue()   # reader() reads from queue
     processes = []
@@ -190,7 +186,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
         work_queue.put(i)
 
     for i in range(ncpu):
-        p = mp.Process(target=worker, args=(work_queue, \
+        p = mp.Process(target=single_worker, args=(work_queue, \
             visual_mode, len(fracture_list)))
         p.daemon = True
         p.start()        
@@ -307,22 +303,23 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     #         j += 1 
 
     print("\n--> Starting Final Merge")
+    tic = time.time()
     subprocess.call(os.environ['LAGRIT_EXE'] +' < merge_rmpts.lgi '\
         + ' > log_merge_all.txt', shell=True) # run remove points
+    toc = time.time()
+    print("--> Final Merge took %0.2f seconds"%(toc-tic))
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:
         if(os.stat("full_mesh.lg").st_size > 0):
-            print("--> Final Merge Complete")
-            print("--> Merging triangulated polygon meshes: Complete\n")
+            print("--> Final Merge Complete\n")
         else:
-            error = "Final Merge Failed"
+            error = "Final Merge Failed\n"
             sys.stderr.write(error)
             sys.exit(1)
     else:
         if os.stat("reduced_mesh.inp").st_size > 0:
-            print("--> Final Merge Complete")
-            print("--> Merging triangulated polygon meshes: Complete\n")
+            print("--> Final Merge Complete\n")
         else:
-            error = "Final Merge Failed"
+            error = "Final Merge Failed\n"
             sys.stderr.write(error)
             sys.exit(1)
