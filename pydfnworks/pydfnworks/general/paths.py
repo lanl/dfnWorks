@@ -21,7 +21,9 @@ def valid(name):
 
 """
     if not (os.path.isfile(os.path.abspath(os.environ[name])) or os.path.isdir(os.path.abspath(os.environ[name]))):
-        sys.exit("ERROR: " + name  + " has an invalid path name: " + os.environ[name])
+        error="ERROR: " + name  + " has an invalid path name: " + os.environ[name]
+        sys.stderr.write(error)
+        sys.exit(1)
 
 def compile_dfn_exe(directory):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
