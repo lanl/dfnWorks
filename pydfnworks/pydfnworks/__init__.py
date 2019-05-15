@@ -22,16 +22,10 @@ Bug reports::
 
     https://github.com/lanl/dfnWorks/issues
 
-Bugs
-----
-
-Please report any bugs that you find `here <https://github.com/networkx/networkx/issues>`_.
-
-
 License
 -------
 
-Released under the 3-Clause BSD license::
+Released under the GPL License
 
     Copyright (C) 20015-2019 dfnWorks Developers
     Jeffrey Hyman <jhyman@lanl.gov>
