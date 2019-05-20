@@ -65,4 +65,6 @@ The following are publications that use *dfnWorks*:
 
 #. \S. Srinivasan, S. Karra, J. D. Hyman, H. Viswanathan, and G. Srinivasan. Model re- duction for fractured porous media: A machine-learning approach for identifying main flow pathways. Computational Geosciences, 2018
 
+#. \N. Makedonska, J. Hyman, E. Kwicklis, K. Birdsell, Conference Proceedings, Discrete Fracture Network Modeling and Simulation of Subsurface Transport for the Topopah Spring Aquifer at Pahute Mesa, 2nd International Discrete Fracture Network Engineering, 2018.
 
+#. \N. Makedonska, C.W. Gable, R. Pawar, Conference Proceedings, Merging Discrete Fracture Network Meshes With 3D Continuum Meshes of Rock Matrix: A Novel Approach, 2nd International Discrete Fracture Network Engineering, 2018.

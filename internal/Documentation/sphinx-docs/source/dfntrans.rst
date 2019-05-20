@@ -38,7 +38,7 @@ to run transport, first, all the parameters and paths should be set up in the
 PTDFN Control file, PTDFN_control.dat. Then, the following command should be
 run: 
 
-``./dfnTrans PTDFN_control.dat``
+``./DFNTrans PTDFN_control.dat``
 
 The control  file sets all necessary parameters to run particle tracking in
 dfnWorks.  Below is one control file example that includes a short
