@@ -56,9 +56,11 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
+#import pydfnworks.dfnGen
+#from pydfnworks.dfnGen import *
+#
 import pydfnworks.general
-from pydfnworks.general.dfnworks import *
-from pydfnworks.general.paths import *
+from pydfnworks.general import *
 
 
 

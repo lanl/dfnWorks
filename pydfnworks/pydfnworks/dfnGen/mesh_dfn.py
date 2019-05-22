@@ -10,9 +10,9 @@ import sys
 from time import time
 from numpy import genfromtxt, sort
 # pydfnworks Modules
-import pydfnworks.dfnGen.mesh_dfn_helper as mh 
-import pydfnworks.dfnGen.lagrit_scripts as lagrit 
-import pydfnworks.dfnGen.run_meshing as run_mesh 
+from pydfnworks.dfnGen import mesh_dfn_helper as mh 
+from pydfnworks.dfnGen import lagrit_scripts as lagrit 
+from pydfnworks.dfnGen import run_meshing as run_mesh 
 
 def mesh_network(self, prune=False, uniform_mesh=False, production_mode=True, refine_factor=1, slope=2, visual_mode=None):
     ''' Mesh fracture network using LaGriT

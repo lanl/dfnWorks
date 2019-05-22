@@ -6,7 +6,7 @@ import scipy.integrate
 import re
 
 #pydfnworks modules
-import pydfnworks.dfnGen.distributions as distr_module
+from pydfnworks.dfnGen import distributions as distr_module
 
 class input_helper():
     """ Functions to help parse the input file and check input parameters.

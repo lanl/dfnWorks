@@ -213,7 +213,7 @@ def check_dfn_trans_run_files(self):
         "aperture:","porosity","density:","satur:",
         "streamline_routing:"]:
         if params[required] == None:
-            error="ERROR!!!%s not provided. Exiting"%(required)
+            error="ERROR!!!\n%s not provided. Exitingi\n\n"%(required)
             sys.stderr.write(error)
             sys.exit(1)
 

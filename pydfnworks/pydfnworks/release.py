@@ -58,11 +58,11 @@ classifiers = [
     'Topic :: Scientific/Engineering :: Physics']
 
 packages=["pydfnworks",
-          "pydfnworks/general", 
-          "pydfnworks/dfnGen",
-          "pydfnworks/dfnFlow",
-          "pydfnworks/dfnTrans",
-          "pydfnworks/dfnGraph"]
+          "pydfnworks.general", 
+          "pydfnworks.dfnGen",
+          "pydfnworks.dfnFlow",
+          "pydfnworks.dfnTrans",
+          "pydfnworks.dfnGraph"]
 
 install_requires=["numpy",
           "scipy",

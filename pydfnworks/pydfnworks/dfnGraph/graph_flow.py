@@ -3,7 +3,7 @@ import numpy as np
 import sys
 import scipy.sparse
 # pydfnworks modules
-import pydfnworks.dfnGraph.dfn2graph as d2g
+from pydfnworks.dfnGraph import dfn2graph as d2g
 
 def get_laplacian_sparse_mat(G, nodelist=None, weight=None, dtype=None, format='lil'):
     """ Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Used to enforce boundary conditions by modifying rows of L = D - A

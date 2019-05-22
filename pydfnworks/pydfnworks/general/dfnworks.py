@@ -40,6 +40,7 @@ class DFNWORKS(Frozen):
     from pydfnworks.general.general_functions import dump_time, print_run_time 
   
     # dfnGen functions 
+    import pydfnworks.dfnGen
     from pydfnworks.dfnGen.gen_input import check_input
     from pydfnworks.dfnGen.generator import dfn_gen, make_working_directory, create_network
     from pydfnworks.dfnGen.gen_output import output_report
@@ -47,16 +48,19 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv 
     
     # dfnFlow
+    import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver, uncorrelated  
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex 
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
     # dfnTrans
+    import pydfnworks.dfnTrans
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
 
 
     # dfnGraph
+    import pydfnworks.dfnGraph
     from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures 
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow 
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport 
