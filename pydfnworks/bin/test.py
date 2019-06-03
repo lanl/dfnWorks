@@ -12,7 +12,7 @@ def run_test(input_file_name):
     
     name = '~/' + 'test_output_files/' + input_file_name.rsplit('/', 1)[-1][:-4]
     arg_string = os.environ['PYTHON_EXE'] + " run.py -ncpu 4 -name  " + name+ " -input " + input_file_name 
-    print "RUNNING ", arg_string 
+    print("RUNNING ", arg_string)
     subprocess.call(arg_string, shell=True)
 
 if __name__ == '__main__':
@@ -36,5 +36,5 @@ if __name__ == '__main__':
                 input_file = benchmark_dir + '/' +  input_file 
                 run_test(input_file)
     else:
-        print 'invalid arguments to test.py script.'
-        print 'syntax: python test.py [TEST_NAME_PART]'
+        print('invalid arguments to test.py script.')
+        print('syntax: python test.py [TEST_NAME_PART]')

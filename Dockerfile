@@ -15,19 +15,17 @@ COPY . .
 RUN ["apt-get","update","-y"]
 
 # 2. Add pre-required packages
-#    TESTING: rm curl and everything after
 ENV DEBIAN_FRONTEND=noninteractive
-RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","wget","libz-dev","m4","bison","python","python-pip","python-tk","vim","curl","pkg-config","openssh-client","openssh-server"]
-RUN ["pip","install","-U","pip","setuptools"]
-RUN ["pip","install","numpy","h5py","matplotlib","scipy"]
+RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","python","python-pip"]
+RUN ["apt-get","install","-y","wget","libz-dev","m4","bison","python3","python3-pip","python3-tk","vim","curl"]
+RUN ["apt-get","install","-y","pkg-config","openssh-client","openssh-server"]
+
+RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx"]
 
 # ---------------------------------------------------------------------------- #
 # OPTIONAL: Use if you are behind proxy!
 RUN git config --global url."https://github.com/".insteadOf git@github.com:
 # ---------------------------------------------------------------------------- #
-
-
-ENV DFNHOME=$APP_PATH
 
 # 3.0 Install FEHM
 RUN ["git","clone","--depth","1","https://github.com/lanl/FEHM.git","FEHM"]
@@ -61,21 +59,27 @@ WORKDIR $APP_PATH/pflotran/src/pflotran
 RUN ["make","pflotran"]
 WORKDIR $APP_PATH
 
-# 4. Begin dfnWorks setup
-RUN ["ls","-al","/dfnWorks/"]
+# 4. Configure paths for dfnWorks in JSON format
+RUN ["echo","{",">>","~/.dfnworksrc"]
+RUN ["echo","\"dfnworks_PATH: \"$APP_PATH\",",">>","~/.dfnworksrc"]
+RUN ["echo","\"PETSC_DIR\": \"$APP_PATH/petsc\",",">>","~/.dfnworksrc"]
+RUN ["echo","\"PETSC_ARCH\": \"arch-linux2-c-debug\",",">>","~/.dfnworksrc"]
+RUN ["echo","\"PFLOTRAN_EXE\": \"$APP_PATH/pflotran\",",">>","~/.dfnworksrc"]
+RUN ["echo","\"PYTHON_EXE\": \"/usr/bin/python3\",",">>","~/.dfnworksrc"]
+RUN ["echo","\"LAGRIT_EXE\": \"$APP_PATH/LaGriT/src/lagrit\"",">>","~/.dfnworksrc"]
+RUN ["echo","\"FEHM_EXE\": \"$APP_PATH/FEHM/src/xfehm_v3.3.1\"",">>","~/.dfnworksrc"]
+RUN ["echo","}",">>","~/.dfnworksrc"]
 
-ENV dfnWorks_PATH=$APP_PATH
-ENV PFLOTRAN_DIR=$APP_PATH/pflotran
-ENV python_dfn=/usr/bin/python
-ENV lagrit_dfn=$APP_PATH/LaGriT/src/lagrit
-ENV FEHM_EXE=$APP_PATH/FEHM/src/xfehm_v3.3.1
+# 5. Begin dfnWorks setup
+# Override default Python and pip to 3.x versions
+RUN ["update-alternatives","--install","/usr/bin/python","python","/usr/bin/python3","10"]
+#update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 WORKDIR $APP_PATH/pydfnworks/bin/
-RUN ["python","fix_paths.py"]
+RUN ["python3","fix_paths.py"]
 WORKDIR $APP_PATH/pydfnworks/
-RUN ["python","setup.py","install"]
+RUN ["python3","setup.py","install"]
 WORKDIR $APP_PATH
-
 
 # Run bash on container launch
 CMD ["bash"]

@@ -2,6 +2,10 @@ from tempfile import mkstemp
 from shutil import move
 import os
 import subprocess
+import json
+
+DFNPARAMS = '~/.dfnworksrc'
+DFNPARAMS = os.path.expanduser(DFNPARAMS)
 
 def valid(name):
     """" Check that path is valid for a executable
@@ -74,31 +78,48 @@ def define_paths():
     # ================================================
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
+
+    # Either write paths to ~/.dfnworksrc in a JSON format...
+    if os.path.isfile(DFNPARAMS):
+        with open(DFNPARAMS,'r') as f:
+            env_paths = json.load(f)
+    # Or, change the paths here
+    else:
+        env_paths = {
+            'dfnworks_PATH': '/home/jhyman/dfnworks/dfnworks-main/',
+            'PETSC_DIR': '/home/satkarra/src/petsc-3.10.2',
+            'PETSC_ARCH': '/Ubuntu-18.04-nodebug/',
+            'PFLOTRAN_EXE': '/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran',
+            'PYTHON_EXE': '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python3/5.2.0/bin/python',
+            'LAGRIT_EXE': '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit',
+            'FEHM_EXE': 'home//jhyman/bin/xfehm'
+        }
     
     # the dfnworks-main  repository 
-    os.environ['dfnworks_PATH'] = '/home/jhyman/dfnworks/dfnworks-main/'
+    os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
     valid('dfnworks_PATH')
 
     # PETSC paths
-    os.environ['PETSC_DIR']='/home/satkarra/src/petsc-3.10.2'
-    os.environ['PETSC_ARCH']='/Ubuntu-18.04-nodebug/'
+    os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
+    os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
     valid('PETSC_DIR')
-#    valid('PETSC_ARCH')
+#   valid('PETSC_ARCH')
 
     # PFLOTRAN path
-    os.environ['PFLOTRAN_EXE']='/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran'
+    os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
     valid('PFLOTRAN_EXE')
 
     # Python executable
-    os.environ['PYTHON_EXE'] = '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python3/5.2.0/bin/python'
+    os.environ['PYTHON_EXE'] = env_paths['PYTHON_EXE']
     valid('PYTHON_EXE')
     
     # LaGriT executable
-    os.environ['LAGRIT_EXE'] = '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit'
+    os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
     valid('LAGRIT_EXE')
 
-    #os.environ['FEHM_EXE'] = 'home//jhyman/bin/xfehm'
-    #valid('FEHM_EXE')
+    os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
+    valid('FEHM_EXE')
+
     # =================================================== 
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
     # ====================================================
