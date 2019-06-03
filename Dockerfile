@@ -60,15 +60,15 @@ RUN ["make","pflotran"]
 WORKDIR $APP_PATH
 
 # 4. Configure paths for dfnWorks in JSON format
-RUN ["echo","{",">>","~/.dfnworksrc"]
-RUN ["echo","\"dfnworks_PATH: \"$APP_PATH\",",">>","~/.dfnworksrc"]
-RUN ["echo","\"PETSC_DIR\": \"$APP_PATH/petsc\",",">>","~/.dfnworksrc"]
-RUN ["echo","\"PETSC_ARCH\": \"arch-linux2-c-debug\",",">>","~/.dfnworksrc"]
-RUN ["echo","\"PFLOTRAN_EXE\": \"$APP_PATH/pflotran\",",">>","~/.dfnworksrc"]
-RUN ["echo","\"PYTHON_EXE\": \"/usr/bin/python3\",",">>","~/.dfnworksrc"]
-RUN ["echo","\"LAGRIT_EXE\": \"$APP_PATH/LaGriT/src/lagrit\"",">>","~/.dfnworksrc"]
-RUN ["echo","\"FEHM_EXE\": \"$APP_PATH/FEHM/src/xfehm_v3.3.1\"",">>","~/.dfnworksrc"]
-RUN ["echo","}",">>","~/.dfnworksrc"]
+RUN echo { >> ~/.dfnworksrc
+RUN echo \"dfnworks_PATH\": \"$APP_PATH\", >> ~/.dfnworksrc
+RUN echo \"PETSC_DIR\": \"$APP_PATH/petsc\", >> ~/.dfnworksrc
+RUN echo \"PETSC_ARCH\": \"arch-linux2-c-debug\", >> ~/.dfnworksrc
+RUN echo \"PFLOTRAN_EXE\": \"$APP_PATH/pflotran/src/pflotran\", >> ~/.dfnworksrc
+RUN echo \"PYTHON_EXE\": \"/usr/bin/python3\", >> ~/.dfnworksrc
+RUN echo \"LAGRIT_EXE\": \"$APP_PATH/LaGriT/src/lagrit\", >> ~/.dfnworksrc
+RUN echo \"FEHM_EXE\": \"$APP_PATH/FEHM/src/xfehm_v3.3.1\" >> ~/.dfnworksrc
+RUN echo } >> ~/.dfnworksrc
 
 # 5. Begin dfnWorks setup
 # Override default Python and pip to 3.x versions
