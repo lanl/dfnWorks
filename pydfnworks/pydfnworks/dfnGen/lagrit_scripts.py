@@ -5,6 +5,7 @@
 
 """
 import os
+import sys
 import glob
 from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
@@ -648,8 +649,8 @@ def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domai
 
     Returns
     -------
-        endis : list of int
-            Number of last fracture merged into a partition of the DFN
+        n_jobs : int
+            number of merge jobs
 
     Notes
     -----
@@ -657,7 +658,7 @@ def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domai
     """
 
     print("--> Writing : merge_poly.lgi")
-    part_size = num_poly/ncpu + 1 ###v number of fractures in each part
+    part_size = int(num_poly/ncpu) + 1 ###v number of fractures in each part
     endis = []
     ii = 0
     for i in fracture_list[:-1]:    
@@ -666,6 +667,7 @@ def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode, domai
             endis.append(i)
             ii = 0    
     endis.append(fracture_list[-1])
+    n_jobs = len(endis)
 
     lagrit_input = """
 # Change to read LaGriT
@@ -721,7 +723,7 @@ addmesh / merge / mo_all / mo_all / cmo_tmp
 cmo / delete / cmo_tmp 
     """
     f = open('merge_rmpts.lgi','w')
-    for j in range(1,len(endis)+1):
+    for j in range(1,n_jobs+1):
         f.write(lagrit_input%(j))
 
     # Append meshes complete
@@ -869,7 +871,7 @@ finish
     f.flush()
     f.close()
 
-    return len(endis)
+    return n_jobs 
 
 def define_zones():
     """Processes zone files for particle tracking. All zone files are combined into allboundaries.zone 
