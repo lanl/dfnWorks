@@ -18,7 +18,7 @@ RUN ["apt-get","update","-y"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ["apt-get","install","-y","build-essential","gfortran","cmake","git","python","python-pip"]
 RUN ["apt-get","install","-y","wget","libz-dev","m4","bison","python3","python3-pip","python3-tk","vim","curl"]
-RUN ["apt-get","install","-y","pkg-config","openssh-client","openssh-server"]
+RUN ["apt-get","install","-y","pkg-config","openssh-client","openssh-server","valgrind"]
 
 RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx"]
 
