@@ -7,6 +7,7 @@ import subprocess
 import sys
 import glob
 import shutil
+import ntpath
 from time import time 
 import numpy as np
 
@@ -402,7 +403,7 @@ def write_perms_and_correct_volumes_areas(self):
         h5file.close()
         print('--> Done writing permeability to h5 file')
 
-def pflotran(self):
+def pflotran(self,restart=False,restart_file=''):
     """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
 
     Parameters
@@ -437,10 +438,26 @@ def pflotran(self):
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file 
     print("Running: %s"%cmd)
     subprocess.call(cmd, shell = True)
-    if not check_pflotran_convergence(self.local_dfnFlow_file):
-        error="ERROR!!!! PFLOTRAN did not convergence. Consider running in transient mode to march to steady-state"
-        sys.stderr.write(error)
-        sys.exit(1)
+    if not restart:
+        if not check_pflotran_convergence(self.local_dfnFlow_file):
+            error="ERROR!!!! PFLOTRAN did not converge. Consider running in transient mode to march to steady-state\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+
+    if restart:
+        try: 
+            shutil.copy(os.path.abspath(restart_file), os.path.abspath(os.getcwd()))
+        except:
+            error="--> ERROR!! Unable to copy PFLOTRAN input file"
+            sys.stderr.write(error)
+            sys.exit(1)
+            
+        print("="*80)
+        print("--> Running PFLOTRAN") 
+        cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
+              ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + ntpath.basename(restart_file) 
+        print("Running: %s"%cmd)
+        subprocess.call(cmd, shell = True)
 
     print('='*80)
     print("--> Running PFLOTRAN Complete")
@@ -485,7 +502,7 @@ def check_pflotran_convergence(pflotran_input_file):
         return True
 
 
-def pflotran_cleanup(self, index_start = 0, index_finish=1,filename=''):
+def pflotran_cleanup(self, index_start=0, index_finish=1,filename=''):
     """pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
     
@@ -510,6 +527,8 @@ def pflotran_cleanup(self, index_start = 0, index_finish=1,filename=''):
 
     if filename == '':
         filename=self.local_dfnFlow_file[:-3]
+    else: 
+        filename=ntpath.basename(filename[:-3])
 
     print('--> Processing PFLOTRAN output') 
   
@@ -531,9 +550,15 @@ def pflotran_cleanup(self, index_start = 0, index_finish=1,filename=''):
             os.remove(fl)    
         for fl in glob.glob(filename+'-darcyvel-%03d-rank*.dat'%index):
             os.remove(fl)    
+    try:
+        os.symlink("darcyvel_%03d.dat"%index_finish,"darcyvel.dat")
+    except:
+        print("--> WARNING!!! Unable to create symlink for darcyvel.dat")
+    try:
+        os.symlink("cellinfo_%03d.dat"%index_finish,"cellinfo.dat")
+    except:
+        print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
 
-    os.symlink("darcyvel_%03d.dat"%index_finish,"darcyvel.dat")
-    os.symlink("cellinfo_%03d.dat"%index_finish,"cellinfo.dat")
     
 def inp2vtk_python(self):
     """ Using Python VTK library, convert inp file to VTK file.  

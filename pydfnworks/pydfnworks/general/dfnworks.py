@@ -7,8 +7,9 @@ __email__ = "jhyman@lanl.gov"
 DFN object class. 
 """
 
-import sys 
 import os
+import sys 
+import ntpath
 from time import time
 from pydfnworks.general.dfntools import *
 
@@ -69,18 +70,18 @@ class DFNWORKS(Frozen):
 
         self.jobname = jobname
         self.ncpu = ncpu
-        self.local_jobname = self.jobname.split('/')[-1]
+        self.local_jobname = ntpath.basename(self.jobname)
 
         self.dfnGen_file = dfnGen_file
-        self.local_dfnGen_file = self.dfnGen_file.split('/')[-1]
+        self.local_dfnGen_file = ntpath.basename(self.dfnGen_file)
         
-        self.output_file = self.dfnGen_file.split('/')[-1]
+        self.output_file = ntpath.basename(self.dfnGen_file)
         
         self.dfnFlow_file = dfnFlow_file 
-        self.local_dfnFlow_file = self.dfnFlow_file.split('/')[-1]
+        self.local_dfnFlow_file = ntpath.basename(self.dfnFlow_file)
 
         self.dfnTrans_file = dfnTrans_file 
-        self.local_dfnTrans_file = self.dfnTrans_file.split('/')[-1]
+        self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
 
         self.vtk_file = vtk_file
         self.inp_file = inp_file
