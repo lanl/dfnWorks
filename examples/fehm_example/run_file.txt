@@ -1,3 +1,0 @@
-dfnGen /dfnWorks/examples/fehm_example/TPL.dat
-dfnFlow /dfnWorks/examples/fehm_example/fehmn.files
-dfnTrans /dfnWorks/examples/fehm_example/PTDFN_control.dat
