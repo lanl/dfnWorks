@@ -19,8 +19,6 @@ DFN.dfn_flow()
 DFN.dfn_trans()
 
 main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print timing
 DFN.dump_time("Total Time: ",main_elapsed) 
 DFN.print_run_time()	
 print("*"*80)
