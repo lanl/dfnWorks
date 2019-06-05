@@ -532,6 +532,8 @@ def pflotran_cleanup(self, index_start = 0, index_finish=1,filename=''):
         for fl in glob.glob(filename+'-darcyvel-%03d-rank*.dat'%index):
             os.remove(fl)    
 
+    os.symlink("darcyvel_%03d.dat"%index_finish,"darcyvel.dat")
+    os.symlink("cellinfo_%03d.dat"%index_finish,"cellinfo.dat")
     
 def inp2vtk_python(self):
     """ Using Python VTK library, convert inp file to VTK file.  
