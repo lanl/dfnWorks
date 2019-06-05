@@ -64,7 +64,7 @@ RUN echo { >> ~/.dfnworksrc
 RUN echo \"dfnworks_PATH\": \"$APP_PATH\", >> ~/.dfnworksrc
 RUN echo \"PETSC_DIR\": \"$APP_PATH/petsc\", >> ~/.dfnworksrc
 RUN echo \"PETSC_ARCH\": \"arch-linux2-c-debug\", >> ~/.dfnworksrc
-RUN echo \"PFLOTRAN_EXE\": \"$APP_PATH/pflotran/src/pflotran\", >> ~/.dfnworksrc
+RUN echo \"PFLOTRAN_EXE\": \"$APP_PATH/pflotran/src/pflotran/pflotran\", >> ~/.dfnworksrc
 RUN echo \"PYTHON_EXE\": \"/usr/bin/python3\", >> ~/.dfnworksrc
 RUN echo \"LAGRIT_EXE\": \"$APP_PATH/LaGriT/src/lagrit\", >> ~/.dfnworksrc
 RUN echo \"FEHM_EXE\": \"$APP_PATH/FEHM/src/xfehm_v3.3.1\" >> ~/.dfnworksrc
@@ -75,8 +75,8 @@ RUN echo } >> ~/.dfnworksrc
 RUN ["update-alternatives","--install","/usr/bin/python","python","/usr/bin/python3","10"]
 #update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
-WORKDIR $APP_PATH/pydfnworks/bin/
-RUN ["python3","fix_paths.py"]
+#WORKDIR $APP_PATH/pydfnworks/bin/
+#RUN ["python3","fix_paths.py"]
 WORKDIR $APP_PATH/pydfnworks/
 RUN ["python3","setup.py","install"]
 WORKDIR $APP_PATH
