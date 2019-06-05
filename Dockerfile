@@ -75,8 +75,6 @@ RUN echo } >> ~/.dfnworksrc
 RUN ["update-alternatives","--install","/usr/bin/python","python","/usr/bin/python3","10"]
 #update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
-#WORKDIR $APP_PATH/pydfnworks/bin/
-#RUN ["python3","fix_paths.py"]
 WORKDIR $APP_PATH/pydfnworks/
 RUN ["python3","setup.py","install"]
 WORKDIR $APP_PATH
