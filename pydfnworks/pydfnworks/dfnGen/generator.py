@@ -89,7 +89,7 @@ def make_working_directory(self):
             print('Creating', self.jobname)
             os.mkdir(self.jobname)    
         elif keep == 'no' or 'n':
-            error = "Not deleting folder. Exiting Program"
+            error = "Not deleting folder. Exiting Program\n"
             sys.stderr.write(error)
             sys.exit(1) 
         else:
