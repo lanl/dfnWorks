@@ -199,7 +199,7 @@ def check_dfn_trans_run_files(self):
     # Check if file required for the run are in the directory and are not empty
     for key in files:
         if not os.path.isfile(params[key]) or os.stat(params[key]).st_size == 0:
-            error="ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program"%files[key]
+            error="ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program"%params[key]
             sys.stderr.write(error)
             sys.exit(1)
     
