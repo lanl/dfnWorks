@@ -10,7 +10,6 @@
 import os, sys
 from time import time
 from pydfnworks import * 
-import subprocess
 
 define_paths()
 main_time = time()
@@ -26,11 +25,6 @@ DFN.mesh_network()
 DFN.correct_stor_file()
 DFN.fehm()
 
-DFN.copy_dfn_trans_files()
-DFN.run_dfn_trans()
-
-main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
 print("*"*80)
 print(DFN.jobname+' complete')
 print("Thank you for using dfnWorks")

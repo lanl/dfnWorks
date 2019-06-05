@@ -1,1 +1,1 @@
-python run_fehm.py -name $PWD/fehm_example -input run_file.txt
+python run_fehm.py -name $PWD/fehm_example -input fehm_run_file.txt -ncpu 16
