@@ -663,6 +663,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
                 f.write('POINT_DATA\t ' + num_cells + '\n')
             for line in pflotran_out:
                 f.write(line)
+        os.remove(file)
     print('--> Parsing PFLOTRAN output complete')
 
 
