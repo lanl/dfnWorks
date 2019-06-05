@@ -485,7 +485,7 @@ def check_pflotran_convergence(pflotran_input_file):
         return True
 
 
-def pflotran_cleanup(self, index = 1):
+def pflotran_cleanup(self, index_start = 0, index_finish=1,filename=''):
     """pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
     
@@ -508,25 +508,29 @@ def pflotran_cleanup(self, index = 1):
         sys.stderr.write(error)
         sys.exit(1)
 
+    if filename == '':
+        filename=self.local_dfnFlow_file[:-3]
+
     print('--> Processing PFLOTRAN output') 
-   
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat > cellinfo.dat'%index
-    print("Running >> %s"%cmd)
-    subprocess.call(cmd, shell = True)
+  
+    for index in range(index_start,index_finish+1):
+        cmd = 'cat '+filename+'-cellinfo-%03d-rank*.dat > cellinfo_%03d.dat'%(index,index)
+        print("Running >> %s"%cmd)
+        subprocess.call(cmd, shell = True)
 
-    cmd = 'cat '+self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat > darcyvel.dat'%index
-    print("Running >> %s"%cmd)
-    subprocess.call(cmd, shell = True)
+        cmd = 'cat '+filename+'-darcyvel-%03d-rank*.dat > darcyvel_%03d.dat'%(index,index)
+        print("Running >> %s"%cmd)
+        subprocess.call(cmd, shell = True)
 
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
-        os.remove(fl)    
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'):
-        os.remove(fl)    
+        #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
+        #    os.remove(fl)    
+        #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'):
+        #    os.remove(fl)    
 
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-%03d-rank*.dat'%index):
-        os.remove(fl)    
-    for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-%03d-rank*.dat'%index):
-        os.remove(fl)    
+        for fl in glob.glob(filename+'-cellinfo-%03d-rank*.dat'%index):
+            os.remove(fl)    
+        for fl in glob.glob(filename+'-darcyvel-%03d-rank*.dat'%index):
+            os.remove(fl)    
 
     
 def inp2vtk_python(self):
