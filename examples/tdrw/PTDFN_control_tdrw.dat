@@ -7,7 +7,7 @@
 param: params.txt
 poly: poly_info.dat
 inp: full_mesh.inp
-stor: tri_fracture.stor
+stor: full_mesh.stor
 boundary: allboundaries.zone
 /* boundary conditions: reading the nodes that belong to in-flow and 
 out-flow boundaries. Should be consistent with those applied to obtain
@@ -48,7 +48,8 @@ out_curv: yes
 /* output into avs file (GMV visualization, Paraview visualization) */
 out_avs: no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
-out_traj: yes
+out_traj: no
+out_fract: no 
 
 /* temporary outputs (every time step from intersection to intersection)*/
 /* use outputs to file or memory buffer. Memory buffer by default */
@@ -75,13 +76,13 @@ streamline_routing: yes
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 
      equidistant from each other ****/
-init_nf: yes 
+init_nf: no 
 init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
      each other on all over in-flow boundary edges ***********************/  
-init_eqd: no  //maximum number of particles that user expects on one boundary edge
-init_npart: 100
+init_eqd: yes  //maximum number of particles that user expects on one boundary edge
+init_npart: 1000
 
 /*** all particles start from the same region at in-flow boundary, in a range  
     {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/
@@ -152,7 +153,7 @@ seed: 337799
 /*** virtual Control planes will be build in the direction of flow. 
 Once particle crosses the control plane, it's position, velocity, time 
 will output to an ascii file. ****/ 
-ControlPlane: yes 
+ControlPlane: no 
 
 /* the path and directory name with all particles output files */
 control_out: outcontroldir
