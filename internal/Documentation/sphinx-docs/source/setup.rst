@@ -1,4 +1,4 @@
-Settting up dfnWorks
+Setting up dfnWorks
 =============================
 
 This document contains instructions for setting up dfnWorks on you machine, 
