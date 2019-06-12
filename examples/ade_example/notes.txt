@@ -1,1 +1,1 @@
-python run_ade.py -name $PWD/ade_example -input ade_run_file.txt -ncpu 8 
+python run_ade.py -name /dfnWorks/work/ade_example -input ade_run_file.txt -ncpu 8 
