@@ -1,6 +1,7 @@
 # pydfnwork modules
 import pydfnworks
-from pydfnworks.dfnGen import gen_input 
+from pydfnworks.dfnGen import gen_input
+
 
 class distr():
     """ 
@@ -19,8 +20,8 @@ class distr():
 
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self.params = params
-        global distr_helper_methods  
-        distr_helper_methods = gen_input.input_helper(params, minFracSize) 
+        global distr_helper_methods
+        distr_helper_methods = gen_input.input_helper(params, minFracSize)
         self.ellipseFams = distr_helper_methods.value_of('nFamEll')
         self.rectFams = distr_helper_methods.value_of('nFamRect')
         self.numEdistribs = numEdistribs
@@ -40,21 +41,29 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "betaDistribution"
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_flag, desiredLength = numFamilies)
+        errResult = distr_helper_methods.verify_list(
+            distr_helper_methods.value_of(paramName),
+            paramName,
+            distr_helper_methods.verify_flag,
+            desiredLength=numFamilies)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} value(s) but there is(are) {} {} family(ies). Need one "\
                   "flag (0 or 1) per {} family.".format(paramName, -errResult, numFamilies, shape, shape))
 
-        numBetas = distr_helper_methods.value_of(paramName).count(1) ## number of 1's in list
+        numBetas = distr_helper_methods.value_of(paramName).count(
+            1)  ## number of 1's in list
         if numBetas == 0: return
 
         betaParam = prefix + "beta"
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(betaParam), betaParam, distr_helper_methods.verify_float, desiredLength = numBetas)
+        errResult = distr_helper_methods.verify_list(
+            distr_helper_methods.value_of(betaParam),
+            betaParam,
+            distr_helper_methods.verify_float,
+            desiredLength=numBetas)
         if errResult != None:
             distr_helper_methods.error("\"{}\" defined {} constant angle(s) but {} flag(s) was(were) set to 1 "\
                   "in {}. Please define one constant angle (beta value) for each flag set "\
                   "to 1 in \"{}\"".format(betaParam, -errResult, numBetas, paramName, paramName))
-
 
     def distr(self, prefix):
         """ 
@@ -67,47 +76,63 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         paramName = prefix + "distr"
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_int, desiredLength = numFamilies)
+        errResult = distr_helper_methods.verify_list(
+            distr_helper_methods.value_of(paramName),
+            paramName,
+            distr_helper_methods.verify_int,
+            desiredLength=numFamilies)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} distributions but there are {} {} families. " \
                 "Need one distribution per family (1 = lognormal, 2 = Truncated Power Law, "
-                "3 = Exponential, or 4 = constant).".format(paramName, -errResult, numFamilies, shape)) 
+                "3 = Exponential, or 4 = constant).".format(paramName, -errResult, numFamilies, shape))
         try:
             for dist in distr_helper_methods.value_of(paramName):
                 if int(dist) <= 0: raise IndexError()
-                distribList[int(dist)] += 1  
+                distribList[int(dist)] += 1
         except IndexError:
             distr_helper_methods.error("\"{}\" contains '{}' which is not a valid distribution option. " \
                    "Only values 1 through 4 can define a family's distribution (1 = lognormal, " \
                    "2 = Truncated Power Law, 3 = Exponential, or 4 = constant).".format(paramName, dist))
 
-
     def lognormal_dist(self, prefix):
         """
         Verifies all logNormal Parameters for ellipses and Rectangles.
-        """ 
+        """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
-        paramNames = [prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]]
+        paramNames = [
+            prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]
+        ]
         errString = "\"{}\" has defined {} value(s) but {} lognormal distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each lognormal (distrib. #1) family."
 
         for param in paramNames:
             zTmp = True if "sd" not in param else False  ## Turns off noZeros check only for 'sd' for better error msg
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[1],
-                        noZeros = zTmp, noNegs = True)         
+            errResult = distr_helper_methods.verify_list(
+                distr_helper_methods.value_of(param),
+                param,
+                distr_helper_methods.verify_float,
+                desiredLength=distribList[1],
+                noZeros=zTmp,
+                noNegs=True)
             if errResult != None:
-                distr_helper_methods.error(errString.format(param, -errResult, distribList[1], prefix+'distr'))
+                distr_helper_methods.error(
+                    errString.format(param, -errResult, distribList[1],
+                                     prefix + 'distr'))
 
         sdParam = prefix + "sd"
-        if distr_helper_methods.zero_in_std_devs(distr_helper_methods.value_of(sdParam)): 
+        if distr_helper_methods.zero_in_std_devs(
+                distr_helper_methods.value_of(sdParam)):
             distr_helper_methods.error("\"{}\" list contains a standard deviation of 0. If this was intended, " \
                 "use the constant distribution (4) instead. Otherwise, _make sure \"{}\" " \
                 "only contains values greater than 0.".format(sdParam, sdParam))
 
-        distr_helper_methods.check_min_max(prefix+"LogMin", prefix+"LogMax", shape)
-        distr_helper_methods.check_mean(prefix+"LogMin", prefix+"LogMax", prefix+"LogMean")
-        distr_helper_methods.check_min_frac_size(distr_helper_methods.value_of(prefix+"LogMin"))
+        distr_helper_methods.check_min_max(prefix + "LogMin",
+                                           prefix + "LogMax", shape)
+        distr_helper_methods.check_mean(prefix + "LogMin", prefix + "LogMax",
+                                        prefix + "LogMean")
+        distr_helper_methods.check_min_frac_size(
+            distr_helper_methods.value_of(prefix + "LogMin"))
 
     def tpl_dist(self, prefix):
         """
@@ -120,14 +145,22 @@ class distr():
                 "defined in \"{}\". Please define one value for each truncated power-law (distrib. #2) family."
 
         for param in paramNames:
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[2], 
-                        noZeros = True, noNegs = True)
+            errResult = distr_helper_methods.verify_list(
+                distr_helper_methods.value_of(param),
+                param,
+                distr_helper_methods.verify_float,
+                desiredLength=distribList[2],
+                noZeros=True,
+                noNegs=True)
             if errResult != None:
-                distr_helper_methods.error(errString.format(param, -errResult, distribList[2], prefix+'distr'))
-                
-        distr_helper_methods.check_min_max(prefix+"min", prefix+"max", shape)
-        distr_helper_methods.check_min_frac_size(distr_helper_methods.value_of(prefix+"min"))
-        
+                distr_helper_methods.error(
+                    errString.format(param, -errResult, distribList[2],
+                                     prefix + 'distr'))
+
+        distr_helper_methods.check_min_max(prefix + "min", prefix + "max",
+                                           shape)
+        distr_helper_methods.check_min_frac_size(
+            distr_helper_methods.value_of(prefix + "min"))
 
     def exponential_dist(self, prefix):
         """
@@ -135,19 +168,31 @@ class distr():
         """
         shape = "ellipse" if prefix is 'e' else "rectangle"
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
-        paramNames = [prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]]
+        paramNames = [
+            prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]
+        ]
         errString = "\"{}\" has defined {} value(s) but {} exponential distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each exponential (distrib. #3) family."
 
         for param in paramNames:
-            errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(param), param, distr_helper_methods.verify_float, desiredLength = distribList[3], 
-                        noZeros = True, noNegs = True)
+            errResult = distr_helper_methods.verify_list(
+                distr_helper_methods.value_of(param),
+                param,
+                distr_helper_methods.verify_float,
+                desiredLength=distribList[3],
+                noZeros=True,
+                noNegs=True)
             if errResult != None:
-                distr_helper_methods.error(errString.format(param, -errResult, distribList[3], prefix+'distr'))
-                
-        distr_helper_methods.check_min_max(prefix+"ExpMin", prefix+"ExpMax", shape)
-        distr_helper_methods.check_mean(prefix+"ExpMin", prefix+"ExpMax", prefix+"ExpMean")
-        distr_helper_methods.check_min_frac_size(distr_helper_methods.value_of(prefix+"ExpMin"))
+                distr_helper_methods.error(
+                    errString.format(param, -errResult, distribList[3],
+                                     prefix + 'distr'))
+
+        distr_helper_methods.check_min_max(prefix + "ExpMin",
+                                           prefix + "ExpMax", shape)
+        distr_helper_methods.check_mean(prefix + "ExpMin", prefix + "ExpMax",
+                                        prefix + "ExpMean")
+        distr_helper_methods.check_min_frac_size(
+            distr_helper_methods.value_of(prefix + "ExpMin"))
 
     def constant_dist(self, prefix):
         """
@@ -157,13 +202,17 @@ class distr():
         numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
         distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
 
-        errResult = distr_helper_methods.verify_list(distr_helper_methods.value_of(paramName), paramName, distr_helper_methods.verify_float, desiredLength = distribList[4],
-                     noZeros = True, noNegs = True)
+        errResult = distr_helper_methods.verify_list(
+            distr_helper_methods.value_of(paramName),
+            paramName,
+            distr_helper_methods.verify_float,
+            desiredLength=distribList[4],
+            noZeros=True,
+            noNegs=True)
         if errResult != None:
             distr_helper_methods.error("\"{}\" has defined {} value(s) but {} constant distrbution(s) was(were) " \
                   "defined in \"{}\". Please define one value for each family with a constant (distrib. "\
                   "#4) distribution.".format(paramName, -errResult, distribList[4], prefix + 'distr'))
-         
-        distr_helper_methods.check_min_frac_size(distr_helper_methods.value_of(paramName))
-        
 
+        distr_helper_methods.check_min_frac_size(
+            distr_helper_methods.value_of(paramName))

@@ -22,19 +22,20 @@ def dump_time(self, function_name, time):
     --------- 
     While this function is working, the current formulation is not robust through the entire workflow
     '''
-    run_time_file=self.jobname+os.sep+self.local_jobname+"_run_time.txt"
+    run_time_file = self.jobname + os.sep + self.local_jobname + "_run_time.txt"
     # Check if time file exists, if not create it
-    if not os.path.isfile(run_time_file):    
+    if not os.path.isfile(run_time_file):
         f = open(run_time_file, "w")
         f.write("Runs times for " + self.local_jobname + "\n")
     else:
         f = open(run_time_file, "a")
     # Write Time
     if time < 60.0:
-        f.write(function_name+" : %0.2f seconds\n"%time)
+        f.write(function_name + " : %0.2f seconds\n" % time)
     else:
-        f.write(function_name+" : %0.2f minutes\n"%(time/60.0))
+        f.write(function_name + " : %0.2f minutes\n" % (time / 60.0))
     f.close()
+
 
 def print_run_time(self):
     '''Read in run times from file and and print to screen with percentages
@@ -52,8 +53,8 @@ def print_run_time(self):
     --------
     This will dump out all values in the run file, not just those from the most recent run
     '''
-    run_time_file=self.jobname+os.sep+self.local_jobname+"_run_time.txt"
-    f=open(run_time_file).readlines()
+    run_time_file = self.jobname + os.sep + self.local_jobname + "_run_time.txt"
+    f = open(run_time_file).readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
     if unit is 'minutes':
@@ -62,20 +63,19 @@ def print_run_time(self):
     print('Runs times for ', f[0])
     percent = []
     name = []
-    for i in range(1,len(f)):
+    for i in range(1, len(f)):
         unit = f[i].split()[-1]
         time = float(f[i].split()[-2])
 
         if unit is 'minutes':
             time *= 60.0
-        percent.append(100.0*(time/total))
+        percent.append(100.0 * (time / total))
         name.append(f[i].split(':')[1])
-        print(f[i], '\t--> Percent if total %0.2f \n'%percent[i-1])
+        print(f[i], '\t--> Percent if total %0.2f \n' % percent[i - 1])
 
     #print("Primary Function Percentages")
     #for i in range(1,len(f) - 1):
     #    if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
-    #        tmp = int(percent[i-1])/10    
+    #        tmp = int(percent[i-1])/10
     #        print(name[i-1]+"\t"+"*"tmp)
     print("\n")
-

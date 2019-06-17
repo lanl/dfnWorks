@@ -1,14 +1,13 @@
-
 """
 functions for using pflotran in dfnworks
 """
-import os 
+import os
 import subprocess
 import sys
 import glob
 import shutil
 import ntpath
-from time import time 
+from time import time
 import numpy as np
 
 
@@ -35,13 +34,13 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     
     """
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
 
-    print('='*80)
+    print('=' * 80)
     print("Starting conversion of files for PFLOTRAN ")
-    print('='*80)
+    print('=' * 80)
     if inp_file:
         self.inp_file = inp_file
     else:
@@ -56,26 +55,27 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         if mesh_type in mesh_types_allowed:
             self.mesh_type = mesh_type
         else:
-            error='ERROR: Unknown mesh type. Select one of dfn, volume or mixed!'
+            error = 'ERROR: Unknown mesh type. Select one of dfn, volume or mixed!'
             sys.stderr.write(error)
             sys.exit(1)
     else:
         mesh_type = self.mesh_type
 
     if mesh_type == '':
-        error='ERROR: Please provide mesh type!'
+        error = 'ERROR: Please provide mesh type!'
         sys.stderr.write(error)
         sys.exit(1)
 
     # Check if UGE file was created by LaGriT, if it does not exists, exit
     self.uge_file = inp_file[:-4] + '.uge'
     if not os.path.isfile(self.uge_file):
-        error='ERROR!!! Cannot find .uge file\nExiting\n'
+        error = 'ERROR!!! Cannot find .uge file\nExiting\n'
         sys.stderr.write(error)
-        sys.exit(1)  
+        sys.exit(1)
 
     if mesh_type == 'dfn':
-        self.write_perms_and_correct_volumes_areas() # Make sure perm and aper files are specified
+        self.write_perms_and_correct_volumes_areas(
+        )  # Make sure perm and aper files are specified
 
     # Convert zone files to ex format
     #self.zone2ex(zone_file='boundary_back_s.zone',face='south')
@@ -85,12 +85,14 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     #self.zone2ex(zone_file='boundary_top.zone',face='top')
     #self.zone2ex(zone_file='boundary_bottom.zone',face='bottom')
     self.zone2ex(zone_file='all')
-    print('='*80)
+    print('=' * 80)
     print("Conversion of files for PFLOTRAN complete")
-    print ('='*80)
+    print('=' * 80)
     print("\n\n")
 
-def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1):
+
+def zone2ex(self, uge_file='', zone_file='', face='',
+            boundary_cell_area=1.e-1):
     """
     Convert zone files from LaGriT into ex format for LaGriT
     
@@ -115,7 +117,7 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
     the boundary_cell_area should be a function of h, the mesh resolution
     """
 
-    print('--> Converting zone files to ex')    
+    print('--> Converting zone files to ex')
     if self.uge_file:
         uge_file = self.uge_file
     else:
@@ -123,7 +125,7 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
     uge_file = self.uge_file
     if uge_file == '':
-        error='ERROR: Please provide uge filename!'
+        error = 'ERROR: Please provide uge filename!'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -153,99 +155,112 @@ def zone2ex(self, uge_file='', zone_file='', face='', boundary_cell_area = 1.e-1
 
     # loop through zone files
     if zone_file is 'all':
-            zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
-                            'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
-            face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
-    else: 
-            if zone_file == '':
-                error='ERROR: Please provide boundary zone filename!'
-                sys.stderr.write(error)
-                sys.exit(1)
-            if face == '':
-                error='ERROR: Please provide face name among: top, bottom, north, south, east, west !'
-                sys.stderr.write(error)
-                sys.exit(1)
-            zone_files = [zone_file]
-            face_names = [face]
-            
-    for iface,zone_file in enumerate(zone_files):
-            face = face_names[iface]
-            # Ex filename
-            ex_file = zone_file.strip('zone') + 'ex'
+        zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
+                        'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
+        face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
+    else:
+        if zone_file == '':
+            error = 'ERROR: Please provide boundary zone filename!'
+            sys.stderr.write(error)
+            sys.exit(1)
+        if face == '':
+            error = 'ERROR: Please provide face name among: top, bottom, north, south, east, west !'
+            sys.stderr.write(error)
+            sys.exit(1)
+        zone_files = [zone_file]
+        face_names = [face]
 
-            # Opening the input file
-            print('--> Opening zone file: ', zone_file)
-            fzone = open(zone_file, 'r')
-            fzone.readline()
-            fzone.readline()
-            fzone.readline()
+    for iface, zone_file in enumerate(zone_files):
+        face = face_names[iface]
+        # Ex filename
+        ex_file = zone_file.strip('zone') + 'ex'
 
-            # Read number of boundary nodes
-            print('--> Calculating number of nodes')
-            num_nodes = int(fzone.readline())
-            Node_array = np.zeros(num_nodes, 'int')
-            # Read the boundary node ids
-            print('--> Reading boundary node ids')
+        # Opening the input file
+        print('--> Opening zone file: ', zone_file)
+        fzone = open(zone_file, 'r')
+        fzone.readline()
+        fzone.readline()
+        fzone.readline()
 
-            if (num_nodes < 10):
+        # Read number of boundary nodes
+        print('--> Calculating number of nodes')
+        num_nodes = int(fzone.readline())
+        Node_array = np.zeros(num_nodes, 'int')
+        # Read the boundary node ids
+        print('--> Reading boundary node ids')
+
+        if (num_nodes < 10):
+            g = fzone.readline()
+            node_array = g.split()
+            # Convert string to integer array
+            node_array = [int(id) for id in node_array]
+            Node_array = np.asarray(node_array)
+        else:
+            for i in range(int(num_nodes / 10 + (num_nodes % 10 != 0))):
                 g = fzone.readline()
                 node_array = g.split()
                 # Convert string to integer array
                 node_array = [int(id) for id in node_array]
-                Node_array = np.asarray(node_array)
-            else:
-                for i in range(int(num_nodes / 10 + (num_nodes%10!=0))):
-                    g = fzone.readline()
-                    node_array = g.split()
-                    # Convert string to integer array
-                    node_array = [int(id) for id in node_array]
-                    if (num_nodes - 10 * i < 10):
-                        for j in range(num_nodes % 10):
-                            Node_array[i * 10 + j] = node_array[j]
-                    else:
-                        for j in range(10):
-                            Node_array[i * 10 + j] = node_array[j]
-            fzone.close()
-            print('--> Finished with zone file')
+                if (num_nodes - 10 * i < 10):
+                    for j in range(num_nodes % 10):
+                        Node_array[i * 10 + j] = node_array[j]
+                else:
+                    for j in range(10):
+                        Node_array[i * 10 + j] = node_array[j]
+        fzone.close()
+        print('--> Finished with zone file')
 
-            Boundary_cell_area = np.zeros(num_nodes, 'float')
-            for i in range(num_nodes):
-                Boundary_cell_area[i] = boundary_cell_area  # Fix the area to a large number
+        if self.h == "":
+            from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
+            _, self.h, _, _, _ = parse_params_file(quite=True)
 
-            print('--> Finished calculating boundary connections')
-            boundary_cell_coord = [Cell_coord[Cell_id[i - 1] - 1] for i in Node_array]
-            if self.h == "":
-                from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
-                _,self.h,_,_,_=parse_params_file(quite=True)
-            epsilon = self.h * 10**-3
- 
-            if (face == 'top'):
-                boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon] for cell in boundary_cell_coord]
-            elif (face == 'bottom'):
-                boundary_cell_coord = [[cell[0], cell[1], cell[2] - epsilon] for cell in boundary_cell_coord]
-            elif (face == 'north'):
-                boundary_cell_coord = [[cell[0], cell[1] + epsilon, cell[2]] for cell in boundary_cell_coord]
-            elif (face == 'south'):
-                boundary_cell_coord = [[cell[0], cell[1] - epsilon, cell[2]] for cell in boundary_cell_coord]
-            elif (face == 'east'):
-                boundary_cell_coord = [[cell[0] + epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
-            elif (face == 'west'):
-                boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]] for cell in boundary_cell_coord]
-            elif (face == 'none'):
-                boundary_cell_coord = [[cell[0], cell[1], cell[2]] for cell in boundary_cell_coord]
-            else:
-                error='ERROR: unknown face. Select one of: top, bottom, east, west, north, south.'
-                sys.stderr.write(error)
-                sys.exit(1)
+        Boundary_cell_area = np.zeros(num_nodes, 'float')
+        for i in range(num_nodes):
+            Boundary_cell_area[
+                i] = boundary_cell_area  # Fix the area to a large number
 
-            with open(ex_file, 'w') as f:
-                f.write('CONNECTIONS\t%i\n' % Node_array.size)
-                for idx, cell in enumerate(boundary_cell_coord):
-                    f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' % (
-                        Node_array[idx], cell[0], cell[1], cell[2], Boundary_cell_area[idx]))
-            print('--> Finished writing ex file "' + ex_file + '" corresponding to the zone file: ' + zone_file+'\n')
+        print('--> Finished calculating boundary connections')
+        boundary_cell_coord = [
+            Cell_coord[Cell_id[i - 1] - 1] for i in Node_array
+        ]
+        epsilon = self.h * 10**-3
 
-    print('--> Converting zone files to ex complete')    
+        if (face == 'top'):
+            boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'bottom'):
+            boundary_cell_coord = [[cell[0], cell[1], cell[2] - epsilon]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'north'):
+            boundary_cell_coord = [[cell[0], cell[1] + epsilon, cell[2]]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'south'):
+            boundary_cell_coord = [[cell[0], cell[1] - epsilon, cell[2]]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'east'):
+            boundary_cell_coord = [[cell[0] + epsilon, cell[1], cell[2]]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'west'):
+            boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'none'):
+            boundary_cell_coord = [[cell[0], cell[1], cell[2]]
+                                   for cell in boundary_cell_coord]
+        else:
+            error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.'
+            sys.stderr.write(error)
+            sys.exit(1)
+
+        with open(ex_file, 'w') as f:
+            f.write('CONNECTIONS\t%i\n' % Node_array.size)
+            for idx, cell in enumerate(boundary_cell_coord):
+                f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' %
+                        (Node_array[idx], cell[0], cell[1], cell[2],
+                         Boundary_cell_area[idx]))
+        print('--> Finished writing ex file "' + ex_file +
+              '" corresponding to the zone file: ' + zone_file + '\n')
+
+    print('--> Converting zone files to ex complete')
 
 
 def write_perms_and_correct_volumes_areas(self):
@@ -266,64 +281,65 @@ def write_perms_and_correct_volumes_areas(self):
     """
     import h5py
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
 
     print("--> Writing Perms and Correct Volume Areas")
     inp_file = self.inp_file
     if inp_file == '':
-        error='ERROR: inp file must be specified!'
+        error = 'ERROR: inp file must be specified!'
         sys.stderr.write(error)
         sys.exit(1)
 
     uge_file = self.uge_file
     if uge_file == '':
-        error='ERROR: uge file must be specified!'
+        error = 'ERROR: uge file must be specified!'
         sys.stderr.write(error)
         sys.exit(1)
-        
+
     perm_file = self.perm_file
     if perm_file == '' and self.perm_cell_file == '':
-        error='ERROR: perm file must be specified!'
+        error = 'ERROR: perm file must be specified!'
         sys.stderr.write(error)
         sys.exit(1)
-        
+
     aper_file = self.aper_file
     aper_cell_file = self.aper_cell_file
     if aper_file == '' and self.aper_cell_file == '':
-        error='ERROR: aperture file must be specified!'
+        error = 'ERROR: aperture file must be specified!'
         sys.stderr.write(error)
         sys.exit(1)
-        
+
     mat_file = 'materialid.dat'
     t = time()
     # Make input file for C UGE converter
     f = open("convert_uge_params.txt", "w")
-    f.write("%s\n"%inp_file)
-    f.write("%s\n"%mat_file)
-    f.write("%s\n"%uge_file)
-    f.write("%s"%(uge_file[:-4]+'_vol_area.uge\n'))
+    f.write("%s\n" % inp_file)
+    f.write("%s\n" % mat_file)
+    f.write("%s\n" % uge_file)
+    f.write("%s" % (uge_file[:-4] + '_vol_area.uge\n'))
     if self.aper_cell_file:
-            f.write("%s\n"%self.aper_cell_file)
-            f.write("1\n")
+        f.write("%s\n" % self.aper_cell_file)
+        f.write("1\n")
     else:
-            f.write("%s\n"%self.aper_file)
-            f.write("-1\n")
+        f.write("%s\n" % self.aper_file)
+        f.write("-1\n")
     f.close()
 
-    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt' 
-    failure = subprocess.call(cmd, shell = True)
+    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
+    failure = subprocess.call(cmd, shell=True)
     if failure > 0:
-        error='ERROR: UGE conversion failed\nExiting Program'
+        error = 'ERROR: UGE conversion failed\nExiting Program'
         sys.stderr.write(error)
         sys.exit(1)
-        
+
     elapsed = time() - t
-    print('--> Time elapsed for UGE file conversion: %0.3f seconds\n'%elapsed)
+    print('--> Time elapsed for UGE file conversion: %0.3f seconds\n' %
+          elapsed)
     # need number of nodes and mat ID file
     print('--> Writing HDF5 File')
-    materialid = np.genfromtxt(mat_file, skip_header = 3).astype(int)
+    materialid = np.genfromtxt(mat_file, skip_header=3).astype(int)
     materialid = -1 * materialid - 6
     NumIntNodes = len(materialid)
 
@@ -340,24 +356,23 @@ def write_perms_and_correct_volumes_areas(self):
         dataset_name = 'Cell Ids'
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
 
-        print ('--> Allocating permeability array')
+        print('--> Allocating permeability array')
         perm = np.zeros(NumIntNodes, '=f8')
 
         print('--> reading permeability data')
         print('--> Note: this script assumes isotropic permeability')
-        perm_list = np.genfromtxt(perm_file,skip_header = 1)
+        perm_list = np.genfromtxt(perm_file, skip_header=1)
         perm_list = np.delete(perm_list, np.s_[1:5], 1)
 
-        matid_index = -1*materialid - 7
+        matid_index = -1 * materialid - 7
         for i in range(NumIntNodes):
             j = matid_index[i]
-            if int(perm_list[j,0]) == materialid[i]:
+            if int(perm_list[j, 0]) == materialid[i]:
                 perm[i] = perm_list[j, 1]
             else:
-                error='Indexing Error in Perm File'
+                error = 'Indexing Error in Perm File'
                 sys.stderr.write(error)
                 sys.exit(1)
-        
 
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=perm)
@@ -379,7 +394,7 @@ def write_perms_and_correct_volumes_areas(self):
             iarray[i] = i + 1
         dataset_name = 'Cell Ids'
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
-        print ('--> Allocating permeability array')
+        print('--> Allocating permeability array')
         perm = np.zeros(NumIntNodes, '=f8')
         print('--> reading permeability data')
         print('--> Note: this script assumes isotropic permeability')
@@ -395,7 +410,7 @@ def write_perms_and_correct_volumes_areas(self):
             perm_list.append(h)
 
         perm_list = [float(perm[0]) for perm in perm_list]
-        
+
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=perm_list)
         f.close()
@@ -403,7 +418,8 @@ def write_perms_and_correct_volumes_areas(self):
         h5file.close()
         print('--> Done writing permeability to h5 file')
 
-def pflotran(self,restart=False,restart_file=''):
+
+def pflotran(self, restart=False, restart_file=''):
     """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
 
     Parameters
@@ -420,48 +436,49 @@ def pflotran(self,restart=False,restart_file=''):
     Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards
     """
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
-        
-    try: 
-        shutil.copy(os.path.abspath(self.dfnFlow_file), os.path.abspath(os.getcwd()))
-    except:
-        error="--> ERROR!! Unable to copy PFLOTRAN input file"
-        sys.stderr.write(error)
-        sys.exit(1)
-        
 
-    print("="*80)
-    print("--> Running PFLOTRAN") 
+    try:
+        shutil.copy(os.path.abspath(self.dfnFlow_file),
+                    os.path.abspath(os.getcwd()))
+    except:
+        error = "--> ERROR!! Unable to copy PFLOTRAN input file"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    print("=" * 80)
+    print("--> Running PFLOTRAN")
     cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
-          ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file 
-    print("Running: %s"%cmd)
-    subprocess.call(cmd, shell = True)
+          ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
+    print("Running: %s" % cmd)
+    subprocess.call(cmd, shell=True)
     if not restart:
         if not check_pflotran_convergence(self.local_dfnFlow_file):
-            error="ERROR!!!! PFLOTRAN did not converge. Consider running in transient mode to march to steady-state\n"
+            error = "ERROR!!!! PFLOTRAN did not converge. Consider running in transient mode to march to steady-state\n"
             sys.stderr.write(error)
             sys.exit(1)
 
     if restart:
-        try: 
-            shutil.copy(os.path.abspath(restart_file), os.path.abspath(os.getcwd()))
+        try:
+            shutil.copy(os.path.abspath(restart_file),
+                        os.path.abspath(os.getcwd()))
         except:
-            error="--> ERROR!! Unable to copy PFLOTRAN input file"
+            error = "--> ERROR!! Unable to copy PFLOTRAN input file"
             sys.stderr.write(error)
             sys.exit(1)
-            
-        print("="*80)
-        print("--> Running PFLOTRAN") 
-        cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
-              ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + ntpath.basename(restart_file) 
-        print("Running: %s"%cmd)
-        subprocess.call(cmd, shell = True)
 
-    print('='*80)
+        print("=" * 80)
+        print("--> Running PFLOTRAN")
+        cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
+              ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + ntpath.basename(restart_file)
+        print("Running: %s" % cmd)
+        subprocess.call(cmd, shell=True)
+
+    print('=' * 80)
     print("--> Running PFLOTRAN Complete")
-    print('='*80)
+    print('=' * 80)
     print("\n")
 
 
@@ -481,28 +498,31 @@ def check_pflotran_convergence(pflotran_input_file):
     ----------
 """
     # check if PFLOTRAN ran in steady-state mode
-    steady=False
-    with open(pflotran_input_file,"r") as fp:
+    steady = False
+    with open(pflotran_input_file, "r") as fp:
         for line in fp.readlines():
             if "STEADY_STATE" in line:
                 steady = True
 
     if steady:
         pflotran_output_file = pflotran_input_file[:-2] + "out"
-        print("\n--> Opening %s to check for convergence"%pflotran_output_file)
-        with open(pflotran_output_file,"r") as fp:
+        print("\n--> Opening %s to check for convergence" %
+              pflotran_output_file)
+        with open(pflotran_output_file, "r") as fp:
             for line in fp.readlines():
                 if "STEADY-SOLVE      1 snes_conv_reason:" in line:
                     print("--> PFLOTRAN converged")
-                    print(line+"\n")
+                    print(line + "\n")
                     return True
         return False
     else:
-        print("PFLOTRAN ran in transient mode, unable to check for steady-state convergence")
+        print(
+            "PFLOTRAN ran in transient mode, unable to check for steady-state convergence"
+        )
         return True
 
 
-def pflotran_cleanup(self, index_start=0, index_finish=1,filename=''):
+def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
     """pflotran_cleanup
     Concatenate PFLOTRAN output files and then delete them 
     
@@ -521,45 +541,47 @@ def pflotran_cleanup(self, index_start=0, index_finish=1,filename=''):
         Can be run in a loop over all pflotran dumps
     """
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
 
     if filename == '':
-        filename=self.local_dfnFlow_file[:-3]
-    else: 
-        filename=ntpath.basename(filename[:-3])
+        filename = self.local_dfnFlow_file[:-3]
+    else:
+        filename = ntpath.basename(filename[:-3])
 
-    print('--> Processing PFLOTRAN output') 
-  
-    for index in range(index_start,index_finish+1):
-        cmd = 'cat '+filename+'-cellinfo-%03d-rank*.dat > cellinfo_%03d.dat'%(index,index)
-        print("Running >> %s"%cmd)
-        subprocess.call(cmd, shell = True)
+    print('--> Processing PFLOTRAN output')
 
-        cmd = 'cat '+filename+'-darcyvel-%03d-rank*.dat > darcyvel_%03d.dat'%(index,index)
-        print("Running >> %s"%cmd)
-        subprocess.call(cmd, shell = True)
+    for index in range(index_start, index_finish + 1):
+        cmd = 'cat ' + filename + '-cellinfo-%03d-rank*.dat > cellinfo_%03d.dat' % (
+            index, index)
+        print("Running >> %s" % cmd)
+        subprocess.call(cmd, shell=True)
+
+        cmd = 'cat ' + filename + '-darcyvel-%03d-rank*.dat > darcyvel_%03d.dat' % (
+            index, index)
+        print("Running >> %s" % cmd)
+        subprocess.call(cmd, shell=True)
 
         #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
-        #    os.remove(fl)    
+        #    os.remove(fl)
         #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-darcyvel-000-rank*.dat'):
-        #    os.remove(fl)    
+        #    os.remove(fl)
 
-        for fl in glob.glob(filename+'-cellinfo-%03d-rank*.dat'%index):
-            os.remove(fl)    
-        for fl in glob.glob(filename+'-darcyvel-%03d-rank*.dat'%index):
-            os.remove(fl)    
+        for fl in glob.glob(filename + '-cellinfo-%03d-rank*.dat' % index):
+            os.remove(fl)
+        for fl in glob.glob(filename + '-darcyvel-%03d-rank*.dat' % index):
+            os.remove(fl)
     try:
-        os.symlink("darcyvel_%03d.dat"%index_finish,"darcyvel.dat")
+        os.symlink("darcyvel_%03d.dat" % index_finish, "darcyvel.dat")
     except:
         print("--> WARNING!!! Unable to create symlink for darcyvel.dat")
     try:
-        os.symlink("cellinfo_%03d.dat"%index_finish,"cellinfo.dat")
+        os.symlink("cellinfo_%03d.dat" % index_finish, "cellinfo.dat")
     except:
         print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
 
-    
+
 def inp2vtk_python(self):
     """ Using Python VTK library, convert inp file to VTK file.  
 
@@ -578,7 +600,7 @@ def inp2vtk_python(self):
     """
     import pyvtk as pv
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -587,7 +609,7 @@ def inp2vtk_python(self):
         inp_file = self.inp_file
 
     if inp_file == '':
-        error='ERROR: Please provide inp filename!'
+        error = 'ERROR: Please provide inp filename!'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -625,9 +647,14 @@ def inp2vtk_python(self):
                 elem_list_tetra.append([int(i) - 1 for i in line])
 
     print('--> Writing inp data to vtk format')
-    vtk = pv.VtkData(pv.UnstructuredGrid(coord, tetra=elem_list_tetra, triangle=elem_list_tri),'Unstructured pflotran grid')
-    
+    vtk = pv.VtkData(
+        pv.UnstructuredGrid(coord,
+                            tetra=elem_list_tetra,
+                            triangle=elem_list_tri),
+        'Unstructured pflotran grid')
+
     vtk.tofile(vtk_file)
+
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Replace CELL_DATA with POINT_DATA in the VTK output.
@@ -649,7 +676,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     print('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
-        error="ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -659,7 +686,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
         self.inp2vtk_python()
 
     grid_file = self.vtk_file
-    
+
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
     with open(grid_file, 'r') as f:
         grid = f.readlines()[3:]
@@ -672,10 +699,12 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     for file in files:
         with open(file, 'r') as f:
             pflotran_out = f.readlines()[4:]
-        pflotran_out = [w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out]
-        header = ['# vtk DataFile Version 2.0\n',
-                  'PFLOTRAN output\n',
-                  'ASCII\n']
+        pflotran_out = [
+            w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out
+        ]
+        header = [
+            '# vtk DataFile Version 2.0\n', 'PFLOTRAN output\n', 'ASCII\n'
+        ]
         filename = out_dir + '/' + file
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
@@ -692,5 +721,3 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
                 f.write(line)
         os.remove(file)
     print('--> Parsing PFLOTRAN output complete')
-
-

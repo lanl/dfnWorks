@@ -1,5 +1,6 @@
 """ Tools for dfnworks data """
 
+
 class Frozen(object):
     """
     Prevents adding new attributes to classes once _freeze() is called on the class.
@@ -29,7 +30,9 @@ class Frozen(object):
         if not self.frozen or hasattr(self, key):
             object.__setattr__(self, key, value)
         else:
-            raise AttributeError(str(key) + ' is not a valid attribute for ' + self._class__.__name__)
+            raise AttributeError(
+                str(key) + ' is not a valid attribute for ' +
+                self._class__.__name__)
 
     def _freeze(self):
         """
@@ -42,4 +45,3 @@ class Frozen(object):
         Allows adding new attributes to classes.
         """
         self.frozen = False
-

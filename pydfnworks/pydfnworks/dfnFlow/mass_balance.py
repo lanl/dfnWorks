@@ -8,8 +8,7 @@
 
 import numpy as np
 import glob
-from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file 
-
+from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
 
 __author__ = 'Satish Karra'
 __email__ = 'satkarra@lanl.gov'
@@ -31,8 +30,9 @@ def get_domain():
     -----
         parse_params_file() is in mesh_dfn_helper.py
 '''
-    _,_,_,_,domain = parse_params_file(quite=True)
+    _, _, _, _, domain = parse_params_file(quite=True)
     return domain
+
 
 def parse_pflotran_input(pflotran_input_file):
     ''' Walk through PFLOTRAN input file and find inflow boundary, inflow and outflow pressure, and direction of flow
@@ -67,7 +67,7 @@ def parse_pflotran_input(pflotran_input_file):
             if outflow_found:
                 if "REGION" in line:
                     outflow = line.split()[-1]
-                    outflow_found = False 
+                    outflow_found = False
             if "BOUNDARY_CONDITION INFLOW" in line:
                 inflow_found = True
             if inflow_found:
@@ -82,36 +82,36 @@ def parse_pflotran_input(pflotran_input_file):
         outflow_found = False
 
         for line in fp.readlines():
-            if "REGION "+inflow in line:
+            if "REGION " + inflow in line:
                 inflow_name_found = True
             if inflow_name_found:
                 if "FILE" in line:
                     inflow_file = line.split()[-1]
                     inflow_name_found = False
-            if "FLOW_CONDITION "+inflow in line:
+            if "FLOW_CONDITION " + inflow in line:
                 inflow_found = True
-            if inflow_found: 
+            if inflow_found:
                 if "PRESSURE " in line:
                     if "dirichlet" not in line:
                         tmp = line.split()[-1]
                         tmp = tmp.split('d')
-                        inflow_pressure = float(tmp[0])*10**float(tmp[1])
+                        inflow_pressure = float(tmp[0]) * 10**float(tmp[1])
                         inflow_found = False
 
-            if "REGION "+outflow in line:
+            if "REGION " + outflow in line:
                 outflow_name_found = True
             if outflow_name_found:
                 if "FILE" in line:
                     outflow_file = line.split()[-1]
                     outflow_name_found = False
-            if "FLOW_CONDITION "+ outflow in line:
+            if "FLOW_CONDITION " + outflow in line:
                 outflow_found = True
-            if outflow_found: 
+            if outflow_found:
                 if "PRESSURE " in line:
                     if "dirichlet" not in line:
                         tmp = line.split()[-1]
                         tmp = tmp.split('d')
-                        outflow_pressure = float(tmp[0])*10**float(tmp[1])
+                        outflow_pressure = float(tmp[0]) * 10**float(tmp[1])
                         outflow_found = False
 
     if inflow_file == 'pboundary_left_w.ex' or inflow_file == 'pboundary_right_e.ex':
@@ -121,12 +121,13 @@ def parse_pflotran_input(pflotran_input_file):
     if inflow_file == 'pboundary_top.ex' or inflow_file == 'pboundary_bottom.ex':
         direction = 'z'
 
-    print("Inflow file: %s"%inflow_file)
-    print("Inflow Pressure %e"%inflow_pressure)
-    print("Outflow Pressure %e"%outflow_pressure)
-    print("Primary Flow Direction : %s"%direction)
+    print("Inflow file: %s" % inflow_file)
+    print("Inflow Pressure %e" % inflow_pressure)
+    print("Outflow Pressure %e" % outflow_pressure)
+    print("Primary Flow Direction : %s" % direction)
 
     return inflow_pressure, outflow_pressure, inflow_file, direction
+
 
 def flow_rate(darcy_vel_file, boundary_file):
     '''Calculates the flow rate across the inflow boundary
@@ -148,11 +149,11 @@ def flow_rate(darcy_vel_file, boundary_file):
     Notes
     -----
     None
-''' 
+'''
     # Calculate the mass flow rate
-    mass_rate = 0.0 #kg/s
-    volume_rate = 0.0 #m^3/s
-    
+    mass_rate = 0.0  #kg/s
+    volume_rate = 0.0  #m^3/s
+
     dat_boundary = np.genfromtxt(boundary_file, skip_header=1)
     dat = np.genfromtxt(darcy_vel_file)
     for cell in dat_boundary[:, 0]:
@@ -167,11 +168,11 @@ def flow_rate(darcy_vel_file, boundary_file):
                 if (cell_up == int(cell)):
                     mass_rate = mass_flux * area * \
                     density + mass_rate  # in kg/s
-                    volume_rate = mass_flux * area + volume_rate #in m3/s
+                    volume_rate = mass_flux * area + volume_rate  #in m3/s
                 else:
                     mass_rate = - mass_flux * area * \
                     density + mass_rate  # in kg/s
-                    volume_rate = - mass_flux * area + volume_rate #in m3/s
+                    volume_rate = -mass_flux * area + volume_rate  #in m3/s
                 #print cell_up, cell_down, mass_flux, density, area, mass_rate, volume_rate
         if (np.any(dat[:, 1] == int(cell))):
             ids = np.where(dat[:, 1] == int(cell))[0]
@@ -184,15 +185,17 @@ def flow_rate(darcy_vel_file, boundary_file):
                 if (cell_up == int(cell)):
                     mass_rate = mass_flux * area * \
                     density + mass_rate  # in kg/s
-                    volume_rate = mass_flux * area + volume_rate #in m3/s
+                    volume_rate = mass_flux * area + volume_rate  #in m3/s
                 else:
                     mass_rate = - mass_flux * area * \
                     density + mass_rate  # in kg/s
-                    volume_rate = - mass_flux * area + volume_rate #in m3/s
+                    volume_rate = -mass_flux * area + volume_rate  #in m3/s
                 #print cell_up, cell_down, mass_flux, density, area, mass_rate, volume_rate
     return mass_rate, volume_rate
 
-def dump_effective_perm(local_jobname,mass_rate,volume_rate,domain,direction, inflow_pressure, outflow_pressure):
+
+def dump_effective_perm(local_jobname, mass_rate, volume_rate, domain,
+                        direction, inflow_pressure, outflow_pressure):
     '''Compute the effective permeability of the DFN and write it to screen and to the file local_jobname_effective_perm.dat
 
     Parameters
@@ -221,51 +224,64 @@ def dump_effective_perm(local_jobname,mass_rate,volume_rate,domain,direction, in
     Information is written into (local_jobname)_effective_perm.txt
 '''
 
-        
-    Lm3 = domain['x']*domain['y']*domain['z']  #L/m^3
+    Lm3 = domain['x'] * domain['y'] * domain['z']  #L/m^3
     # if flow is in x direction, cross section is domain['y']*domain['z']
     if direction == 'x':
-        surface = domain['y']*domain['z']
-        L = domain['x'] 
+        surface = domain['y'] * domain['z']
+        L = domain['x']
     if direction == 'y':
-        surface = domain['x']*domain['z'] 
-        L = domain['y'] 
+        surface = domain['x'] * domain['z']
+        L = domain['y']
     if direction == 'z':
-        surface = domain['x']*domain['y'] 
-        L = domain['z'] 
+        surface = domain['x'] * domain['y']
+        L = domain['z']
     # Print the calculated mass flow rate in kg/s
-    mu = 8.9e-4 #dynamic viscosity of water at 20 degrees C, Pa*s
-    spery = 3600.*24.*365.25 #seconds per year
-    # compute pressure gradient  
-    pgrad = (inflow_pressure - outflow_pressure)/L 
-    
+    mu = 8.9e-4  #dynamic viscosity of water at 20 degrees C, Pa*s
+    spery = 3600. * 24. * 365.25  #seconds per year
+    # compute pressure gradient
+    pgrad = (inflow_pressure - outflow_pressure) / L
+
     print("\n\nEffective Permeabilty Properties\n")
-    fp=open(local_jobname+'_effective_perm.txt', "w")
+    fp = open(local_jobname + '_effective_perm.txt', "w")
     print('The mass flow rate [kg/s]: ' + str(mass_rate))
-    fp.write('The mass flow rate [kg/s]: %e\n'%(mass_rate))
+    fp.write('The mass flow rate [kg/s]: %e\n' % (mass_rate))
     print('The volume flow rate [m3/s]: ' + str(volume_rate))
-    fp.write('The volume flow rate [m3/s]: %s\n'%(volume_rate))
-    q = volume_rate/surface #darcy flux over entire face m3/m2/s
+    fp.write('The volume flow rate [m3/s]: %s\n' % (volume_rate))
+    q = volume_rate / surface  #darcy flux over entire face m3/m2/s
 
     if direction == 'x':
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e'%(domain['y'],domain['z'],q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n'%(domain['y'],domain['z'],q))
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e'%(domain['y'],domain['z'],spery*q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n'%(domain['y'],domain['z'],spery*q))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e' %
+              (domain['y'], domain['z'], q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n' %
+                 (domain['y'], domain['z'], q))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e' %
+              (domain['y'], domain['z'], spery * q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n' %
+                 (domain['y'], domain['z'], spery * q))
 
     if direction == 'y':
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e'%(domain['x'],domain['z'],q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n'%(domain['x'],domain['z'],q))
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e'%(domain['x'],domain['z'],spery*q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n'%(domain['x'],domain['z'],spery*q))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e' %
+              (domain['x'], domain['z'], q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n' %
+                 (domain['x'], domain['z'], q))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e' %
+              (domain['x'], domain['z'], spery * q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n' %
+                 (domain['x'], domain['z'], spery * q))
 
     if direction == 'z':
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e'%(domain['x'],domain['y'],q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n'%(domain['x'],domain['y'],q))
-        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e'%(domain['x'],domain['y'],spery*q))
-        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n'%(domain['x'],domain['y'],spery*q))
-    print('The effective permeability of the domain [m2]: ' + str(q*mu/pgrad))
-    fp.write('The effective permeability of the domain [m2]: %e\n' %(q*mu/pgrad))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e' %
+              (domain['x'], domain['y'], q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/s]: %e\n' %
+                 (domain['x'], domain['y'], q))
+        print('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e' %
+              (domain['x'], domain['y'], spery * q))
+        fp.write('The darcy flow rate over %f x %f m2 area [m3/m2/y]: %e\n' %
+                 (domain['x'], domain['y'], spery * q))
+    print('The effective permeability of the domain [m2]: ' +
+          str(q * mu / pgrad))
+    fp.write('The effective permeability of the domain [m2]: %e\n' %
+             (q * mu / pgrad))
     fp.close()
 
 
@@ -290,14 +306,18 @@ def effective_perm(self):
 '''
     print("\n--> Computing Effective Permeability of Block")
     if not self.flow_solver == "PFLOTRAN":
-        print("Incorrect flow solver selected. Cannot compute effective permeability")
+        print(
+            "Incorrect flow solver selected. Cannot compute effective permeability"
+        )
         return 0
 
-    darcy_vel_file= 'darcyvel.dat' 
-    pflotran_input_file = self.local_dfnFlow_file 
-    
-    inflow_pressure, outflow_pressure,boundary_file,direction = parse_pflotran_input(pflotran_input_file)
+    darcy_vel_file = 'darcyvel.dat'
+    pflotran_input_file = self.local_dfnFlow_file
+
+    inflow_pressure, outflow_pressure, boundary_file, direction = parse_pflotran_input(
+        pflotran_input_file)
     domain = get_domain()
     mass_rate, volume_rate = flow_rate(darcy_vel_file, boundary_file)
-    dump_effective_perm(self.local_jobname, mass_rate, volume_rate, domain, direction, inflow_pressure, outflow_pressure)
-    print("\n--> Complete\n\n") 
+    dump_effective_perm(self.local_jobname, mass_rate, volume_rate, domain,
+                        direction, inflow_pressure, outflow_pressure)
+    print("\n--> Complete\n\n")
