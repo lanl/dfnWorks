@@ -4,7 +4,7 @@
 
 /*
     Exponential Distribution Class
-    
+
     This class was created to allow the user to specify
     the min and max values received from the exponential
     distrubution function.
@@ -31,7 +31,7 @@ ExpDist::ExpDist(double maxDecimal, std::mt19937_64 &_generator) : generator(_ge
     Arg 2: Maximum bound
     Return: Random double on [min, max] */
 double ExpDist::unifRandom(double min, double max) {
-    return ((max-min) *  double(generator())/generator.max() + min);
+    return ((max - min) *  double(generator()) / generator.max() + min);
 }
 
 
@@ -40,24 +40,22 @@ double ExpDist::unifRandom(double min, double max) {
 // Overloaded Function
 /*! Returns a random number from the distribution with a random variable
     given as an argument.
-    Arg 1: Lambda 
+    Arg 1: Lambda
     Arg 2: Random variable between 0 and 1
     Return: Random number from exponential distribution described by 'lambda' */
 double ExpDist::getValue(double lambda, double rv) {
+    if (rv > 1) {
+        std::cout << "ERROR: Attempted to input random value of greater than 1 to the exponential "
+                  << "distribution class's getValue() function. Input must be on [0,1] interval.\n";
+        exit(1);
+    }
     
-    if (rv > 1) { 
-       std::cout << "ERROR: Attempted to input random value of greater than 1 to the exponential " 
-                 << "distribution class's getValue() function. Input must be on [0,1] interval.\n";
-       exit(1);
-   }
-    
-   // Using inverse CDF
-   if (rv != 1) { 
-       return  -std::log(1-rv)/lambda;
-   }
-   else {
-       return -std::log(1-maxInput)/lambda;
-   }
+    // Using inverse CDF
+    if (rv != 1) {
+        return  -std::log(1 - rv) / lambda;
+    } else {
+        return -std::log(1 - maxInput) / lambda;
+    }
 }
 
 
@@ -65,38 +63,37 @@ double ExpDist::getValue(double lambda, double rv) {
 /***************************************************************************/
 // Overloaded Function
 /*! Generates a random value from the exponental distribution between the user's
-    defined minimum and maximum range. 
+    defined minimum and maximum range.
 
     minVal and maxVal are the inputs needed to produce the user's minimum and maximum
     fracture sizes. minVal and maxVal are initialized within the Distributions constructor
-    and saved in the Shape structure. Using a uniform random variable with range 
-    [minVal, maxVal], the exponential distrubition will always return a value 
+    and saved in the Shape structure. Using a uniform random variable with range
+    [minVal, maxVal], the exponential distrubition will always return a value
     within that range.
 
     Arg 1: Exponential Lambda (1/mean)
-    Arg 2: Minimum input (between 0 and 1) 
-    Arg 3: Maximum input (between 0 and 1) 
+    Arg 2: Minimum input (between 0 and 1)
+    Arg 3: Maximum input (between 0 and 1)
     Return: Random number from exponential distribution described by 'lambda'
             and sampled with random variable between minInput and maxVal */
 double ExpDist::getValue(double lambda, double minVal, double maxVal) {
     // Uniform distrubution on [minVal, maxVal)
-    if ( maxVal > 1 || minVal > 1) { 
+    if ( maxVal > 1 || minVal > 1) {
         // Passing 1 into exp. distribution will reuturn inf
-        std::cout << "ERROR: Passed min, or max, input value of greater than 1 to getValue()" 
+        std::cout << "ERROR: Passed min, or max, input value of greater than 1 to getValue()"
                   << " in expDist.cpp. Input must be in [0,1] interval.\n";
         exit(1);
     }
-
-   double randVar = unifRandom(minVal, maxVal);
- 
-   // Using inverse CDF
-   // If randVar is 1, this function returns inf
-   if (randVar != 1) { 
-       return  -std::log(1-randVar)/lambda;
-   }
-   else {
-       return -std::log(1-maxInput)/lambda;
-   }          
+    
+    double randVar = unifRandom(minVal, maxVal);
+    
+    // Using inverse CDF
+    // If randVar is 1, this function returns inf
+    if (randVar != 1) {
+        return  -std::log(1 - randVar) / lambda;
+    } else {
+        return -std::log(1 - maxInput) / lambda;
+    }
 }
 
 
@@ -106,14 +103,14 @@ double ExpDist::getValue(double lambda, double minVal, double maxVal) {
     (What the inverse CDF returns when given 0.9999... to maximum precision.
     Inputing 1.0 into the distribution results in 'inf'.)
 
-    Used to print warning to user if their desired maximum is larger than the 
+    Used to print warning to user if their desired maximum is larger than the
     machine is able to produce.
 
     Arg 1: Lambda
     Return: Maximum value possible due to machine precision issues
             before reutrning inf */
 double ExpDist::getMaxValue(double lambda) {
-        return -std::log(1-maxInput)/lambda;
+    return -std::log(1 - maxInput) / lambda;
 }
 
 
@@ -127,7 +124,7 @@ double ExpDist::getMaxValue(double lambda) {
     Arg 2: Lambda
     Return: The necessary input to getValue() to produce a value of 'output' */
 double ExpDist::computeInput(double output, double lambda) {
-   return 1.0 - std::exp(-lambda*output);
+    return 1.0 - std::exp(-lambda * output);
 }
 
 
