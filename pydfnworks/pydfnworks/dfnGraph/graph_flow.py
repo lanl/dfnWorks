@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import sys
 import scipy.sparse
+
 # pydfnworks modules
 from pydfnworks.dfnGraph import dfn2graph as d2g
 
@@ -86,10 +87,11 @@ def prepare_graph_with_attributes(inflow, outflow):
 
     Gtilde.remove_node('s')
     Gtilde.remove_node('t')
-    sys_size = Gtilde.number_of_nodes()
 
-    mapping = dict(zip(Gtilde, range(0, sys_size)))
-    Gtilde = nx.relabel_nodes(Gtilde, mapping, copy=False)
+    Gtilde = nx.convert_node_labels_to_integers(Gtilde,
+                                                first_label=0,
+                                                ordering="sorted",
+                                                label_attribute="old_label")
 
     return Gtilde
 
