@@ -15,7 +15,7 @@ SIMULATION
 #  CHECKPOINT
 #    TIMES s 100.0d0
 #  /
-  RESTART dfn_explicit-100.0000s.chk 0.
+  RESTART dfn_explicit-restart.h5 0.
 END
 SUBSURFACE
 
