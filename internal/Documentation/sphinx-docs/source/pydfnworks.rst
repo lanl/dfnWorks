@@ -63,6 +63,15 @@ Mesh helper methods
 .. automodule:: pydfnworks.dfnGen.mesh_dfn_helper
     :members:
 
+
+Creating an upscaled mesh of the DFN
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.map2continuum
+    :members:
+
+.. automodule:: pydfnworks.dfnGen.upscale
+    :members:
+
 dfnFlow
 --------
 
