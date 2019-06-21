@@ -93,7 +93,7 @@ def define_paths():
             'PETSC_DIR': '/Users/jhyman/src/petsc/',
             'PETSC_ARCH': '/arch-darwin-c-debug/',
             'PFLOTRAN_EXE': '/Users/jhyman/src/pflotran/src/pflotran/pflotran',
-            'PYTHON_EXE': '/Users/jhyman/anaconda3/bin/python',
+            'PYTHON_EXE': '/anaconda3/bin/python',
             'LAGRIT_EXE': '/Users/jhyman/src/LaGriT/src/lagrit',
             'FEHM_EXE': '/Users/jhyman/bin/xfehm/'
         }

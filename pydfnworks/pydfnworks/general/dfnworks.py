@@ -48,6 +48,9 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
 
+    from pydfnworks.dfnGen.map2continuum import map_to_continuum
+    from pydfnworks.dfnGen.upscale import upscale 
+
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver, uncorrelated
