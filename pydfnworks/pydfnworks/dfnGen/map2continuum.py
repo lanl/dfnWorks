@@ -47,7 +47,9 @@ def map_to_continuum(self, l, orl):
     print('=' * 80)
 
     if type(orl) is not int or orl < 1:
-        sys.exit("ERROR: orl must be positive integer. Exiting")
+        error = "ERROR: orl must be positive integer. Exiting"
+        sys.stderr(error)
+        sys.exit(1)
 
     # Read in normal vectors and points from dfnWorks output
     normal_vectors = np.genfromtxt('normal_vectors.dat', delimiter=' ')
@@ -75,7 +77,9 @@ def map_to_continuum(self, l, orl):
     nz = domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
-        sys.exit("ERROR: Number of elements > 1e8. Exiting")
+        error = "ERROR: Number of elements > 1e8. Exiting"
+        sys.stderr(error)
+        sys.exit(1)
 
     print("\nCreating *.lgi files for octree mesh\n")
     try:
