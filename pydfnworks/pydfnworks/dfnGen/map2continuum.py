@@ -48,7 +48,7 @@ def map_to_continuum(self, l, orl):
 
     if type(orl) is not int or orl < 1:
         error = "ERROR: orl must be positive integer. Exiting"
-        sys.stderr(error)
+        sys.stderr.write(error)
         sys.exit(1)
 
     # Read in normal vectors and points from dfnWorks output
@@ -61,7 +61,7 @@ def map_to_continuum(self, l, orl):
                 new.write(line)
     points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
 
-    num_poly, _, _, _, domain = mh.parse_params_file()
+    num_poly, _, _, _, domain = mh.parse_params_file(quite=True)
 
     # Extent of domain
     x0 = 0 - (domain['x'] / 2.0)
@@ -78,7 +78,7 @@ def map_to_continuum(self, l, orl):
 
     if nx * ny * nz > 1e8:
         error = "ERROR: Number of elements > 1e8. Exiting"
-        sys.stderr(error)
+        sys.stderr.write(error)
         sys.exit(1)
 
     print("\nCreating *.lgi files for octree mesh\n")
@@ -668,7 +668,13 @@ def lagrit_run():
     """
     # Run LaGriT
     os.chdir('octree/')
-    os.symlink("../reduced_mesh.inp", "reduced_mesh.inp")
+    if os.path.isfile("../reduced_mesh.inp"):
+        os.symlink("../reduced_mesh.inp", "reduced_mesh.inp")
+    else:
+        error = "ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     cmd = os.environ['LAGRIT_EXE'] + '< driver_octree.lgi'
     subprocess.call(cmd, shell=True)
 

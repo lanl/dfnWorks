@@ -49,7 +49,7 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
 
     from pydfnworks.dfnGen.map2continuum import map_to_continuum
-    from pydfnworks.dfnGen.upscale import upscale 
+    from pydfnworks.dfnGen.upscale import upscale
 
     # dfnFlow
     import pydfnworks.dfnFlow

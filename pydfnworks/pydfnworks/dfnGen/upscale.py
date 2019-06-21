@@ -16,6 +16,7 @@ import time
 import math as m
 import glob
 
+
 def upscale(self, mat_perm, mat_por):
     """ Generate permeabilities and porosities based on output of map2continuum.
 
@@ -276,18 +277,12 @@ def upscale(self, mat_perm, mat_por):
 
         upscale_cleanup()
 
+
 def upscale_cleanup():
-    files_to_remove = ["area*", "build*", "driver*", "ex*", "frac*", "hex*", 
-                      "intersect*", "log*", "out*", "parame*", "remove*", 
-                      "time*", "tmp*"]  
+    files_to_remove = [
+        "area*", "build*", "driver*", "ex*", "frac*", "hex*", "intersect*",
+        "log*", "out*", "parame*", "remove*", "time*", "tmp*"
+    ]
     for name in files_to_remove:
         for fl in glob.glob(name):
             os.remove(fl)
-
-
-
-
-
-
-
-
