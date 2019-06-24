@@ -1,0 +1,156 @@
+\hypertarget{_rotate_fracture_8c}{}\section{/\+Users/nataliia/\+Desktop/dfn\+Gen-\/docs/\+Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\+Rotate\+Fracture.c File Reference}
+\label{_rotate_fracture_8c}\index{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/RotateFracture.c@{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/RotateFracture.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$search.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Func\+Def.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_rotate_fracture_8c_a544594dde0a4f38fb12c863f7c395fd6}{Convertto2d}} ()
+\item 
+void \mbox{\hyperlink{_rotate_fracture_8c_ac21ac13cf8f1cb96197713aa59131247}{Convertto3d}} ()
+\item 
+void \mbox{\hyperlink{_rotate_fracture_8c_a6ac46448269e65b5766a3e49942c28e7}{Change\+Fracture}} (int cell\+\_\+win)
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}} \mbox{\hyperlink{_rotate_fracture_8c_aa8cd5b8e207b47b4a0ad1052040d16e9}{Calculate\+Position3D}} ()
+\item 
+void \mbox{\hyperlink{_rotate_fracture_8c_aa32bb7cee88e4c860b955eb1a3be9b62}{Velocity3D}} ()
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}} \mbox{\hyperlink{_rotate_fracture_8c_a8de9963c8d396e510b962001d412fc37}{Calculate\+Velocity3D}} ()
+\item 
+void \mbox{\hyperlink{_rotate_fracture_8c_a1991461f9a5546ec57dc497b6bdcae14}{Coordinations2D}} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_rotate_fracture_8c_aa8cd5b8e207b47b4a0ad1052040d16e9}\label{_rotate_fracture_8c_aa8cd5b8e207b47b4a0ad1052040d16e9}} 
+\index{RotateFracture.c@{RotateFracture.c}!CalculatePosition3D@{CalculatePosition3D}}
+\index{CalculatePosition3D@{CalculatePosition3D}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{CalculatePosition3D()}{CalculatePosition3D()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structposit3d}{posit3d}} Calculate\+Position3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function calculates 3D coordinates of current particle\textquotesingle{}s position at 2D fracture plane 
+
+Definition at line 213 of file Rotate\+Fracture.\+c.
+
+
+
+References vertex\+::coord, vertex\+::coord\+\_\+xy, posit3d\+::cord3, material\+::firstnode, contam\+::fracture, fracture, node, np, particle, contam\+::position, and material\+::rot3mat.
+
+
+
+Referenced by Change\+Fracture().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_a8de9963c8d396e510b962001d412fc37}\label{_rotate_fracture_8c_a8de9963c8d396e510b962001d412fc37}} 
+\index{RotateFracture.c@{RotateFracture.c}!CalculateVelocity3D@{CalculateVelocity3D}}
+\index{CalculateVelocity3D@{CalculateVelocity3D}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{CalculateVelocity3D()}{CalculateVelocity3D()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structposit3d}{posit3d}} Calculate\+Velocity3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function converts particle\textquotesingle{}s 2D velocity vector to 3D velocity vector 
+
+Definition at line 335 of file Rotate\+Fracture.\+c.
+
+
+
+References posit3d\+::cord3, contam\+::fracture, fracture, np, particle, material\+::rot3mat, and contam\+::velocity.
+
+
+
+Referenced by Calculate\+Lagrangian().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_a6ac46448269e65b5766a3e49942c28e7}\label{_rotate_fracture_8c_a6ac46448269e65b5766a3e49942c28e7}} 
+\index{RotateFracture.c@{RotateFracture.c}!ChangeFracture@{ChangeFracture}}
+\index{ChangeFracture@{ChangeFracture}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{ChangeFracture()}{ChangeFracture()}}
+{\footnotesize\ttfamily void Change\+Fracture (\begin{DoxyParamCaption}\item[{int}]{cell\+\_\+win }\end{DoxyParamCaption})}
+
+This function recalculates particles coordinations at intersection lines. Particles XY coordinations at one fracture are recalculated to 3D positions and then new XY coordinations of an intersecting fracture are defined. 
+
+Definition at line 183 of file Rotate\+Fracture.\+c.
+
+
+
+References Calculate\+Position3\+D(), contam\+::cell, cell, element\+::fracture, contam\+::fracture, fracture, np, particle, contam\+::position, and material\+::rot2mat.
+
+
+
+Referenced by Across\+Intersection(), and In\+Out\+Flow\+Cell().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_a544594dde0a4f38fb12c863f7c395fd6}\label{_rotate_fracture_8c_a544594dde0a4f38fb12c863f7c395fd6}} 
+\index{RotateFracture.c@{RotateFracture.c}!Convertto2d@{Convertto2d}}
+\index{Convertto2d@{Convertto2d}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{Convertto2d()}{Convertto2d()}}
+{\footnotesize\ttfamily void Convertto2d (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function uses rotation matrix and fracture\textquotesingle{}s normal vector to rotate fracture from its position in 3D to XY plane if node belongs to intersection, belongs to two fractures 
+
+Definition at line 17 of file Rotate\+Fracture.\+c.
+
+
+
+References vertex\+::coord, vertex\+::coord\+\_\+xy, vertex\+::fracture, fracture, nfract, nnodes, node, material\+::nvect\+\_\+xy, pi, material\+::rot2mat, material\+::rot3mat, and material\+::theta.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_ac21ac13cf8f1cb96197713aa59131247}\label{_rotate_fracture_8c_ac21ac13cf8f1cb96197713aa59131247}} 
+\index{RotateFracture.c@{RotateFracture.c}!Convertto3d@{Convertto3d}}
+\index{Convertto3d@{Convertto3d}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{Convertto3d()}{Convertto3d()}}
+{\footnotesize\ttfamily void Convertto3d (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function uses rotation matrix to rotate fracture from its position in XY plane to 3D domain 
+
+Definition at line 130 of file Rotate\+Fracture.\+c.
+
+
+
+References fracture, nfract, material\+::nvect\+\_\+z, pi, material\+::rot3mat, and material\+::theta.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_a1991461f9a5546ec57dc497b6bdcae14}\label{_rotate_fracture_8c_a1991461f9a5546ec57dc497b6bdcae14}} 
+\index{RotateFracture.c@{RotateFracture.c}!Coordinations2D@{Coordinations2D}}
+\index{Coordinations2D@{Coordinations2D}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{Coordinations2D()}{Coordinations2D()}}
+{\footnotesize\ttfamily void Coordinations2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function outputs 2D coordinations of nodes\+: every fracture into separate file. Those files are used as input to gstat for length correlation of aperture. 
+
+Definition at line 360 of file Rotate\+Fracture.\+c.
+
+
+
+References vertex\+::coord\+\_\+xy, fracture, nfract, nnodes, node, and Open\+File().
+
+\mbox{\Hypertarget{_rotate_fracture_8c_aa32bb7cee88e4c860b955eb1a3be9b62}\label{_rotate_fracture_8c_aa32bb7cee88e4c860b955eb1a3be9b62}} 
+\index{RotateFracture.c@{RotateFracture.c}!Velocity3D@{Velocity3D}}
+\index{Velocity3D@{Velocity3D}!RotateFracture.c@{RotateFracture.c}}
+\subsubsection{\texorpdfstring{Velocity3D()}{Velocity3D()}}
+{\footnotesize\ttfamily void Velocity3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Recalculates 2D velocities at XY fracture plane to 3D velocties in the simulation domain. This procedure is not used for particle tracking, but can be used for velocity field visualization. 
+
+Definition at line 246 of file Rotate\+Fracture.\+c.
+
+
+
+References posit3d\+::cord3, vertex\+::fracture, fracture, maindir, nnodes, node, Open\+File(), material\+::rot3mat, and vertex\+::velocity.
+
+
+
+Referenced by main().
+

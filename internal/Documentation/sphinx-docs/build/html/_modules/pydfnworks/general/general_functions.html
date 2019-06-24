@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -182,19 +183,20 @@
 <span class="sd">    --------- </span>
 <span class="sd">    While this function is working, the current formulation is not robust through the entire workflow</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">run_time_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="o">+</span><span class="s2">&quot;_run_time.txt&quot;</span>
+    <span class="n">run_time_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;_run_time.txt&quot;</span>
     <span class="c1"># Check if time file exists, if not create it</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Runs times for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
     <span class="c1"># Write Time</span>
     <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="mf">60.0</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span><span class="o">+</span><span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span><span class="o">+</span><span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> minutes</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="mf">60.0</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> minutes</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="print_run_time"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.print_run_time">[docs]</a><span class="k">def</span> <span class="nf">print_run_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Read in run times from file and and print to screen with percentages</span>
@@ -212,8 +214,8 @@
 <span class="sd">    --------</span>
 <span class="sd">    This will dump out all values in the run file, not just those from the most recent run</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">run_time_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="o">+</span><span class="s2">&quot;_run_time.txt&quot;</span>
-    <span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">run_time_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;_run_time.txt&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
     <span class="n">unit</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="s1">&#39;minutes&#39;</span><span class="p">:</span>
@@ -222,23 +224,22 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Runs times for &#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">percent</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">name</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)):</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="s1">&#39;minutes&#39;</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">*=</span> <span class="mf">60.0</span>
-        <span class="n">percent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">total</span><span class="p">))</span>
+        <span class="n">percent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="n">total</span><span class="p">))</span>
         <span class="n">name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">--&gt; Percent if total </span><span class="si">%0.2f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">percent</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">--&gt; Percent if total </span><span class="si">%0.2f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">percent</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="c1">#print(&quot;Primary Function Percentages&quot;)</span>
     <span class="c1">#for i in range(1,len(f) - 1):</span>
     <span class="c1">#    if name[i-1] == &#39; dfnGen &#39; or name[i-1] == &#39; dfnFlow &#39; or name[i-1] == &#39; dfnTrans &#39;:</span>
-    <span class="c1">#        tmp = int(percent[i-1])/10    </span>
+    <span class="c1">#        tmp = int(percent[i-1])/10</span>
     <span class="c1">#        print(name[i-1]+&quot;\t&quot;+&quot;*&quot;tmp)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
 </pre></div>
 
            </div>

@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -170,11 +171,18 @@
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">sort</span>
 <span class="c1"># pydfnworks Modules</span>
-<span class="kn">import</span> <span class="nn">pydfnworks.dfnGen.mesh_dfn_helper</span> <span class="k">as</span> <span class="nn">mh</span> 
-<span class="kn">import</span> <span class="nn">pydfnworks.dfnGen.lagrit_scripts</span> <span class="k">as</span> <span class="nn">lagrit</span> 
-<span class="kn">import</span> <span class="nn">pydfnworks.dfnGen.run_meshing</span> <span class="k">as</span> <span class="nn">run_mesh</span> 
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen</span> <span class="k">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen</span> <span class="k">import</span> <span class="n">lagrit_scripts</span> <span class="k">as</span> <span class="n">lagrit</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen</span> <span class="k">import</span> <span class="n">run_meshing</span> <span class="k">as</span> <span class="n">run_mesh</span>
 
-<div class="viewcode-block" id="mesh_network"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.mesh_network">[docs]</a><span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">uniform_mesh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">visual_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mesh_network"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.mesh_network">[docs]</a><span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">uniform_mesh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">production_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">refine_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">visual_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Mesh fracture network using LaGriT</span>
 
 <span class="sd">    Parameters</span>
@@ -204,38 +212,42 @@
 <span class="sd">    2. All fractures in self.prune_file must intersect at least 1 other fracture</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meshing Network Using LaGriT : Starting&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-   
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">uniform_mesh</span><span class="p">:</span>
-        <span class="n">slope</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Setting slope = 0, results in a uniform mesh</span>
-     
+        <span class="n">slope</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Setting slope = 0, results in a uniform mesh</span>
+
     <span class="k">if</span> <span class="n">prune</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR!! User requested pruning in meshing but </span><span class="se">\</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!! User requested pruning in meshing but </span><span class="se">\</span>
 <span class="s2">did not provide file of fractures to keep.</span><span class="se">\n</span><span class="s2">Exiting program.&quot;</span>
+
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">mh</span><span class="o">.</span><span class="n">create_mesh_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">params_visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">()</span>
+        <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">params_visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">(</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">visual_mode</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">visual_mode</span> <span class="o">=</span> <span class="n">params_visual_mode</span> 
+            <span class="n">visual_mode</span> <span class="o">=</span> <span class="n">params_visual_mode</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading list of fractures to remain in network from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading list of fractures to remain in network from </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">)</span>
         <span class="n">fracture_list</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">genfromtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">fracture_list</span><span class="p">)</span>
-        
-        <span class="n">lagrit</span><span class="o">.</span><span class="n">edit_intersection_files</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">fracture_list</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="n">lagrit</span><span class="o">.</span><span class="n">edit_intersection_files</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">fracture_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
         <span class="n">num_poly</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fracture_list</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">params_visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">()</span>
+        <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">params_visual_mode</span><span class="p">,</span> <span class="n">dudded_points</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">(</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">visual_mode</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">visual_mode</span> <span class="o">=</span> <span class="n">params_visual_mode</span> 
+            <span class="n">visual_mode</span> <span class="o">=</span> <span class="n">params_visual_mode</span>
         <span class="n">fracture_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_poly</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="c1"># if number of fractures is greater than number of CPUS, </span>
+    <span class="c1"># if number of fractures is greater than number of CPUS,</span>
     <span class="c1"># only use num_poly CPUs. This change is only made here, so ncpus</span>
     <span class="c1"># is still used in PFLOTRAN</span>
     <span class="n">ncpu</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">)</span>
@@ -245,32 +257,33 @@
     <span class="n">failure</span> <span class="o">=</span> <span class="n">run_mesh</span><span class="o">.</span><span class="n">mesh_fractures_header</span><span class="p">(</span><span class="n">fracture_list</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
         <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
-        <span class="n">error</span><span class="o">=</span><span class="s2">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">lagrit</span><span class="o">.</span><span class="n">create_merge_poly_files</span><span class="p">(</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">fracture_list</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span><span class="p">)</span>
+    <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">lagrit</span><span class="o">.</span><span class="n">create_merge_poly_files</span><span class="p">(</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">fracture_list</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span>
+                                            <span class="n">visual_mode</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span><span class="p">)</span>
     <span class="n">run_mesh</span><span class="o">.</span><span class="n">merge_the_meshes</span><span class="p">(</span><span class="n">num_poly</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">visual_mode</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prune</span><span class="p">):</span>    
+
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">visual_mode</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prune</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mh</span><span class="o">.</span><span class="n">check_dudded_points</span><span class="p">(</span><span class="n">dudded_points</span><span class="p">):</span>
             <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
-            <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR!!! Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">production_mode</span><span class="p">:</span>
         <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual_mode</span><span class="p">:</span>
         <span class="n">lagrit</span><span class="o">.</span><span class="n">define_zones</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">prune</span><span class="p">:</span>
-        <span class="n">mh</span><span class="o">.</span><span class="n">clean_up_files_after_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>        
-    
-    <span class="n">mh</span><span class="o">.</span><span class="n">output_meshing_report</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="p">,</span><span class="n">visual_mode</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Meshing Complete&quot;</span><span class="p">)</span></div>
+        <span class="n">mh</span><span class="o">.</span><span class="n">clean_up_files_after_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+    <span class="n">mh</span><span class="o">.</span><span class="n">output_meshing_report</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Meshing Complete&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

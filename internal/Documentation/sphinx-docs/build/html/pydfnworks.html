@@ -87,7 +87,8 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
@@ -104,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.lagrit_scripts">LaGrit scripts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.run_meshing">Run meshing in parallel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.mesh_dfn_helper">Mesh helper methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.map2continuum">Creating an upscaled mesh of the DFN</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dfnflow">dfnFlow</a><ul>
@@ -914,6 +916,40 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pydfnworks.general.dfnworks.DFNWORKS.map_to_continuum">
+<code class="descname">map_to_continuum</code><span class="sig-paren">(</span><em>l</em>, <em>orl</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.map_to_continuum" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates an octree-refined continuum mesh using the
+reduced_mesh.inp as input.  To generate the reduced_mesh.inp, one must
+turn visualization mode on in the DFN input card.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>object</em>) – DFN Class</li>
+<li><strong>l</strong> (<em>float</em>) – Size (m) of level-0 mesh element in the continuum mesh</li>
+<li><strong>orl</strong> (<em>int</em>) – Number of total refinement levels in the octree</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<dl class="docutils">
+<dt>octree_dfn.inp <span class="classifier-delimiter">:</span> <span class="classifier">Mesh file</span></dt>
+<dd>Octree-refined continuum mesh</dd>
+<dt>fracX.inp <span class="classifier-delimiter">:</span> <span class="classifier">Mesh files</span></dt>
+<dd>Octree-refined continuum meshes, which contain intersection areas</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pydfnworks.general.dfnworks.DFNWORKS.mesh_network">
 <code class="descname">mesh_network</code><span class="sig-paren">(</span><em>prune=False</em>, <em>uniform_mesh=False</em>, <em>production_mode=True</em>, <em>refine_factor=1</em>, <em>slope=2</em>, <em>visual_mode=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.mesh_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mesh fracture network using LaGriT</p>
@@ -989,7 +1025,7 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="method">
 <dt id="pydfnworks.general.dfnworks.DFNWORKS.pflotran">
-<code class="descname">pflotran</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.pflotran" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pflotran</code><span class="sig-paren">(</span><em>restart=False</em>, <em>restart_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.pflotran" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1009,7 +1045,7 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="method">
 <dt id="pydfnworks.general.dfnworks.DFNWORKS.pflotran_cleanup">
-<code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><em>index=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><em>index_start=0</em>, <em>index_finish=1</em>, <em>filename=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate PFLOTRAN output files and then delete them</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1075,6 +1111,11 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 <p>This will dump out all values in the run file, not just those from the most recent run</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="pydfnworks.general.dfnworks.DFNWORKS.pydfnworks">
+<code class="descname">pydfnworks</code><em class="property"> = &lt;module 'pydfnworks' from '/Users/jhyman/.local/lib/python3.7/site-packages/pydfnworks-2.2-py3.7.egg/pydfnworks/__init__.py'&gt;</em><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.pydfnworks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="pydfnworks.general.dfnworks.DFNWORKS.run_dfn_trans">
 <code class="descname">run_dfn_trans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.run_dfn_trans" title="Permalink to this definition">¶</a></dt>
@@ -1115,7 +1156,7 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="method">
 <dt id="pydfnworks.general.dfnworks.DFNWORKS.run_graph_transport">
-<code class="descname">run_graph_transport</code><span class="sig-paren">(</span><em>Gtilde</em>, <em>nparticles</em>, <em>partime_file=None</em>, <em>frac_id_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.run_graph_transport" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run_graph_transport</code><span class="sig-paren">(</span><em>Gtilde</em>, <em>nparticles</em>, <em>partime_file=None</em>, <em>frac_id_file=None</em>, <em>frac_porosity=1.0</em>, <em>tdrw_flag=False</em>, <em>matrix_porosity=0.02</em>, <em>matrix_diffusivity=1e-11</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.run_graph_transport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run  particle tracking on the given NetworkX graph</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1127,6 +1168,10 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 <li><strong>nparticles</strong> (<em>int</em>) – number of particles</li>
 <li><strong>partime_file</strong> (<em>string</em>) – name of file to  which the total travel times and lengths will be written for each particle, default is None</li>
 <li><strong>frac_id_file</strong> (<em>string</em>) – name of file to which detailed information of each particle’s travel will be written, default is None</li>
+<li><strong>frac_porosity</strong> (<em>float</em>) – porosity of fracture, default is 1.0</li>
+<li><strong>tdrw_flag</strong> (<em>Bool</em>) – if False, matrix_porosity, matrix_diffusivity are ignored</li>
+<li><strong>matrix_porosity</strong> (<em>float</em>) – default is 0.02</li>
+<li><strong>matrix_diffusivity</strong> (<em>float</em>) – default is 1e-11 in SI units</li>
 </ul>
 </td>
 </tr>
@@ -1181,6 +1226,36 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 </table>
 <p class="rubric">Notes</p>
 <p>mu is the mean of perm not log(perm)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydfnworks.general.dfnworks.DFNWORKS.upscale">
+<code class="descname">upscale</code><span class="sig-paren">(</span><em>mat_perm</em>, <em>mat_por</em><span class="sig-paren">)</span><a class="headerlink" href="#pydfnworks.general.dfnworks.DFNWORKS.upscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate permeabilities and porosities based on output of map2continuum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>object</em>) – DFN Class</li>
+<li><strong>mat_perm</strong> (<em>float</em>) – Matrix permeability (in m^2)</li>
+<li><strong>mat_por</strong> (<em>float</em>) – Matrix porosity</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>perm_fehm.dat</strong> (<em>text file</em>) – Contains permeability data for FEHM input</li>
+<li><strong>rock_fehm.dat</strong> (<em>text file</em>) – Contains rock properties data for FEHM input</li>
+<li><strong>mesh_permeability.h5</strong> (<em>h5 file</em>) – Contains permeabilites at each node for PFLOTRAN input</li>
+<li><strong>mesh_porosity.h5</strong> (<em>h5 file</em>) – Contains porosities at each node for PFLOTRAN input</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
 </dd></dl>
 
 <dl class="method">
@@ -1831,10 +1906,10 @@ Stores how many of each distrib are in use in numEdistribs or numRdistribs lists
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>endis</strong> – Number of last fracture merged into a partition of the DFN</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>n_jobs</strong> – number of merge jobs</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of int</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
 </td>
 </tr>
 </tbody>
@@ -2256,6 +2331,317 @@ False - If failure.txt is not empty, then at least one fracture failed.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pydfnworks.dfnGen.map2continuum">
+<span id="creating-an-upscaled-mesh-of-the-dfn"></span><h3>Creating an upscaled mesh of the DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.map2continuum" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-map2continuum.py"></span><dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.driver_parallel">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">driver_parallel</code><span class="sig-paren">(</span><em>self</em>, <em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#driver_parallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.driver_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function drives the parallelization of the area sums upscaling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>object</em>) – DFN Class</li>
+<li><strong>num_poly</strong> (<em>int</em>) – Number of fractures</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_build">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_build</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the build_octree.mlgi lagrit script.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_driver">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_driver</code><span class="sig-paren">(</span><em>nx</em>, <em>ny</em>, <em>nz</em>, <em>num_poly</em>, <em>normal_vectors</em>, <em>points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the main lagrit driver script, which calls all
+lagrit scripts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ni</strong> (<em>int</em>) – Number of cells in each direction</li>
+<li><strong>num_poly</strong> (<em>int</em>) – Number of fractures</li>
+<li><strong>normal_vectors</strong> (<em>array</em>) – Array containing normal vectors of each fracture</li>
+<li><strong>points</strong> (<em>array</em>) – Array containing a point on each fracture</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_hex_to_tet">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_hex_to_tet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_hex_to_tet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_hex_to_tet" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the hex_to_tet.mlgi lagrit script.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_intersect">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_intersect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the intersect_refine.mlgi lagrit scripts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_parameters">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_parameters</code><span class="sig-paren">(</span><em>orl</em>, <em>x0</em>, <em>x1</em>, <em>y0</em>, <em>y1</em>, <em>z0</em>, <em>z1</em>, <em>nx</em>, <em>ny</em>, <em>nz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the parameters_octree_dfn.mlgi lagrit script.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>orl</strong> (<em>int</em>) – Number of total refinement levels in the octree</li>
+<li><strong>i1</strong> (<em>i0</em><em>,</em>) – Extent of domain in x, y, z directions</li>
+<li><strong>ni</strong> (<em>int</em>) – Number of cells in each direction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_remove">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the remove_cells.mlgi lagrit script.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_run">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function executes the lagrit scripts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.lagrit_strip">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_strip</code><span class="sig-paren">(</span><em>num_poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_strip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_strip" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function strips and replaces the headers of the files, which is
+needed to assign the fracture areas to a mesh object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_poly</strong> (<em>int</em>) – Number of fractures</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.map_to_continuum">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">map_to_continuum</code><span class="sig-paren">(</span><em>self</em>, <em>l</em>, <em>orl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#map_to_continuum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.map_to_continuum" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates an octree-refined continuum mesh using the
+reduced_mesh.inp as input.  To generate the reduced_mesh.inp, one must
+turn visualization mode on in the DFN input card.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>object</em>) – DFN Class</li>
+<li><strong>l</strong> (<em>float</em>) – Size (m) of level-0 mesh element in the continuum mesh</li>
+<li><strong>orl</strong> (<em>int</em>) – Number of total refinement levels in the octree</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<dl class="docutils">
+<dt>octree_dfn.inp <span class="classifier-delimiter">:</span> <span class="classifier">Mesh file</span></dt>
+<dd>Octree-refined continuum mesh</dd>
+<dt>fracX.inp <span class="classifier-delimiter">:</span> <span class="classifier">Mesh files</span></dt>
+<dd>Octree-refined continuum meshes, which contain intersection areas</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.upscale_parallel">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">upscale_parallel</code><span class="sig-paren">(</span><em>f_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#upscale_parallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.upscale_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates lagrit script that makes mesh files with area sums.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f_id</strong> (<em>int</em>) – Fracture index</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pydfnworks.dfnGen.map2continuum.worker">
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">worker</code><span class="sig-paren">(</span><em>tasks_to_accomplish</em>, <em>tasks_that_are_done</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Worker function for python parallel. See multiprocessing module
+documentation for details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tasks_to_accomplish</strong> – Processes still in queue</li>
+<li><strong>tasks_that_are_done</strong> – Processes complete</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<span class="target" id="module-pydfnworks.dfnGen.upscale"></span><span class="target" id="module-upscale.py"></span><dl class="function">
+<dt id="pydfnworks.dfnGen.upscale.upscale">
+<code class="descclassname">pydfnworks.dfnGen.upscale.</code><code class="descname">upscale</code><span class="sig-paren">(</span><em>self</em>, <em>mat_perm</em>, <em>mat_por</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/upscale.html#upscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.upscale.upscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate permeabilities and porosities based on output of map2continuum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>object</em>) – DFN Class</li>
+<li><strong>mat_perm</strong> (<em>float</em>) – Matrix permeability (in m^2)</li>
+<li><strong>mat_por</strong> (<em>float</em>) – Matrix porosity</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>perm_fehm.dat</strong> (<em>text file</em>) – Contains permeability data for FEHM input</li>
+<li><strong>rock_fehm.dat</strong> (<em>text file</em>) – Contains rock properties data for FEHM input</li>
+<li><strong>mesh_permeability.h5</strong> (<em>h5 file</em>) – Contains permeabilites at each node for PFLOTRAN input</li>
+<li><strong>mesh_porosity.h5</strong> (<em>h5 file</em>) – Contains porosities at each node for PFLOTRAN input</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="dfnflow">
 <h2>dfnFlow<a class="headerlink" href="#dfnflow" title="Permalink to this headline">¶</a></h2>
@@ -2455,7 +2841,7 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="function">
 <dt id="pydfnworks.dfnFlow.pflotran.pflotran">
-<code class="descclassname">pydfnworks.dfnFlow.pflotran.</code><code class="descname">pflotran</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnFlow.pflotran.</code><code class="descname">pflotran</code><span class="sig-paren">(</span><em>self</em>, <em>restart=False</em>, <em>restart_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2475,7 +2861,7 @@ Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="function">
 <dt id="pydfnworks.dfnFlow.pflotran.pflotran_cleanup">
-<code class="descclassname">pydfnworks.dfnFlow.pflotran.</code><code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><em>self</em>, <em>index=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran_cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnFlow.pflotran.</code><code class="descname">pflotran_cleanup</code><span class="sig-paren">(</span><em>self</em>, <em>index_start=0</em>, <em>index_finish=1</em>, <em>filename=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran_cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate PFLOTRAN output files and then delete them</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3338,13 +3724,19 @@ See Hyman et al. 2018 SIAM MMS</p>
 <dl class="attribute">
 <dt>
 <code class="descname">* time</code></dt>
-<dd><p>Total time of travel of particle [s]</p>
+<dd><p>Total advective time of travel of particle [s]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* tdrw_time</code></dt>
+<dd><p>Total advection+diffusion time of travel of particle [s]</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt>
 <code class="descname">* dist</code></dt>
-<dd><p>total distance traveled [m]</p>
+<dd><p>total distance travelled in advection [m]</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3361,7 +3753,7 @@ See Hyman et al. 2018 SIAM MMS</p>
 
 <dl class="method">
 <dt id="pydfnworks.dfnGraph.graph_transport.Particle.add_frac_data">
-<code class="descname">add_frac_data</code><span class="sig-paren">(</span><em>frac</em>, <em>t</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#Particle.add_frac_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.Particle.add_frac_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_frac_data</code><span class="sig-paren">(</span><em>frac</em>, <em>t</em>, <em>t_tdrw</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#Particle.add_frac_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.Particle.add_frac_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>add details of fracture through which particle traversed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3371,6 +3763,7 @@ See Hyman et al. 2018 SIAM MMS</p>
 <li><strong>self</strong> (<em>object</em>) – </li>
 <li><strong>frac</strong> (<em>int</em>) – index of fracture in graph</li>
 <li><strong>t</strong> (<em>double</em>) – time in seconds</li>
+<li><strong>t_tdrw</strong> (<em>double</em>) – time in seconds</li>
 <li><strong>L</strong> (<em>double</em>) – distance in metres</li>
 </ul>
 </td>
@@ -3400,7 +3793,7 @@ See Hyman et al. 2018 SIAM MMS</p>
 
 <dl class="method">
 <dt id="pydfnworks.dfnGraph.graph_transport.Particle.track">
-<code class="descname">track</code><span class="sig-paren">(</span><em>Gtilde</em>, <em>nbrs_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#Particle.track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.Particle.track" title="Permalink to this definition">¶</a></dt>
+<code class="descname">track</code><span class="sig-paren">(</span><em>Gtilde</em>, <em>nbrs_dict</em>, <em>frac_porosity</em>, <em>tdrw_flag</em>, <em>matrix_porosity</em>, <em>matrix_diffusivity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#Particle.track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.Particle.track" title="Permalink to this definition">¶</a></dt>
 <dd><p>track a particle from inlet vertex to outlet vertex</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3460,7 +3853,7 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 
 <dl class="function">
 <dt id="pydfnworks.dfnGraph.graph_transport.run_graph_transport">
-<code class="descclassname">pydfnworks.dfnGraph.graph_transport.</code><code class="descname">run_graph_transport</code><span class="sig-paren">(</span><em>self</em>, <em>Gtilde</em>, <em>nparticles</em>, <em>partime_file=None</em>, <em>frac_id_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#run_graph_transport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.run_graph_transport" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnGraph.graph_transport.</code><code class="descname">run_graph_transport</code><span class="sig-paren">(</span><em>self</em>, <em>Gtilde</em>, <em>nparticles</em>, <em>partime_file=None</em>, <em>frac_id_file=None</em>, <em>frac_porosity=1.0</em>, <em>tdrw_flag=False</em>, <em>matrix_porosity=0.02</em>, <em>matrix_diffusivity=1e-11</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#run_graph_transport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.run_graph_transport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run  particle tracking on the given NetworkX graph</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3472,6 +3865,10 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 <li><strong>nparticles</strong> (<em>int</em>) – number of particles</li>
 <li><strong>partime_file</strong> (<em>string</em>) – name of file to  which the total travel times and lengths will be written for each particle, default is None</li>
 <li><strong>frac_id_file</strong> (<em>string</em>) – name of file to which detailed information of each particle’s travel will be written, default is None</li>
+<li><strong>frac_porosity</strong> (<em>float</em>) – porosity of fracture, default is 1.0</li>
+<li><strong>tdrw_flag</strong> (<em>Bool</em>) – if False, matrix_porosity, matrix_diffusivity are ignored</li>
+<li><strong>matrix_porosity</strong> (<em>float</em>) – default is 0.02</li>
+<li><strong>matrix_diffusivity</strong> (<em>float</em>) – default is 1e-11 in SI units</li>
 </ul>
 </td>
 </tr>

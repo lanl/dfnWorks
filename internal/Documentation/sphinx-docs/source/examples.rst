@@ -105,33 +105,6 @@ This test case consists of a family of fractures whose size is exponentially dis
 
 
 
-lognormal
-------------------
-
-Location: examples/lognormal/
-
-
-This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat. We have changed the flow direction to be aligned with the z-axis by modifying the PFLOTRAN input card dfn_explicit.in
-
-
-.. figure:: figures/lognormal_mesh.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-
-.. figure:: figures/lognormal_pressure.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-
 
 TPL: Truncated Power Law
 ----------------------------------
@@ -141,25 +114,10 @@ Location: examples/TPL/
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m. 
 
 .. figure:: figures/power_mesh.png
-   :scale: 30 %
+   :scale: 20 %
    :alt: alternate text
    :align: center
 
-|
-|
-
-.. figure:: figures/power_pressure.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
-
-|
-|
-
-.. figure:: figures/power_trace.png
-   :scale: 30 %
-   :alt: alternate text
-   :align: center
 
 Graph based pruning
 ----------------------

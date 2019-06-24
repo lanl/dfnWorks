@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -158,9 +159,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pydfnworks.general.paths</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+<span></span><span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">mkstemp</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="k">import</span> <span class="n">move</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">DFNPARAMS</span> <span class="o">=</span> <span class="s1">&#39;~/.dfnworksrc&#39;</span>
+<span class="n">DFNPARAMS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">DFNPARAMS</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="valid"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.valid">[docs]</a><span class="k">def</span> <span class="nf">valid</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -180,10 +187,13 @@
 <span class="sd">        If file is not found, program exits</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]))):</span>
-        <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR: &quot;</span> <span class="o">+</span> <span class="n">name</span>  <span class="o">+</span> <span class="s2">&quot; has an invalid path name: &quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+            <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]))):</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; has an invalid path name: &quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+            <span class="n">name</span><span class="p">]</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="compile_dfn_exe"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.compile_dfn_exe">[docs]</a><span class="k">def</span> <span class="nf">compile_dfn_exe</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function</span>
@@ -203,13 +213,13 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compiling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">directory</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compiling </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">directory</span><span class="p">)</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Complete&quot;</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="define_paths"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.define_paths">[docs]</a><span class="k">def</span> <span class="nf">define_paths</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Defines enviromental variables for use in dfnWorks. The user must change these to match their workspace.</span>
@@ -229,61 +239,80 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-
-
     <span class="c1"># ================================================</span>
     <span class="c1"># THESE PATHS MUST BE SET BY THE USER.</span>
     <span class="c1"># ================================================</span>
-    
-    <span class="c1"># the dfnworks-main  repository </span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/Users/jhyman/src/dfnworks-main/&#39;</span>
+
+    <span class="c1"># Either write paths to ~/.dfnworksrc in a JSON format...</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">DFNPARAMS</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">DFNPARAMS</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">env_paths</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="c1"># Or, change the paths here</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">env_paths</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">:</span> <span class="s1">&#39;/Users/jhyman/src/dfnworks-main/&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">:</span> <span class="s1">&#39;/Users/jhyman/src/petsc/&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">:</span> <span class="s1">&#39;/arch-darwin-c-debug/&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">:</span> <span class="s1">&#39;/Users/jhyman/src/pflotran/src/pflotran/pflotran&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PYTHON_EXE&#39;</span><span class="p">:</span> <span class="s1">&#39;/anaconda3/bin/python&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;LAGRIT_EXE&#39;</span><span class="p">:</span> <span class="s1">&#39;/Users/jhyman/src/LaGriT/src/lagrit&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;FEHM_EXE&#39;</span><span class="p">:</span> <span class="s1">&#39;/Users/jhyman/bin/xfehm/&#39;</span>
+        <span class="p">}</span>
+
+    <span class="c1"># the dfnworks-main  repository</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">)</span>
 
     <span class="c1"># PETSC paths</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;/Users/jhyman/src/petsc/&#39;</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;/arch-darwin-c-debug/&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">)</span>
-<span class="c1">#    valid(&#39;PETSC_ARCH&#39;)</span>
+    <span class="c1">#   valid(&#39;PETSC_ARCH&#39;)</span>
 
     <span class="c1"># PFLOTRAN path</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;/Users/jhyman/src/pflotran/src/pflotran/pflotran&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">)</span>
 
     <span class="c1"># Python executable</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHON_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/Users/jhyman/anaconda2/bin/python&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHON_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;PYTHON_EXE&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;PYTHON_EXE&#39;</span><span class="p">)</span>
-    
+
     <span class="c1"># LaGriT executable</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LAGRIT_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/Users/jhyman/src/LaGriT/src/lagrit&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LAGRIT_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;LAGRIT_EXE&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;LAGRIT_EXE&#39;</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FEHM_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/Users/jhyman/bin/xfehm&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FEHM_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_paths</span><span class="p">[</span><span class="s1">&#39;FEHM_EXE&#39;</span><span class="p">]</span>
     <span class="n">valid</span><span class="p">(</span><span class="s1">&#39;FEHM_EXE&#39;</span><span class="p">)</span>
-    <span class="c1"># =================================================== </span>
+
+    <span class="c1"># ===================================================</span>
     <span class="c1"># THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.</span>
     <span class="c1"># ====================================================</span>
-   
+
     <span class="c1"># Directories</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;DFNGen/DFNGen&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;DFNGen/DFNGen&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]):</span>
-        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;DFNGen/&#39;</span><span class="p">)</span>
+        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;DFNGen/&#39;</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNTRANS_EXE&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39;DFNTrans/DFNTrans&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+        <span class="s1">&#39;DFNTRANS_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;DFNTrans/DFNTrans&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNTRANS_EXE&#39;</span><span class="p">]):</span>
-        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;DFNTrans/&#39;</span><span class="p">)</span>
-    
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_UGE_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;C_uge_correct/correct_uge&#39;</span>
+        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;DFNTrans&#39;</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_UGE_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+        <span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;C_uge_correct/correct_uge&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_UGE_EXE&#39;</span><span class="p">]):</span>
-        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;C_uge_correct/&#39;</span><span class="p">)</span>
+        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;C_uge_correct/&#39;</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_STOR_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;C_stor_correct/correct_stor&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_STOR_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+        <span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;C_stor_correct/correct_stor&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_STOR_EXE&#39;</span><span class="p">]):</span>
-        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;C_stor_correct/&#39;</span><span class="p">)</span>
+        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;C_stor_correct/&#39;</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CONNECT_TEST_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;DFN_Mesh_Connectivity_Test/ConnectivityTest&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CONNECT_TEST_EXE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+        <span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;DFN_Mesh_Connectivity_Test/ConnectivityTest&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CONNECT_TEST_EXE&#39;</span><span class="p">]):</span>
-        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;DFN_Mesh_Connectivity_Test/&#39;</span><span class="p">)</span></div>
-
+        <span class="n">compile_dfn_exe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnworks_PATH&#39;</span><span class="p">]</span> <span class="o">+</span>
+                        <span class="s1">&#39;DFN_Mesh_Connectivity_Test/&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

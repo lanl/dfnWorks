@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Example Applications" href="applications.html" />
-    <link rel="prev" title="Settting up dfnWorks" href="setup.html" /> 
+    <link rel="prev" title="Setting up dfnWorks" href="setup.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,12 +87,12 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#user-defined-rects">4_user_defined_rects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#user-defined-ell-uniform">4_user_defined_ell_uniform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exp-exponentially-distributed-fracture-lengths">exp: Exponentially Distributed fracture lengths</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#lognormal">lognormal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tpl-truncated-power-law">TPL: Truncated Power Law</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#graph-based-pruning">Graph based pruning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#in-fracture-variability">In Fracture Variability</a></li>
@@ -229,45 +229,12 @@ We have used the extract surface and tube filters in paraview for visual clarity
 <p class="caption"><span class="caption-text"><em>Pressure solution on with rectangular fractures whose lengths following a exponential distribution. Gradient is aligned with the Y-Axis</em></span></p>
 </div>
 </div>
-<div class="section" id="lognormal">
-<h2>lognormal<a class="headerlink" href="#lognormal" title="Permalink to this headline">¶</a></h2>
-<p>Location: examples/lognormal/</p>
-<p>This test case consists of two fracture families whose sizes have a lognormal distribution with a minimum size of 0.5m and a maximum size of 50m. The domain size is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_lognormal_dist.dat. We have changed the flow direction to be aligned with the z-axis by modifying the PFLOTRAN input card dfn_explicit.in</p>
-<div class="figure align-center">
-<a class="reference internal image-reference" href="_images/lognormal_mesh.png"><img alt="alternate text" src="_images/lognormal_mesh.png" style="width: 559.8px; height: 377.4px;" /></a>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<div class="figure align-center">
-<a class="reference internal image-reference" href="_images/lognormal_pressure.png"><img alt="alternate text" src="_images/lognormal_pressure.png" style="width: 559.8px; height: 377.4px;" /></a>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</div>
 <div class="section" id="tpl-truncated-power-law">
 <h2>TPL: Truncated Power Law<a class="headerlink" href="#tpl-truncated-power-law" title="Permalink to this headline">¶</a></h2>
 <p>Location: examples/TPL/</p>
 <p>This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m.</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="_images/power_mesh.png"><img alt="alternate text" src="_images/power_mesh.png" style="width: 629.4px; height: 288.0px;" /></a>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<div class="figure align-center">
-<a class="reference internal image-reference" href="_images/power_pressure.png"><img alt="alternate text" src="_images/power_pressure.png" style="width: 629.4px; height: 288.0px;" /></a>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<div class="figure align-center">
-<a class="reference internal image-reference" href="_images/power_trace.png"><img alt="alternate text" src="_images/power_trace.png" style="width: 629.4px; height: 288.0px;" /></a>
+<a class="reference internal image-reference" href="_images/power_mesh.png"><img alt="alternate text" src="_images/power_mesh.png" style="width: 674.4000000000001px; height: 362.8px;" /></a>
 </div>
 </div>
 <div class="section" id="graph-based-pruning">
@@ -309,7 +276,7 @@ We have used the extract surface and tube filters in paraview for visual clarity
         <a href="applications.html" class="btn btn-neutral float-right" title="Example Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="setup.html" class="btn btn-neutral float-left" title="Settting up dfnWorks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setting up dfnWorks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

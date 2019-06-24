@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Settting up dfnWorks &mdash; dfnWorks 2.2 documentation</title>
+  <title>Setting up dfnWorks &mdash; dfnWorks 2.2 documentation</title>
   
 
   
@@ -87,12 +87,18 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Settting up dfnWorks</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting up dfnWorks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#turn-on-x-forwarding-if-on-server">Turn on X forwarding if on server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#go-to-the-dnfworks-repository">Go to the dnfWorks repository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fix-paths-in-test-directory">Fix paths in test directory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-the-petsc-pflotran-python-and-lagrit-paths">Set the PETSC, PFLOTRAN, Python, and LaGriT paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setup-the-python-package-pydfnworks">Setup the Python package pydfnworks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#running-dfnworks-from-docker">Running dfnWorks from Docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-x-forwarding">Setting Up X-Forwarding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -149,7 +155,7 @@
     
       <li><a href="index_docs.html">Docs</a> &raquo;</li>
         
-      <li>Settting up dfnWorks</li>
+      <li>Setting up dfnWorks</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -168,9 +174,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="settting-up-dfnworks">
-<h1>Settting up dfnWorks<a class="headerlink" href="#settting-up-dfnworks" title="Permalink to this headline">¶</a></h1>
-<p>This document contains instructions for setting up dfnWorks on you machine,</p>
+  <div class="section" id="setting-up-dfnworks">
+<h1>Setting up dfnWorks<a class="headerlink" href="#setting-up-dfnworks" title="Permalink to this headline">¶</a></h1>
+<p>This document contains instructions for setting up dfnWorks natively on your
+machine. To setup dfnWorks using Docker instead, see the next section.</p>
 <div class="section" id="turn-on-x-forwarding-if-on-server">
 <h2>Turn on X forwarding if on server<a class="headerlink" href="#turn-on-x-forwarding-if-on-server" title="Permalink to this headline">¶</a></h2>
 <p>Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:</p>
@@ -186,7 +193,7 @@
 </div>
 <div class="section" id="fix-paths-in-test-directory">
 <h2>Fix paths in test directory<a class="headerlink" href="#fix-paths-in-test-directory" title="Permalink to this headline">¶</a></h2>
-<p>Fix the pathnames for all files in the folder /tests/ . This can be done automatically by running the script fix_paths.py:</p>
+<p>Fix the pathnames for all files in the folder <code class="docutils literal notranslate"><span class="pre">/tests/</span></code> . This can be done automatically by running the script <code class="docutils literal notranslate"><span class="pre">fix_paths.py</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /pydfnworks/bin/
 $ python fix_paths.py
 </pre></div>
@@ -224,6 +231,68 @@ $ python fix_paths.py
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install --user
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="running-dfnworks-from-docker">
+<h1>Running dfnWorks from Docker<a class="headerlink" href="#running-dfnworks-from-docker" title="Permalink to this headline">¶</a></h1>
+<p>If you do not already have Docker installed on your machine,
+visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
+<p>The dfnWorks Docker image can be pulled from DockerHub using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker pull ees16/dfnworks
+</pre></div>
+</div>
+<div class="section" id="setting-up-x-forwarding">
+<h2>Setting Up X-Forwarding<a class="headerlink" href="#setting-up-x-forwarding" title="Permalink to this headline">¶</a></h2>
+<p><strong>On macOS:</strong></p>
+<p>To setup X-forwarding on macOS, you will need <code class="docutils literal notranslate"><span class="pre">socat</span></code> and <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>.
+To install, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install socat
+brew cask install xquartz
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">socat</span></code> is used to expose the local XQuartz socker over a TCP port, enabling the
+Docker container to exchange display information with your local machine.</p>
+<p><strong>On Linux:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>TODO
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-the-dfnworks-container">
+<h2>Running the dfnWorks container<a class="headerlink" href="#running-the-dfnworks-container" title="Permalink to this headline">¶</a></h2>
+<p>The base command for running the dfnWorks container is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti dfnworks:latest
+</pre></div>
+</div>
+<p>However, to exchange files between the host and container, we will need to mount
+a volume.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">LOCAL_FOLDER:/dfnWorks/work</span></code> will allow all files present in the
+container folder <code class="docutils literal notranslate"><span class="pre">dfnWorks/work</span></code> to be exposed to <code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code> is the absolute path to a folder on your machine.</p>
+<p>In order to exchange display information, we will need to pass in the DISPLAY
+variable from host to container.</p>
+<p>On macOS, this is <code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">DISPLAY=docker.for.mac.host.internal:0</span></code>. On Linux, it is
+<code class="docutils literal notranslate"><span class="pre">TODO</span></code>.</p>
+<p>With this is place, the final command for running the Docker container is:</p>
+<p><strong>On macOS:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>open -a XQuartz
+socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:<span class="se">\&quot;</span><span class="nv">$DISPLAY</span><span class="se">\&quot;</span>
+docker run -ti <span class="se">\</span>
+       -e <span class="nv">DISPLAY</span><span class="o">=</span>docker.for.mac.host.internal:0 <span class="se">\</span>
+       -v /Users/yourname/dfnworks-example:/dfnWorks/work <span class="se">\</span>
+       dfnworks:latest
+</pre></div>
+</div>
+<p><strong>On Linux:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>TODO
+</pre></div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you recieve a warning that port 6000 is in use, run either <code class="docutils literal notranslate"><span class="pre">lsof</span> <span class="pre">-i</span> <span class="pre">TCP:6000</span></code>
+or <code class="docutils literal notranslate"><span class="pre">netstat</span> <span class="pre">-vanp</span> <span class="pre">tcp</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">6000</span></code> to isolate the process listening on this port.</p>
+<p>Then, use <code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">-i</span> <span class="pre">&lt;PID&gt;</span></code> to kill the process and re-run <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>, <code class="docutils literal notranslate"><span class="pre">socat</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code>.</p>
 </div>
 </div>
 
