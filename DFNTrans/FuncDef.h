@@ -72,7 +72,7 @@ extern unsigned int flag_w;
 
 /*! Material structure contains fracture parameters, read from DFN mesh */
 struct material {
-    
+
     /*! angle that fracture makes with z axis*/
     float theta;
     
@@ -104,7 +104,7 @@ struct material {
 
 /*! Vertex is a node structure and contains all the information about the node/vertex of the DFN mesh */
 struct vertex {
-    
+
     /*! node type: 0 - interior node; 10 - boundary (exterior) node; 2 - intersection (interface) node; 12 - intersection boundary node; 300, 310, 302, 312 - node in in-flow boundary; 200, 210, 202, 212 - node in out-flow boundary */
     unsigned int typeN;
     
@@ -174,8 +174,8 @@ struct element {
 
 
 /*! contam structure contains all parameters of the particles */
-struct contam{
-    
+struct contam {
+
     /*! velocity of particle, interpolated from triangular cell */
     double velocity[2];
     
@@ -235,7 +235,7 @@ void DarcyVelocity();
 struct matr   MatrixProducts (double normxarea[][2],  int number);
 struct lb  DefineBoundaryAngle(int i, unsigned int edge_1, unsigned int edge_2, int f1, int coorf);
 void VelocityInteriorNode (double normxarea[][2], int i, int number, unsigned int indj[max_neighb], int vi);
-void VelocityExteriorNode (double normxarea[][2], int i, int number, unsigned int indj[max_neighb],struct lb lbound, int vi) ;
+void VelocityExteriorNode (double normxarea[][2], int i, int number, unsigned int indj[max_neighb], struct lb lbound, int vi) ;
 void CheckNewCell();
 void ParticleTrack();
 struct intcoef  CalculateWeights(int nn1, int nn2, int nn3);
@@ -256,7 +256,7 @@ int Moving2NextCell(int stuck, int k);
 void BoundaryCells();
 int InitParticles_np (int k_current, int firstn, int lastn, int parts_fracture, int first_ind, int last_ind);
 int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, int first_ind, int last_ind);
-int CornerVelocity(int i,int m1,int m2,int m3,int s1,int s2,int s3);
+int CornerVelocity(int i, int m1, int m2, int m3, int s1, int s2, int s3);
 void ReadBoundaryNodes();
 FILE *OpenFile(char filen[120], char fileopt[2]);
 void ReadFEHMfile(int nedges);
@@ -271,8 +271,8 @@ int StreamlineRandomSampling(double products[4], double speedsq[4], int indj, in
 void OutputVelocities();
 int XindexC(int nodenum, int ii);
 int YindexC(int nodenum, int ii);
-double DefineAngle(double u1,double u2, double v1, double v2);
-void HalfPolygonVelocity(int i,int k, int fractn, int indc,unsigned int fractj[max_neighb]);
+double DefineAngle(double u1, double u2, double v1, double v2);
+void HalfPolygonVelocity(int i, int k, int fractn, int indc, unsigned int fractj[max_neighb]);
 struct posit3d CalculateVelocity3D();
 void BoundaryLine(int n1, int n2, int n3);
 void CheckGrid();

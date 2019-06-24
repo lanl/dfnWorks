@@ -72,12 +72,12 @@
  POSSIBILITY OF SUCH DAMAGE.
 
  \section dfnTrans
- 
+
  First release date is April 1st 2015.
- 
+
  The detail explanation of the technique of Particle Tracking in 3D DFN is published: Makedonska, N., Painter, S. L., Bui, Q. M., Gable, C. W., & Karra, S. (2015). Particle tracking approach for transport in three-dimensional discrete fracture networks. Computational Geosciences, 19(5), 1123-1137.
- 
+
  This code is using velocity reconstruction algorithm: Painter, S.L., Gable, C.W., Kelkar, S. (2012). Pathline tracing on fully unstructured control-volume grids. Comput. Geosci. 16(4), 1125–1134.
- 
+
 */
 
