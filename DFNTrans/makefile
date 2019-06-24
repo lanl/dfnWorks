@@ -9,10 +9,10 @@ OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o Tracki
 
 DFNTrans_TDRW: $(OBJECTS)
        
-	$(CC)  $(OBJECTS) -o DFNTrans_TDRW $(CFLAGS)
+	$(CC)  $(OBJECTS) -o DFNTrans $(CFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 clean:
-	rm -rf DFNTrans_TDRW main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
+	rm -rf DFNTrans main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
