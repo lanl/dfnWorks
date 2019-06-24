@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dfnTrans &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Scripts" href="scripts.html" />
+    <link rel="prev" title="dfnFlow" href="dfnflow.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index_docs.html">Docs</a> &raquo;</li>
+        
+      <li>dfnTrans</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dfntrans.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dfntrans">
+<span id="dftrans-chapter"></span><h1>dfnTrans<a class="headerlink" href="#dfntrans" title="Permalink to this headline">¶</a></h1>
+<p>dfnTrans is a method for resolving solute transport using control volume flow
+solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen.
+We adopt a Lagrangian approach and represent a non-reactive conservative solute
+as a collection of indivisible passive tracer particles. Particle tracking
+methods (a) provide a wealth of information about the local flow field, (b) do
+not suffer from numerical dispersion, which is inherent in the discretizations
+of advection–dispersion equations, and (c) allow for the computation of each
+particle trajectory to be performed in an intrinsically parallel fashion if
+particles are not allowed to interact with one another or the fracture network.
+However, particle tracking on a DFN poses unique challenges that arise from (a)
+the quality of the flow solution, (b) the unstructured mesh representation of
+the DFN, and (c) the physical phenomena of interest. The flow solutions obtained
+from dfnFlow are locally mass conserving, so the particle tracking method does
+not suffer from the problems inherent in using Galerkin finite element codes.</p>
+<p>dfnTrans starts from  reconstruction of local velocity field: Darcy fluxes
+obtained using dfnFlow are used to reconstruct the local velocity field, which
+is used for particle tracking on the DFN. Then, Lagrangian transport simulation
+is used to determine pathlines through the network and simulate transport. It is
+important to note that dfnTrans itself only solves for advective transport, but
+effects of longitudinal dispersion and matrix diffusion, sorption, and other
+retention processes are easily incorporated by post-processing particle
+trajectories. The detailed description of dfnTrans algorithm and implemented
+methodology is in <a class="reference external" href="http://link.springer.com/article/10.1007/s10596-015-9525-4">Makedonska, N., Painter, S. L., Bui, Q. M., Gable, C. W., &amp;
+Karra, S. (2015). Particle tracking approach for transport in three-dimensional
+discrete fracture networks. Computational Geosciences, 19(5), 1123-1137.</a></p>
+<p>All source files of C code of dfnTrans are in <code class="docutils literal notranslate"><span class="pre">DFNTrans/</span></code> directory of
+dfnWorks 2.2. It compiles under linux/mac machines using <code class="docutils literal notranslate"><span class="pre">makefile</span></code>.  In order
+to run transport, first, all the parameters and paths should be set up in the
+PTDFN Control file, PTDFN_control.dat. Then, the following command should be
+run:</p>
+<p><code class="docutils literal notranslate"><span class="pre">./DFNTrans</span> <span class="pre">PTDFN_control.dat</span></code></p>
+<p>The control  file sets all necessary parameters to run particle tracking in
+dfnWorks.  Below is one control file example that includes a short
+explanation of each parameter setting:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/***********************************************************************/</span>
+<span class="cm">/*   CONTROL FILE FOR PARTICLE TRACKING IN DISCRETE FRACTURE NETWORK   */</span>
+<span class="cm">/***********************************************************************/</span>
+
+<span class="cm">/**********************  INPUT FILES: grid *****************************/</span>
+<span class="cm">/**** input files with grid of DFN, mainly it&#39;s output of DFNGen ******/</span>
+<span class="nl">param</span><span class="p">:</span> <span class="n">params</span><span class="p">.</span><span class="n">txt</span>
+<span class="nl">poly</span><span class="p">:</span> <span class="n">poly_info</span><span class="p">.</span><span class="n">dat</span>
+<span class="nl">inp</span><span class="p">:</span> <span class="n">full_mesh</span><span class="p">.</span><span class="n">inp</span>
+<span class="nl">stor</span><span class="p">:</span> <span class="n">full_mesh</span><span class="p">.</span><span class="n">stor</span>
+<span class="nl">boundary</span><span class="p">:</span> <span class="n">allboundaries</span><span class="p">.</span><span class="n">zone</span>
+<span class="cm">/* boundary conditions: reading the nodes that belong to in-flow and</span>
+<span class="cm">out-flow boundaries. Should be consistent with those applied to obtain</span>
+<span class="cm">steady state pressure solution (PFLOTRAN)   */</span>
+<span class="cm">/*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */</span>
+<span class="n">in</span><span class="o">-</span><span class="n">flow</span><span class="o">-</span><span class="nl">boundary</span><span class="p">:</span> <span class="mi">3</span>
+<span class="n">out</span><span class="o">-</span><span class="n">flow</span><span class="o">-</span><span class="nl">boundary</span><span class="p">:</span> <span class="mi">5</span>
+
+
+<span class="cm">/**************** INPUT FILES: PFLOTRAN flow solution *******************/</span>
+<span class="nl">PFLOTRAN</span><span class="p">:</span> <span class="n">yes</span>
+<span class="nl">PFLOTRAN_vel</span><span class="p">:</span> <span class="n">darcyvel</span><span class="p">.</span><span class="n">dat</span>
+<span class="nl">PFLOTRAN_cell</span><span class="p">:</span> <span class="n">cellinfo</span><span class="p">.</span><span class="n">dat</span>
+<span class="nl">PFLOTRAN_uge</span><span class="p">:</span> <span class="n">full_mesh_vol_area</span><span class="p">.</span><span class="n">uge</span>
+
+<span class="cm">/**************** INPUT FILES: FEHM flow solution ***********************/</span>
+<span class="cm">/*currently we are using PFLOTRAN , but the code would work with FEHM, too */</span>
+<span class="nl">FEHM</span><span class="p">:</span> <span class="n">no</span>
+<span class="nl">FEHM_fin</span><span class="p">:</span> <span class="n">dfn</span><span class="p">.</span><span class="n">fin</span>
+
+<span class="cm">/************************  OUTPUT FILES  ********************************/</span>
+<span class="cm">/* initial grid info structure output, usefull for debugging */</span>
+<span class="nl">out_grid</span><span class="p">:</span> <span class="n">no</span>
+<span class="cm">/* flow field: 3D Darcy velocities: output file has an each nodes position</span>
+<span class="cm">and its Darcy velocity, reconstructed from fluxes */</span>
+<span class="nl">out_3dflow</span><span class="p">:</span> <span class="n">no</span>
+<span class="cm">/* out initial positions of particles into separate file */</span>
+<span class="nl">out_init</span><span class="p">:</span> <span class="n">no</span>
+<span class="cm">/* out particle trajectories tortuosity file, torts.dat */</span>
+<span class="nl">out_tort</span><span class="p">:</span> <span class="n">no</span>
+
+<span class="cm">/*************** output options for particles trajectories ****************/</span>
+<span class="cm">/* output frequency is set according to trajectories curvature. We check the</span>
+<span class="cm">curvature of particles trajectory each segment, from intersection to intersection.</span>
+<span class="cm">If it&#39;s like a straight line, then the output is less frequent (in case of</span>
+<span class="cm">&quot;out_curv:yes&quot;, if &quot;no&quot;,  the output file will contain every time step) */</span>
+<span class="nl">out_curv</span><span class="p">:</span> <span class="n">yes</span>
+<span class="cm">/* output into avs file (GMV visualization, Paraview visualization) */</span>
+<span class="nl">out_avs</span><span class="p">:</span> <span class="n">no</span>
+<span class="cm">/* output into trajectories ascii files (veloc+posit+cell+fract+time) */</span>
+<span class="nl">out_traj</span><span class="p">:</span> <span class="n">yes</span>
+
+<span class="cm">/* temporary outputs (every time step from intersection to intersection)*/</span>
+<span class="cm">/* use outputs to file or memory buffer. Memory buffer by default */</span>
+<span class="nl">out_filetemp</span><span class="p">:</span> <span class="n">no</span>
+
+<span class="cm">/************* output directories *************************************/</span>
+<span class="nl">out_dir</span><span class="p">:</span> <span class="n">traj_SR</span> <span class="cm">/* path and name of directory where all the particle</span>
+<span class="cm">                     tracking results will be written*/</span>
+
+
+<span class="nl">out_path</span><span class="p">:</span> <span class="n">trajectories</span> <span class="cm">/*name of directory where all particle</span>
+<span class="cm">                    trajectories will be saved, in out_dir path */</span>
+
+<span class="cm">/* name of resultant file (in out_dir path), which contains total travel time and</span>
+<span class="cm">                final positions of particles */</span>
+<span class="nl">out_time</span><span class="p">:</span> <span class="n">partime</span>
+
+
+
+<span class="cm">/**************** PARTICLES INITIAL POSITIONS ******************************/</span>
+
+<span class="cm">/*****  particles positions according to in-flow flux weight *********/</span>
+<span class="nl">init_fluxw</span><span class="p">:</span> <span class="n">no</span> <span class="c1">//turn on this input option (don&#39;t forget to turn off rest of PARTICLES INITIAL POSITIONS options)</span>
+<span class="nl">init_totalnumber</span><span class="p">:</span> <span class="mi">10000</span> <span class="c1">// distance [m] between particles at inflow face for equal flux weight calculation</span>
+
+
+<span class="cm">/****init_nf: if yes - the same number of particles (init_partn) will be placed</span>
+<span class="cm">     on every boundary fracture edge on in-flow boundary,</span>
+<span class="cm">     equidistant from each other ****/</span>
+<span class="nl">init_nf</span><span class="p">:</span> <span class="n">yes</span>
+<span class="nl">init_partn</span><span class="p">:</span> <span class="mi">10</span>
+
+<span class="cm">/****init_eqd: if yes - particles will be placed on the same distance from</span>
+<span class="cm">     each other on all over in-flow boundary edges ***********************/</span>
+<span class="nl">init_eqd</span><span class="p">:</span> <span class="n">no</span>  <span class="c1">//maximum number of particles that user expects on one boundary edge</span>
+<span class="nl">init_npart</span><span class="p">:</span> <span class="mi">100</span>
+
+<span class="cm">/*** all particles start from the same region at in-flow boundary, in a range</span>
+<span class="cm">    {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/</span>
+<span class="nl">init_oneregion</span><span class="p">:</span> <span class="n">no</span>
+<span class="nl">in_partn</span><span class="p">:</span> <span class="mi">100000</span>
+<span class="nl">in_xmin</span><span class="p">:</span> <span class="o">-</span><span class="mf">50.0</span>
+<span class="nl">in_xmax</span><span class="p">:</span> <span class="o">-</span><span class="mf">50.0</span>
+<span class="nl">in_ymin</span><span class="p">:</span> <span class="o">-</span><span class="mf">20.0</span>
+<span class="nl">in_ymax</span><span class="p">:</span>  <span class="mf">20.0</span>
+<span class="nl">in_zmin</span><span class="p">:</span> <span class="o">-</span><span class="mf">15.0</span>
+<span class="nl">in_zmax</span><span class="p">:</span>  <span class="mf">0.0</span>
+
+<span class="cm">/**** all particles are placed randomly over all fracture surface</span>
+<span class="cm">     (not only on boundary edges!) ************************************/</span>
+<span class="nl">init_random</span><span class="p">:</span> <span class="n">no</span>
+<span class="c1">// total number of particles</span>
+<span class="nl">in_randpart</span><span class="p">:</span> <span class="mi">100</span>
+
+<span class="cm">/**** all particles are seed randomly over matrix,</span>
+<span class="cm">     they will start travel in DFN from the node/cell that is closest to</span>
+<span class="cm">     their initial position in rock matrix ***************************/</span>
+
+<span class="nl">init_matrix</span><span class="p">:</span> <span class="n">no</span>
+<span class="c1">// to obtain these files, run python script RandomPositGener.py</span>
+<span class="nl">inm_coord</span><span class="p">:</span> <span class="n">ParticleInitCoordR</span><span class="p">.</span><span class="n">dat</span>
+<span class="nl">inm_nodeID</span><span class="p">:</span> <span class="n">ClosestNodeR</span><span class="p">.</span><span class="n">inp</span>
+<span class="nl">inm_porosity</span><span class="p">:</span> <span class="mf">0.02</span>
+<span class="nl">inm_diffcoeff</span><span class="p">:</span> <span class="mf">1.0e-12</span>
+
+<span class="cm">/*************** Intersection Mixing Rule **********************************/</span>
+<span class="cm">/****streamline_routing: if yes - streamline routing is the selected subgrid process</span>
+<span class="cm">     otherwise the complete mixing rule is selected ****/</span>
+<span class="nl">streamline_routing</span><span class="p">:</span> <span class="n">no</span>
+
+
+<span class="cm">/************* TIME DOMAIN RANDOM WALK ******************************/</span>
+<span class="nl">tdrw</span><span class="p">:</span> <span class="n">no</span>
+<span class="nl">tdrw_porosity</span><span class="p">:</span> <span class="mf">0.02</span>
+<span class="nl">tdrw_diffcoeff</span><span class="p">:</span> <span class="mf">1.0e-11</span>
+
+<span class="cm">/****************** FLOW AND FRACTURE PARAMETERS **********************/</span>
+<span class="nl">porosity</span><span class="p">:</span> <span class="mf">1.0</span> <span class="c1">// porosity</span>
+<span class="nl">density</span><span class="p">:</span> <span class="mf">997.73</span>  <span class="c1">//fluid density</span>
+<span class="nl">satur</span><span class="p">:</span> <span class="mf">1.0</span>
+<span class="nl">thickness</span><span class="p">:</span> <span class="mf">1.0</span> <span class="c1">//DFN aperture  (used in case of no aperture file provided)</span>
+
+<span class="cm">/************************ APERTURE *********************************/</span>
+
+<span class="nl">aperture</span><span class="p">:</span> <span class="n">yes</span>  <span class="c1">//DFN aperture</span>
+<span class="nl">aperture_type</span><span class="p">:</span> <span class="n">frac</span> <span class="c1">//aperture is giving per cell (type &quot;cell&quot;)</span>
+<span class="c1">//    or per fracture (type &quot;frac&quot;)</span>
+<span class="c1">// for now we use an aperture giving per fracture</span>
+<span class="nl">aperture_file</span><span class="p">:</span> <span class="n">aperture</span><span class="p">.</span><span class="n">dat</span>
+
+
+<span class="cm">/********************  TIME ********************************************/</span>
+<span class="nl">timesteps</span><span class="p">:</span> <span class="mi">2000000</span>
+<span class="c1">//units of time (years, days, hours, minutes)</span>
+<span class="nl">time_units</span><span class="p">:</span> <span class="n">seconds</span>
+
+<span class="cm">/**** flux weighted particles*/</span>
+<span class="cm">/**** in case of random initial positions of particles - it&#39;s aperture weighted **/</span>
+<span class="nl">flux_weight</span><span class="p">:</span> <span class="n">yes</span>
+<span class="cm">/* random generator seed */</span>
+<span class="nl">seed</span><span class="p">:</span> <span class="mi">337799</span>
+
+<span class="cm">/*********************  Control Plane/Cylinder Output ********************/</span>
+<span class="cm">/*** virtual Control planes will be build in the direction of flow.</span>
+<span class="cm">Once particle crosses the control plane, it&#39;s position, velocity, time</span>
+<span class="cm">will output to an ascii file. ****/</span>
+<span class="nl">ControlPlane</span><span class="p">:</span> <span class="n">yes</span>
+
+<span class="cm">/* the path and directory name with all particles output files */</span>
+<span class="nl">control_out</span><span class="p">:</span> <span class="n">outcontroldir</span>
+
+<span class="cm">/* Delta Control Plane - the distance between control planes */</span>
+<span class="nl">delta_Control</span><span class="p">:</span> <span class="mi">1</span>
+
+<span class="cm">/* ControlPlane: direction of flow: x-0; y-1; z-2 */</span>
+<span class="nl">flowdir</span><span class="p">:</span> <span class="mi">0</span>
+
+
+<span class="cm">/**************************************************************************/</span>
+<span class="o">/</span><span class="n">endendend</span><span class="o">/</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scripts.html" class="btn btn-neutral float-right" title="Scripts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dfnflow.html" class="btn btn-neutral float-left" title="dfnFlow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

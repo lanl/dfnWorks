@@ -3,6 +3,8 @@
 *.cmake
 *FracMan_interface*
 
+#macOS folder config
+*DS_Store
 
 pydfnworks/pydfnworks/only_gen_output.py
 pydfnworks/pydfnworks/paths.py

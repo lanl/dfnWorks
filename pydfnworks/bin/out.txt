@@ -1,0 +1,2 @@
+RUNNING  /Users/jhyman/anaconda2/bin/python run.py -ncpu 4 -name  ~/test_output_files/4_user_defined_rectangles -input /Users/jhyman/src/dfnworks-main/tests/4_user_defined_rectangles.txt
+Compiling executables

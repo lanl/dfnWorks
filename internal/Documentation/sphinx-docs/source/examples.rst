@@ -94,14 +94,14 @@ This example uses a graph representation of a DFN to isolate the 2-core. The pru
    :alt: alternate text
    :align: center
 
-   *(left) Graph based on DFN topology. Each vertex is a fracture in the network. The inflow boundary is colored blue and the outflow is colored red. (right) 2-Core of the graph to the left. *
+   *(left) Graph based on DFN topology. Each vertex is a fracture in the network. The inflow boundary is colored blue and the outflow is colored red. (right) 2-Core of the graph to the left.*
 
 .. figure:: figures/pruned_network.png
-   :scale: 30 %
+   :scale: 5 %
    :alt: alternate text
    :align: center
 
-   *(left) Original DFN (right) DFN corresponding to the 2-core of the DFN to the left. *
+   *(left) Original DFN (right) DFN corresponding to the 2-core of the DFN to the left.*
 
 
 In Fracture Variability

@@ -11,19 +11,12 @@ The pydfnworks must be setup by the user using the following command in the dire
 
 ``python setup.py install --user`` (if the user does not have admin privileges):
 
-The documentation below includes all the methods and classes of the pydfnworks package. 
+The documentation below includes methods and classes of the pydfnworks package. 
 
-DFN Class
-----------------
+DFN Class and Setup
+---------------------
 
-.. automodule:: pydfnworks.dfnworks
-    :members:
-
-
-DFN setup 
-----------------
-
-.. automodule:: pydfnworks.create_dfn
+.. automodule:: pydfnworks.general.dfnworks
     :members:
 
 dfnGen
@@ -31,20 +24,20 @@ dfnGen
 
 Processing generator input
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.gen_input
+.. automodule:: pydfnworks.dfnGen.gen_input
     :members:
 
-.. automodule:: pydfnworks.distributions
+.. automodule:: pydfnworks.dfnGen.distributions
     :members:
 
 Running the generator
 ^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.generator
+.. automodule:: pydfnworks.dfnGen.generator
     :members:
 
-Graphing generator output
+Analysis of Generated DFN 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.gen_output
+.. automodule:: pydfnworks.dfnGen.gen_output
     :members:
 
 Meshing - LaGriT
@@ -52,22 +45,31 @@ Meshing - LaGriT
 
 Mesh DFN
 ^^^^^^^^^
-.. automodule:: pydfnworks.meshdfn
+.. automodule:: pydfnworks.dfnGen.mesh_dfn
     :members:
 
 LaGrit scripts
 ^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.lagrit_scripts
+.. automodule:: pydfnworks.dfnGen.lagrit_scripts
     :members:
 
 Run meshing in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.run_meshing
+.. automodule:: pydfnworks.dfnGen.run_meshing
     :members:
 
 Mesh helper methods
 ^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.mesh_dfn_helper
+.. automodule:: pydfnworks.dfnGen.mesh_dfn_helper
+    :members:
+
+
+Creating an upscaled mesh of the DFN
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.map2continuum
+    :members:
+
+.. automodule:: pydfnworks.dfnGen.upscale
     :members:
 
 dfnFlow
@@ -75,22 +77,22 @@ dfnFlow
 
 Running Flow
 ^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.flow
+.. automodule:: pydfnworks.dfnFlow.flow
     :members:
 
 Running Flow: PFLOTRAN
 ^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.pflotran
+.. automodule:: pydfnworks.dfnFlow.pflotran
     :members:
 
 Running Flow: FEHM 
 ^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.fehm
+.. automodule:: pydfnworks.dfnFlow.fehm
     :members:
 
 Processing Flow
 ^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.mass_balance
+.. automodule:: pydfnworks.dfnFlow.mass_balance
     :members:
 
 
@@ -99,14 +101,26 @@ dfnTrans
 
 Running Transport 
 ^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.transport
+.. automodule:: pydfnworks.dfnTrans.transport
     :members:
 
-dfn2graph
+dfnGraph
 ---------
-.. automodule:: pydfnworks.dfn2graph
+
+General Graph Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGraph.dfn2graph
     :members:
 
+Graph-Based Flow and Transport
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGraph.graph_flow
+    :members:
+
+.. automodule:: pydfnworks.dfnGraph.graph_transport
+    :members:
+
+<<<<<<< HEAD
 .. automodule:: pydfnworks.graph_flow
     :members:
 
@@ -114,20 +128,23 @@ dfn2graph
     :members:
 
 General Workflow functions
+=======
+General Workflow Functions
+>>>>>>> master
 --------------------------
 
 Print legal statement
 ^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.legal
+.. automodule:: pydfnworks.general.legal
     :members:
  
 Helper functions
 ^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.general_functions
+.. automodule:: pydfnworks.general.general_functions
     :members:
  
 Set up run paths
 ^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.paths
+.. automodule:: pydfnworks.general.paths
     :members:
  

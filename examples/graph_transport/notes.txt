@@ -1,1 +1,1 @@
-python run_graph_transport.py -name $PWD/graph_transport_example -input graph_transport_run_file.txt
+python run_graph_transport.py -name /dfnWorks/work/graph_transport_example -input graph_transport_run_file.txt
