@@ -1,0 +1,14 @@
+<map id="checkForTripleIntersections" name="checkForTripleIntersections">
+<area shape="rect" id="node2" href="$computational_geometry_8cpp.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="240,128,371,155"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="640,255,720,281"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="795,199,882,225"/>
+<area shape="rect" id="node13" href="$vector_functions_8cpp.html#af04ebdcbe44a303101290e88a5971c71" title="euclideanDistance" alt="" coords="240,356,371,383"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#a7038a32284147d86abda1f0b54b83a4e" title="parallel" alt="" coords="463,153,529,180"/>
+<area shape="rect" id="node6" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="797,15,881,41"/>
+<area shape="rect" id="node7" href="$computational_geometry_8cpp.html#ab5f3ce14eaf1560295c9ec71514c340c" title="pointOnLineSeg" alt="" coords="437,52,555,79"/>
+<area shape="rect" id="node8" href="$computational_geometry_8cpp.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="419,103,573,129"/>
+<area shape="rect" id="node12" href="$computational_geometry_8cpp.html#a9eb32a7555c136fb7960f9f13db70004" title="lineIntersection3D" alt="" coords="431,204,561,231"/>
+<area shape="rect" id="node9" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="622,103,738,129"/>
+<area shape="rect" id="node10" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="787,141,890,168"/>
+<area shape="rect" id="node11" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="799,91,879,117"/>
+</map>

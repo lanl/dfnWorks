@@ -1,0 +1,21 @@
+<map id="FRAM" name="FRAM">
+<area shape="rect" id="node2" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="965,124,1049,151"/>
+<area shape="rect" id="node3" href="$computational_geometry_8cpp.html#adf34efb0050985566dfb41f51967680f" title="checkCloseEdge" alt="" coords="152,200,275,227"/>
+<area shape="rect" id="node17" href="$computational_geometry_8cpp.html#a237899188f8ca6cf74a2da890cd13868" title="checkForTripleIntersections" alt="" coords="121,453,306,480"/>
+<area shape="rect" id="node19" href="$computational_geometry_8cpp.html#ac1228db3b0fb85b1a5233b1fb78edd4a" title="checkDistToOldIntersections" alt="" coords="117,301,309,328"/>
+<area shape="rect" id="node20" href="$computational_geometry_8cpp.html#abdfd17162db7fd7ad2e4719255fa915f" title="checkDistToNewIntersections" alt="" coords="115,251,312,277"/>
+<area shape="rect" id="node4" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="790,200,906,227"/>
+<area shape="rect" id="node8" href="$computational_geometry_8cpp.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="384,301,515,328"/>
+<area shape="rect" id="node14" href="$computational_geometry_8cpp.html#a69f93a65c39c49d1b705fad32f790e98" title="shrinkIntersection" alt="" coords="601,48,727,75"/>
+<area shape="rect" id="node16" href="$computational_geometry_8cpp.html#a95b1277bb056c0817776be85b254c987" title="checkDistanceFromNodes" alt="" coords="360,136,539,163"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="955,239,1058,265"/>
+<area shape="rect" id="node6" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="963,403,1050,429"/>
+<area shape="rect" id="node7" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="967,188,1047,215"/>
+<area shape="rect" id="node9" href="$vector_functions_8h.html#a7038a32284147d86abda1f0b54b83a4e" title="parallel" alt="" coords="631,352,697,379"/>
+<area shape="rect" id="node11" href="$computational_geometry_8cpp.html#ab5f3ce14eaf1560295c9ec71514c340c" title="pointOnLineSeg" alt="" coords="605,301,723,328"/>
+<area shape="rect" id="node12" href="$computational_geometry_8cpp.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="587,251,741,277"/>
+<area shape="rect" id="node13" href="$computational_geometry_8cpp.html#a9eb32a7555c136fb7960f9f13db70004" title="lineIntersection3D" alt="" coords="599,403,729,429"/>
+<area shape="rect" id="node10" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="808,403,888,429"/>
+<area shape="rect" id="node15" href="$generating_points_8cpp.html#a1765372f6dbad65b4d7cac36d830bdfe" title="lineFunction3D" alt="" coords="793,48,903,75"/>
+<area shape="rect" id="node18" href="$vector_functions_8cpp.html#af04ebdcbe44a303101290e88a5971c71" title="euclideanDistance" alt="" coords="384,504,515,531"/>
+</map>

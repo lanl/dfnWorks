@@ -1,0 +1,16 @@
+<map id="checkCloseEdge" name="checkCloseEdge">
+<area shape="rect" id="node2" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="606,56,722,83"/>
+<area shape="rect" id="node7" href="$computational_geometry_8cpp.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="200,233,331,260"/>
+<area shape="rect" id="node13" href="$computational_geometry_8cpp.html#a69f93a65c39c49d1b705fad32f790e98" title="shrinkIntersection" alt="" coords="417,157,543,184"/>
+<area shape="rect" id="node15" href="$computational_geometry_8cpp.html#a95b1277bb056c0817776be85b254c987" title="checkDistanceFromNodes" alt="" coords="176,5,355,32"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="771,31,874,57"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="781,157,865,184"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="779,259,866,285"/>
+<area shape="rect" id="node6" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="783,81,863,108"/>
+<area shape="rect" id="node8" href="$vector_functions_8h.html#a7038a32284147d86abda1f0b54b83a4e" title="parallel" alt="" coords="447,259,513,285"/>
+<area shape="rect" id="node10" href="$computational_geometry_8cpp.html#ab5f3ce14eaf1560295c9ec71514c340c" title="pointOnLineSeg" alt="" coords="421,309,539,336"/>
+<area shape="rect" id="node11" href="$computational_geometry_8cpp.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="403,107,557,133"/>
+<area shape="rect" id="node12" href="$computational_geometry_8cpp.html#a9eb32a7555c136fb7960f9f13db70004" title="lineIntersection3D" alt="" coords="415,360,545,387"/>
+<area shape="rect" id="node9" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="624,309,704,336"/>
+<area shape="rect" id="node14" href="$generating_points_8cpp.html#a1765372f6dbad65b4d7cac36d830bdfe" title="lineFunction3D" alt="" coords="609,107,719,133"/>
+</map>

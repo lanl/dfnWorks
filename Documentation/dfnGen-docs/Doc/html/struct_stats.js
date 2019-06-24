@@ -1,0 +1,25 @@
+var struct_stats =
+[
+    [ "Stats", "struct_stats.html#aed79e2b7167040dada2cb2ba8b90ad9b", null ],
+    [ "acceptedFromFam", "struct_stats.html#a334fa0009d90e69ec0013a17ff81e7f3", null ],
+    [ "acceptedPolyCount", "struct_stats.html#aff2b4f1ca734a438e89ad561b82dd7ea", null ],
+    [ "areaAfterRemoval", "struct_stats.html#ab9e2ed63a3c7d89d4c2f128c918f3c24", null ],
+    [ "areaBeforeRemoval", "struct_stats.html#adf7f38474bfb4c7ab6e35877c5c174bb", null ],
+    [ "discardedLength", "struct_stats.html#a5cd7cf21a73c6d359b63732ef1d7eebb", null ],
+    [ "expectedFromFam", "struct_stats.html#a1041c9121838585a366175f3ddd23e91", null ],
+    [ "fractGroup", "struct_stats.html#a15b646bf15b9fa5aad461bf8fb9d27ff", null ],
+    [ "groupData", "struct_stats.html#ae4c56b074f1d02cc1ce798790fc9dcab", null ],
+    [ "intersectionNodeCount", "struct_stats.html#a84c9fecbd7e80b7cf93b185952618062", null ],
+    [ "intersectionsShortened", "struct_stats.html#ae27fc3d500d31275f8d97fde166b055c", null ],
+    [ "nextGroupNum", "struct_stats.html#ac4e4a2e4e084716a6dbd3ce08461282f", null ],
+    [ "originalLength", "struct_stats.html#a8cf48c5b0b96005ef7dbb03cceaf9003", null ],
+    [ "rejectedFromFam", "struct_stats.html#aa8289ad2f4e3480362ff9d9f13adb1a2", null ],
+    [ "rejectedPolyCount", "struct_stats.html#ae78598e8e15f944d358722868f763e32", null ],
+    [ "rejectionReasons", "struct_stats.html#a3c0ec96761b92e70bbb96de0df58cce5", null ],
+    [ "rejectsPerAttempt", "struct_stats.html#ae2c4ebee5152b67185fc4932fa6cca22", null ],
+    [ "retranslatedPolyCount", "struct_stats.html#a0fe2c18e0646b84364712352595751ec", null ],
+    [ "tripleNodeCount", "struct_stats.html#a6d521913f1a280406a6536cb632c4356", null ],
+    [ "truncated", "struct_stats.html#a0467673e7585331b1f609c9f7fc1de7a", null ],
+    [ "volAfterRemoval", "struct_stats.html#a7e6c4e52e898eb48d5df350955dda7a8", null ],
+    [ "volBeforeRemoval", "struct_stats.html#a04e3ecdf0010372b9dae313b7dc6ecc3", null ]
+];

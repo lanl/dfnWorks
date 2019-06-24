@@ -1,0 +1,48 @@
+var files =
+[
+    [ "clusterGroups.cpp", "cluster_groups_8cpp.html", "cluster_groups_8cpp" ],
+    [ "clusterGroups.h", "cluster_groups_8h.html", "cluster_groups_8h" ],
+    [ "computationalGeometry.cpp", "computational_geometry_8cpp.html", "computational_geometry_8cpp" ],
+    [ "computationalGeometry.h", "computational_geometry_8h.html", "computational_geometry_8h" ],
+    [ "debugFunctions.cpp", "debug_functions_8cpp.html", "debug_functions_8cpp" ],
+    [ "debugFunctions.h", "debug_functions_8h.html", "debug_functions_8h" ],
+    [ "DFNmain.cpp", "_d_f_nmain_8cpp.html", "_d_f_nmain_8cpp" ],
+    [ "distributions.cpp", "distributions_8cpp.html", null ],
+    [ "distributions.h", "distributions_8h.html", [
+      [ "Distributions", "class_distributions.html", "class_distributions" ]
+    ] ],
+    [ "docMainPage.cpp", "doc_main_page_8cpp.html", null ],
+    [ "domain.cpp", "domain_8cpp.html", "domain_8cpp" ],
+    [ "domain.h", "domain_8h.html", "domain_8h" ],
+    [ "expDist.cpp", "exp_dist_8cpp.html", null ],
+    [ "expDist.h", "exp_dist_8h.html", [
+      [ "ExpDist", "class_exp_dist.html", "class_exp_dist" ]
+    ] ],
+    [ "fractureEstimating.cpp", "fracture_estimating_8cpp.html", "fracture_estimating_8cpp" ],
+    [ "fractureEstimating.h", "fracture_estimating_8h.html", "fracture_estimating_8h" ],
+    [ "generatingPoints.cpp", "generating_points_8cpp.html", "generating_points_8cpp" ],
+    [ "generatingPoints.h", "generating_points_8h.html", "generating_points_8h" ],
+    [ "hotkey.cpp", "hotkey_8cpp.html", "hotkey_8cpp" ],
+    [ "hotkey.h", "hotkey_8h.html", "hotkey_8h" ],
+    [ "input.h", "input_8h.html", "input_8h" ],
+    [ "insertShape.cpp", "insert_shape_8cpp.html", "insert_shape_8cpp" ],
+    [ "insertShape.h", "insert_shape_8h.html", "insert_shape_8h" ],
+    [ "insertUserEll.cpp", "insert_user_ell_8cpp.html", "insert_user_ell_8cpp" ],
+    [ "insertUserEllByCoord.cpp", "insert_user_ell_by_coord_8cpp.html", "insert_user_ell_by_coord_8cpp" ],
+    [ "insertUserRects.cpp", "insert_user_rects_8cpp.html", "insert_user_rects_8cpp" ],
+    [ "insertUserRectsByCoord.cpp", "insert_user_rects_by_coord_8cpp.html", "insert_user_rects_by_coord_8cpp" ],
+    [ "mathFunctions.cpp", "math_functions_8cpp.html", "math_functions_8cpp" ],
+    [ "mathFunctions.h", "math_functions_8h.html", "math_functions_8h" ],
+    [ "output.cpp", "output_8cpp.html", "output_8cpp" ],
+    [ "output.h", "output_8h.html", "output_8h" ],
+    [ "readInput.cpp", "read_input_8cpp.html", "read_input_8cpp" ],
+    [ "readInputFunctions.cpp", "read_input_functions_8cpp.html", "read_input_functions_8cpp" ],
+    [ "readInputFunctions.h", "read_input_functions_8h.html", "read_input_functions_8h" ],
+    [ "removeFractures.cpp", "remove_fractures_8cpp.html", "remove_fractures_8cpp" ],
+    [ "removeFractures.h", "remove_fractures_8h.html", "remove_fractures_8h" ],
+    [ "structures.cpp", "structures_8cpp.html", null ],
+    [ "structures.h", "structures_8h.html", "structures_8h" ],
+    [ "testing.h", "testing_8h.html", null ],
+    [ "vectorFunctions.cpp", "vector_functions_8cpp.html", "vector_functions_8cpp" ],
+    [ "vectorFunctions.h", "vector_functions_8h.html", "vector_functions_8h" ]
+];

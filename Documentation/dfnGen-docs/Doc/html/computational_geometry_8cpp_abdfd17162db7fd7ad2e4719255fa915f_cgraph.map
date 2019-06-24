@@ -1,0 +1,13 @@
+<map id="checkDistToNewIntersections" name="checkDistToNewIntersections">
+<area shape="rect" id="node2" href="$computational_geometry_8cpp.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="251,123,381,150"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#a7038a32284147d86abda1f0b54b83a4e" title="parallel" alt="" coords="474,22,539,49"/>
+<area shape="rect" id="node6" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="807,174,891,201"/>
+<area shape="rect" id="node7" href="$computational_geometry_8cpp.html#ab5f3ce14eaf1560295c9ec71514c340c" title="pointOnLineSeg" alt="" coords="448,225,565,251"/>
+<area shape="rect" id="node8" href="$computational_geometry_8cpp.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="429,123,584,150"/>
+<area shape="rect" id="node12" href="$computational_geometry_8cpp.html#a9eb32a7555c136fb7960f9f13db70004" title="lineIntersection3D" alt="" coords="442,73,571,99"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="651,22,731,49"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="806,22,893,49"/>
+<area shape="rect" id="node9" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="633,123,749,150"/>
+<area shape="rect" id="node10" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="798,73,901,99"/>
+<area shape="rect" id="node11" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="809,123,889,150"/>
+</map>

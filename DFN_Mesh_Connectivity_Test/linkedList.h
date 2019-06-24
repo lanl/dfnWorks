@@ -5,11 +5,11 @@
 
 class LinkedList {
 
-private:
+  private:
     Node* head;
     Node* tail;
-
-public: 
+    
+  public:
     LinkedList();
     ~LinkedList();
     void append(Node* node);

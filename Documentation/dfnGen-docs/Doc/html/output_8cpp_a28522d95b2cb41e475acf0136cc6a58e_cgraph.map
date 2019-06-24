@@ -1,0 +1,14 @@
+<map id="writeIntersectionFiles" name="writeIntersectionFiles">
+<area shape="rect" id="node2" href="$output_8cpp.html#a08e7277a09a396170a11d74b1dea4a8f" title="adjustIntFractIDs" alt="" coords="232,5,355,32"/>
+<area shape="rect" id="node3" href="$read_input_functions_8cpp.html#a93d02ef3164ffc7b03270f3c0e1736aa" title="checkIfOpen" alt="" coords="245,56,342,83"/>
+<area shape="rect" id="node4" href="$computational_geometry_8cpp.html#a06628fbaa79aad7eec7a74c5341e77bd" title="polyAndIntersection\l_RotationToXY" alt="" coords="224,107,363,149"/>
+<area shape="rect" id="node8" href="$vector_functions_8cpp.html#af04ebdcbe44a303101290e88a5971c71" title="euclideanDistance" alt="" coords="228,173,359,200"/>
+<area shape="rect" id="node9" href="$math_functions_8cpp.html#a50249713d75d2446b44572f47cc0c560" title="sortedIndex" alt="" coords="247,224,339,251"/>
+<area shape="rect" id="node10" href="$generating_points_8cpp.html#a22991db6b15a6147e875c27a84402d4c" title="discretizeLineOfIntersection" alt="" coords="200,275,387,301"/>
+<area shape="rect" id="node12" href="$output_8cpp.html#ac2cd20a288fc5b4e1d25bf9871f2cea4" title="writePoints" alt="" coords="250,325,337,352"/>
+<area shape="rect" id="node13" href="$output_8cpp.html#a4ed77d5751dbcd90abcdaeccd521c6e8" title="finishWritingIntFile" alt="" coords="228,376,359,403"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#a94303b1c8dd36d71e57fd0e4d5d26ae3" title="crossProduct" alt="" coords="595,89,695,116"/>
+<area shape="rect" id="node6" href="$computational_geometry_8cpp.html#a8aaea6ef9d977f6d7d571d45ace1ad5d" title="rotationMatrix" alt="" coords="439,140,542,167"/>
+<area shape="rect" id="node7" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="602,140,689,167"/>
+<area shape="rect" id="node11" href="$generating_points_8cpp.html#a1765372f6dbad65b4d7cac36d830bdfe" title="lineFunction3D" alt="" coords="435,275,546,301"/>
+</map>

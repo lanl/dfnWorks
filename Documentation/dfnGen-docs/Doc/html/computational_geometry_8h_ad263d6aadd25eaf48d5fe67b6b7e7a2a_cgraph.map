@@ -1,0 +1,6 @@
+<map id="pointToLineSeg" name="pointToLineSeg">
+<area shape="rect" id="node2" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="171,5,274,32"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="181,56,265,83"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="179,107,266,133"/>
+<area shape="rect" id="node5" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="183,157,263,184"/>
+</map>

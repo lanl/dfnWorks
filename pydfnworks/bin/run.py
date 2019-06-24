@@ -14,22 +14,19 @@ if __name__ == "__main__":
 
     define_paths()
     main_time = time()
-    print 'Compiling executables'
-    subprocess.call(os.environ['python_dfn'] + ' compile.py', shell=True)  
+    print('Compiling executables')
     DFN = create_dfn()
     if type(DFN) is ' NoneType':
-        print 'ERROR: DFN object not created correctly'
-        exit()
+        print('ERROR: DFN object not created correctly')
+        exit(1)
     # General Work Flow
-    DFN.dfn_gen()
+    DFN.dfn_gen(output=False)
     DFN.dfn_flow()
     DFN.dfn_trans()
-    DFN.cleanup_files_at_end()
 
     main_elapsed = time() - main_time
     timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-    print timing
-    dump_time(DFN.local_jobname, DFN.jobname,main_elapsed) 
+    DFN.dump_time("Total run time",main_elapsed)
     #dfn.print_run_time()	
     print("*"*80)
     print(DFN.jobname+' complete')
