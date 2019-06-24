@@ -1,0 +1,31 @@
+<map id="intersectionChecking" name="intersectionChecking">
+<area shape="rect" id="node2" href="$computational_geometry_8cpp.html#a4016983189eb7ed8e227b49477018d8a" title="checkBoundingBox" alt="" coords="200,5,336,32"/>
+<area shape="rect" id="node3" href="$computational_geometry_8cpp.html#acc7b1a87dc0b49ffcb9898dae4cc4e96" title="findIntersections" alt="" coords="209,637,327,664"/>
+<area shape="rect" id="node9" href="$computational_geometry_8cpp.html#a7770747ef4153bfb4ae5d53dce0d5876" title="FRAM" alt="" coords="238,411,298,437"/>
+<area shape="rect" id="node10" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="1234,157,1318,184"/>
+<area shape="rect" id="node28" href="$cluster_groups_8cpp.html#a379930b3782e888c9ccdf5a8106b3434" title="assignGroup" alt="" coords="219,700,317,727"/>
+<area shape="rect" id="node30" href="$cluster_groups_8cpp.html#aa67c48c94718510ec7bd5590f09d090c" title="updateGroups" alt="" coords="215,776,321,803"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="1233,563,1319,589"/>
+<area shape="rect" id="node5" href="$math_functions_8cpp.html#a144421162e6b2cc91b275cf0c41488da" title="sumDevAry3" alt="" coords="433,587,532,613"/>
+<area shape="rect" id="node7" href="$math_functions_8cpp.html#a31921fcb145e36a988b2fca62c737815" title="maxElmtIdx" alt="" coords="437,637,529,664"/>
+<area shape="rect" id="node8" href="$math_functions_8cpp.html#a50249713d75d2446b44572f47cc0c560" title="sortedIndex" alt="" coords="437,688,529,715"/>
+<area shape="rect" id="node6" href="$math_functions_8cpp.html#a98cde7148e906b892afae204d7bdc6b1" title="sumDeviation" alt="" coords="667,688,770,715"/>
+<area shape="rect" id="node11" href="$computational_geometry_8cpp.html#adf34efb0050985566dfb41f51967680f" title="checkCloseEdge" alt="" coords="421,309,544,336"/>
+<area shape="rect" id="node24" href="$computational_geometry_8cpp.html#a237899188f8ca6cf74a2da890cd13868" title="checkForTripleIntersections" alt="" coords="390,512,575,539"/>
+<area shape="rect" id="node26" href="$computational_geometry_8cpp.html#ac1228db3b0fb85b1a5233b1fb78edd4a" title="checkDistToOldIntersections" alt="" coords="387,385,579,412"/>
+<area shape="rect" id="node27" href="$computational_geometry_8cpp.html#abdfd17162db7fd7ad2e4719255fa915f" title="checkDistToNewIntersections" alt="" coords="384,436,581,463"/>
+<area shape="rect" id="node12" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="1059,309,1175,336"/>
+<area shape="rect" id="node15" href="$computational_geometry_8cpp.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="653,411,784,437"/>
+<area shape="rect" id="node21" href="$computational_geometry_8cpp.html#a69f93a65c39c49d1b705fad32f790e98" title="shrinkIntersection" alt="" coords="870,157,997,184"/>
+<area shape="rect" id="node23" href="$computational_geometry_8cpp.html#a95b1277bb056c0817776be85b254c987" title="checkDistanceFromNodes" alt="" coords="629,247,808,273"/>
+<area shape="rect" id="node13" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="1225,284,1327,311"/>
+<area shape="rect" id="node14" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="1236,335,1316,361"/>
+<area shape="rect" id="node16" href="$vector_functions_8h.html#a7038a32284147d86abda1f0b54b83a4e" title="parallel" alt="" coords="901,461,966,488"/>
+<area shape="rect" id="node18" href="$computational_geometry_8cpp.html#ab5f3ce14eaf1560295c9ec71514c340c" title="pointOnLineSeg" alt="" coords="875,360,992,387"/>
+<area shape="rect" id="node19" href="$computational_geometry_8cpp.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="856,411,1011,437"/>
+<area shape="rect" id="node20" href="$computational_geometry_8cpp.html#a9eb32a7555c136fb7960f9f13db70004" title="lineIntersection3D" alt="" coords="869,512,998,539"/>
+<area shape="rect" id="node17" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="1077,512,1157,539"/>
+<area shape="rect" id="node22" href="$generating_points_8cpp.html#a1765372f6dbad65b4d7cac36d830bdfe" title="lineFunction3D" alt="" coords="1062,208,1173,235"/>
+<area shape="rect" id="node25" href="$vector_functions_8cpp.html#af04ebdcbe44a303101290e88a5971c71" title="euclideanDistance" alt="" coords="653,563,784,589"/>
+<area shape="rect" id="node29" href="$math_functions_8h.html#aaf4979ac027751a7358291353a23b387" title="OR" alt="" coords="461,789,504,816"/>
+</map>

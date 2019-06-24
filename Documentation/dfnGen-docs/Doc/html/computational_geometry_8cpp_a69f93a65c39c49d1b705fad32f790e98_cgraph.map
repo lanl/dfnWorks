@@ -1,0 +1,8 @@
+<map id="shrinkIntersection" name="shrinkIntersection">
+<area shape="rect" id="node2" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="357,5,441,32"/>
+<area shape="rect" id="node3" href="$generating_points_8cpp.html#a1765372f6dbad65b4d7cac36d830bdfe" title="lineFunction3D" alt="" coords="185,56,295,83"/>
+<area shape="rect" id="node4" href="$computational_geometry_8cpp.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="182,107,298,133"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#ad5177d4868472616bd9fac80a8b65f78" title="sqrMagnitude" alt="" coords="347,56,450,83"/>
+<area shape="rect" id="node6" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="355,107,442,133"/>
+<area shape="rect" id="node7" href="$vector_functions_8cpp.html#a3c2b95a1658779bf4d2b104fa9513e75" title="projection" alt="" coords="359,157,439,184"/>
+</map>

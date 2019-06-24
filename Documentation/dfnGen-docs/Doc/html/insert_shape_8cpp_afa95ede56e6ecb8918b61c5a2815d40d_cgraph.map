@@ -1,0 +1,10 @@
+<map id="reTranslatePoly" name="reTranslatePoly">
+<area shape="rect" id="node2" href="$generating_points_8cpp.html#a152eb5ef32d8e1dd69785a1e05d9c8c0" title="randomTranslation" alt="" coords="171,5,304,32"/>
+<area shape="rect" id="node3" href="$computational_geometry_8cpp.html#a3098cccf29c7a47d2eae661b0f545224" title="translate" alt="" coords="201,56,274,83"/>
+<area shape="rect" id="node4" href="$insert_shape_8cpp.html#a8ed0d23da7ff9cd1f7c4109a4c478071" title="initializeEllVertices" alt="" coords="171,107,303,133"/>
+<area shape="rect" id="node5" href="$computational_geometry_8cpp.html#a878eeb1b4990cde9d7d12a64f647af4d" title="applyRotation2D" alt="" coords="177,157,297,184"/>
+<area shape="rect" id="node6" href="$computational_geometry_8cpp.html#af7f1ba8a57908229078780a2695e4e46" title="applyRotation3D" alt="" coords="177,208,297,235"/>
+<area shape="rect" id="node7" href="$vector_functions_8h.html#a94303b1c8dd36d71e57fd0e4d5d26ae3" title="crossProduct" alt="" coords="505,183,605,209"/>
+<area shape="rect" id="node8" href="$computational_geometry_8cpp.html#a8aaea6ef9d977f6d7d571d45ace1ad5d" title="rotationMatrix" alt="" coords="353,233,455,260"/>
+<area shape="rect" id="node9" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="511,233,598,260"/>
+</map>

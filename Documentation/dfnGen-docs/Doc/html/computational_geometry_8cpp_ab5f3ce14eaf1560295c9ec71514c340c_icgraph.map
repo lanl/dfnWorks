@@ -1,0 +1,15 @@
+<map id="pointOnLineSeg" name="pointOnLineSeg">
+<area shape="rect" id="node2" href="$computational_geometry_8h.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="171,117,301,143"/>
+<area shape="rect" id="node3" href="$computational_geometry_8h.html#ac1228db3b0fb85b1a5233b1fb78edd4a" title="checkDistToOldIntersections" alt="" coords="352,41,544,67"/>
+<area shape="rect" id="node12" href="$computational_geometry_8h.html#a4c94ffa2818f164dbda3f1cb6f0fb9a8" title="checkDistToNewIntersections" alt="" coords="349,91,547,118"/>
+<area shape="rect" id="node13" href="$computational_geometry_8h.html#adf34efb0050985566dfb41f51967680f" title="checkCloseEdge" alt="" coords="387,142,509,169"/>
+<area shape="rect" id="node14" href="$computational_geometry_8h.html#a237899188f8ca6cf74a2da890cd13868" title="checkForTripleIntersections" alt="" coords="355,193,541,219"/>
+<area shape="rect" id="node4" href="$computational_geometry_8h.html#a7ada98067054623a6bcc19ab19403682" title="FRAM" alt="" coords="595,117,655,143"/>
+<area shape="rect" id="node5" href="$computational_geometry_8h.html#aff243280740a51cada5c0dd94021fb66" title="intersectionChecking" alt="" coords="705,117,850,143"/>
+<area shape="rect" id="node6" href="$_d_f_nmain_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title="main" alt="" coords="1117,117,1168,143"/>
+<area shape="rect" id="node7" href="$insert_user_ell_8cpp.html#a9841b356b0460e297748d6648c301558" title="insertUserEll" alt="" coords="935,41,1033,67"/>
+<area shape="rect" id="node8" href="$insert_user_ell_by_coord_8cpp.html#a49e6b0be012ed44c6ef83ea66ed6dd86" title="insertUserEllByCoord" alt="" coords="909,91,1059,118"/>
+<area shape="rect" id="node9" href="$insert_user_rects_8cpp.html#af69365c2e0148366aabe6751ffc54a79" title="insertUserRects" alt="" coords="925,142,1043,169"/>
+<area shape="rect" id="node10" href="$insert_user_rects_by_coord_8cpp.html#a244f461634679dc91d08da3e183f9b8c" title="insertUserRectsByCoord" alt="" coords="899,193,1069,219"/>
+<area shape="rect" id="node11" href="$remove_fractures_8h.html#a016a4a3e0104523549279e6f6cf6c6d8" title="removeFractures" alt="" coords="923,243,1045,270"/>
+</map>

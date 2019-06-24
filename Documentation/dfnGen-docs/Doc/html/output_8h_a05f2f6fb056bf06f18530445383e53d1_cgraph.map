@@ -1,0 +1,6 @@
+<map id="rotateFractures" name="rotateFractures">
+<area shape="rect" id="node2" href="$computational_geometry_8cpp.html#af7f1ba8a57908229078780a2695e4e46" title="applyRotation3D" alt="" coords="165,31,285,57"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#a94303b1c8dd36d71e57fd0e4d5d26ae3" title="crossProduct" alt="" coords="486,5,586,32"/>
+<area shape="rect" id="node4" href="$computational_geometry_8cpp.html#a8aaea6ef9d977f6d7d571d45ace1ad5d" title="rotationMatrix" alt="" coords="334,56,437,83"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="493,56,579,83"/>
+</map>

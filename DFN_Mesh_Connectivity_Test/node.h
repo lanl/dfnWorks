@@ -3,7 +3,7 @@
 
 class Node {
 
-public: 
+  public:
     Node* next;
     int id;
     Node(int ID);

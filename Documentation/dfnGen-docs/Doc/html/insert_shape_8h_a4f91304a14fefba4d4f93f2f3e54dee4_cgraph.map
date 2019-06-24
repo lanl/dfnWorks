@@ -1,0 +1,17 @@
+<map id="generatePoly" name="generatePoly">
+<area shape="rect" id="node2" href="$insert_shape_8cpp.html#ae4fa66ac2a60ae519ee05168b44c9917" title="shapeType" alt="" coords="184,5,272,32"/>
+<area shape="rect" id="node3" href="$insert_shape_8cpp.html#a9b3f632508ac90991bd6ebee7bcfbc2f" title="getFamilyNumber" alt="" coords="165,56,291,83"/>
+<area shape="rect" id="node4" href="$insert_shape_8cpp.html#aed01cfb18a8a6b4ec394783593d5765f" title="initializeRectVertices" alt="" coords="155,107,301,133"/>
+<area shape="rect" id="node5" href="$insert_shape_8cpp.html#a8ed0d23da7ff9cd1f7c4109a4c478071" title="initializeEllVertices" alt="" coords="162,157,294,184"/>
+<area shape="rect" id="node6" href="$generating_points_8cpp.html#a91e58d3a0d7a5e9d65cf15471f02fab0" title="truncatedPowerLaw" alt="" coords="158,208,298,235"/>
+<area shape="rect" id="node7" href="$computational_geometry_8cpp.html#a878eeb1b4990cde9d7d12a64f647af4d" title="applyRotation2D" alt="" coords="168,259,288,285"/>
+<area shape="rect" id="node8" href="$generating_points_8cpp.html#a2f7b981bd314f565407a2db0358bf81b" title="fisherDistribution" alt="" coords="350,309,471,336"/>
+<area shape="rect" id="node11" href="$vector_functions_8h.html#a92da2058f3ed2a6db16d2fe0e445794a" title="magnitude" alt="" coords="186,411,270,437"/>
+<area shape="rect" id="node12" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="188,461,268,488"/>
+<area shape="rect" id="node13" href="$computational_geometry_8cpp.html#af7f1ba8a57908229078780a2695e4e46" title="applyRotation3D" alt="" coords="168,360,288,387"/>
+<area shape="rect" id="node15" href="$generating_points_8cpp.html#a152eb5ef32d8e1dd69785a1e05d9c8c0" title="randomTranslation" alt="" coords="161,512,295,539"/>
+<area shape="rect" id="node16" href="$computational_geometry_8cpp.html#a3098cccf29c7a47d2eae661b0f545224" title="translate" alt="" coords="191,563,265,589"/>
+<area shape="rect" id="node9" href="$vector_functions_8h.html#a94303b1c8dd36d71e57fd0e4d5d26ae3" title="crossProduct" alt="" coords="521,360,621,387"/>
+<area shape="rect" id="node10" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="527,309,614,336"/>
+<area shape="rect" id="node14" href="$computational_geometry_8cpp.html#a8aaea6ef9d977f6d7d571d45ace1ad5d" title="rotationMatrix" alt="" coords="359,360,462,387"/>
+</map>

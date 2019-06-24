@@ -1,0 +1,3 @@
+dfnGen /dfnWorks/examples/graph_transport/gen_TPL.dat
+dfnFlow /dfnWorks/examples/graph_transport/dfn_explicit.in
+dfnTrans /dfnWorks/examples/graph_transport/PTDFN_control.dat

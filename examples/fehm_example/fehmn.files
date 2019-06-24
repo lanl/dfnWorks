@@ -1,0 +1,10 @@
+input: initial.dat
+gridf: full_mesh.fehmn
+outp:  tri_frac.out
+rsto:  tri_frac.fin
+check: tri_frac.chk
+root:  tri_frac
+stor:  full_mesh_vol_area.stor
+
+all
+0

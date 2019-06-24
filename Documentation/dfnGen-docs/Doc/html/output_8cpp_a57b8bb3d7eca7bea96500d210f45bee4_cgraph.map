@@ -1,0 +1,6 @@
+<map id="writeRotationData" name="writeRotationData">
+<area shape="rect" id="node2" href="$read_input_functions_8cpp.html#a93d02ef3164ffc7b03270f3c0e1736aa" title="checkIfOpen" alt="" coords="183,5,281,32"/>
+<area shape="rect" id="node3" href="$vector_functions_8h.html#abb1d4beb5939c7a5ddd4978c15fab7bb" title="dotProduct" alt="" coords="189,56,275,83"/>
+<area shape="rect" id="node4" href="$vector_functions_8h.html#a94303b1c8dd36d71e57fd0e4d5d26ae3" title="crossProduct" alt="" coords="182,107,282,133"/>
+<area shape="rect" id="node5" href="$vector_functions_8h.html#a48bb00fc4195377b229efe044f3bb67e" title="normalize" alt="" coords="192,157,272,184"/>
+</map>

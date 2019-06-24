@@ -1,0 +1,28 @@
+var computational_geometry_8h =
+[
+    [ "applyRotation2D", "computational_geometry_8h.html#a0de7b2e0479ef51bf9a286b09f2b53e1", null ],
+    [ "applyRotation3D", "computational_geometry_8h.html#a0d5da6b9c8dc5c9193e7ea07d2ba466e", null ],
+    [ "checkBoundingBox", "computational_geometry_8h.html#a8f29f7390c5415ae171ee96d38ff858f", null ],
+    [ "checkCloseEdge", "computational_geometry_8h.html#adf34efb0050985566dfb41f51967680f", null ],
+    [ "checkDistanceFromNodes", "computational_geometry_8h.html#a63cb49a89f3b90a72aea7b6a24548633", null ],
+    [ "checkDistIntPtsEdge", "computational_geometry_8h.html#ae7560d107886d705a36d1efaee8b8cc8", null ],
+    [ "checkDistToNewIntersections", "computational_geometry_8h.html#a4c94ffa2818f164dbda3f1cb6f0fb9a8", null ],
+    [ "checkDistToOldIntersections", "computational_geometry_8h.html#ac1228db3b0fb85b1a5233b1fb78edd4a", null ],
+    [ "checkForTripleIntersections", "computational_geometry_8h.html#a237899188f8ca6cf74a2da890cd13868", null ],
+    [ "createBoundingBox", "computational_geometry_8h.html#ace23b489a120bc6d6407f7e08e1e009d", null ],
+    [ "findIntersections", "computational_geometry_8h.html#a415bf8d3cbc3ccbdf9c8f7bbff35bc96", null ],
+    [ "FRAM", "computational_geometry_8h.html#a7ada98067054623a6bcc19ab19403682", null ],
+    [ "intersectionChecking", "computational_geometry_8h.html#aff243280740a51cada5c0dd94021fb66", null ],
+    [ "lineIntersection3D", "computational_geometry_8h.html#a9eb32a7555c136fb7960f9f13db70004", null ],
+    [ "lineSegToLineSeg", "computational_geometry_8h.html#a5edbf5558b99624dfb90275aa07ba149", null ],
+    [ "lineSegToLineSegSep", "computational_geometry_8h.html#a545f45434dcbd126c6ff994b9ec2588b", null ],
+    [ "PointOnLineSeg", "computational_geometry_8h.html#add63aa632ee4353bfb401e7a470c6153", null ],
+    [ "PointOnLineSeg", "computational_geometry_8h.html#a44049a34bde344a1eea2087773474ba8", null ],
+    [ "pointToLineSeg", "computational_geometry_8h.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2", null ],
+    [ "pointToLineSeg", "computational_geometry_8h.html#ad263d6aadd25eaf48d5fe67b6b7e7a2a", null ],
+    [ "polyAndIntersection_RotationToXY", "computational_geometry_8h.html#a06628fbaa79aad7eec7a74c5341e77bd", null ],
+    [ "printBoundingBox", "computational_geometry_8h.html#a68c9aa4c8a1d635c5a662c94722bd19f", null ],
+    [ "rotationMatrix", "computational_geometry_8h.html#a8aaea6ef9d977f6d7d571d45ace1ad5d", null ],
+    [ "shrinkIntersection", "computational_geometry_8h.html#a69f93a65c39c49d1b705fad32f790e98", null ],
+    [ "translate", "computational_geometry_8h.html#a3098cccf29c7a47d2eae661b0f545224", null ]
+];

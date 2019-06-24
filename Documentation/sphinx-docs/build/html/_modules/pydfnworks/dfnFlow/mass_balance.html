@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pydfnworks.dfnFlow.mass_balance &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index_docs.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pydfnworks.dfnFlow.mass_balance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pydfnworks.dfnFlow.mass_balance</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="c1"># Calculate mass balance across a boundary of a DFN mesh</span>
+<span class="c1"># Make sure that you run PFLOTRAN with MASS_FLOWRATE under OUTPUT</span>
+<span class="c1"># Satish Karra</span>
+<span class="c1"># March 17, 2016</span>
+<span class="c1"># Updated Jeffrey Hyman Dec 19 2018</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.mesh_dfn_helper</span> <span class="k">import</span> <span class="n">parse_params_file</span> 
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Satish Karra&#39;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s1">&#39;satkarra@lanl.gov&#39;</span>
+
+
+<div class="viewcode-block" id="get_domain"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.get_domain">[docs]</a><span class="k">def</span> <span class="nf">get_domain</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Return dictionary of domain x,y,z by calling parse_params_file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        domain : dict</span>
+<span class="sd">            Dictionary of domain sizes in x, y, z</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        parse_params_file() is in mesh_dfn_helper.py</span>
+<span class="sd">&#39;&#39;&#39;</span>
+    <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">domain</span> <span class="o">=</span> <span class="n">parse_params_file</span><span class="p">(</span><span class="n">quite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">domain</span></div>
+
+<div class="viewcode-block" id="parse_pflotran_input"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.parse_pflotran_input">[docs]</a><span class="k">def</span> <span class="nf">parse_pflotran_input</span><span class="p">(</span><span class="n">pflotran_input_file</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Walk through PFLOTRAN input file and find inflow boundary, inflow and outflow pressure, and direction of flow</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        pflotran_input_file : string</span>
+<span class="sd">            Name of PFLOTRAN input file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        inflow_pressure : double</span>
+<span class="sd">            Inflow Pressure boundary condition</span>
+<span class="sd">        outflow_pressure : float</span>
+<span class="sd">            Outflow pressure boundary condition</span>
+<span class="sd">        inflow_file : string</span>
+<span class="sd">            Name of inflow boundary .ex file </span>
+<span class="sd">        direction : string </span>
+<span class="sd">            Primary direction of flow x, y, or z</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Currently only works for Dirichlet Boundary Conditions</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pflotran_input_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;BOUNDARY_CONDITION OUTFLOW&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">outflow_found</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;REGION&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">outflow</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">False</span> 
+            <span class="k">if</span> <span class="s2">&quot;BOUNDARY_CONDITION INFLOW&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">inflow_found</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;REGION&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">inflow</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pflotran_input_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">inflow_name_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">outflow_name_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;REGION &quot;</span><span class="o">+</span><span class="n">inflow</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">inflow_name_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">inflow_name_found</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;FILE&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">inflow_file</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">inflow_name_found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;FLOW_CONDITION &quot;</span><span class="o">+</span><span class="n">inflow</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">inflow_found</span><span class="p">:</span> 
+                <span class="k">if</span> <span class="s2">&quot;PRESSURE &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;dirichlet&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+                        <span class="n">inflow_pressure</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="nb">float</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">inflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="s2">&quot;REGION &quot;</span><span class="o">+</span><span class="n">outflow</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">outflow_name_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">outflow_name_found</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;FILE&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">outflow_file</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">outflow_name_found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;FLOW_CONDITION &quot;</span><span class="o">+</span> <span class="n">outflow</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">outflow_found</span><span class="p">:</span> 
+                <span class="k">if</span> <span class="s2">&quot;PRESSURE &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;dirichlet&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+                        <span class="n">outflow_pressure</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="nb">float</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">outflow_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_left_w.ex&#39;</span> <span class="ow">or</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_right_e.ex&#39;</span><span class="p">:</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span>
+    <span class="k">if</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_front_n.ex&#39;</span> <span class="ow">or</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_back_s.ex&#39;</span><span class="p">:</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>
+    <span class="k">if</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_top.ex&#39;</span> <span class="ow">or</span> <span class="n">inflow_file</span> <span class="o">==</span> <span class="s1">&#39;pboundary_bottom.ex&#39;</span><span class="p">:</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="s1">&#39;z&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inflow file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">inflow_file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inflow Pressure </span><span class="si">%e</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">inflow_pressure</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outflow Pressure </span><span class="si">%e</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">outflow_pressure</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Primary Flow Direction : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">direction</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inflow_pressure</span><span class="p">,</span> <span class="n">outflow_pressure</span><span class="p">,</span> <span class="n">inflow_file</span><span class="p">,</span> <span class="n">direction</span></div>
+
+<div class="viewcode-block" id="flow_rate"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.flow_rate">[docs]</a><span class="k">def</span> <span class="nf">flow_rate</span><span class="p">(</span><span class="n">darcy_vel_file</span><span class="p">,</span> <span class="n">boundary_file</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the flow rate across the inflow boundary</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        darcy_vel_file : string</span>
+<span class="sd">            Name of concatenated Darcy velocity file</span>
+<span class="sd">        boundary_file : string</span>
+<span class="sd">             ex file for the inflow boundary</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        mass_rate : float</span>
+<span class="sd">            Mass flow rate across the inflow boundary</span>
+<span class="sd">        volume_rate : float</span>
+<span class="sd">            Volumetric flow rate across the inflow boundary</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    None</span>
+<span class="sd">&#39;&#39;&#39;</span> 
+    <span class="c1"># Calculate the mass flow rate</span>
+    <span class="n">mass_rate</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#kg/s</span>
+    <span class="n">volume_rate</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#m^3/s</span>
+    
+    <span class="n">dat_boundary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">boundary_file</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">darcy_vel_file</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">dat_boundary</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">))):</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="n">cell_up</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="n">cell_down</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">mass_flux</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># in m/s , darcy flux, right? m3/m2/s</span>
+                <span class="n">density</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># in kg/m3</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># in m^2</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">cell_up</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">)):</span>
+                    <span class="n">mass_rate</span> <span class="o">=</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> \
+                    <span class="n">density</span> <span class="o">+</span> <span class="n">mass_rate</span>  <span class="c1"># in kg/s</span>
+                    <span class="n">volume_rate</span> <span class="o">=</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">+</span> <span class="n">volume_rate</span> <span class="c1">#in m3/s</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mass_rate</span> <span class="o">=</span> <span class="o">-</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> \
+                    <span class="n">density</span> <span class="o">+</span> <span class="n">mass_rate</span>  <span class="c1"># in kg/s</span>
+                    <span class="n">volume_rate</span> <span class="o">=</span> <span class="o">-</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">+</span> <span class="n">volume_rate</span> <span class="c1">#in m3/s</span>
+                <span class="c1">#print cell_up, cell_down, mass_flux, density, area, mass_rate, volume_rate</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">))):</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="n">cell_up</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="n">cell_down</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">mass_flux</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># in m/s</span>
+                <span class="n">density</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># in kg/m3</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># in m^2</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">cell_up</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cell</span><span class="p">)):</span>
+                    <span class="n">mass_rate</span> <span class="o">=</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> \
+                    <span class="n">density</span> <span class="o">+</span> <span class="n">mass_rate</span>  <span class="c1"># in kg/s</span>
+                    <span class="n">volume_rate</span> <span class="o">=</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">+</span> <span class="n">volume_rate</span> <span class="c1">#in m3/s</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mass_rate</span> <span class="o">=</span> <span class="o">-</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> \
+                    <span class="n">density</span> <span class="o">+</span> <span class="n">mass_rate</span>  <span class="c1"># in kg/s</span>
+                    <span class="n">volume_rate</span> <span class="o">=</span> <span class="o">-</span> <span class="n">mass_flux</span> <span class="o">*</span> <span class="n">area</span> <span class="o">+</span> <span class="n">volume_rate</span> <span class="c1">#in m3/s</span>
+                <span class="c1">#print cell_up, cell_down, mass_flux, density, area, mass_rate, volume_rate</span>
+    <span class="k">return</span> <span class="n">mass_rate</span><span class="p">,</span> <span class="n">volume_rate</span></div>
+
+<div class="viewcode-block" id="dump_effective_perm"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.dump_effective_perm">[docs]</a><span class="k">def</span> <span class="nf">dump_effective_perm</span><span class="p">(</span><span class="n">local_jobname</span><span class="p">,</span><span class="n">mass_rate</span><span class="p">,</span><span class="n">volume_rate</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">direction</span><span class="p">,</span> <span class="n">inflow_pressure</span><span class="p">,</span> <span class="n">outflow_pressure</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute the effective permeability of the DFN and write it to screen and to the file local_jobname_effective_perm.dat</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        local_jobname  : string</span>
+<span class="sd">            Jobname</span>
+<span class="sd">        mass_rate : float</span>
+<span class="sd">            Mass flow rate through inflow boundary</span>
+<span class="sd">        volume_rate : float</span>
+<span class="sd">            Volumetric flow rate through inflow boundary</span>
+<span class="sd">        direction : string</span>
+<span class="sd">            Primary direction of flow (x, y, or z)</span>
+<span class="sd">        domain : dict</span>
+<span class="sd">            Dictionary of domain sizes in x, y, z</span>
+<span class="sd">        inflow_pressure : float</span>
+<span class="sd">            Inflow boundary pressure</span>
+<span class="sd">        outflow_pressure : float</span>
+<span class="sd">            Outflow boundary pressure</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Information is written into (local_jobname)_effective_perm.txt</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+        
+    <span class="n">Lm3</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>  <span class="c1">#L/m^3</span>
+    <span class="c1"># if flow is in x direction, cross section is domain[&#39;y&#39;]*domain[&#39;z&#39;]</span>
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+        <span class="n">surface</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> 
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+        <span class="n">surface</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> 
+        <span class="n">L</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> 
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+        <span class="n">surface</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> 
+        <span class="n">L</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> 
+    <span class="c1"># Print the calculated mass flow rate in kg/s</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mf">8.9e-4</span> <span class="c1">#dynamic viscosity of water at 20 degrees C, Pa*s</span>
+    <span class="n">spery</span> <span class="o">=</span> <span class="mf">3600.</span><span class="o">*</span><span class="mf">24.</span><span class="o">*</span><span class="mf">365.25</span> <span class="c1">#seconds per year</span>
+    <span class="c1"># compute pressure gradient  </span>
+    <span class="n">pgrad</span> <span class="o">=</span> <span class="p">(</span><span class="n">inflow_pressure</span> <span class="o">-</span> <span class="n">outflow_pressure</span><span class="p">)</span><span class="o">/</span><span class="n">L</span> 
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Effective Permeabilty Properties</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fp</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">local_jobname</span><span class="o">+</span><span class="s1">&#39;_effective_perm.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The mass flow rate [kg/s]: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mass_rate</span><span class="p">))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The mass flow rate [kg/s]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">mass_rate</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The volume flow rate [m3/s]: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">volume_rate</span><span class="p">))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The volume flow rate [m3/s]: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">volume_rate</span><span class="p">))</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">volume_rate</span><span class="o">/</span><span class="n">surface</span> <span class="c1">#darcy flux over entire face m3/m2/s</span>
+
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/s]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">q</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The darcy flow rate over </span><span class="si">%f</span><span class="s1"> x </span><span class="si">%f</span><span class="s1"> m2 area [m3/m2/y]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">spery</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The effective permeability of the domain [m2]: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">mu</span><span class="o">/</span><span class="n">pgrad</span><span class="p">))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;The effective permeability of the domain [m2]: </span><span class="si">%e</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">mu</span><span class="o">/</span><span class="n">pgrad</span><span class="p">))</span>
+    <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="effective_perm"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.effective_perm">[docs]</a><span class="k">def</span> <span class="nf">effective_perm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Computes the effective permeability of a DFN in the primary direction of flow using a steady-state PFLOTRAN solution. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object </span>
+<span class="sd">            DFN Class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    1. Information is written to screen and to the file self.local_jobname_effective_perm.txt</span>
+<span class="sd">    2. Currently, only PFLOTRAN solutions are supported</span>
+<span class="sd">    3. Assumes density of water </span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; Computing Effective Permeability of Block&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Incorrect flow solver selected. Cannot compute effective permeability&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">darcy_vel_file</span><span class="o">=</span> <span class="s1">&#39;darcyvel.dat&#39;</span> 
+    <span class="n">pflotran_input_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span> 
+    
+    <span class="n">inflow_pressure</span><span class="p">,</span> <span class="n">outflow_pressure</span><span class="p">,</span><span class="n">boundary_file</span><span class="p">,</span><span class="n">direction</span> <span class="o">=</span> <span class="n">parse_pflotran_input</span><span class="p">(</span><span class="n">pflotran_input_file</span><span class="p">)</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">()</span>
+    <span class="n">mass_rate</span><span class="p">,</span> <span class="n">volume_rate</span> <span class="o">=</span> <span class="n">flow_rate</span><span class="p">(</span><span class="n">darcy_vel_file</span><span class="p">,</span> <span class="n">boundary_file</span><span class="p">)</span>
+    <span class="n">dump_effective_perm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="p">,</span> <span class="n">mass_rate</span><span class="p">,</span> <span class="n">volume_rate</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">inflow_pressure</span><span class="p">,</span> <span class="n">outflow_pressure</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; Complete</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span> </div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

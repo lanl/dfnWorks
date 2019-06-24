@@ -1,0 +1,1 @@
+python run.py -name DUMMY/examples/tdrw_example/ -input tdrw_run_file.txt -ncpu 8

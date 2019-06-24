@@ -1,0 +1,25 @@
+<map id="magnitude" name="magnitude">
+<area shape="rect" id="node2" href="$computational_geometry_8h.html#a7ada98067054623a6bcc19ab19403682" title="FRAM" alt="" coords="1006,221,1066,247"/>
+<area shape="rect" id="node3" href="$computational_geometry_8h.html#aff243280740a51cada5c0dd94021fb66" title="intersectionChecking" alt="" coords="1115,334,1261,361"/>
+<area shape="rect" id="node6" href="$insert_user_ell_by_coord_8cpp.html#a49e6b0be012ed44c6ef83ea66ed6dd86" title="insertUserEllByCoord" alt="" coords="1320,309,1469,335"/>
+<area shape="rect" id="node8" href="$insert_user_rects_by_coord_8cpp.html#a244f461634679dc91d08da3e183f9b8c" title="insertUserRectsByCoord" alt="" coords="1310,359,1479,386"/>
+<area shape="rect" id="node10" href="$computational_geometry_8h.html#a69f93a65c39c49d1b705fad32f790e98" title="shrinkIntersection" alt="" coords="345,94,471,121"/>
+<area shape="rect" id="node12" href="$computational_geometry_8h.html#a5e3e0a14f3ad58c314ce2e6a29b03fa2" title="pointToLineSeg" alt="" coords="153,195,269,222"/>
+<area shape="rect" id="node15" href="$computational_geometry_8h.html#a5edbf5558b99624dfb90275aa07ba149" title="lineSegToLineSeg" alt="" coords="557,246,688,273"/>
+<area shape="rect" id="node19" href="$domain_8h.html#aed3d77c17f33d2024704b479d0885332" title="domainTruncation" alt="" coords="1123,449,1253,475"/>
+<area shape="rect" id="node21" href="$insert_shape_8h.html#a4f91304a14fefba4d4f93f2f3e54dee4" title="generatePoly" alt="" coords="1138,613,1238,639"/>
+<area shape="rect" id="node22" href="$insert_shape_8h.html#a4a4d307b0a091a6159358f312371ae95" title="generatePoly_withRadius" alt="" coords="536,550,709,577"/>
+<area shape="rect" id="node23" href="$math_functions_8h.html#a78276693aa55fab858a41366e5b4aa73" title="getArea" alt="" coords="1153,499,1223,526"/>
+<area shape="rect" id="node24" href="$vector_functions_8h.html#afd59d451cff22898e4153261bc1fb38e" title="angleBeteenVectors" alt="" coords="139,651,282,678"/>
+<area shape="rect" id="node4" href="$_d_f_nmain_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title="main" alt="" coords="1528,435,1579,462"/>
+<area shape="rect" id="node5" href="$insert_user_ell_8cpp.html#a9841b356b0460e297748d6648c301558" title="insertUserEll" alt="" coords="1346,410,1443,437"/>
+<area shape="rect" id="node7" href="$insert_user_rects_8cpp.html#af69365c2e0148366aabe6751ffc54a79" title="insertUserRects" alt="" coords="1336,461,1453,487"/>
+<area shape="rect" id="node9" href="$remove_fractures_8h.html#a016a4a3e0104523549279e6f6cf6c6d8" title="removeFractures" alt="" coords="1333,258,1456,285"/>
+<area shape="rect" id="node11" href="$computational_geometry_8h.html#adf34efb0050985566dfb41f51967680f" title="checkCloseEdge" alt="" coords="797,145,920,171"/>
+<area shape="rect" id="node13" href="$computational_geometry_8h.html#a63cb49a89f3b90a72aea7b6a24548633" title="checkDistanceFromNodes" alt="" coords="533,195,712,222"/>
+<area shape="rect" id="node14" href="$computational_geometry_8h.html#a545f45434dcbd126c6ff994b9ec2588b" title="lineSegToLineSegSep" alt="" coords="331,246,485,273"/>
+<area shape="rect" id="node16" href="$computational_geometry_8h.html#ac1228db3b0fb85b1a5233b1fb78edd4a" title="checkDistToOldIntersections" alt="" coords="763,246,955,273"/>
+<area shape="rect" id="node17" href="$computational_geometry_8h.html#a4c94ffa2818f164dbda3f1cb6f0fb9a8" title="checkDistToNewIntersections" alt="" coords="760,297,957,323"/>
+<area shape="rect" id="node18" href="$computational_geometry_8h.html#a237899188f8ca6cf74a2da890cd13868" title="checkForTripleIntersections" alt="" coords="766,195,951,222"/>
+<area shape="rect" id="node20" href="$fracture_estimating_8h.html#a7cf21b594fd24b2879af467e23bdac0a" title="dryRun" alt="" coords="1362,613,1427,639"/>
+</map>
