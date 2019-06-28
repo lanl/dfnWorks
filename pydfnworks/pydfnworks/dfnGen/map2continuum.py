@@ -61,7 +61,7 @@ def map_to_continuum(self, l, orl):
                 new.write(line)
     points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
 
-    num_poly, _, _, _, domain = mh.parse_params_file(quite=True)
+    num_poly, h, _, _, domain = mh.parse_params_file()
 
     # Extent of domain
     x0 = 0 - (domain['x'] / 2.0)
@@ -89,7 +89,7 @@ def map_to_continuum(self, l, orl):
         os.mkdir('octree')
 
     lagrit_driver(nx, ny, nz, num_poly, normal_vectors, points)
-    lagrit_parameters(orl, x0, x1, y0, y1, z0, z1, nx, ny, nz)
+    lagrit_parameters(orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
     lagrit_build()
     lagrit_intersect()
     lagrit_hex_to_tet()
@@ -341,6 +341,37 @@ dump / coord  /       octree_dfn     / MOTET
 dump / stor /         octree_dfn     / MOTET
 dump / zone_imt /     octree_dfn     / MOTET
 dump / zone_outside / octree_dfn     / MOTET
+
+define / ZONE / 1
+define / FOUT / pboundary_top
+pset / top / attribute / zic / 1 0 0 / gt / ZMAX
+pset / top / zone / FOUT / ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / pboundary_bottom
+pset / bottom / attribute / zic / 1 0 0 / lt / ZMIN
+pset / bottom / zone / FOUT / ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / pboundary_left_w
+pset / left_w / attribute / xic / 1 0 0 / lt / XMIN
+pset / left_w / zone / FOUT / ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / pboundary_front_n
+pset / front_n / attribute / yic / 1 0 0 / gt / YMAX
+pset / front_n / zone / FOUT / ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / pboundary_right_e
+pset / right_e / attribute / xic / 1 0 0 / gt / XMAX
+pset / right_e / zone / FOUT / ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / pboundary_back_s
+pset / back_s / attribute / yic / 1 0 0 / lt / YMIN
+pset / back_s / zone / FOUT / ascii / ZONE
+
 #
 # Work around for getting *.fehnm file
 # Do we need this?
@@ -358,7 +389,7 @@ finish
     print("Creating driver_octree.lgi file: Complete\n")
 
 
-def lagrit_parameters(orl, x0, x1, y0, y1, z0, z1, nx, ny, nz):
+def lagrit_parameters(orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
     """ This function creates the parameters_octree_dfn.mlgi lagrit script.
     
     Parameters
@@ -398,6 +429,7 @@ define / REFINE_AMR / 123
 #
     """
     f.write(fin)
+    eps = h * 10**-3
     f.write('define / N_OCTREE_REFINE /    %d \n' % orl)
     f.write('define / N_OCTREE_REFINE_M1 / %d \n' % (orl - 1))
     f.write('define / N_OCTREE_np1 / %d \n' % (orl + 1))
@@ -408,6 +440,12 @@ define / REFINE_AMR / 123
     f.write('define / Y1 /  %0.12f \n' % y1)
     f.write('define / Z0 /  %0.12f \n' % z0)
     f.write('define / Z1 /  %0.12f \n' % z1)
+    f.write('define / XMAX / %0.12f \n' % (x1 - eps))
+    f.write('define / XMIN / %0.12f \n' % (x0 + eps))
+    f.write('define / YMAX / %0.12f \n' % (y1 - eps))
+    f.write('define / YMIN / %0.12f \n' % (y0 + eps))
+    f.write('define / ZMAX / %0.12f \n' % (z1 - eps))
+    f.write('define / ZMIN / %0.12f \n' % (z0 + eps))
     f.write('define / NX / %d \n' % nx)
     f.write('define / NY / %d \n' % ny)
     f.write('define / NZ / %d \n' % nz)
