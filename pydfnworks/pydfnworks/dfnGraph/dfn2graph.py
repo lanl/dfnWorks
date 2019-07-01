@@ -132,7 +132,7 @@ def boundary_index(bc_name):
     try:
         return bc_dict[bc_name]
     except:
-        error = "Unknown boundary condition: %s\nExiting" % bc
+        error = "Unknown boundary condition: %s\nExiting\n" % bc
         sys.stderr.write(error)
         sys.exit(1)
 
