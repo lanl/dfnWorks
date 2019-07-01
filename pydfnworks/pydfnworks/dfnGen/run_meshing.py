@@ -105,7 +105,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     elapsed = time.time() - t
 
     if failure > 0:
-        error = 'Fracture %d out of %d complete, but mesh checking failed' % (
+        error = 'Fracture %d out of %d complete, but mesh checking failed\n' % (
             fracture_id, num_poly)
         sys.stderr.write(error)
         sys.exit(1)
@@ -290,7 +290,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     for output in outputs:
         if output:
-            error = "ERROR!!! One of the merges failed\nExiting"
+            error = "ERROR!!! One of the merges failed\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
 

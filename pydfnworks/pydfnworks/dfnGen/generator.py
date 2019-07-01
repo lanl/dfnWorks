@@ -95,7 +95,7 @@ def make_working_directory(self):
             sys.stderr.write(error)
             sys.exit(1)
         else:
-            error = "Unknown Response. Exiting Program"
+            error = "Unknown Response. Exiting Program\n"
             sys.stderr.write(error)
             sys.exit(1)
     os.mkdir(self.jobname + '/radii')
@@ -121,18 +121,17 @@ def create_network(self):
 
     Notes
     -----
-    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existance of the file params.txt. 
+    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. 
     '''
     print('--> Running DFNGEN')
     # copy input file into job folder
-    cmd = os.environ[
-        'DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:
-                                                     -4] + '_clean.dat' + ' ' + self.jobname
+    cmd = os.environ['DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
+    
     print("Running %s" % cmd)
     subprocess.call(cmd, shell=True)
 
     if os.path.isfile("params.txt") is False:
-        error = "ERROR! Generation Failed\nExiting Program."
+        error = "ERROR! Generation Failed\nExiting Program.\n"
         sys.stderr.write(error)
         sys.exit(1)
     else:
