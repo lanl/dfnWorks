@@ -219,7 +219,7 @@ def commandline_options():
                         help="Path to original DFN files")
     options = parser.parse_args()
     if options.jobname is "":
-        error = "Error: Jobname is required. Exiting."
+        error = "Error: Jobname is required. Exiting.\n"
         sys.stderr.write(error)
         sys.exit(1)
     return options
@@ -254,7 +254,7 @@ def create_dfn():
     print('--> Number of cpus requested: ', DFN.ncpu)
 
     if options.input_file == "":
-        error = "ERROR!!! Input file must be provided."
+        error = "ERROR!!! Input file must be provided.\n"
         sys.stderr.write(error)
         sys.exit(1)
     else:
@@ -277,7 +277,7 @@ def create_dfn():
                 print('--> dfnTrans input file: ', DFN.dfnTrans_file)
                 DFN.local_dfnTrans_file = line[1].split('/')[-1]
             else:
-                error = "ERROR Reading Input File\nUnknown line: %s" % line
+                error = "ERROR Reading Input File\nUnknown line: %s\n" % line
                 sys.stderr.write(error)
                 sys.exit(1)
 
