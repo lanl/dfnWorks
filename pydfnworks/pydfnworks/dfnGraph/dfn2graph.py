@@ -405,6 +405,8 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     k_shortest = set([])
     for path in k_shortest_paths(G, k, source, target, weight):
         k_shortest |= set(path)
+    k_shortest.remove('s')
+    k_shortest.remove('t')
     path_nodes = sorted(list(k_shortest))
     nodes = list(G.nodes())
     secondary = list(set(nodes) - set(path_nodes))
@@ -532,8 +534,8 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None', k=''):
         path = nx.shortest_path(Gprime, source, target, weight=weight)
         H = Gprime.subgraph(path)
         Hprime.add_edges_from(H.edges(data=True))
-        for u, v, d in H.edges(data=True):
-            Gprime.remove_edge(u, v)
+        Gprime.remove_edges_from(list(H.edges()))
+
         cnt += 1
         if cnt > k:
             break
