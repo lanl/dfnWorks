@@ -17,8 +17,6 @@ C_uge_stor/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
-!inp_2_vtk/inp2vtk
-
 */build/*
 */dist/*
 *.egg
