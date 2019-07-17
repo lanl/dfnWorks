@@ -24,7 +24,7 @@ DFN.create_network()
 DFN.set_flow_solver("PFLOTRAN")
 DFN.mesh_network(uniform_mesh=True)
 
-restart_file = "/dfnWorks/examples/ade_example/dfn_restart.in"
+restart_file = "DUMMY/examples/ade_example/dfn_restart.in"
 DFN.lagrit2pflotran()
 DFN.pflotran(restart=True,restart_file=restart_file)
 
