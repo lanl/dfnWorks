@@ -1,1 +1,1 @@
-python run_cont.py -name $PWD/octree_example -input octree_run_file.txt -ncpu 8
+python run_cont.py -name DUMMY/examples/octree_example -input octree_run_file.txt -ncpu 8
