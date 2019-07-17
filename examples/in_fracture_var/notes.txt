@@ -1,1 +1,1 @@
-python run_explicit.py -name DUMMY/dfnworks-main/examples/in_fracture_var_example -input in_fracture_var_run_file.txt -cell  
+python run_explicit.py -name DUMMY/dfnworks-main/examples/in_fracture_var/in_fracture_var_example -input in_fracture_var_run_file.txt -cell  
