@@ -89,7 +89,7 @@ def define_paths():
     # Or, change the paths here
     else:
         env_paths = {
-            'dfnworks_PATH': 'DUMMY/dfnworks-main',
+            'dfnworks_PATH': 'DUMMY/dfnworks-main/',
             'PETSC_DIR': '/home/satkarra/src/petsc-3.10.2',
             'PETSC_ARCH': '/Ubuntu-18.04-nodebug/',
             'PFLOTRAN_EXE': '/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran',
