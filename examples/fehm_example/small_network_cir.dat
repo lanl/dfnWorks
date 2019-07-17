@@ -433,7 +433,7 @@ userRecByCoord: 0
 //  0 - user defined rectangles not used
 //  1 - user defined rectangles used and defined by input file:
 
-RectByCoord_Input_File_Path: /Users/jhyman/Projects/Carbon/two_fractures/two_fractures_coords.dat 
+RectByCoord_Input_File_Path: two_fractures_coords.dat 
 
 
 /*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 

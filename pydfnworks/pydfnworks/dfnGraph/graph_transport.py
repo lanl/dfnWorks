@@ -287,7 +287,7 @@ def run_graph_transport(self,
                     "# advective time (s)  advection+diffusion time (s)  diffusion time (s)  total advection distance covered (m)\n"
                 )
         except:
-            error = "ERROR: Unable to open supplied partime_file file {}".format(
+            error = "ERROR: Unable to open supplied partime_file file {}\n".format(
                 partime_file)
             sys.stderr.write(error)
             sys.exit(1)
@@ -299,7 +299,7 @@ def run_graph_transport(self,
                     "# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)\n"
                 )
         except:
-            error = "ERROR: Unable to open supplied frac_id_file file {}".format(
+            error = "ERROR: Unable to open supplied frac_id_file file {}\n".format(
                 frac_id_file)
             sys.stderr.write(error)
             sys.exit(1)

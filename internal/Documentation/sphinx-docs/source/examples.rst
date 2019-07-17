@@ -60,7 +60,7 @@ Location: examples/exp/
 This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat.  We have changed the flow direction to be aligned with the y-axis by modifying the PFLOTRAN input card dfn_explicit.in
 
 .. figure:: figures/exp_pressure.png
-   :scale: 30 %
+   :scale: 10 %
    :alt: alternate text
    :align: center
 
@@ -76,10 +76,11 @@ Location: examples/TPL/
 
 This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m. 
 
-.. figure:: figures/TPL_pathlines.png
-   :scale: 30 %
+.. figure:: figures/power_mesh.png
+   :scale: 20 %
    :alt: alternate text
    :align: center
+
 
 Graph based pruning
 ----------------------

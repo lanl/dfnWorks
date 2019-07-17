@@ -1,3 +1,0 @@
-dfnGen /home/tsherman/dfnworks-main/tests/gen_4_user_ellipses.dat
-dfnFlow /home/tsherman/dfnworks-main/tests/dfn_explicit.in
-dfnTrans /home/tsherman/dfnworks-main/tests/PTDFN_control.dat

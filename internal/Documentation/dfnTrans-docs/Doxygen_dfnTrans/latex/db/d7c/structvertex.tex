@@ -1,0 +1,288 @@
+\hypertarget{structvertex}{}\section{vertex Struct Reference}
+\label{structvertex}\index{vertex@{vertex}}
+
+
+{\ttfamily \#include $<$Func\+Def.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{structvertex_aa8c5c50393696a507d20dda8ec69fd51}{typeN}}
+\item 
+unsigned int \mbox{\hyperlink{structvertex_aa2cd06573422bc415cb8f38a67232de7}{fracture}} \mbox{[}2\mbox{]}
+\item 
+double \mbox{\hyperlink{structvertex_a1eff0deab63f96c97ba5098608d65ad3}{coord}} \mbox{[}3\mbox{]}
+\item 
+double \mbox{\hyperlink{structvertex_a3473aebf2ce957df8c02095cc98ebb39}{coord\+\_\+xy}} \mbox{[}6\mbox{]}
+\item 
+double \mbox{\hyperlink{structvertex_a7cf1594124712ff00a9e4d00926f1010}{pvolume}}
+\item 
+double \mbox{\hyperlink{structvertex_a54ac97be271319fa385aef0685ea0641}{pressure}}
+\item 
+unsigned int \mbox{\hyperlink{structvertex_acf83b561551952403148f73fe032f57b}{numneighb}}
+\item 
+double \mbox{\hyperlink{structvertex_a92493253fc12b459eb0599ec07c56743}{velocity}} \mbox{[}4\mbox{]}\mbox{[}2\mbox{]}
+\item 
+double \mbox{\hyperlink{structvertex_a5e4c0ee67478edf757b52b50859dd25e}{timestep}} \mbox{[}4\mbox{]}
+\item 
+unsigned int $\ast$ \mbox{\hyperlink{structvertex_a82e41673a29352ee0f004ae7890d5266}{indnodes}}
+\item 
+unsigned int $\ast$$\ast$ \mbox{\hyperlink{structvertex_a583032cadaa99e8f5c044d3bd10191cf}{cells}}
+\item 
+unsigned int $\ast$$\ast$ \mbox{\hyperlink{structvertex_adc1951216db706914f5963da2e58accc}{fracts}}
+\item 
+unsigned int $\ast$ \mbox{\hyperlink{structvertex_aeabf5788639be2723927c854aa11cd33}{type}}
+\item 
+double $\ast$ \mbox{\hyperlink{structvertex_a9934ed428ad1db71c9aa1e601649791c}{flux}}
+\item 
+double $\ast$ \mbox{\hyperlink{structvertex_aff6495cfbefb8dffd8714d7c68810ca6}{area}}
+\item 
+double \mbox{\hyperlink{structvertex_a6ee9434e764f4105136cb10a8c5be642}{residtime}}
+\item 
+double \mbox{\hyperlink{structvertex_a7588fad77cf759d8db0957c9e957e23a}{aperture}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Vertex is a node structure and contains all the information about the node/vertex of the D\+FN mesh 
+
+Definition at line 106 of file Func\+Def.\+h.
+
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structvertex_a7588fad77cf759d8db0957c9e957e23a}\label{structvertex_a7588fad77cf759d8db0957c9e957e23a}} 
+\index{vertex@{vertex}!aperture@{aperture}}
+\index{aperture@{aperture}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{aperture}{aperture}}
+{\footnotesize\ttfamily double vertex\+::aperture}
+
+fracture aperture at the control volume cell 
+
+Definition at line 157 of file Func\+Def.\+h.
+
+
+
+Referenced by Calculate\+Lagrangian(), Init\+Pos(), Read\+Aperture(), Read\+Data\+Files(), and Time\+Domain\+R\+W().
+
+\mbox{\Hypertarget{structvertex_aff6495cfbefb8dffd8714d7c68810ca6}\label{structvertex_aff6495cfbefb8dffd8714d7c68810ca6}} 
+\index{vertex@{vertex}!area@{area}}
+\index{area@{area}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{area}{area}}
+{\footnotesize\ttfamily double$\ast$ vertex\+::area}
+
+dynamic array of 2D areas of the edges of the control volume cell 
+
+Definition at line 151 of file Func\+Def.\+h.
+
+
+
+Referenced by Half\+Polygon\+Velocity(), Read\+Data\+Files(), Read\+Init(), and Read\+P\+F\+L\+O\+T\+R\+A\+Nfile().
+
+\mbox{\Hypertarget{structvertex_a583032cadaa99e8f5c044d3bd10191cf}\label{structvertex_a583032cadaa99e8f5c044d3bd10191cf}} 
+\index{vertex@{vertex}!cells@{cells}}
+\index{cells@{cells}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{cells}{cells}}
+{\footnotesize\ttfamily unsigned int$\ast$$\ast$ vertex\+::cells}
+
+dynamic array of triangular cells ID 
+
+Definition at line 139 of file Func\+Def.\+h.
+
+
+
+Referenced by Across\+Intersection(), Adjacent\+Cells(), Boundary\+Cells(), Complete\+Mixing\+Random\+Sampling(), Final\+Position(), Half\+Polygon\+Velocity(), Init\+Cell(), Moving2\+Next\+Cell(), Moving2\+Next\+Cell\+Bound(), Neighbor\+Cells(), Read\+Data\+Files(), Read\+Init(), and Streamline\+Random\+Sampling().
+
+\mbox{\Hypertarget{structvertex_a1eff0deab63f96c97ba5098608d65ad3}\label{structvertex_a1eff0deab63f96c97ba5098608d65ad3}} 
+\index{vertex@{vertex}!coord@{coord}}
+\index{coord@{coord}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{coord}{coord}}
+{\footnotesize\ttfamily double vertex\+::coord\mbox{[}3\mbox{]}}
+
+node\textquotesingle{}s x,y,z coordinations 
+
+Definition at line 115 of file Func\+Def.\+h.
+
+
+
+Referenced by Calculate\+Position3\+D(), Convertto2d(), Init\+In\+Matrix(), Init\+Pos(), and Particle\+Track().
+
+\mbox{\Hypertarget{structvertex_a3473aebf2ce957df8c02095cc98ebb39}\label{structvertex_a3473aebf2ce957df8c02095cc98ebb39}} 
+\index{vertex@{vertex}!coord\_xy@{coord\_xy}}
+\index{coord\_xy@{coord\_xy}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{coord\_xy}{coord\_xy}}
+{\footnotesize\ttfamily double vertex\+::coord\+\_\+xy\mbox{[}6\mbox{]}}
+
+X\+YZ plane coordination of node; if the node is on intersection then two sets of X\+YZ coordinations are defined (each set for each intersecting fracture 
+
+Definition at line 118 of file Func\+Def.\+h.
+
+
+
+Referenced by Across\+Intersection(), Boundary\+Cells(), Calculate\+Position3\+D(), Calculate\+Weights(), Check\+Distance(), Convertto2d(), Coordinations2\+D(), Corner\+Velocity(), Darcy\+Velocity(), Define\+Boundary\+Angle(), Final\+Position(), Half\+Polygon\+Velocity(), Init\+In\+Matrix(), Init\+Particles\+\_\+eq(), Init\+Particles\+\_\+flux(), Init\+Particles\+\_\+np(), In\+Out\+Flow\+Cell(), and Moving2\+Center().
+
+\mbox{\Hypertarget{structvertex_a9934ed428ad1db71c9aa1e601649791c}\label{structvertex_a9934ed428ad1db71c9aa1e601649791c}} 
+\index{vertex@{vertex}!flux@{flux}}
+\index{flux@{flux}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{flux}{flux}}
+{\footnotesize\ttfamily double$\ast$ vertex\+::flux}
+
+dynamic array of flow fluxes at the edges of the control volume cell 
+
+Definition at line 148 of file Func\+Def.\+h.
+
+
+
+Referenced by Read\+Boundary\+Nodes(), Read\+Data\+Files(), Read\+Init(), Read\+P\+F\+L\+O\+T\+R\+A\+Nfile(), Velocity\+Exterior\+Node(), and Velocity\+Interior\+Node().
+
+\mbox{\Hypertarget{structvertex_adc1951216db706914f5963da2e58accc}\label{structvertex_adc1951216db706914f5963da2e58accc}} 
+\index{vertex@{vertex}!fracts@{fracts}}
+\index{fracts@{fracts}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{fracts}{fracts}}
+{\footnotesize\ttfamily unsigned int$\ast$$\ast$ vertex\+::fracts}
+
+dynamic array of fractures ID 
+
+Definition at line 142 of file Func\+Def.\+h.
+
+
+
+Referenced by Adjacent\+Cells(), Read\+Data\+Files(), and Read\+Init().
+
+\mbox{\Hypertarget{structvertex_aa2cd06573422bc415cb8f38a67232de7}\label{structvertex_aa2cd06573422bc415cb8f38a67232de7}} 
+\index{vertex@{vertex}!fracture@{fracture}}
+\index{fracture@{fracture}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{fracture}{fracture}}
+{\footnotesize\ttfamily unsigned int vertex\+::fracture\mbox{[}2\mbox{]}}
+
+fracture ID where node is 
+
+Definition at line 112 of file Func\+Def.\+h.
+
+
+
+Referenced by Across\+Intersection(), Adjacent\+Cells(), Check\+Distance(), Convertto2d(), Darcy\+Velocity(), Init\+In\+Matrix(), Init\+Particles\+\_\+eq(), Init\+Particles\+\_\+flux(), Init\+Particles\+\_\+np(), Init\+Pos(), Particle\+Track(), Read\+Aperture(), Read\+Data\+Files(), and Velocity3\+D().
+
+\mbox{\Hypertarget{structvertex_a82e41673a29352ee0f004ae7890d5266}\label{structvertex_a82e41673a29352ee0f004ae7890d5266}} 
+\index{vertex@{vertex}!indnodes@{indnodes}}
+\index{indnodes@{indnodes}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{indnodes}{indnodes}}
+{\footnotesize\ttfamily unsigned int$\ast$ vertex\+::indnodes}
+
+dynamic array of neighboring nodes ID 
+
+Definition at line 136 of file Func\+Def.\+h.
+
+
+
+Referenced by Boundary\+Cells(), Check\+Distance(), Darcy\+Velocity(), Define\+Boundary\+Angle(), Final\+Position(), Half\+Polygon\+Velocity(), Read\+Data\+Files(), and Read\+Init().
+
+\mbox{\Hypertarget{structvertex_acf83b561551952403148f73fe032f57b}\label{structvertex_acf83b561551952403148f73fe032f57b}} 
+\index{vertex@{vertex}!numneighb@{numneighb}}
+\index{numneighb@{numneighb}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{numneighb}{numneighb}}
+{\footnotesize\ttfamily unsigned int vertex\+::numneighb}
+
+number of nodes connections 
+
+Definition at line 127 of file Func\+Def.\+h.
+
+
+
+Referenced by Adjacent\+Cells(), Boundary\+Cells(), Check\+Distance(), Check\+Grid(), Check\+New\+Cell(), Darcy\+Velocity(), Final\+Position(), Flow\+In\+Weight(), Init\+Cell(), Init\+Particles\+\_\+flux(), Read\+Boundary\+Nodes(), Read\+Data\+Files(), Read\+P\+F\+L\+O\+T\+R\+A\+Nfile(), and Writing\+Init().
+
+\mbox{\Hypertarget{structvertex_a54ac97be271319fa385aef0685ea0641}\label{structvertex_a54ac97be271319fa385aef0685ea0641}} 
+\index{vertex@{vertex}!pressure@{pressure}}
+\index{pressure@{pressure}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{pressure}{pressure}}
+{\footnotesize\ttfamily double vertex\+::pressure}
+
+fluid pressure defined at the node by flow solver 
+
+Definition at line 124 of file Func\+Def.\+h.
+
+
+
+Referenced by Boundary\+Cells(), Predictor\+Step(), Read\+F\+E\+H\+Mfile(), and Read\+P\+F\+L\+O\+T\+R\+A\+Nfile().
+
+\mbox{\Hypertarget{structvertex_a7cf1594124712ff00a9e4d00926f1010}\label{structvertex_a7cf1594124712ff00a9e4d00926f1010}} 
+\index{vertex@{vertex}!pvolume@{pvolume}}
+\index{pvolume@{pvolume}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{pvolume}{pvolume}}
+{\footnotesize\ttfamily double vertex\+::pvolume}
+
+Voronoi polygon vlue associated with the cell center 
+
+Definition at line 121 of file Func\+Def.\+h.
+
+\mbox{\Hypertarget{structvertex_a6ee9434e764f4105136cb10a8c5be642}\label{structvertex_a6ee9434e764f4105136cb10a8c5be642}} 
+\index{vertex@{vertex}!residtime@{residtime}}
+\index{residtime@{residtime}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{residtime}{residtime}}
+{\footnotesize\ttfamily double vertex\+::residtime}
+
+residential time of particles inside the control volume cell 
+
+Definition at line 154 of file Func\+Def.\+h.
+
+\mbox{\Hypertarget{structvertex_a5e4c0ee67478edf757b52b50859dd25e}\label{structvertex_a5e4c0ee67478edf757b52b50859dd25e}} 
+\index{vertex@{vertex}!timestep@{timestep}}
+\index{timestep@{timestep}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{timestep}{timestep}}
+{\footnotesize\ttfamily double vertex\+::timestep\mbox{[}4\mbox{]}}
+
+appropriate time step for particles is defined at the node according to the volume of control volume cell 
+
+Definition at line 133 of file Func\+Def.\+h.
+
+
+
+Referenced by Calculate\+Current\+D\+T(), and Define\+Time\+Step().
+
+\mbox{\Hypertarget{structvertex_aeabf5788639be2723927c854aa11cd33}\label{structvertex_aeabf5788639be2723927c854aa11cd33}} 
+\index{vertex@{vertex}!type@{type}}
+\index{type@{type}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily unsigned int$\ast$ vertex\+::type}
+
+dynamic array of types of neighbouring nodes 
+
+Definition at line 145 of file Func\+Def.\+h.
+
+
+
+Referenced by Half\+Polygon\+Velocity(), Read\+Data\+Files(), and Read\+Init().
+
+\mbox{\Hypertarget{structvertex_aa8c5c50393696a507d20dda8ec69fd51}\label{structvertex_aa8c5c50393696a507d20dda8ec69fd51}} 
+\index{vertex@{vertex}!typeN@{typeN}}
+\index{typeN@{typeN}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{typeN}{typeN}}
+{\footnotesize\ttfamily unsigned int vertex\+::typeN}
+
+node type\+: 0 -\/ interior node; 10 -\/ boundary (exterior) node; 2 -\/ intersection (interface) node; 12 -\/ intersection boundary node; 300, 310, 302, 312 -\/ node in in-\/flow boundary; 200, 210, 202, 212 -\/ node in out-\/flow boundary 
+
+Definition at line 109 of file Func\+Def.\+h.
+
+
+
+Referenced by Half\+Polygon\+Velocity(), Read\+Boundary\+Nodes(), and Read\+Data\+Files().
+
+\mbox{\Hypertarget{structvertex_a92493253fc12b459eb0599ec07c56743}\label{structvertex_a92493253fc12b459eb0599ec07c56743}} 
+\index{vertex@{vertex}!velocity@{velocity}}
+\index{velocity@{velocity}!vertex@{vertex}}
+\subsubsection{\texorpdfstring{velocity}{velocity}}
+{\footnotesize\ttfamily double vertex\+::velocity\mbox{[}4\mbox{]}\mbox{[}2\mbox{]}}
+
+reconstructed Darcy velocity at the node, four velocities are defined at intersection nodes 
+
+Definition at line 130 of file Func\+Def.\+h.
+
+
+
+Referenced by Across\+Intersection(), Boundary\+Cells(), Corner\+Velocity(), Darcy\+Velocity(), Define\+Time\+Step(), In\+Out\+Flow\+Cell(), Output\+Velocities(), Predictor\+Step(), Velocity3\+D(), Velocity\+Exterior\+Node(), and Velocity\+Interior\+Node().
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/nataliia/\+Desktop/dfn\+Gen-\/docs/\+Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\mbox{\hyperlink{_func_def_8h}{Func\+Def.\+h}}\end{DoxyCompactItemize}

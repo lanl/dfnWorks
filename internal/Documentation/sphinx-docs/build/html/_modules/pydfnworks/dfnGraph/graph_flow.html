@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -162,10 +163,16 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span>
-<span class="c1"># pydfnworks modules</span>
-<span class="kn">import</span> <span class="nn">pydfnworks.dfnGraph.dfn2graph</span> <span class="k">as</span> <span class="nn">d2g</span>
 
-<div class="viewcode-block" id="get_laplacian_sparse_mat"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.get_laplacian_sparse_mat">[docs]</a><span class="k">def</span> <span class="nf">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lil&#39;</span><span class="p">):</span>
+<span class="c1"># pydfnworks modules</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph</span> <span class="k">import</span> <span class="n">dfn2graph</span> <span class="k">as</span> <span class="n">d2g</span>
+
+
+<div class="viewcode-block" id="get_laplacian_sparse_mat"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.get_laplacian_sparse_mat">[docs]</a><span class="k">def</span> <span class="nf">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span>
+                             <span class="n">nodelist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lil&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Used to enforce boundary conditions by modifying rows of L = D - A</span>
 
 <span class="sd">    Parameters</span>
@@ -194,14 +201,18 @@
 <span class="sd">            Adjacency matrix of graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_scipy_sparse_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">nodelist</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_scipy_sparse_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span>
+                                  <span class="n">nodelist</span><span class="o">=</span><span class="n">nodelist</span><span class="p">,</span>
+                                  <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+                                  <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+                                  <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
 
     <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">spdiags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">A</span></div>
 
- 
+
 <div class="viewcode-block" id="prepare_graph_with_attributes"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.prepare_graph_with_attributes">[docs]</a><span class="k">def</span> <span class="nf">prepare_graph_with_attributes</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet</span>
 <span class="sd">    </span>
@@ -218,16 +229,15 @@
 <span class="sd">        Gtilde : NetworkX graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-
-
-    <span class="n">G</span> <span class="o">=</span> <span class="n">d2g</span><span class="o">.</span><span class="n">create_intersection_graph</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">intersection_file</span><span class="o">=</span><span class="s2">&quot;intersection_list.dat&quot;</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">d2g</span><span class="o">.</span><span class="n">create_intersection_graph</span><span class="p">(</span>
+        <span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">intersection_file</span><span class="o">=</span><span class="s2">&quot;intersection_list.dat&quot;</span><span class="p">)</span>
     <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">d2g</span><span class="o">.</span><span class="n">add_perm</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
     <span class="n">d2g</span><span class="o">.</span><span class="n">add_area</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
     <span class="n">d2g</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
-        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]</span><span class="o">=</span> <span class="kc">False</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">):</span>
@@ -236,18 +246,15 @@
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">):</span>
         <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-
     <span class="n">Gtilde</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
     <span class="n">Gtilde</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
-    <span class="n">sys_size</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span>
 
-    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sys_size</span><span class="p">)))</span>
-    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">relabel_nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">convert_node_labels_to_integers</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span>
+                                                <span class="n">first_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">ordering</span><span class="o">=</span><span class="s2">&quot;sorted&quot;</span><span class="p">,</span>
+                                                <span class="n">label_attribute</span><span class="o">=</span><span class="s2">&quot;old_label&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">Gtilde</span></div>
-
-
-
 
 
 <div class="viewcode-block" id="solve_flow_on_graph"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.solve_flow_on_graph">[docs]</a><span class="k">def</span> <span class="nf">solve_flow_on_graph</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span> <span class="n">fluid_viscosity</span><span class="o">=</span><span class="mf">8.9e-4</span><span class="p">):</span>
@@ -272,32 +279,27 @@
 <span class="sd">            Gtilde is updated with vertex pressures, edge fluxes and travel times</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-
     <span class="n">Inlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]]</span>
     <span class="n">Outlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]]</span>
 
-
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">Inlet</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">Outlet</span><span class="p">)):</span>
-        <span class="n">error</span><span class="o">=</span><span class="s2">&quot;Incompatible graph: Vertex connected to both source and target&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Incompatible graph: Vertex connected to both source and target&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-
     <span class="n">D</span><span class="p">,</span> <span class="n">A</span> <span class="o">=</span> <span class="n">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lil&#39;</span><span class="p">)</span>
-
 
     <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">())</span>
 
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Inlet</span><span class="p">:</span>
         <span class="n">rhs</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pin</span>
-        <span class="n">A</span><span class="p">[</span><span class="n">v</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Outlet</span><span class="p">:</span>
-        <span class="n">rhs</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>  <span class="o">=</span> <span class="n">Pout</span>
         <span class="n">A</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">A</span> <span class="c1"># automatically converts to csr when returning L</span>
-
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Outlet</span><span class="p">:</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pout</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">A</span>  <span class="c1"># automatically converts to csr when returning L</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solving sparse system&quot;</span><span class="p">)</span>
     <span class="n">Phat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">spsolve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
@@ -306,14 +308,19 @@
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
         <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Phat</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
 
-    <span class="k">for</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
-        <span class="n">delta_p</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
+        <span class="n">delta_p</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span>
+                      <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">delta_p</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]):</span>
-            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;perm&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">fluid_viscosity</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
-            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;perm&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">fluid_viscosity</span>
+            <span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span>
+                    <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span>
+                <span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    
+
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Graph flow complete&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Gtilde</span></div>
 
@@ -352,7 +359,7 @@
 <span class="sd">    Information on individual functions in found therein</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">prepare_graph_with_attributes</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">)</span>
-    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">solve_flow_on_graph</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span><span class="n">fluid_viscosity</span><span class="p">)</span> 
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">solve_flow_on_graph</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span> <span class="n">fluid_viscosity</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Gtilde</span></div>
 </pre></div>
 

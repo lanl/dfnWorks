@@ -54,8 +54,8 @@ def copy_dfn_trans_files(self):
         os.remove(self.local_dfnTrans_file)
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except:
-        print("--> ERROR: Problem copying %s file" % self.dfnTrans_file)
-        error = "Unable to replace. Exiting Program"
+        print("--> ERROR: Problem copying %s file\n" % self.dfnTrans_file)
+        error = "Unable to replace. Exiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -117,7 +117,7 @@ def create_dfn_trans_links(self, path='../'):
         try:
             os.symlink(path + f, f)
         except:
-            print("--> Error Creating link for %s" % f)
+            print("--> Error Creating link for %s\n" % f)
 
 
 def check_dfn_trans_run_files(self):
@@ -247,7 +247,7 @@ def check_dfn_trans_run_files(self):
     for key in files:
         if not os.path.isfile(params[key]) or os.stat(
                 params[key]).st_size == 0:
-            error = "ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program" % params[
+            error = "ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program\n" % params[
                 key]
             sys.stderr.write(error)
             sys.exit(1)
@@ -265,7 +265,7 @@ def check_dfn_trans_run_files(self):
             "streamline_routing:"
     ]:
         if params[required] == None:
-            error = "ERROR!!!\n%s not provided. Exitingi\n\n" % (required)
+            error = "ERROR!!!\n%s not provided. Exiting\n\n" % (required)
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -285,7 +285,7 @@ def check_dfn_trans_run_files(self):
             ic_selected.append(ic[0])
             for i in ic:
                 if params[i] == None:
-                    error = "Initial condition %s selected but %s not provided" % (
+                    error = "Initial condition %s selected but %s not provided\n" % (
                         ic[0], i)
                     sys.stderr.write(error)
                     sys.exit(1)
@@ -298,14 +298,14 @@ def check_dfn_trans_run_files(self):
         print()
         sys.exit(1)
     elif len(ic_selected) == 0:
-        error = "ERROR!!! No initial condition defined\nExiting"
+        error = "ERROR!!! No initial condition defined\nExiting\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     if params["ControlPlane:"] != None:
         for required in ["control_out:", "delta_Control:", "flowdir:"]:
             if params[required] == None:
-                error = "Parameter %s required for ControlPlane" % required
+                error = "Parameter %s required for ControlPlane\n" % required
                 sys.stderr.write(error)
                 sys.exit(1)
 
@@ -317,32 +317,27 @@ def check_dfn_trans_run_files(self):
 
         for required in ["tdrw_porosity:", "tdrw_diffcoeff:"]:
             if params[required] == None:
-                error = "Parameter %s required for tdrw" % required
+                error = "Parameter %s required for tdrw\n" % required
                 sys.stderr.write(error)
                 sys.exit(1)
 
     if params["aperture:"] == "yes":
         if params["aperture_type:"] == None:
-            error = "Parameter aperture_type: required for aperture: yes"
-            sys.stderr.write(error)
-            sys.exit(1)
-
-        if params["aperture_file:"] == None:
-            error = "Parameter aperture_file: required for aperture: yes"
+            error = "Parameter aperture_type: required for aperture: yes\n"
             sys.stderr.write(error)
             sys.exit(1)
 
         else:
             if not os.path.isfile(params["aperture_file:"]) or os.stat(
                     params["aperture_file:"]).st_size == 0:
-                error = "aperture_file: %s not found or empty" % params[
+                error = "aperture_file: %s not found or empty\n" % params[
                     "aperture_file:"]
                 sys.stderr.write(error)
                 sys.exit(1)
 
     else:
         if params["thickness:"] == None:
-            error = "Parameter thickness: required for aperture: no:"
+            error = "Parameter thickness: required for aperture: no:\n"
             sys.stderr.write(error)
             sys.exit(1)
 

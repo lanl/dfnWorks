@@ -83,15 +83,22 @@ The dfnWorks Docker image can be pulled from DockerHub using:
 
 .. code-block:: bash
 
-    $ docker pull ees16/dfnworks
+    $ docker pull ees16/dfnworks:v2.2
 
 Setting Up X-Forwarding
 -----------------------
 
 **On macOS:**
 
-To setup X-forwarding on macOS, you will need ``socat`` and ``xquartz``. 
-To install, run:
+To setup X-forwarding on macOS, you will need ``homebrew``,``socat`` and ``xquartz``.
+To install homebrew visit `https://brew.sh/ <https://brew.sh/>`_. or run 
+
+.. code-block:: bash
+
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+
+To install, ``socat`` and ``xquartz`` run:
 
 .. code-block:: bash
 
@@ -114,7 +121,7 @@ The base command for running the dfnWorks container is:
 
 .. code-block:: bash
 
-    docker run -ti dfnworks:latest
+    docker run -ti ees16/dfnworks:v2.2
 
 However, to exchange files between the host and container, we will need to mount
 a volume.

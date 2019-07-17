@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -160,11 +161,14 @@
   <h1>Source code for pydfnworks.dfnGraph.graph_transport</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.random</span> 
+<span class="kn">import</span> <span class="nn">numpy.random</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">scipy.special</span>
 
 <span class="c1"># pydfnworks modules</span>
-<span class="kn">import</span> <span class="nn">pydfnworks.dfnGraph.graph_flow</span> 
+<span class="kn">import</span> <span class="nn">pydfnworks.dfnGraph.graph_flow</span>
+
 
 <div class="viewcode-block" id="create_neighbour_list"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.create_neighbour_list">[docs]</a><span class="k">def</span> <span class="nf">create_neighbour_list</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Create a list of downstream neighbour vertices for every vertex on NetworkX graph obtained after running graph_flow</span>
@@ -190,28 +194,27 @@
 
         <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]:</span>
             <span class="k">continue</span>
-        
-        <span class="n">node_list</span> <span class="o">=</span>  <span class="p">[]</span>
-        <span class="n">prob_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">nbrs</span> <span class="o">=</span>  <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-            <span class="n">delta_p</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> 
 
-            <span class="k">if</span>  <span class="n">delta_p</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]):</span>
+        <span class="n">node_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">prob_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+            <span class="n">delta_p</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">delta_p</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]):</span>
                 <span class="n">node_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
                 <span class="n">prob_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">])</span>
-        
+
         <span class="k">if</span> <span class="n">node_list</span><span class="p">:</span>
             <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;child&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_list</span>
-            <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prob_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">prob_list</span><span class="p">)</span>
+            <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prob_list</span><span class="p">,</span>
+                                            <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">prob_list</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;child&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    
-    <span class="k">return</span> <span class="n">nbrs_dict</span> </div>
 
+    <span class="k">return</span> <span class="n">nbrs_dict</span></div>
 
 
 <div class="viewcode-block" id="Particle"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle">[docs]</a><span class="k">class</span> <span class="nc">Particle</span><span class="p">():</span>
@@ -220,16 +223,17 @@
 
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        * time : Total time of travel of particle [s]</span>
-<span class="sd">        * dist : total distance traveled [m]</span>
+<span class="sd">        * time : Total advective time of travel of particle [s]</span>
+<span class="sd">        * tdrw_time : Total advection+diffusion time of travel of particle [s]</span>
+<span class="sd">        * dist : total distance travelled in advection [m]</span>
 <span class="sd">        * flag : True if particle exited system, else False</span>
 <span class="sd">        * frac_seq : Dictionary, contains information about fractures through which the particle went</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdrw_time</span> <span class="o">=</span> <span class="nb">float</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="nb">float</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="nb">bool</span>
 
@@ -250,9 +254,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdrw_time</span> <span class="o">=</span> <span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">L</span></div>
-    
-<div class="viewcode-block" id="Particle.track"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle.track">[docs]</a>    <span class="k">def</span> <span class="nf">track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Gtilde</span><span class="p">,</span> <span class="n">nbrs_dict</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Particle.track"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle.track">[docs]</a>    <span class="k">def</span> <span class="nf">track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Gtilde</span><span class="p">,</span> <span class="n">nbrs_dict</span><span class="p">,</span> <span class="n">frac_porosity</span><span class="p">,</span> <span class="n">tdrw_flag</span><span class="p">,</span>
+              <span class="n">matrix_porosity</span><span class="p">,</span> <span class="n">matrix_diffusivity</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; track a particle from inlet vertex to outlet vertex</span>
 
 <span class="sd">        Parameters</span>
@@ -269,25 +275,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">Inlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]]</span>
+
         <span class="n">curr_v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">Inlet</span><span class="p">)</span>
+
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
             <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
+
             <span class="k">if</span> <span class="n">nbrs_dict</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;child&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning!!! No child found&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">break</span>
-            <span class="n">next_v</span> <span class="o">=</span>  <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">nbrs_dict</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;child&#39;</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">nbrs_dict</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">])</span>
+
+            <span class="n">next_v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">nbrs_dict</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;child&#39;</span><span class="p">],</span>
+                                         <span class="n">p</span><span class="o">=</span><span class="n">nbrs_dict</span><span class="p">[</span><span class="n">curr_v</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">])</span>
 
             <span class="n">frac</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;frac&#39;</span><span class="p">]</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>
-            <span class="n">L</span>  <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_frac_data</span><span class="p">(</span><span class="n">frac</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">frac_porosity</span>
+
+            <span class="k">if</span> <span class="n">tdrw_flag</span><span class="p">:</span>
+                <span class="n">a_nondim</span> <span class="o">=</span> <span class="n">matrix_porosity</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                    <span class="n">matrix_diffusivity</span> <span class="o">/</span>
+                    <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;perm&#39;</span><span class="p">]))</span>
+                <span class="n">xi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">()</span>
+                <span class="n">t_tdrw</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">a_nondim</span> <span class="o">*</span> <span class="n">t</span> <span class="o">/</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">erfcinv</span><span class="p">(</span><span class="n">xi</span><span class="p">),</span>
+                                      <span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_tdrw</span> <span class="o">=</span> <span class="n">t</span>
+
+            <span class="n">L</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_v</span><span class="p">,</span> <span class="n">next_v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_frac_data</span><span class="p">(</span><span class="n">frac</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_tdrw</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
             <span class="n">curr_v</span> <span class="o">=</span> <span class="n">next_v</span></div>
 
-    
-<div class="viewcode-block" id="Particle.add_frac_data"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle.add_frac_data">[docs]</a>    <span class="k">def</span> <span class="nf">add_frac_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+<div class="viewcode-block" id="Particle.add_frac_data"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle.add_frac_data">[docs]</a>    <span class="k">def</span> <span class="nf">add_frac_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_tdrw</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; add details of fracture through which particle traversed</span>
 
 <span class="sd">        Parameters</span>
@@ -299,7 +321,8 @@
 
 <span class="sd">            t : double</span>
 <span class="sd">                time in seconds</span>
-
+<span class="sd">            t_tdrw: double</span>
+<span class="sd">                time in seconds</span>
 <span class="sd">            L : double</span>
 <span class="sd">                distance in metres</span>
 
@@ -308,14 +331,19 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">frac</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;dist&#39;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">}})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">frac</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s1">&#39;tdrw_time&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s1">&#39;dist&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="p">}})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">frac</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">t</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">frac</span><span class="p">][</span><span class="s1">&#39;dist&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">frac</span><span class="p">][</span><span class="s1">&#39;tdrw_time&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">t_tdrw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">frac</span><span class="p">][</span><span class="s1">&#39;dist&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdrw_time</span> <span class="o">+=</span> <span class="n">t_tdrw</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">+=</span> <span class="n">L</span></div>
 
-    
-    
 <div class="viewcode-block" id="Particle.write_file"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.Particle.write_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partime_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frac_id_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; write particle data to output files, if supplied</span>
 
@@ -335,28 +363,41 @@
 
         <span class="k">if</span> <span class="n">partime_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">partime_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f1</span><span class="p">:</span>
-                <span class="n">f1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.3E}</span><span class="s2">  </span><span class="si">{:3.3E}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">))</span>
-        
+                <span class="n">f1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.3E}</span><span class="s2"> </span><span class="si">{:3.3E}</span><span class="s2"> </span><span class="si">{:3.3E}</span><span class="s2"> </span><span class="si">{:3.3E}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tdrw_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tdrw_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="n">frac_id_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">data1</span> <span class="o">=</span>  <span class="p">[]</span>
-            <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">]</span>
+            <span class="n">data1</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
+            <span class="p">]</span>
             <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">frac_id_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f2</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>    
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
                         <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:d}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-                    <span class="k">elif</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">:</span>
-                        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.2E}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="p">]][</span><span class="s1">&#39;time&#39;</span><span class="p">]))</span>
+                    <span class="k">elif</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">:</span>
+                        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.2E}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">n</span><span class="p">]][</span><span class="s1">&#39;time&#39;</span><span class="p">]))</span>
+                    <span class="k">elif</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">:</span>
+                        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.2E}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">]][</span><span class="s1">&#39;tdrw_time&#39;</span><span class="p">]))</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.2E}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">]][</span><span class="s1">&#39;dist&#39;</span><span class="p">]))</span>
+                        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:3.2E}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frac_seq</span><span class="p">[</span><span class="n">data1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">]][</span><span class="s1">&#39;dist&#39;</span><span class="p">]))</span>
                 <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 
 
-
-
-
-
-<div class="viewcode-block" id="run_graph_transport"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.run_graph_transport">[docs]</a><span class="k">def</span> <span class="nf">run_graph_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Gtilde</span><span class="p">,</span> <span class="n">nparticles</span><span class="p">,</span> <span class="n">partime_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frac_id_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="run_graph_transport"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.run_graph_transport">[docs]</a><span class="k">def</span> <span class="nf">run_graph_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">Gtilde</span><span class="p">,</span>
+                        <span class="n">nparticles</span><span class="p">,</span>
+                        <span class="n">partime_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">frac_id_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">frac_porosity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                        <span class="n">tdrw_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">matrix_porosity</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+                        <span class="n">matrix_diffusivity</span><span class="o">=</span><span class="mf">1e-11</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Run  particle tracking on the given NetworkX graph</span>
 
 <span class="sd">    Parameters</span>
@@ -375,6 +416,15 @@
 
 <span class="sd">        frac_id_file : string</span>
 <span class="sd">            name of file to which detailed information of each particle&#39;s travel will be written, default is None</span>
+<span class="sd">        </span>
+<span class="sd">        frac_porosity: float</span>
+<span class="sd">            porosity of fracture, default is 1.0</span>
+<span class="sd">        tdrw_flag : Bool</span>
+<span class="sd">            if False, matrix_porosity, matrix_diffusivity are ignored</span>
+<span class="sd">        matrix_porosity: float</span>
+<span class="sd">            default is 0.02</span>
+<span class="sd">        matrix_diffusivity: float</span>
+<span class="sd">            default is 1e-11 in SI units</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -383,38 +433,46 @@
 <span class="sd">    -----</span>
 <span class="sd">    Information on individual functions is found therein</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    
+
     <span class="k">if</span> <span class="n">partime_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">partime_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f1</span><span class="p">:</span>
-                <span class="n">f1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# exit time (s)  total distance covered (m)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">&quot;# advective time (s)  advection+diffusion time (s)  diffusion time (s)  total advection distance covered (m)</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR: Unable to open supplied partime_file file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">partime_file</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: Unable to open supplied partime_file file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">partime_file</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">frac_id_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>        
+    <span class="k">if</span> <span class="n">frac_id_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">frac_id_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f2</span><span class="p">:</span>
-                <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Line has (n+n+n) entries, consisting of all frac_ids (from 0), times spent (s), dist covered (m)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">&quot;# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR: Unable to open supplied frac_id_file file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">frac_id_file</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: Unable to open supplied frac_id_file file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">frac_id_file</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">nbrs_dict</span> <span class="o">=</span> <span class="n">create_neighbour_list</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating downstream neighbour list&quot;</span><span class="p">)</span>
-    <span class="n">Inlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]]</span>
-    
-    <span class="n">pfailcount</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting particle tracking&quot;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nparticles</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating downstream neighbour list...&quot;</span><span class="p">)</span>
+
+    <span class="n">Inlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]]</span>
+
+    <span class="n">pfailcount</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting particle tracking...&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nparticles</span><span class="p">):</span>
+
         <span class="n">particle_i</span> <span class="o">=</span> <span class="n">Particle</span><span class="p">()</span>
         <span class="n">particle_i</span><span class="o">.</span><span class="n">set_start_time_dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">particle_i</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">nbrs_dict</span><span class="p">)</span>
+        <span class="n">particle_i</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">nbrs_dict</span><span class="p">,</span> <span class="n">frac_porosity</span><span class="p">,</span> <span class="n">tdrw_flag</span><span class="p">,</span>
+                         <span class="n">matrix_porosity</span><span class="p">,</span> <span class="n">matrix_diffusivity</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">particle_i</span><span class="o">.</span><span class="n">flag</span><span class="p">:</span>
             <span class="n">particle_i</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">partime_file</span><span class="p">,</span> <span class="n">frac_id_file</span><span class="p">)</span>
@@ -422,10 +480,16 @@
             <span class="n">pfailcount</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Particle tracking complete&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">pfailcount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All particles exited&quot;</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Out of </span><span class="si">{}</span><span class="s2"> particles, </span><span class="si">{}</span><span class="s2"> particles did not exit&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nparticles</span><span class="p">,</span> <span class="n">pfailcount</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Out of </span><span class="si">{}</span><span class="s2"> particles, </span><span class="si">{}</span><span class="s2"> particles did not exit&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">nparticles</span><span class="p">,</span> <span class="n">pfailcount</span><span class="p">))</span>
+
     <span class="k">return</span></div>
 </pre></div>
 

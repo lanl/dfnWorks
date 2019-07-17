@@ -14,9 +14,10 @@ define_paths()
 main_time = time()
 DFN = create_dfn()
 # General Work Flow
+DFN.set_flow_solver("FEHM")
 DFN.dfn_gen(output=False)
-DFN.dfn_flow()
-DFN.dfn_trans()
+#DFN.dfn_flow()
+#DFN.dfn_trans()
 
 main_elapsed = time() - main_time
 print('Time Required: %0.2f Minutes'%(main_elapsed/60.0))

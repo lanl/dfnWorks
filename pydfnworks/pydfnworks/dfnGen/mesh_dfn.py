@@ -61,7 +61,7 @@ def mesh_network(self,
     if prune:
         if self.prune_file == "":
             error = "ERROR!! User requested pruning in meshing but \
-did not provide file of fractures to keep.\nExiting program."
+did not provide file of fractures to keep.\nExiting program.\n"
 
             sys.stderr.write(error)
             sys.exit(1)
@@ -96,7 +96,7 @@ did not provide file of fractures to keep.\nExiting program."
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
     if failure:
         mh.cleanup_dir()
-        error = "One or more fractures failed to mesh properly.\nExiting Program"
+        error = "One or more fractures failed to mesh properly.\nExiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -108,7 +108,7 @@ did not provide file of fractures to keep.\nExiting program."
     if (not visual_mode and not prune):
         if not mh.check_dudded_points(dudded_points):
             mh.cleanup_dir()
-            error = "ERROR!!! Incorrect Number of dudded points.\nExiting Program"
+            error = "ERROR!!! Incorrect Number of dudded points.\nExiting Program\n"
             sys.stderr.write(error)
             sys.exit(1)
 

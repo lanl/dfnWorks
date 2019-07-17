@@ -85,7 +85,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
@@ -165,7 +166,8 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.mesh_dfn_helper</span> <span class="k">import</span> <span class="n">parse_params_file</span>
 
-<div class="viewcode-block" id="dfn_gen"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.dfn_gen">[docs]</a><span class="k">def</span> <span class="nf">dfn_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">visual_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="dfn_gen"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.dfn_gen">[docs]</a><span class="k">def</span> <span class="nf">dfn_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">visual_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Wrapper script the runs the dfnGen workflow:    </span>
 <span class="sd">        1) make_working_directory: Create a directory with name of job</span>
 <span class="sd">        2) check_input: Check input parameters and create a clean version of the input file</span>
@@ -195,31 +197,32 @@
     <span class="c1"># Create Working directory</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">make_working_directory</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: make_working_directory&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span><span class="o">-</span> <span class="n">tic</span><span class="p">)</span> 
-    
-    <span class="c1"># Check input file  </span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: make_working_directory&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>
+
+    <span class="c1"># Check input file</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">check_input</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: check_input&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>   
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: check_input&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>
 
-    <span class="c1"># Create network    </span>
+    <span class="c1"># Create network</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">create_network</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: create_network&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>    
-    
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: create_network&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
         <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_report</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;output_report&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>   
-    
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;output_report&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>
+
     <span class="c1"># Mesh Network</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">mesh_network</span><span class="p">(</span><span class="n">visual_mode</span><span class="o">=</span><span class="n">visual_mode</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: mesh_network&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>  
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Function: mesh_network&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dfnGen Complete&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Process: dfnGen&#39;</span><span class="p">,</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic_gen</span><span class="p">)</span>  </div>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_time</span><span class="p">(</span><span class="s1">&#39;Process: dfnGen&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic_gen</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="make_working_directory"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.make_working_directory">[docs]</a><span class="k">def</span> <span class="nf">make_working_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Make working directory for dfnWorks Simulation</span>
@@ -236,7 +239,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    If directory already exists, user is prompted if they want to overwrite and proceed. If not, program exits. </span>
-<span class="sd">    &#39;&#39;&#39;</span>    
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
@@ -247,22 +250,23 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Deleting&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>    
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">keep</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span> <span class="ow">or</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Not deleting folder. Exiting Program&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Not deleting folder. Exiting Program</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">error</span><span class="o">=</span><span class="s2">&quot;Unknown Response. Exiting Program&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Unknown Response. Exiting Program&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="s1">&#39;/radii&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="s1">&#39;/intersections&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="s1">&#39;/polys&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current directory is now: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jobname is </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span> </div>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current directory is now: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jobname is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="create_network"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.create_network">[docs]</a><span class="k">def</span> <span class="nf">create_network</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Execute dfnGen</span>
@@ -280,23 +284,25 @@
 <span class="sd">    -----</span>
 <span class="sd">    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existance of the file params.txt. </span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Running DFNGEN&#39;</span><span class="p">)</span> 
-    <span class="c1"># copy input file into job folder    </span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnGen_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_clean.dat&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cmd</span><span class="p">)</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Running DFNGEN&#39;</span><span class="p">)</span>
+    <span class="c1"># copy input file into job folder</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
+        <span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnGen_file</span><span class="p">[:</span>
+                                                     <span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_clean.dat&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;params.txt&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ERROR! Generation Failed</span><span class="se">\n</span><span class="s2">Exiting Program.&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Generation Failed</span><span class="se">\n</span><span class="s2">Exiting Program.&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">num_poly</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="o">=</span><span class="n">parse_params_file</span><span class="p">(</span><span class="n">quite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_params_file</span><span class="p">(</span><span class="n">quite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">=</span> <span class="n">num_poly</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">h</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">h</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generation Succeeded&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
