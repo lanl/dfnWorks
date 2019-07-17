@@ -1,3 +1,3 @@
-dfnGen DUMMY/examples/pruning/gen_truncated_power_law_dist.dat
-dfnFlow DUMMY/examples/pruning/dfn_explicit.in
-dfnTrans DUMMY/examples/pruning/PTDFN_control.dat
+dfnGen DUMMY/dfnworks-main/examples/pruning/gen_truncated_power_law_dist.dat
+dfnFlow DUMMY/dfnworks-main/examples/pruning/dfn_explicit.in
+dfnTrans DUMMY/dfnworks-main/examples/pruning/PTDFN_control.dat

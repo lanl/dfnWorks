@@ -1,3 +1,3 @@
-dfnGen DUMMY/examples/in_fracture_var/gen_4_user_rectangles.dat
-dfnFlow DUMMY/examples/in_fracture_var/dfn_explicit.in
-dfnTrans DUMMY/examples/in_fracture_var/PTDFN_control_in_fracture_var.dat
+dfnGen DUMMY/dfnworks-main/examples/in_fracture_var/gen_4_user_rectangles.dat
+dfnFlow DUMMY/dfnworks-main/examples/in_fracture_var/dfn_explicit.in
+dfnTrans DUMMY/dfnworks-main/examples/in_fracture_var/PTDFN_control_in_fracture_var.dat
