@@ -1,3 +1,0 @@
-dfnGen /home/jhyman/dfnworks/input_files/mixing/input_mixing_25L_kappa_0.dat
-dfnFlow /project/bes_dfn/jhyman/dfn2graph_networks/backbone_x01/dfn_explicit.in
-dfnTrans /project/bes_dfn/jhyman/dfn2graph_networks/PTDFN_Control.dat

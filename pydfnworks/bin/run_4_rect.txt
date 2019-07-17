@@ -1,3 +1,0 @@
-dfnGen /Users/jhyman/src/dfnworks-main/tests/gen_lognormal_dist.dat
-dfnFlow /Users/jhyman/src/dfnworks-main/tests/dfn_explicit.in
-dfnTrans /Users/jhyman/src/dfnworks-main/tests/PTDFN_control.dat
