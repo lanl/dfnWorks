@@ -45,8 +45,7 @@ def create_graph(self, graph_type, inflow, outflow):
         return []
     return G
 
-
-def create_fracture_graph(inflow, outflow, topology_file="connectivity.dat"):
+def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat", fracture_info_file="fracture_info.dat"):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -61,6 +60,8 @@ def create_fracture_graph(inflow, outflow, topology_file="connectivity.dat"):
             Name of outflow boundary (connect to target)
         topology_file : string
             Name of adjacency matrix file for a DFN default=connectivity.dat  
+        fracture_infor : str
+                filename for fracture information
 
     Returns
     -------
@@ -92,9 +93,9 @@ def create_fracture_graph(inflow, outflow, topology_file="connectivity.dat"):
         outflow = [outflow]
     G.add_node('s')
     G.add_node('t')
-    G.add_edges_from(zip(['s'] * (len(inflow)), inflow))
-    G.add_edges_from(zip(outflow, ['t'] * (len(outflow))))
-    add_perm(G)
+    G.add_edges_from(zip(['s']*(len(inflow)),inflow))
+    G.add_edges_from(zip(outflow,['t']*(len(outflow))))   
+    add_perm(G,fracture_info_file) 
     print("--> Graph loaded")
     return G
 
@@ -157,6 +158,8 @@ def create_intersection_graph(inflow,
              File Format:
              fracture 1, fracture 2, x center, y center, z center, intersection length
 
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
         G : NetworkX Graph
@@ -241,14 +244,12 @@ def create_intersection_graph(inflow,
 
     for i in nodes:
         e = set(f1[i])
-        if len(e.intersection(set('s'))) > 0 or len(e.intersection(set(
-            [-1]))) > 0:
-            G.add_edge(i, 's', frac='s', length=0.0)
-        if len(e.intersection(set('t'))) > 0 or len(e.intersection(set(
-            [-2]))) > 0:
-            G.add_edge(i, 't', frac='t', length=0.0)
-    add_perm(G)
-    print("Graph Construction Complete")
+        if len(e.intersection(set('s'))) > 0 or len(e.intersection(set([-1]))) > 0:
+            G.add_edge(i,'s',frac='s', length=0.0)
+        if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
+            G.add_edge(i,'t',frac='t', length=0.0)     
+    add_perm(G,fracture_info) 
+        print("Graph Construction Complete")
     return G
 
 
@@ -646,8 +647,7 @@ def load_json_graph(self, name):
     print("Complete")
     return G
 
-
-def add_perm(G):
+def add_perm(G,fracture_info="fracture_info.dat"):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
@@ -658,6 +658,8 @@ def add_perm(G):
         G :networkX graph
             NetworkX Graph based on the DFN
    
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
  
@@ -666,7 +668,7 @@ def add_perm(G):
 
 """
 
-    perm = np.genfromtxt('fracture_info.dat', skip_header=1)[:, 1]
+    perm = np.genfromtxt(fracture_info, skip_header =1)[:,1]
     if G.graph['representation'] == "fracture":
         nodes = list(nx.nodes(G))
         for n in nodes:
@@ -699,12 +701,24 @@ def add_perm(G):
                 G.node[fracture]['aperture'] = float(aperture)
 
 
-def add_area(G):
+def add_area(G,fracture_info="fracture_info.dat"):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
-    representation'''
+    representation
+    
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+        fracture_info : str
+            filename for fracture information
+    
+    Returns
+    -------
+        None
+'''
 
-    aperture = np.genfromtxt('fracture_info.dat', skip_header=1)[:, 2]
+    aperture = np.genfromtxt(fracture_info, skip_header =1)[:,2]
     edges = list(nx.edges(G))
     for u, v in edges:
         x = G.edges[u, v]['frac']
@@ -717,10 +731,20 @@ def add_area(G):
 
 
 def add_weight(G):
-    '''Compute weight w = K*A/L associated with each edge '''
+    '''Compute weight w = K*A/L associated with each edge 
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+    
+    Returns
+    -------
+        None
+'''
     edges = list(nx.edges(G))
     for u, v in edges:
         if G.edges[u, v]['length'] > 0:
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v][
                 'area'] / G.edges[u, v]['length']
     return
+

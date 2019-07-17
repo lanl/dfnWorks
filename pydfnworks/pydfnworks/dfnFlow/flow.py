@@ -117,7 +117,7 @@ def create_dfn_flow_links(self, path='../'):
         1. Typically, the path is DFN.path, which is set by the command line argument -path
         2. Currently only supported for PFLOTRAN
     """
-    files = [
+        files = [
         'full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat', 'full_mesh.stor', 'full_mesh_material.zone',
         'full_mesh.fehmn', 'allboundaries.zone', 'pboundary_bottom.zone',

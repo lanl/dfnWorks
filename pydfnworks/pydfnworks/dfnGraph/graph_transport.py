@@ -1,3 +1,10 @@
+"""
+.. module:: graph_transport.py
+   :synopsis: simulate transport on a pipe network representaiton of a DFN 
+.. moduleauthor:: Shriram Srinivasan <shrirams@lanl.gov>
+
+"""
+
 import networkx as nx
 import numpy as np
 import numpy.random
