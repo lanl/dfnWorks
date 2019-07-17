@@ -1,9 +1,8 @@
 # automatically changes path names in tests directory and pydfnworks
 
-import subprocess
-import sys, os
+import os
 
-old = 'DUMMY/'
+old = 'DUMMY'
 new = os.path.join('/',*os.getcwd().split('/')[:-3])
 
 def listdir_recursive(base_directory):
