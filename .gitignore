@@ -3,12 +3,15 @@
 *.cmake
 *FracMan_interface*
 
+#macOS folder config
+*DS_Store
 
 pydfnworks/pydfnworks/only_gen_output.py
 pydfnworks/pydfnworks/paths.py
 
 # dfnWorks Executables
 ParticleTracking/DFNTrans
+DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
 C_uge_correct/correct_uge
 C_uge_stor/correct_stor

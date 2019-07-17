@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pydfnworks.dfnGraph.graph_flow &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index_docs.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pydfnworks.dfnGraph.graph_flow</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pydfnworks.dfnGraph.graph_flow</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="c1"># pydfnworks modules</span>
+<span class="kn">import</span> <span class="nn">pydfnworks.dfnGraph.dfn2graph</span> <span class="k">as</span> <span class="nn">d2g</span>
+
+<div class="viewcode-block" id="get_laplacian_sparse_mat"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.get_laplacian_sparse_mat">[docs]</a><span class="k">def</span> <span class="nf">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lil&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get the matrices D, A that make up the Laplacian sparse matrix in desired sparsity format. Used to enforce boundary conditions by modifying rows of L = D - A</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">        G : object</span>
+<span class="sd">            NetworkX graph equipped with weight attribute</span>
+
+<span class="sd">        nodelist : list</span>
+<span class="sd">            list of nodes of G for which laplacian is desired. Default is None in which case, all the nodes</span>
+<span class="sd">        </span>
+<span class="sd">        weight : string</span>
+<span class="sd">            For weighted Laplacian, else all weights assumed unity</span>
+<span class="sd">        </span>
+<span class="sd">        dtype :  default is None, cooresponds to float</span>
+<span class="sd">        </span>
+<span class="sd">        format: string</span>
+<span class="sd">            sparse matrix format, csr, csc, coo, lil_matrix with default being lil</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        D : sparse 2d float array       </span>
+<span class="sd">            Diagonal part of Laplacian</span>
+<span class="sd">            </span>
+<span class="sd">        A : sparse 2d float array</span>
+<span class="sd">            Adjacency matrix of graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_scipy_sparse_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">nodelist</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">spdiags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">A</span></div>
+
+ 
+<div class="viewcode-block" id="prepare_graph_with_attributes"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.prepare_graph_with_attributes">[docs]</a><span class="k">def</span> <span class="nf">prepare_graph_with_attributes</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        inflow : string</span>
+<span class="sd">            name of file containing list of DFN fractures on inflow boundary</span>
+
+<span class="sd">        outflow: string</span>
+<span class="sd">            name of file containing list of DFN fractures on outflow boundary</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Gtilde : NetworkX graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">d2g</span><span class="o">.</span><span class="n">create_intersection_graph</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">intersection_file</span><span class="o">=</span><span class="s2">&quot;intersection_list.dat&quot;</span><span class="p">)</span>
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">d2g</span><span class="o">.</span><span class="n">add_perm</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
+    <span class="n">d2g</span><span class="o">.</span><span class="n">add_area</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
+    <span class="n">d2g</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]</span><span class="o">=</span> <span class="kc">False</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">):</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">):</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+    <span class="n">Gtilde</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+    <span class="n">Gtilde</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+    <span class="n">sys_size</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span>
+
+    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sys_size</span><span class="p">)))</span>
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">relabel_nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Gtilde</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="solve_flow_on_graph"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.solve_flow_on_graph">[docs]</a><span class="k">def</span> <span class="nf">solve_flow_on_graph</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span> <span class="n">fluid_viscosity</span><span class="o">=</span><span class="mf">8.9e-4</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        Gtilde : NetworkX graph</span>
+
+<span class="sd">        Pin : double</span>
+<span class="sd">            Value of pressure (in Pa) at inlet</span>
+<span class="sd">        </span>
+<span class="sd">        Pout : double</span>
+<span class="sd">            Value of pressure (in Pa) at outlet</span>
+<span class="sd">        </span>
+<span class="sd">        fluid_viscosity : double</span>
+<span class="sd">            optional, in Pa-s, default is for water</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Gtilde : NetworkX graph </span>
+<span class="sd">            Gtilde is updated with vertex pressures, edge fluxes and travel times</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">Inlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;inletflag&#39;</span><span class="p">]]</span>
+    <span class="n">Outlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]]</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">Inlet</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">Outlet</span><span class="p">)):</span>
+        <span class="n">error</span><span class="o">=</span><span class="s2">&quot;Incompatible graph: Vertex connected to both source and target&quot;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="n">D</span><span class="p">,</span> <span class="n">A</span> <span class="o">=</span> <span class="n">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lil&#39;</span><span class="p">)</span>
+
+
+    <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Inlet</span><span class="p">:</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pin</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">v</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Outlet</span><span class="p">:</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>  <span class="o">=</span> <span class="n">Pout</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">A</span> <span class="c1"># automatically converts to csr when returning L</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solving sparse system&quot;</span><span class="p">)</span>
+    <span class="n">Phat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">spsolve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Updating graph edges with flow solution&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
+        <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Phat</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">):</span>
+        <span class="n">delta_p</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">delta_p</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]):</span>
+            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">(</span><span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;perm&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">fluid_viscosity</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
+            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Gtilde</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Graph flow complete&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Gtilde</span></div>
+
+
+<div class="viewcode-block" id="run_graph_flow"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.run_graph_flow">[docs]</a><span class="k">def</span> <span class="nf">run_graph_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span> <span class="n">fluid_viscosity</span><span class="o">=</span><span class="mf">8.9e-4</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Run the graph flow portion of the workflow</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+
+
+<span class="sd">        inflow : string</span>
+<span class="sd">            name of file containing list of DFN fractures on inflow boundary</span>
+
+<span class="sd">        outflow: string</span>
+<span class="sd">            name of file containing list of DFN fractures on outflow boundary</span>
+
+<span class="sd">        Pin : double</span>
+<span class="sd">            Value of pressure (in Pa) at inlet</span>
+<span class="sd">        </span>
+<span class="sd">        Pout : double</span>
+<span class="sd">            Value of pressure (in Pa) at outlet</span>
+<span class="sd">        </span>
+<span class="sd">        fluid_viscosity : double</span>
+<span class="sd">            optional, in Pa-s, default is for water</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Gtilde : NetworkX graph </span>
+<span class="sd">            Grtilde is updated with vertex pressures, edge fluxes and travel times</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Information on individual functions in found therein</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">prepare_graph_with_attributes</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">)</span>
+    <span class="n">Gtilde</span> <span class="o">=</span> <span class="n">solve_flow_on_graph</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">Pout</span><span class="p">,</span><span class="n">fluid_viscosity</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="n">Gtilde</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

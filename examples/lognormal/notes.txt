@@ -1,0 +1,1 @@
+python run.py -name /dfnWorks/work/lognormal_example/ -input lognormal_dist_run_file.txt -ncpu 8

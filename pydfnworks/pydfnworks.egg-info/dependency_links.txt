@@ -1,1 +1,0 @@
-https://github.com/deknapp/testdfn/tarball/master#egg-package-1.0

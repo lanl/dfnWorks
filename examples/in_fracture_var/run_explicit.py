@@ -24,7 +24,6 @@ aper_file=cwd+"/aper_node.dat"
 perm_file=cwd+"/perm_node.dat"
 
 
-
 DFN.make_working_directory()
 DFN.check_input()
 DFN.create_network()

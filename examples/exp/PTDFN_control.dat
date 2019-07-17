@@ -49,6 +49,7 @@ out_curv: yes
 out_avs:  no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no 
+out_fract: no
 
 /* temporary outputs (every time step from intersection to intersection)*/
 /* use outputs to file or memory buffer. Memory buffer by default */
@@ -69,7 +70,7 @@ out_time: partime
 /*************** Intersection Mixing Rule **********************************/
 /****streamline_routing: if yes - streamline routing is the selected subgrid process
      otherwise the complete mixing rule is selected ****/
-streamline_routing: no 
+streamline_routing: yes
 
 /**************** PARTICLES INITIAL POSITIONS ******************************/
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 

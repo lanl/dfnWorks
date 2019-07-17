@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pydfnworks.general.dfnworks &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Settting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index_docs.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pydfnworks.general.dfnworks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pydfnworks.general.dfnworks</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Jeffrey Hyman and Satish Karra&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;2.2&quot;</span>
+<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Jeffrey Hyman and Satish Karra&quot;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;jhyman@lanl.gov&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DFN object class. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span> 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.general.dfntools</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="DFNWORKS"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.DFNWORKS">[docs]</a><span class="k">class</span> <span class="nc">DFNWORKS</span><span class="p">(</span><span class="n">Frozen</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Class for DFN Generation and meshing</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        * jobname: name of job, also the folder where output files are stored</span>
+<span class="sd">        * ncpu: number of CPUs used in the job</span>
+<span class="sd">        * dfnGen file: the name of the dfnGen input file</span>
+<span class="sd">        * dfnFlow file: the name of the dfnFlow input file</span>
+<span class="sd">        * dfnTrans file: the name of the dfnFlow input file</span>
+<span class="sd">        * local prefix: indicates that the name contains only the most local directory</span>
+<span class="sd">        * vtk_file: the name of the VTK file</span>
+<span class="sd">        * inp_file: the name of the INP file</span>
+<span class="sd">        * uge_file: the name of the UGE file</span>
+<span class="sd">        * mesh_type: the type of mesh</span>
+<span class="sd">        * perm_file: the name of the file containing permeabilities </span>
+<span class="sd">        * aper_file: the name of the file containing apertures </span>
+<span class="sd">        * perm_cell file: the name of the file containing cell permeabilities </span>
+<span class="sd">        * aper_cell_file: the name of the file containing cell apertures</span>
+<span class="sd">        * freeze: indicates whether the class attributes can be modified</span>
+<span class="sd">        * h : FRAM length scale </span>
+<span class="sd">&#39;&#39;&#39;</span>
+    <span class="c1"># genearl functions</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.general.legal</span> <span class="k">import</span> <span class="n">legal</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.general.paths</span> <span class="k">import</span> <span class="n">define_paths</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.general.general_functions</span> <span class="k">import</span> <span class="n">dump_time</span><span class="p">,</span> <span class="n">print_run_time</span> 
+  
+    <span class="c1"># dfnGen functions </span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.gen_input</span> <span class="k">import</span> <span class="n">check_input</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generator</span> <span class="k">import</span> <span class="n">dfn_gen</span><span class="p">,</span> <span class="n">make_working_directory</span><span class="p">,</span> <span class="n">create_network</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.gen_output</span> <span class="k">import</span> <span class="n">output_report</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.mesh_dfn</span> <span class="k">import</span> <span class="n">mesh_network</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.mesh_dfn_helper</span> <span class="k">import</span> <span class="n">inp2gmv</span> 
+    
+    <span class="c1"># dfnFlow</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnFlow.flow</span> <span class="k">import</span> <span class="n">dfn_flow</span><span class="p">,</span> <span class="n">create_dfn_flow_links</span><span class="p">,</span> <span class="n">set_flow_solver</span><span class="p">,</span> <span class="n">uncorrelated</span>  
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnFlow.pflotran</span> <span class="k">import</span> <span class="n">lagrit2pflotran</span><span class="p">,</span> <span class="n">pflotran</span><span class="p">,</span> <span class="n">inp2vtk_python</span><span class="p">,</span> <span class="n">parse_pflotran_vtk_python</span><span class="p">,</span> <span class="n">pflotran_cleanup</span><span class="p">,</span> <span class="n">write_perms_and_correct_volumes_areas</span><span class="p">,</span> <span class="n">zone2ex</span> 
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnFlow.fehm</span> <span class="k">import</span> <span class="n">correct_stor_file</span><span class="p">,</span> <span class="n">fehm</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnFlow.mass_balance</span> <span class="k">import</span> <span class="n">effective_perm</span>
+
+    <span class="c1"># dfnTrans</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnTrans.transport</span> <span class="k">import</span> <span class="n">dfn_trans</span><span class="p">,</span> <span class="n">copy_dfn_trans_files</span><span class="p">,</span> <span class="n">run_dfn_trans</span><span class="p">,</span> <span class="n">create_dfn_trans_links</span><span class="p">,</span> <span class="n">check_dfn_trans_run_files</span>
+
+
+    <span class="c1"># dfnGraph</span>
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph.dfn2graph</span> <span class="k">import</span> <span class="n">create_graph</span><span class="p">,</span> <span class="n">k_shortest_paths_backbone</span><span class="p">,</span> <span class="n">dump_json_graph</span><span class="p">,</span> <span class="n">load_json_graph</span><span class="p">,</span> <span class="n">plot_graph</span><span class="p">,</span> <span class="n">greedy_edge_disjoint</span><span class="p">,</span> <span class="n">dump_fractures</span> 
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph.graph_flow</span> <span class="k">import</span> <span class="n">run_graph_flow</span> 
+    <span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph.graph_transport</span> <span class="k">import</span> <span class="n">run_graph_transport</span> 
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jobname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ncpu</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">local_jobname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">dfnGen_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">local_dfnGen_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dfnFlow_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">local_dfnFlow_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dfnTrans_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">prune_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">flow_solver</span> <span class="o">=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">,</span> <span class="n">inp_file</span><span class="o">=</span><span class="s1">&#39;full_mesh.inp&#39;</span><span class="p">,</span> <span class="n">uge_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">stor_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;dfn&#39;</span><span class="p">,</span> <span class="n">perm_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">aper_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">perm_cell_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">aper_cell_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dfnTrans_version</span> <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">num_frac</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">=</span> <span class="n">jobname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span> <span class="o">=</span> <span class="n">ncpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfnGen_file</span> <span class="o">=</span> <span class="n">dfnGen_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnGen_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnGen_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnGen_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span> <span class="o">=</span> <span class="n">dfnFlow_file</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span> <span class="o">=</span> <span class="n">dfnTrans_file</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnTrans_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span> <span class="o">=</span> <span class="n">vtk_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span> <span class="o">=</span> <span class="n">inp_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="n">uge_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perm_file</span> <span class="o">=</span> <span class="n">perm_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aper_file</span> <span class="o">=</span> <span class="n">aper_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stor_file</span> <span class="o">=</span> <span class="n">stor_file</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span> <span class="o">=</span> <span class="n">perm_cell_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aper_cell_file</span> <span class="o">=</span> <span class="n">aper_cell_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">=</span> <span class="n">flow_solver</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_version</span><span class="o">=</span> <span class="mf">2.2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freeze</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legal</span><span class="p">()</span></div>
+        <span class="c1">#options = create_dfn.commandline_options()</span>
+
+ 
+<div class="viewcode-block" id="commandline_options"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.commandline_options">[docs]</a><span class="k">def</span> <span class="nf">commandline_options</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Read command lines for use in dfnWorks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        None</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">        options : argparse function</span>
+<span class="sd">            command line options </span>
+<span class="sd">   </span>
+<span class="sd">    Notes</span>
+<span class="sd">    ---------</span>
+<span class="sd">        Options:</span>
+<span class="sd">            -name : string</span>
+<span class="sd">                Path to working directory (Mandatory) </span>
+<span class="sd">            -ncpu : int </span>
+<span class="sd">                Number of CPUS (Optional, default=4)</span>
+<span class="sd">            -input : string </span>
+<span class="sd">                Input file with paths to run files (Mandatory if the next three options are not specified)</span>
+<span class="sd">            -gen : string </span>
+<span class="sd">                Generator Input File (Mandatory, can be included within the input file)</span>
+<span class="sd">            -flow : string </span>
+<span class="sd">                PFLORAN Input File (Mandatory, can be included within the input file)</span>
+<span class="sd">            -trans : string</span>
+<span class="sd">                Transport Input File (Mandatory, can be included within the input file)</span>
+<span class="sd">            -prune_file : string</span>
+<span class="sd">                Absolute path to the prune Input File </span>
+<span class="sd">            -path : string</span>
+<span class="sd">                Path to another DFN run that you want to base the current run from </span>
+<span class="sd">            -cell : bool</span>
+<span class="sd">                True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">argparse</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Command Line Arguments for dfnWorks&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-name&quot;</span><span class="p">,</span> <span class="s2">&quot;--jobname&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;jobname&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-ncpu&quot;</span><span class="p">,</span> <span class="s2">&quot;--ncpu&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> 
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of CPUs&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-input&quot;</span><span class="p">,</span> <span class="s2">&quot;--input_file&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;input file with paths to run files&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-gen&quot;</span><span class="p">,</span> <span class="s2">&quot;--dfnGen&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to dfnGen run file&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-flow&quot;</span><span class="p">,</span> <span class="s2">&quot;--dfnFlow&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to dfnFlow run file&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-trans&quot;</span><span class="p">,</span> <span class="s2">&quot;--dfnTrans&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to dfnTrans run file&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-path&quot;</span><span class="p">,</span> <span class="s2">&quot;--path&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to directory for sub-network runs&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-cell&quot;</span><span class="p">,</span> <span class="s2">&quot;--cell&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Binary For Cell Based Apereture / Perm&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-prune_file&quot;</span><span class="p">,</span> <span class="s2">&quot;--prune_file&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> 
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to prune DFN list file&quot;</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-prune_path&quot;</span><span class="p">,</span> <span class="s2">&quot;--prune_path&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> 
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to original DFN files&quot;</span><span class="p">)</span> 
+    <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">jobname</span> <span class="ow">is</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error: Jobname is required. Exiting.&quot;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">options</span></div>
+
+<div class="viewcode-block" id="create_dfn"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.create_dfn">[docs]</a><span class="k">def</span> <span class="nf">create_dfn</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Parse command line inputs and input files to create and populate dfnworks class</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        None</span>
+<span class="sd"> </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        DFN : object </span>
+<span class="sd">            DFN class object populated with information parsed from the command line. Information about DFN class is in dfnworks.py</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">options</span> <span class="o">=</span> <span class="n">commandline_options</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Command Line Inputs:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt;Creating DFN class</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">DFN</span><span class="o">=</span><span class="n">DFNWORKS</span><span class="p">(</span><span class="n">jobname</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">jobname</span><span class="p">,</span> <span class="n">ncpu</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">ncpu</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>  
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; Creating DFN class&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Jobname: &#39;</span><span class="p">,</span> <span class="n">DFN</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Number of cpus requested: &#39;</span><span class="p">,</span> <span class="n">DFN</span><span class="o">.</span><span class="n">ncpu</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">input_file</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Input file must be provided.&quot;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Reading Input from &quot;</span><span class="o">+</span><span class="n">options</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;dfnGen&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">dfnGen_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; dfnGen input file: &#39;</span><span class="p">,</span><span class="n">DFN</span><span class="o">.</span><span class="n">dfnGen_file</span><span class="p">)</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">local_dfnGen_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;dfnFlow&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">dfnFlow_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; dfnFlow input file: &#39;</span><span class="p">,</span><span class="n">DFN</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">)</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">local_dfnFlow_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;dfnTrans&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">dfnTrans_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; dfnTrans input file: &#39;</span><span class="p">,</span><span class="n">DFN</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="p">)</span>
+                <span class="n">DFN</span><span class="o">.</span><span class="n">local_dfnTrans_file</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR Reading Input File</span><span class="se">\n</span><span class="s2">Unknown line: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">line</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">path</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">path</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; DFN Path: &#39;</span><span class="p">,</span><span class="n">DFN</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">prune_file</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">prune_file</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">prune_file</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; DFN prune file: &#39;</span><span class="p">,</span><span class="n">DFN</span><span class="o">.</span><span class="n">prune_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">prune_file</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">cell</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Expecting Cell Based Aperture and Permeability&#39;</span><span class="p">)</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">aper_cell_file</span> <span class="o">=</span> <span class="s1">&#39;aper_node.dat&#39;</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">perm_cell_file</span> <span class="o">=</span> <span class="s1">&#39;perm_node.dat&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">aper_file</span> <span class="o">=</span> <span class="s1">&#39;aperture.dat&#39;</span>
+        <span class="n">DFN</span><span class="o">.</span><span class="n">perm_file</span> <span class="o">=</span> <span class="s1">&#39;perm.dat&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; Creating DFN class: Complete&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="n">DFN</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

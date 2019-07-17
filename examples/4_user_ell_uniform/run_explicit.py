@@ -21,7 +21,7 @@ DFN.check_input()
 DFN.create_network()
 DFN.output_report()
 # Uniform mesh resolution
-DFN.mesh_network(slope=0)
+DFN.mesh_network(uniform_mesh=True)
 
 DFN.dfn_flow()
 DFN.dfn_trans() 

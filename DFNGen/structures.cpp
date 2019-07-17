@@ -5,10 +5,10 @@
 /*! Initializes fract1 and fract2 to -1.
     Sets intersectionShortened to false;
 */
-IntPoints::IntPoints(){
+IntPoints::IntPoints() {
     fract1 = -1;
     fract2 = -1;
-    intersectionShortened = false;    
+    intersectionShortened = false;
 }
 
 // Constructor
@@ -25,7 +25,7 @@ RejectionReasons::RejectionReasons() {
 
 // Constructor
 /*! Initializes many values to zero. (See implementation for details).*/
-Poly::Poly(){
+Poly::Poly() {
     groupNum = 0;
     area = 0;
     aperture = 0;
@@ -46,12 +46,12 @@ Poly::Poly(){
 /*! Initializes x, y, and z to zero.*/
 Point::Point() {
     x = 0;
-    y = 0; 
+    y = 0;
     z = 0;
 }
 
-// Constructor 
-/*! Initializes x, y, and z with arguments 
+// Constructor
+/*! Initializes x, y, and z with arguments
     passed to the constructor. */
 Point::Point(double _x, double _y, double _z) {
     x = _x;
@@ -59,17 +59,17 @@ Point::Point(double _x, double _y, double _z) {
     z = _z;
 }
 
-// Constructor 
+// Constructor
 /*! Initializes polyList vector to reserve enough memory
     for 100 floats.*/
 FractureGroups::FractureGroups() {
-    polyList.reserve(100);        
+    polyList.reserve(100);
 }
-    
-// Constructor 
-/*! Initializes size to zero, valid to true, 
+
+// Constructor
+/*! Initializes size to zero, valid to true,
     and zeros (set to false) the faces array. */
-GroupData::GroupData(){
+GroupData::GroupData() {
     size = 0;
     valid = 1;
     faces[0] = 0;
@@ -80,7 +80,7 @@ GroupData::GroupData(){
     faces[5] = 0;
 }
 
-// Constructor 
+// Constructor
 /*! Initializes all counters to zero. Initializes
     nextGroupNum to 1. (See implementation for details)*/
 Stats::Stats() {
@@ -90,8 +90,8 @@ Stats::Stats() {
     truncated = 0;
     intersectionsShortened = 0;
     nextGroupNum = 1;
-    fractGroup.reserve(16); 
-    originalLength = 0; 
+    fractGroup.reserve(16);
+    originalLength = 0;
     discardedLength = 0;
     intersectionNodeCount = 0;
     tripleNodeCount = 0;
@@ -100,13 +100,13 @@ Stats::Stats() {
     volBeforeRemoval = 0;
     volAfterRemoval = 0;
 }
-    
-// Constructor 
+
+// Constructor
 /*! Initializes p32Target, currentP32, and radiiIdx to zero.*/
 Shape::Shape() {
     p32Target = 0;
     currentP32 = 0;
     radiiIdx = 0;
-}    
-    
-    
+}
+
+
