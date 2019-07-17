@@ -1,3 +1,3 @@
-dfnGen /dfnWorks/examples/tdrw/gen_uniform_rects.dat
-dfnFlow /dfnWorks/examples/tdrw/dfn_explicit.in
-dfnTrans /dfnWorks/examples/tdrw/PTDFN_control_tdrw.dat
+dfnGen DUMMY/examples/tdrw/gen_uniform_rects.dat
+dfnFlow DUMMY/examples/tdrw/dfn_explicit.in
+dfnTrans DUMMY/examples/tdrw/PTDFN_control_tdrw.dat
