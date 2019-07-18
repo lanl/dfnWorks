@@ -17,6 +17,8 @@ C_uge_stor/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
+internal/Documentation/sphinx-docs/build/
+
 !inp_2_vtk/inp2vtk
 
 */build/*
