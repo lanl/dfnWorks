@@ -249,7 +249,7 @@ def create_intersection_graph(inflow,
         if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
             G.add_edge(i,'t',frac='t', length=0.0)     
     add_perm(G,fracture_info) 
-        print("Graph Construction Complete")
+    print("Graph Construction Complete")
     return G
 
 
