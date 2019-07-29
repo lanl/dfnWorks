@@ -89,13 +89,13 @@ def define_paths():
     # Or, change the paths here
     else:
         env_paths = {
-            'dfnworks_PATH': 'DUMMY/dfnworks-main/',
-            'PETSC_DIR': '/home/satkarra/src/petsc-3.10.2',
-            'PETSC_ARCH': '/Ubuntu-18.04-nodebug/',
-            'PFLOTRAN_EXE': '/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran',
-            'PYTHON_EXE': '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python3/5.2.0/bin/python',
-            'LAGRIT_EXE': '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit',
-            'FEHM_EXE': '/scratch/eescommon/spchu//FEHM/xfehm_v3.3.3lnUbuntu16.13Jun19'
+            'dfnworks_PATH': '/Users/jhyman/src/dfnworks-main/',
+            'PETSC_DIR': '/Users/jhyman/src/petsc/',
+            'PETSC_ARCH': '/arch-darwin-c-debug/',
+            'PFLOTRAN_EXE': '/Users/jhyman/src/pflotran/src/pflotran/pflotran',
+            'PYTHON_EXE': '/anaconda3/bin/python',
+            'LAGRIT_EXE': '/Users/jhyman/bin/lagrit',
+            'FEHM_EXE': '/Users/jhyman/bin/xfehm'
         }
 
     # the dfnworks-main  repository
