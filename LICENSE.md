@@ -1,3 +1,13 @@
+This program was prepared at Los Alamos National Laboratory (LANL),
+Earth and Environmental Sciences Division, Computational Earth
+Science Group (EES-16), Subsurface Flow and Transport Team.
+All rights in the program are reserved by the DOE and LANL.
+Permission is granted to the public to copy and use this software
+without charge, provided that this Notice and any statement of
+authorship are reproduced on all copies. Neither the U.S. Government
+nor LANS makes any warranty, express or implied, or assumes
+any liability or responsibility for the use of this software.
+
 LA-CC-17-027
 
 (or copyright) 2018 Triad National Security, LLC. All rights reserved.
