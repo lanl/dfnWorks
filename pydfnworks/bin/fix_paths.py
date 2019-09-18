@@ -18,6 +18,9 @@ def replace(old, new):
     files.extend(listdir_recursive('../../examples'))
 
     for file in files:
+        if 'fix_paths' in file:
+            continue
+        
         try:
             with open(file,'r') as f:
                 replaced_text = f.read().replace(old,new)
