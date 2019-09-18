@@ -120,7 +120,17 @@ Graph-Based Flow and Transport
 .. automodule:: pydfnworks.dfnGraph.graph_transport
     :members:
 
+<<<<<<< HEAD
+.. automodule:: pydfnworks.graph_flow
+    :members:
+
+.. automodule:: pydfnworks.graph_transport
+    :members:
+
+General Workflow functions
+=======
 General Workflow Functions
+>>>>>>> master
 --------------------------
 
 Print legal statement

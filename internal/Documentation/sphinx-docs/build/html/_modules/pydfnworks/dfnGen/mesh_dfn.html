@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
@@ -222,7 +223,7 @@
     <span class="k">if</span> <span class="n">prune</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!! User requested pruning in meshing but </span><span class="se">\</span>
-<span class="s2">did not provide file of fractures to keep.</span><span class="se">\n</span><span class="s2">Exiting program.&quot;</span>
+<span class="s2">did not provide file of fractures to keep.</span><span class="se">\n</span><span class="s2">Exiting program.</span><span class="se">\n</span><span class="s2">&quot;</span>
 
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -257,7 +258,7 @@
     <span class="n">failure</span> <span class="o">=</span> <span class="n">run_mesh</span><span class="o">.</span><span class="n">mesh_fractures_header</span><span class="p">(</span><span class="n">fracture_list</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">visual_mode</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
         <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;One or more fractures failed to mesh properly.</span><span class="se">\n</span><span class="s2">Exiting Program</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -269,7 +270,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">visual_mode</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prune</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mh</span><span class="o">.</span><span class="n">check_dudded_points</span><span class="p">(</span><span class="n">dudded_points</span><span class="p">):</span>
             <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_dir</span><span class="p">()</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s2">Exiting Program&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Incorrect Number of dudded points.</span><span class="se">\n</span><span class="s2">Exiting Program</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 

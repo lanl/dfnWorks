@@ -105,6 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
@@ -238,14 +239,18 @@ $ python fix_paths.py
 <p>If you do not already have Docker installed on your machine,
 visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
 <p>The dfnWorks Docker image can be pulled from DockerHub using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker pull ees16/dfnworks
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker pull ees16/dfnworks:v2.2
 </pre></div>
 </div>
 <div class="section" id="setting-up-x-forwarding">
 <h2>Setting Up X-Forwarding<a class="headerlink" href="#setting-up-x-forwarding" title="Permalink to this headline">¶</a></h2>
 <p><strong>On macOS:</strong></p>
-<p>To setup X-forwarding on macOS, you will need <code class="docutils literal notranslate"><span class="pre">socat</span></code> and <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>.
-To install, run:</p>
+<p>To setup X-forwarding on macOS, you will need <code class="docutils literal notranslate"><span class="pre">homebrew</span></code>,``socat`` and <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>.
+To install homebrew visit <a class="reference external" href="https://brew.sh/">https://brew.sh/</a>. or run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/bin/ruby -e <span class="s2">&quot;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>To install, <code class="docutils literal notranslate"><span class="pre">socat</span></code> and <code class="docutils literal notranslate"><span class="pre">xquartz</span></code> run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install socat
 brew cask install xquartz
 </pre></div>
@@ -260,7 +265,7 @@ Docker container to exchange display information with your local machine.</p>
 <div class="section" id="running-the-dfnworks-container">
 <h2>Running the dfnWorks container<a class="headerlink" href="#running-the-dfnworks-container" title="Permalink to this headline">¶</a></h2>
 <p>The base command for running the dfnWorks container is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti dfnworks:latest
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti ees16/dfnworks:v2.2
 </pre></div>
 </div>
 <p>However, to exchange files between the host and container, we will need to mount
