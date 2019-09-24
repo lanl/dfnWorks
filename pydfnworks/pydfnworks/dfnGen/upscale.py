@@ -232,12 +232,12 @@ def upscale(self, mat_perm, mat_por):
             with open("perm_fehm.dat", "a") as f:
                 f.write(
                     str(i) + " " + str(i) + " " + "1" + " " +
-                    str(permX[i - 1]) + " " + str(permY[i - 1]) + " " +
-                    str(permZ[i - 1]) + "\n")
+                    str(perm_var[i - 1]) + " " + str(perm_var[i - 1]) + " " +
+                    str(perm_var[i - 1]) + "\n")
             with open("rock_fehm.dat", "a") as g:
                 g.write(
-                    str(i) + " " + str(i) + " " + "1" + " " + "2757." + " " +
-                    "1180." + " " + str(por_var[i - 1]) + "\n")
+                    str(i) + " " + str(i) + " " + "1" + " " + "2165." + " " +
+                    "931." + " " + str(por_var[i - 1]) + "\n")
 
     # Need an extra space at end for FEHM
     if self.flow_solver == "FEHM":
