@@ -2,7 +2,7 @@
 
 import os
 
-old = 'DUMMY'
+old = '/Users/jhyman/src'
 new = os.path.join('/',*os.getcwd().split('/')[:-3])
 
 def listdir_recursive(base_directory):
