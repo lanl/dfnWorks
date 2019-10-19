@@ -116,9 +116,7 @@ inm_diffcoeff: 1.0e-12
 
 /*****  particles positions according to in-flow flux weight *********/
 init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
-init_delta: 0.001 // distance [m] between particles at inflow face for equal flux weight calculation
-
-
+init_totalnumber: 10000
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 
