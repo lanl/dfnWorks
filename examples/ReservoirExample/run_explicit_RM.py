@@ -25,20 +25,18 @@ DFN.check_input()
 DFN.create_network()
 DFN.mesh_network(visual_mode=False)
 
-
 # DFNFlow
-
 os.chdir(DFN.jobname)
 
 # call LaGriT to run a script for identifying all the nodes on the well
-cmd = 'lagrit  </dfnWorks/work/ReservoirExample/CreateWellZone.lgi '
-os.system(cmd)
+cmd = '/dfnWorks/bin/lagrit < /dfnWorks/work/ReservoirExample/CreateWellZone.lgi '
+subprocess.call(cmd,shell=True)
 
 # run python  script to combine 4 boundary faces nodes into one zone file  -> inflow boundary
 # and the well zone file -> outflow boundary 
 os.chdir(DFN.jobname)
-cmd = 'python  /dfnWorks/work/ReservoirExample/createbound.py'
-os.system(cmd)
+cmd = 'python /dfnWorks/work/ReservoirExample/create_boundaries.py'
+subprocess.call(cmd,shell=True)
 
 DFN.lagrit2pflotran()
 
@@ -49,9 +47,7 @@ DFN.pflotran()
 DFN.parse_pflotran_vtk_python()       
 DFN.pflotran_cleanup()
 
-
 # DFNtrans
-
 DFN.dfn_trans()
 
 main_elapsed = time() - main_time

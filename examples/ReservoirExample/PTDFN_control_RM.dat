@@ -93,6 +93,8 @@ out_fract: no
 /* output of particle trajectories tortuosity, torts.dat file*/
 out_tort: no
 
+out_init: no
+
 /* Due to the mesh and DFN geometry, or other settings,
 not all the particles that are placed initially at in-flow boundary
 will reach out-flow face. If "allparticles_output" is on, then 
