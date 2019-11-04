@@ -3,6 +3,8 @@
 *.cmake
 *FracMan_interface*
 
+#macOS folder config
+*DS_Store
 
 pydfnworks/pydfnworks/only_gen_output.py
 pydfnworks/pydfnworks/paths.py
@@ -14,6 +16,8 @@ C_uge_correct/correct_uge
 C_uge_stor/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
+
+internal/Documentation/sphinx-docs/build/
 
 !inp_2_vtk/inp2vtk
 

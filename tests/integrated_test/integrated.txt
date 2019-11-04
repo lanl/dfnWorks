@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks-main/tests/integrated_test/dfn_gen_input.dat 
-dfnFlow DUMMY/dfnworks-main/tests/integrated_test/dfn_explicit.in 
-dfnTrans DUMMY/dfnworks-main/tests/integrated_test/PTDFN_Control.dat 

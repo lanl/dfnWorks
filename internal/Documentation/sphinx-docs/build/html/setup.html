@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setting up dfnWorks &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting up dfnWorks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#turn-on-x-forwarding-if-on-server">Turn on X forwarding if on server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#go-to-the-dnfworks-repository">Go to the dnfWorks repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fix-paths-in-test-directory">Fix paths in test directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-the-petsc-pflotran-python-and-lagrit-paths">Set the PETSC, PFLOTRAN, Python, and LaGriT paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-the-python-package-pydfnworks">Setup the Python package pydfnworks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#running-dfnworks-from-docker">Running dfnWorks from Docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-x-forwarding">Setting Up X-Forwarding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index_docs.html">Docs</a> &raquo;</li>
+        
+      <li>Setting up dfnWorks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/setup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setting-up-dfnworks">
+<h1>Setting up dfnWorks<a class="headerlink" href="#setting-up-dfnworks" title="Permalink to this headline">¶</a></h1>
+<p>This document contains instructions for setting up dfnWorks natively on your
+machine. To setup dfnWorks using Docker instead, see the next section.</p>
+<div class="section" id="turn-on-x-forwarding-if-on-server">
+<h2>Turn on X forwarding if on server<a class="headerlink" href="#turn-on-x-forwarding-if-on-server" title="Permalink to this headline">¶</a></h2>
+<p>Ensure that X forwarding is turned on if you are running dfnWorks from an ssh connection. This requires that the ssh login have the -X option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ssh -X SERVER_NAME
+</pre></div>
+</div>
+</div>
+<div class="section" id="go-to-the-dnfworks-repository">
+<h2>Go to the dnfWorks repository<a class="headerlink" href="#go-to-the-dnfworks-repository" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/dfnWorks/
+</pre></div>
+</div>
+</div>
+<div class="section" id="fix-paths-in-test-directory">
+<h2>Fix paths in test directory<a class="headerlink" href="#fix-paths-in-test-directory" title="Permalink to this headline">¶</a></h2>
+<p>Fix the pathnames for all files in the folder <code class="docutils literal notranslate"><span class="pre">/tests/</span></code> . This can be done automatically by running the script <code class="docutils literal notranslate"><span class="pre">fix_paths.py</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /pydfnworks/bin/
+$ python fix_paths.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-the-petsc-pflotran-python-and-lagrit-paths">
+<h2>Set the PETSC, PFLOTRAN, Python, and LaGriT paths<a class="headerlink" href="#set-the-petsc-pflotran-python-and-lagrit-paths" title="Permalink to this headline">¶</a></h2>
+<p><strong>Before executing dfnWorks,</strong> the following paths must be set:</p>
+<ul class="simple">
+<li>dfnWorks_PATH: the dfnWorks repository folder</li>
+<li>PETSC_DIR and PETSC_ARCH: PETSC environmental variables</li>
+<li>PFLOTRAN_EXE:  Path to PFLOTRAN executable</li>
+<li>PYTHON_EXE:  Path to python executable</li>
+<li>LAGRIT_EXE:  Path to LaGriT executable</li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ vi /pydfnworks/pydfnworks/paths.py
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnWorks_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/home/username/dfnWorks/&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-the-python-package-pydfnworks">
+<h2>Setup the Python package pydfnworks<a class="headerlink" href="#setup-the-python-package-pydfnworks" title="Permalink to this headline">¶</a></h2>
+<p>Go up a directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ..
+</pre></div>
+</div>
+<p><strong>If the user has admin privelges</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+</pre></div>
+</div>
+<p><strong>If the user DOES NOT have admin priveleges</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py install --user
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-dfnworks-from-docker">
+<h1>Running dfnWorks from Docker<a class="headerlink" href="#running-dfnworks-from-docker" title="Permalink to this headline">¶</a></h1>
+<p>If you do not already have Docker installed on your machine,
+visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
+<p>The dfnWorks Docker image can be pulled from DockerHub using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker pull ees16/dfnworks
+</pre></div>
+</div>
+<div class="section" id="setting-up-x-forwarding">
+<h2>Setting Up X-Forwarding<a class="headerlink" href="#setting-up-x-forwarding" title="Permalink to this headline">¶</a></h2>
+<p><strong>On macOS:</strong></p>
+<p>To setup X-forwarding on macOS, you will need <code class="docutils literal notranslate"><span class="pre">socat</span></code> and <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>.
+To install, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install socat
+brew cask install xquartz
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">socat</span></code> is used to expose the local XQuartz socker over a TCP port, enabling the
+Docker container to exchange display information with your local machine.</p>
+<p><strong>On Linux:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>TODO
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-the-dfnworks-container">
+<h2>Running the dfnWorks container<a class="headerlink" href="#running-the-dfnworks-container" title="Permalink to this headline">¶</a></h2>
+<p>The base command for running the dfnWorks container is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti dfnworks:latest
+</pre></div>
+</div>
+<p>However, to exchange files between the host and container, we will need to mount
+a volume.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">LOCAL_FOLDER:/dfnWorks/work</span></code> will allow all files present in the
+container folder <code class="docutils literal notranslate"><span class="pre">dfnWorks/work</span></code> to be exposed to <code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code> is the absolute path to a folder on your machine.</p>
+<p>In order to exchange display information, we will need to pass in the DISPLAY
+variable from host to container.</p>
+<p>On macOS, this is <code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">DISPLAY=docker.for.mac.host.internal:0</span></code>. On Linux, it is
+<code class="docutils literal notranslate"><span class="pre">TODO</span></code>.</p>
+<p>With this is place, the final command for running the Docker container is:</p>
+<p><strong>On macOS:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>open -a XQuartz
+socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:<span class="se">\&quot;</span><span class="nv">$DISPLAY</span><span class="se">\&quot;</span>
+docker run -ti <span class="se">\</span>
+       -e <span class="nv">DISPLAY</span><span class="o">=</span>docker.for.mac.host.internal:0 <span class="se">\</span>
+       -v /Users/yourname/dfnworks-example:/dfnWorks/work <span class="se">\</span>
+       dfnworks:latest
+</pre></div>
+</div>
+<p><strong>On Linux:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>TODO
+</pre></div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you recieve a warning that port 6000 is in use, run either <code class="docutils literal notranslate"><span class="pre">lsof</span> <span class="pre">-i</span> <span class="pre">TCP:6000</span></code>
+or <code class="docutils literal notranslate"><span class="pre">netstat</span> <span class="pre">-vanp</span> <span class="pre">tcp</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">6000</span></code> to isolate the process listening on this port.</p>
+<p>Then, use <code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">-i</span> <span class="pre">&lt;PID&gt;</span></code> to kill the process and re-run <code class="docutils literal notranslate"><span class="pre">xquartz</span></code>, <code class="docutils literal notranslate"><span class="pre">socat</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

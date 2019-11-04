@@ -1,84 +1,184 @@
-\indexentry{create\_dfn() (in module pydfnworks)|hyperpage}{25}
-\indexentry{pydfnworks.gen\_input (module)|hyperpage}{25}
-\indexentry{check\_input() (in module pydfnworks.gen\_input)|hyperpage}{25}
-\indexentry{pydfnworks.distributions (module)|hyperpage}{25}
-\indexentry{distr (class in pydfnworks.distributions)|hyperpage}{25}
-\indexentry{beta\_distribution() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{constant\_dist() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{distr() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{exponential\_dist() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{lognormal\_dist() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{tpl\_dist() (pydfnworks.distributions.distr method)|hyperpage}{26}
-\indexentry{pydfnworks.generator (module)|hyperpage}{26}
-\indexentry{create\_network() (in module pydfnworks.generator)|hyperpage}{26}
-\indexentry{dfn\_gen() (in module pydfnworks.generator)|hyperpage}{26}
-\indexentry{make\_working\_directory() (in module pydfnworks.generator)|hyperpage}{26}
-\indexentry{pydfnworks.gen\_output (module)|hyperpage}{26}
-\indexentry{output\_report() (in module pydfnworks.gen\_output)|hyperpage}{26}
-\indexentry{pydfnworks.flow (module)|hyperpage}{27}
-\indexentry{dfn\_flow() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{inp2gmv() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{lagrit2pflotran() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{parse\_pflotran\_vtk() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{parse\_pflotran\_vtk\_python() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{pflotran() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{pflotran\_cleanup() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{write\_perms\_and\_correct\_volumes\_areas() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{zone2ex() (in module pydfnworks.flow)|hyperpage}{27}
-\indexentry{pydfnworks.transport (module)|hyperpage}{28}
-\indexentry{copy\_dfn\_trans\_files() (in module pydfnworks.transport)|hyperpage}{28}
-\indexentry{dfn\_trans() (in module pydfnworks.transport)|hyperpage}{28}
-\indexentry{run\_dfn\_trans() (in module pydfnworks.transport)|hyperpage}{28}
-\indexentry{pydfnworks.meshdfn (module)|hyperpage}{28}
-\indexentry{meshdfn.py (module)|hyperpage}{28}
-\indexentry{mesh\_network() (in module pydfnworks.meshdfn)|hyperpage}{28}
-\indexentry{pydfnworks.lagrit\_scripts (module)|hyperpage}{28}
-\indexentry{lagrit\_scripts.py (module)|hyperpage}{28}
-\indexentry{create\_lagrit\_scripts() (in module pydfnworks.lagrit\_scripts)|hyperpage}{28}
-\indexentry{create\_merge\_poly\_files() (in module pydfnworks.lagrit\_scripts)|hyperpage}{28}
-\indexentry{create\_parameter\_mlgi\_file() (in module pydfnworks.lagrit\_scripts)|hyperpage}{28}
-\indexentry{create\_user\_functions() (in module pydfnworks.lagrit\_scripts)|hyperpage}{28}
-\indexentry{define\_zones() (in module pydfnworks.lagrit\_scripts)|hyperpage}{28}
-\indexentry{pydfnworks.run\_meshing (module)|hyperpage}{29}
-\indexentry{run\_meshing.py (module)|hyperpage}{29}
-\indexentry{merge\_the\_meshes() (in module pydfnworks.run\_meshing)|hyperpage}{29}
-\indexentry{mesh\_fracture() (in module pydfnworks.run\_meshing)|hyperpage}{29}
-\indexentry{mesh\_fractures\_header() (in module pydfnworks.run\_meshing)|hyperpage}{29}
-\indexentry{worker() (in module pydfnworks.run\_meshing)|hyperpage}{29}
-\indexentry{pydfnworks.mesh\_dfn\_helper (module)|hyperpage}{29}
-\indexentry{mesh\_dfn\_helper.py (module)|hyperpage}{29}
-\indexentry{check\_dudded\_points() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{29}
-\indexentry{cleanup\_dir() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{29}
-\indexentry{output\_meshing\_report() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{29}
-\indexentry{parse\_params\_file() (in module pydfnworks.mesh\_dfn\_helper)|hyperpage}{29}
-\indexentry{pydfnworks.legal (module)|hyperpage}{30}
-\indexentry{legal() (in module pydfnworks.legal)|hyperpage}{30}
-\indexentry{pydfnworks.helper (module)|hyperpage}{30}
-\indexentry{commandline\_options() (in module pydfnworks.helper)|hyperpage}{30}
-\indexentry{dump\_time() (in module pydfnworks.helper)|hyperpage}{30}
-\indexentry{get\_num\_frac() (in module pydfnworks.helper)|hyperpage}{30}
-\indexentry{input\_helper (class in pydfnworks.helper)|hyperpage}{30}
-\indexentry{check\_fam\_count() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{check\_mean() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{check\_min\_frac\_size() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{check\_min\_max() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{curly\_to\_list() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{error() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{extract\_parameters() (pydfnworks.helper.input\_helper method)|hyperpage}{30}
-\indexentry{find\_key() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{find\_val() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{get\_groups() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{has\_curlys() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{is\_negative() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{list\_to\_curly() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{process\_line() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{scale() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{val\_helper() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{value\_of() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{verify\_flag() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{verify\_float() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{verify\_int() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{verify\_list() (pydfnworks.helper.input\_helper method)|hyperpage}{31}
-\indexentry{warning() (pydfnworks.helper.input\_helper method)|hyperpage}{32}
-\indexentry{zero\_in\_std\_devs() (pydfnworks.helper.input\_helper method)|hyperpage}{32}
-\indexentry{print\_run\_time() (in module pydfnworks.helper)|hyperpage}{32}
+\indexentry{pydfnworks.general.dfnworks (module)@\spxentry{pydfnworks.general.dfnworks}\spxextra{module}|hyperpage}{31}
+\indexentry{DFNWORKS (class in pydfnworks.general.dfnworks)@\spxentry{DFNWORKS}\spxextra{class in pydfnworks.general.dfnworks}|hyperpage}{31}
+\indexentry{check\_dfn\_trans\_run\_files() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{check\_dfn\_trans\_run\_files()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{32}
+\indexentry{check\_input() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{check\_input()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{32}
+\indexentry{copy\_dfn\_trans\_files() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{copy\_dfn\_trans\_files()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{33}
+\indexentry{correct\_stor\_file() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{correct\_stor\_file()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{33}
+\indexentry{create\_dfn\_flow\_links() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{create\_dfn\_flow\_links()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{33}
+\indexentry{create\_dfn\_trans\_links() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{create\_dfn\_trans\_links()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{33}
+\indexentry{create\_graph() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{create\_graph()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{34}
+\indexentry{create\_network() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{create\_network()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{34}
+\indexentry{define\_paths() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{define\_paths()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{34}
+\indexentry{dfn\_flow() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dfn\_flow()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{34}
+\indexentry{dfn\_gen() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dfn\_gen()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{35}
+\indexentry{dfn\_trans() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dfn\_trans()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{35}
+\indexentry{dump\_fractures() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dump\_fractures()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{35}
+\indexentry{dump\_json\_graph() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dump\_json\_graph()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{35}
+\indexentry{dump\_time() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{dump\_time()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{36}
+\indexentry{effective\_perm() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{effective\_perm()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{36}
+\indexentry{fehm() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{fehm()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{36}
+\indexentry{greedy\_edge\_disjoint() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{greedy\_edge\_disjoint()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{36}
+\indexentry{inp2gmv() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{inp2gmv()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{37}
+\indexentry{inp2vtk\_python() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{inp2vtk\_python()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{37}
+\indexentry{k\_shortest\_paths\_backbone() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{k\_shortest\_paths\_backbone()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{37}
+\indexentry{lagrit2pflotran() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{lagrit2pflotran()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{38}
+\indexentry{legal() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{legal()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{38}
+\indexentry{load\_json\_graph() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{load\_json\_graph()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{38}
+\indexentry{make\_working\_directory() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{make\_working\_directory()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{38}
+\indexentry{mesh\_network() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{mesh\_network()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{39}
+\indexentry{output\_report() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{output\_report()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{39}
+\indexentry{parse\_pflotran\_vtk\_python() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{parse\_pflotran\_vtk\_python()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{39}
+\indexentry{pflotran() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{pflotran()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{40}
+\indexentry{pflotran\_cleanup() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{pflotran\_cleanup()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{40}
+\indexentry{plot\_graph() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{plot\_graph()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{40}
+\indexentry{print\_run\_time() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{print\_run\_time()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{41}
+\indexentry{pydfnworks (pydfnworks.general.dfnworks.DFNWORKS attribute)@\spxentry{pydfnworks}\spxextra{pydfnworks.general.dfnworks.DFNWORKS attribute}|hyperpage}{41}
+\indexentry{run\_dfn\_trans() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{run\_dfn\_trans()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{41}
+\indexentry{run\_graph\_flow() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{run\_graph\_flow()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{41}
+\indexentry{run\_graph\_transport() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{run\_graph\_transport()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{41}
+\indexentry{set\_flow\_solver() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{set\_flow\_solver()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{42}
+\indexentry{uncorrelated() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{uncorrelated()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{42}
+\indexentry{write\_perms\_and\_correct\_volumes\_areas() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{write\_perms\_and\_correct\_volumes\_areas()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{42}
+\indexentry{zone2ex() (pydfnworks.general.dfnworks.DFNWORKS method)@\spxentry{zone2ex()}\spxextra{pydfnworks.general.dfnworks.DFNWORKS method}|hyperpage}{42}
+\indexentry{commandline\_options() (in module pydfnworks.general.dfnworks)@\spxentry{commandline\_options()}\spxextra{in module pydfnworks.general.dfnworks}|hyperpage}{43}
+\indexentry{create\_dfn() (in module pydfnworks.general.dfnworks)@\spxentry{create\_dfn()}\spxextra{in module pydfnworks.general.dfnworks}|hyperpage}{43}
+\indexentry{pydfnworks.dfnGen.gen\_input (module)@\spxentry{pydfnworks.dfnGen.gen\_input}\spxextra{module}|hyperpage}{44}
+\indexentry{check\_input() (in module pydfnworks.dfnGen.gen\_input)@\spxentry{check\_input()}\spxextra{in module pydfnworks.dfnGen.gen\_input}|hyperpage}{44}
+\indexentry{input\_helper (class in pydfnworks.dfnGen.gen\_input)@\spxentry{input\_helper}\spxextra{class in pydfnworks.dfnGen.gen\_input}|hyperpage}{44}
+\indexentry{check\_fam\_count() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{check\_fam\_count()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{44}
+\indexentry{check\_mean() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{check\_mean()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{44}
+\indexentry{check\_min\_frac\_size() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{check\_min\_frac\_size()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{44}
+\indexentry{check\_min\_max() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{check\_min\_max()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{44}
+\indexentry{curly\_to\_list() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{curly\_to\_list()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{44}
+\indexentry{error() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{error()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{extract\_parameters() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{extract\_parameters()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{find\_key() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{find\_key()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{find\_val() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{find\_val()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{get\_groups() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{get\_groups()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{has\_curlys() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{has\_curlys()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{is\_negative() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{is\_negative()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{list\_to\_curly() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{list\_to\_curly()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{process\_line() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{process\_line()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{scale() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{scale()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{val\_helper() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{val\_helper()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{value\_of() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{value\_of()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{verify\_flag() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{verify\_flag()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{verify\_float() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{verify\_float()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{verify\_int() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{verify\_int()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{verify\_list() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{verify\_list()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{45}
+\indexentry{warning() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{warning()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{46}
+\indexentry{zero\_in\_std\_devs() (pydfnworks.dfnGen.gen\_input.input\_helper method)@\spxentry{zero\_in\_std\_devs()}\spxextra{pydfnworks.dfnGen.gen\_input.input\_helper method}|hyperpage}{46}
+\indexentry{pydfnworks.dfnGen.distributions (module)@\spxentry{pydfnworks.dfnGen.distributions}\spxextra{module}|hyperpage}{46}
+\indexentry{distr (class in pydfnworks.dfnGen.distributions)@\spxentry{distr}\spxextra{class in pydfnworks.dfnGen.distributions}|hyperpage}{46}
+\indexentry{params (pydfnworks.dfnGen.distributions.distr attribute)@\spxentry{params}\spxextra{pydfnworks.dfnGen.distributions.distr attribute}|hyperpage}{46}
+\indexentry{numEdistribs (pydfnworks.dfnGen.distributions.distr attribute)@\spxentry{numEdistribs}\spxextra{pydfnworks.dfnGen.distributions.distr attribute}|hyperpage}{46}
+\indexentry{numRdistribs (pydfnworks.dfnGen.distributions.distr attribute)@\spxentry{numRdistribs}\spxextra{pydfnworks.dfnGen.distributions.distr attribute}|hyperpage}{46}
+\indexentry{minFracSize (pydfnworks.dfnGen.distributions.distr attribute)@\spxentry{minFracSize}\spxextra{pydfnworks.dfnGen.distributions.distr attribute}|hyperpage}{46}
+\indexentry{beta\_distribution() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{beta\_distribution()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{constant\_dist() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{constant\_dist()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{distr() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{distr()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{exponential\_dist() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{exponential\_dist()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{lognormal\_dist() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{lognormal\_dist()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{tpl\_dist() (pydfnworks.dfnGen.distributions.distr method)@\spxentry{tpl\_dist()}\spxextra{pydfnworks.dfnGen.distributions.distr method}|hyperpage}{46}
+\indexentry{pydfnworks.dfnGen.generator (module)@\spxentry{pydfnworks.dfnGen.generator}\spxextra{module}|hyperpage}{47}
+\indexentry{create\_network() (in module pydfnworks.dfnGen.generator)@\spxentry{create\_network()}\spxextra{in module pydfnworks.dfnGen.generator}|hyperpage}{47}
+\indexentry{dfn\_gen() (in module pydfnworks.dfnGen.generator)@\spxentry{dfn\_gen()}\spxextra{in module pydfnworks.dfnGen.generator}|hyperpage}{47}
+\indexentry{make\_working\_directory() (in module pydfnworks.dfnGen.generator)@\spxentry{make\_working\_directory()}\spxextra{in module pydfnworks.dfnGen.generator}|hyperpage}{47}
+\indexentry{pydfnworks.dfnGen.gen\_output (module)@\spxentry{pydfnworks.dfnGen.gen\_output}\spxextra{module}|hyperpage}{48}
+\indexentry{output\_report() (in module pydfnworks.dfnGen.gen\_output)@\spxentry{output\_report()}\spxextra{in module pydfnworks.dfnGen.gen\_output}|hyperpage}{48}
+\indexentry{pydfnworks.dfnGen.mesh\_dfn (module)@\spxentry{pydfnworks.dfnGen.mesh\_dfn}\spxextra{module}|hyperpage}{48}
+\indexentry{mesh\_dfn.py (module)@\spxentry{mesh\_dfn.py}\spxextra{module}|hyperpage}{48}
+\indexentry{mesh\_network() (in module pydfnworks.dfnGen.mesh\_dfn)@\spxentry{mesh\_network()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn}|hyperpage}{48}
+\indexentry{pydfnworks.dfnGen.lagrit\_scripts (module)@\spxentry{pydfnworks.dfnGen.lagrit\_scripts}\spxextra{module}|hyperpage}{49}
+\indexentry{lagrit\_scripts.py (module)@\spxentry{lagrit\_scripts.py}\spxextra{module}|hyperpage}{49}
+\indexentry{create\_lagrit\_scripts() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{create\_lagrit\_scripts()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{49}
+\indexentry{create\_merge\_poly\_files() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{create\_merge\_poly\_files()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{49}
+\indexentry{create\_parameter\_mlgi\_file() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{create\_parameter\_mlgi\_file()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{49}
+\indexentry{create\_user\_functions() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{create\_user\_functions()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{50}
+\indexentry{define\_zones() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{define\_zones()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{50}
+\indexentry{edit\_intersection\_files() (in module pydfnworks.dfnGen.lagrit\_scripts)@\spxentry{edit\_intersection\_files()}\spxextra{in module pydfnworks.dfnGen.lagrit\_scripts}|hyperpage}{50}
+\indexentry{pydfnworks.dfnGen.run\_meshing (module)@\spxentry{pydfnworks.dfnGen.run\_meshing}\spxextra{module}|hyperpage}{51}
+\indexentry{run\_meshing.py (module)@\spxentry{run\_meshing.py}\spxextra{module}|hyperpage}{51}
+\indexentry{merge\_the\_meshes() (in module pydfnworks.dfnGen.run\_meshing)@\spxentry{merge\_the\_meshes()}\spxextra{in module pydfnworks.dfnGen.run\_meshing}|hyperpage}{51}
+\indexentry{merge\_worker() (in module pydfnworks.dfnGen.run\_meshing)@\spxentry{merge\_worker()}\spxextra{in module pydfnworks.dfnGen.run\_meshing}|hyperpage}{51}
+\indexentry{mesh\_fracture() (in module pydfnworks.dfnGen.run\_meshing)@\spxentry{mesh\_fracture()}\spxextra{in module pydfnworks.dfnGen.run\_meshing}|hyperpage}{51}
+\indexentry{mesh\_fractures\_header() (in module pydfnworks.dfnGen.run\_meshing)@\spxentry{mesh\_fractures\_header()}\spxextra{in module pydfnworks.dfnGen.run\_meshing}|hyperpage}{52}
+\indexentry{single\_worker() (in module pydfnworks.dfnGen.run\_meshing)@\spxentry{single\_worker()}\spxextra{in module pydfnworks.dfnGen.run\_meshing}|hyperpage}{52}
+\indexentry{pydfnworks.dfnGen.mesh\_dfn\_helper (module)@\spxentry{pydfnworks.dfnGen.mesh\_dfn\_helper}\spxextra{module}|hyperpage}{52}
+\indexentry{mesh\_dfn\_helper.py (module)@\spxentry{mesh\_dfn\_helper.py}\spxextra{module}|hyperpage}{52}
+\indexentry{check\_dudded\_points() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{check\_dudded\_points()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{52}
+\indexentry{clean\_up\_files\_after\_prune() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{clean\_up\_files\_after\_prune()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{53}
+\indexentry{cleanup\_dir() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{cleanup\_dir()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{53}
+\indexentry{create\_mesh\_links() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{create\_mesh\_links()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{53}
+\indexentry{inp2gmv() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{inp2gmv()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{53}
+\indexentry{output\_meshing\_report() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{output\_meshing\_report()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{54}
+\indexentry{parse\_params\_file() (in module pydfnworks.dfnGen.mesh\_dfn\_helper)@\spxentry{parse\_params\_file()}\spxextra{in module pydfnworks.dfnGen.mesh\_dfn\_helper}|hyperpage}{54}
+\indexentry{pydfnworks.dfnFlow.flow (module)@\spxentry{pydfnworks.dfnFlow.flow}\spxextra{module}|hyperpage}{54}
+\indexentry{create\_dfn\_flow\_links() (in module pydfnworks.dfnFlow.flow)@\spxentry{create\_dfn\_flow\_links()}\spxextra{in module pydfnworks.dfnFlow.flow}|hyperpage}{54}
+\indexentry{dfn\_flow() (in module pydfnworks.dfnFlow.flow)@\spxentry{dfn\_flow()}\spxextra{in module pydfnworks.dfnFlow.flow}|hyperpage}{55}
+\indexentry{set\_flow\_solver() (in module pydfnworks.dfnFlow.flow)@\spxentry{set\_flow\_solver()}\spxextra{in module pydfnworks.dfnFlow.flow}|hyperpage}{55}
+\indexentry{uncorrelated() (in module pydfnworks.dfnFlow.flow)@\spxentry{uncorrelated()}\spxextra{in module pydfnworks.dfnFlow.flow}|hyperpage}{55}
+\indexentry{pydfnworks.dfnFlow.pflotran (module)@\spxentry{pydfnworks.dfnFlow.pflotran}\spxextra{module}|hyperpage}{56}
+\indexentry{check\_pflotran\_convergence() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{check\_pflotran\_convergence()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{56}
+\indexentry{inp2vtk\_python() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{inp2vtk\_python()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{56}
+\indexentry{lagrit2pflotran() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{lagrit2pflotran()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{56}
+\indexentry{parse\_pflotran\_vtk\_python() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{parse\_pflotran\_vtk\_python()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{56}
+\indexentry{pflotran() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{pflotran()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{57}
+\indexentry{pflotran\_cleanup() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{pflotran\_cleanup()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{57}
+\indexentry{write\_perms\_and\_correct\_volumes\_areas() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{write\_perms\_and\_correct\_volumes\_areas()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{57}
+\indexentry{zone2ex() (in module pydfnworks.dfnFlow.pflotran)@\spxentry{zone2ex()}\spxextra{in module pydfnworks.dfnFlow.pflotran}|hyperpage}{57}
+\indexentry{pydfnworks.dfnFlow.fehm (module)@\spxentry{pydfnworks.dfnFlow.fehm}\spxextra{module}|hyperpage}{58}
+\indexentry{correct\_perm\_for\_fehm() (in module pydfnworks.dfnFlow.fehm)@\spxentry{correct\_perm\_for\_fehm()}\spxextra{in module pydfnworks.dfnFlow.fehm}|hyperpage}{58}
+\indexentry{correct\_stor\_file() (in module pydfnworks.dfnFlow.fehm)@\spxentry{correct\_stor\_file()}\spxextra{in module pydfnworks.dfnFlow.fehm}|hyperpage}{58}
+\indexentry{fehm() (in module pydfnworks.dfnFlow.fehm)@\spxentry{fehm()}\spxextra{in module pydfnworks.dfnFlow.fehm}|hyperpage}{58}
+\indexentry{pydfnworks.dfnFlow.mass\_balance (module)@\spxentry{pydfnworks.dfnFlow.mass\_balance}\spxextra{module}|hyperpage}{59}
+\indexentry{dump\_effective\_perm() (in module pydfnworks.dfnFlow.mass\_balance)@\spxentry{dump\_effective\_perm()}\spxextra{in module pydfnworks.dfnFlow.mass\_balance}|hyperpage}{59}
+\indexentry{effective\_perm() (in module pydfnworks.dfnFlow.mass\_balance)@\spxentry{effective\_perm()}\spxextra{in module pydfnworks.dfnFlow.mass\_balance}|hyperpage}{59}
+\indexentry{flow\_rate() (in module pydfnworks.dfnFlow.mass\_balance)@\spxentry{flow\_rate()}\spxextra{in module pydfnworks.dfnFlow.mass\_balance}|hyperpage}{59}
+\indexentry{get\_domain() (in module pydfnworks.dfnFlow.mass\_balance)@\spxentry{get\_domain()}\spxextra{in module pydfnworks.dfnFlow.mass\_balance}|hyperpage}{60}
+\indexentry{parse\_pflotran\_input() (in module pydfnworks.dfnFlow.mass\_balance)@\spxentry{parse\_pflotran\_input()}\spxextra{in module pydfnworks.dfnFlow.mass\_balance}|hyperpage}{60}
+\indexentry{pydfnworks.dfnTrans.transport (module)@\spxentry{pydfnworks.dfnTrans.transport}\spxextra{module}|hyperpage}{60}
+\indexentry{check\_dfn\_trans\_run\_files() (in module pydfnworks.dfnTrans.transport)@\spxentry{check\_dfn\_trans\_run\_files()}\spxextra{in module pydfnworks.dfnTrans.transport}|hyperpage}{60}
+\indexentry{copy\_dfn\_trans\_files() (in module pydfnworks.dfnTrans.transport)@\spxentry{copy\_dfn\_trans\_files()}\spxextra{in module pydfnworks.dfnTrans.transport}|hyperpage}{61}
+\indexentry{create\_dfn\_trans\_links() (in module pydfnworks.dfnTrans.transport)@\spxentry{create\_dfn\_trans\_links()}\spxextra{in module pydfnworks.dfnTrans.transport}|hyperpage}{61}
+\indexentry{dfn\_trans() (in module pydfnworks.dfnTrans.transport)@\spxentry{dfn\_trans()}\spxextra{in module pydfnworks.dfnTrans.transport}|hyperpage}{61}
+\indexentry{run\_dfn\_trans() (in module pydfnworks.dfnTrans.transport)@\spxentry{run\_dfn\_trans()}\spxextra{in module pydfnworks.dfnTrans.transport}|hyperpage}{61}
+\indexentry{pydfnworks.dfnGraph.dfn2graph (module)@\spxentry{pydfnworks.dfnGraph.dfn2graph}\spxextra{module}|hyperpage}{61}
+\indexentry{add\_area() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{add\_area()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{61}
+\indexentry{add\_perm() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{add\_perm()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{61}
+\indexentry{add\_weight() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{add\_weight()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{62}
+\indexentry{boundary\_index() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{boundary\_index()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{62}
+\indexentry{create\_bipartite\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{create\_bipartite\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{62}
+\indexentry{create\_fracture\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{create\_fracture\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{62}
+\indexentry{create\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{create\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{63}
+\indexentry{create\_intersection\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{create\_intersection\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{63}
+\indexentry{dump\_fractures() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{dump\_fractures()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{63}
+\indexentry{dump\_json\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{dump\_json\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{64}
+\indexentry{greedy\_edge\_disjoint() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{greedy\_edge\_disjoint()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{64}
+\indexentry{k\_shortest\_paths() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{k\_shortest\_paths()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{64}
+\indexentry{k\_shortest\_paths\_backbone() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{k\_shortest\_paths\_backbone()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{65}
+\indexentry{load\_json\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{load\_json\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{65}
+\indexentry{plot\_graph() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{plot\_graph()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{65}
+\indexentry{pull\_source\_and\_target() (in module pydfnworks.dfnGraph.dfn2graph)@\spxentry{pull\_source\_and\_target()}\spxextra{in module pydfnworks.dfnGraph.dfn2graph}|hyperpage}{65}
+\indexentry{pydfnworks.dfnGraph.graph\_flow (module)@\spxentry{pydfnworks.dfnGraph.graph\_flow}\spxextra{module}|hyperpage}{66}
+\indexentry{get\_laplacian\_sparse\_mat() (in module pydfnworks.dfnGraph.graph\_flow)@\spxentry{get\_laplacian\_sparse\_mat()}\spxextra{in module pydfnworks.dfnGraph.graph\_flow}|hyperpage}{66}
+\indexentry{prepare\_graph\_with\_attributes() (in module pydfnworks.dfnGraph.graph\_flow)@\spxentry{prepare\_graph\_with\_attributes()}\spxextra{in module pydfnworks.dfnGraph.graph\_flow}|hyperpage}{66}
+\indexentry{run\_graph\_flow() (in module pydfnworks.dfnGraph.graph\_flow)@\spxentry{run\_graph\_flow()}\spxextra{in module pydfnworks.dfnGraph.graph\_flow}|hyperpage}{66}
+\indexentry{solve\_flow\_on\_graph() (in module pydfnworks.dfnGraph.graph\_flow)@\spxentry{solve\_flow\_on\_graph()}\spxextra{in module pydfnworks.dfnGraph.graph\_flow}|hyperpage}{67}
+\indexentry{pydfnworks.dfnGraph.graph\_transport (module)@\spxentry{pydfnworks.dfnGraph.graph\_transport}\spxextra{module}|hyperpage}{67}
+\indexentry{Particle (class in pydfnworks.dfnGraph.graph\_transport)@\spxentry{Particle}\spxextra{class in pydfnworks.dfnGraph.graph\_transport}|hyperpage}{67}
+\indexentry{add\_frac\_data() (pydfnworks.dfnGraph.graph\_transport.Particle method)@\spxentry{add\_frac\_data()}\spxextra{pydfnworks.dfnGraph.graph\_transport.Particle method}|hyperpage}{67}
+\indexentry{set\_start\_time\_dist() (pydfnworks.dfnGraph.graph\_transport.Particle method)@\spxentry{set\_start\_time\_dist()}\spxextra{pydfnworks.dfnGraph.graph\_transport.Particle method}|hyperpage}{67}
+\indexentry{track() (pydfnworks.dfnGraph.graph\_transport.Particle method)@\spxentry{track()}\spxextra{pydfnworks.dfnGraph.graph\_transport.Particle method}|hyperpage}{67}
+\indexentry{write\_file() (pydfnworks.dfnGraph.graph\_transport.Particle method)@\spxentry{write\_file()}\spxextra{pydfnworks.dfnGraph.graph\_transport.Particle method}|hyperpage}{68}
+\indexentry{create\_neighbour\_list() (in module pydfnworks.dfnGraph.graph\_transport)@\spxentry{create\_neighbour\_list()}\spxextra{in module pydfnworks.dfnGraph.graph\_transport}|hyperpage}{68}
+\indexentry{run\_graph\_transport() (in module pydfnworks.dfnGraph.graph\_transport)@\spxentry{run\_graph\_transport()}\spxextra{in module pydfnworks.dfnGraph.graph\_transport}|hyperpage}{68}
+\indexentry{pydfnworks.general.legal (module)@\spxentry{pydfnworks.general.legal}\spxextra{module}|hyperpage}{69}
+\indexentry{legal() (in module pydfnworks.general.legal)@\spxentry{legal()}\spxextra{in module pydfnworks.general.legal}|hyperpage}{69}
+\indexentry{pydfnworks.general.general\_functions (module)@\spxentry{pydfnworks.general.general\_functions}\spxextra{module}|hyperpage}{69}
+\indexentry{dump\_time() (in module pydfnworks.general.general\_functions)@\spxentry{dump\_time()}\spxextra{in module pydfnworks.general.general\_functions}|hyperpage}{69}
+\indexentry{print\_run\_time() (in module pydfnworks.general.general\_functions)@\spxentry{print\_run\_time()}\spxextra{in module pydfnworks.general.general\_functions}|hyperpage}{69}
+\indexentry{pydfnworks.general.paths (module)@\spxentry{pydfnworks.general.paths}\spxextra{module}|hyperpage}{70}
+\indexentry{compile\_dfn\_exe() (in module pydfnworks.general.paths)@\spxentry{compile\_dfn\_exe()}\spxextra{in module pydfnworks.general.paths}|hyperpage}{70}
+\indexentry{define\_paths() (in module pydfnworks.general.paths)@\spxentry{define\_paths()}\spxextra{in module pydfnworks.general.paths}|hyperpage}{70}
+\indexentry{valid() (in module pydfnworks.general.paths)@\spxentry{valid()}\spxextra{in module pydfnworks.general.paths}|hyperpage}{70}

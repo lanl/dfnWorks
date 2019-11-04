@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  3 APR 2018 11:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  10 JUN 2019 13:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -7,7 +7,7 @@ entering extended mode
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (./sphinxmanual.cls
-Document Class: sphinxmanual 2017/03/26 v1.6 Document class (Sphinx manual)
+Document Class: sphinxmanual 2018/09/18 v1.8.1 Document class (Sphinx manual)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/size10.clo
@@ -460,7 +460,7 @@ Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \c@AlphaDecCnt=\count102
 )
 (./sphinx.sty
-Package: sphinx 2017/12/12 v1.6.6 LaTeX package (Sphinx markup)
+Package: sphinx 2018/11/06 v1.8.2 LaTeX package (Sphinx markup)
 
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
@@ -761,7 +761,7 @@ Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix
 \FV@StepNumber=\count113
 \FV@OutFile=\write3
 ) (./footnotehyper-sphinx.sty
-Package: footnotehyper-sphinx 2017/03/07 v1.6 hyperref aware footnote.sty for s
+Package: footnotehyper-sphinx 2017/10/27 v1.7 hyperref aware footnote.sty for s
 phinx (JFB)
 \FNH@notes=\box35
 \FNH@width=\dimen134
@@ -798,6 +798,7 @@ Package: capt-of 2009/12/29 v0.2 standard captions outside of floats
 (/usr/local/texlive/2017/texmf-dist/tex/latex/needspace/needspace.sty
 Package: needspace 2010/09/12 v1.3d reserve vertical space
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/carlisle/remreset.sty)
 (./sphinxhighlight.sty
 Package: sphinxhighlight 2016/05/29 stylesheet for highlighting with pygments
 )
@@ -827,9 +828,9 @@ Package etexcmds Info: Could not find \expanded.
 \spx@notice@border=\dimen142
 \spx@image@box=\box39
 \c@literalblock=\count116
-\spx@Verbatim@TitleBox=\box40
-\sphinxcontinuationbox=\box41
-\sphinxvisiblespacebox=\box42
+\sphinxcontinuationbox=\box40
+\sphinxvisiblespacebox=\box41
+\sphinxVerbatim@TitleBox=\box42
 \py@argswidth=\skip71
 \lineblockindentation=\skip72
 \DUlineblockindent=\skip73
@@ -984,29 +985,29 @@ Writing index file dfnWorks.idx
 (./dfnWorks.aux)
 \openout1 = `dfnWorks.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 66.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 66.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 63.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 63.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 66.
-LaTeX Font Info:    ... okay on input line 66.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 66.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 63.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -1076,7 +1077,7 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box44
-Package hyperref Info: Link coloring ON on input line 66.
+Package hyperref Info: Link coloring ON on input line 63.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
@@ -1085,18 +1086,18 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count136
 )
-LaTeX Info: Redefining \ref on input line 66.
-LaTeX Info: Redefining \pageref on input line 66.
-LaTeX Info: Redefining \nameref on input line 66.
+LaTeX Info: Redefining \ref on input line 63.
+LaTeX Info: Redefining \pageref on input line 63.
+LaTeX Info: Redefining \nameref on input line 63.
 
 (./dfnWorks.out) (./dfnWorks.out)
 \@outlinefile=\write5
 \openout5 = `dfnWorks.out'.
 
-Package hyperref Info: Option `pageanchor' set `false' on input line 69.
+Package hyperref Info: Option `pageanchor' set `false' on input line 67.
 
-<dfnworks_logo.png, id=298, 530.9436pt x 210.0648pt>
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 69.
+<dfnworks_logo.png, id=330, 201.75375pt x 80.3pt>
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 67.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
@@ -1104,44 +1105,44 @@ File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 File: dfnworks_logo.png Graphic file (type png)
 
 <use dfnworks_logo.png>
-Package pdftex.def Info: dfnworks_logo.png used on input line 69.
-(pdftex.def)             Requested size: 469.75502pt x 185.85445pt.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 69.
+Package pdftex.def Info: dfnworks_logo.png used on input line 67.
+(pdftex.def)             Requested size: 201.75325pt x 80.29979pt.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 67.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 67.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 67.
 <<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
-LaTeX Font Info:    Try loading font information for U+msa on input line 69.
+LaTeX Font Info:    Try loading font information for U+msa on input line 67.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 69.
+LaTeX Font Info:    Try loading font information for U+msb on input line 67.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (37.27771pt too wide) in paragraph at lines 69--69
+Overfull \hbox (37.27771pt too wide) in paragraph at lines 67--67
  [][]
  []
 
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 67.
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./dfnwo
@@ -1149,7 +1150,7 @@ rks_logo.png>] [2
 
 ]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 69.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 68.
  (./dfnWorks.toc
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
@@ -1170,414 +1171,1421 @@ LaTeX Font Info:    Try loading font information for TS1+ptm on input line 128.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [3] [4]
+[5]
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 264.
-
-[5] [6] [7] [8
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 296.
+ [6] [7] [8]
+Chapter 2.
+[9
 
 ]
-Chapter 2.
-[9]
-LaTeX Font Info:    Try loading font information for TS1+pcr on input line 435.
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 514.
 
  (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/ts1pcr.fd
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 ) [10]
-<4_user_rectangles_mesh.png, id=471, 1969.3575pt x 855.195pt>
+Chapter 3.
+[11
+
+] [12]
+Chapter 4.
+<4_user_rectangles_mesh.png, id=515, 2396.955pt x 1581.91pt>
 File: 4_user_rectangles_mesh.png Graphic file (type png)
 
 <use 4_user_rectangles_mesh.png>
-Package pdftex.def Info: 4_user_rectangles_mesh.png used on input line 527.
-(pdftex.def)             Requested size: 590.81181pt x 256.56049pt.
+Package pdftex.def Info: 4_user_rectangles_mesh.png used on input line 649.
+(pdftex.def)             Requested size: 239.70953pt x 158.20026pt.
 
-<4_user_rectangles_pressure.png, id=472, 1969.3575pt x 855.195pt>
+<4_user_rectangles_pressure.png, id=516, 2396.955pt x 1581.91pt>
 File: 4_user_rectangles_pressure.png Graphic file (type png)
 
 <use 4_user_rectangles_pressure.png>
-Package pdftex.def Info: 4_user_rectangles_pressure.png used on input line 537.
+Package pdftex.def Info: 4_user_rectangles_pressure.png used on input line 659.
 
-(pdftex.def)             Requested size: 590.81181pt x 256.56049pt.
+(pdftex.def)             Requested size: 239.70953pt x 158.20026pt.
+ [13
 
-<4_user_rectangles_trace.png, id=473, 2105.8675pt x 963.6pt>
+ <./4_user_rectangles_mesh.png (PNG copy)>] <4_user_rectangles_trace.png, id=52
+2, 2228.325pt x 1581.91pt>
 File: 4_user_rectangles_trace.png Graphic file (type png)
 
 <use 4_user_rectangles_trace.png>
-Package pdftex.def Info: 4_user_rectangles_trace.png used on input line 551.
-(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
- [11] [12 <./4_user_rectangles_mesh.png (PNG copy)> <./4_user_rectangles_pressu
-re.png (PNG copy)>]
-<4_user_ellipses_mesh.png, id=484, 1969.3575pt x 855.195pt>
+Package pdftex.def Info: 4_user_rectangles_trace.png used on input line 673.
+(pdftex.def)             Requested size: 178.26964pt x 126.55537pt.
+
+<4_user_ellipses_mesh.png, id=523, 2228.325pt x 1581.91pt>
 File: 4_user_ellipses_mesh.png Graphic file (type png)
 
 <use 4_user_ellipses_mesh.png>
-Package pdftex.def Info: 4_user_ellipses_mesh.png used on input line 564.
-(pdftex.def)             Requested size: 590.81181pt x 256.56049pt.
+Package pdftex.def Info: 4_user_ellipses_mesh.png used on input line 687.
+(pdftex.def)             Requested size: 222.84555pt x 158.20026pt.
 
-<4_user_ellipses_pressure.png, id=485, 1969.3575pt x 855.195pt>
+<4_user_ellipses_pressure.png, id=524, 2228.325pt x 1581.91pt>
 File: 4_user_ellipses_pressure.png Graphic file (type png)
 
 <use 4_user_ellipses_pressure.png>
-Package pdftex.def Info: 4_user_ellipses_pressure.png used on input line 575.
-(pdftex.def)             Requested size: 590.81181pt x 256.56049pt.
- [13 <./4_user_rectangles_trace.png (PNG copy)> <./4_user_ellipses_mesh.png (PN
-G copy)>]
-<4_user_ellipses_trace.png, id=491, 2105.8675pt x 963.6pt>
+Package pdftex.def Info: 4_user_ellipses_pressure.png used on input line 694.
+(pdftex.def)             Requested size: 222.84555pt x 158.20026pt.
+
+<4_user_ellipses_trace.png, id=525, 2228.325pt x 1581.91pt>
 File: 4_user_ellipses_trace.png Graphic file (type png)
 
 <use 4_user_ellipses_trace.png>
-Package pdftex.def Info: 4_user_ellipses_trace.png used on input line 586.
-(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
-
-<power_mesh.png, id=492, 2105.8675pt x 963.6pt>
-File: power_mesh.png Graphic file (type png)
- <use power_mesh.png>
-Package pdftex.def Info: power_mesh.png used on input line 602.
-(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
- [14 <./4_user_ellipses_pressure.png (PNG copy)> <./4_user_ellipses_trace.png (
-PNG copy)>] <power_pressure.png, id=497, 2105.8675pt x 963.6pt>
-File: power_pressure.png Graphic file (type png)
- <use power_pressure.png>
-Package pdftex.def Info: power_pressure.png used on input line 613.
-(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
-
-<power_trace.png, id=498, 2105.8675pt x 963.6pt>
-File: power_trace.png Graphic file (type png)
- <use power_trace.png>
-Package pdftex.def Info: power_trace.png used on input line 624.
-(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
- [15 <./power_mesh.png (PNG copy)> <./power_pressure.png (PNG copy)>]
-<exp_mesh.png, id=504, 1872.9975pt x 1262.7175pt>
+Package pdftex.def Info: 4_user_ellipses_trace.png used on input line 701.
+(pdftex.def)             Requested size: 222.84555pt x 158.20026pt.
+ <exp_mesh.png, id=526, 2228.325pt x 1581.91pt>
 File: exp_mesh.png Graphic file (type png)
- <use exp_mesh.png>
-Package pdftex.def Info: exp_mesh.png used on input line 635.
-(pdftex.def)             Requested size: 561.9036pt x 378.81818pt.
 
-<exp_pressure.png, id=505, 1872.9975pt x 1262.7175pt>
+<use exp_mesh.png>
+Package pdftex.def Info: exp_mesh.png used on input line 715.
+(pdftex.def)             Requested size: 222.84555pt x 158.20026pt.
+ <exp_pressure.png, id=527, 2228.325pt x 1581.91pt>
 File: exp_pressure.png Graphic file (type png)
- <use exp_pressure.png>
-Package pdftex.def Info: exp_pressure.png used on input line 646.
-(pdftex.def)             Requested size: 561.9036pt x 378.81818pt.
 
-<exp_trace.png, id=506, 2105.8675pt x 1013.7875pt>
-File: exp_trace.png Graphic file (type png)
- <use exp_trace.png>
-Package pdftex.def Info: exp_trace.png used on input line 657.
-(pdftex.def)             Requested size: 631.76514pt x 304.1386pt.
-
-<lognormal_mesh.png, id=507, 1872.9975pt x 1262.7175pt>
+<use exp_pressure.png>
+Package pdftex.def Info: exp_pressure.png used on input line 722.
+(pdftex.def)             Requested size: 222.84555pt x 158.20026pt.
+ [14 <./4_user_rectangles_pressure.png (PNG copy)> <./4_user_rectangles_trace.p
+ng (PNG copy)>] [15 <./4_user_ellipses_mesh.png (PNG copy)> <./4_user_ellipses_
+pressure.png (PNG copy)> <./4_user_ellipses_trace.png (PNG copy)>] [16 <./exp_m
+esh.png (PNG copy)> <./exp_pressure.png (PNG copy)>]
+<lognormal_mesh.png, id=548, 1872.9975pt x 1262.7175pt>
 File: lognormal_mesh.png Graphic file (type png)
 
 <use lognormal_mesh.png>
-Package pdftex.def Info: lognormal_mesh.png used on input line 673.
+Package pdftex.def Info: lognormal_mesh.png used on input line 735.
 (pdftex.def)             Requested size: 561.9036pt x 378.81818pt.
 
-<lognormal_pressure.png, id=508, 1872.9975pt x 1262.7175pt>
+<lognormal_pressure.png, id=549, 1872.9975pt x 1262.7175pt>
 File: lognormal_pressure.png Graphic file (type png)
 
 <use lognormal_pressure.png>
-Package pdftex.def Info: lognormal_pressure.png used on input line 684.
+Package pdftex.def Info: lognormal_pressure.png used on input line 746.
 (pdftex.def)             Requested size: 561.9036pt x 378.81818pt.
- [16 <./power_trace.png (PNG copy)>] [17 <./exp_mesh.png (PNG copy)> <./exp_pre
-ssure.png (PNG copy)>] [18 <./exp_trace.png (PNG copy)> <./lognormal_mesh.png (
-PNG copy)>]
-<lognormal_trace.png, id=521, 2105.8675pt x 1013.7875pt>
-File: lognormal_trace.png Graphic file (type png)
+ <power_mesh.png, id=550, 2105.8675pt x 963.6pt>
+File: power_mesh.png Graphic file (type png)
 
-<use lognormal_trace.png>
-Package pdftex.def Info: lognormal_trace.png used on input line 695.
-(pdftex.def)             Requested size: 631.76514pt x 304.1386pt.
- [19 <./lognormal_pressure.png (PNG copy)>] [20 <./lognormal_trace.png (PNG cop
-y)>]
-Chapter 3.
-<time_co2.png, id=530, 1316.92pt x 678.535pt>
+<use power_mesh.png>
+Package pdftex.def Info: power_mesh.png used on input line 764.
+(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
+ [17 <./lognormal_mesh.png (PNG copy)>] [18 <./lognormal_pressure.png (PNG copy
+)> <./power_mesh.png (PNG copy)>]
+<power_pressure.png, id=559, 2105.8675pt x 963.6pt>
+File: power_pressure.png Graphic file (type png)
+ <use power_pressure.png>
+Package pdftex.def Info: power_pressure.png used on input line 775.
+(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
+
+<power_trace.png, id=560, 2105.8675pt x 963.6pt>
+File: power_trace.png Graphic file (type png)
+ <use power_trace.png>
+Package pdftex.def Info: power_trace.png used on input line 786.
+(pdftex.def)             Requested size: 631.76514pt x 289.08223pt.
+ [19 <./power_pressure.png (PNG copy)> <./power_trace.png (PNG copy)>]
+<dfn_2_core.png, id=566, 899.2797pt x 348.1005pt>
+File: dfn_2_core.png Graphic file (type png)
+ <use dfn_2_core.png>
+Package pdftex.def Info: dfn_2_core.png used on input line 800.
+(pdftex.def)             Requested size: 269.78598pt x 104.43095pt.
+
+<pruned_network.png, id=567, 3745.2723pt x 1584.1584pt>
+File: pruned_network.png Graphic file (type png)
+
+<use pruned_network.png>
+Package pdftex.def Info: pruned_network.png used on input line 807.
+(pdftex.def)             Requested size: 187.27458pt x 79.21255pt.
+
+<in_fracture_var_perm.png, id=568, 2019.545pt x 1581.91pt>
+File: in_fracture_var_perm.png Graphic file (type png)
+
+<use in_fracture_var_perm.png>
+Package pdftex.def Info: in_fracture_var_perm.png used on input line 821.
+(pdftex.def)             Requested size: 201.96632pt x 158.20026pt.
+
+<in_fracture_var_pressure.png, id=569, 2019.545pt x 1581.91pt>
+File: in_fracture_var_pressure.png Graphic file (type png)
+
+<use in_fracture_var_pressure.png>
+Package pdftex.def Info: in_fracture_var_pressure.png used on input line 828.
+(pdftex.def)             Requested size: 201.96632pt x 158.20026pt.
+ [20 <./dfn_2_core.png> <./pruned_network.png>] [21 <./in_fracture_var_perm.png
+ (PNG copy)> <./in_fracture_var_pressure.png (PNG copy)>] [22
+
+]
+Chapter 5.
+<time_co2.png, id=589, 1316.92pt x 678.535pt>
 File: time_co2.png Graphic file (type png)
  <use time_co2.png>
-Package pdftex.def Info: time_co2.png used on input line 715.
+Package pdftex.def Info: time_co2.png used on input line 843.
 (pdftex.def)             Requested size: 658.45839pt x 339.26666pt.
- [21
-
- <./time_co2.png>] <well-pressure.png, id=538, 3609.485pt x 3148.76375pt>
+ [23 <./time_co2.png>] <well-pressure.png, id=597, 3609.485pt x 3148.76375pt>
 File: well-pressure.png Graphic file (type png)
 
 <use well-pressure.png>
-Package pdftex.def Info: well-pressure.png used on input line 727.
+Package pdftex.def Info: well-pressure.png used on input line 855.
 (pdftex.def)             Requested size: 360.96965pt x 314.89482pt.
- [22 <./well-pressure.png>]
-<forsmark_trajectories.png, id=545, 5302.81125pt x 4190.65625pt>
+ [24 <./well-pressure.png>]
+<forsmark_trajectories.png, id=604, 5302.81125pt x 4190.65625pt>
 File: forsmark_trajectories.png Graphic file (type png)
 
 <use forsmark_trajectories.png>
-Package pdftex.def Info: forsmark_trajectories.png used on input line 740.
+Package pdftex.def Info: forsmark_trajectories.png used on input line 868.
 (pdftex.def)             Requested size: 530.3122pt x 419.09018pt.
- [23 <./forsmark_trajectories.png>] [24]
-Chapter 4.
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
-[25
-
-] [26] [27] [28] [29] [30] [31] [32]
-Chapter 5.
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1702.
-LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
-(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 1708.
-
-[33
-
-]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[34]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[35]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[36]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[37]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[38]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[39]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[40]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[41]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[42]
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2357
- []
-
-[43] [44]
+ [25 <./forsmark_trajectories.png>] [26]
 Chapter 6.
-[45
+[27
 
-]
-Underfull \vbox (badness 10000) detected at line 2514
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2514
- []
-
-[46] [47] [48
+] [28] [29] [30
 
 ]
 Chapter 7.
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1017.
 
-Overfull \vbox (5.56998pt too high) detected at line 2741
- []
-
-[49]
-Underfull \vbox (badness 10000) detected at line 2741
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2741
- []
-
-[50]
-Underfull \vbox (badness 10000) detected at line 2741
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+[]\T1/ptm/m/it/10 jobname=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ncpu=''\T1/ptm/m/n
+/10 , \T1/ptm/m/it/10 lo-cal_jobname=''\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2741
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 dfn-Gen_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 out-put_file=''
+\T1/ptm/m/n/10 , \T1/ptm/m/it/10 lo-
  []
 
-[51]
-Underfull \vbox (badness 10000) detected at line 2741
+
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 cal_dfnGen_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 dfn-Flow_fil
+e=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 lo-
  []
 
 
-Overfull \vbox (9.36998pt too high) detected at line 2741
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 prune_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 flow_solver='PFLO
+TRAN'\T1/ptm/m/n/10 ,
  []
 
-[52] [53] [54
 
-]
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 inp_file='full_mesh.inp'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 uge_fi
+le=''\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 stor_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 vtk_file=''\T1/ptm
+/m/n/10 , \T1/ptm/m/it/10 mesh_type='dfn'\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1017--1017
+\T1/ptm/m/it/10 aper_cell_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 dfn-Trans_ver
+sion=''\T1/ptm/m/n/10 ,
+ []
+
+[31]
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1154.
+ [32] [33] [34] [35] [36] [37]
+Underfull \hbox (badness 6658) in paragraph at lines 1764--1766
+\T1/ptm/m/n/10 Takes out-put from LaGriT and pro-cesses it for use in PFLO-TRAN
+. Calls the func-tuon
+ []
+
+[38]
+Underfull \hbox (badness 10000) in paragraph at lines 1864--1864
+[]\T1/ptm/m/it/10 prune=False\T1/ptm/m/n/10 , \T1/ptm/m/it/10 uni-form_mesh=Fal
+se\T1/ptm/m/n/10 , \T1/ptm/m/it/10 pro-duc-tion_mode=True\T1/ptm/m/n/10 , \T1/p
+tm/m/it/10 re-fine_factor=1\T1/ptm/m/n/10 ,
+ []
+
+[39] [40]
+LaTeX Font Info:    Font shape `TS1/pcr/bx/n' in size <10> not available
+(Font)              Font shape `TS1/pcr/b/n' tried instead on input line 1.
+ [41] [42] [43] [44] [45] [46]
+Underfull \hbox (badness 10000) in paragraph at lines 2867--2867
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 radi-iFile='radii.dat'\T
+1/ptm/m/n/10 , \T1/ptm/m/it/10 fam-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2867--2867
+\T1/ptm/m/it/10 File='families.dat'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 trans-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2867--2867
+\T1/ptm/m/it/10 File='translations.dat'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 re-ject
+-
+ []
+
+[47]
+Underfull \hbox (badness 10000) in paragraph at lines 2955--2955
+[]\T1/ptm/m/it/10 visual_mode\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ncpu\T1/ptm/m/n/1
+0 , \T1/ptm/m/it/10 re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2955--2955
+\T1/ptm/m/it/10 fine_factor=1\T1/ptm/m/n/10 , \T1/ptm/m/it/10 pro-duc-
+ []
+
+[48]
+Underfull \hbox (badness 5878) in paragraph at lines 2998--2998
+[]\T1/ptm/m/it/10 ncpu\T1/ptm/m/n/10 , \T1/ptm/m/it/10 num_poly\T1/ptm/m/n/10 ,
+ \T1/ptm/m/it/10 frac-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3044--3044
+[]\T1/ptm/m/it/10 fracture_list\T1/ptm/m/n/10 , \T1/ptm/m/it/10 h\T1/ptm/m/n/10
+ ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3044--3044
+\T1/ptm/m/it/10 slope=2.0\T1/ptm/m/n/10 , \T1/ptm/m/it/10 re-
+ []
+
+[49] [50]
+Underfull \hbox (badness 10000) in paragraph at lines 3249--3249
+[]\T1/ptm/m/it/10 fracture_list\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ncpu\T1/ptm/m/n
+/10 , \T1/ptm/m/it/10 vi-
+ []
+
+[51] [52]
+Underfull \hbox (badness 10000) in paragraph at lines 3447--3447
+[]\T1/ptm/m/it/10 local_jobname\T1/ptm/m/n/10 , \T1/ptm/m/it/10 vi-
+ []
+
+[53] [54] [55]
+Underfull \hbox (badness 10000) in paragraph at lines 3683--3683
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 inp_file=''\T1/ptm/m/n/1
+0 , \T1/ptm/m/it/10 mesh_type=''\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3684--3686
+\T1/ptm/m/n/10 Takes out-put from LaGriT and pro-cesses it for use in PFLO-TRAN
+. Calls the func-tuon
+ []
+
+[56]
+Underfull \hbox (badness 10000) in paragraph at lines 3810--3810
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 uge_file=''\T1/ptm/m/n/1
+0 , \T1/ptm/m/it/10 zone_file=''\T1/ptm/m/n/10 , \T1/ptm/m/it/10 face=''\T1/ptm
+/m/n/10 , \T1/ptm/m/it/10 bound-
+ []
+
+[57]
+Underfull \hbox (badness 10000) in paragraph at lines 3920--3920
+[]\T1/ptm/m/it/10 local_jobname\T1/ptm/m/n/10 , \T1/ptm/m/it/10 mass_rate\T1/pt
+m/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3920--3920
+\T1/ptm/m/it/10 vol-ume_rate\T1/ptm/m/n/10 , \T1/ptm/m/it/10 do-main\T1/ptm/m/n
+/10 , \T1/ptm/m/it/10 di-rec-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3920--3920
+\T1/ptm/m/it/10 tion\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-flow_pressure\T1/ptm/m/
+n/10 , \T1/ptm/m/it/10 out-
+ []
+
+
+Underfull \hbox (badness 6842) in paragraph at lines 3921--3922
+\T1/ptm/m/n/10 Compute the ef-fec-tive per-me-abil-ity of the DFN and write it 
+to screen and to the file lo-
+ []
+
+[58] [59] [60] [61]
+Underfull \hbox (badness 10000) in paragraph at lines 4265--4265
+[]\T1/ptm/m/it/10 inflow\T1/ptm/m/n/10 , \T1/ptm/m/it/10 out-flow\T1/ptm/m/n/10
+ , \T1/ptm/m/it/10 in-ter-sec-
+ []
+
+
+Overfull \hbox (1.57292pt too wide) in paragraph at lines 4265--4265
+\T1/ptm/m/it/10 tion_list='intersection_list.dat'\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4265--4265
+\T1/ptm/m/it/10 frac-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4300--4300
+[]\T1/ptm/m/it/10 inflow\T1/ptm/m/n/10 , \T1/ptm/m/it/10 out-flow\T1/ptm/m/n/10
+ , \T1/ptm/m/it/10 topol-
+ []
+
+[62]
+Overfull \hbox (23.06319pt too wide) in paragraph at lines 4365--4365
+\T1/ptm/m/it/10 tion_file='intersection_list.dat'\T1/pcr/m/n/10 ) 
+ []
+
+[63] [64]
+Underfull \hbox (badness 10000) in paragraph at lines 4597--4597
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 G\T1/ptm/m/n/10 , \T1/pt
+m/m/it/10 source='s'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 tar-get='t'\T1/ptm/m/n/10 
+, \T1/ptm/m/it/10 out-
+ []
+
+[65]
+Underfull \hbox (badness 10000) in paragraph at lines 4657--4657
+[]\T1/ptm/m/it/10 G\T1/ptm/m/n/10 , \T1/ptm/m/it/10 nodelist=None\T1/ptm/m/n/10
+ ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4657--4657
+\T1/ptm/m/it/10 weight=None\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4721--4721
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-flow\T1/ptm/m/n/10 , 
+\T1/ptm/m/it/10 out-flow\T1/ptm/m/n/10 , \T1/ptm/m/it/10 Pin\T1/ptm/m/n/10 , \T
+1/ptm/m/it/10 Pout\T1/ptm/m/n/10 ,
+ []
+
+[66]
+Underfull \hbox (badness 10000) in paragraph at lines 4743--4743
+[]\T1/ptm/m/it/10 Gtilde\T1/ptm/m/n/10 , \T1/ptm/m/it/10 Pin\T1/ptm/m/n/10 , \T
+1/ptm/m/it/10 Pout\T1/ptm/m/n/10 ,
+ []
+
+[67]
+Underfull \hbox (badness 10000) in paragraph at lines 4925--4925
+[]\T1/ptm/m/it/10 self\T1/ptm/m/n/10 , \T1/ptm/m/it/10 Gtilde\T1/ptm/m/n/10 , \
+T1/ptm/m/it/10 npar-ti-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4925--4925
+\T1/ptm/m/it/10 cles\T1/ptm/m/n/10 , \T1/ptm/m/it/10 par-time_file=None\T1/ptm/
+m/n/10 ,
+ []
+
+[68] [69] [70]
 Chapter 8.
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 5117.
+LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 5123.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1--2775
-[]\T1/pcr/m/n/10 python run.py -name [JOBNAME] -input [INPUT_FILE_NAME] -ncpu [
-NUMBER OF CPUS
+
+Overfull \vbox (0.80615pt too high) detected at line 5772
  []
 
-[55] [56
+[71
 
 ]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[72]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[73]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[74]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[75]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[76]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[77]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[78]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[79]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[80]
+Underfull \vbox (badness 10000) detected at line 5772
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5772
+ []
+
+[81] [82]
 Chapter 9.
-[57] [58] [59] [60] [61] [62] [63] [64
+
+Overfull \vbox (0.72583pt too high) detected at line 5929
+ []
+
+[83
+
+]
+Underfull \vbox (badness 10000) detected at line 5929
+ []
+
+
+Overfull \vbox (2.68169pt too high) detected at line 5929
+ []
+
+[84] [85] [86
 
 ]
 Chapter 10.
-[65] (./dfnWorks.ind [66]
-Underfull \hbox (badness 10000) in paragraph at lines 5--6
-[]\T1/ptm/m/n/10 beta_distribution() (pydfn-works.distributions.distr
+
+Overfull \vbox (1.72583pt too high) detected at line 6147
+ []
+
+[87]
+Underfull \vbox (badness 10000) detected at line 6147
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--10
-[]\T1/ptm/m/n/10 check_dudded_points() (in mod-ule pydfn-
+Overfull \vbox (2.68169pt too high) detected at line 6147
+ []
+
+[88]
+Underfull \vbox (badness 10000) detected at line 6147
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 10--11
-[]\T1/ptm/m/n/10 check_fam_count() (pydfn-works.helper.input_helper
+Overfull \vbox (2.68169pt too high) detected at line 6147
  []
 
+[89] [90]
+Chapter 11.
+[91
 
-Underfull \hbox (badness 10000) in paragraph at lines 14--15
-[]\T1/ptm/m/n/10 check_min_max() (pydfn-works.helper.input_helper
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 20--21
-[]\T1/ptm/m/n/10 create_lagrit_scripts() (in mod-ule pydfn-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 21--22
-[]\T1/ptm/m/n/10 create_merge_poly_files() (in mod-ule pydfn-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--24
-[]\T1/ptm/m/n/10 create_parameter_mlgi_file() (in mod-ule pydfn-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 24--25
-[]\T1/ptm/m/n/10 create_user_functions() (in mod-ule pydfn-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
-[]\T1/ptm/m/n/10 exponential_dist() (pydfn-works.distributions.distr
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 41--42
-[]\T1/ptm/m/n/10 extract_parameters() (pydfn-works.helper.input_helper
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
-[]\T1/ptm/m/n/10 lognormal_dist() (pydfn-works.distributions.distr
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
-[]\T1/ptm/m/n/10 make_working_directory() (in mod-ule pydfn-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--75
-[]\T1/ptm/m/n/10 merge_the_meshes() (in mod-ule pydfn-
- []
-
-[67
-
+] [92
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 77--78
-[]\T1/ptm/m/n/10 mesh_fractures_header() (in mod-ule pydfn-
+Chapter 12.
+[93] [94] [95] [96] (./dfnWorks.ind [97] [98
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+[]\T1/pcr/m/n/10 add_area() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
-[]\T1/ptm/m/n/10 output_meshing_report() (in mod-ule pydfn-
+Underfull \hbox (badness 10000) in paragraph at lines 9--11
+[]\T1/pcr/m/n/10 add_frac_data() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 88--89
-[]\T1/ptm/m/n/10 parse_params_file() (in mod-ule pydfn-
+Underfull \hbox (badness 10000) in paragraph at lines 9--11
+\T1/ptm/m/it/10 works.dfnGraph.graph_transport.Particle
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
-[]\T1/ptm/m/n/10 parse_pflotran_vtk_python() (in mod-ule pydfn-
+Underfull \hbox (badness 10000) in paragraph at lines 11--12
+[]\T1/pcr/m/n/10 add_perm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 138--139
-[]\T1/ptm/m/n/10 zero_in_std_devs() (pydfn-works.helper.input_helper
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+[]\T1/pcr/m/n/10 add_weight() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+
  []
 
-[68])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3387.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3387.
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--18
+[]\T1/pcr/m/n/10 beta_distribution() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--18
+\T1/ptm/m/it/10 works.dfnGen.distributions.distr method\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 18--20
+[]\T1/pcr/m/n/10 boundary_index() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--25
+[]\T1/pcr/m/n/10 check_dfn_trans_run_files() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in
+ mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--27
+[]\T1/pcr/m/n/10 check_dfn_trans_run_files() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--29
+[]\T1/pcr/m/n/10 check_dudded_points() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
+le pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--31
+[]\T1/pcr/m/n/10 check_fam_count() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
+[]\T1/pcr/m/n/10 check_input() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--34
+[]\T1/pcr/m/n/10 check_input() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 34--36
+[]\T1/pcr/m/n/10 check_mean() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 36--38
+[]\T1/pcr/m/n/10 check_min_frac_size() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--40
+[]\T1/pcr/m/n/10 check_min_max() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--42
+[]\T1/pcr/m/n/10 check_pflotran_convergence() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 i
+n mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--44
+[]\T1/pcr/m/n/10 clean_up_files_after_prune() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 i
+n mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--46
+[]\T1/pcr/m/n/10 cleanup_dir() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--48
+[]\T1/pcr/m/n/10 commandline_options() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
+le pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+[]\T1/pcr/m/n/10 compile_dfn_exe() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule p
+ydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--51
+[]\T1/pcr/m/n/10 constant_dist() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--51
+\T1/ptm/m/it/10 works.dfnGen.distributions.distr method\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--53
+[]\T1/pcr/m/n/10 copy_dfn_trans_files() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-
+ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--55
+[]\T1/pcr/m/n/10 copy_dfn_trans_files() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 55--57
+[]\T1/pcr/m/n/10 correct_perm_for_fehm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--59
+[]\T1/pcr/m/n/10 correct_stor_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+ pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--61
+[]\T1/pcr/m/n/10 correct_stor_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--64
+[]\T1/pcr/m/n/10 create_dfn() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 64--66
+[]\T1/pcr/m/n/10 create_dfn_flow_links() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--68
+[]\T1/pcr/m/n/10 create_dfn_flow_links() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--72
+[]\T1/pcr/m/n/10 create_dfn_trans_links() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn
+-
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 72--74
+[]\T1/pcr/m/n/10 create_fracture_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--76
+[]\T1/pcr/m/n/10 create_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+[99
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 76--78
+[]\T1/pcr/m/n/10 create_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--80
+[]\T1/pcr/m/n/10 create_intersection_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in
+ mod-ule
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 80--82
+[]\T1/pcr/m/n/10 create_lagrit_scripts() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--86
+[]\T1/pcr/m/n/10 create_mesh_links() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+ pydfn-
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 86--88
+[]\T1/pcr/m/n/10 create_neighbour_list() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--90
+[]\T1/pcr/m/n/10 create_network() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
+[]\T1/pcr/m/n/10 create_network() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--94
+[]\T1/pcr/m/n/10 create_parameter_mlgi_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 i
+n mod-ule
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 94--96
+[]\T1/pcr/m/n/10 create_user_functions() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--98
+[]\T1/pcr/m/n/10 curly_to_list() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
+[]\T1/pcr/m/n/10 define_paths() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--104
+[]\T1/pcr/m/n/10 define_paths() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--106
+[]\T1/pcr/m/n/10 define_zones() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+
+Overfull \hbox (9.01099pt too wide) in paragraph at lines 107--109
+[]\T1/pcr/m/n/10 dfn_flow() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general
+.dfnworks.DFNWORKS
+ []
+
+
+Overfull \hbox (3.01099pt too wide) in paragraph at lines 110--111
+[]\T1/pcr/m/n/10 dfn_gen() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.
+dfnworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--112
+[]\T1/pcr/m/n/10 dfn_trans() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 112--114
+[]\T1/pcr/m/n/10 dfn_trans() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
+[]\T1/pcr/m/n/10 distr() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.dis
+tributions.distr
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--119
+[]\T1/pcr/m/n/10 dump_effective_perm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
+le pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 119--121
+[]\T1/pcr/m/n/10 dump_fractures() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--123
+[]\T1/pcr/m/n/10 dump_fractures() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 123--125
+[]\T1/pcr/m/n/10 dump_json_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule p
+ydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--127
+[]\T1/pcr/m/n/10 dump_json_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 127--129
+[]\T1/pcr/m/n/10 dump_time() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 129--131
+[]\T1/pcr/m/n/10 dump_time() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
+[]\T1/pcr/m/n/10 effective_perm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--140
+[]\T1/pcr/m/n/10 effective_perm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 140--142
+[]\T1/pcr/m/n/10 error() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.gen
+_input.input_helper
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 142--144
+[]\T1/pcr/m/n/10 exponential_dist() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 142--144
+\T1/ptm/m/it/10 works.dfnGen.distributions.distr method\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 144--146
+[]\T1/pcr/m/n/10 extract_parameters() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
+[]\T1/pcr/m/n/10 fehm() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.dfn
+works.DFNWORKS
+ []
+
+
+Overfull \hbox (9.41095pt too wide) in paragraph at lines 151--153
+[]\T1/pcr/m/n/10 find_key() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.
+gen_input.input_helper
+ []
+
+
+Overfull \hbox (9.41095pt too wide) in paragraph at lines 153--155
+[]\T1/pcr/m/n/10 find_val() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.
+gen_input.input_helper
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 155--157
+[]\T1/pcr/m/n/10 flow_rate() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 160--162
+[]\T1/pcr/m/n/10 get_domain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--164
+[]\T1/pcr/m/n/10 get_groups() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 166--168
+[]\T1/pcr/m/n/10 greedy_edge_disjoint() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-
+ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
+[]\T1/pcr/m/n/10 greedy_edge_disjoint() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+[100]
+Underfull \hbox (badness 10000) in paragraph at lines 173--175
+[]\T1/pcr/m/n/10 has_curlys() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--180
+[]\T1/pcr/m/n/10 inp2gmv() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+ []
+
+
+Overfull \hbox (3.01099pt too wide) in paragraph at lines 180--181
+[]\T1/pcr/m/n/10 inp2gmv() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.
+dfnworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--183
+[]\T1/pcr/m/n/10 inp2vtk_python() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--185
+[]\T1/pcr/m/n/10 inp2vtk_python() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 185--186
+[]\T1/pcr/m/n/10 input_helper \T1/ptm/m/n/10 (\T1/ptm/m/it/10 class in pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 186--188
+[]\T1/pcr/m/n/10 is_negative() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 191--193
+[]\T1/pcr/m/n/10 k_shortest_paths() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule 
+pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
+[]\T1/pcr/m/n/10 k_shortest_paths_backbone() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in
+ mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 195--197
+[]\T1/pcr/m/n/10 k_shortest_paths_backbone() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 200--202
+[]\T1/pcr/m/n/10 lagrit2pflotran() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule p
+ydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 202--204
+[]\T1/pcr/m/n/10 lagrit2pflotran() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--207
+[]\T1/pcr/m/n/10 legal() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.df
+nworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 207--209
+[]\T1/pcr/m/n/10 list_to_curly() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 209--211
+[]\T1/pcr/m/n/10 load_json_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule p
+ydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--213
+[]\T1/pcr/m/n/10 load_json_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
+[]\T1/pcr/m/n/10 lognormal_dist() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
+\T1/ptm/m/it/10 works.dfnGen.distributions.distr method\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--222
+[]\T1/pcr/m/n/10 make_working_directory() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--224
+[]\T1/pcr/m/n/10 merge_the_meshes() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule 
+pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--226
+[]\T1/pcr/m/n/10 merge_worker() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--230
+[]\T1/pcr/m/n/10 mesh_fracture() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pyd
+fn-
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 230--232
+[]\T1/pcr/m/n/10 mesh_fractures_header() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
+[]\T1/pcr/m/n/10 mesh_network() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--235
+[]\T1/pcr/m/n/10 mesh_network() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 7362) in paragraph at lines 235--237
+[]\T1/pcr/m/n/10 minFracSize \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen
+.distributions.distr
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 247--249
+[]\T1/pcr/m/n/10 output_meshing_report() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
+-ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 249--251
+[]\T1/pcr/m/n/10 output_report() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pyd
+fn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 251--253
+[]\T1/pcr/m/n/10 output_report() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 256--257
+[]\T1/pcr/m/n/10 params \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.dist
+ributions.distr at-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--259
+[]\T1/pcr/m/n/10 parse_params_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+ pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 259--261
+[]\T1/pcr/m/n/10 parse_pflotran_input() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-
+ule pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 261--263
+[]\T1/pcr/m/n/10 parse_pflotran_vtk_python() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in
+ mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 263--265
+[]\T1/pcr/m/n/10 parse_pflotran_vtk_python() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 265--266
+[]\T1/pcr/m/n/10 Particle \T1/ptm/m/n/10 (\T1/ptm/m/it/10 class in pydfn-
+ []
+
+[101]
+Overfull \hbox (9.01099pt too wide) in paragraph at lines 267--268
+[]\T1/pcr/m/n/10 pflotran() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general
+.dfnworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 268--270
+[]\T1/pcr/m/n/10 pflotran_cleanup() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule 
+pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--272
+[]\T1/pcr/m/n/10 pflotran_cleanup() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 272--273
+[]\T1/pcr/m/n/10 plot_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydfn-
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 273--275
+[]\T1/pcr/m/n/10 plot_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--279
+[]\T1/pcr/m/n/10 print_run_time() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 279--281
+[]\T1/pcr/m/n/10 print_run_time() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 281--283
+[]\T1/pcr/m/n/10 process_line() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Overfull \hbox (9.01099pt too wide) in paragraph at lines 285--287
+[]\T1/pcr/m/n/10 pydfnworks \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general
+.dfnworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 295--296
+[]\T1/pcr/m/n/10 pydfnworks.dfnGen.lagrit_scripts \T1/ptm/m/n/10 (\T1/ptm/m/it/
+10 mod-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--301
+[]\T1/pcr/m/n/10 pydfnworks.dfnGraph.graph_flow \T1/ptm/m/n/10 (\T1/ptm/m/it/10
+ mod-ule\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 301--302
+[]\T1/pcr/m/n/10 pydfnworks.dfnGraph.graph_transport
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 304--305
+[]\T1/pcr/m/n/10 pydfnworks.general.general_functions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--312
+[]\T1/pcr/m/n/10 run_dfn_trans() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pyd
+fn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 312--314
+[]\T1/pcr/m/n/10 run_dfn_trans() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 314--316
+[]\T1/pcr/m/n/10 run_graph_flow() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule py
+dfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 316--318
+[]\T1/pcr/m/n/10 run_graph_flow() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 318--320
+[]\T1/pcr/m/n/10 run_graph_transport() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
+le pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 320--322
+[]\T1/pcr/m/n/10 run_graph_transport() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 326--328
+[]\T1/pcr/m/n/10 scale() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.gen
+_input.input_helper
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 328--329
+[]\T1/pcr/m/n/10 set_flow_solver() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule p
+ydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 329--331
+[]\T1/pcr/m/n/10 set_flow_solver() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
+[]\T1/pcr/m/n/10 set_start_time_dist() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
+\T1/ptm/m/it/10 works.dfnGraph.graph_transport.Particle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 333--335
+[]\T1/pcr/m/n/10 single_worker() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pyd
+fn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--337
+[]\T1/pcr/m/n/10 solve_flow_on_graph() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
+le pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 340--342
+[]\T1/pcr/m/n/10 tpl_dist() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.
+distributions.distr
+ []
+
+
+Overfull \hbox (6.94086pt too wide) in paragraph at lines 342--344
+[]\T1/pcr/m/n/10 track() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGraph.g
+raph_transport.Particle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 347--348
+[]\T1/pcr/m/n/10 uncorrelated() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule pydf
+n-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 348--350
+[]\T1/pcr/m/n/10 uncorrelated() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 353--355
+[]\T1/pcr/m/n/10 val_helper() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Overfull \hbox (9.41095pt too wide) in paragraph at lines 356--358
+[]\T1/pcr/m/n/10 value_of() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.
+gen_input.input_helper
+ []
+
+[102]
+Underfull \hbox (badness 10000) in paragraph at lines 358--360
+[]\T1/pcr/m/n/10 verify_flag() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 360--362
+[]\T1/pcr/m/n/10 verify_float() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 362--364
+[]\T1/pcr/m/n/10 verify_int() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 364--366
+[]\T1/pcr/m/n/10 verify_list() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Overfull \hbox (3.41095pt too wide) in paragraph at lines 369--371
+[]\T1/pcr/m/n/10 warning() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.dfnGen.g
+en_input.input_helper
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--373
+[]\T1/pcr/m/n/10 write_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--373
+\T1/ptm/m/it/10 works.dfnGraph.graph_transport.Particle
+ []
+
+
+Overfull \hbox (4.1225pt too wide) in paragraph at lines 373--375
+[]\T1/pcr/m/n/10 write_perms_and_correct_volumes_areas()
+ []
+
+
+Overfull \hbox (4.1225pt too wide) in paragraph at lines 375--377
+[]\T1/pcr/m/n/10 write_perms_and_correct_volumes_areas()
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 375--377
+\T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.dfnworks.DFNWORKS
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 380--382
+[]\T1/pcr/m/n/10 zero_in_std_devs() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-
+ []
+
+
+Overfull \hbox (3.01099pt too wide) in paragraph at lines 383--384
+[]\T1/pcr/m/n/10 zone2ex() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 pydfn-works.general.
+dfnworks.DFNWORKS
+ []
+
+[103
+
+])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 6492.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 6492.
  (./dfnWorks.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3387.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3387.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 6492.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 6492.
 
 Package rerunfilecheck Info: File `dfnWorks.out' has not changed.
-(rerunfilecheck)             Checksum: AB1338FDFF0907211ABE08EBC54D6218;10510.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3387.
+(rerunfilecheck)             Checksum: 3D97407BD46825696C17D9526013CA78;12205.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 6492.
  ) 
 Here is how much of TeX's memory you used:
- 14298 strings out of 492995
- 202395 string characters out of 6132704
- 878449 words of memory out of 5000000
- 17203 multiletter control sequences out of 15000+600000
- 55890 words of font info for 78 fonts, out of 8000000 for 9000
+ 14664 strings out of 492995
+ 213102 string characters out of 6132704
+ 885677 words of memory out of 5000000
+ 17376 multiletter control sequences out of 15000+600000
+ 59642 words of font info for 83 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 37i,12n,51p,1427b,565s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,12n,51p,1425b,661s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/tex
 live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texli
@@ -1589,10 +2597,10 @@ s/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1
 elvetic/uhvr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/ut
 mb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><
 /usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on dfnWorks.pdf (72 pages, 3891014 bytes).
+Output written on dfnWorks.pdf (107 pages, 8445118 bytes).
 PDF statistics:
- 1168 PDF objects out of 1200 (max. 8388607)
- 1044 compressed objects within 11 object streams
- 319 named destinations out of 1000 (max. 500000)
- 700 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1580 PDF objects out of 1728 (max. 8388607)
+ 1413 compressed objects within 15 object streams
+ 501 named destinations out of 1000 (max. 500000)
+ 774 words of extra memory for PDF output out of 10000 (max. 10000000)
 

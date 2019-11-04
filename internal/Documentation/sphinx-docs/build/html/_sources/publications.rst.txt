@@ -1,7 +1,7 @@
 .. _publications-chapter:
 
 dfnWorks Publications
-============
+======================
 
 The following are publications that use *dfnWorks*:
 
@@ -44,3 +44,27 @@ The following are publications that use *dfnWorks*:
 #. \J. D. Hyman, Satish Karra, J. William Carey, Carl W. Gable, Hari Viswanathan, Esteban Rougier, and Zhou Lei. Discontinuities in effective permeability due to fracture percolation. Mechanics of Materials, 119:25 – 33, 2018
 
 #. \S. Karra, D. O’Malley, J. D. Hyman, H.S. Viswanathan, and G. Srinivasan. Modeling flow and transport in fracture networks using graphs. Phys. Rev. E, 2018
+
+#. \J. D. Hyman and J. Jimenéz-Martínez. Dispersion and mixing in three-dimensional discrete fracture networks: Nonlinear interplay between structural and hydraulic heterogeneity. Water Resources Research, 54(5):3243–3258, 2018
+
+#. \D. O’Malley, S. Karra, J. D. Hyman, H. Viswanathan, and G. Srinivasan. Efficient monte carlo with graph-based subsurface flow and transport models. Water Resour. Res., 2018
+
+#. \G. Srinivasan, J. D. Hyman, D. Osthus, B. Moore, D. O’Malley, S. Karra, E Rougier, A. Hagberg, A. Hunter, and H. S. Viswanathan. Quantifying topological uncertainty in fractured systems using graph theory and machine learning. Scientific Reports, 2018
+
+#. \H. S. Viswanathan, J. D. Hyman, S. Karra, D. O’Malley, S. Srinivasan, A. Hagberg, and G. Srinivasan. Advancing graph-based algorithms for predicting flow and transport in fractured rock. Water Resour. Res., 2018
+
+#. \S. Srinivasan, J. D. Hyman, S. Karra, D. O’Malley, H. Viswanathan, and G. Srinivasan. Robust system size reduction of discrete fracture networks: A multi-fidelity method that preserves transport characteristics. Computational Geosciences, 2018
+
+#. \J. D. Hyman, Aric Hagberg, Dave Osthus, Shriram Srinivasan, Hari Viswanathan, and Gowri Srinivasan. Identifying backbones in three-dimensional discrete fracture net- works: A bipartite graph-based approach. Multiscale Modeling & Simulation, 16(4):1948– 1968, 2018
+
+#. \G. Aldrich, J. Lukasczyk, J. D. Hyman, G. Srinivasan, H. Viswanathan, C. Garth, H. Leitte, J. Ahrens, and B. Hamann. A query-based framework for searching,sorting, and exploring data ensembles. Computing in Science Engineering, 2018
+
+#. \T. Sherman, J. D. Hyman, D. Bolster, N. Makedonska, and G. Srinivasan. Characteriz- ing the impact of particle behavior at fracture intersections in three-dimensional discrete fracture networks. Physical Review E, 99(1):013110, 2019
+
+#. \J. D. Hyman, M. Dentz, A. Hagberg, and P. Kang. Linking structural and transport properties in three-dimensional fracture networks. J. Geophys. Res. Sol. Ea., 2019
+
+#. \S. Srinivasan, S. Karra, J. D. Hyman, H. Viswanathan, and G. Srinivasan. Model re- duction for fractured porous media: A machine-learning approach for identifying main flow pathways. Computational Geosciences, 2018
+
+#. \N. Makedonska, J. Hyman, E. Kwicklis, K. Birdsell, Conference Proceedings, Discrete Fracture Network Modeling and Simulation of Subsurface Transport for the Topopah Spring Aquifer at Pahute Mesa, 2nd International Discrete Fracture Network Engineering, 2018.
+
+#. \N. Makedonska, C.W. Gable, R. Pawar, Conference Proceedings, Merging Discrete Fracture Network Meshes With 3D Continuum Meshes of Rock Matrix: A Novel Approach, 2nd International Discrete Fracture Network Engineering, 2018.

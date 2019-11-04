@@ -1,0 +1,741 @@
+.TH "Docs_PT/ParticleTracking_source/FuncDef.h" 3 "Mon Jun 24 2019" "dfnTrans" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Docs_PT/ParticleTracking_source/FuncDef.h
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBmaterial\fP"
+.br
+.ti -1c
+.RI "struct \fBvertex\fP"
+.br
+.ti -1c
+.RI "struct \fBelement\fP"
+.br
+.ti -1c
+.RI "struct \fBcontam\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBpi\fP   3\&.14159265359"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBReadInit\fP ()"
+.br
+.ti -1c
+.RI "void \fBReadDataFiles\fP ()"
+.br
+.ti -1c
+.RI "void \fBAdjacentCells\fP (int ln, int i, int j, int k)"
+.br
+.ti -1c
+.RI "void \fBConvertto2d\fP ()"
+.br
+.ti -1c
+.RI "void \fBConvertto3d\fP ()"
+.br
+.ti -1c
+.RI "void \fBDarcyVelocity\fP ()"
+.br
+.ti -1c
+.RI "struct \fBmatr\fP \fBMatrixProducts\fP (double normxarea[][2], int number)"
+.br
+.ti -1c
+.RI "struct \fBlb\fP \fBDefineBoundaryAngle\fP (int i, unsigned int edge_1, unsigned int edge_2, int f1, int coorf)"
+.br
+.ti -1c
+.RI "void \fBVelocityInteriorNode\fP (double normxarea[][2], int i, int number, unsigned int indj[\fBmax_neighb\fP], int vi)"
+.br
+.ti -1c
+.RI "void \fBVelocityExteriorNode\fP (double normxarea[][2], int i, int number, unsigned int indj[\fBmax_neighb\fP], struct \fBlb\fP lbound, int vi)"
+.br
+.ti -1c
+.RI "void \fBCheckNewCell\fP ()"
+.br
+.ti -1c
+.RI "void \fBParticleTrack\fP ()"
+.br
+.ti -1c
+.RI "struct \fBintcoef\fP \fBCalculateWeights\fP (int nn1, int nn2, int nn3)"
+.br
+.ti -1c
+.RI "void \fBSearchNeighborCells\fP (int nn1, int nn2, int nn3)"
+.br
+.ti -1c
+.RI "int \fBInsideCell\fP (unsigned int numc)"
+.br
+.ti -1c
+.RI "void \fBNeighborCells\fP (int k)"
+.br
+.ti -1c
+.RI "void \fBPredictorStep\fP ()"
+.br
+.ti -1c
+.RI "void \fBCorrectorStep\fP ()"
+.br
+.ti -1c
+.RI "void \fBDefineTimeStep\fP ()"
+.br
+.ti -1c
+.RI "int \fBCheckDistance\fP ()"
+.br
+.ti -1c
+.RI "void \fBAcrossIntersection\fP (int prevcell, int int1, int int2, int \fBmixing_rule\fP)"
+.br
+.ti -1c
+.RI "void \fBChangeFracture\fP (int cell_win)"
+.br
+.ti -1c
+.RI "struct \fBposit3d\fP \fBCalculatePosition3D\fP ()"
+.br
+.ti -1c
+.RI "int \fBInitCell\fP ()"
+.br
+.ti -1c
+.RI "int \fBInitPos\fP ()"
+.br
+.ti -1c
+.RI "void \fBMoving2Center\fP (int nnp, int cellnumber)"
+.br
+.ti -1c
+.RI "int \fBMoving2NextCell\fP (int stuck, int k)"
+.br
+.ti -1c
+.RI "void \fBBoundaryCells\fP ()"
+.br
+.ti -1c
+.RI "int \fBInitParticles_np\fP (int k_current, int firstn, int lastn, int parts_fracture, int first_ind, int last_ind)"
+.br
+.ti -1c
+.RI "int \fBInitParticles_eq\fP (int k_current, int firstn, int lastn, double parts_dist, int first_ind, int last_ind)"
+.br
+.ti -1c
+.RI "int \fBCornerVelocity\fP (int i, int m1, int m2, int m3, int s1, int s2, int s3)"
+.br
+.ti -1c
+.RI "void \fBReadBoundaryNodes\fP ()"
+.br
+.ti -1c
+.RI "FILE * \fBOpenFile\fP (char filen[120], char fileopt[2])"
+.br
+.ti -1c
+.RI "void \fBReadFEHMfile\fP (int nedges)"
+.br
+.ti -1c
+.RI "void \fBReadPFLOTRANfile\fP (int nedges)"
+.br
+.ti -1c
+.RI "void \fBWritingInit\fP ()"
+.br
+.ti -1c
+.RI "void \fBVelocity3D\fP ()"
+.br
+.ti -1c
+.RI "double \fBCalculateCurrentDT\fP ()"
+.br
+.ti -1c
+.RI "int \fBYindex\fP (int nodenum, int \fBnp\fP)"
+.br
+.ti -1c
+.RI "int \fBXindex\fP (int nodenum, int \fBnp\fP)"
+.br
+.ti -1c
+.RI "int \fBCompleteMixingRandomSampling\fP (double products[4], double speedsq[4], int indj, int int1, int indk)"
+.br
+.ti -1c
+.RI "int \fBStreamlineRandomSampling\fP (double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac, int prevcell)"
+.br
+.ti -1c
+.RI "void \fBOutputVelocities\fP ()"
+.br
+.ti -1c
+.RI "int \fBXindexC\fP (int nodenum, int ii)"
+.br
+.ti -1c
+.RI "int \fBYindexC\fP (int nodenum, int ii)"
+.br
+.ti -1c
+.RI "double \fBDefineAngle\fP (double u1, double u2, double v1, double v2)"
+.br
+.ti -1c
+.RI "void \fBHalfPolygonVelocity\fP (int i, int k, int fractn, int indc, unsigned int fractj[\fBmax_neighb\fP])"
+.br
+.ti -1c
+.RI "struct \fBposit3d\fP \fBCalculateVelocity3D\fP ()"
+.br
+.ti -1c
+.RI "void \fBBoundaryLine\fP (int n1, int n2, int n3)"
+.br
+.ti -1c
+.RI "void \fBCheckGrid\fP ()"
+.br
+.ti -1c
+.RI "int \fBBVelocityDirection\fP (int b1, int b2)"
+.br
+.ti -1c
+.RI "double \fBInOutFlowCell\fP (int indcell, int int1, double nposx, double nposy)"
+.br
+.ti -1c
+.RI "void \fBMoving2NextCellBound\fP (int prevcell)"
+.br
+.ti -1c
+.RI "struct \fBinpfile\fP \fBControl_File\fP (char fileobject[], int ctr)"
+.br
+.ti -1c
+.RI "struct \fBinpfile\fP \fBControl_Data\fP (char fileobject[], int ctr)"
+.br
+.ti -1c
+.RI "void \fBParticleOutput\fP (int currentt, int frac_p)"
+.br
+.ti -1c
+.RI "struct \fBinpfile\fP \fBControl_Param\fP (char fileobject[], int ctr)"
+.br
+.ti -1c
+.RI "void \fBFlowInWeight\fP (int numbpart)"
+.br
+.ti -1c
+.RI "int \fBInitParticles_ones\fP (int k_current, double inter_p[][4], int \fBfracture\fP, int parts_fracture, int ii, double thirdcoor, int zonenumb_in, int first_ind, int last_ind)"
+.br
+.ti -1c
+.RI "void \fBCoordinations2D\fP ()"
+.br
+.ti -1c
+.RI "void \fBReadAperture\fP ()"
+.br
+.ti -1c
+.RI "void \fBInitInMatrix\fP ()"
+.br
+.ti -1c
+.RI "double \fBTimeFromMatrix\fP (double pdist)"
+.br
+.ti -1c
+.RI "void \fBFinalPosition\fP ()"
+.br
+.ti -1c
+.RI "struct \fBlagrangian\fP \fBCalculateLagrangian\fP (double xcurrent, double ycurrent, double zcurrent, double xprev, double yprev, double zprev)"
+.br
+.ti -1c
+.RI "void \fBOutputMarPlumDisp\fP (int currentnum, char path[125])"
+.br
+.ti -1c
+.RI "int \fBString_Compare\fP (char string1[], char string2[])"
+.br
+.ti -1c
+.RI "struct \fBinpfile\fP \fBControl_File_Optional\fP (char fileobject[], int ctr)"
+.br
+.ti -1c
+.RI "double \fBTimeDomainRW\fP (double time_advect)"
+.br
+.ti -1c
+.RI "int \fBInitParticles_flux\fP (int k_current, int firstn, int lastn, double weight_p)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "char \fBmaindir\fP [125]"
+.br
+.ti -1c
+.RI "double \fBporosity\fP"
+.br
+.ti -1c
+.RI "double \fBdensity\fP"
+.br
+.ti -1c
+.RI "unsigned long int \fBtimesteps\fP"
+.br
+.ti -1c
+.RI "double \fBthickness\fP"
+.br
+.ti -1c
+.RI "double \fBsaturation\fP"
+.br
+.ti -1c
+.RI "double \fBtimeunit\fP"
+.br
+.ti -1c
+.RI "char \fBcontrolfile\fP [120]"
+.br
+.ti -1c
+.RI "double \fBtotalFluxIn\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBpflotran\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfehm\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnnodes\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBncells\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnfract\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBmax_neighb\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnpart\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnp\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnzone_in\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fBnodezonein\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fBnodezoneout\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBflag_w\fP"
+.br
+.ti -1c
+.RI "struct \fBmaterial\fP * \fBfracture\fP"
+.br
+.ti -1c
+.RI "struct \fBvertex\fP * \fBnode\fP"
+.br
+.ti -1c
+.RI "struct \fBcontam\fP * \fBparticle\fP"
+.br
+.ti -1c
+.RI "struct \fBelement\fP * \fBcell\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define pi   3\&.14159265359"
+
+.PP
+Definition at line 2 of file FuncDef\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "void AcrossIntersection (int prevcell, int int1, int int2, int mixing_rule)"
+Particle is moving through intersection line 
+.PP
+Definition at line 2013 of file TrackingPart\&.c\&.
+.SS "void AdjacentCells (int ln, int in, int jn, int kn)"
+The function defines adjacent triangular cells for each node 
+.PP
+Definition at line 540 of file ReadGridInit\&.c\&.
+.SS "void BoundaryCells ()"
+The function checks velocities at boundary nodes and fixes pathological cases\&.
+.PP
+In the rare event, when two velocity vectors are directed towards each other along the same cell edge, a particle will be stuck there\&. To avoid this situation, one of velocities is redirected along the edge with node associated with lower pressure value\&. 
+.PP
+Definition at line 531 of file VelocityReconstruction\&.c\&.
+.SS "void BoundaryLine (int n1, int n2, int n3)"
+
+.SS "int BVelocityDirection (int b1, int b2)"
+
+.SS "double CalculateCurrentDT ()"
+Functions returns particle instanteneous time step 
+.PP
+Definition at line 2527 of file TrackingPart\&.c\&.
+.SS "struct \fBlagrangian\fP CalculateLagrangian (double xcurrent, double ycurrent, double zcurrent, double xprev, double yprev, double zprev)"
+Function calculates Lagrangian variables: tau and beta\&. 
+.PP
+Definition at line 3140 of file TrackingPart\&.c\&.
+.SS "struct \fBposit3d\fP CalculatePosition3D ()"
+Function calculates 3D coordinates of current particle's position at 2D fracture plane 
+.PP
+Definition at line 213 of file RotateFracture\&.c\&.
+.SS "struct \fBposit3d\fP CalculateVelocity3D ()"
+The function converts particle's 2D velocity vector to 3D velocity vector 
+.PP
+Definition at line 335 of file RotateFracture\&.c\&.
+.SS "struct \fBintcoef\fP CalculateWeights (int nn1, int nn2, int nn3)"
+Function calculates interpolation weights for velocity instanteneous particles velocity and time step\&. 
+.PP
+Definition at line 1416 of file TrackingPart\&.c\&.
+.SS "void ChangeFracture (int cell_win)"
+This function recalculates particles coordinations at intersection lines\&. Particles XY coordinations at one fracture are recalculated to 3D positions and then new XY coordinations of an intersecting fracture are defined\&. 
+.PP
+Definition at line 183 of file RotateFracture\&.c\&.
+.SS "int CheckDistance ()"
+Function checks the distance from particle to intersection line when particles is located at the intersection triangular cell 
+.PP
+Definition at line 1655 of file TrackingPart\&.c\&.
+.SS "void CheckGrid ()"
+The function checks the grid: looking for nodes that are defined as internal or external, but belong to two fractures and should be defined as interface nodes 
+.PP
+Definition at line 1055 of file ReadGridInit\&.c\&.
+.SS "void CheckNewCell ()"
+Function performs a check, did particle move to a new triangular cell during last time step or stayed at the same cell 
+.PP
+Definition at line 1273 of file TrackingPart\&.c\&.
+.SS "int CompleteMixingRandomSampling (double products[4], double speedsq[4], int indj, int int1, int indk)"
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1: Cross product to define outgoing and incoming cells\&. Vector contains value for each cell at the intersection Arg 2: Vector of the speed squared for each cell at the intersection Arg 3: index of current cell in int1 node list Arg 4: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5: indk gives the position in the list of the 4 intersection cells that is previous cell Return: The Exit cell at the intersection 
+.PP
+Definition at line 2344 of file TrackingPart\&.c\&.
+.SS "struct \fBinpfile\fP Control_Data (char fileobject[], int ctr)"
+The function reads control file with input parameters to dfnTrans; returns input parameter value\&. If the parameter is not defined in the control file, the program is terminated\&. 
+.PP
+Definition at line 1201 of file ReadGridInit\&.c\&.
+.SS "struct \fBinpfile\fP Control_File (char fileobject[], int ctr)"
+The function reads control file with input parameters to dfnTrans; returns the file name and/or input parameter value\&. If the parameter is not defined in the control file, the program is terminated\&. 
+.PP
+Definition at line 1090 of file ReadGridInit\&.c\&.
+.SS "struct \fBinpfile\fP Control_File_Optional (char fileobject[], int ctr)"
+The function reads control file with input parameters to dfnTrans; returns the file name and/or input parameter value\&. This function is called for the optional parameters only\&. If the parameter is not defined in the control file, the default value is used\&. 
+.PP
+Definition at line 1135 of file ReadGridInit\&.c\&.
+.SS "struct \fBinpfile\fP Control_Param (char fileobject[], int ctr)"
+The function reads control file with input parameters to dfnTrans; returns input parameter value\&. If the parameter is not defined in the control file, the program is terminated\&. 
+.PP
+Definition at line 1245 of file ReadGridInit\&.c\&.
+.SS "void Convertto2d ()"
+The function uses rotation matrix and fracture's normal vector to rotate fracture from its position in 3D to XY plane if node belongs to intersection, belongs to two fractures 
+.PP
+Definition at line 17 of file RotateFracture\&.c\&.
+.SS "void Convertto3d ()"
+The function uses rotation matrix to rotate fracture from its position in XY plane to 3D domain 
+.PP
+Definition at line 130 of file RotateFracture\&.c\&.
+.SS "void Coordinations2D ()"
+The function outputs 2D coordinations of nodes: every fracture into separate file\&. Those files are used as input to gstat for length correlation of aperture\&. 
+.PP
+Definition at line 360 of file RotateFracture\&.c\&.
+.SS "int CornerVelocity (int i, int m1, int m2, int m3, int s1, int s2, int s3)"
+The Function identifies pathologycal cases at corner of fracture boundary\&. The angle between velocity on corner node and velocities/edges on surrounding boundary nodes are calculated\&. Then, if velocity is pointing outside of fracture, turns the velocity direction along the fracture edge\&. 
+.PP
+Definition at line 771 of file VelocityReconstruction\&.c\&.
+.SS "void CorrectorStep ()"
+Corrector step in Predictor-Corrector technique\&. Function calculates new particle position using calculated velocity in Predictor step\&. 
+.PP
+Definition at line 1576 of file TrackingPart\&.c\&.
+.SS "void DarcyVelocity ()"
+Function performs Darcy's velocity reconstruction (main function of Darcy velocities reconstruction procedure) using linear least square algorithm\&. Flow solver provides flow fluxes on each edge of control volume cells\&. Velocity on each control volume cell center (each node) is reconstructed using flow fluxes\&.
+.PP
+Velocity of interior and interior-interface nodes is reconstructed according to Eq\&.5 (Painter,2011); exterior node' velocity according to Eq\&.7 (Painter, 2011)
+.PP
+Function makes a loop over all nodes and calls functions for velocity reconstruction depending of type of the node (external, internal, internal-interface, external interface) 
+.PP
+Definition at line 29 of file VelocityReconstruction\&.c\&.
+.SS "double DefineAngle (double u1, double u2, double v1, double v2)"
+Function defines an angle between two edges of voronoy cell 
+.PP
+Definition at line 415 of file VelocityReconstruction\&.c\&.
+.SS "struct \fBlb\fP DefineBoundaryAngle (int i, unsigned int edge_1, unsigned int edge_2, int f1, int coorf)"
+The function defines angle between two edges of a boundary cell and return the result\&. The angle is used in flow velocity reconstruction on fracture edge\&. 
+.PP
+Definition at line 367 of file VelocityReconstruction\&.c\&.
+.SS "void DefineTimeStep ()"
+Function performs a loop through all the nodes in the mesh and defines a time step at each node\&. The time step of particles will be interpolated from time steps defined at each node\&. 
+.PP
+Definition at line 1622 of file TrackingPart\&.c\&.
+.SS "void FinalPosition ()"
+Function calculates particles final position at out-flow boundary 
+.PP
+Definition at line 2996 of file TrackingPart\&.c\&.
+.SS "void FlowInWeight (int numberpart)"
+Function calculates particle's in-flow flux weight\&. Used in option #1, #2, #3\&. 
+.PP
+Definition at line 861 of file InitialPartPositions\&.c\&.
+.SS "void HalfPolygonVelocity (int i, int k, int fractn, int indc, unsigned int fractj[max_neighb])"
+Velocity reconstruction on an intersection node\&. In this case, the control volume cell is devided onto two polygons by intersection line\&. The velocity reconstruction is performed on each part of control volume cell at intersection\&. 
+.PP
+Definition at line 944 of file VelocityReconstruction\&.c\&.
+.SS "int InitCell ()"
+Function performs a search to find cell Id where the particle was initially placed\&. 
+.PP
+Definition at line 621 of file InitialPartPositions\&.c\&.
+.SS "void InitInMatrix ()"
+Function performs data reading from files for Option #5, init_matrix\&. In this option particles are placed at random positions in matrix, the time to move from initial position to nearest fracture is calculated in function TimeFromMatrix\&.
+.PP
+Input files ParticleInitCoordR\&.dat and ClosestNodeR\&.inp provide particles initial positions at matrix and te closes node ID at DFN mesh, respectively\&. 
+.PP
+Definition at line 968 of file InitialPartPositions\&.c\&.
+.SS "int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, int first_ind, int last_ind)"
+Function defines particles initial positions at a single fracture edge, using calculated before distance between particles\&. Option #2, init_eqd\&. 
+.PP
+Definition at line 711 of file InitialPartPositions\&.c\&.
+.SS "int InitParticles_flux (int k_current, int first_ind, int last_ind, double weight_p)"
+Function defines particle's initial positions at single fracture edge in Option #6\&. Particles are placed according to input flux weights\&. In this case, all the particles have the same flux weight, but number of particles per fracture edge depends on in-flow flux of this fracture\&. 
+.PP
+Definition at line 1095 of file InitialPartPositions\&.c\&.
+.SS "int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture, int first_ind, int last_ind)"
+Function defines particle's initial positions on a single fracture edge\&. Option #1, init_nf 
+.PP
+Definition at line 660 of file InitialPartPositions\&.c\&.
+.SS "int InitParticles_ones (int k_current, double inter_p[][4], int fracture_n, int parts_fracture, int ii, double thirdcoor, int zonenumb_in, int first_ind, int last_ind)"
+Function defines particles initial positions in option #3, where user defines region at in-flow boundary face for particles\&. 
+.PP
+Definition at line 764 of file InitialPartPositions\&.c\&.
+.SS "int InitPos ()"
+Function defines the required option of particles initial positions defined at input control file; calculates number of particles, allocates memory\&. First option init_nf: equal number of particles on every boundary edge regardless of edge length
+.PP
+Second option init_eqd: calculate total length of boundary edges; define the distance between particles and place particles equidistant from each other on all edges
+.PP
+Third option init_oneregion: user specifies a region and all particles start from the fracture edges that located inside the region
+.PP
+Fourth option init_random: particles will be set randomly over all fractures surfaces; in this case the particles are weighted acoording to the aperture
+.PP
+5th option init_matrix: particles are set randomly in rock matrix, their time from initial positions is calculated, then particles move through fractures to out-flow boundary\&. This option requires preprocessing; the script RandomPositGener\&.py will provide necessary input files
+.PP
+Sixth option init_flux: place particles according to input fluxes\&. Each particle has the same flux weight\&. The number of particles are placed propportionally to inflow flux on each cell and fracture edge\&. 
+.PP
+Definition at line 21 of file InitialPartPositions\&.c\&.
+.SS "double InOutFlowCell (int indcell, int int1, double nposx, double nposy)"
+Function defines if velocities on cell vertices pointing in or out of intersection line 
+.PP
+Definition at line 1949 of file TrackingPart\&.c\&.
+.SS "int InsideCell (unsigned int numc)"
+Function checks if particle is in the cell (numc is cell ID) 
+.PP
+Definition at line 1487 of file TrackingPart\&.c\&.
+.SS "struct \fBmatr\fP MatrixProducts (double normxarea[][2], int number)"
+Function performs matrix dot product (GTG)-1 and returns the result\&. 
+.PP
+Definition at line 318 of file VelocityReconstruction\&.c\&.
+.SS "void Moving2Center (int nnp, int cellnumber)"
+Function moves particle to the center of the same cell 
+.PP
+Definition at line 2440 of file TrackingPart\&.c\&.
+.SS "int Moving2NextCell (int stuck, int k)"
+Functions performs the movement of particle from one cell to the center of neighbouring cell\&. 
+.PP
+Definition at line 2471 of file TrackingPart\&.c\&.
+.SS "void Moving2NextCellBound (int prevcell)"
+In the pathological rare case, when particle is out of fracture, the function is called and it's moving particle to internal cell 
+.PP
+Definition at line 2572 of file TrackingPart\&.c\&.
+.SS "void NeighborCells (int k)"
+Function checks neighboring cells to find a particle 
+.PP
+Definition at line 1600 of file TrackingPart\&.c\&.
+.SS "FILE* OpenFile (char filen[120], char fileopt[2])"
+The function opens file for reading or writing\&. If error - the program is terminated\&. 
+.PP
+Definition at line 728 of file ReadGridInit\&.c\&.
+.SS "void OutputMarPlumDisp (int currentnum, char path[125])"
+This function is used when particles trajectories should be output in format that MARFA and/or PLUMECALC codes will be able to read and process\&. 
+.PP
+Definition at line 19 of file output\&.c\&.
+.SS "void OutputVelocities ()"
+This function is called to output velocities on nodes in the order of fractture IDs\&. The output can be used to visualise flow field of 2D reconstructed Darcy velocities in 3D simulation domain 
+.PP
+Definition at line 253 of file VelocityReconstruction\&.c\&.
+.SS "void ParticleOutput (int currentt, int fract_p)"
+The function of particles trajectories outputs\&. Function is called at every intersection and outputs to file at each segment of particles trajectory: from intersection to intersection\&. The curvature of the trajectory is defined and dictate number of time steps for outputs (unless user requested every time step output)\&. 
+.PP
+Definition at line 2669 of file TrackingPart\&.c\&.
+.SS "void ParticleTrack ()"
+The main driving function of particles tracking procedure\&.
+.IP "1." 4
+The all necessary options for particle tracking and for the outputs are read from input control file\&.
+.IP "2." 4
+The subroutine for particle initial positions is called\&.
+.IP "3." 4
+External loop on paticles is organised\&. One particle at a time\&.
+.IP "4." 4
+Internal loop on time steps, where particles are mobing through fracture network\&. 4\&.1 Predictor -corrector technique is used for particles to move through fractures\&. 4\&.2 Complete mixing or streamline routing rule (defined by user) are used on intersections\&. 4\&.3 Particles data outputs\&. 
+.PP
+
+.PP
+Definition at line 66 of file TrackingPart\&.c\&.
+.SS "void PredictorStep ()"
+Predictor step in Predictor-Corrector technique\&. Function calculates new velocities and new particle position\&. 
+.PP
+Definition at line 1541 of file TrackingPart\&.c\&.
+.SS "void ReadAperture ()"
+The function reads apertures of fractures in DFN\&. Aperture can be defined for each fracture or for every node/cell, representing internal heterogeneity\&. 
+.PP
+Definition at line 1289 of file ReadGridInit\&.c\&.
+.SS "void ReadBoundaryNodes ()"
+The functions reads node's IDs assigned to in-flow and out-flow boundaries\&. the total input flow flux is calculated\&. 
+.PP
+Definition at line 581 of file ReadGridInit\&.c\&.
+.SS "void ReadDataFiles ()"
+The function reads DFN mesh from inp and stor files if no aperture file specified, the aperture of all fractures will be equal to thickness value 
+.PP
+Definition at line 180 of file ReadGridInit\&.c\&.
+.SS "void ReadFEHMfile (int nedges)"
+The function opens and reads FEHM outputs; read in flow fluxes and cell volumes\&. 
+.PP
+Definition at line 879 of file ReadGridInit\&.c\&.
+.SS "void ReadInit ()"
+The function reads total number of nodes, triangular cells, fractures in DFN mesh\&. The memory is allocated for data structures: NODE, CELL, FRACTURE 
+.PP
+Definition at line 16 of file ReadGridInit\&.c\&.
+.SS "void ReadPFLOTRANfile (int nedges)"
+The function opens and reads PFLOTRAN files, read in flow fluxes, areas, pressure\&. 
+.PP
+Definition at line 742 of file ReadGridInit\&.c\&.
+.SS "void SearchNeighborCells (int nn1, int nn2, int nn3)"
+Function performs a search of neighbouring cells of current particles position\&. 
+.PP
+Definition at line 1450 of file TrackingPart\&.c\&.
+.SS "int StreamlineRandomSampling (double products[4], double speedsq[4], int indj, int int1, int indk, int neighborcellind[4], int neighborfracind[4], int prevfrac, int prevcell)"
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1: Cross product to define outgoing and incoming cells\&. Vector contains value for each cell at the intersection Arg 2: Vector of the speed squared for each cell at the intersection Arg 3: index of current cell in int1 node list Arg 4: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5: indk gives the position in the list of the 4 intersection cells that is previous cell Arg 6: Vector of the indicies for the 4 neighboring cells Arg 7: Vector of the fracture index for the 4 neighboring cells Arg 8: Fracture a particle is coming from Arg 9: Cell index a particle is coming from Return: The Exit cell at the intersection 
+.PP
+Definition at line 2142 of file TrackingPart\&.c\&.
+.SS "int String_Compare (char string1[], char string2[])"
+The finction performs a string comparison, used in the control file reading\&. 
+.PP
+Definition at line 1176 of file ReadGridInit\&.c\&.
+.SS "double TimeDomainRW (double time_advect)"
+Time Domain Random Walk (TDRW) procedure\&. Returns a diffusion time of particle per racture\&. Called at each intersection\&. 
+.PP
+Definition at line 3175 of file TrackingPart\&.c\&.
+.SS "double TimeFromMatrix (double pdist)"
+Option #5\&. Estimation of travel time of particles moving from matrix to the closest fracture\&. 
+.PP
+Definition at line 1062 of file InitialPartPositions\&.c\&.
+.SS "void Velocity3D ()"
+Recalculates 2D velocities at XY fracture plane to 3D velocties in the simulation domain\&. This procedure is not used for particle tracking, but can be used for velocity field visualization\&. 
+.PP
+Definition at line 246 of file RotateFracture\&.c\&.
+.SS "void VelocityExteriorNode (double norm_xarea[][2], int i, int number, unsigned int indj[max_neighb], struct \fBlb\fP lbound, int vi)"
+The function reconstructs Darcy velocity on exterior (boundary) node 
+.PP
+Definition at line 465 of file VelocityReconstruction\&.c\&.
+.SS "void VelocityInteriorNode (double normx_area[][2], int i, int number, unsigned int indj[max_neighb], int vi)"
+The function reconstructs Darcy velocity on interior cell center, at interior node 
+.PP
+Definition at line 426 of file VelocityReconstruction\&.c\&.
+.SS "void WritingInit ()"
+Functions write the data structure of nodes, cells and fractures into files in ASCII format with detail explanations\&. This output is optional and can be helpful in code debugging\&. 
+.PP
+Definition at line 981 of file ReadGridInit\&.c\&.
+.SS "int Xindex (int nodenum, int nnp)"
+Functions returns the index of X coordination of intersection node 
+.PP
+Definition at line 2550 of file TrackingPart\&.c\&.
+.SS "int XindexC (int nodenum, int ii)"
+Functions returns the index of X coordination of intersection node (cells) 
+.PP
+Definition at line 922 of file VelocityReconstruction\&.c\&.
+.SS "int Yindex (int nodenum, int nnp)"
+Functions returns the index of Y coordination of intersection node 
+.PP
+Definition at line 2561 of file TrackingPart\&.c\&.
+.SS "int YindexC (int nodenum, int ii)"
+Functions returns the index of Y coordination of intersection node (cells) 
+.PP
+Definition at line 933 of file VelocityReconstruction\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "struct \fBelement\fP* cell"
+DYNAMIC ARRAY OF TRIANGULAR CELLS in DFN mesh 
+.PP
+Definition at line 42 of file main\&.c\&.
+.SS "char controlfile[120]"
+Name of Control file with all inut parameters to dfnTrans, given by user at the command line 
+.PP
+Definition at line 44 of file main\&.c\&.
+.SS "double density"
+Flow density, defined by user 
+.PP
+Definition at line 47 of file main\&.c\&.
+.SS "unsigned int fehm"
+fehm=1 when FEHM flow solver is used 
+.PP
+Definition at line 28 of file main\&.c\&.
+.SS "unsigned int flag_w"
+
+.PP
+Definition at line 38 of file main\&.c\&.
+.SS "struct \fBmaterial\fP* fracture"
+DYNAMIC ARRAY OF FRACTURES 
+.PP
+Definition at line 39 of file main\&.c\&.
+.SS "char maindir[125]"
+The directory/path for particle tracking outputs, defined by user 
+.PP
+Definition at line 43 of file main\&.c\&.
+.SS "unsigned int max_neighb"
+maximum number of nodes neighbours/connections 
+.PP
+Definition at line 32 of file main\&.c\&.
+.SS "unsigned int ncells"
+total number of triangular elements in the DFN mesh 
+.PP
+Definition at line 30 of file main\&.c\&.
+.SS "unsigned int nfract"
+total number of fractures in the DFN mesh 
+.PP
+Definition at line 31 of file main\&.c\&.
+.SS "unsigned int nnodes"
+total number of nodes in the DFN mesh 
+.PP
+Definition at line 29 of file main\&.c\&.
+.SS "struct \fBvertex\fP* node"
+DYNAMIC ARRAY OF NODES in DFN mesh 
+.PP
+Definition at line 40 of file main\&.c\&.
+.SS "unsigned int* nodezonein"
+pointer to the dynamic array with a list of in-flow boundary nodes 
+.PP
+Definition at line 36 of file main\&.c\&.
+.SS "unsigned int* nodezoneout"
+pointer to the dynamic array with a list of out-flow boundary nodes 
+.PP
+Definition at line 37 of file main\&.c\&.
+.SS "unsigned int np"
+index of current particle, idex in particle's loop 
+.PP
+Definition at line 34 of file main\&.c\&.
+.SS "unsigned int npart"
+initial number of particles set up in the simulation 
+.PP
+Definition at line 33 of file main\&.c\&.
+.SS "unsigned int nzone_in"
+number of nodes in in-flow boundary face/zone 
+.PP
+Definition at line 35 of file main\&.c\&.
+.SS "struct \fBcontam\fP* particle"
+DYNAMIC ARRAY OF PARTICLES 
+.PP
+Definition at line 41 of file main\&.c\&.
+.SS "unsigned int pflotran"
+pflotran=1 when PFLOTRAN flow solver is used 
+.PP
+Definition at line 27 of file main\&.c\&.
+.SS "double porosity"
+Fracture porosity, used in velocity reconstructions, defined by user 
+.PP
+Definition at line 46 of file main\&.c\&.
+.SS "double saturation"
+Flow saturation, defined by user 
+.PP
+Definition at line 50 of file main\&.c\&.
+.SS "double thickness"
+One value for all fractures aperture (defined by user), used in case when fracture aperture is not provided by user 
+.PP
+Definition at line 49 of file main\&.c\&.
+.SS "unsigned long int timesteps"
+Max number of time steps used for each particles movements, defined by user 
+.PP
+Definition at line 48 of file main\&.c\&.
+.SS "double timeunit"
+Time unit multiplier, converts calculated time/velocities according to required time units 
+.PP
+Definition at line 51 of file main\&.c\&.
+.SS "double totalFluxIn"
+Total Flow flux on in-flow boundary, calculated in the code 
+.PP
+Definition at line 52 of file main\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for dfnTrans from the source code\&.

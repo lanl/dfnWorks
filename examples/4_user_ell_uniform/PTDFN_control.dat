@@ -46,9 +46,12 @@ If it's like a straight line, then the output is less frequent (in case of
 "out_curv:yes", if "no",  the output file will contain every time step) */
 out_curv: yes 
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs:  yes 
+out_avs:  no 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no 
+out_fract: no
+
+
 
 /* temporary outputs (every time step from intersection to intersection)*/
 /* use outputs to file or memory buffer. Memory buffer by default */
@@ -113,9 +116,7 @@ inm_diffcoeff: 1.0e-12
 
 /*****  particles positions according to in-flow flux weight *********/
 init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
-init_delta: 0.001 // distance [m] between particles at inflow face for equal flux weight calculation
-
-
+init_totalnumber: 10000
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 
@@ -152,7 +153,7 @@ seed: 337799
 /*** virtual Control planes will be build in the direction of flow. 
 Once particle crosses the control plane, it's position, velocity, time 
 will output to an ascii file. ****/ 
-ControlPlane: yes 
+ControlPlane: no 
 
 /* the path and directory name with all particles output files */
 control_out: outcontroldir

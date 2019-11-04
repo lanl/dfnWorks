@@ -6,93 +6,12 @@ Output files
 dfnWorks outputs about a hundred different output files. This section describes the contents and purpose of each file.
 
 
-File locations
-----------------
-
-Here is a list of file locations after dfnWorks has finished running:
-
-dfnWorks-main
-^^^^^^^^^^^^^^
-
-- allboundaries.zone_
-- aperture.dat_
-- cellinfo.dat_
-- darcyvel.dat_
-- dfnTrans_output_dir_
-- params.txt_
-- PTDFN_control.dat_
-- pboundary_back_n.zone_
-- pboundary_bottom.zone_
-- pboundary_front_s.zone_
-- pboundary_left_w.zone_
-- pboundary_right_e.zone_
-- pboundary_top.zone_
-
-
-dfnGen
-^^^^^^^
-
-- connectivity.dat_
-- DFN_output.txt_
-- families.dat_
-- input_generator.dat_
-- input_generator_clean.dat_
-- normal_vectors.dat_
-- radii_
-- radii.dat_
-- radii_Final.dat_
-- rejections.dat_
-- rejectsPerAttempt.dat_
-- translations.dat_
-- triple_points.dat_
-- user_rects.dat_
-- warningFileDFNGen.txt_
-
-LaGriT
-^^^^^^^^
-
-- bound_zones.lgi_
-- boundary_output.txt_
-- finalmesh.txt_
-- full_mesh.inp_
-- full_mesh.gmv_
-- full_mesh.lg_
-- intersections_
-- lagrit_logs_
-- logx3dgen_
-- outx3dgen_
-- parameters_
-- polys_
-- tri_fracture.stor_
-- user_function.lgi_
-
-PFLOTRAN
-^^^^^^^^^
-
-- aperture.dat_
-- cellinfo.dat_
-- dfn_explicit-000.vtk_
-- dfn_explicit-001.vtk_
-- dfn_explicit-mas.dat_
-- dfn_explicit.in_
-- dfn_explicit.out_
-- dfn_properties.h5_
-- full_mesh.uge_
-- full_mesh_viz.inp_
-- full_mesh_vol_area.uge_
-- materialid.dat_
-- parsed_vtk_
-- perm.dat_
-- pboundary_back_n.ex_
-- pboundary_bottom.ex_
-- pboundary_front_s.ex_
-- pboundary_left_w.ex_
-- pboundary_right_e.ex_
-- pboundary_top.ex_
-
-
 dfnGen 
 --------
+
+**aperture.dat:**
+
+.. _aperture.dat:
 
 **connectivity.dat:**
 
@@ -135,6 +54,13 @@ Abbreviated input file for DFN generator.
 .. _normal_vectors.dat:
 
 Normal vector of each fracture in the network. 
+
+
+**params.txt:**
+
+.. _params.txt:
+
+Parameter information about the fracture network used for meshing. Includes number of fractures, h, visualmode, expected number of dudded points, and x,y,z dimensions of the domain. 
 
 **poly_info.dat:**
 
@@ -203,6 +129,12 @@ x,y,z location of triple intersection points.
 
 Warning file output by DFNGen. 
 
+**intersection_list.dat:**
+
+.. _intersection_list.dat:
+
+List of intersections between fractures. Format is fracture1 fracture2 x y z length. Negative numbers correspond to intersections with boundaries.
+
 LaGrit 
 ---------
 
@@ -230,17 +162,21 @@ Brief summary of final mesh.
 
 Full DFN mesh in AVS format. 
 
-**full_mesh.gmv:**
-
-.. _full_mesh.gmv:
-
-Full DFN mesh in GMV (general mesh viewer) format. 
-
 **full_mesh.lg:**
 
 .. _full_mesh.lg:
 
-Information: Full DFN mesh in LaGriT binary format. 
+Full DFN mesh in LaGriT binary format. 
+
+**full_mesh.uge:**
+
+.. _full_mesh.uge:
+
+Full DFN mesh in UGE format. NOTE volumes are not correct in this file. This file is processed by convert_uge to create full_mesh_vol_area.uge, which has the correct volumes. 
+
+**full_mesh_viz.inp:**
+
+.. _full_mesh_viz.inp:
 
 **intersections:**
 
@@ -272,11 +208,6 @@ LaGriT output.
 
 Directory of parameter*.mgli files used for fracture meshing. 
 
-**params.txt:**
-
-.. _params.txt:
-
-Parameter information about the fracture network used for meshing. Includes number of fractures, h, visualmode, expected number of dudded points, and x,y,z dimensions of the domain. 
 
 **polys:**
 
@@ -299,10 +230,6 @@ Function used by LaGriT for meshing. Defines coarsening gradient.
 
 PFLOTRAN 
 ----------
-
-**aperture.dat:**
-
-.. _aperture.dat:
 
 Fracture based aperture value for the DFN. Used to rescale volumes in full_mesh_vol_area.uge. 
 
@@ -348,16 +275,6 @@ pflotran output file.
 
 h5 file of fracture network properties, permeability, used by pflotran. 
 
-**full_mesh.uge:**
-
-.. _full_mesh.uge:
-
-Full DFN mesh in UGE format. NOTE volumes are not correct in this file. This file is processed by convert_uge to create full_mesh_vol_area.uge, which has the correct volumes. 
-
-
-**full_mesh_viz.inp:**
-
-.. _full_mesh_viz.inp:
 
 Full DFN mesh with limited attributes in AVS format. 
 
@@ -450,39 +367,40 @@ Input file for DFNTrans.
 
 **pboundary_back_n.zone:**
 
-.. _pboundary_back_n.zone:
+.. _pboundary_back_s.zone:
 
-Boundary zone file for the back of the domain. 
+Boundary zone file for the back of the domain. Normal vector (0,1,0) +- pi/2 
 
 **pboundary_bottom.zone:**
 
 .. _pboundary_bottom.zone:
 
-Boundary zone file for the bottom of the domain. 
+Boundary zone file for the bottom of the domain. Normal vector (0,0,-1) +- pi/2 
 
 **pboundary_front_s.zone:**
 
-.. _pboundary_front_s.zone:
+.. _pboundary_front_n.zone:
 
-Boundary zone file for the front of the domain. 
+Boundary zone file for the front of the domain. Normal vector (0,-1,0) +- pi/2 
 
 
 **pboundary_left_w.zone:**
 
 .. _pboundary_left_w.zone:
 
-Boundary zone file for the left side of the domain. 
+Boundary zone file for the left side of the domain. Normal vector (-1,0,0) +- pi/2 
 
 
 **pboundary_right_e.zone:**
 
 .. _pboundary_right_e.zone:
 
-Boundary zone file for the bottom of the domain. 
+
+Boundary zone file for the bottom of the domain. Normal  vector (1,0,0) +- pi/2 
 
 **pboundary_top.zone:**
 
 .. _pboundary_top.zone:
 
-Boundary zone file for the top of the domain. 
+Boundary zone file for the top of the domain. Normal vector (0,0,1) +- pi/2 
 

@@ -13,22 +13,3 @@ The tests that come with dfnWorks depend on pathnames which vary depending on wh
 ``python fix_paths.py`` 
 
 
-test.py: test dfnWorks 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``test.py`` script can be used to easily test functionality of dfnWorks. It runs a test suite (input files contained in the tests folder) that test the exponential, power law, and lognormal distributions as well as user-defined ellipses and user-defined rectangle fracture inputs. The syntax is:
-
-``python test.py [TEST_NAME_PART]``
-
-Here ``[TEST_NAME_PART]`` is all or part of the name of the tests the user wants to run.
-
-run.py: run dfnWorks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The run.py script allows the user to execute a single run of dfnWorks. The syntax for this script is:
-
-``python run.py -name [JOBNAME] -input [INPUT_FILE_NAME] -ncpu [NUMBER OF CPUS TO USE]`` 
-
-Please refer to the tutorial section (the next section for a detailed description of how to run dfnWorks. 
-
-

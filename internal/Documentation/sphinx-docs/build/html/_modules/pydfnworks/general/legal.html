@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pydfnworks.general.legal &mdash; dfnWorks 2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#running-dfnworks-from-docker">Running dfnWorks from Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index_docs.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pydfnworks.general.legal</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pydfnworks.general.legal</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="legal"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.legal">[docs]</a><span></span><span class="k">def</span> <span class="nf">legal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print the legal LANL statement for dfnWorks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes </span>
+<span class="sd">    ----</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lanl_statement</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">===================================================================</span>
+<span class="s1">===================================================================</span>
+<span class="s1">===================================================================</span>
+<span class="s1">||\    _____         \               / ______  _______       /  \ </span>
+<span class="s1">||  \  |     |\     | \             /  |    |  |     | | /  /    \ </span>
+<span class="s1">||   \ |___  | \    |  \    /\     /   |    |  |_____| |/   |  |  |</span>
+<span class="s1">||   / |     |   \  |   \  /  \  /     |    |  |   \   |\    \  \ </span>
+<span class="s1">||  /  |     |     \|    \/    \/      |____|  |    \  | \ |  |  |</span>
+<span class="s1">||/ ======================================================= \    /</span>
+<span class="s1">============================================================  \/</span>
+<span class="s1">===================================================================</span>
+
+
+
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="s1">~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.2 ~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="s1">This program was prepared at Los Alamos National Laboratory (LANL),</span>
+<span class="s1">Earth and Environmental Sciences Division, Computational Earth</span>
+<span class="s1">Science Group (EES-16), Subsurface Flow and Transport Team.</span>
+<span class="s1">All rights in the program are reserved by the DOE and LANL.</span>
+<span class="s1">Permission is granted to the public to copy and use this software</span>
+<span class="s1">without charge, provided that this Notice and any statement of</span>
+<span class="s1">authorship are reproduced on all copies. Neither the U.S. Government</span>
+<span class="s1">nor LANS makes any warranty, express or implied, or assumes</span>
+<span class="s1">any liability or responsibility for the use of this software.</span>
+
+<span class="s1">Contact Information : dfnworks@lanl.gov</span>
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="s1">LA-CC-17-027</span>
+
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="s1">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="s1">(or copyright) 2018 Triad National Security, LLC. All rights reserved.</span>
+<span class="s1"> </span>
+<span class="s1">This program was produced under U.S. Government contract 89233218CNA000001</span>
+<span class="s1"> for Los Alamos National Laboratory (LANL), which is operated by Triad </span>
+<span class="s1"> National Security, LLC for the U.S. Department of Energy/National Nuclear</span>
+<span class="s1">  Security Administration.</span>
+<span class="s1"> </span>
+<span class="s1">All rights in the program are reserved by Triad National Security, LLC, </span>
+<span class="s1">and the U.S. Department of Energy/National Nuclear Security Administration.</span>
+<span class="s1"> The Government is granted for itself and others acting on its behalf a </span>
+<span class="s1"> nonexclusive, paid-up, irrevocable worldwide license in this material </span>
+<span class="s1"> to reproduce, prepare derivative works, distribute copies to the public,</span>
+<span class="s1">  perform publicly and display publicly, and to permit others to do so.</span>
+<span class="s1"> </span>
+
+<span class="s1"> The U.S. Government has rights to use, reproduce, and distribute this software.  </span>
+<span class="s1"> NEITHER THE GOVERNMENT NOR TRIAD NATIONAL SECURITY, LLC MAKES ANY WARRANTY, </span>
+<span class="s1"> EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  </span>
+<span class="s1"> If software is modified to  produce derivative works, such modified </span>
+<span class="s1"> software should be clearly marked, so as not to confuse it with the </span>
+<span class="s1"> version available from LANL.</span>
+
+<span class="s1">Additionally, this program is free software; you can redistribute it and/or </span>
+<span class="s1">modify it under the terms of the GNU General Public License as published by the </span>
+<span class="s1">Free Software Foundation; either version 2 of the License, or (at your option) </span>
+<span class="s1">any later version. Accordingly, this program is distributed in the hope that it </span>
+<span class="s1">will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of </span>
+<span class="s1">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public </span>
+<span class="s1">License for more details.</span>
+<span class="s1"> </span>
+<span class="s1">Additionally, redistribution and use in source and binary forms, with or </span>
+<span class="s1">without modification, are permitted provided that the following conditions are </span>
+<span class="s1">met:</span>
+<span class="s1">1.       Redistributions of source code must retain the above copyright notice, </span>
+<span class="s1">this list of conditions and the following disclaimer.</span>
+
+<span class="s1">2.      Redistributions in binary form must reproduce the above copyright </span>
+<span class="s1">notice, this list of conditions and the following disclaimer in the </span>
+<span class="s1">documentation and/or other materials provided with the distribution.</span>
+
+<span class="s1">3.      Neither the name of Los Alamos National Security, LLC, Los Alamos </span>
+<span class="s1">National Laboratory, LANL, the U.S. Government, nor the names of its </span>
+<span class="s1">contributors may be used to endorse or promote products derived from this </span>
+<span class="s1">software without specific prior written permission.</span>
+<span class="s1"> </span>
+<span class="s1">THIS SOFTWARE IS PROVIDED BY LOS ALAMOS NATIONAL SECURITY, LLC AND </span>
+<span class="s1">CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT </span>
+<span class="s1">LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A </span>
+<span class="s1">PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL LOS ALAMOS NATIONAL </span>
+<span class="s1">SECURITY, LLC OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, </span>
+<span class="s1">SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, </span>
+<span class="s1">PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR </span>
+<span class="s1">BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER </span>
+<span class="s1">IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span>
+<span class="s1">ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE </span>
+<span class="s1">POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="s1">&#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lanl_statement</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

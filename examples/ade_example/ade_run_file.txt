@@ -1,0 +1,3 @@
+dfnGen DUMMY/dfnworks-main/examples/ade_example/gen_exponential_dist.dat
+dfnFlow DUMMY/dfnworks-main/examples/ade_example/dfn_explicit.in
+dfnTrans /None/none
