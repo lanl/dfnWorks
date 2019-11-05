@@ -49,7 +49,7 @@ def create_graph(self, graph_type, inflow, outflow):
 def create_fracture_graph(inflow,
                           outflow,
                           topology_file="connectivity.dat",
-                          fracture_info="frature_info.dat"):
+                          fracture_info="fracture_info.dat"):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
