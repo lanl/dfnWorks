@@ -14,6 +14,7 @@ import shutil
 from pydfnworks.dfnGen import mesh_dfn_helper as mh
 import time
 
+
 def mesh_dfm(self):
     """ This function generates a conforming DFM mesh using the full_mesh.inp 
     as input. Visualization mode must be turned off in the DFN input card.
@@ -46,7 +47,7 @@ def mesh_dfm(self):
     z1 = 0 + (domain['z'] / 2.0)
 
     # Mesh size in matrix
-    l = h/2
+    l = h / 2
     # Number of points in each direction in matrix
     np = domain['x'] / l + 1
 
@@ -56,11 +57,12 @@ def mesh_dfm(self):
         sys.exit(1)
 
     dfm_driver(np, num_poly)
-    dfm_box(x0, x1, y0, y1, z0, z1)    
+    dfm_box(x0, x1, y0, y1, z0, z1)
     dfm_build()
     dfm_fracture_facets(num_poly)
     dfm_facets()
     dfm_run()
+
 
 def dfm_driver(np, num_poly):
     """ This function creates the main lagrit driver script, which calls all
@@ -77,12 +79,12 @@ def dfm_driver(np, num_poly):
 
     """
     floop = ""
-    for i in range(1,num_poly+1):
+    for i in range(1, num_poly + 1):
         if i < num_poly:
             floop += "facets_f{0}.table &\n".format(i)
         else:
             floop += "facets_f{0}.table".format(i)
-            
+
     f_name = 'dfm_mesh_fracture_driver.lgi'
     f = open(f_name, 'w')
     fin = ("""#
@@ -157,7 +159,7 @@ infile dfm_extract_fracture_facets.mlgi
 #
 dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / / / &
      facesets &
-""".format(int(np), int(np-1)) + floop + """
+""".format(int(np), int(np - 1)) + floop + """
 
 finish
 """)
@@ -166,7 +168,8 @@ finish
     f.close()
     print("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
 
-def dfm_box(x0, x1, y0, y1, z0, z1):    
+
+def dfm_box(x0, x1, y0, y1, z0, z1):
     """ This function creates the dfm_box_dimensions.mlgi lagrit script.
 
     Parameters
@@ -197,6 +200,7 @@ finish
     f.flush()
     f.close()
     print("Creating dfm_box_dimensions.mlgi file: Complete\n")
+
 
 def dfm_build():
     """ This function creates the dfm_build_background_mesh.mlgi lagrit script.
@@ -229,6 +233,7 @@ finish
     f.close()
     print("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
+
 def dfm_fracture_facets(num_poly):
     """ This function creates the dfm_extract_fracture_facets.mlgi lagrit script.
 
@@ -244,7 +249,7 @@ def dfm_fracture_facets(num_poly):
     """
     floop1 = ""
     floop2 = ""
-    for i in range(1,num_poly+1):
+    for i in range(1, num_poly + 1):
         floop1 += """
 define / FRAC_ID / {0}
 define / FRAC_FILE_OUT / facets_f{0}.inp
@@ -282,6 +287,7 @@ finish
     f.flush()
     f.close()
     print("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
+
 
 def dfm_facets():
     """ This function creates the dfm_extract_facets.mlgi lagrit script.
@@ -357,6 +363,7 @@ finish
     f.flush()
     f.close()
     print("Creating dfm_extract_facets.mlgi file: Complete\n")
+
 
 def dfm_run():
     """ This function executes the lagrit scripts. 
