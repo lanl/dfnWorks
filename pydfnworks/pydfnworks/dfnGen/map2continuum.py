@@ -47,7 +47,7 @@ def map_to_continuum(self, l, orl):
     print('=' * 80)
 
     if type(orl) is not int or orl < 1:
-        error = "ERROR: orl must be positive integer. Exiting\n"
+        error = "ERROR: orl must be positive integer. Exiting"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -77,7 +77,7 @@ def map_to_continuum(self, l, orl):
     nz = domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
-        error = "ERROR: Number of elements > 1e8. Exiting\n"
+        error = "ERROR: Number of elements > 1e8. Exiting"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -709,7 +709,7 @@ def lagrit_run():
     if os.path.isfile("../reduced_mesh.inp"):
         os.symlink("../reduced_mesh.inp", "reduced_mesh.inp")
     else:
-        error = "ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting\n"
+        error = "ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
         sys.stderr.write(error)
         sys.exit(1)
 

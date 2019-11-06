@@ -45,7 +45,11 @@ def create_graph(self, graph_type, inflow, outflow):
         return []
     return G
 
-def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat", fracture_info_file="fracture_info.dat"):
+
+def create_fracture_graph(inflow,
+                          outflow,
+                          topology_file="connectivity.dat",
+                          fracture_info="fracture_info.dat"):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -93,9 +97,9 @@ def create_fracture_graph(inflow, outflow, topology_file = "connectivity.dat", f
         outflow = [outflow]
     G.add_node('s')
     G.add_node('t')
-    G.add_edges_from(zip(['s']*(len(inflow)),inflow))
-    G.add_edges_from(zip(outflow,['t']*(len(outflow))))   
-    add_perm(G,fracture_info_file) 
+    G.add_edges_from(zip(['s'] * (len(inflow)), inflow))
+    G.add_edges_from(zip(outflow, ['t'] * (len(outflow))))
+    add_perm(G, fracture_info)
     print("--> Graph loaded")
     return G
 
@@ -244,11 +248,13 @@ def create_intersection_graph(inflow,
 
     for i in nodes:
         e = set(f1[i])
-        if len(e.intersection(set('s'))) > 0 or len(e.intersection(set([-1]))) > 0:
-            G.add_edge(i,'s',frac='s', length=0.0)
-        if len(e.intersection(set('t'))) > 0 or len(e.intersection(set([-2]))) > 0:
-            G.add_edge(i,'t',frac='t', length=0.0)     
-    add_perm(G,fracture_info) 
+        if len(e.intersection(set('s'))) > 0 or len(e.intersection(set(
+            [-1]))) > 0:
+            G.add_edge(i, 's', frac='s', length=0.0)
+        if len(e.intersection(set('t'))) > 0 or len(e.intersection(set(
+            [-2]))) > 0:
+            G.add_edge(i, 't', frac='t', length=0.0)
+    add_perm(G, fracture_info)
     print("Graph Construction Complete")
     return G
 
@@ -647,7 +653,7 @@ def load_json_graph(self, name):
     print("Complete")
     return G
 
-def add_perm(G,fracture_info="fracture_info.dat"):
+def add_perm(G, fracture_info):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
@@ -668,7 +674,7 @@ def add_perm(G,fracture_info="fracture_info.dat"):
 
 """
 
-    perm = np.genfromtxt(fracture_info, skip_header =1)[:,1]
+    perm = np.genfromtxt(fracture_info, skip_header=1)[:, 1]
     if G.graph['representation'] == "fracture":
         nodes = list(nx.nodes(G))
         for n in nodes:
@@ -691,7 +697,7 @@ def add_perm(G,fracture_info="fracture_info.dat"):
                 G[u][v]['iperm'] = 1.0
     elif G.graph['representation'] == "bipartite":
         # add fracture info
-        with open('fracture_info.dat') as f:
+        with open(fracture_info) as f:
             header = f.readline()
             data = f.read().strip()
             for fracture, line in enumerate(data.split('\n'), 1):
@@ -701,7 +707,7 @@ def add_perm(G,fracture_info="fracture_info.dat"):
                 G.node[fracture]['aperture'] = float(aperture)
 
 
-def add_area(G,fracture_info="fracture_info.dat"):
+def add_area(G, fracture_info):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
     representation
@@ -718,7 +724,7 @@ def add_area(G,fracture_info="fracture_info.dat"):
         None
 '''
 
-    aperture = np.genfromtxt(fracture_info, skip_header =1)[:,2]
+    aperture = np.genfromtxt(fracture_info, skip_header=1)[:, 2]
     edges = list(nx.edges(G))
     for u, v in edges:
         x = G.edges[u, v]['frac']

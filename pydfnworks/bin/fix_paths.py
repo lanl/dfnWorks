@@ -2,7 +2,7 @@
 
 import os
 
-old = 'DUMMY'
+old = '/Users/jhyman/src'
 new = os.path.join('/',*os.getcwd().split('/')[:-3])
 
 def listdir_recursive(base_directory):
@@ -17,6 +17,10 @@ def replace(old, new):
     files.extend(listdir_recursive('../../examples'))
 
     for file in files:
+
+        if 'fix_paths' in file:
+            continue
+
         try:
             with open(file,'r') as f:
                 replaced_text = f.read().replace(old,new)

@@ -18,6 +18,8 @@ C_uge_stor/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
+internal/Documentation/sphinx-docs/build/
+
 */build/*
 */dist/*
 *.egg

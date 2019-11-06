@@ -564,8 +564,11 @@ int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture
     int j, pf;
     pf = parts_fracture;
     int ii, jj,  k, curcel, insc = 0;
-    deltax = fabs(node[lastnd - 1].coord_xy[0] - node[firstnd - 1].coord_xy[0]);
-    deltay = fabs(node[lastnd - 1].coord_xy[1] - node[firstnd - 1].coord_xy[1]);
+    deltax = fabs(node[nodezonein[last_ind]-1].coord_xy[0] - node[nodezonein[first_ind]-1].coord_xy[0]);
+    deltay = fabs(node[nodezonein[last_ind]-1].coord_xy[1] - node[nodezonein[first_ind]-1].coord_xy[1]);
+   
+ //   printf ("%d  %d %d %d %f %f\n", first_ind, last_ind,  firstnd, lastnd, deltax, deltay);
+  
     
     for (j = 0; j < pf; j++) {
         if (node[firstnd - 1].coord_xy[0] < node[lastnd - 1].coord_xy[0]) {
