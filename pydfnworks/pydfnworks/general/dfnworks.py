@@ -49,7 +49,10 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
 
     from pydfnworks.dfnGen.map2continuum import map_to_continuum
-    from pydfnworks.dfnGen.upscale import upscale
+#    from pydfnworks.dfnGen.map2continuum_fast import map_to_continuum
+#    from pydfnworks.dfnGen.upscale_bandis import upscale
+#    from pydfnworks.dfnGen.upscale_layers import upscale
+    from pydfnworks.dfnGen.lagrit_scripts_dfm import mesh_dfm
 
     # dfnFlow
     import pydfnworks.dfnFlow
@@ -81,7 +84,7 @@ class DFNWORKS(Frozen):
                  path='',
                  prune_file='',
                  flow_solver="PFLOTRAN",
-                 inp_file='octree_dfn.inp',
+                 inp_file='full_mesh.inp',
                  uge_file='',
                  stor_file='',
                  vtk_file='',
