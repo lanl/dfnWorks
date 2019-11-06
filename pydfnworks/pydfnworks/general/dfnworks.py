@@ -81,7 +81,7 @@ class DFNWORKS(Frozen):
                  path='',
                  prune_file='',
                  flow_solver="PFLOTRAN",
-                 inp_file='full_mesh.inp',
+                 inp_file='octree_dfn.inp',
                  uge_file='',
                  stor_file='',
                  vtk_file='',
