@@ -70,3 +70,5 @@ The following are publications that use *dfnWorks*:
 #. `\N. Makedonska, C.W. Gable, R. Pawar, Conference Proceedings, Merging Discrete Fracture Network Meshes With 3D Continuum Meshes of Rock Matrix: A Novel Approach, 2nd International Discrete Fracture Network Engineering, 2018. <https://www.onepetro.org/conference-paper/ARMA-DFNE-18-0560>`_.
 
 #. `\A. Frampton, J.D, Hyman, L. Zou, Advective transport in discrete fracture networks with connected and disconnected textures representing internal aperture variability, Water Resources Research. 2019 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2018WR024322>`_.
+
+#. `\J.D. Hyman, J. Jiménez-Martínez, C. W. Gable, P. H. Stauffer, and R. J. Pawar. Characterizing the Impact of Fractured Caprock Heterogeneity on Supercritical CO2 Injection." Transport in Porous Media: 2019. <https://link.springer.com/article/10.1007/s11242-019-01372-1>`_.
