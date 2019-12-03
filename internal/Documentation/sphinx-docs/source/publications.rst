@@ -71,4 +71,7 @@ The following are publications that use *dfnWorks*:
 
 #. `\A. Frampton, J.D, Hyman, L. Zou, Advective transport in discrete fracture networks with connected and disconnected textures representing internal aperture variability, Water Resources Research. 2019 <https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2018WR024322>`_.
 
-#. `\J.D. Hyman, J. Jiménez-Martínez, C. W. Gable, P. H. Stauffer, and R. J. Pawar. Characterizing the Impact of Fractured Caprock Heterogeneity on Supercritical CO2 Injection." Transport in Porous Media: 2019. <https://link.springer.com/article/10.1007/s11242-019-01372-1>`_.
+#. `\J.D. Hyman, J. Jiménez-Martínez, C. W. Gable, P. H. Stauffer, and R. J. Pawar. Characterizing the Impact of Fractured Caprock Heterogeneity on Supercritical CO2 Injection. Transport in Porous Media: 2019. <https://link.springer.com/article/10.1007/s11242-019-01372-1>`_.
+
+#. `\J.D. Hyman, H. Rajaram, S. Srinivasan, N. Makedonska, S. Karra, H. Viswanathan, H.,  & G. Srinivasan,  (2019). Matrix diffusion in fractured media: New insights into power law scaling of breakthrough curves. Geophysical Research Letters, 46. 2019 <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019GL085454>`_.
+
