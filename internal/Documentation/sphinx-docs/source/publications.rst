@@ -76,3 +76,6 @@ The following are publications that use *dfnWorks*:
 #. `\J.D. Hyman, H. Rajaram, S. Srinivasan, N. Makedonska, S. Karra, H. Viswanathan, H.,  & G. Srinivasan,  (2019). Matrix diffusion in fractured media: New insights into power law scaling of breakthrough curves. Geophysical Research Letters, 46. 2019 <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019GL085454>`_.
 
 #. `\J.D. Hyman, M. Dentz, A. Hagberg,  & P. K.  Kang,  (2019). Emergence of Stable Laws for First Passage Times in Three-Dimensional Random Fracture Networks. Physical Review Letters, 123. 248501 <https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.248501>`_.
+
+#. `\M. R. Sweeney, C. W. Gable, S. Karra, P. H. Stauffer, R. J. Pawar, J. D. Hyman  (2019). Upscaled discrete fracture matrix model (UDFM): an octree-refined continuum representation of fractured porous mediaComputational Geosciences 2019 <https://link.springer.com/article/10.1007/s10596-019-09921-9>`_.
+
