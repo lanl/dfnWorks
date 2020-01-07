@@ -76,9 +76,10 @@ did not provide file of fractures to keep.\nExiting program.\n"
               self.prune_file)
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print(fracture_list)
-
-        lagrit.edit_intersection_files(num_poly, fracture_list, self.path)
+        if not visual_mode:
+            lagrit.edit_intersection_files(num_poly, fracture_list, self.path)
         num_poly = len(fracture_list)
+
     else:
         num_poly, h, params_visual_mode, dudded_points, domain = mh.parse_params_file(
         )
