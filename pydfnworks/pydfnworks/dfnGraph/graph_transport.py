@@ -253,11 +253,13 @@ def track_particle(data):
     particle.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
         matrix_porosity, matrix_diffusivity)
 
-    if particle.flag:
-        particle.write_file(partime_file, frac_id_file)
-        return 0
-    else:
-        return 1
+    return particle
+
+    # if particle.flag:
+    #     particle.write_file(partime_file, frac_id_file)
+    #     return 0
+    # else:
+    #     return 1
 
 def run_graph_transport(self,
                         Gtilde,
@@ -354,11 +356,18 @@ def run_graph_transport(self,
             mp_input.append(data)
 
         pool = mp.Pool(self.ncpu)
-        out = pool.map(track_particle, mp_input)
+        particles = pool.map(track_particle, mp_input)
         pool.close()
         pool.join()
-        pool.terminate() 
-        pfailcount= sum(out)
+        pool.terminate()
+        print("--> Tracking Complete")
+        print("--> Writing Data to files: {} and {}".format(partime_file,frac_id_file))
+        for particle in particles:
+            if particle.flag:
+                particle.write_file(partime_file, frac_id_file)
+            else:
+                pfailcount += 1 
+
     else:
         for i in range(nparticles):
             if i % 1000 == 0:
@@ -373,7 +382,6 @@ def run_graph_transport(self,
             else:
                 pfailcount += 1
 
-    print("--> Particle tracking complete")
     if pfailcount == 0:
         print("--> All particles exited")
     else:
