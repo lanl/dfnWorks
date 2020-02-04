@@ -330,16 +330,16 @@ def run_graph_transport(self,
 
     nbrs_dict = create_neighbour_list(Gtilde)
 
-    print("Creating downstream neighbour list...")
+    print("--> Creating downstream neighbor list")
 
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
 
     pfailcount = 0
-    print("Starting particle tracking for %d particles"%nparticles)
+    print("--> Starting particle tracking for %d particles"%nparticles)
 
     if self.ncpu > 1:
+        print("--> Using %d processors"%self.ncpu)
         mp_input = []
-
         for i in range(nparticles):
 
             data = {}
@@ -361,7 +361,8 @@ def run_graph_transport(self,
         pfailcount= sum(out)
     else:
         for i in range(nparticles):
-
+            if i % 1000 == 0:
+                print("--> Starting particle %d out of %d"%(i,nparticles))
             particle_i = Particle()
             particle_i.set_start_time_dist(0, 0)
             particle_i.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
@@ -372,10 +373,10 @@ def run_graph_transport(self,
             else:
                 pfailcount += 1
 
-    print("Particle tracking complete")
+    print("--> Particle tracking complete")
     if pfailcount == 0:
-        print("All particles exited")
+        print("--> All particles exited")
     else:
-        print("Out of {} particles, {} particles did not exit".format(
+        print("--> Out of {} particles, {} particles did not exit".format(
             nparticles, pfailcount))
     return
