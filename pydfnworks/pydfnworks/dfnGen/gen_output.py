@@ -1,6 +1,10 @@
 from scipy import stats, special
 import numpy as np
 import re
+
+import matplotlib
+matplotlib.use("Agg")
+  
 import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
