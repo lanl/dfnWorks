@@ -225,15 +225,15 @@ class Particle():
                 for i in range(0, 4 * n):
                     if i < n:
                         f2.write("{:d}  ".format(data1[i]))
-                    elif n - 1 < i < 2 * n:
-                        f2.write("{:3.2E}  ".format(
-                            self.frac_seq[data1[i - n]]['time']))
-                    elif 2 * n - 1 < i < 3 * n:
-                        f2.write("{:3.2E}  ".format(
-                            self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
-                    else:
-                        f2.write("{:3.2E}  ".format(
-                            self.frac_seq[data1[i - 3 * n]]['dist']))
+                #    elif n - 1 < i < 2 * n:
+                #        f2.write("{:3.2E}  ".format(
+                #            self.frac_seq[data1[i - n]]['time']))
+                #    elif 2 * n - 1 < i < 3 * n:
+                #        f2.write("{:3.2E}  ".format(
+                #            self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
+                #    else:
+                #        f2.write("{:3.2E}  ".format(
+                #            self.frac_seq[data1[i - 3 * n]]['dist']))
                 f2.write("\n")
 
 def track_particle(data):
