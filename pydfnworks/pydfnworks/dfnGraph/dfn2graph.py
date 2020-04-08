@@ -6,6 +6,10 @@ from networkx.algorithms.flow.shortestaugmentingpath import *
 from networkx.algorithms.flow.edmondskarp import *
 from networkx.algorithms.flow.preflowpush import *
 from networkx.readwrite import json_graph
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pylab as plt
 from itertools import islice
 
