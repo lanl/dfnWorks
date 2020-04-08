@@ -148,7 +148,8 @@ def boundary_index(bc_name):
 
 def create_intersection_graph(inflow,
                               outflow,
-                              intersection_file="intersection_list.dat"):
+                              intersection_file="intersection_list.dat",
+                              fracture_info="fracture_info.dat"):
     """ Create a graph based on topology of network.
     Edges are represented as nodes and if two intersections
     are on the same fracture, there is an edge between them in the graph. 
@@ -213,10 +214,10 @@ def create_intersection_graph(inflow,
             # note fractures of the intersection
             G.add_node(i, frac=(f1, f2))
             # keep intersection location and length
-            G.node[i]['x'] = float(frac_edges[i][2])
-            G.node[i]['y'] = float(frac_edges[i][3])
-            G.node[i]['z'] = float(frac_edges[i][4])
-            G.node[i]['length'] = float(frac_edges[i][5])
+            G.nodes[i]['x'] = float(frac_edges[i][2])
+            G.nodes[i]['y'] = float(frac_edges[i][3])
+            G.nodes[i]['z'] = float(frac_edges[i][4])
+            G.nodes[i]['length'] = float(frac_edges[i][5])
 
     nodes = list(nx.nodes(G))
     f1 = nx.get_node_attributes(G, 'frac')
@@ -234,13 +235,13 @@ def create_intersection_graph(inflow,
                     # connected
                     # If not, add edge between
                     if x != 's' and x != 't':
-                        xi = G.node[i]['x']
-                        yi = G.node[i]['y']
-                        zi = G.node[i]['z']
+                        xi = G.nodes[i]['x']
+                        yi = G.nodes[i]['y']
+                        zi = G.nodes[i]['z']
 
-                        xj = G.node[j]['x']
-                        yj = G.node[j]['y']
-                        zj = G.node[j]['z']
+                        xj = G.nodes[j]['x']
+                        yj = G.nodes[j]['y']
+                        zj = G.nodes[j]['z']
 
                         distance = np.sqrt((xi - xj)**2 + (yi - yj)**2 +
                                            (zi - zj)**2)
@@ -348,8 +349,8 @@ def create_bipartite_graph(inflow,
         data = f.read().strip()
         for fracture, line in enumerate(data.split('\n'), 1):
             c, perm, aperture = line.split(' ')
-            B.node[fracture]['perm'] = float(perm)
-            B.node[fracture]['aperture'] = float(aperture)
+            B.nodes[fracture]['perm'] = float(perm)
+            B.nodes[fracture]['aperture'] = float(aperture)
 
     print("--> Complete")
 
@@ -657,7 +658,7 @@ def load_json_graph(self, name):
     print("Complete")
     return G
 
-def add_perm(G, fracture_info):
+def add_perm(G, fracture_info="fracture_info.dat"):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
@@ -683,11 +684,11 @@ def add_perm(G, fracture_info):
         nodes = list(nx.nodes(G))
         for n in nodes:
             if n != 's' and n != 't':
-                G.node[n]['perm'] = perm[n]
-                G.node[n]['iperm'] = 1.0 / perm[n]
+                G.nodes[n]['perm'] = perm[n]
+                G.nodes[n]['iperm'] = 1.0 / perm[n]
             else:
-                G.node[n]['perm'] = 1.0
-                G.node[n]['iperm'] = 1.0
+                G.nodes[n]['perm'] = 1.0
+                G.nodes[n]['iperm'] = 1.0
 
     elif G.graph['representation'] == "intersection":
         edges = list(nx.edges(G))
@@ -706,12 +707,12 @@ def add_perm(G, fracture_info):
             data = f.read().strip()
             for fracture, line in enumerate(data.split('\n'), 1):
                 c, perm, aperture = line.split(' ')
-                G.node[fracture]['perm'] = float(perm)
-                G.node[fracture]['iperm'] = 1.0 / float(perm)
-                G.node[fracture]['aperture'] = float(aperture)
+                G.nodes[fracture]['perm'] = float(perm)
+                G.nodes[fracture]['iperm'] = 1.0 / float(perm)
+                G.nodes[fracture]['aperture'] = float(aperture)
 
 
-def add_area(G, fracture_info):
+def add_area(G, fracture_info="fracture_info.dat"):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
     representation
