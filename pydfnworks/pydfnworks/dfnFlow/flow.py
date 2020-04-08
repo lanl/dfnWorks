@@ -153,7 +153,7 @@ def uncorrelated(self, mu, sigma, path='../'):
     mu is the mean of perm not log(perm)
 
     """
-    from pydfnworks.mesh_dfn_helper import parse_params_file
+    from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
 
     print('--> Creating Uncorrelated Transmissivity Fields')
     print('Mean: ', mu)

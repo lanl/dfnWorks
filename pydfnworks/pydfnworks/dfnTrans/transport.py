@@ -273,14 +273,17 @@ def check_dfn_trans_run_files(self):
     # required parameters have been defined
     print("--> Checking Initial Conditions")
     initial_conditions = [
-        ("init_nf:", "init_partn:"), ("init_eqd:", "init_npart:"),
-        ("init_fluxw:", "init_totalnumber:"), ("init_random:", "in_randpart:"),
+        ("init_nf:", "init_partn:"), 
+        ("init_eqd:", "init_npart:"),
+        ("init_fluxw:", "init_totalnumber:"), 
+        ("init_random:", "in_randpart:"),
         ("init_oneregion:", "in_partn:", "in_xmin:", "in_ymin:", "in_zmin:",
-         "in_xmax:", "in_ymax:", "in_zmax:"), ("init_random:", "in_randpart:"),
+         "in_xmax:", "in_ymax:", "in_zmax:"),
         ("init_matrix:", "inm_coord:", "inm_nodeID:", "inm_porosity:")
     ]
     ic_selected = []
     for ic in initial_conditions:
+        
         if params[ic[0]] == "yes":
             ic_selected.append(ic[0])
             for i in ic:
