@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
@@ -195,7 +196,7 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -208,7 +209,7 @@
         <span class="n">inp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span>
 
     <span class="k">if</span> <span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide inp filename!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide inp filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -216,14 +217,14 @@
         <span class="k">if</span> <span class="n">mesh_type</span> <span class="ow">in</span> <span class="n">mesh_types_allowed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Unknown mesh type. Select one of dfn, volume or mixed!&#39;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Unknown mesh type. Select one of dfn, volume or mixed!</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mesh_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span>
 
     <span class="k">if</span> <span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide mesh type!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide mesh type!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -286,7 +287,7 @@
 
     <span class="n">uge_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span>
     <span class="k">if</span> <span class="n">uge_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide uge filename!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide uge filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -321,11 +322,11 @@
         <span class="n">face_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;south&#39;</span><span class="p">,</span> <span class="s1">&#39;west&#39;</span><span class="p">,</span> <span class="s1">&#39;east&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">zone_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide boundary zone filename!&#39;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide boundary zone filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">face</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide face name among: top, bottom, north, south, east, west !&#39;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide face name among: top, bottom, north, south, east, west !</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">zone_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">zone_file</span><span class="p">]</span>
@@ -408,7 +409,7 @@
             <span class="n">boundary_cell_coord</span> <span class="o">=</span> <span class="p">[[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
                                    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">boundary_cell_coord</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: unknown face. Select one of: top, bottom, east, west, north, south.&#39;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: unknown face. Select one of: top, bottom, east, west, north, south.</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -442,33 +443,33 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">h5py</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Writing Perms and Correct Volume Areas&quot;</span><span class="p">)</span>
     <span class="n">inp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span>
     <span class="k">if</span> <span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: inp file must be specified!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: inp file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">uge_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span>
     <span class="k">if</span> <span class="n">uge_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: uge file must be specified!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: uge file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">perm_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_file</span>
     <span class="k">if</span> <span class="n">perm_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: perm file must be specified!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: perm file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">aper_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aper_file</span>
     <span class="n">aper_cell_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aper_cell_file</span>
     <span class="k">if</span> <span class="n">aper_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">aper_cell_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: aperture file must be specified!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: aperture file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -491,7 +492,7 @@
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_UGE_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; convert_uge_params.txt&#39;</span>
     <span class="n">failure</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">failure</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: UGE conversion failed</span><span class="se">\n</span><span class="s1">Exiting Program&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: UGE conversion failed</span><span class="se">\n</span><span class="s1">Exiting Program</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -531,7 +532,7 @@
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">perm_list</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">materialid</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm_list</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Indexing Error in Perm File&#39;</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Indexing Error in Perm File</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -597,7 +598,7 @@
 <span class="sd">    Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -605,7 +606,7 @@
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">),</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN input file&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN input file</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -626,7 +627,7 @@
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">restart_file</span><span class="p">),</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN input file&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN input file</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -702,7 +703,7 @@
 <span class="sd">        Can be run in a loop over all pflotran dumps</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -761,7 +762,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">pyvtk</span> <span class="k">as</span> <span class="nn">pv</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -770,7 +771,7 @@
         <span class="n">inp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span>
 
     <span class="k">if</span> <span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide inp filename!&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide inp filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -837,7 +838,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output with Python&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 

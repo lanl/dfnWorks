@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
@@ -206,8 +207,7 @@
         <span class="k">return</span> <span class="p">[]</span>
     <span class="k">return</span> <span class="n">G</span></div>
 
-
-<div class="viewcode-block" id="create_fracture_graph"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.create_fracture_graph">[docs]</a><span class="k">def</span> <span class="nf">create_fracture_graph</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">topology_file</span><span class="o">=</span><span class="s2">&quot;connectivity.dat&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_fracture_graph"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.create_fracture_graph">[docs]</a><span class="k">def</span> <span class="nf">create_fracture_graph</span><span class="p">(</span><span class="n">inflow</span><span class="p">,</span> <span class="n">outflow</span><span class="p">,</span> <span class="n">topology_file</span> <span class="o">=</span> <span class="s2">&quot;connectivity.dat&quot;</span><span class="p">,</span> <span class="n">fracture_info_file</span><span class="o">=</span><span class="s2">&quot;fracture_info.dat&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Create a graph based on topology of network. Fractures</span>
 <span class="sd">    are represented as nodes and if two fractures intersect </span>
 <span class="sd">    there is an edge between them in the graph. </span>
@@ -222,6 +222,8 @@
 <span class="sd">            Name of outflow boundary (connect to target)</span>
 <span class="sd">        topology_file : string</span>
 <span class="sd">            Name of adjacency matrix file for a DFN default=connectivity.dat  </span>
+<span class="sd">        fracture_infor : str</span>
+<span class="sd">                filename for fracture information</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -253,9 +255,9 @@
         <span class="n">outflow</span> <span class="o">=</span> <span class="p">[</span><span class="n">outflow</span><span class="p">]</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
-    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inflow</span><span class="p">)),</span> <span class="n">inflow</span><span class="p">))</span>
-    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">outflow</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outflow</span><span class="p">))))</span>
-    <span class="n">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;s&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inflow</span><span class="p">)),</span><span class="n">inflow</span><span class="p">))</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">outflow</span><span class="p">,[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outflow</span><span class="p">))))</span>   
+    <span class="n">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">fracture_info_file</span><span class="p">)</span> 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Graph loaded&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">G</span></div>
 
@@ -293,7 +295,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">bc_dict</span><span class="p">[</span><span class="n">bc_name</span><span class="p">]</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Unknown boundary condition: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">Exiting&quot;</span> <span class="o">%</span> <span class="n">bc</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Unknown boundary condition: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">bc</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
@@ -318,6 +320,8 @@
 <span class="sd">             File Format:</span>
 <span class="sd">             fracture 1, fracture 2, x center, y center, z center, intersection length</span>
 
+<span class="sd">        fracture_infor : str</span>
+<span class="sd">                filename for fracture information</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        G : NetworkX Graph</span>
@@ -402,13 +406,11 @@
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
         <span class="n">e</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
-            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
-            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="n">frac</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">,</span><span class="n">frac</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>     
+    <span class="n">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">fracture_info</span><span class="p">)</span> 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Graph Construction Complete&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">G</span></div>
 
@@ -566,6 +568,8 @@
     <span class="n">k_shortest</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">k_shortest_paths</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="n">k_shortest</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">k_shortest</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+    <span class="n">k_shortest</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
     <span class="n">path_nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">k_shortest</span><span class="p">))</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
     <span class="n">secondary</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">path_nodes</span><span class="p">))</span>
@@ -693,8 +697,8 @@
         <span class="n">path</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">Gprime</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
         <span class="n">H</span> <span class="o">=</span> <span class="n">Gprime</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">Hprime</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">Gprime</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">Gprime</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">()))</span>
+
         <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="n">k</span><span class="p">:</span>
             <span class="k">break</span>
@@ -805,8 +809,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Complete&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">G</span></div>
 
-
-<div class="viewcode-block" id="add_perm"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.add_perm">[docs]</a><span class="k">def</span> <span class="nf">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+<div class="viewcode-block" id="add_perm"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.add_perm">[docs]</a><span class="k">def</span> <span class="nf">add_perm</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">fracture_info</span><span class="o">=</span><span class="s2">&quot;fracture_info.dat&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Add fracture permeability to Graph. If Graph representation is</span>
 <span class="sd">    fracture, then permeability is a node attribute. If graph representation </span>
 <span class="sd">    is intersection, then permeability is an edge attribute</span>
@@ -817,6 +820,8 @@
 <span class="sd">        G :networkX graph</span>
 <span class="sd">            NetworkX Graph based on the DFN</span>
 <span class="sd">   </span>
+<span class="sd">        fracture_infor : str</span>
+<span class="sd">                filename for fracture information</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd"> </span>
@@ -825,7 +830,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-    <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;fracture_info.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fracture_info</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;representation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;fracture&quot;</span><span class="p">:</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
@@ -858,12 +863,24 @@
                 <span class="n">G</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">fracture</span><span class="p">][</span><span class="s1">&#39;aperture&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">aperture</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_area"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.add_area">[docs]</a><span class="k">def</span> <span class="nf">add_area</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+<div class="viewcode-block" id="add_area"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.add_area">[docs]</a><span class="k">def</span> <span class="nf">add_area</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">fracture_info</span><span class="o">=</span><span class="s2">&quot;fracture_info.dat&quot;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Read Fracture aperture from fracture_info.dat and </span>
 <span class="sd">    load on the edges in the graph. Graph must be intersection to node</span>
-<span class="sd">    representation&#39;&#39;&#39;</span>
+<span class="sd">    representation</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        G : NetworkX Graph</span>
+<span class="sd">            networkX graph </span>
+<span class="sd">        fracture_info : str</span>
+<span class="sd">            filename for fracture information</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+<span class="sd">&#39;&#39;&#39;</span>
 
-    <span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;fracture_info.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">fracture_info</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;frac&#39;</span><span class="p">]</span>
@@ -876,13 +893,23 @@
 
 
 <div class="viewcode-block" id="add_weight"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.add_weight">[docs]</a><span class="k">def</span> <span class="nf">add_weight</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Compute weight w = K*A/L associated with each edge &#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;Compute weight w = K*A/L associated with each edge </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        G : NetworkX Graph</span>
+<span class="sd">            networkX graph </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+<span class="sd">&#39;&#39;&#39;</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;perm&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span>
                 <span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span>
     <span class="k">return</span></div>
+
 </pre></div>
 
            </div>

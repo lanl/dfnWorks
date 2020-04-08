@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
@@ -177,7 +178,6 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-
 <span class="sd">        G : object</span>
 <span class="sd">            NetworkX graph equipped with weight attribute</span>
 
@@ -283,7 +283,7 @@
     <span class="n">Outlet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">Gtilde</span><span class="p">)</span> <span class="k">if</span> <span class="n">Gtilde</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;outletflag&#39;</span><span class="p">]]</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">Inlet</span><span class="p">)</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">Outlet</span><span class="p">)):</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Incompatible graph: Vertex connected to both source and target&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Incompatible graph: Vertex connected to both source and target</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 

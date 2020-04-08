@@ -16,7 +16,6 @@ def get_laplacian_sparse_mat(G,
 
     Parameters
     ----------
-
         G : object
             NetworkX graph equipped with weight attribute
 

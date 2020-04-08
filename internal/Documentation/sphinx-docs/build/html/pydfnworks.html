@@ -124,14 +124,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGraph.graph_flow">Graph-Based Flow and Transport</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#general-workflow-functions">General Workflow Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.general.legal">Print legal statement</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.general.general_functions">Helper functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.general.paths">Set up run paths</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
@@ -505,7 +500,7 @@
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existance of the file params.txt.</p>
+<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1733,7 +1728,7 @@ Stores how many of each distrib are in use in numEdistribs or numRdistribs lists
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existance of the file params.txt.</p>
+<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt.</p>
 </dd></dl>
 
 <dl class="function">
@@ -2450,7 +2445,7 @@ lagrit scripts.</p>
 
 <dl class="function">
 <dt id="pydfnworks.dfnGen.map2continuum.lagrit_parameters">
-<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_parameters</code><span class="sig-paren">(</span><em>orl</em>, <em>x0</em>, <em>x1</em>, <em>y0</em>, <em>y1</em>, <em>z0</em>, <em>z1</em>, <em>nx</em>, <em>ny</em>, <em>nz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnGen.map2continuum.</code><code class="descname">lagrit_parameters</code><span class="sig-paren">(</span><em>orl</em>, <em>x0</em>, <em>x1</em>, <em>y0</em>, <em>y1</em>, <em>z0</em>, <em>z1</em>, <em>nx</em>, <em>ny</em>, <em>nz</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/map2continuum.html#lagrit_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGen.map2continuum.lagrit_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function creates the parameters_octree_dfn.mlgi lagrit script.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3241,15 +3236,33 @@ This functions adds that line return</p>
 <span id="general-graph-functions"></span><h3>General Graph Functions<a class="headerlink" href="#module-pydfnworks.dfnGraph.dfn2graph" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="pydfnworks.dfnGraph.dfn2graph.add_area">
-<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">add_area</code><span class="sig-paren">(</span><em>G</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_area" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">add_area</code><span class="sig-paren">(</span><em>G</em>, <em>fracture_info='fracture_info.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read Fracture aperture from fracture_info.dat and
 load on the edges in the graph. Graph must be intersection to node
 representation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>G</strong> (<em>NetworkX Graph</em>) – networkX graph</li>
+<li><strong>fracture_info</strong> (<em>str</em>) – filename for fracture information</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="pydfnworks.dfnGraph.dfn2graph.add_perm">
-<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">add_perm</code><span class="sig-paren">(</span><em>G</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_perm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_perm" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">add_perm</code><span class="sig-paren">(</span><em>G</em>, <em>fracture_info='fracture_info.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_perm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_perm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add fracture permeability to Graph. If Graph representation is
 fracture, then permeability is a node attribute. If graph representation
 is intersection, then permeability is an edge attribute</p>
@@ -3257,7 +3270,11 @@ is intersection, then permeability is an edge attribute</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>G</strong> (<em>networkX graph</em>) – NetworkX Graph based on the DFN</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>G</strong> (<em>networkX graph</em>) – NetworkX Graph based on the DFN</li>
+<li><strong>fracture_infor</strong> (<em>str</em>) – filename for fracture information</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -3267,7 +3284,19 @@ is intersection, then permeability is an edge attribute</p>
 <dl class="function">
 <dt id="pydfnworks.dfnGraph.dfn2graph.add_weight">
 <code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">add_weight</code><span class="sig-paren">(</span><em>G</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_weight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute weight w = K*A/L associated with each edge</p>
+<dd><p>Compute weight w = K*A/L associated with each edge
+:param G: networkX graph
+:type G: NetworkX Graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -3326,7 +3355,7 @@ Nodes are in two sets, fractures and intersections, with edges connecting them.<
 
 <dl class="function">
 <dt id="pydfnworks.dfnGraph.dfn2graph.create_fracture_graph">
-<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">create_fracture_graph</code><span class="sig-paren">(</span><em>inflow</em>, <em>outflow</em>, <em>topology_file='connectivity.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#create_fracture_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.create_fracture_graph" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pydfnworks.dfnGraph.dfn2graph.</code><code class="descname">create_fracture_graph</code><span class="sig-paren">(</span><em>inflow</em>, <em>outflow</em>, <em>topology_file='connectivity.dat'</em>, <em>fracture_info_file='fracture_info.dat'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#create_fracture_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.create_fracture_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a graph based on topology of network. Fractures
 are represented as nodes and if two fractures intersect
 there is an edge between them in the graph.</p>
@@ -3339,6 +3368,7 @@ there is an edge between them in the graph.</p>
 <li><strong>inflow</strong> (<em>string</em>) – Name of inflow boundary (connect to source)</li>
 <li><strong>outflow</strong> (<em>string</em>) – Name of outflow boundary (connect to target)</li>
 <li><strong>topology_file</strong> (<em>string</em>) – Name of adjacency matrix file for a DFN default=connectivity.dat</li>
+<li><strong>fracture_infor</strong> (<em>str</em>) – filename for fracture information</li>
 </ul>
 </td>
 </tr>
@@ -3397,6 +3427,7 @@ are on the same fracture, there is an edge between them in the graph.</p>
 <li><strong>intersection_file</strong> (<em>string</em>) – File containing intersection information
 File Format:
 fracture 1, fracture 2, x center, y center, z center, intersection length</li>
+<li><strong>fracture_infor</strong> (<em>str</em>) – filename for fracture information</li>
 </ul>
 </td>
 </tr>
@@ -3717,7 +3748,7 @@ See Hyman et al. 2018 SIAM MMS</p>
 </table>
 </dd></dl>
 
-<span class="target" id="module-pydfnworks.dfnGraph.graph_transport"></span><dl class="class">
+<span class="target" id="module-pydfnworks.dfnGraph.graph_transport"></span><span class="target" id="module-graph_transport.py"></span><dl class="class">
 <dt id="pydfnworks.dfnGraph.graph_transport.Particle">
 <em class="property">class </em><code class="descclassname">pydfnworks.dfnGraph.graph_transport.</code><code class="descname">Particle</code><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#Particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.Particle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for graph particle tracking, instantiated for each particle</p>
@@ -3878,13 +3909,27 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 <p>Information on individual functions is found therein</p>
 </dd></dl>
 
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+.. automodule:: pydfnworks.graph_flow</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">members:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
 </div>
 </div>
 <div class="section" id="general-workflow-functions">
-<h2>General Workflow Functions<a class="headerlink" href="#general-workflow-functions" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="module-pydfnworks.general.legal">
-<span id="print-legal-statement"></span><h3>Print legal statement<a class="headerlink" href="#module-pydfnworks.general.legal" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
+<h1>General Workflow functions<a class="headerlink" href="#general-workflow-functions" title="Permalink to this headline">¶</a></h1>
+<p>General Workflow Functions
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; master
+————————–</p>
+<span class="target" id="module-pydfnworks.general.legal"></span><dl class="function">
 <dt id="pydfnworks.general.legal.legal">
 <code class="descclassname">pydfnworks.general.legal.</code><code class="descname">legal</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/general/legal.html#legal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.general.legal.legal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the legal LANL statement for dfnWorks.</p>
@@ -3904,10 +3949,7 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 <p>None</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pydfnworks.general.general_functions">
-<span id="helper-functions"></span><h3>Helper functions<a class="headerlink" href="#module-pydfnworks.general.general_functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
+<span class="target" id="module-pydfnworks.general.general_functions"></span><dl class="function">
 <dt id="pydfnworks.general.general_functions.dump_time">
 <code class="descclassname">pydfnworks.general.general_functions.</code><code class="descname">dump_time</code><span class="sig-paren">(</span><em>self</em>, <em>function_name</em>, <em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/general/general_functions.html#dump_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.general.general_functions.dump_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write run time for a funcion to the jobname_run_time.txt file</p>
@@ -3954,10 +3996,7 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 <p>This will dump out all values in the run file, not just those from the most recent run</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pydfnworks.general.paths">
-<span id="set-up-run-paths"></span><h3>Set up run paths<a class="headerlink" href="#module-pydfnworks.general.paths" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
+<span class="target" id="module-pydfnworks.general.paths"></span><dl class="function">
 <dt id="pydfnworks.general.paths.compile_dfn_exe">
 <code class="descclassname">pydfnworks.general.paths.</code><code class="descname">compile_dfn_exe</code><span class="sig-paren">(</span><em>directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/general/paths.html#compile_dfn_exe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pydfnworks.general.paths.compile_dfn_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function</p>
@@ -4017,8 +4056,6 @@ dict[n][‘prob’] is a list of probabilities for choosing a downstream node fo
 <p>If file is not found, program exits</p>
 </dd></dl>
 
-</div>
-</div>
 </div>
 
 

@@ -1,9 +1,18 @@
+"""
+.. module:: graph_transport.py
+   :synopsis: simulate transport on a pipe network representaiton of a DFN 
+.. moduleauthor:: Shriram Srinivasan <shrirams@lanl.gov>
+
+"""
+
 import networkx as nx
 import numpy as np
 import numpy.random
 import sys
 import math
 import scipy.special
+import multiprocessing as mp
+
 
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow
@@ -227,6 +236,30 @@ class Particle():
                             self.frac_seq[data1[i - 3 * n]]['dist']))
                 f2.write("\n")
 
+def track_particle(data):
+
+    Gtilde = data["Gtilde"]
+    nbrs_dict = data["nbrs_dict"]
+    frac_porosity = data["frac_porosity"]
+    tdrw_flag = data["tdrw_flag"]
+    matrix_porosity = data["matrix_porosity"]
+    matrix_diffusivity = data["matrix_diffusivity"]
+    partime_file = data["partime_file"]
+    frac_id_file = data["frac_id_file"]
+
+
+    particle = Particle()
+    particle.set_start_time_dist(0, 0)
+    particle.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
+        matrix_porosity, matrix_diffusivity)
+
+    return particle
+
+    # if particle.flag:
+    #     particle.write_file(partime_file, frac_id_file)
+    #     return 0
+    # else:
+    #     return 1
 
 def run_graph_transport(self,
                         Gtilde,
@@ -299,34 +332,59 @@ def run_graph_transport(self,
 
     nbrs_dict = create_neighbour_list(Gtilde)
 
-    print("Creating downstream neighbour list...")
+    print("--> Creating downstream neighbor list")
 
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
 
     pfailcount = 0
-    print("Starting particle tracking...")
+    print("--> Starting particle tracking for %d particles"%nparticles)
 
-    for i in range(0, nparticles):
+    if self.ncpu > 1:
+        print("--> Using %d processors"%self.ncpu)
+        mp_input = []
+        for i in range(nparticles):
 
-        particle_i = Particle()
-        particle_i.set_start_time_dist(0, 0)
-        particle_i.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
-                         matrix_porosity, matrix_diffusivity)
+            data = {}
+            data["Gtilde"] = Gtilde 
+            data["nbrs_dict"]= nbrs_dict 
+            data["frac_porosity"] = frac_porosity 
+            data["tdrw_flag"] = tdrw_flag 
+            data["matrix_porosity"] = matrix_porosity
+            data["matrix_diffusivity"] = matrix_diffusivity
+            data["partime_file"] = partime_file
+            data["frac_id_file"] = frac_id_file 
+            mp_input.append(data)
 
-        if particle_i.flag:
-            particle_i.write_file(partime_file, frac_id_file)
-        else:
-            pfailcount += 1
-
-    print("Particle tracking complete")
-
-    if pfailcount == 0:
-
-        print("All particles exited")
+        pool = mp.Pool(self.ncpu)
+        particles = pool.map(track_particle, mp_input)
+        pool.close()
+        pool.join()
+        pool.terminate()
+        print("--> Tracking Complete")
+        print("--> Writing Data to files: {} and {}".format(partime_file,frac_id_file))
+        for particle in particles:
+            if particle.flag:
+                particle.write_file(partime_file, frac_id_file)
+            else:
+                pfailcount += 1 
 
     else:
+        for i in range(nparticles):
+            if i % 1000 == 0:
+                print("--> Starting particle %d out of %d"%(i,nparticles))
+            particle_i = Particle()
+            particle_i.set_start_time_dist(0, 0)
+            particle_i.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
+                             matrix_porosity, matrix_diffusivity)
 
-        print("Out of {} particles, {} particles did not exit".format(
+            if particle_i.flag:
+                particle_i.write_file(partime_file, frac_id_file)
+            else:
+                pfailcount += 1
+
+    if pfailcount == 0:
+        print("--> All particles exited")
+    else:
+        print("--> Out of {} particles, {} particles did not exit".format(
             nparticles, pfailcount))
-
     return

@@ -11,6 +11,7 @@ pydfnworks/pydfnworks/paths.py
 
 # dfnWorks Executables
 ParticleTracking/DFNTrans
+DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
 C_uge_correct/correct_uge
 C_uge_stor/correct_stor
@@ -18,8 +19,6 @@ DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
 internal/Documentation/sphinx-docs/build/*
-
-!inp_2_vtk/inp2vtk
 
 */build/*
 */dist/*

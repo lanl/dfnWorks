@@ -80,13 +80,24 @@ out_curv: no
 out_avs:  no 
 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
+<<<<<<< HEAD
+out_traj: no
+out_fract: no 
+=======
 out_traj: no 
+>>>>>>> master
 
 /* use outputs to file or memory buffer. Memory buffer by default */
 out_filetemp: no
 
+<<<<<<< HEAD
+/************* output directories *************************************/
+out_dir: DFNTrans_output /* path and name of directory where all the particle 
+                     tracking results will be written*/
+=======
 /* output of fractures ID list, that are attended by each particle */
 out_fract: no
+>>>>>>> master
 
 /* output of particle trajectories tortuosity, torts.dat file*/
 out_tort: no
@@ -109,6 +120,29 @@ ControlPlane: no
 /* the path and directory name with all particles output files */
 control_out: outcontroldir
 
+<<<<<<< HEAD
+/*************** Intersection Mixing Rule **********************************/
+/****streamline_routing: if yes - streamline routing is the selected subgrid process
+     otherwise the complete mixing rule is selected ****/
+streamline_routing: no 
+
+
+
+
+/**************** PARTICLES INITIAL POSITIONS ******************************/
+
+/*****  particles positions according to in-flow flux weight *********/
+init_fluxw: yes //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
+
+// Initial number of particles can not be less than number of nodes in in-flow boundary. If it is less, the number of particles will be increased.
+
+init_totalnumber: 10000 // total number of particles. particles will be placed according to inflow flux
+
+
+/****init_nf: if yes - the same number of particles (init_partn) will be placed 
+     on every boundary fracture edge on in-flow boundary, 
+     equidistant from each other ****/
+=======
 /* Delta Control Plane - the distance between control planes */
 delta_Control: 1
 
@@ -123,6 +157,7 @@ flowdir: 0
 /*Option #1.init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge at in-flow boundary, 
      equidistant from each other */
+>>>>>>> master
 init_nf: no 
 init_partn: 10
 
@@ -162,6 +197,8 @@ inm_nodeID: ClosestNodeR.inp
 inm_porosity: 0.02
 inm_diffcoeff: 1.0e-12
 
+<<<<<<< HEAD
+=======
 
 /* Option #6. particles positions according to in-flow flux weight */
 init_fluxw: yes 
@@ -169,24 +206,53 @@ init_fluxw: yes
 number of nodes in in-flow boundary. If it is less, 
 the number of particles will be increased. */
 init_totalnumber: 200 
+>>>>>>> master
 
 /***********************************************************************/
 /**************** PARTICLE TRACKING PARAMETERS *************************/
 /***********************************************************************/
 
 
+<<<<<<< HEAD
+aperture: yes  //DFN aperture
+aperture_type: frac //aperture is giving per cell (type "cell") 
+//    or per fracture (type "frac")
+// for now we use an aperture giving per fracture
+aperture_file: aperture.dat
+
+/************* TIME DOMAIN RANDOM WALK ******************************/
+tdrw: no 
+tdrw_porosity: 0.02
+tdrw_diffcoeff: 1.0e-13
+
+/********************  TIME ********************************************/
+timesteps: 1000000
+=======
 /************************ FLOW PARAMETERS *****************************/
 porosity: 1.0 // fracture porosity 
 density: 997.73  //fluid density 
 satur: 1.0 //fluid saturation
 
 timesteps: 30000 //number of time steps
+>>>>>>> master
 //units of time (years, days, hours, minutes) 
 time_units: years 
 
 /*flux weighted particles (in case of init_nf and init_enq initial options)*/
 /*in case of random initial positions, particles are weighted by initial cell aperture*/ 
 flux_weight: yes
+<<<<<<< HEAD
+/* random generator seed */
+seed: 337799
+
+
+/*********************  Control Plane/Cylinder Output ********************/
+/*** virtual Control planes will be build in the direction of flow. 
+Once particle crosses the control plane, it's position, velocity, time 
+will output to an ascii file. ****/ 
+ControlPlane: no 
+=======
+>>>>>>> master
 
 /* random generator seed, when zero used the current time as seed number */
 seed: 0

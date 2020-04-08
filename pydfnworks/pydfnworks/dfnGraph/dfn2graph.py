@@ -64,6 +64,8 @@ def create_fracture_graph(inflow,
             Name of outflow boundary (connect to target)
         topology_file : string
             Name of adjacency matrix file for a DFN default=connectivity.dat  
+        fracture_infor : str
+                filename for fracture information
 
     Returns
     -------
@@ -160,6 +162,8 @@ def create_intersection_graph(inflow,
              File Format:
              fracture 1, fracture 2, x center, y center, z center, intersection length
 
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
         G : NetworkX Graph
@@ -649,7 +653,6 @@ def load_json_graph(self, name):
     print("Complete")
     return G
 
-
 def add_perm(G, fracture_info):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
@@ -661,6 +664,8 @@ def add_perm(G, fracture_info):
         G :networkX graph
             NetworkX Graph based on the DFN
    
+        fracture_infor : str
+                filename for fracture information
     Returns
     -------
  
@@ -705,7 +710,19 @@ def add_perm(G, fracture_info):
 def add_area(G, fracture_info):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
-    representation'''
+    representation
+    
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+        fracture_info : str
+            filename for fracture information
+    
+    Returns
+    -------
+        None
+'''
 
     aperture = np.genfromtxt(fracture_info, skip_header=1)[:, 2]
     edges = list(nx.edges(G))
@@ -720,10 +737,20 @@ def add_area(G, fracture_info):
 
 
 def add_weight(G):
-    '''Compute weight w = K*A/L associated with each edge '''
+    '''Compute weight w = K*A/L associated with each edge 
+    Parameters
+    ----------
+        G : NetworkX Graph
+            networkX graph 
+    
+    Returns
+    -------
+        None
+'''
     edges = list(nx.edges(G))
     for u, v in edges:
         if G.edges[u, v]['length'] > 0:
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v][
                 'area'] / G.edges[u, v]['length']
     return
+

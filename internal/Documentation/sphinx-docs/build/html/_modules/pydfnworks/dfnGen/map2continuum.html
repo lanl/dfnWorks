@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html#general-workflow-functions">General Workflow functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
@@ -208,7 +209,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">orl</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">orl</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: orl must be positive integer. Exiting&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: orl must be positive integer. Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -222,7 +223,7 @@
                 <span class="n">new</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
     <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;points.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
 
-    <span class="n">num_poly</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">(</span><span class="n">quite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">num_poly</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">mh</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">()</span>
 
     <span class="c1"># Extent of domain</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">-</span> <span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
@@ -238,7 +239,7 @@
     <span class="n">nz</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="k">if</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span> <span class="o">&gt;</span> <span class="mf">1e8</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: Number of elements &gt; 1e8. Exiting&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: Number of elements &gt; 1e8. Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -250,7 +251,7 @@
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;octree&#39;</span><span class="p">)</span>
 
     <span class="n">lagrit_driver</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">num_poly</span><span class="p">,</span> <span class="n">normal_vectors</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
-    <span class="n">lagrit_parameters</span><span class="p">(</span><span class="n">orl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+    <span class="n">lagrit_parameters</span><span class="p">(</span><span class="n">orl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
     <span class="n">lagrit_build</span><span class="p">()</span>
     <span class="n">lagrit_intersect</span><span class="p">()</span>
     <span class="n">lagrit_hex_to_tet</span><span class="p">()</span>
@@ -502,6 +503,37 @@
 <span class="s2">dump / stor /         octree_dfn     / MOTET</span>
 <span class="s2">dump / zone_imt /     octree_dfn     / MOTET</span>
 <span class="s2">dump / zone_outside / octree_dfn     / MOTET</span>
+
+<span class="s2">define / ZONE / 1</span>
+<span class="s2">define / FOUT / pboundary_top</span>
+<span class="s2">pset / top / attribute / zic / 1 0 0 / gt / ZMAX</span>
+<span class="s2">pset / top / zone / FOUT / ascii / ZONE</span>
+
+<span class="s2">define / ZONE / 2</span>
+<span class="s2">define / FOUT / pboundary_bottom</span>
+<span class="s2">pset / bottom / attribute / zic / 1 0 0 / lt / ZMIN</span>
+<span class="s2">pset / bottom / zone / FOUT / ascii / ZONE</span>
+
+<span class="s2">define / ZONE / 3</span>
+<span class="s2">define / FOUT / pboundary_left_w</span>
+<span class="s2">pset / left_w / attribute / xic / 1 0 0 / lt / XMIN</span>
+<span class="s2">pset / left_w / zone / FOUT / ascii / ZONE</span>
+
+<span class="s2">define / ZONE / 4</span>
+<span class="s2">define / FOUT / pboundary_front_n</span>
+<span class="s2">pset / front_n / attribute / yic / 1 0 0 / gt / YMAX</span>
+<span class="s2">pset / front_n / zone / FOUT / ascii / ZONE</span>
+
+<span class="s2">define / ZONE / 5</span>
+<span class="s2">define / FOUT / pboundary_right_e</span>
+<span class="s2">pset / right_e / attribute / xic / 1 0 0 / gt / XMAX</span>
+<span class="s2">pset / right_e / zone / FOUT / ascii / ZONE</span>
+
+<span class="s2">define / ZONE / 6</span>
+<span class="s2">define / FOUT / pboundary_back_s</span>
+<span class="s2">pset / back_s / attribute / yic / 1 0 0 / lt / YMIN</span>
+<span class="s2">pset / back_s / zone / FOUT / ascii / ZONE</span>
+
 <span class="s2">#</span>
 <span class="s2"># Work around for getting *.fehnm file</span>
 <span class="s2"># Do we need this?</span>
@@ -519,7 +551,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating driver_octree.lgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="lagrit_parameters"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.lagrit_parameters">[docs]</a><span class="k">def</span> <span class="nf">lagrit_parameters</span><span class="p">(</span><span class="n">orl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">):</span>
+<div class="viewcode-block" id="lagrit_parameters"><a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.dfnworks.lagrit_parameters">[docs]</a><span class="k">def</span> <span class="nf">lagrit_parameters</span><span class="p">(</span><span class="n">orl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This function creates the parameters_octree_dfn.mlgi lagrit script.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -559,6 +591,7 @@
 <span class="s2">#</span>
 <span class="s2">    &quot;&quot;&quot;</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">3</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / N_OCTREE_REFINE /    </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">orl</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / N_OCTREE_REFINE_M1 / </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">orl</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / N_OCTREE_np1 / </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">orl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
@@ -569,6 +602,12 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / Y1 /  </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">y1</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / Z0 /  </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">z0</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / Z1 /  </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">z1</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / XMAX / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / XMIN / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / YMAX / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / YMIN / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y0</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / ZMAX / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">z1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / ZMIN / </span><span class="si">%0.12f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">z0</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / NX / </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">nx</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / NY / </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ny</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;define / NZ / </span><span class="si">%d</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">nz</span><span class="p">)</span>
@@ -832,7 +871,7 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;../reduced_mesh.inp&quot;</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="s2">&quot;../reduced_mesh.inp&quot;</span><span class="p">,</span> <span class="s2">&quot;reduced_mesh.inp&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.</span><span class="se">\n</span><span class="s2">Exiting&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
