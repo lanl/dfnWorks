@@ -17,8 +17,8 @@ import multiprocessing as mp
 import pydfnworks.dfnGraph.graph_flow
 
 
-def create_neighbour_list(Gtilde):
-    """ Create a list of downstream neighbour vertices for every vertex on NetworkX graph obtained after running graph_flow
+def create_neighbor_list(Gtilde):
+    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
 
     Parameters
     ----------
@@ -113,7 +113,7 @@ class Particle():
                 graph obtained from graph_flow
 
             nbrs_dict: nested dictionary
-                dictionary of downstream neighbours for each vertex
+                dictionary of downstream neighbors for each vertex
 
         Returns
         -------
@@ -220,49 +220,92 @@ class Particle():
             ]
             n = len(data1)
             with open(frac_id_file, "a") as f2:
-                for i in range(0, 4 * n):
-                    if i < n:
-                        f2.write("{:d}  ".format(data1[i]))
-                #    elif n - 1 < i < 2 * n:
-                #        f2.write("{:3.2E}  ".format(
-                #            self.frac_seq[data1[i - n]]['time']))
-                #    elif 2 * n - 1 < i < 3 * n:
-                #        f2.write("{:3.2E}  ".format(
-                #            self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
-                #    else:
-                #        f2.write("{:3.2E}  ".format(
-                #            self.frac_seq[data1[i - 3 * n]]['dist']))
+                for i in range(n):
+                    f2.write("{:d}  ".format(data1[i]))
                 f2.write("\n")
+                # f2.write("{:d}".format(n))
+                # for i in range(0, 4 * n):
+                #     if i < n:
+                #         f2.write("{3:d}  ".format(data1[i]))
+                #     elif n - 1 < i < 2 * n:
+                #         f2.write("{:3.2E}  ".format(
+                #             self.frac_seq[data1[i - n]]['time']))
+                #     elif 2 * n - 1 < i < 3 * n:
+                #         f2.write("{:3.2E}  ".format(
+                #             self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
+                #     else:
+                #         f2.write("{:3.2E}  ".format(
+                #             self.frac_seq[data1[i - 3 * n]]['dist']))
+                # f2.write("\n")
+
 
 
 def prepare_output_files(partime_file, frac_id_file):
+    """ opens the output files partime_file and frac_id_file and writes the
+        header for each
 
-    if partime_file is not None:
-        try:
-            with open(partime_file, "w") as f1:
-                f1.write(
-                    "# advective time (s)  advection+diffusion time (s)  diffusion time (s)  total advection distance covered (m)\n"
-                )
-        except:
-            error = "ERROR: Unable to open supplied partime_file file {}\n".format(
-                partime_file)
-            sys.stderr.write(error)
-            sys.exit(1)
+        Parameters
+        ----------
 
-    if frac_id_file is not None:
-        try:
-            with open(frac_id_file, "w") as f2:
-                f2.write(
-                    "# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)\n"
-                )
-        except:
-            error = "ERROR: Unable to open supplied frac_id_file file {}\n".format(
-                frac_id_file)
-            sys.stderr.write(error)
-            sys.exit(1)
+            partime_file : string
+                name of file to  which the total travel times and lengths will be written for each particle
+
+            frac_id_file : string
+                name of file to which detailed information of each particle's travel will be written
+
+        Returns
+        -------
+            None
+    """
+
+    try:
+        with open(partime_file, "w") as f1:
+            f1.write(
+                "# advective time (s)  advection+diffusion time (s)  diffusion time (s)  total advection distance covered (m)\n"
+            )
+    except:
+        error = "ERROR: Unable to open supplied partime_file file {}\n".format(
+            partime_file)
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    try:
+        with open(frac_id_file, "w") as f2:
+            f2.write("# List of fractures each particle visits\n")
+            #f2.write(
+            #    "# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)\n"
+            #)
+    except:
+        error = "ERROR: Unable to open supplied frac_id_file file {}\n".format(
+            frac_id_file)
+        sys.stderr.write(error)
+        sys.exit(1)
+
 
 
 def dump_particle_info(particles, partime_file, frac_id_file):
+    """ If running graph transport in parallel, this function dumps out all the
+        particle information is a single pass rather then opening and closing the
+        files for every particle
+
+
+        Parameters
+        ----------
+            particles : list
+                list of particle objects 
+
+            partime_file : string
+                name of file to  which the total travel times and lengths will be written for each particle
+
+            frac_id_file : string
+                name of file to which detailed information of each particle's travel will be written
+
+        Returns
+        -------
+            pfailcount : int 
+                Number of particles that do not exit the domain
+
+        """
 
     prepare_output_files(partime_file, frac_id_file)
 
@@ -282,19 +325,25 @@ def dump_particle_info(particles, partime_file, frac_id_file):
                 if isinstance(key, dict) is False
             ]
             n = len(data1)
-            for i in range(0, 4 * n):
-                if i < n:
-                    f2.write("{:d}  ".format(data1[i]))
-                elif n - 1 < i < 2 * n:
-                    f2.write("{:3.2E}  ".format(
-                        particle.frac_seq[data1[i - n]]['time']))
-                elif 2 * n - 1 < i < 3 * n:
-                    f2.write("{:3.2E}  ".format(
-                        particle.frac_seq[data1[i - 2 * n]]['tdrw_time']))
-                else:
-                    f2.write("{:3.2E}  ".format(
-                        particle.frac_seq[data1[i - 3 * n]]['dist']))
-                f2.write("\n")
+
+            for i in range(n):
+                f2.write("{:d}  ".format(data1[i]))
+            f2.write("\n")
+            # f2.write("{:d}".format(n))
+            # for i in range(0, 4 * n):
+            #     if i < n:
+            #         f2.write("{3:d}  ".format(data1[i]))
+            #     elif n - 1 < i < 2 * n:
+            #         f2.write("{:3.2E}  ".format(
+            #             self.frac_seq[data1[i - n]]['time']))
+            #     elif 2 * n - 1 < i < 3 * n:
+            #         f2.write("{:3.2E}  ".format(
+            #             self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
+            #     else:
+            #         f2.write("{:3.2E}  ".format(
+            #             self.frac_seq[data1[i - 3 * n]]['dist']))
+            # f2.write("\n")
+            f2.write("\n")
         else:
             pfailcount += 1
 
@@ -304,18 +353,43 @@ def dump_particle_info(particles, partime_file, frac_id_file):
 
 
 def track_particle(data):
+    """ Tracks a single particle through the graph
 
-    Gtilde = data["Gtilde"]
-    nbrs_dict = data["nbrs_dict"]
-    frac_porosity = data["frac_porosity"]
-    tdrw_flag = data["tdrw_flag"]
-    matrix_porosity = data["matrix_porosity"]
-    matrix_diffusivity = data["matrix_diffusivity"]
+        all input parameters are in the dictionary named data 
+
+        Parameters
+        ----------
+                
+            Gtilde : NetworkX graph 
+                obtained from graph_flow
+
+            nbrs_dict : dict
+                see function  create_neighbor_list
+
+            frac_porosity: float
+                porosity of fracture, default is 1.0
+
+            tdrw_flag : Bool
+                if False, matrix_porosity, matrix_diffusivity are ignored
+
+            matrix_porosity: float
+                default is 0.02
+
+            matrix_diffusivity: float
+                default is 1e-11 m^2/s
+
+        Returns
+        -------
+            particle : object
+                particle trajectory information 
+
+        """
 
     particle = Particle()
     particle.set_start_time_dist(0, 0)
-    particle.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
-                   matrix_porosity, matrix_diffusivity)
+    particle.track(data["Gtilde"], data["nbrs_dict"], data["frac_porosity"],
+                   data["tdrw_flag"], data["matrix_porosity"],
+                   data["matrix_diffusivity"])
 
     return particle
 
@@ -365,7 +439,7 @@ def run_graph_transport(self,
     Information on individual functions is found therein
     """
 
-    nbrs_dict = create_neighbour_list(Gtilde)
+    nbrs_dict = create_neighbor_list(Gtilde)
 
     print("--> Creating downstream neighbor list")
 
