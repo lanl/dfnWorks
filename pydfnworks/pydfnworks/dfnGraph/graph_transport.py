@@ -343,7 +343,6 @@ def dump_particle_info(particles, partime_file, frac_id_file):
             #         f2.write("{:3.2E}  ".format(
             #             self.frac_seq[data1[i - 3 * n]]['dist']))
             # f2.write("\n")
-            f2.write("\n")
         else:
             pfailcount += 1
 
