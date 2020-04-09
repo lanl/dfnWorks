@@ -277,7 +277,7 @@ def output_report(self,
         histHeights, binEdges, patches = histo.hist(radiiSizes,
                                                     numBuckets,
                                                     weights=weights,
-                                                    normed=1,
+                                                    density=True,
                                                     color='r',
                                                     alpha=0.75,
                                                     label='Empirical data')
