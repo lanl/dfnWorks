@@ -50,7 +50,7 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.upscale import upscale
-    #from pydfnworks.dfnGen.lagrit_scripts_dfm import mesh_dfm
+    from pydfnworks.dfnGen.lagrit_scripts_dfm import mesh_dfm
 
     # dfnFlow
     import pydfnworks.dfnFlow
