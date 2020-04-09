@@ -180,7 +180,7 @@ def create_intersection_graph(inflow,
     """
 
     print("Creating Graph Based on DFN")
-    print("Intersections being mapped to nodes and Fractures to Edges")
+    print("Intersections being mapped to nodes and fractures to edges")
     inflow_index = boundary_index(inflow)
     outflow_index = boundary_index(outflow)
 
