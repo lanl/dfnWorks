@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.2"
+__version__ = "2.3"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -49,10 +49,8 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
 
     from pydfnworks.dfnGen.map2continuum import map_to_continuum
-#    from pydfnworks.dfnGen.map2continuum_fast import map_to_continuum
     from pydfnworks.dfnGen.upscale import upscale
-#    from pydfnworks.dfnGen.upscale_layers import upscale
-    from pydfnworks.dfnGen.lagrit_scripts_dfm import mesh_dfm
+    #from pydfnworks.dfnGen.lagrit_scripts_dfm import mesh_dfm
 
     # dfnFlow
     import pydfnworks.dfnFlow
