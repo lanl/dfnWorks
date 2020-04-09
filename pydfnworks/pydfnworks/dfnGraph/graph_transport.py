@@ -13,7 +13,6 @@ import math
 import scipy.special
 import multiprocessing as mp
 
-
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow
 
@@ -77,7 +76,6 @@ class Particle():
         * flag : True if particle exited system, else False
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
-
     def __init__(self):
         self.frac_seq = {}
         self.time = float
@@ -236,6 +234,7 @@ class Particle():
                 #            self.frac_seq[data1[i - 3 * n]]['dist']))
                 f2.write("\n")
 
+
 def prepare_output_files(partime_file, frac_id_file):
 
     if partime_file is not None:
@@ -262,6 +261,7 @@ def prepare_output_files(partime_file, frac_id_file):
             sys.stderr.write(error)
             sys.exit(1)
 
+
 def dump_particle_info(particles, partime_file, frac_id_file):
 
     prepare_output_files(partime_file, frac_id_file)
@@ -274,11 +274,12 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     for particle in particles:
         if particle.flag:
             f1.write("{:3.3E} {:3.3E} {:3.3E} {:3.3E} \n".format(
-                particle.time, particle.tdrw_time, particle.tdrw_time - particle.time,
-                particle.dist))
+                particle.time, particle.tdrw_time,
+                particle.tdrw_time - particle.time, particle.dist))
 
             data1 = [
-                key for key in particle.frac_seq if isinstance(key, dict) is False
+                key for key in particle.frac_seq
+                if isinstance(key, dict) is False
             ]
             n = len(data1)
             for i in range(0, 4 * n):
@@ -301,6 +302,7 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     f2.close()
     return pfailcount
 
+
 def track_particle(data):
 
     Gtilde = data["Gtilde"]
@@ -310,13 +312,13 @@ def track_particle(data):
     matrix_porosity = data["matrix_porosity"]
     matrix_diffusivity = data["matrix_diffusivity"]
 
-
     particle = Particle()
     particle.set_start_time_dist(0, 0)
     particle.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,
-        matrix_porosity, matrix_diffusivity)
+                   matrix_porosity, matrix_diffusivity)
 
     return particle
+
 
 def run_graph_transport(self,
                         Gtilde,
@@ -370,22 +372,22 @@ def run_graph_transport(self,
     Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
 
     pfailcount = 0
-    print("--> Starting particle tracking for %d particles"%nparticles)
+    print("--> Starting particle tracking for %d particles" % nparticles)
 
     if self.ncpu > 1:
-        print("--> Using %d processors"%self.ncpu)
+        print("--> Using %d processors" % self.ncpu)
         mp_input = []
         for i in range(nparticles):
 
             data = {}
-            data["Gtilde"] = Gtilde 
-            data["nbrs_dict"]= nbrs_dict 
-            data["frac_porosity"] = frac_porosity 
-            data["tdrw_flag"] = tdrw_flag 
+            data["Gtilde"] = Gtilde
+            data["nbrs_dict"] = nbrs_dict
+            data["frac_porosity"] = frac_porosity
+            data["tdrw_flag"] = tdrw_flag
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             #data["partime_file"] = partime_file
-            #data["frac_id_file"] = frac_id_file 
+            #data["frac_id_file"] = frac_id_file
             mp_input.append(data)
 
         pool = mp.Pool(self.ncpu)
@@ -394,7 +396,8 @@ def run_graph_transport(self,
         pool.join()
         pool.terminate()
         print("--> Tracking Complete")
-        print("--> Writing Data to files: {} and {}".format(partime_file,frac_id_file))
+        print("--> Writing Data to files: {} and {}".format(
+            partime_file, frac_id_file))
         dump_particle_info(particles, partime_file, frac_id_file)
         print("--> Writing Data Complete")
 
@@ -402,7 +405,7 @@ def run_graph_transport(self,
         prepare_output_files(partime_file, frac_id_file)
         for i in range(nparticles):
             if i % 1000 == 0:
-                print("--> Starting particle %d out of %d"%(i,nparticles))
+                print("--> Starting particle %d out of %d" % (i, nparticles))
             particle_i = Particle()
             particle_i.set_start_time_dist(0, 0)
             particle_i.track(Gtilde, nbrs_dict, frac_porosity, tdrw_flag,

@@ -658,6 +658,7 @@ def load_json_graph(self, name):
     print("Complete")
     return G
 
+
 def add_perm(G, fracture_info="fracture_info.dat"):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
@@ -758,4 +759,3 @@ def add_weight(G):
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v][
                 'area'] / G.edges[u, v]['length']
     return
-
