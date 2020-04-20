@@ -1,5 +1,4 @@
-from tempfile import mkstemp
-from shutil import move
+rom shutil import move
 import os
 import sys
 import subprocess
@@ -11,20 +10,16 @@ DFNPARAMS = os.path.expanduser(DFNPARAMS)
 
 def valid(name):
     """" Check that path is valid for a executable
-
     Parameters
     ----------
         name : string
             Path to file or executable
-
     Returns
     -------
         None
-
     Notes
     -----
         If file is not found, program exits
-
 """
     if not (os.path.isfile(os.path.abspath(os.environ[name]))
             or os.path.isdir(os.path.abspath(os.environ[name]))):
@@ -36,12 +31,10 @@ def valid(name):
 
 def compile_dfn_exe(directory):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
-
     Parameters
     ----------
         directory : string
             Path to dfnWorks executable 
-
     Returns
     -------
         None
@@ -49,7 +42,6 @@ def compile_dfn_exe(directory):
     Notes
     -----
         This function is only called if an executable is not found. 
-
 """
 
     print("Compiling %s" % directory)
@@ -62,20 +54,15 @@ def compile_dfn_exe(directory):
 
 def define_paths():
     """Defines enviromental variables for use in dfnWorks. The user must change these to match their workspace.
-
     Parameters
     ----------
         None
-
     Returns
     -------
         None
-
     Notes
     -----
         Enviromental variables are set to executables
-
-
 """
 
     # ================================================
@@ -89,13 +76,13 @@ def define_paths():
     # Or, change the paths here
     else:
         env_paths = {
-            'dfnworks_PATH': 'DUMMY/dfnworks-main/',
-            'PETSC_DIR': '/home/satkarra/src/petsc-3.10.2',
-            'PETSC_ARCH': '/Ubuntu-18.04-nodebug/',
-            'PFLOTRAN_EXE': '/home/satkarra/src/pflotran-petsc.3.10.2/src/pflotran/pflotran',
-            'PYTHON_EXE': '/n/swdev/packages/Ubuntu-16.04-x86_64/anaconda-python3/5.2.0/bin/python',
-            'LAGRIT_EXE': '/n/swdev/mesh_tools/lagrit/install-Ubuntu-16.04-x86_64-gcc5.4.0/bin/lagrit',
-            'FEHM_EXE': '/scratch/eescommon/spchu//FEHM/xfehm_v3.3.3lnUbuntu16.13Jun19'
+            'dfnworks_PATH': '',
+            'PETSC_DIR': '',
+            'PETSC_ARCH': '',
+            'PFLOTRAN_EXE': '',
+            'PYTHON_EXE': '',
+            'LAGRIT_EXE': '',
+            'FEHM_EXE': ''
         }
 
     # the dfnworks-main  repository
