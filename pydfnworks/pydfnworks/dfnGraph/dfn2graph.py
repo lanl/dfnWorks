@@ -434,6 +434,76 @@ def add_fracture_source(self,G,source):
     return G
 
 
+def add_fracture_target(self,G,target):
+    """Returns the k shortest paths in a graph 
+    
+    Parameters
+    ----------
+        G : NetworkX Graph
+            NetworkX Graph based on a DFN 
+        target : list
+            list of integers corresponding to fracture numbers
+    Returns 
+    -------
+        G : NetworkX Graph
+
+    Notes
+    -----
+        bipartite graph note supported
+         
+    """
+
+    if not type(target) == list:
+        source = [target]
+
+    print("--> Adding new target connections")
+    print("--> Warning old target will be removed!!!")
+
+    if G.graph['representation'] == "fracture":
+        # removing old target term and all connections
+        G.remove_node('t')
+        # add new target node
+        G.add_node('t')
+
+        G.nodes['t']['perm'] = 1.0
+        G.nodes['t']['iperm'] = 1.0
+
+        for u in target:
+            G.add_edge(u,'t')
+
+    elif G.graph['representation'] == "intersection":
+        # removing old target term and all connections
+        nodes_to_remove = ['t']
+        for u,d in G.nodes(data=True):
+            if u != 's' and u != 't':
+                f1,f2 = d["frac"]
+                #print("node {0}: f1 {1}, f2 {2}".format(u,f1,f2))
+                if f2 == 't':
+                    nodes_to_remove.append(u)
+
+        print("--> Removing nodes: ", nodes_to_remove)
+        G.remove_nodes_from(nodes_to_remove)
+
+        # add new target node
+        G.add_node('t')
+        for u,d in G.nodes(data=True):
+            if u != 's' and u != 't':
+                f1 = d["frac"][0]
+                f2 = d["frac"][1]
+                if f1 in target:
+                    print("--> Adding edge between {0} and new target / fracture {1}".format(u,f1))
+                    G.add_edge(u,'t',frac=f1,length=0.,perm=1.,iperm=1.)
+                elif f2 in target:
+                    print("--> Adding edge between {0} and new target / fracture {1}".format(u,f2)) 
+                    G.add_edge(u,'t',frac=f2,length=0.,perm=1.,iperm=1.)
+
+    elif G.graph['representation'] == "bipartite":
+        print("--> Not supported for bipartite graph")
+        print("--> Returning unchanged graph")
+    return G
+
+
+
 def k_shortest_paths(G, k, source, target, weight):
     """Returns the k shortest paths in a graph 
     

@@ -65,7 +65,7 @@ class DFNWORKS(Frozen):
 
     # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source
+    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source, add_fracture_target
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
 
