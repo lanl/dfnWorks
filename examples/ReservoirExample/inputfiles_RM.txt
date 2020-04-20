@@ -1,0 +1,3 @@
+dfnGen /dfnWorks/work/ReservoirExample/input_RM.dat
+dfnFlow /dfnWorks/work/ReservoirExample/ResModPFLOTRAN.in  
+dfnTrans  /dfnWorks/work/ReservoirExample/PTDFN_control_RM.dat
