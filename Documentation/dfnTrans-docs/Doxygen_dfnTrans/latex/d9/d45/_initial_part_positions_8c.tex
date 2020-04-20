@@ -1,0 +1,215 @@
+\hypertarget{_initial_part_positions_8c}{}\section{/\+Users/nataliia/\+Desktop/dfn\+Gen-\/docs/\+Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\+Initial\+Part\+Positions.c File Reference}
+\label{_initial_part_positions_8c}\index{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/InitialPartPositions.c@{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/InitialPartPositions.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$search.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Func\+Def.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}}
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_ae2df2bd90c8d4aa96e508002a36327c9}{Init\+Pos}} ()
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_a461479d92dd1f67c7ef94fa953186860}{Init\+Cell}} ()
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_a30b78ca10a78d9e5d6de6d5831a5557a}{Init\+Particles\+\_\+np}} (int k\+\_\+current, int firstnd, int lastnd, int parts\+\_\+fracture, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_a01e7bd2a5bd9417f1d28849b8577b0b9}{Init\+Particles\+\_\+eq}} (int k\+\_\+current, int firstn, int lastn, double parts\+\_\+dist, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_a2e978219b990b7dfb64b4f9d567054db}{Init\+Particles\+\_\+ones}} (int k\+\_\+current, double inter\+\_\+p\mbox{[}$\,$\mbox{]}\mbox{[}4\mbox{]}, int fracture\+\_\+n, int parts\+\_\+fracture, int ii, double thirdcoor, int zonenumb\+\_\+in, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+void \mbox{\hyperlink{_initial_part_positions_8c_a59d54f4d5c97e70b0f25e32de87ee3da}{Flow\+In\+Weight}} (int numberpart)
+\item 
+void \mbox{\hyperlink{_initial_part_positions_8c_a0355cfa365c20964163da103eec2f0e5}{Init\+In\+Matrix}} ()
+\item 
+double \mbox{\hyperlink{_initial_part_positions_8c_a0610d22ad530758b4de42acd23a5df92}{Time\+From\+Matrix}} (double pdist)
+\item 
+int \mbox{\hyperlink{_initial_part_positions_8c_ad3b7970929b5c9502172afc4e0bc65e8}{Init\+Particles\+\_\+flux}} (int k\+\_\+current, int first\+\_\+ind, int last\+\_\+ind, double weight\+\_\+p)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_initial_part_positions_8c_a59d54f4d5c97e70b0f25e32de87ee3da}\label{_initial_part_positions_8c_a59d54f4d5c97e70b0f25e32de87ee3da}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!FlowInWeight@{FlowInWeight}}
+\index{FlowInWeight@{FlowInWeight}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{FlowInWeight()}{FlowInWeight()}}
+{\footnotesize\ttfamily void Flow\+In\+Weight (\begin{DoxyParamCaption}\item[{int}]{numberpart }\end{DoxyParamCaption})}
+
+Function calculates particle\textquotesingle{}s in-\/flow flux weight. Used in option \#1, \#2, \#3. 
+
+Definition at line 861 of file Initial\+Part\+Positions.\+c.
+
+
+
+References contam\+::cell, cell, contam\+::fl\+\_\+weight, Init\+Cell(), node, element\+::node\+\_\+ind, np, vertex\+::numneighb, particle, and contam\+::weight.
+
+
+
+Referenced by Particle\+Track().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a461479d92dd1f67c7ef94fa953186860}\label{_initial_part_positions_8c_a461479d92dd1f67c7ef94fa953186860}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitCell@{InitCell}}
+\index{InitCell@{InitCell}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitCell()}{InitCell()}}
+{\footnotesize\ttfamily int Init\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a search to find cell Id where the particle was initially placed. 
+
+Definition at line 621 of file Initial\+Part\+Positions.\+c.
+
+
+
+References vertex\+::cells, Inside\+Cell(), node, nodezonein, vertex\+::numneighb, and nzone\+\_\+in.
+
+
+
+Referenced by Flow\+In\+Weight().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a0355cfa365c20964163da103eec2f0e5}\label{_initial_part_positions_8c_a0355cfa365c20964163da103eec2f0e5}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitInMatrix@{InitInMatrix}}
+\index{InitInMatrix@{InitInMatrix}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitInMatrix()}{InitInMatrix()}}
+{\footnotesize\ttfamily void Init\+In\+Matrix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs data reading from files for Option \#5, init\+\_\+matrix. In this option particles are placed at random positions in matrix, the time to move from initial position to nearest fracture is calculated in function Time\+From\+Matrix.
+
+Input files Particle\+Init\+Coord\+R.\+dat and Closest\+Node\+R.\+inp provide particles initial positions at matrix and te closes node ID at D\+FN mesh, respectively. 
+
+Definition at line 968 of file Initial\+Part\+Positions.\+c.
+
+
+
+References contam\+::cell, Control\+\_\+\+File(), vertex\+::coord, vertex\+::coord\+\_\+xy, contam\+::fl\+\_\+weight, vertex\+::fracture, contam\+::fracture, contam\+::intcell, node, npart, Open\+File(), particle, contam\+::position, contam\+::prev\+\_\+pos, contam\+::time, Time\+From\+Matrix(), contam\+::velocity, and contam\+::weight.
+
+
+
+Referenced by Init\+Pos().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a01e7bd2a5bd9417f1d28849b8577b0b9}\label{_initial_part_positions_8c_a01e7bd2a5bd9417f1d28849b8577b0b9}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitParticles\_eq@{InitParticles\_eq}}
+\index{InitParticles\_eq@{InitParticles\_eq}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitParticles\_eq()}{InitParticles\_eq()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+eq (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{firstn,  }\item[{int}]{lastn,  }\item[{double}]{parts\+\_\+dist,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particles initial positions at a single fracture edge, using calculated before distance between particles. Option \#2, init\+\_\+eqd. 
+
+Definition at line 711 of file Initial\+Part\+Positions.\+c.
+
+
+
+References vertex\+::coord\+\_\+xy, contam\+::fl\+\_\+weight, vertex\+::fracture, contam\+::fracture, fracture, contam\+::intcell, node, npart, particle, contam\+::position, contam\+::time, and contam\+::velocity.
+
+
+
+Referenced by Init\+Pos().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_ad3b7970929b5c9502172afc4e0bc65e8}\label{_initial_part_positions_8c_ad3b7970929b5c9502172afc4e0bc65e8}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitParticles\_flux@{InitParticles\_flux}}
+\index{InitParticles\_flux@{InitParticles\_flux}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitParticles\_flux()}{InitParticles\_flux()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+flux (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind,  }\item[{double}]{weight\+\_\+p }\end{DoxyParamCaption})}
+
+Function defines particle\textquotesingle{}s initial positions at single fracture edge in Option \#6. Particles are placed according to input flux weights. In this case, all the particles have the same flux weight, but number of particles per fracture edge depends on in-\/flow flux of this fracture. 
+
+Definition at line 1095 of file Initial\+Part\+Positions.\+c.
+
+
+
+References contam\+::cell, vertex\+::coord\+\_\+xy, density, contam\+::fl\+\_\+weight, vertex\+::fracture, contam\+::fracture, contam\+::intcell, node, nodezonein, np, npart, vertex\+::numneighb, particle, contam\+::position, contam\+::time, and contam\+::velocity.
+
+
+
+Referenced by Init\+Pos().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a30b78ca10a78d9e5d6de6d5831a5557a}\label{_initial_part_positions_8c_a30b78ca10a78d9e5d6de6d5831a5557a}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitParticles\_np@{InitParticles\_np}}
+\index{InitParticles\_np@{InitParticles\_np}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitParticles\_np()}{InitParticles\_np()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+np (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{firstnd,  }\item[{int}]{lastnd,  }\item[{int}]{parts\+\_\+fracture,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particle\textquotesingle{}s initial positions on a single fracture edge. Option \#1, init\+\_\+nf 
+
+Definition at line 660 of file Initial\+Part\+Positions.\+c.
+
+
+
+References vertex\+::coord\+\_\+xy, contam\+::fl\+\_\+weight, vertex\+::fracture, contam\+::fracture, contam\+::intcell, node, npart, particle, contam\+::position, contam\+::time, and contam\+::velocity.
+
+
+
+Referenced by Init\+Pos().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a2e978219b990b7dfb64b4f9d567054db}\label{_initial_part_positions_8c_a2e978219b990b7dfb64b4f9d567054db}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitParticles\_ones@{InitParticles\_ones}}
+\index{InitParticles\_ones@{InitParticles\_ones}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitParticles\_ones()}{InitParticles\_ones()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+ones (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{double}]{inter\+\_\+p\mbox{[}$\,$\mbox{]}\mbox{[}4\mbox{]},  }\item[{int}]{fracture\+\_\+n,  }\item[{int}]{parts\+\_\+fracture,  }\item[{int}]{ii,  }\item[{double}]{thirdcoor,  }\item[{int}]{zonenumb\+\_\+in,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particles initial positions in option \#3, where user defines region at in-\/flow boundary face for particles. 
+
+Definition at line 764 of file Initial\+Part\+Positions.\+c.
+
+
+
+References contam\+::fl\+\_\+weight, contam\+::fracture, fracture, contam\+::intcell, npart, particle, contam\+::position, material\+::rot2mat, contam\+::time, and contam\+::velocity.
+
+
+
+Referenced by Init\+Pos().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_ae2df2bd90c8d4aa96e508002a36327c9}\label{_initial_part_positions_8c_ae2df2bd90c8d4aa96e508002a36327c9}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!InitPos@{InitPos}}
+\index{InitPos@{InitPos}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{InitPos()}{InitPos()}}
+{\footnotesize\ttfamily int Init\+Pos (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function defines the required option of particles initial positions defined at input control file; calculates number of particles, allocates memory. First option init\+\_\+nf\+: equal number of particles on every boundary edge regardless of edge length
+
+Second option init\+\_\+eqd\+: calculate total length of boundary edges; define the distance between particles and place particles equidistant from each other on all edges
+
+Third option init\+\_\+oneregion\+: user specifies a region and all particles start from the fracture edges that located inside the region
+
+Fourth option init\+\_\+random\+: particles will be set randomly over all fractures surfaces; in this case the particles are weighted acoording to the aperture
+
+5th option init\+\_\+matrix\+: particles are set randomly in rock matrix, their time from initial positions is calculated, then particles move through fractures to out-\/flow boundary. This option requires preprocessing; the script Random\+Posit\+Gener.\+py will provide necessary input files
+
+Sixth option init\+\_\+flux\+: place particles according to input fluxes. Each particle has the same flux weight. The number of particles are placed propportionally to inflow flux on each cell and fracture edge. 
+
+Definition at line 21 of file Initial\+Part\+Positions.\+c.
+
+
+
+References vertex\+::aperture, contam\+::cell, cell, Control\+\_\+\+Data(), Control\+\_\+\+File(), Control\+\_\+\+File\+\_\+\+Optional(), Control\+\_\+\+Param(), vertex\+::coord, inpfile\+::filename, contam\+::fl\+\_\+weight, inpfile\+::flag, flag\+\_\+w, vertex\+::fracture, element\+::fracture, contam\+::fracture, fracture, Init\+In\+Matrix(), Init\+Particles\+\_\+eq(), Init\+Particles\+\_\+flux(), Init\+Particles\+\_\+np(), Init\+Particles\+\_\+ones(), Inside\+Cell(), Moving2\+Center(), ncells, node, element\+::node\+\_\+ind, nodezonein, npart, nzone\+\_\+in, inpfile\+::param, particle, contam\+::time, total\+Flux\+In, and contam\+::velocity.
+
+
+
+Referenced by Particle\+Track().
+
+\mbox{\Hypertarget{_initial_part_positions_8c_a0610d22ad530758b4de42acd23a5df92}\label{_initial_part_positions_8c_a0610d22ad530758b4de42acd23a5df92}} 
+\index{InitialPartPositions.c@{InitialPartPositions.c}!TimeFromMatrix@{TimeFromMatrix}}
+\index{TimeFromMatrix@{TimeFromMatrix}!InitialPartPositions.c@{InitialPartPositions.c}}
+\subsubsection{\texorpdfstring{TimeFromMatrix()}{TimeFromMatrix()}}
+{\footnotesize\ttfamily double Time\+From\+Matrix (\begin{DoxyParamCaption}\item[{double}]{pdist }\end{DoxyParamCaption})}
+
+Option \#5. Estimation of travel time of particles moving from matrix to the closest fracture. 
+
+Definition at line 1062 of file Initial\+Part\+Positions.\+c.
+
+
+
+References Control\+\_\+\+Param(), inpfile\+::param, pi, and timeunit.
+
+
+
+Referenced by Init\+In\+Matrix().
+
