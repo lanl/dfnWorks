@@ -1,5 +1,0 @@
-var searchData=
-[
-  ['weight',['weight',['../structcontam.html#a5b317ab55ab5b48dc82c9a473c76a41e',1,'contam']]],
-  ['weights',['weights',['../structintcoef.html#ab3d267bf2bc81e221bed2ebc1779dbf0',1,'intcoef']]]
-];
