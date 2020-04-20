@@ -380,7 +380,7 @@ def add_fracture_source(self,G,source):
 
     Notes
     -----
-        bipartite graph note supported
+        bipartite graph not supported
          
     """
 
@@ -449,7 +449,7 @@ def add_fracture_target(self,G,target):
 
     Notes
     -----
-        bipartite graph note supported
+        bipartite graph not supported
          
     """
 
