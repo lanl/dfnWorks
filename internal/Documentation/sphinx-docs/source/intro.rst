@@ -48,6 +48,16 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 	  publisher={Elsevier}
 	}
 
+What's new in v2.3?
+-------------------
+
+- Bug fixes in LaGrit Meshing 
+- Bug fixes in dfnTrans checking
+- Bug fixes in dfnTrans output
+- Expanded examples
+- Added PDF printing abilities
+ 
+
 What's new in v2.2?
 -------------------
 
@@ -75,10 +85,11 @@ What's new in v2.0?
 
 Where can one get dfnWorks?
 ---------------------------
-dfnWorks 2.2 can be downloaded from https://github.com/lanl/dfnWorks/
+dfnWorks 2.3 can be downloaded from https://hub.docker.com/r/ees16/dfnworks 
+
+dfnWorks 2.3 can be downloaded from https://github.com/lanl/dfnWorks/
 
 v1.0 can be downloaded from https://github.com/dfnWorks/dfnWorks-Version1.0  
-
 
 Installation
 ------------

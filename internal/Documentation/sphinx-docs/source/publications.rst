@@ -79,3 +79,13 @@ The following are publications that use *dfnWorks*:
 
 #. `\M. R. Sweeney, C. W. Gable, S. Karra, P. H. Stauffer, R. J. Pawar, J. D. Hyman  (2019). Upscaled discrete fracture matrix model (UDFM): an octree-refined continuum representation of fractured porous mediaComputational Geosciences 2019 <https://link.springer.com/article/10.1007/s10596-019-09921-9>`_.
 
+#. `\T. Sherman, J. D. Hyman, M. Dentz, and D. Bolster. Characterizing the influence of fracture density on network scale transport. J. Geophys. Res. Sol. Ea., 2019 <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JB018547>`_.
+
+#. D. Osthus, J. D. Hyman, S. Karra, N. Panda, and G. Srinivasan. A probabilistic clustering approach for identifying primary subnetworks of discrete fracture networks with quantified uncertainty. SIAM ASA Journal on Uncertainty Quantification, 2020.
+
+#. `\V. Romano, S. Bigi, F. Carnevale, J. D. Hyman, S. Karra, A. Valocchi, M. Tartarello, and M. Battaglia. Hydraulic characterization of a fault zone from fracture distribution. Journal of Structural Geology, 2020 <https://www.sciencedirect.com/science/article/pii/S0191814119305061>`_.
+
+#. S. Srinivasan, E. Cawi, J. D. Hyman, D. Osthus, A. Hagberg, H. Viswanathan, and G. Srinivasan. Physics-informed machine-learning for backbone identification in discrete fracture networks. Comput. Geosci., 2020
+
+
+
