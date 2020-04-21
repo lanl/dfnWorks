@@ -72,14 +72,13 @@ The Government is granted for itself and others acting on its behalf a
 nonexclusive, paid-up, irrevocable worldwide license in this material 
 to reproduce, prepare derivative works, distribute copies to the public,
 perform publicly and display publicly, and to permit others to do so.
- 
 
- The U.S. Government has rights to use, reproduce, and distribute this software.  
- NEITHER THE GOVERNMENT NOR TRIAD NATIONAL SECURITY, LLC MAKES ANY WARRANTY, 
- EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  
- If software is modified to  produce derivative works, such modified 
- software should be clearly marked, so as not to confuse it with the 
- version available from LANL.
+The U.S. Government has rights to use, reproduce, and distribute this software.  
+NEITHER THE GOVERNMENT NOR TRIAD NATIONAL SECURITY, LLC MAKES ANY WARRANTY, 
+EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  
+If software is modified to  produce derivative works, such modified 
+software should be clearly marked, so as not to confuse it with the 
+version available from LANL.
 
 Additionally, this program is free software; you can redistribute it and/or 
 modify it under the terms of the GNU General Public License as published by the 

@@ -63,7 +63,7 @@ def dfn_gen(self, output=True, visual_mode=None):
     self.dump_time('Process: dfnGen', time() - tic_gen)
 
 
-def make_working_directory(self):
+def make_working_directory(self,delete=False):
     ''' Make working directory for dfnWorks Simulation
 
     Parameters
@@ -80,24 +80,30 @@ def make_working_directory(self):
     If directory already exists, user is prompted if they want to overwrite and proceed. If not, program exits. 
     '''
 
-    try:
-        os.mkdir(self.jobname)
-    except OSError:
-        print('\nFolder ', self.jobname, ' exists')
-        keep = input('Do you want to delete it? [yes/no] \n')
-        if keep == 'yes' or keep == 'y':
-            print('Deleting', self.jobname)
-            shutil.rmtree(self.jobname)
-            print('Creating', self.jobname)
+    if not delete:
+        try:
             os.mkdir(self.jobname)
-        elif keep == 'no' or 'n':
-            error = "Not deleting folder. Exiting Program\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        else:
-            error = "Unknown Response. Exiting Program"
-            sys.stderr.write(error)
-            sys.exit(1)
+        except OSError:
+            print('\nFolder ', self.jobname, ' exists')
+            keep = input('Do you want to delete it? [yes/no] \n')
+            if keep == 'yes' or keep == 'y':
+                print('Deleting', self.jobname)
+                shutil.rmtree(self.jobname)
+                print('Creating', self.jobname)
+                os.mkdir(self.jobname)
+            elif keep == 'no' or 'n':
+                error = "Not deleting folder. Exiting Program\n"
+                sys.stderr.write(error)
+                sys.exit(1)
+            else:
+                error = "Unknown Response. Exiting Program\n"
+                sys.stderr.write(error)
+                sys.exit(1)
+    else:
+        shutil.rmtree(self.jobname)
+        print('Creating', self.jobname)
+        os.mkdir(self.jobname)
+
     os.mkdir(self.jobname + '/radii')
     os.mkdir(self.jobname + '/intersections')
     os.mkdir(self.jobname + '/polys')
@@ -121,18 +127,17 @@ def create_network(self):
 
     Notes
     -----
-    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existance of the file params.txt. 
+    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. 
     '''
     print('--> Running DFNGEN')
     # copy input file into job folder
-    cmd = os.environ[
-        'DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:
-                                                     -4] + '_clean.dat' + ' ' + self.jobname
+    cmd = os.environ['DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
+    
     print("Running %s" % cmd)
     subprocess.call(cmd, shell=True)
 
     if os.path.isfile("params.txt") is False:
-        error = "ERROR! Generation Failed\nExiting Program."
+        error = "ERROR! Generation Failed\nExiting Program.\n"
         sys.stderr.write(error)
         sys.exit(1)
     else:

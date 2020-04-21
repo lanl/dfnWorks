@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.2"
+__version__ = "2.3"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -64,7 +64,7 @@ class DFNWORKS(Frozen):
 
     # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures
+    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source, add_fracture_target
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
 
@@ -219,7 +219,7 @@ def commandline_options():
                         help="Path to original DFN files")
     options = parser.parse_args()
     if options.jobname is "":
-        error = "Error: Jobname is required. Exiting."
+        error = "Error: Jobname is required. Exiting.\n"
         sys.stderr.write(error)
         sys.exit(1)
     return options
@@ -254,7 +254,7 @@ def create_dfn():
     print('--> Number of cpus requested: ', DFN.ncpu)
 
     if options.input_file == "":
-        error = "ERROR!!! Input file must be provided."
+        error = "ERROR!!! Input file must be provided.\n"
         sys.stderr.write(error)
         sys.exit(1)
     else:
@@ -277,7 +277,7 @@ def create_dfn():
                 print('--> dfnTrans input file: ', DFN.dfnTrans_file)
                 DFN.local_dfnTrans_file = line[1].split('/')[-1]
             else:
-                error = "ERROR Reading Input File\nUnknown line: %s" % line
+                error = "ERROR Reading Input File\nUnknown line: %s\n" % line
                 sys.stderr.write(error)
                 sys.exit(1)
 

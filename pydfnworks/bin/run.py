@@ -15,6 +15,7 @@ if __name__ == "__main__":
     define_paths()
     main_time = time()
     print('Compiling executables')
+#    subprocess.call(os.environ['PYTHON_EXE'] + ' compile.py', shell=True)  
     DFN = create_dfn()
     if type(DFN) is ' NoneType':
         print('ERROR: DFN object not created correctly')

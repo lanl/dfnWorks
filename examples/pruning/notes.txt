@@ -1,6 +1,6 @@
 # Run example in two parts
 # part 1: make dfn and identify 2-core
-python run_prune_explicit_part1.py -name DUMMY/examples/pruning_example -input pruning_run_file.txt
+python run_prune_explicit_part1.py -name DUMMY/dfnworks-main/examples/pruning/pruning_example -input pruning_run_file.txt
 
 # part 2: mesh 2-core, run flow and transport
-python run_prune_explicit_part2.py -name DUMMY/examples/pruning_example/2_core -input pruning_run_file.txt -path DUMMY/examples/pruning_example/ -prune_file DUMMY/examples/pruning_example/2_core.dat -ncpu 8
+python run_prune_explicit_part2.py -name DUMMY/dfnworks-main/examples/pruning/pruning_example/2_core -input pruning_run_file.txt -path DUMMY/dfnworks-main/examples/pruning/pruning_example -prune_file DUMMY/dfnworks-main/examples/pruning/pruning/2_core.dat -ncpu 8
