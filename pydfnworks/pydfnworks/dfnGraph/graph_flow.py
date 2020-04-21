@@ -16,7 +16,6 @@ def get_laplacian_sparse_mat(G,
 
     Parameters
     ----------
-
         G : object
             NetworkX graph equipped with weight attribute
 
@@ -122,7 +121,7 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
     Outlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['outletflag']]
 
     if not set(Inlet).isdisjoint(set(Outlet)):
-        error = "Incompatible graph: Vertex connected to both source and target"
+        error = "Incompatible graph: Vertex connected to both source and target\n"
         sys.stderr.write(error)
         sys.exit(1)
 

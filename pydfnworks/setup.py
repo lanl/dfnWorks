@@ -14,7 +14,6 @@ import os
 import sys
 import shutil
 from setuptools import setup
-
 dirs = ["build", "pydfnworks.egg-info", "dist"]
 for d in dirs:
     if os.path.exists(d):

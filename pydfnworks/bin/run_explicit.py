@@ -17,19 +17,22 @@ main_time = time()
 DFN = create_dfn()
 
 DFN.make_working_directory()
+
+# dfnGen
 DFN.check_input()
 DFN.create_network()
 DFN.output_report()
 DFN.mesh_network()
 
-
+#dfnFlow()
 DFN.lagrit2pflotran()
 DFN.pflotran()
 DFN.parse_pflotran_vtk_python()       
 DFN.pflotran_cleanup()
 
-os.chdir(DFN.jobname)
+# dfnTrans
 DFN.copy_dfn_trans_files()
+DFN.check_dfn_trans_run_files()
 DFN.run_dfn_trans()
 
 main_elapsed = time() - main_time
