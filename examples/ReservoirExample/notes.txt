@@ -1,0 +1,1 @@
+python run_explicit_RM.py -name /dfnWorks/work/RM_example_output -input inputfiles_RM.txt  -ncpu 16 

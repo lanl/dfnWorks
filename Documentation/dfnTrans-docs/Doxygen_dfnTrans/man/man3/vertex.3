@@ -1,0 +1,144 @@
+.TH "vertex" 3 "Mon Jun 24 2019" "dfnTrans" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vertex
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FuncDef\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned int \fBtypeN\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfracture\fP [2]"
+.br
+.ti -1c
+.RI "double \fBcoord\fP [3]"
+.br
+.ti -1c
+.RI "double \fBcoord_xy\fP [6]"
+.br
+.ti -1c
+.RI "double \fBpvolume\fP"
+.br
+.ti -1c
+.RI "double \fBpressure\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumneighb\fP"
+.br
+.ti -1c
+.RI "double \fBvelocity\fP [4][2]"
+.br
+.ti -1c
+.RI "double \fBtimestep\fP [4]"
+.br
+.ti -1c
+.RI "unsigned int * \fBindnodes\fP"
+.br
+.ti -1c
+.RI "unsigned int ** \fBcells\fP"
+.br
+.ti -1c
+.RI "unsigned int ** \fBfracts\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fBtype\fP"
+.br
+.ti -1c
+.RI "double * \fBflux\fP"
+.br
+.ti -1c
+.RI "double * \fBarea\fP"
+.br
+.ti -1c
+.RI "double \fBresidtime\fP"
+.br
+.ti -1c
+.RI "double \fBaperture\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Vertex is a node structure and contains all the information about the node/vertex of the DFN mesh 
+.PP
+Definition at line 106 of file FuncDef\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "double vertex::aperture"
+fracture aperture at the control volume cell 
+.PP
+Definition at line 157 of file FuncDef\&.h\&.
+.SS "double* vertex::area"
+dynamic array of 2D areas of the edges of the control volume cell 
+.PP
+Definition at line 151 of file FuncDef\&.h\&.
+.SS "unsigned int** vertex::cells"
+dynamic array of triangular cells ID 
+.PP
+Definition at line 139 of file FuncDef\&.h\&.
+.SS "double vertex::coord[3]"
+node's x,y,z coordinations 
+.PP
+Definition at line 115 of file FuncDef\&.h\&.
+.SS "double vertex::coord_xy[6]"
+XYZ plane coordination of node; if the node is on intersection then two sets of XYZ coordinations are defined (each set for each intersecting fracture 
+.PP
+Definition at line 118 of file FuncDef\&.h\&.
+.SS "double* vertex::flux"
+dynamic array of flow fluxes at the edges of the control volume cell 
+.PP
+Definition at line 148 of file FuncDef\&.h\&.
+.SS "unsigned int** vertex::fracts"
+dynamic array of fractures ID 
+.PP
+Definition at line 142 of file FuncDef\&.h\&.
+.SS "unsigned int vertex::fracture[2]"
+fracture ID where node is 
+.PP
+Definition at line 112 of file FuncDef\&.h\&.
+.SS "unsigned int* vertex::indnodes"
+dynamic array of neighboring nodes ID 
+.PP
+Definition at line 136 of file FuncDef\&.h\&.
+.SS "unsigned int vertex::numneighb"
+number of nodes connections 
+.PP
+Definition at line 127 of file FuncDef\&.h\&.
+.SS "double vertex::pressure"
+fluid pressure defined at the node by flow solver 
+.PP
+Definition at line 124 of file FuncDef\&.h\&.
+.SS "double vertex::pvolume"
+Voronoi polygon vlue associated with the cell center 
+.PP
+Definition at line 121 of file FuncDef\&.h\&.
+.SS "double vertex::residtime"
+residential time of particles inside the control volume cell 
+.PP
+Definition at line 154 of file FuncDef\&.h\&.
+.SS "double vertex::timestep[4]"
+appropriate time step for particles is defined at the node according to the volume of control volume cell 
+.PP
+Definition at line 133 of file FuncDef\&.h\&.
+.SS "unsigned int* vertex::type"
+dynamic array of types of neighbouring nodes 
+.PP
+Definition at line 145 of file FuncDef\&.h\&.
+.SS "unsigned int vertex::typeN"
+node type: 0 - interior node; 10 - boundary (exterior) node; 2 - intersection (interface) node; 12 - intersection boundary node; 300, 310, 302, 312 - node in in-flow boundary; 200, 210, 202, 212 - node in out-flow boundary 
+.PP
+Definition at line 109 of file FuncDef\&.h\&.
+.SS "double vertex::velocity[4][2]"
+reconstructed Darcy velocity at the node, four velocities are defined at intersection nodes 
+.PP
+Definition at line 130 of file FuncDef\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for dfnTrans from the source code\&.

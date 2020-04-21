@@ -204,6 +204,7 @@ int InitPos()
                             particle[k_curr].fracture = cell[currentcell - 1].fracture;
                             particle[k_curr].cell = currentcell;
                             particle[k_curr].time = 0.0;
+                            particle[k_curr].pressure = 0.0;
                             Moving2Center (k_curr, currentcell);
                             int insc;
                             insc = InsideCell (currentcell);
@@ -564,9 +565,11 @@ int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture
     int j, pf;
     pf = parts_fracture;
     int ii, jj,  k, curcel, insc = 0;
-    deltax = fabs(node[lastnd - 1].coord_xy[0] - node[firstnd - 1].coord_xy[0]);
-    deltay = fabs(node[lastnd - 1].coord_xy[1] - node[firstnd - 1].coord_xy[1]);
+    deltax = fabs(node[nodezonein[last_ind] - 1].coord_xy[0] - node[nodezonein[first_ind] - 1].coord_xy[0]);
+    deltay = fabs(node[nodezonein[last_ind] - 1].coord_xy[1] - node[nodezonein[first_ind] - 1].coord_xy[1]);
     
+//   printf ("%d  %d %d %d %f %f\n", first_ind, last_ind,  firstnd, lastnd, deltax, deltay);
+
     for (j = 0; j < pf; j++) {
         if (node[firstnd - 1].coord_xy[0] < node[lastnd - 1].coord_xy[0]) {
             particle[k_current].position[0] = node[firstnd - 1].coord_xy[0] + (deltax / pf) * (j) + deltax / (2.0 * pf);
@@ -586,6 +589,7 @@ int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture
         particle[k_current].intcell = 0;
         particle[k_current].time = 0.0;
         particle[k_current].fl_weight = 0.0;
+        particle[k_current].pressure = 0.0;
         k_current++;
         
         if (k_current > npart) {
@@ -627,6 +631,7 @@ int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, i
         particle[k_current].intcell = 0;
         particle[k_current].time = 0.0;
         particle[k_current].fl_weight = 0.0;
+        particle[k_current].pressure = 0.0;
         
         if (particle[k_current].fracture == 13) {
             printf("os %lf %lf \n", particle[k_current].position[0], particle[k_current].position[1]);
@@ -711,6 +716,7 @@ int InitParticles_ones (int k_current, double inter_p[][4], int fracture_n, int 
         particle[k_current].intcell = 0;
         particle[k_current].time = 0.0;
         particle[k_current].fl_weight = 0.0;
+        particle[k_current].pressure = 0.0;
         k_current++;
         
         if (k_current > npart) {
@@ -871,6 +877,7 @@ void InitInMatrix()
         particle[ii].prev_pos[1] = 0.0;
         particle[ii].intcell = 0;
         particle[ii].fl_weight = 0.0;
+        particle[ii].pressure = 0.0;
         // define a time that took for particle to reach fracture from a rock matrix
         particle[ii].time = TimeFromMatrix(distance[ii]);
         sum_distance = sum_distance + distance[ii];
@@ -923,8 +930,10 @@ int InitParticles_flux (int k_current, int first_ind, int last_ind, double weigh
     unsigned int i, k, j, jj, pf, curcel = 0, insc = 0, np, np_init;
     struct posit3d particle3dposition;
     np_init = k_current;
+    deltax = (node[nodezonein[last_ind] - 1].coord_xy[0] - node[nodezonein[first_ind] - 1].coord_xy[0]);
+    deltay = (node[nodezonein[last_ind] - 1].coord_xy[1] - node[nodezonein[first_ind] - 1].coord_xy[1]);
     
-    //  printf("firstn %d lastn %d \n", first_ind, last_ind);
+//      printf("firstn %d lastn %d %f %f \n", first_ind, last_ind, deltax, deltay);
     for (j = first_ind; j <= last_ind; j++) {
         sumflux = 0.0;
         
@@ -986,6 +995,7 @@ int InitParticles_flux (int k_current, int first_ind, int last_ind, double weigh
             particle[k_current].time = 0.0;
             particle[k_current].fl_weight = weight_p;
             particle[k_current].cell = 0;
+            particle[k_current].pressure = 0.0;
             np = k_current;
             k_current++;
             

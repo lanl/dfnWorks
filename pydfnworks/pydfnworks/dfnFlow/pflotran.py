@@ -34,7 +34,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -47,7 +47,7 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         inp_file = self.inp_file
 
     if inp_file == '':
-        error = 'ERROR: Please provide inp filename!'
+        error = 'ERROR: Please provide inp filename!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -55,14 +55,14 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
         if mesh_type in mesh_types_allowed:
             self.mesh_type = mesh_type
         else:
-            error = 'ERROR: Unknown mesh type. Select one of dfn, volume or mixed!'
+            error = 'ERROR: Unknown mesh type. Select one of dfn, volume or mixed!\n'
             sys.stderr.write(error)
             sys.exit(1)
     else:
         mesh_type = self.mesh_type
 
     if mesh_type == '':
-        error = 'ERROR: Please provide mesh type!'
+        error = 'ERROR: Please provide mesh type!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -125,7 +125,7 @@ def zone2ex(self, uge_file='', zone_file='', face='',
 
     uge_file = self.uge_file
     if uge_file == '':
-        error = 'ERROR: Please provide uge filename!'
+        error = 'ERROR: Please provide uge filename!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -160,11 +160,11 @@ def zone2ex(self, uge_file='', zone_file='', face='',
         face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else:
         if zone_file == '':
-            error = 'ERROR: Please provide boundary zone filename!'
+            error = 'ERROR: Please provide boundary zone filename!\n'
             sys.stderr.write(error)
             sys.exit(1)
         if face == '':
-            error = 'ERROR: Please provide face name among: top, bottom, north, south, east, west !'
+            error = 'ERROR: Please provide face name among: top, bottom, north, south, east, west !\n'
             sys.stderr.write(error)
             sys.exit(1)
         zone_files = [zone_file]
@@ -247,7 +247,7 @@ def zone2ex(self, uge_file='', zone_file='', face='',
             boundary_cell_coord = [[cell[0], cell[1], cell[2]]
                                    for cell in boundary_cell_coord]
         else:
-            error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.'
+            error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.\n'
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -281,33 +281,33 @@ def write_perms_and_correct_volumes_areas(self):
     """
     import h5py
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     print("--> Writing Perms and Correct Volume Areas")
     inp_file = self.inp_file
     if inp_file == '':
-        error = 'ERROR: inp file must be specified!'
+        error = 'ERROR: inp file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     uge_file = self.uge_file
     if uge_file == '':
-        error = 'ERROR: uge file must be specified!'
+        error = 'ERROR: uge file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     perm_file = self.perm_file
     if perm_file == '' and self.perm_cell_file == '':
-        error = 'ERROR: perm file must be specified!'
+        error = 'ERROR: perm file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     aper_file = self.aper_file
     aper_cell_file = self.aper_cell_file
     if aper_file == '' and self.aper_cell_file == '':
-        error = 'ERROR: aperture file must be specified!'
+        error = 'ERROR: aperture file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -330,7 +330,7 @@ def write_perms_and_correct_volumes_areas(self):
     cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
-        error = 'ERROR: UGE conversion failed\nExiting Program'
+        error = 'ERROR: UGE conversion failed\nExiting Program\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -370,7 +370,7 @@ def write_perms_and_correct_volumes_areas(self):
             if int(perm_list[j, 0]) == materialid[i]:
                 perm[i] = perm_list[j, 1]
             else:
-                error = 'Indexing Error in Perm File'
+                error = 'Indexing Error in Perm File\n'
                 sys.stderr.write(error)
                 sys.exit(1)
 
@@ -436,7 +436,7 @@ def pflotran(self, restart=False, restart_file=''):
     Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -444,7 +444,7 @@ def pflotran(self, restart=False, restart_file=''):
         shutil.copy(os.path.abspath(self.dfnFlow_file),
                     os.path.abspath(os.getcwd()))
     except:
-        error = "--> ERROR!! Unable to copy PFLOTRAN input file"
+        error = "--> ERROR!! Unable to copy PFLOTRAN input file\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -465,7 +465,7 @@ def pflotran(self, restart=False, restart_file=''):
             shutil.copy(os.path.abspath(restart_file),
                         os.path.abspath(os.getcwd()))
         except:
-            error = "--> ERROR!! Unable to copy PFLOTRAN input file"
+            error = "--> ERROR!! Unable to copy PFLOTRAN input file\n"
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -541,7 +541,7 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         Can be run in a loop over all pflotran dumps
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -600,7 +600,7 @@ def inp2vtk_python(self):
     """
     import pyvtk as pv
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -609,7 +609,7 @@ def inp2vtk_python(self):
         inp_file = self.inp_file
 
     if inp_file == '':
-        error = 'ERROR: Please provide inp filename!'
+        error = 'ERROR: Please provide inp filename!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -676,7 +676,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     print('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
