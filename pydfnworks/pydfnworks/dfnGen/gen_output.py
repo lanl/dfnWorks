@@ -1,6 +1,10 @@
 from scipy import stats, special
 import numpy as np
 import re
+
+import matplotlib
+matplotlib.use("Agg")
+  
 import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
@@ -273,7 +277,7 @@ def output_report(self,
         histHeights, binEdges, patches = histo.hist(radiiSizes,
                                                     numBuckets,
                                                     weights=weights,
-                                                    normed=1,
+                                                    density=True,
                                                     color='r',
                                                     alpha=0.75,
                                                     label='Empirical data')

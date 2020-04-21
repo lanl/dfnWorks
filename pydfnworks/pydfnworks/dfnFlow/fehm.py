@@ -28,7 +28,7 @@ def correct_stor_file(self):
     """
     # Make input file for C Stor converter
     if self.flow_solver != "FEHM":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -45,7 +45,7 @@ def correct_stor_file(self):
     cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
-        error = 'ERROR: stor conversion failed\nExiting Program'
+        error = 'ERROR: stor conversion failed\nExiting Program\n'
         sys.stderr.write(error)
         sys.exit(1)
     elapsed = time() - t
@@ -100,7 +100,7 @@ def fehm(self):
     """
     print("--> Running FEHM")
     if self.flow_solver != "FEHM":
-        error = "ERROR! Wrong flow solver requested"
+        error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -119,7 +119,7 @@ def fehm(self):
     try:
         shutil.copy(path + fehm_input, os.getcwd())
     except:
-        error = "-->ERROR copying FEHM input file:" % fehm_input
+        error = "-->ERROR copying FEHM input file:\n" % fehm_input
         sys.stderr.write(error)
         sys.exit(1)
 

@@ -1,0 +1,237 @@
+.TH "Docs_PT/ParticleTracking_source/main.c" 3 "Mon Jun 24 2019" "dfnTrans" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Docs_PT/ParticleTracking_source/main.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <search\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'FuncDef\&.h'\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBinpfile\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *controlf[])"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "unsigned int \fBpflotran\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfehm\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnnodes\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBncells\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnfract\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBmax_neighb\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnpart\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnp\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnzone_in\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fBnodezonein\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fBnodezoneout\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBflag_w\fP"
+.br
+.ti -1c
+.RI "struct \fBmaterial\fP * \fBfracture\fP"
+.br
+.ti -1c
+.RI "struct \fBvertex\fP * \fBnode\fP"
+.br
+.ti -1c
+.RI "struct \fBcontam\fP * \fBparticle\fP"
+.br
+.ti -1c
+.RI "struct \fBelement\fP * \fBcell\fP"
+.br
+.ti -1c
+.RI "char \fBmaindir\fP [125]"
+.br
+.ti -1c
+.RI "char \fBcontrolfile\fP [120]"
+.br
+.ti -1c
+.RI "double \fBporosity\fP"
+.br
+.ti -1c
+.RI "double \fBdensity\fP"
+.br
+.ti -1c
+.RI "unsigned long int \fBtimesteps\fP"
+.br
+.ti -1c
+.RI "double \fBthickness\fP"
+.br
+.ti -1c
+.RI "double \fBsaturation\fP"
+.br
+.ti -1c
+.RI "double \fBtimeunit\fP"
+.br
+.ti -1c
+.RI "double \fBtotalFluxIn\fP"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int main (int argc, char * controlf[])"
+The MAIN of dfnTrans code\&. Input argument is a control file with input parameters to dfnTrans\&. The main parts of particle tracking simulations are called:
+.IP "1." 4
+Read DFN mesh and Flow Solver's ouputs
+.IP "2." 4
+Reconstruct Darcy's velocities on each node of DFN mesh
+.IP "3." 4
+Perform Particle Tracking procedure 
+.PP
+
+.PP
+Definition at line 66 of file main\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "struct \fBelement\fP* cell"
+DYNAMIC ARRAY OF TRIANGULAR CELLS in DFN mesh 
+.PP
+Definition at line 42 of file main\&.c\&.
+.SS "char controlfile[120]"
+Name of Control file with all inut parameters to dfnTrans, given by user at the command line 
+.PP
+Definition at line 44 of file main\&.c\&.
+.SS "double density"
+Flow density, defined by user 
+.PP
+Definition at line 47 of file main\&.c\&.
+.SS "unsigned int fehm"
+fehm=1 when FEHM flow solver is used 
+.PP
+Definition at line 28 of file main\&.c\&.
+.SS "unsigned int flag_w"
+
+.PP
+Definition at line 38 of file main\&.c\&.
+.SS "struct \fBmaterial\fP* fracture"
+DYNAMIC ARRAY OF FRACTURES 
+.PP
+Definition at line 39 of file main\&.c\&.
+.SS "char maindir[125]"
+The directory/path for particle tracking outputs, defined by user 
+.PP
+Definition at line 43 of file main\&.c\&.
+.SS "unsigned int max_neighb"
+maximum number of nodes neighbours/connections 
+.PP
+Definition at line 32 of file main\&.c\&.
+.SS "unsigned int ncells"
+total number of triangular elements in the DFN mesh 
+.PP
+Definition at line 30 of file main\&.c\&.
+.SS "unsigned int nfract"
+total number of fractures in the DFN mesh 
+.PP
+Definition at line 31 of file main\&.c\&.
+.SS "unsigned int nnodes"
+total number of nodes in the DFN mesh 
+.PP
+Definition at line 29 of file main\&.c\&.
+.SS "struct \fBvertex\fP* node"
+DYNAMIC ARRAY OF NODES in DFN mesh 
+.PP
+Definition at line 40 of file main\&.c\&.
+.SS "unsigned int* nodezonein"
+pointer to the dynamic array with a list of in-flow boundary nodes 
+.PP
+Definition at line 36 of file main\&.c\&.
+.SS "unsigned int* nodezoneout"
+pointer to the dynamic array with a list of out-flow boundary nodes 
+.PP
+Definition at line 37 of file main\&.c\&.
+.SS "unsigned int np"
+index of current particle, idex in particle's loop 
+.PP
+Definition at line 34 of file main\&.c\&.
+.SS "unsigned int npart"
+initial number of particles set up in the simulation 
+.PP
+Definition at line 33 of file main\&.c\&.
+.SS "unsigned int nzone_in"
+number of nodes in in-flow boundary face/zone 
+.PP
+Definition at line 35 of file main\&.c\&.
+.SS "struct \fBcontam\fP* particle"
+DYNAMIC ARRAY OF PARTICLES 
+.PP
+Definition at line 41 of file main\&.c\&.
+.SS "unsigned int pflotran"
+pflotran=1 when PFLOTRAN flow solver is used 
+.PP
+Definition at line 27 of file main\&.c\&.
+.SS "double porosity"
+Fracture porosity, used in velocity reconstructions, defined by user 
+.PP
+Definition at line 46 of file main\&.c\&.
+.SS "double saturation"
+Flow saturation, defined by user 
+.PP
+Definition at line 50 of file main\&.c\&.
+.SS "double thickness"
+One value for all fractures aperture (defined by user), used in case when fracture aperture is not provided by user 
+.PP
+Definition at line 49 of file main\&.c\&.
+.SS "unsigned long int timesteps"
+Max number of time steps used for each particles movements, defined by user 
+.PP
+Definition at line 48 of file main\&.c\&.
+.SS "double timeunit"
+Time unit multiplier, converts calculated time/velocities according to required time units 
+.PP
+Definition at line 51 of file main\&.c\&.
+.SS "double totalFluxIn"
+Total Flow flux on in-flow boundary, calculated in the code 
+.PP
+Definition at line 52 of file main\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for dfnTrans from the source code\&.

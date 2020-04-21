@@ -1,0 +1,135 @@
+.TH "Docs_PT/ParticleTracking_source/VelocityReconstruction.c" 3 "Mon Jun 24 2019" "dfnTrans" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Docs_PT/ParticleTracking_source/VelocityReconstruction.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <search\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'FuncDef\&.h'\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBlb\fP"
+.br
+.ti -1c
+.RI "struct \fBmatr\fP"
+.br
+.ti -1c
+.RI "struct \fBinpfile\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBDarcyVelocity\fP ()"
+.br
+.ti -1c
+.RI "void \fBOutputVelocities\fP ()"
+.br
+.ti -1c
+.RI "struct \fBmatr\fP \fBMatrixProducts\fP (double normxarea[][2], int number)"
+.br
+.ti -1c
+.RI "struct \fBlb\fP \fBDefineBoundaryAngle\fP (int i, unsigned int edge_1, unsigned int edge_2, int f1, int coorf)"
+.br
+.ti -1c
+.RI "double \fBDefineAngle\fP (double u1, double u2, double v1, double v2)"
+.br
+.ti -1c
+.RI "void \fBVelocityInteriorNode\fP (double normx_area[][2], int i, int number, unsigned int indj[\fBmax_neighb\fP], int vi)"
+.br
+.ti -1c
+.RI "void \fBVelocityExteriorNode\fP (double norm_xarea[][2], int i, int number, unsigned int indj[\fBmax_neighb\fP], struct \fBlb\fP lbound, int vi)"
+.br
+.ti -1c
+.RI "void \fBBoundaryCells\fP ()"
+.br
+.ti -1c
+.RI "int \fBCornerVelocity\fP (int i, int m1, int m2, int m3, int s1, int s2, int s3)"
+.br
+.ti -1c
+.RI "int \fBXindexC\fP (int nodenum, int ii)"
+.br
+.ti -1c
+.RI "int \fBYindexC\fP (int nodenum, int ii)"
+.br
+.ti -1c
+.RI "void \fBHalfPolygonVelocity\fP (int i, int k, int fractn, int indc, unsigned int fractj[\fBmax_neighb\fP])"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "void BoundaryCells ()"
+The function checks velocities at boundary nodes and fixes pathological cases\&.
+.PP
+In the rare event, when two velocity vectors are directed towards each other along the same cell edge, a particle will be stuck there\&. To avoid this situation, one of velocities is redirected along the edge with node associated with lower pressure value\&. 
+.PP
+Definition at line 531 of file VelocityReconstruction\&.c\&.
+.SS "int CornerVelocity (int i, int m1, int m2, int m3, int s1, int s2, int s3)"
+The Function identifies pathologycal cases at corner of fracture boundary\&. The angle between velocity on corner node and velocities/edges on surrounding boundary nodes are calculated\&. Then, if velocity is pointing outside of fracture, turns the velocity direction along the fracture edge\&. 
+.PP
+Definition at line 771 of file VelocityReconstruction\&.c\&.
+.SS "void DarcyVelocity ()"
+Function performs Darcy's velocity reconstruction (main function of Darcy velocities reconstruction procedure) using linear least square algorithm\&. Flow solver provides flow fluxes on each edge of control volume cells\&. Velocity on each control volume cell center (each node) is reconstructed using flow fluxes\&.
+.PP
+Velocity of interior and interior-interface nodes is reconstructed according to Eq\&.5 (Painter,2011); exterior node' velocity according to Eq\&.7 (Painter, 2011)
+.PP
+Function makes a loop over all nodes and calls functions for velocity reconstruction depending of type of the node (external, internal, internal-interface, external interface) 
+.PP
+Definition at line 29 of file VelocityReconstruction\&.c\&.
+.SS "double DefineAngle (double u1, double u2, double v1, double v2)"
+Function defines an angle between two edges of voronoy cell 
+.PP
+Definition at line 415 of file VelocityReconstruction\&.c\&.
+.SS "struct \fBlb\fP DefineBoundaryAngle (int i, unsigned int edge_1, unsigned int edge_2, int f1, int coorf)"
+The function defines angle between two edges of a boundary cell and return the result\&. The angle is used in flow velocity reconstruction on fracture edge\&. 
+.PP
+Definition at line 367 of file VelocityReconstruction\&.c\&.
+.SS "void HalfPolygonVelocity (int i, int k, int fractn, int indc, unsigned int fractj[max_neighb])"
+Velocity reconstruction on an intersection node\&. In this case, the control volume cell is devided onto two polygons by intersection line\&. The velocity reconstruction is performed on each part of control volume cell at intersection\&. 
+.PP
+Definition at line 944 of file VelocityReconstruction\&.c\&.
+.SS "struct \fBmatr\fP MatrixProducts (double normxarea[][2], int number)"
+Function performs matrix dot product (GTG)-1 and returns the result\&. 
+.PP
+Definition at line 318 of file VelocityReconstruction\&.c\&.
+.SS "void OutputVelocities ()"
+This function is called to output velocities on nodes in the order of fractture IDs\&. The output can be used to visualise flow field of 2D reconstructed Darcy velocities in 3D simulation domain 
+.PP
+Definition at line 253 of file VelocityReconstruction\&.c\&.
+.SS "void VelocityExteriorNode (double norm_xarea[][2], int i, int number, unsigned int indj[max_neighb], struct \fBlb\fP lbound, int vi)"
+The function reconstructs Darcy velocity on exterior (boundary) node 
+.PP
+Definition at line 465 of file VelocityReconstruction\&.c\&.
+.SS "void VelocityInteriorNode (double normx_area[][2], int i, int number, unsigned int indj[max_neighb], int vi)"
+The function reconstructs Darcy velocity on interior cell center, at interior node 
+.PP
+Definition at line 426 of file VelocityReconstruction\&.c\&.
+.SS "int XindexC (int nodenum, int ii)"
+Functions returns the index of X coordination of intersection node (cells) 
+.PP
+Definition at line 922 of file VelocityReconstruction\&.c\&.
+.SS "int YindexC (int nodenum, int ii)"
+Functions returns the index of Y coordination of intersection node (cells) 
+.PP
+Definition at line 933 of file VelocityReconstruction\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for dfnTrans from the source code\&.

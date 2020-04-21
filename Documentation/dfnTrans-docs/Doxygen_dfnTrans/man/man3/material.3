@@ -1,0 +1,88 @@
+.TH "material" 3 "Mon Jun 24 2019" "dfnTrans" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+material
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FuncDef\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "float \fBtheta\fP"
+.br
+.ti -1c
+.RI "float \fBnvect_xy\fP [2]"
+.br
+.ti -1c
+.RI "float \fBnvect_z\fP [2]"
+.br
+.ti -1c
+.RI "unsigned int \fBfirstnode\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBlastnode\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBfirstcell\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumbcells\fP"
+.br
+.ti -1c
+.RI "double \fBrot2mat\fP [3][3]"
+.br
+.ti -1c
+.RI "double \fBrot3mat\fP [3][3]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Material structure contains fracture parameters, read from DFN mesh 
+.PP
+Definition at line 74 of file FuncDef\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "unsigned int material::firstcell"
+index of first triangular cell in a fracture 
+.PP
+Definition at line 92 of file FuncDef\&.h\&.
+.SS "unsigned int material::firstnode"
+index of first node in a fracture (doesn't include the intersection nodes) 
+.PP
+Definition at line 86 of file FuncDef\&.h\&.
+.SS "unsigned int material::lastnode"
+index of last node in a fracture (doesn't include the intersection nodes) 
+.PP
+Definition at line 89 of file FuncDef\&.h\&.
+.SS "unsigned int material::numbcells"
+total number of triangular cells in a fracture 
+.PP
+Definition at line 95 of file FuncDef\&.h\&.
+.SS "float material::nvect_xy[2]"
+rotation vector for rotating fracture to xy plane 
+.PP
+Definition at line 80 of file FuncDef\&.h\&.
+.SS "float material::nvect_z[2]"
+rotation vector for rotating fracture back to xyz domain 
+.PP
+Definition at line 83 of file FuncDef\&.h\&.
+.SS "double material::rot2mat[3][3]"
+rotational matrix from 3d to 2d 
+.PP
+Definition at line 98 of file FuncDef\&.h\&.
+.SS "double material::rot3mat[3][3]"
+rotational matrix from 2d to 3d 
+.PP
+Definition at line 101 of file FuncDef\&.h\&.
+.SS "float material::theta"
+angle that fracture makes with z axis 
+.PP
+Definition at line 77 of file FuncDef\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for dfnTrans from the source code\&.

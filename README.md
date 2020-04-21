@@ -4,11 +4,6 @@ For information on how to get dfnWorks up and running, please see the document d
 
 # Using Docker
 
-A precomplied Docker container is available at
-
-https://hub.docker.com/r/ees16/dfnworks
-
-
 To build a Docker image, run
 
     docker build -t dfnworks .

@@ -355,7 +355,6 @@ int main(int argc, char *args[]) {
     fp = open_file(paramsName, "", "r");
     readInParams(fp, params);
     printf("\nCorrecting UGE Volumes and Areas for dfnWorks\n");
-    printf("--> Current version works for Uniform Fracture Aperature\n");
     printf("-> Mesh File: %s\n", params->mesh_file);
     printf("-> MatID File: %s\n", params->matID_file);
     printf("-> Aperture File: %s\n", params->aper_file);
