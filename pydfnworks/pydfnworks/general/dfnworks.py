@@ -218,7 +218,7 @@ def commandline_options():
                         type=str,
                         help="Path to original DFN files")
     options = parser.parse_args()
-    if options.jobname is "":
+    if options.jobname == "":
         error = "Error: Jobname is required. Exiting.\n"
         sys.stderr.write(error)
         sys.exit(1)

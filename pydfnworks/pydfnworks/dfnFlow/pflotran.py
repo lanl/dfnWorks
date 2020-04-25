@@ -154,7 +154,7 @@ def zone2ex(self, uge_file='', zone_file='', face='',
     print('--> Finished with uge file\n')
 
     # loop through zone files
-    if zone_file is 'all':
+    if zone_file == 'all':
         zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
                         'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
         face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
