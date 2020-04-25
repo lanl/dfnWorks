@@ -275,7 +275,7 @@ class input_helper():
     def verify_flag(self, value, key="", inList=False):
         """ Verify that value is either a 0 or a 1.
         """
-        if value is '0' or value is '1':
+        if value == '0' or value == '1':
             return int(value)
         elif inList:
             return None
@@ -984,7 +984,7 @@ def check_input(self, input_file='', output_file=''):
     def compare_pts_v_sh(prefix, hval):
         """ Check that the rectangles and ellipses generated will not involve features with length less than 3*h value used in FRAM. 
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
+        shape = "ellipse" if prefix == 'e' else "rectangle"
         aspectList = params[prefix + "aspect"][0]
         numPointsList = None
 
@@ -1099,8 +1099,8 @@ def check_input(self, input_file='', output_file=''):
 
     def aspect(prefix):
         """ Check the aspect of the the rectangle or ellipse families. """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramName = prefix + "aspect"
 
         errResult = input_helper_methods.verify_list(
@@ -1122,8 +1122,8 @@ def check_input(self, input_file='', output_file=''):
 
     def layer(prefix):
         """ Check the number of layers. """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramName = prefix + "Layer"
 
         errResult = input_helper_methods.verify_list(
@@ -1150,8 +1150,8 @@ def check_input(self, input_file='', output_file=''):
     def theta_phi_kappa(prefix):
         """ Check the angle parameters used for Fisher distributions 
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramNames = [prefix + name for name in ["theta", "phi", "kappa"]]
         errString = "\"{}\" has defined {} angle(s) but there is(are) {} {} family(ies)."\
                 "Please defined one angle for each {} family."
