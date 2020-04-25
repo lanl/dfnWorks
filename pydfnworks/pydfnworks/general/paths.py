@@ -1,4 +1,4 @@
-rom shutil import move
+from shutil import move
 import os
 import sys
 import subprocess
