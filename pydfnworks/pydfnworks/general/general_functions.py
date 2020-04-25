@@ -57,7 +57,7 @@ def print_run_time(self):
     f = open(run_time_file).readlines()
     unit = f[-1].split()[-1]
     total = float(f[-1].split()[-2])
-    if unit is 'minutes':
+    if unit == 'minutes':
         total *= 60.0
 
     print('Runs times for ', f[0])
@@ -67,7 +67,7 @@ def print_run_time(self):
         unit = f[i].split()[-1]
         time = float(f[i].split()[-2])
 
-        if unit is 'minutes':
+        if unit == 'minutes':
             time *= 60.0
         percent.append(100.0 * (time / total))
         name.append(f[i].split(':')[1])
