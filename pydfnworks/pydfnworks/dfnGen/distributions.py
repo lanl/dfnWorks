@@ -133,7 +133,6 @@ class distr():
                                         prefix + "LogMean")
         distr_helper_methods.check_min_frac_size(
             distr_helper_methods.value_of(prefix + "LogMin"))
-
     def tpl_dist(self, prefix):
         """
         Verifies parameters for truncated power law distribution of fractures.
@@ -159,6 +158,7 @@ class distr():
 
         distr_helper_methods.check_min_max(prefix + "min", prefix + "max",
                                            shape)
+
         distr_helper_methods.check_min_frac_size(
             distr_helper_methods.value_of(prefix + "min"))
 
