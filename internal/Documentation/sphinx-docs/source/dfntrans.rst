@@ -33,7 +33,7 @@ discrete fracture networks. Computational Geosciences, 19(5), 1123-1137.
 
 
 All source files of C code of dfnTrans are in ``DFNTrans/`` directory of
-dfnWorks 2.2. It compiles under linux/mac machines using ``makefile``.  In order
+dfnWorks 2.3. It compiles under linux/mac machines using ``makefile``.  In order
 to run transport, first, all the parameters and paths should be set up in the
 PTDFN Control file, PTDFN_control.dat. Then, the following command should be
 run: 
