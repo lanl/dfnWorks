@@ -1036,11 +1036,14 @@ def check_input(self, input_file='', output_file=''):
     def h():
         """ Check the float value provided for h to be used in FRAM (the feautre rejection algorithm for meshing.
         """
+        global minFracSize
+
         val = input_helper_methods.verify_float(input_helper_methods.value_of(
             'h', params),'h',noNeg=True)
 
         if val == 0: input_helper_methods.error("\"h\" cannot be 0.")
-
+        if minFracSize is None:
+            minFracSize = 1
         if val < minFracSize / 1000.0 and ellipseFams + rectFams > 0:  ####### NOTE ----- future developers TODO, delete the
             ## "and ellipseFams + rectFams > 0" once you are also
             ## checking the userInput Files for minimums that could be
