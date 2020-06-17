@@ -51,9 +51,11 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.upscale import upscale
 
+    from pydfnworks.dfnGen.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
+
     # dfnFlow
     import pydfnworks.dfnFlow
-    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver, uncorrelated
+    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm

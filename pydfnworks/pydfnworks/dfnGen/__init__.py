@@ -10,3 +10,5 @@ from pydfnworks.dfnGen.run_meshing import *
 # mapping
 from pydfnworks.dfnGen.map2continuum import *
 from pydfnworks.dfnGen.upscale import *
+# Aperture values 
+from pydfnworks.dfnGen.hydraulic_properties import *
