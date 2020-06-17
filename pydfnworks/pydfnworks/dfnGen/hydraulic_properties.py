@@ -1,9 +1,8 @@
 import numpy as np
 import sys
 
-
 def get_units(variable):
-    ''' 
+    """
     Returns a string of appropriate units for different variable
 
     Parameters
@@ -14,7 +13,7 @@ def get_units(variable):
     ----------
         units : string
             appropriate units for provided variable
-    '''
+    """
 
     if variable == "aperture":
         units = "m"
@@ -442,8 +441,8 @@ def generate_hydraulic_values(self,
                               params,
                               radii_filename="radii_Final.dat",
                               family_id=None):
-
     """ Generates hydraulic property values. 
+
     Parameters
     -----------
         self : object 
