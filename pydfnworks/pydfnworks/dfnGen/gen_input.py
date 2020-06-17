@@ -16,7 +16,6 @@ class input_helper():
             * params (list): list of parameters specified in the input file.
             * minFracSize (float): the minimum fracture size.
     """
-
     def __init__(self, params, minFracSize):
         self.params = params
         self.minFracSize = minFracSize
@@ -186,7 +185,7 @@ class input_helper():
         for val in valList:
             if minFracSize == None:
                 minFracSize = val
-            elif val < minFracSize: 
+            elif val < minFracSize:
                 minFracSize = val
 
     ## ====================================================================== ##
@@ -1039,7 +1038,9 @@ def check_input(self, input_file='', output_file=''):
         global minFracSize
 
         val = input_helper_methods.verify_float(input_helper_methods.value_of(
-            'h', params),'h',noNeg=True)
+            'h', params),
+                                                'h',
+                                                noNeg=True)
 
         if val == 0: input_helper_methods.error("\"h\" cannot be 0.")
         if minFracSize is None:

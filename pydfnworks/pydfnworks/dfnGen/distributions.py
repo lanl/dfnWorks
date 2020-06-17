@@ -17,7 +17,6 @@ class distr():
         minFracSize : double
             Minimum fracture size
     """
-
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self.params = params
         global distr_helper_methods
@@ -133,6 +132,7 @@ class distr():
                                         prefix + "LogMean")
         distr_helper_methods.check_min_frac_size(
             distr_helper_methods.value_of(prefix + "LogMin"))
+
     def tpl_dist(self, prefix):
         """
         Verifies parameters for truncated power law distribution of fractures.

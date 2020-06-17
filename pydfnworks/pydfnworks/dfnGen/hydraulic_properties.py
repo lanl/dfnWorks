@@ -1,5 +1,15 @@
+"""
+.. file:: hydraulic_properties.py
+   :synopsis: Allows user to modify hydraulic properties of fractures based on functional relationships with radii
+   :version: 1.0
+   :maintainer: Jeffrey Hyman
+.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+
+"""
+
 import numpy as np
 import sys
+
 
 def get_units(variable):
     """
@@ -50,7 +60,7 @@ def check_key(dict, key):
         return False
 
 
-def load_fractures(filename,quiet):
+def load_fractures(filename, quiet):
     ''' 
     Loads fracture information from filename. 
 
@@ -135,7 +145,7 @@ def convert(x, source, target):
         sys.exit(1)
 
 
-def log_normal(params, variable,number_of_fractures):
+def log_normal(params, variable, number_of_fractures):
     """ Creates Fracture Based Log-Normal values that is number_of_fractures long.
     The values has a mean mu and log-variance sigma. 
     
@@ -237,7 +247,6 @@ def correlated(params, variable, radii):
     if variable == "transmissivity":
         print("T ={1}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
-
 
     if variable == "aperture":
         b = params["alpha"] * radii**params["beta"]
@@ -500,7 +509,8 @@ def generate_hydraulic_values(self,
     #         .format(relationship))
 
     # Load Fracture information
-    radii, families, number_of_fractures = load_fractures(radii_filename,quiet=True)
+    radii, families, number_of_fractures = load_fractures(radii_filename,
+                                                          quiet=True)
 
     if relationship == "log-normal":
         keys = ["mu", "sigma"]
@@ -530,7 +540,8 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = semi_correlated(params, variable, radii, number_of_fractures)
+        b, perm, T = semi_correlated(params, variable, radii,
+                                     number_of_fractures)
 
     if relationship == "constant":
         keys = ["mu"]
@@ -542,16 +553,16 @@ def generate_hydraulic_values(self,
                 sys.exit(1)
         b, perm, T = constant(params, variable, number_of_fractures)
 
-
     if family_id == None:
         return b, perm, T
     else:
         # Sent entrites that are not in the requested family to None
         idx = np.where(families != family_id)
-        b[idx] = 0  
-        T[idx] = 0 
-        perm[idx] = 0 
-        return b,perm,T
+        b[idx] = 0
+        T[idx] = 0
+        perm[idx] = 0
+        return b, perm, T
+
 
 # if __name__ == '__main__':
 
