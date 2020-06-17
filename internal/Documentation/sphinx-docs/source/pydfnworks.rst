@@ -35,9 +35,14 @@ Running the generator
 .. automodule:: pydfnworks.dfnGen.generator
     :members:
 
-Analysis of Generated DFN 
+Analysis of generated DFN 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.gen_output
+    :members:
+
+Modification of hydraulic properties of the DFN 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.hydraulic_properties
     :members:
 
 Meshing - LaGriT
