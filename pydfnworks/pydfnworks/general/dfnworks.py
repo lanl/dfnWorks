@@ -53,6 +53,8 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
 
+    from pydfnworks.dfnGen.add_attribute_to_mesh import add_variable_to_mesh
+    
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 

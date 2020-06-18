@@ -1,14 +1,13 @@
 """
 .. module:: mesh_dfn_helper.py
-   :synopsis: helper functions for meshing dfn using lagrit  
+   :synopsis: helper functions for meshing DFN using LaGriT  
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-
+import os
 import glob
-from os import remove, symlink, unlink
 from numpy import genfromtxt, sort
-
+import subprocess
 
 def parse_params_file(quite=False):
     """ Reads params.txt file from DFNGen and parses information
@@ -153,7 +152,7 @@ def cleanup_dir():
     ]
     for name in files_to_remove:
         for fl in glob.glob(name):
-            remove(fl)
+            os.remove(fl)
 
 
 def output_meshing_report(local_jobname, visual_mode):
@@ -221,11 +220,8 @@ def clean_up_files_after_prune(self):
     
     Parameters
     ----------
-        prune_file : string
-            Name for file with list of fractures to remain in the network
-        path : string 
-            Path to files to be modified
-
+        self : DFN object
+         
     Returns
     -------
         None
@@ -243,7 +239,7 @@ def clean_up_files_after_prune(self):
     print("--> Editing params.txt file")
     fin = open(self.path + '/params.txt')
     try:
-        unlink('params.txt')
+        os.unlink('params.txt')
     except:
         pass
     fout = open('params.txt', 'w')
@@ -259,7 +255,7 @@ def clean_up_files_after_prune(self):
     print("--> Editing poly_info.dat file")
     poly_info = genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
     try:
-        unlink('poly_info.dat')
+        os.unlink('poly_info.dat')
     except:
         pass
     f = open('poly_info.dat', 'w')
@@ -373,7 +369,7 @@ def create_mesh_links(path):
             except:
                 print("Unable to remove %s" % f)
         try:
-            symlink(path + f, f)
+            os.symlink(path + f, f)
         except:
             print("Unable to make link for %s" % f)
             pass
@@ -415,10 +411,34 @@ def inp2gmv(self, inp_file=''):
         fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
         fid.write('finish \n\n')
 
-    cmd = lagrit_path + ' <inp2gmv.lgi ' + '> lagrit_inp2gmv.txt'
+    cmd = os.environ["LAGRIT_EXE"] + ' < inp2gmv.lgi ' 
     failure = subprocess.call(cmd, shell=True)
     if failure:
         error = 'ERROR: Failed to run LaGrit to get gmv from inp file!\n'
         sys.stderr.write(error)
         sys.exit(1)
     print("--> Finished writing gmv format from avs format")
+
+def run_lagrit_script(lagrit_file):
+    """
+    Runs LaGriT
+
+    Parameters
+    -----------
+    ----------
+        lagrit_file : string
+            Name of LaGriT script to run
+    Returns
+    ----------
+        lagrit_file : string
+            Name of LaGriT output file
+    """
+    cmd = "{0} < {1}".format(os.environ["LAGRIT_EXE"],lagrit_file)
+    print("--> Running: {0}".format(cmd))
+    failure = subprocess.call(cmd, shell=True)
+    if failure:
+        error = 'ERROR: \n'
+        sys.stderr.write(error)
+        sys.exit(1)
+    print("--> Complete")
+    
