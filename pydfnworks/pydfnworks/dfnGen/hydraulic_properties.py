@@ -10,7 +10,6 @@
 import numpy as np
 import sys
 
-
 def get_units(variable):
     """
     Returns a string of appropriate units for different variable
@@ -110,6 +109,15 @@ def convert(x, source, target):
     ----------
         y : numpy array
             array of converted values
+
+    Notes
+    -----
+    permeability/Transmissivty are defined using the cubic law
+
+    k = b^2/12
+
+    T = (b^3 rho g)/(12 mu)
+
     '''
 
     mu = 8.9e-4  #dynamic viscosity of water at 20 degrees C, Pa*s
@@ -242,7 +250,8 @@ def correlated(params, variable, radii):
         print("b ={1}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
     if variable == "permeability":
-        print("k ={1}*r^{2} {3}".format(variable, params["alpha"],
+        print("k ={1}*r^{2} {3}".format(variable, params["alpha"]h
+
                                         params["beta"], units))
     if variable == "transmissivity":
         print("T ={1}*r^{2} {3}".format(variable, params["alpha"],
@@ -511,6 +520,8 @@ def generate_hydraulic_values(self,
     # Load Fracture information
     radii, families, number_of_fractures = load_fractures(radii_filename,
                                                           quiet=True)
+    if family_id is not None:
+        print("--> Working on Fracture Family {0}".format(family_id))
 
     if relationship == "log-normal":
         keys = ["mu", "sigma"]
