@@ -4,7 +4,7 @@ import re
 
 import matplotlib
 matplotlib.use("Agg")
-  
+
 import matplotlib.pylab as plt
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
@@ -54,7 +54,6 @@ def output_report(self,
                     * infoStr (str): an informative string describing the family
                     * parameters (dict): a dictionary containing the values of parameters for the family
         """
-
         def __init__(self, globFamNum, radiiList, distrib, infoStr,
                      parameters):
             self.globFamNum = globFamNum

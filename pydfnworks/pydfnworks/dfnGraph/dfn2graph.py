@@ -204,7 +204,7 @@ def create_intersection_graph(inflow,
     for i in range(len(frac_edges)):
         f1 = int(frac_edges[i][0])
         keep = True
-        if frac_edges[i][1] is 's' or frac_edges[i][1] is 't':
+        if frac_edges[i][1] == 's' or frac_edges[i][1] == 't':
             f2 = frac_edges[i][1]
         elif int(frac_edges[i][1]) > 0:
             f2 = int(frac_edges[i][1])

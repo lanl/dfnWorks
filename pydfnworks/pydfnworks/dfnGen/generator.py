@@ -63,7 +63,7 @@ def dfn_gen(self, output=True, visual_mode=None):
     self.dump_time('Process: dfnGen', time() - tic_gen)
 
 
-def make_working_directory(self,delete=False):
+def make_working_directory(self, delete=False):
     ''' Make working directory for dfnWorks Simulation
 
     Parameters
@@ -131,8 +131,10 @@ def create_network(self):
     '''
     print('--> Running DFNGEN')
     # copy input file into job folder
-    cmd = os.environ['DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:-4] + '_clean.dat' + ' ' + self.jobname
-    
+    cmd = os.environ[
+        'DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:
+                                                     -4] + '_clean.dat' + ' ' + self.jobname
+
     print("Running %s" % cmd)
     subprocess.call(cmd, shell=True)
 

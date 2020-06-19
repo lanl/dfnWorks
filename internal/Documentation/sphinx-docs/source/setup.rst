@@ -83,7 +83,7 @@ The dfnWorks Docker image can be pulled from DockerHub using:
 
 .. code-block:: bash
 
-    $ docker pull ees16/dfnworks:v2.2
+    $ docker pull ees16/dfnworks:latest
 
 Setting Up X-Forwarding
 -----------------------
@@ -121,7 +121,7 @@ The base command for running the dfnWorks container is:
 
 .. code-block:: bash
 
-    docker run -ti ees16/dfnworks:v2.2
+    docker run -ti ees16/dfnworks:latest
 
 However, to exchange files between the host and container, we will need to mount
 a volume.

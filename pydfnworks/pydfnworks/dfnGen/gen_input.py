@@ -16,7 +16,6 @@ class input_helper():
             * params (list): list of parameters specified in the input file.
             * minFracSize (float): the minimum fracture size.
     """
-
     def __init__(self, params, minFracSize):
         self.params = params
         self.minFracSize = minFracSize
@@ -182,8 +181,12 @@ class input_helper():
     def check_min_frac_size(self, valList):
         """ Corrects the minimum fracture size if necessary, by looking at the values in valList.
         """
+        global minFracSize
         for val in valList:
-            if val < self.minFracSize: self.minFracSize = val
+            if minFracSize == None:
+                minFracSize = val
+            elif val < minFracSize:
+                minFracSize = val
 
     ## ====================================================================== ##
     ##                              Parsing Functions                         ##
@@ -549,7 +552,8 @@ def check_input(self, input_file='', output_file=''):
     global numLayers
     numLayers = 0
     global minFracSize
-    minFracSize = 99999999.9
+    minFracSize = None
+
     ## WARNING: Index[0] for the following lists should never be used. See edistr() and rdistr() for clarity.
     global numEdistribs
     numEdistribs = [
@@ -970,7 +974,7 @@ def check_input(self, input_file='', output_file=''):
         x = a * r * np.cos(theta)
         y = b * r * np.sin(theta)
 
-        # Check Euclidean Distance between consectutive points
+        # Check Euclidean Distance between consecutive points
         h_min = 99999999999
         for i in range(1, n):
             for j in range(i, n):
@@ -984,7 +988,7 @@ def check_input(self, input_file='', output_file=''):
     def compare_pts_v_sh(prefix, hval):
         """ Check that the rectangles and ellipses generated will not involve features with length less than 3*h value used in FRAM. 
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
+        shape = "ellipse" if prefix == 'e' else "rectangle"
         aspectList = params[prefix + "aspect"][0]
         numPointsList = None
 
@@ -1031,11 +1035,16 @@ def check_input(self, input_file='', output_file=''):
     def h():
         """ Check the float value provided for h to be used in FRAM (the feautre rejection algorithm for meshing.
         """
+        global minFracSize
+
         val = input_helper_methods.verify_float(input_helper_methods.value_of(
             'h', params),
                                                 'h',
                                                 noNeg=True)
+
         if val == 0: input_helper_methods.error("\"h\" cannot be 0.")
+        if minFracSize is None:
+            minFracSize = 1
         if val < minFracSize / 1000.0 and ellipseFams + rectFams > 0:  ####### NOTE ----- future developers TODO, delete the
             ## "and ellipseFams + rectFams > 0" once you are also
             ## checking the userInput Files for minimums that could be
@@ -1099,8 +1108,8 @@ def check_input(self, input_file='', output_file=''):
 
     def aspect(prefix):
         """ Check the aspect of the the rectangle or ellipse families. """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramName = prefix + "aspect"
 
         errResult = input_helper_methods.verify_list(
@@ -1122,8 +1131,8 @@ def check_input(self, input_file='', output_file=''):
 
     def layer(prefix):
         """ Check the number of layers. """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramName = prefix + "Layer"
 
         errResult = input_helper_methods.verify_list(
@@ -1150,8 +1159,8 @@ def check_input(self, input_file='', output_file=''):
     def theta_phi_kappa(prefix):
         """ Check the angle parameters used for Fisher distributions 
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = ellipseFams if prefix is 'e' else rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
         paramNames = [prefix + name for name in ["theta", "phi", "kappa"]]
         errString = "\"{}\" has defined {} angle(s) but there is(are) {} {} family(ies)."\
                 "Please defined one angle for each {} family."
@@ -1218,14 +1227,17 @@ def check_input(self, input_file='', output_file=''):
             rejects_per_fracture, user_defined,
             input_helper_methods.check_fam_count, check_no_dep_flags, fam_prob
         ]
+
         generalized = [
             layer, aspect, angle_option, theta_phi_kappa,
             distributions.beta_distribution, distributions.distr
         ]
+
         distribs = [
             distributions.lognormal_dist, distributions.tpl_dist,
             distributions.exponential_dist, distributions.constant_dist
         ]
+
         checkLast = [disable_fram, aperture, permeability]
 
         for paramFunc in firstPriority:
@@ -1234,6 +1246,7 @@ def check_input(self, input_file='', output_file=''):
         if rectFams > 0:
             for paramFunc in generalized:
                 paramFunc('r')
+
         if ellipseFams > 0:
             enum_points()
             for paramFunc in generalized:
@@ -1319,5 +1332,4 @@ def check_input(self, input_file='', output_file=''):
     parse_input()
     verify_params()
     write_back()
-
     print('--> Checking Input Data Complete')

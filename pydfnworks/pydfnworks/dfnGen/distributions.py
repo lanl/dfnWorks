@@ -17,7 +17,6 @@ class distr():
         minFracSize : double
             Minimum fracture size
     """
-
     def __init__(self, params, numEdistribs, numRdistribs, minFracSize):
         self.params = params
         global distr_helper_methods
@@ -37,8 +36,8 @@ class distr():
             prefix : str
                 Indicates shapes that the beta distribution describes. 'e' if they are ellipses, 'r' if they are rectangles.
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = self.ellipseFams if prefix == 'e' else self.rectFams
         paramName = prefix + "betaDistribution"
 
         errResult = distr_helper_methods.verify_list(
@@ -71,9 +70,9 @@ class distr():
         each distribution is either 1 (log-normal), 2 (Truncated Power Law), 3 (Exponential), or 4 (constant).
         Stores how many of each distrib are in use in numEdistribs or numRdistribs lists.  
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
-        numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        distribList = self.numEdistribs if prefix == 'e' else self.numRdistribs
+        numFamilies = self.ellipseFams if prefix == 'e' else self.rectFams
         paramName = prefix + "distr"
 
         errResult = distr_helper_methods.verify_list(
@@ -98,8 +97,8 @@ class distr():
         """
         Verifies all logNormal Parameters for ellipses and Rectangles.
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        distribList = self.numEdistribs if prefix == 'e' else self.numRdistribs
         paramNames = [
             prefix + name for name in ["LogMean", "sd", "LogMin", "LogMax"]
         ]
@@ -138,8 +137,8 @@ class distr():
         """
         Verifies parameters for truncated power law distribution of fractures.
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        distribList = self.numEdistribs if prefix == 'e' else self.numRdistribs
         paramNames = [prefix + name for name in ["min", "max", "alpha"]]
         errString = "\"{}\" has defined {} value(s) but {} truncated power-law distrbution(s) was(were) " \
                 "defined in \"{}\". Please define one value for each truncated power-law (distrib. #2) family."
@@ -159,6 +158,7 @@ class distr():
 
         distr_helper_methods.check_min_max(prefix + "min", prefix + "max",
                                            shape)
+
         distr_helper_methods.check_min_frac_size(
             distr_helper_methods.value_of(prefix + "min"))
 
@@ -166,8 +166,8 @@ class distr():
         """
         Verifies parameters for exponential distribution of fractures.
         """
-        shape = "ellipse" if prefix is 'e' else "rectangle"
-        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        distribList = self.numEdistribs if prefix == 'e' else self.numRdistribs
         paramNames = [
             prefix + name for name in ["ExpMean", "ExpMin", "ExpMax"]
         ]
@@ -199,8 +199,8 @@ class distr():
         Verifies parameters for constant distribution of fractures
         """
         paramName = prefix + "const"
-        numFamilies = self.ellipseFams if prefix is 'e' else self.rectFams
-        distribList = self.numEdistribs if prefix is 'e' else self.numRdistribs
+        numFamilies = self.ellipseFams if prefix == 'e' else self.rectFams
+        distribList = self.numEdistribs if prefix == 'e' else self.numRdistribs
 
         errResult = distr_helper_methods.verify_list(
             distr_helper_methods.value_of(paramName),

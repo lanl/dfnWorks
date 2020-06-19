@@ -1,0 +1,1199 @@
+\hypertarget{_func_def_8h}{}\section{Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\+Func\+Def.h File Reference}
+\label{_func_def_8h}\index{Docs\_PT/ParticleTracking\_source/FuncDef.h@{Docs\_PT/ParticleTracking\_source/FuncDef.h}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structmaterial}{material}}
+\item 
+struct \mbox{\hyperlink{structvertex}{vertex}}
+\item 
+struct \mbox{\hyperlink{structelement}{element}}
+\item 
+struct \mbox{\hyperlink{structcontam}{contam}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_func_def_8h_a1daf785e3f68d293c7caa1c756d5cb74}{pi}}~3.\+14159265359
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_func_def_8h_a361538379ec6b2e063a620235b010bfc}{Read\+Init}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a60556e448bef6314a77260487c969ced}{Read\+Data\+Files}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a4c53fcfe5268349ff922899f3da7ecc3}{Adjacent\+Cells}} (int ln, int i, int j, int k)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a544594dde0a4f38fb12c863f7c395fd6}{Convertto2d}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_ac21ac13cf8f1cb96197713aa59131247}{Convertto3d}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a6c0b7207a055a56ec2091b578dcab307}{Darcy\+Velocity}} ()
+\item 
+struct \mbox{\hyperlink{structmatr}{matr}} \mbox{\hyperlink{_func_def_8h_a9847c8edcfa5f9fd5426106a7477f935}{Matrix\+Products}} (double normxarea\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]}, int number)
+\item 
+struct \mbox{\hyperlink{structlb}{lb}} \mbox{\hyperlink{_func_def_8h_acc3803bef1f2fcc10f4f2a0ecc627b34}{Define\+Boundary\+Angle}} (int i, unsigned int edge\+\_\+1, unsigned int edge\+\_\+2, int f1, int coorf)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a3ab1d6b68f6e08d66631d879794e7204}{Velocity\+Interior\+Node}} (double normxarea\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]}, int i, int number, unsigned int indj\mbox{[}\mbox{\hyperlink{main_8c_a9bbb8dd86b166646cdce87a545a36fa7}{max\+\_\+neighb}}\mbox{]}, int vi)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a306003b4df4a2ee90e44c0768bbaa13b}{Velocity\+Exterior\+Node}} (double normxarea\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]}, int i, int number, unsigned int indj\mbox{[}\mbox{\hyperlink{main_8c_a9bbb8dd86b166646cdce87a545a36fa7}{max\+\_\+neighb}}\mbox{]}, struct \mbox{\hyperlink{structlb}{lb}} lbound, int vi)
+\item 
+void \mbox{\hyperlink{_func_def_8h_ab72ec3059b077bf933070124a6f64a03}{Check\+New\+Cell}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a70ceb6e59ecdae0487126a86c88523bb}{Particle\+Track}} ()
+\item 
+struct \mbox{\hyperlink{structintcoef}{intcoef}} \mbox{\hyperlink{_func_def_8h_a288d5ddd917552bb6640483eaa1b7add}{Calculate\+Weights}} (int nn1, int nn2, int nn3)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a3202503f7885b8b7db52a53134351045}{Search\+Neighbor\+Cells}} (int nn1, int nn2, int nn3)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a5c8fe8978ce1689f5dcf12bc7b56793d}{Inside\+Cell}} (unsigned int numc)
+\item 
+void \mbox{\hyperlink{_func_def_8h_acefa073fc2b27b20856d5e8a2ae09fd1}{Neighbor\+Cells}} (int k)
+\item 
+void \mbox{\hyperlink{_func_def_8h_aeab4f78b54bf9ba581dcc8f5246d658d}{Predictor\+Step}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a31b6a7f477cbead6448a5c27a867f86d}{Corrector\+Step}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_ae1803816ac80e7c427387495c19a41c8}{Define\+Time\+Step}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a92f5b1ab36094a7f2007161931bb0fdb}{Check\+Distance}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}{Across\+Intersection}} (int prevcell, int int1, int int2, int \mbox{\hyperlink{_tracking_part_8c_abcfbff992646c011bd630b5df97eeebe}{mixing\+\_\+rule}})
+\item 
+void \mbox{\hyperlink{_func_def_8h_a6ac46448269e65b5766a3e49942c28e7}{Change\+Fracture}} (int cell\+\_\+win)
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}} \mbox{\hyperlink{_func_def_8h_aa8cd5b8e207b47b4a0ad1052040d16e9}{Calculate\+Position3D}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a461479d92dd1f67c7ef94fa953186860}{Init\+Cell}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_ae2df2bd90c8d4aa96e508002a36327c9}{Init\+Pos}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a69f9dfd9f5eba61f40439fc5dc92f3b6}{Moving2\+Center}} (int nnp, int cellnumber)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a9541c2c154a6c03a5bf820ac7522fc04}{Moving2\+Next\+Cell}} (int stuck, int k)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a638a294e89812e3847446ff830b717f9}{Boundary\+Cells}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a3d0625b25d49f518dd208288eeecf5e7}{Init\+Particles\+\_\+np}} (int k\+\_\+current, int firstn, int lastn, int parts\+\_\+fracture, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a01e7bd2a5bd9417f1d28849b8577b0b9}{Init\+Particles\+\_\+eq}} (int k\+\_\+current, int firstn, int lastn, double parts\+\_\+dist, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a54da61c82947f6b18230d9d49a15d3b5}{Corner\+Velocity}} (int i, int m1, int m2, int m3, int s1, int s2, int s3)
+\item 
+void \mbox{\hyperlink{_func_def_8h_adf46a0a89792c3085aa47f07957c6955}{Read\+Boundary\+Nodes}} ()
+\item 
+F\+I\+LE $\ast$ \mbox{\hyperlink{_func_def_8h_a205add90a27292ac5f18188fa35bcdf5}{Open\+File}} (char filen\mbox{[}120\mbox{]}, char fileopt\mbox{[}2\mbox{]})
+\item 
+void \mbox{\hyperlink{_func_def_8h_a9bf66a3ae3be79cacf8836e88dbdcef1}{Read\+F\+E\+H\+Mfile}} (int nedges)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a335450331ee81be8a4f3dfda40186f5b}{Read\+P\+F\+L\+O\+T\+R\+A\+Nfile}} (int nedges)
+\item 
+void \mbox{\hyperlink{_func_def_8h_aee37300c235f6fed3eea46ac342e7be6}{Writing\+Init}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_aa32bb7cee88e4c860b955eb1a3be9b62}{Velocity3D}} ()
+\item 
+double \mbox{\hyperlink{_func_def_8h_a181c33224a0f02a5196c0c7e088744ec}{Calculate\+Current\+DT}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a771a7e6baee7d5d23c3c43c1f075842c}{Yindex}} (int nodenum, int \mbox{\hyperlink{_tracking_part_8c_a67b3bde25c933874d93fd30f06b55f65}{np}})
+\item 
+int \mbox{\hyperlink{_func_def_8h_a1aa44dd56fa050699a1137d52a005cb7}{Xindex}} (int nodenum, int \mbox{\hyperlink{_tracking_part_8c_a67b3bde25c933874d93fd30f06b55f65}{np}})
+\item 
+int \mbox{\hyperlink{_func_def_8h_a7ff6ac949c292978394b28d9e0a9977b}{Complete\+Mixing\+Random\+Sampling}} (double products\mbox{[}4\mbox{]}, double speedsq\mbox{[}4\mbox{]}, int indj, int int1, int indk)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a1da16dbc53cf2728df74a0184f76e1ef}{Streamline\+Random\+Sampling}} (double products\mbox{[}4\mbox{]}, double speedsq\mbox{[}4\mbox{]}, int indj, int int1, int indk, int neighborcellind\mbox{[}4\mbox{]}, int neighborfracind\mbox{[}4\mbox{]}, int prevfrac, int prevcell)
+\item 
+void \mbox{\hyperlink{_func_def_8h_ae95808a34380ac01e823c78d8a708eb3}{Output\+Velocities}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a5445e2c235239b89cc51146de36ca58f}{XindexC}} (int nodenum, int ii)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a11a6fda3ecb0ede2c4a9a8e96e23145d}{YindexC}} (int nodenum, int ii)
+\item 
+double \mbox{\hyperlink{_func_def_8h_a3759fb98594fea9a5c180b9d2324e027}{Define\+Angle}} (double u1, double u2, double v1, double v2)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a0210252e558723368a0288b57b6136ea}{Half\+Polygon\+Velocity}} (int i, int k, int fractn, int indc, unsigned int fractj\mbox{[}\mbox{\hyperlink{main_8c_a9bbb8dd86b166646cdce87a545a36fa7}{max\+\_\+neighb}}\mbox{]})
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}} \mbox{\hyperlink{_func_def_8h_a8de9963c8d396e510b962001d412fc37}{Calculate\+Velocity3D}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a87524c648302d750ae4fe7c219cc7c9b}{Boundary\+Line}} (int n1, int n2, int n3)
+\item 
+void \mbox{\hyperlink{_func_def_8h_aac796a2c642d933ded40275edb457d16}{Check\+Grid}} ()
+\item 
+int \mbox{\hyperlink{_func_def_8h_a484716ff21554afa2ff7ea97f2ad3bd5}{B\+Velocity\+Direction}} (int b1, int b2)
+\item 
+double \mbox{\hyperlink{_func_def_8h_a6f447de1387b9a1e610decc755e43bd8}{In\+Out\+Flow\+Cell}} (int indcell, int int1, double nposx, double nposy)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a3655e04df015e152f63d69abfbf9fdee}{Moving2\+Next\+Cell\+Bound}} (int prevcell)
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_func_def_8h_a2afbea1a5d0b14d8a098f551fe055420}{Control\+\_\+\+File}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_func_def_8h_a9bb4185d1b46d02dc42d5889e4d70ebf}{Control\+\_\+\+Data}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a9e3244f5404d7751a6b81b66e5b416a6}{Particle\+Output}} (int currentt, int frac\+\_\+p)
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_func_def_8h_a922a07b425353141b29d8d57e830a7c1}{Control\+\_\+\+Param}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a3ff73fcd11e358801772a4241e99e12d}{Flow\+In\+Weight}} (int numbpart)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a176c0aef2063a544ab3559d2bec07c2a}{Init\+Particles\+\_\+ones}} (int k\+\_\+current, double inter\+\_\+p\mbox{[}$\,$\mbox{]}\mbox{[}4\mbox{]}, int \mbox{\hyperlink{main_8c_ab71244130eef93109128572e8ef83c2b}{fracture}}, int parts\+\_\+fracture, int ii, double thirdcoor, int zonenumb\+\_\+in, int first\+\_\+ind, int last\+\_\+ind)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a1991461f9a5546ec57dc497b6bdcae14}{Coordinations2D}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a977295cc5cf9eca6fa850ec922f4a6b0}{Read\+Aperture}} ()
+\item 
+void \mbox{\hyperlink{_func_def_8h_a0355cfa365c20964163da103eec2f0e5}{Init\+In\+Matrix}} ()
+\item 
+double \mbox{\hyperlink{_func_def_8h_a0610d22ad530758b4de42acd23a5df92}{Time\+From\+Matrix}} (double pdist)
+\item 
+void \mbox{\hyperlink{_func_def_8h_aff6510d8f65513c2356dc171c2191086}{Final\+Position}} ()
+\item 
+struct \mbox{\hyperlink{structlagrangian}{lagrangian}} \mbox{\hyperlink{_func_def_8h_a9fbd79304ae6c1759d1e903f5626ab87}{Calculate\+Lagrangian}} (double xcurrent, double ycurrent, double zcurrent, double xprev, double yprev, double zprev)
+\item 
+void \mbox{\hyperlink{_func_def_8h_a5d25bfed6640fd5e87e0e1f917e25218}{Output\+Mar\+Plum\+Disp}} (int currentnum, char path\mbox{[}125\mbox{]})
+\item 
+int \mbox{\hyperlink{_func_def_8h_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}{String\+\_\+\+Compare}} (char string1\mbox{[}$\,$\mbox{]}, char string2\mbox{[}$\,$\mbox{]})
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_func_def_8h_a484100bd5902d4efcdd15c21d1cb9048}{Control\+\_\+\+File\+\_\+\+Optional}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+double \mbox{\hyperlink{_func_def_8h_abeed81e7f6a295e7af7da3721dd07d66}{Time\+Domain\+RW}} (double time\+\_\+advect)
+\item 
+int \mbox{\hyperlink{_func_def_8h_a872a60753d347bab1cd2531b37ba8eda}{Init\+Particles\+\_\+flux}} (int k\+\_\+current, int firstn, int lastn, double weight\+\_\+p)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{_func_def_8h_a396d7f3e7653807b76887efe794f2eb7}{maindir}} \mbox{[}125\mbox{]}
+\item 
+double \mbox{\hyperlink{_func_def_8h_a38299b3e08d348a2a1c11cac9a7f01bd}{porosity}}
+\item 
+double \mbox{\hyperlink{_func_def_8h_a6f8c052f8417728038991f7f2826d38d}{density}}
+\item 
+unsigned long int \mbox{\hyperlink{_func_def_8h_a15415d9923eaa4ed9145037c60199b99}{timesteps}}
+\item 
+double \mbox{\hyperlink{_func_def_8h_a20238819f2c84ce6d3f083ded9ac612d}{thickness}}
+\item 
+double \mbox{\hyperlink{_func_def_8h_af8cb639b360600b7ca938a3e275b017f}{saturation}}
+\item 
+double \mbox{\hyperlink{_func_def_8h_a5799b26fb87c6d98cd44352eb84a2e7e}{timeunit}}
+\item 
+char \mbox{\hyperlink{_func_def_8h_aa867dd168d29d6a51276df24caa862ce}{controlfile}} \mbox{[}120\mbox{]}
+\item 
+double \mbox{\hyperlink{_func_def_8h_aa27b8bb0d1e8acff46eaadd07476ed04}{total\+Flux\+In}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a7f54a7ad2e8c4f2214887aeac797ce91}{pflotran}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a8a3e3776115006efbafec148de4200e0}{fehm}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a0049b706bb5b3980868a5b1e1b3fac0c}{nnodes}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a5225ceefbfdde0f9cb32cb84174a4863}{ncells}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_accb317d0fcd1e5a1683184b91a49ff11}{nfract}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a9bbb8dd86b166646cdce87a545a36fa7}{max\+\_\+neighb}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a9c5371905330e52a346417559120efec}{npart}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a67b3bde25c933874d93fd30f06b55f65}{np}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_a6d971fbeb47db134f84ff99053b7c47d}{nzone\+\_\+in}}
+\item 
+unsigned int $\ast$ \mbox{\hyperlink{_func_def_8h_ae04e94bac8fc762dd97706043f25eaa4}{nodezonein}}
+\item 
+unsigned int $\ast$ \mbox{\hyperlink{_func_def_8h_a8e227a7bdba87548413eeac3daae26a6}{nodezoneout}}
+\item 
+unsigned int \mbox{\hyperlink{_func_def_8h_adef0bd5e77533cdd4cdd0bcf0d5dc96b}{flag\+\_\+w}}
+\item 
+struct \mbox{\hyperlink{structmaterial}{material}} $\ast$ \mbox{\hyperlink{_func_def_8h_ab71244130eef93109128572e8ef83c2b}{fracture}}
+\item 
+struct \mbox{\hyperlink{structvertex}{vertex}} $\ast$ \mbox{\hyperlink{_func_def_8h_a9d0d7da8d3c9e75857a16e168969f89d}{node}}
+\item 
+struct \mbox{\hyperlink{structcontam}{contam}} $\ast$ \mbox{\hyperlink{_func_def_8h_a821d6a33fadb1aacb1a231c2c38cf7ca}{particle}}
+\item 
+struct \mbox{\hyperlink{structelement}{element}} $\ast$ \mbox{\hyperlink{_func_def_8h_a26a18460ba7bc9d4e9ace81fda1819ee}{cell}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_func_def_8h_a1daf785e3f68d293c7caa1c756d5cb74}\label{_func_def_8h_a1daf785e3f68d293c7caa1c756d5cb74}} 
+\index{FuncDef.h@{FuncDef.h}!pi@{pi}}
+\index{pi@{pi}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{pi}{pi}}
+{\footnotesize\ttfamily \#define pi~3.\+14159265359}
+
+
+
+Definition at line 2 of file Func\+Def.\+h.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_func_def_8h_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}\label{_func_def_8h_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}} 
+\index{FuncDef.h@{FuncDef.h}!AcrossIntersection@{AcrossIntersection}}
+\index{AcrossIntersection@{AcrossIntersection}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{AcrossIntersection()}{AcrossIntersection()}}
+{\footnotesize\ttfamily void Across\+Intersection (\begin{DoxyParamCaption}\item[{int}]{prevcell,  }\item[{int}]{int1,  }\item[{int}]{int2,  }\item[{int}]{mixing\+\_\+rule }\end{DoxyParamCaption})}
+
+Particle is moving through intersection line 
+
+Definition at line 2013 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a4c53fcfe5268349ff922899f3da7ecc3}\label{_func_def_8h_a4c53fcfe5268349ff922899f3da7ecc3}} 
+\index{FuncDef.h@{FuncDef.h}!AdjacentCells@{AdjacentCells}}
+\index{AdjacentCells@{AdjacentCells}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{AdjacentCells()}{AdjacentCells()}}
+{\footnotesize\ttfamily void Adjacent\+Cells (\begin{DoxyParamCaption}\item[{int}]{ln,  }\item[{int}]{in,  }\item[{int}]{jn,  }\item[{int}]{kn }\end{DoxyParamCaption})}
+
+The function defines adjacent triangular cells for each node 
+
+Definition at line 540 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a638a294e89812e3847446ff830b717f9}\label{_func_def_8h_a638a294e89812e3847446ff830b717f9}} 
+\index{FuncDef.h@{FuncDef.h}!BoundaryCells@{BoundaryCells}}
+\index{BoundaryCells@{BoundaryCells}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{BoundaryCells()}{BoundaryCells()}}
+{\footnotesize\ttfamily void Boundary\+Cells (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function checks velocities at boundary nodes and fixes pathological cases.
+
+In the rare event, when two velocity vectors are directed towards each other along the same cell edge, a particle will be stuck there. To avoid this situation, one of velocities is redirected along the edge with node associated with lower pressure value. 
+
+Definition at line 531 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a87524c648302d750ae4fe7c219cc7c9b}\label{_func_def_8h_a87524c648302d750ae4fe7c219cc7c9b}} 
+\index{FuncDef.h@{FuncDef.h}!BoundaryLine@{BoundaryLine}}
+\index{BoundaryLine@{BoundaryLine}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{BoundaryLine()}{BoundaryLine()}}
+{\footnotesize\ttfamily void Boundary\+Line (\begin{DoxyParamCaption}\item[{int}]{n1,  }\item[{int}]{n2,  }\item[{int}]{n3 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_func_def_8h_a484716ff21554afa2ff7ea97f2ad3bd5}\label{_func_def_8h_a484716ff21554afa2ff7ea97f2ad3bd5}} 
+\index{FuncDef.h@{FuncDef.h}!BVelocityDirection@{BVelocityDirection}}
+\index{BVelocityDirection@{BVelocityDirection}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{BVelocityDirection()}{BVelocityDirection()}}
+{\footnotesize\ttfamily int B\+Velocity\+Direction (\begin{DoxyParamCaption}\item[{int}]{b1,  }\item[{int}]{b2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_func_def_8h_a181c33224a0f02a5196c0c7e088744ec}\label{_func_def_8h_a181c33224a0f02a5196c0c7e088744ec}} 
+\index{FuncDef.h@{FuncDef.h}!CalculateCurrentDT@{CalculateCurrentDT}}
+\index{CalculateCurrentDT@{CalculateCurrentDT}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CalculateCurrentDT()}{CalculateCurrentDT()}}
+{\footnotesize\ttfamily double Calculate\+Current\+DT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Functions returns particle instanteneous time step 
+
+Definition at line 2527 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9fbd79304ae6c1759d1e903f5626ab87}\label{_func_def_8h_a9fbd79304ae6c1759d1e903f5626ab87}} 
+\index{FuncDef.h@{FuncDef.h}!CalculateLagrangian@{CalculateLagrangian}}
+\index{CalculateLagrangian@{CalculateLagrangian}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CalculateLagrangian()}{CalculateLagrangian()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structlagrangian}{lagrangian}} Calculate\+Lagrangian (\begin{DoxyParamCaption}\item[{double}]{xcurrent,  }\item[{double}]{ycurrent,  }\item[{double}]{zcurrent,  }\item[{double}]{xprev,  }\item[{double}]{yprev,  }\item[{double}]{zprev }\end{DoxyParamCaption})}
+
+Function calculates Lagrangian variables\+: tau and beta. 
+
+Definition at line 3140 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aa8cd5b8e207b47b4a0ad1052040d16e9}\label{_func_def_8h_aa8cd5b8e207b47b4a0ad1052040d16e9}} 
+\index{FuncDef.h@{FuncDef.h}!CalculatePosition3D@{CalculatePosition3D}}
+\index{CalculatePosition3D@{CalculatePosition3D}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CalculatePosition3D()}{CalculatePosition3D()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structposit3d}{posit3d}} Calculate\+Position3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function calculates 3D coordinates of current particle\textquotesingle{}s position at 2D fracture plane 
+
+Definition at line 213 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a8de9963c8d396e510b962001d412fc37}\label{_func_def_8h_a8de9963c8d396e510b962001d412fc37}} 
+\index{FuncDef.h@{FuncDef.h}!CalculateVelocity3D@{CalculateVelocity3D}}
+\index{CalculateVelocity3D@{CalculateVelocity3D}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CalculateVelocity3D()}{CalculateVelocity3D()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structposit3d}{posit3d}} Calculate\+Velocity3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function converts particle\textquotesingle{}s 2D velocity vector to 3D velocity vector 
+
+Definition at line 335 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a288d5ddd917552bb6640483eaa1b7add}\label{_func_def_8h_a288d5ddd917552bb6640483eaa1b7add}} 
+\index{FuncDef.h@{FuncDef.h}!CalculateWeights@{CalculateWeights}}
+\index{CalculateWeights@{CalculateWeights}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CalculateWeights()}{CalculateWeights()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structintcoef}{intcoef}} Calculate\+Weights (\begin{DoxyParamCaption}\item[{int}]{nn1,  }\item[{int}]{nn2,  }\item[{int}]{nn3 }\end{DoxyParamCaption})}
+
+Function calculates interpolation weights for velocity instanteneous particles velocity and time step. 
+
+Definition at line 1416 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a6ac46448269e65b5766a3e49942c28e7}\label{_func_def_8h_a6ac46448269e65b5766a3e49942c28e7}} 
+\index{FuncDef.h@{FuncDef.h}!ChangeFracture@{ChangeFracture}}
+\index{ChangeFracture@{ChangeFracture}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ChangeFracture()}{ChangeFracture()}}
+{\footnotesize\ttfamily void Change\+Fracture (\begin{DoxyParamCaption}\item[{int}]{cell\+\_\+win }\end{DoxyParamCaption})}
+
+This function recalculates particles coordinations at intersection lines. Particles XY coordinations at one fracture are recalculated to 3D positions and then new XY coordinations of an intersecting fracture are defined. 
+
+Definition at line 183 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a92f5b1ab36094a7f2007161931bb0fdb}\label{_func_def_8h_a92f5b1ab36094a7f2007161931bb0fdb}} 
+\index{FuncDef.h@{FuncDef.h}!CheckDistance@{CheckDistance}}
+\index{CheckDistance@{CheckDistance}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CheckDistance()}{CheckDistance()}}
+{\footnotesize\ttfamily int Check\+Distance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function checks the distance from particle to intersection line when particles is located at the intersection triangular cell 
+
+Definition at line 1655 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aac796a2c642d933ded40275edb457d16}\label{_func_def_8h_aac796a2c642d933ded40275edb457d16}} 
+\index{FuncDef.h@{FuncDef.h}!CheckGrid@{CheckGrid}}
+\index{CheckGrid@{CheckGrid}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CheckGrid()}{CheckGrid()}}
+{\footnotesize\ttfamily void Check\+Grid (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function checks the grid\+: looking for nodes that are defined as internal or external, but belong to two fractures and should be defined as interface nodes 
+
+Definition at line 1055 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ab72ec3059b077bf933070124a6f64a03}\label{_func_def_8h_ab72ec3059b077bf933070124a6f64a03}} 
+\index{FuncDef.h@{FuncDef.h}!CheckNewCell@{CheckNewCell}}
+\index{CheckNewCell@{CheckNewCell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CheckNewCell()}{CheckNewCell()}}
+{\footnotesize\ttfamily void Check\+New\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a check, did particle move to a new triangular cell during last time step or stayed at the same cell 
+
+Definition at line 1273 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a7ff6ac949c292978394b28d9e0a9977b}\label{_func_def_8h_a7ff6ac949c292978394b28d9e0a9977b}} 
+\index{FuncDef.h@{FuncDef.h}!CompleteMixingRandomSampling@{CompleteMixingRandomSampling}}
+\index{CompleteMixingRandomSampling@{CompleteMixingRandomSampling}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CompleteMixingRandomSampling()}{CompleteMixingRandomSampling()}}
+{\footnotesize\ttfamily int Complete\+Mixing\+Random\+Sampling (\begin{DoxyParamCaption}\item[{double}]{products\mbox{[}4\mbox{]},  }\item[{double}]{speedsq\mbox{[}4\mbox{]},  }\item[{int}]{indj,  }\item[{int}]{int1,  }\item[{int}]{indk }\end{DoxyParamCaption})}
+
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1\+: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection Arg 2\+: Vector of the speed squared for each cell at the intersection Arg 3\+: index of current cell in int1 node list Arg 4\+: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5\+: indk gives the position in the list of the 4 intersection cells that is previous cell Return\+: The Exit cell at the intersection 
+
+Definition at line 2344 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9bb4185d1b46d02dc42d5889e4d70ebf}\label{_func_def_8h_a9bb4185d1b46d02dc42d5889e4d70ebf}} 
+\index{FuncDef.h@{FuncDef.h}!Control\_Data@{Control\_Data}}
+\index{Control\_Data@{Control\_Data}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Control\_Data()}{Control\_Data()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+Data (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1201 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a2afbea1a5d0b14d8a098f551fe055420}\label{_func_def_8h_a2afbea1a5d0b14d8a098f551fe055420}} 
+\index{FuncDef.h@{FuncDef.h}!Control\_File@{Control\_File}}
+\index{Control\_File@{Control\_File}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Control\_File()}{Control\_File()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+File (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns the file name and/or input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1090 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a484100bd5902d4efcdd15c21d1cb9048}\label{_func_def_8h_a484100bd5902d4efcdd15c21d1cb9048}} 
+\index{FuncDef.h@{FuncDef.h}!Control\_File\_Optional@{Control\_File\_Optional}}
+\index{Control\_File\_Optional@{Control\_File\_Optional}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Control\_File\_Optional()}{Control\_File\_Optional()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+File\+\_\+\+Optional (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns the file name and/or input parameter value. This function is called for the optional parameters only. If the parameter is not defined in the control file, the default value is used. 
+
+Definition at line 1135 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a922a07b425353141b29d8d57e830a7c1}\label{_func_def_8h_a922a07b425353141b29d8d57e830a7c1}} 
+\index{FuncDef.h@{FuncDef.h}!Control\_Param@{Control\_Param}}
+\index{Control\_Param@{Control\_Param}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Control\_Param()}{Control\_Param()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+Param (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1245 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a544594dde0a4f38fb12c863f7c395fd6}\label{_func_def_8h_a544594dde0a4f38fb12c863f7c395fd6}} 
+\index{FuncDef.h@{FuncDef.h}!Convertto2d@{Convertto2d}}
+\index{Convertto2d@{Convertto2d}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Convertto2d()}{Convertto2d()}}
+{\footnotesize\ttfamily void Convertto2d (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function uses rotation matrix and fracture\textquotesingle{}s normal vector to rotate fracture from its position in 3D to XY plane if node belongs to intersection, belongs to two fractures 
+
+Definition at line 17 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ac21ac13cf8f1cb96197713aa59131247}\label{_func_def_8h_ac21ac13cf8f1cb96197713aa59131247}} 
+\index{FuncDef.h@{FuncDef.h}!Convertto3d@{Convertto3d}}
+\index{Convertto3d@{Convertto3d}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Convertto3d()}{Convertto3d()}}
+{\footnotesize\ttfamily void Convertto3d (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function uses rotation matrix to rotate fracture from its position in XY plane to 3D domain 
+
+Definition at line 130 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a1991461f9a5546ec57dc497b6bdcae14}\label{_func_def_8h_a1991461f9a5546ec57dc497b6bdcae14}} 
+\index{FuncDef.h@{FuncDef.h}!Coordinations2D@{Coordinations2D}}
+\index{Coordinations2D@{Coordinations2D}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Coordinations2D()}{Coordinations2D()}}
+{\footnotesize\ttfamily void Coordinations2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function outputs 2D coordinations of nodes\+: every fracture into separate file. Those files are used as input to gstat for length correlation of aperture. 
+
+Definition at line 360 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a54da61c82947f6b18230d9d49a15d3b5}\label{_func_def_8h_a54da61c82947f6b18230d9d49a15d3b5}} 
+\index{FuncDef.h@{FuncDef.h}!CornerVelocity@{CornerVelocity}}
+\index{CornerVelocity@{CornerVelocity}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CornerVelocity()}{CornerVelocity()}}
+{\footnotesize\ttfamily int Corner\+Velocity (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{m1,  }\item[{int}]{m2,  }\item[{int}]{m3,  }\item[{int}]{s1,  }\item[{int}]{s2,  }\item[{int}]{s3 }\end{DoxyParamCaption})}
+
+The Function identifies pathologycal cases at corner of fracture boundary. The angle between velocity on corner node and velocities/edges on surrounding boundary nodes are calculated. Then, if velocity is pointing outside of fracture, turns the velocity direction along the fracture edge. 
+
+Definition at line 771 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a31b6a7f477cbead6448a5c27a867f86d}\label{_func_def_8h_a31b6a7f477cbead6448a5c27a867f86d}} 
+\index{FuncDef.h@{FuncDef.h}!CorrectorStep@{CorrectorStep}}
+\index{CorrectorStep@{CorrectorStep}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{CorrectorStep()}{CorrectorStep()}}
+{\footnotesize\ttfamily void Corrector\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Corrector step in Predictor-\/\+Corrector technique. Function calculates new particle position using calculated velocity in Predictor step. 
+
+Definition at line 1576 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a6c0b7207a055a56ec2091b578dcab307}\label{_func_def_8h_a6c0b7207a055a56ec2091b578dcab307}} 
+\index{FuncDef.h@{FuncDef.h}!DarcyVelocity@{DarcyVelocity}}
+\index{DarcyVelocity@{DarcyVelocity}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{DarcyVelocity()}{DarcyVelocity()}}
+{\footnotesize\ttfamily void Darcy\+Velocity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs Darcy\textquotesingle{}s velocity reconstruction (main function of Darcy velocities reconstruction procedure) using linear least square algorithm. Flow solver provides flow fluxes on each edge of control volume cells. Velocity on each control volume cell center (each node) is reconstructed using flow fluxes.
+
+Velocity of interior and interior-\/interface nodes is reconstructed according to Eq.\+5 (Painter,2011); exterior node\textquotesingle{} velocity according to Eq.\+7 (Painter, 2011)
+
+Function makes a loop over all nodes and calls functions for velocity reconstruction depending of type of the node (external, internal, internal-\/interface, external interface) 
+
+Definition at line 29 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3759fb98594fea9a5c180b9d2324e027}\label{_func_def_8h_a3759fb98594fea9a5c180b9d2324e027}} 
+\index{FuncDef.h@{FuncDef.h}!DefineAngle@{DefineAngle}}
+\index{DefineAngle@{DefineAngle}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{DefineAngle()}{DefineAngle()}}
+{\footnotesize\ttfamily double Define\+Angle (\begin{DoxyParamCaption}\item[{double}]{u1,  }\item[{double}]{u2,  }\item[{double}]{v1,  }\item[{double}]{v2 }\end{DoxyParamCaption})}
+
+Function defines an angle between two edges of voronoy cell 
+
+Definition at line 415 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_acc3803bef1f2fcc10f4f2a0ecc627b34}\label{_func_def_8h_acc3803bef1f2fcc10f4f2a0ecc627b34}} 
+\index{FuncDef.h@{FuncDef.h}!DefineBoundaryAngle@{DefineBoundaryAngle}}
+\index{DefineBoundaryAngle@{DefineBoundaryAngle}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{DefineBoundaryAngle()}{DefineBoundaryAngle()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structlb}{lb}} Define\+Boundary\+Angle (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{unsigned int}]{edge\+\_\+1,  }\item[{unsigned int}]{edge\+\_\+2,  }\item[{int}]{f1,  }\item[{int}]{coorf }\end{DoxyParamCaption})}
+
+The function defines angle between two edges of a boundary cell and return the result. The angle is used in flow velocity reconstruction on fracture edge. 
+
+Definition at line 367 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ae1803816ac80e7c427387495c19a41c8}\label{_func_def_8h_ae1803816ac80e7c427387495c19a41c8}} 
+\index{FuncDef.h@{FuncDef.h}!DefineTimeStep@{DefineTimeStep}}
+\index{DefineTimeStep@{DefineTimeStep}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{DefineTimeStep()}{DefineTimeStep()}}
+{\footnotesize\ttfamily void Define\+Time\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a loop through all the nodes in the mesh and defines a time step at each node. The time step of particles will be interpolated from time steps defined at each node. 
+
+Definition at line 1622 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aff6510d8f65513c2356dc171c2191086}\label{_func_def_8h_aff6510d8f65513c2356dc171c2191086}} 
+\index{FuncDef.h@{FuncDef.h}!FinalPosition@{FinalPosition}}
+\index{FinalPosition@{FinalPosition}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{FinalPosition()}{FinalPosition()}}
+{\footnotesize\ttfamily void Final\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function calculates particles final position at out-\/flow boundary 
+
+Definition at line 2996 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3ff73fcd11e358801772a4241e99e12d}\label{_func_def_8h_a3ff73fcd11e358801772a4241e99e12d}} 
+\index{FuncDef.h@{FuncDef.h}!FlowInWeight@{FlowInWeight}}
+\index{FlowInWeight@{FlowInWeight}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{FlowInWeight()}{FlowInWeight()}}
+{\footnotesize\ttfamily void Flow\+In\+Weight (\begin{DoxyParamCaption}\item[{int}]{numberpart }\end{DoxyParamCaption})}
+
+Function calculates particle\textquotesingle{}s in-\/flow flux weight. Used in option \#1, \#2, \#3. 
+
+Definition at line 861 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a0210252e558723368a0288b57b6136ea}\label{_func_def_8h_a0210252e558723368a0288b57b6136ea}} 
+\index{FuncDef.h@{FuncDef.h}!HalfPolygonVelocity@{HalfPolygonVelocity}}
+\index{HalfPolygonVelocity@{HalfPolygonVelocity}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{HalfPolygonVelocity()}{HalfPolygonVelocity()}}
+{\footnotesize\ttfamily void Half\+Polygon\+Velocity (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{k,  }\item[{int}]{fractn,  }\item[{int}]{indc,  }\item[{unsigned int}]{fractj\mbox{[}max\+\_\+neighb\mbox{]} }\end{DoxyParamCaption})}
+
+Velocity reconstruction on an intersection node. In this case, the control volume cell is devided onto two polygons by intersection line. The velocity reconstruction is performed on each part of control volume cell at intersection. 
+
+Definition at line 944 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a461479d92dd1f67c7ef94fa953186860}\label{_func_def_8h_a461479d92dd1f67c7ef94fa953186860}} 
+\index{FuncDef.h@{FuncDef.h}!InitCell@{InitCell}}
+\index{InitCell@{InitCell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitCell()}{InitCell()}}
+{\footnotesize\ttfamily int Init\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a search to find cell Id where the particle was initially placed. 
+
+Definition at line 621 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a0355cfa365c20964163da103eec2f0e5}\label{_func_def_8h_a0355cfa365c20964163da103eec2f0e5}} 
+\index{FuncDef.h@{FuncDef.h}!InitInMatrix@{InitInMatrix}}
+\index{InitInMatrix@{InitInMatrix}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitInMatrix()}{InitInMatrix()}}
+{\footnotesize\ttfamily void Init\+In\+Matrix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs data reading from files for Option \#5, init\+\_\+matrix. In this option particles are placed at random positions in matrix, the time to move from initial position to nearest fracture is calculated in function Time\+From\+Matrix.
+
+Input files Particle\+Init\+Coord\+R.\+dat and Closest\+Node\+R.\+inp provide particles initial positions at matrix and te closes node ID at D\+FN mesh, respectively. 
+
+Definition at line 968 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a01e7bd2a5bd9417f1d28849b8577b0b9}\label{_func_def_8h_a01e7bd2a5bd9417f1d28849b8577b0b9}} 
+\index{FuncDef.h@{FuncDef.h}!InitParticles\_eq@{InitParticles\_eq}}
+\index{InitParticles\_eq@{InitParticles\_eq}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitParticles\_eq()}{InitParticles\_eq()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+eq (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{firstn,  }\item[{int}]{lastn,  }\item[{double}]{parts\+\_\+dist,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particles initial positions at a single fracture edge, using calculated before distance between particles. Option \#2, init\+\_\+eqd. 
+
+Definition at line 711 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a872a60753d347bab1cd2531b37ba8eda}\label{_func_def_8h_a872a60753d347bab1cd2531b37ba8eda}} 
+\index{FuncDef.h@{FuncDef.h}!InitParticles\_flux@{InitParticles\_flux}}
+\index{InitParticles\_flux@{InitParticles\_flux}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitParticles\_flux()}{InitParticles\_flux()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+flux (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind,  }\item[{double}]{weight\+\_\+p }\end{DoxyParamCaption})}
+
+Function defines particle\textquotesingle{}s initial positions at single fracture edge in Option \#6. Particles are placed according to input flux weights. In this case, all the particles have the same flux weight, but number of particles per fracture edge depends on in-\/flow flux of this fracture. 
+
+Definition at line 1095 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3d0625b25d49f518dd208288eeecf5e7}\label{_func_def_8h_a3d0625b25d49f518dd208288eeecf5e7}} 
+\index{FuncDef.h@{FuncDef.h}!InitParticles\_np@{InitParticles\_np}}
+\index{InitParticles\_np@{InitParticles\_np}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitParticles\_np()}{InitParticles\_np()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+np (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{int}]{firstnd,  }\item[{int}]{lastnd,  }\item[{int}]{parts\+\_\+fracture,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particle\textquotesingle{}s initial positions on a single fracture edge. Option \#1, init\+\_\+nf 
+
+Definition at line 660 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a176c0aef2063a544ab3559d2bec07c2a}\label{_func_def_8h_a176c0aef2063a544ab3559d2bec07c2a}} 
+\index{FuncDef.h@{FuncDef.h}!InitParticles\_ones@{InitParticles\_ones}}
+\index{InitParticles\_ones@{InitParticles\_ones}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitParticles\_ones()}{InitParticles\_ones()}}
+{\footnotesize\ttfamily int Init\+Particles\+\_\+ones (\begin{DoxyParamCaption}\item[{int}]{k\+\_\+current,  }\item[{double}]{inter\+\_\+p\mbox{[}$\,$\mbox{]}\mbox{[}4\mbox{]},  }\item[{int}]{fracture\+\_\+n,  }\item[{int}]{parts\+\_\+fracture,  }\item[{int}]{ii,  }\item[{double}]{thirdcoor,  }\item[{int}]{zonenumb\+\_\+in,  }\item[{int}]{first\+\_\+ind,  }\item[{int}]{last\+\_\+ind }\end{DoxyParamCaption})}
+
+Function defines particles initial positions in option \#3, where user defines region at in-\/flow boundary face for particles. 
+
+Definition at line 764 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ae2df2bd90c8d4aa96e508002a36327c9}\label{_func_def_8h_ae2df2bd90c8d4aa96e508002a36327c9}} 
+\index{FuncDef.h@{FuncDef.h}!InitPos@{InitPos}}
+\index{InitPos@{InitPos}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InitPos()}{InitPos()}}
+{\footnotesize\ttfamily int Init\+Pos (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function defines the required option of particles initial positions defined at input control file; calculates number of particles, allocates memory. First option init\+\_\+nf\+: equal number of particles on every boundary edge regardless of edge length
+
+Second option init\+\_\+eqd\+: calculate total length of boundary edges; define the distance between particles and place particles equidistant from each other on all edges
+
+Third option init\+\_\+oneregion\+: user specifies a region and all particles start from the fracture edges that located inside the region
+
+Fourth option init\+\_\+random\+: particles will be set randomly over all fractures surfaces; in this case the particles are weighted acoording to the aperture
+
+5th option init\+\_\+matrix\+: particles are set randomly in rock matrix, their time from initial positions is calculated, then particles move through fractures to out-\/flow boundary. This option requires preprocessing; the script Random\+Posit\+Gener.\+py will provide necessary input files
+
+Sixth option init\+\_\+flux\+: place particles according to input fluxes. Each particle has the same flux weight. The number of particles are placed propportionally to inflow flux on each cell and fracture edge. 
+
+Definition at line 21 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a6f447de1387b9a1e610decc755e43bd8}\label{_func_def_8h_a6f447de1387b9a1e610decc755e43bd8}} 
+\index{FuncDef.h@{FuncDef.h}!InOutFlowCell@{InOutFlowCell}}
+\index{InOutFlowCell@{InOutFlowCell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InOutFlowCell()}{InOutFlowCell()}}
+{\footnotesize\ttfamily double In\+Out\+Flow\+Cell (\begin{DoxyParamCaption}\item[{int}]{indcell,  }\item[{int}]{int1,  }\item[{double}]{nposx,  }\item[{double}]{nposy }\end{DoxyParamCaption})}
+
+Function defines if velocities on cell vertices pointing in or out of intersection line 
+
+Definition at line 1949 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a5c8fe8978ce1689f5dcf12bc7b56793d}\label{_func_def_8h_a5c8fe8978ce1689f5dcf12bc7b56793d}} 
+\index{FuncDef.h@{FuncDef.h}!InsideCell@{InsideCell}}
+\index{InsideCell@{InsideCell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{InsideCell()}{InsideCell()}}
+{\footnotesize\ttfamily int Inside\+Cell (\begin{DoxyParamCaption}\item[{unsigned int}]{numc }\end{DoxyParamCaption})}
+
+Function checks if particle is in the cell (numc is cell ID) 
+
+Definition at line 1487 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9847c8edcfa5f9fd5426106a7477f935}\label{_func_def_8h_a9847c8edcfa5f9fd5426106a7477f935}} 
+\index{FuncDef.h@{FuncDef.h}!MatrixProducts@{MatrixProducts}}
+\index{MatrixProducts@{MatrixProducts}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{MatrixProducts()}{MatrixProducts()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structmatr}{matr}} Matrix\+Products (\begin{DoxyParamCaption}\item[{double}]{normxarea\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]},  }\item[{int}]{number }\end{DoxyParamCaption})}
+
+Function performs matrix dot product (G\+TG)-\/1 and returns the result. 
+
+Definition at line 318 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a69f9dfd9f5eba61f40439fc5dc92f3b6}\label{_func_def_8h_a69f9dfd9f5eba61f40439fc5dc92f3b6}} 
+\index{FuncDef.h@{FuncDef.h}!Moving2Center@{Moving2Center}}
+\index{Moving2Center@{Moving2Center}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Moving2Center()}{Moving2Center()}}
+{\footnotesize\ttfamily void Moving2\+Center (\begin{DoxyParamCaption}\item[{int}]{nnp,  }\item[{int}]{cellnumber }\end{DoxyParamCaption})}
+
+Function moves particle to the center of the same cell 
+
+Definition at line 2440 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9541c2c154a6c03a5bf820ac7522fc04}\label{_func_def_8h_a9541c2c154a6c03a5bf820ac7522fc04}} 
+\index{FuncDef.h@{FuncDef.h}!Moving2NextCell@{Moving2NextCell}}
+\index{Moving2NextCell@{Moving2NextCell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Moving2NextCell()}{Moving2NextCell()}}
+{\footnotesize\ttfamily int Moving2\+Next\+Cell (\begin{DoxyParamCaption}\item[{int}]{stuck,  }\item[{int}]{k }\end{DoxyParamCaption})}
+
+Functions performs the movement of particle from one cell to the center of neighbouring cell. 
+
+Definition at line 2471 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3655e04df015e152f63d69abfbf9fdee}\label{_func_def_8h_a3655e04df015e152f63d69abfbf9fdee}} 
+\index{FuncDef.h@{FuncDef.h}!Moving2NextCellBound@{Moving2NextCellBound}}
+\index{Moving2NextCellBound@{Moving2NextCellBound}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Moving2NextCellBound()}{Moving2NextCellBound()}}
+{\footnotesize\ttfamily void Moving2\+Next\+Cell\+Bound (\begin{DoxyParamCaption}\item[{int}]{prevcell }\end{DoxyParamCaption})}
+
+In the pathological rare case, when particle is out of fracture, the function is called and it\textquotesingle{}s moving particle to internal cell 
+
+Definition at line 2572 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_acefa073fc2b27b20856d5e8a2ae09fd1}\label{_func_def_8h_acefa073fc2b27b20856d5e8a2ae09fd1}} 
+\index{FuncDef.h@{FuncDef.h}!NeighborCells@{NeighborCells}}
+\index{NeighborCells@{NeighborCells}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{NeighborCells()}{NeighborCells()}}
+{\footnotesize\ttfamily void Neighbor\+Cells (\begin{DoxyParamCaption}\item[{int}]{k }\end{DoxyParamCaption})}
+
+Function checks neighboring cells to find a particle 
+
+Definition at line 1600 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a205add90a27292ac5f18188fa35bcdf5}\label{_func_def_8h_a205add90a27292ac5f18188fa35bcdf5}} 
+\index{FuncDef.h@{FuncDef.h}!OpenFile@{OpenFile}}
+\index{OpenFile@{OpenFile}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{OpenFile()}{OpenFile()}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ Open\+File (\begin{DoxyParamCaption}\item[{char}]{filen\mbox{[}120\mbox{]},  }\item[{char}]{fileopt\mbox{[}2\mbox{]} }\end{DoxyParamCaption})}
+
+The function opens file for reading or writing. If error -\/ the program is terminated. 
+
+Definition at line 728 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a5d25bfed6640fd5e87e0e1f917e25218}\label{_func_def_8h_a5d25bfed6640fd5e87e0e1f917e25218}} 
+\index{FuncDef.h@{FuncDef.h}!OutputMarPlumDisp@{OutputMarPlumDisp}}
+\index{OutputMarPlumDisp@{OutputMarPlumDisp}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{OutputMarPlumDisp()}{OutputMarPlumDisp()}}
+{\footnotesize\ttfamily void Output\+Mar\+Plum\+Disp (\begin{DoxyParamCaption}\item[{int}]{currentnum,  }\item[{char}]{path\mbox{[}125\mbox{]} }\end{DoxyParamCaption})}
+
+This function is used when particles trajectories should be output in format that M\+A\+R\+FA and/or P\+L\+U\+M\+E\+C\+A\+LC codes will be able to read and process. 
+
+Definition at line 19 of file output.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ae95808a34380ac01e823c78d8a708eb3}\label{_func_def_8h_ae95808a34380ac01e823c78d8a708eb3}} 
+\index{FuncDef.h@{FuncDef.h}!OutputVelocities@{OutputVelocities}}
+\index{OutputVelocities@{OutputVelocities}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{OutputVelocities()}{OutputVelocities()}}
+{\footnotesize\ttfamily void Output\+Velocities (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+This function is called to output velocities on nodes in the order of fractture I\+Ds. The output can be used to visualise flow field of 2D reconstructed Darcy velocities in 3D simulation domain 
+
+Definition at line 253 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9e3244f5404d7751a6b81b66e5b416a6}\label{_func_def_8h_a9e3244f5404d7751a6b81b66e5b416a6}} 
+\index{FuncDef.h@{FuncDef.h}!ParticleOutput@{ParticleOutput}}
+\index{ParticleOutput@{ParticleOutput}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ParticleOutput()}{ParticleOutput()}}
+{\footnotesize\ttfamily void Particle\+Output (\begin{DoxyParamCaption}\item[{int}]{currentt,  }\item[{int}]{fract\+\_\+p }\end{DoxyParamCaption})}
+
+The function of particles trajectories outputs. Function is called at every intersection and outputs to file at each segment of particles trajectory\+: from intersection to intersection. The curvature of the trajectory is defined and dictate number of time steps for outputs (unless user requested every time step output). 
+
+Definition at line 2669 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a70ceb6e59ecdae0487126a86c88523bb}\label{_func_def_8h_a70ceb6e59ecdae0487126a86c88523bb}} 
+\index{FuncDef.h@{FuncDef.h}!ParticleTrack@{ParticleTrack}}
+\index{ParticleTrack@{ParticleTrack}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ParticleTrack()}{ParticleTrack()}}
+{\footnotesize\ttfamily void Particle\+Track (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The main driving function of particles tracking procedure.
+\begin{DoxyEnumerate}
+\item The all necessary options for particle tracking and for the outputs are read from input control file.
+\item The subroutine for particle initial positions is called.
+\item External loop on paticles is organised. One particle at a time.
+\item Internal loop on time steps, where particles are mobing through fracture network. 4.\+1 Predictor -\/corrector technique is used for particles to move through fractures. 4.\+2 Complete mixing or streamline routing rule (defined by user) are used on intersections. 4.\+3 Particles data outputs. 
+\end{DoxyEnumerate}
+
+Definition at line 66 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aeab4f78b54bf9ba581dcc8f5246d658d}\label{_func_def_8h_aeab4f78b54bf9ba581dcc8f5246d658d}} 
+\index{FuncDef.h@{FuncDef.h}!PredictorStep@{PredictorStep}}
+\index{PredictorStep@{PredictorStep}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{PredictorStep()}{PredictorStep()}}
+{\footnotesize\ttfamily void Predictor\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Predictor step in Predictor-\/\+Corrector technique. Function calculates new velocities and new particle position. 
+
+Definition at line 1541 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a977295cc5cf9eca6fa850ec922f4a6b0}\label{_func_def_8h_a977295cc5cf9eca6fa850ec922f4a6b0}} 
+\index{FuncDef.h@{FuncDef.h}!ReadAperture@{ReadAperture}}
+\index{ReadAperture@{ReadAperture}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadAperture()}{ReadAperture()}}
+{\footnotesize\ttfamily void Read\+Aperture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads apertures of fractures in D\+FN. Aperture can be defined for each fracture or for every node/cell, representing internal heterogeneity. 
+
+Definition at line 1289 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_adf46a0a89792c3085aa47f07957c6955}\label{_func_def_8h_adf46a0a89792c3085aa47f07957c6955}} 
+\index{FuncDef.h@{FuncDef.h}!ReadBoundaryNodes@{ReadBoundaryNodes}}
+\index{ReadBoundaryNodes@{ReadBoundaryNodes}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadBoundaryNodes()}{ReadBoundaryNodes()}}
+{\footnotesize\ttfamily void Read\+Boundary\+Nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The functions reads node\textquotesingle{}s I\+Ds assigned to in-\/flow and out-\/flow boundaries. the total input flow flux is calculated. 
+
+Definition at line 581 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a60556e448bef6314a77260487c969ced}\label{_func_def_8h_a60556e448bef6314a77260487c969ced}} 
+\index{FuncDef.h@{FuncDef.h}!ReadDataFiles@{ReadDataFiles}}
+\index{ReadDataFiles@{ReadDataFiles}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadDataFiles()}{ReadDataFiles()}}
+{\footnotesize\ttfamily void Read\+Data\+Files (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads D\+FN mesh from inp and stor files if no aperture file specified, the aperture of all fractures will be equal to thickness value 
+
+Definition at line 180 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9bf66a3ae3be79cacf8836e88dbdcef1}\label{_func_def_8h_a9bf66a3ae3be79cacf8836e88dbdcef1}} 
+\index{FuncDef.h@{FuncDef.h}!ReadFEHMfile@{ReadFEHMfile}}
+\index{ReadFEHMfile@{ReadFEHMfile}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadFEHMfile()}{ReadFEHMfile()}}
+{\footnotesize\ttfamily void Read\+F\+E\+H\+Mfile (\begin{DoxyParamCaption}\item[{int}]{nedges }\end{DoxyParamCaption})}
+
+The function opens and reads F\+E\+HM outputs; read in flow fluxes and cell volumes. 
+
+Definition at line 879 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a361538379ec6b2e063a620235b010bfc}\label{_func_def_8h_a361538379ec6b2e063a620235b010bfc}} 
+\index{FuncDef.h@{FuncDef.h}!ReadInit@{ReadInit}}
+\index{ReadInit@{ReadInit}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadInit()}{ReadInit()}}
+{\footnotesize\ttfamily void Read\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads total number of nodes, triangular cells, fractures in D\+FN mesh. The memory is allocated for data structures\+: N\+O\+DE, C\+E\+LL, F\+R\+A\+C\+T\+U\+RE 
+
+Definition at line 16 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a335450331ee81be8a4f3dfda40186f5b}\label{_func_def_8h_a335450331ee81be8a4f3dfda40186f5b}} 
+\index{FuncDef.h@{FuncDef.h}!ReadPFLOTRANfile@{ReadPFLOTRANfile}}
+\index{ReadPFLOTRANfile@{ReadPFLOTRANfile}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ReadPFLOTRANfile()}{ReadPFLOTRANfile()}}
+{\footnotesize\ttfamily void Read\+P\+F\+L\+O\+T\+R\+A\+Nfile (\begin{DoxyParamCaption}\item[{int}]{nedges }\end{DoxyParamCaption})}
+
+The function opens and reads P\+F\+L\+O\+T\+R\+AN files, read in flow fluxes, areas, pressure. 
+
+Definition at line 742 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3202503f7885b8b7db52a53134351045}\label{_func_def_8h_a3202503f7885b8b7db52a53134351045}} 
+\index{FuncDef.h@{FuncDef.h}!SearchNeighborCells@{SearchNeighborCells}}
+\index{SearchNeighborCells@{SearchNeighborCells}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{SearchNeighborCells()}{SearchNeighborCells()}}
+{\footnotesize\ttfamily void Search\+Neighbor\+Cells (\begin{DoxyParamCaption}\item[{int}]{nn1,  }\item[{int}]{nn2,  }\item[{int}]{nn3 }\end{DoxyParamCaption})}
+
+Function performs a search of neighbouring cells of current particles position. 
+
+Definition at line 1450 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a1da16dbc53cf2728df74a0184f76e1ef}\label{_func_def_8h_a1da16dbc53cf2728df74a0184f76e1ef}} 
+\index{FuncDef.h@{FuncDef.h}!StreamlineRandomSampling@{StreamlineRandomSampling}}
+\index{StreamlineRandomSampling@{StreamlineRandomSampling}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{StreamlineRandomSampling()}{StreamlineRandomSampling()}}
+{\footnotesize\ttfamily int Streamline\+Random\+Sampling (\begin{DoxyParamCaption}\item[{double}]{products\mbox{[}4\mbox{]},  }\item[{double}]{speedsq\mbox{[}4\mbox{]},  }\item[{int}]{indj,  }\item[{int}]{int1,  }\item[{int}]{indk,  }\item[{int}]{neighborcellind\mbox{[}4\mbox{]},  }\item[{int}]{neighborfracind\mbox{[}4\mbox{]},  }\item[{int}]{prevfrac,  }\item[{int}]{prevcell }\end{DoxyParamCaption})}
+
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1\+: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection Arg 2\+: Vector of the speed squared for each cell at the intersection Arg 3\+: index of current cell in int1 node list Arg 4\+: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5\+: indk gives the position in the list of the 4 intersection cells that is previous cell Arg 6\+: Vector of the indicies for the 4 neighboring cells Arg 7\+: Vector of the fracture index for the 4 neighboring cells Arg 8\+: Fracture a particle is coming from Arg 9\+: Cell index a particle is coming from Return\+: The Exit cell at the intersection 
+
+Definition at line 2142 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}\label{_func_def_8h_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}} 
+\index{FuncDef.h@{FuncDef.h}!String\_Compare@{String\_Compare}}
+\index{String\_Compare@{String\_Compare}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{String\_Compare()}{String\_Compare()}}
+{\footnotesize\ttfamily int String\+\_\+\+Compare (\begin{DoxyParamCaption}\item[{char}]{string1\mbox{[}$\,$\mbox{]},  }\item[{char}]{string2\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+The finction performs a string comparison, used in the control file reading. 
+
+Definition at line 1176 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_abeed81e7f6a295e7af7da3721dd07d66}\label{_func_def_8h_abeed81e7f6a295e7af7da3721dd07d66}} 
+\index{FuncDef.h@{FuncDef.h}!TimeDomainRW@{TimeDomainRW}}
+\index{TimeDomainRW@{TimeDomainRW}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{TimeDomainRW()}{TimeDomainRW()}}
+{\footnotesize\ttfamily double Time\+Domain\+RW (\begin{DoxyParamCaption}\item[{double}]{time\+\_\+advect }\end{DoxyParamCaption})}
+
+Time Domain Random Walk (T\+D\+RW) procedure. Returns a diffusion time of particle per racture. Called at each intersection. 
+
+Definition at line 3175 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a0610d22ad530758b4de42acd23a5df92}\label{_func_def_8h_a0610d22ad530758b4de42acd23a5df92}} 
+\index{FuncDef.h@{FuncDef.h}!TimeFromMatrix@{TimeFromMatrix}}
+\index{TimeFromMatrix@{TimeFromMatrix}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{TimeFromMatrix()}{TimeFromMatrix()}}
+{\footnotesize\ttfamily double Time\+From\+Matrix (\begin{DoxyParamCaption}\item[{double}]{pdist }\end{DoxyParamCaption})}
+
+Option \#5. Estimation of travel time of particles moving from matrix to the closest fracture. 
+
+Definition at line 1062 of file Initial\+Part\+Positions.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aa32bb7cee88e4c860b955eb1a3be9b62}\label{_func_def_8h_aa32bb7cee88e4c860b955eb1a3be9b62}} 
+\index{FuncDef.h@{FuncDef.h}!Velocity3D@{Velocity3D}}
+\index{Velocity3D@{Velocity3D}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Velocity3D()}{Velocity3D()}}
+{\footnotesize\ttfamily void Velocity3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Recalculates 2D velocities at XY fracture plane to 3D velocties in the simulation domain. This procedure is not used for particle tracking, but can be used for velocity field visualization. 
+
+Definition at line 246 of file Rotate\+Fracture.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a306003b4df4a2ee90e44c0768bbaa13b}\label{_func_def_8h_a306003b4df4a2ee90e44c0768bbaa13b}} 
+\index{FuncDef.h@{FuncDef.h}!VelocityExteriorNode@{VelocityExteriorNode}}
+\index{VelocityExteriorNode@{VelocityExteriorNode}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{VelocityExteriorNode()}{VelocityExteriorNode()}}
+{\footnotesize\ttfamily void Velocity\+Exterior\+Node (\begin{DoxyParamCaption}\item[{double}]{norm\+\_\+xarea\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]},  }\item[{int}]{i,  }\item[{int}]{number,  }\item[{unsigned int}]{indj\mbox{[}max\+\_\+neighb\mbox{]},  }\item[{struct \mbox{\hyperlink{structlb}{lb}}}]{lbound,  }\item[{int}]{vi }\end{DoxyParamCaption})}
+
+The function reconstructs Darcy velocity on exterior (boundary) node 
+
+Definition at line 465 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a3ab1d6b68f6e08d66631d879794e7204}\label{_func_def_8h_a3ab1d6b68f6e08d66631d879794e7204}} 
+\index{FuncDef.h@{FuncDef.h}!VelocityInteriorNode@{VelocityInteriorNode}}
+\index{VelocityInteriorNode@{VelocityInteriorNode}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{VelocityInteriorNode()}{VelocityInteriorNode()}}
+{\footnotesize\ttfamily void Velocity\+Interior\+Node (\begin{DoxyParamCaption}\item[{double}]{normx\+\_\+area\mbox{[}$\,$\mbox{]}\mbox{[}2\mbox{]},  }\item[{int}]{i,  }\item[{int}]{number,  }\item[{unsigned int}]{indj\mbox{[}max\+\_\+neighb\mbox{]},  }\item[{int}]{vi }\end{DoxyParamCaption})}
+
+The function reconstructs Darcy velocity on interior cell center, at interior node 
+
+Definition at line 426 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aee37300c235f6fed3eea46ac342e7be6}\label{_func_def_8h_aee37300c235f6fed3eea46ac342e7be6}} 
+\index{FuncDef.h@{FuncDef.h}!WritingInit@{WritingInit}}
+\index{WritingInit@{WritingInit}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{WritingInit()}{WritingInit()}}
+{\footnotesize\ttfamily void Writing\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Functions write the data structure of nodes, cells and fractures into files in A\+S\+C\+II format with detail explanations. This output is optional and can be helpful in code debugging. 
+
+Definition at line 981 of file Read\+Grid\+Init.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a1aa44dd56fa050699a1137d52a005cb7}\label{_func_def_8h_a1aa44dd56fa050699a1137d52a005cb7}} 
+\index{FuncDef.h@{FuncDef.h}!Xindex@{Xindex}}
+\index{Xindex@{Xindex}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Xindex()}{Xindex()}}
+{\footnotesize\ttfamily int Xindex (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{nnp }\end{DoxyParamCaption})}
+
+Functions returns the index of X coordination of intersection node 
+
+Definition at line 2550 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a5445e2c235239b89cc51146de36ca58f}\label{_func_def_8h_a5445e2c235239b89cc51146de36ca58f}} 
+\index{FuncDef.h@{FuncDef.h}!XindexC@{XindexC}}
+\index{XindexC@{XindexC}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{XindexC()}{XindexC()}}
+{\footnotesize\ttfamily int XindexC (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{ii }\end{DoxyParamCaption})}
+
+Functions returns the index of X coordination of intersection node (cells) 
+
+Definition at line 922 of file Velocity\+Reconstruction.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a771a7e6baee7d5d23c3c43c1f075842c}\label{_func_def_8h_a771a7e6baee7d5d23c3c43c1f075842c}} 
+\index{FuncDef.h@{FuncDef.h}!Yindex@{Yindex}}
+\index{Yindex@{Yindex}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{Yindex()}{Yindex()}}
+{\footnotesize\ttfamily int Yindex (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{nnp }\end{DoxyParamCaption})}
+
+Functions returns the index of Y coordination of intersection node 
+
+Definition at line 2561 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a11a6fda3ecb0ede2c4a9a8e96e23145d}\label{_func_def_8h_a11a6fda3ecb0ede2c4a9a8e96e23145d}} 
+\index{FuncDef.h@{FuncDef.h}!YindexC@{YindexC}}
+\index{YindexC@{YindexC}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{YindexC()}{YindexC()}}
+{\footnotesize\ttfamily int YindexC (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{ii }\end{DoxyParamCaption})}
+
+Functions returns the index of Y coordination of intersection node (cells) 
+
+Definition at line 933 of file Velocity\+Reconstruction.\+c.
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{_func_def_8h_a26a18460ba7bc9d4e9ace81fda1819ee}\label{_func_def_8h_a26a18460ba7bc9d4e9ace81fda1819ee}} 
+\index{FuncDef.h@{FuncDef.h}!cell@{cell}}
+\index{cell@{cell}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{cell}{cell}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structelement}{element}}$\ast$ cell}
+
+D\+Y\+N\+A\+M\+IC A\+R\+R\+AY OF T\+R\+I\+A\+N\+G\+U\+L\+AR C\+E\+L\+LS in D\+FN mesh 
+
+Definition at line 42 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aa867dd168d29d6a51276df24caa862ce}\label{_func_def_8h_aa867dd168d29d6a51276df24caa862ce}} 
+\index{FuncDef.h@{FuncDef.h}!controlfile@{controlfile}}
+\index{controlfile@{controlfile}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{controlfile}{controlfile}}
+{\footnotesize\ttfamily char controlfile\mbox{[}120\mbox{]}}
+
+Name of Control file with all inut parameters to dfn\+Trans, given by user at the command line 
+
+Definition at line 44 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a6f8c052f8417728038991f7f2826d38d}\label{_func_def_8h_a6f8c052f8417728038991f7f2826d38d}} 
+\index{FuncDef.h@{FuncDef.h}!density@{density}}
+\index{density@{density}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{density}{density}}
+{\footnotesize\ttfamily double density}
+
+Flow density, defined by user 
+
+Definition at line 47 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a8a3e3776115006efbafec148de4200e0}\label{_func_def_8h_a8a3e3776115006efbafec148de4200e0}} 
+\index{FuncDef.h@{FuncDef.h}!fehm@{fehm}}
+\index{fehm@{fehm}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{fehm}{fehm}}
+{\footnotesize\ttfamily unsigned int fehm}
+
+fehm=1 when F\+E\+HM flow solver is used 
+
+Definition at line 28 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_adef0bd5e77533cdd4cdd0bcf0d5dc96b}\label{_func_def_8h_adef0bd5e77533cdd4cdd0bcf0d5dc96b}} 
+\index{FuncDef.h@{FuncDef.h}!flag\_w@{flag\_w}}
+\index{flag\_w@{flag\_w}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{flag\_w}{flag\_w}}
+{\footnotesize\ttfamily unsigned int flag\+\_\+w}
+
+
+
+Definition at line 38 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ab71244130eef93109128572e8ef83c2b}\label{_func_def_8h_ab71244130eef93109128572e8ef83c2b}} 
+\index{FuncDef.h@{FuncDef.h}!fracture@{fracture}}
+\index{fracture@{fracture}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{fracture}{fracture}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structmaterial}{material}}$\ast$ fracture}
+
+D\+Y\+N\+A\+M\+IC A\+R\+R\+AY OF F\+R\+A\+C\+T\+U\+R\+ES 
+
+Definition at line 39 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a396d7f3e7653807b76887efe794f2eb7}\label{_func_def_8h_a396d7f3e7653807b76887efe794f2eb7}} 
+\index{FuncDef.h@{FuncDef.h}!maindir@{maindir}}
+\index{maindir@{maindir}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{maindir}{maindir}}
+{\footnotesize\ttfamily char maindir\mbox{[}125\mbox{]}}
+
+The directory/path for particle tracking outputs, defined by user 
+
+Definition at line 43 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9bbb8dd86b166646cdce87a545a36fa7}\label{_func_def_8h_a9bbb8dd86b166646cdce87a545a36fa7}} 
+\index{FuncDef.h@{FuncDef.h}!max\_neighb@{max\_neighb}}
+\index{max\_neighb@{max\_neighb}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{max\_neighb}{max\_neighb}}
+{\footnotesize\ttfamily unsigned int max\+\_\+neighb}
+
+maximum number of nodes neighbours/connections 
+
+Definition at line 32 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a5225ceefbfdde0f9cb32cb84174a4863}\label{_func_def_8h_a5225ceefbfdde0f9cb32cb84174a4863}} 
+\index{FuncDef.h@{FuncDef.h}!ncells@{ncells}}
+\index{ncells@{ncells}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{ncells}{ncells}}
+{\footnotesize\ttfamily unsigned int ncells}
+
+total number of triangular elements in the D\+FN mesh 
+
+Definition at line 30 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_accb317d0fcd1e5a1683184b91a49ff11}\label{_func_def_8h_accb317d0fcd1e5a1683184b91a49ff11}} 
+\index{FuncDef.h@{FuncDef.h}!nfract@{nfract}}
+\index{nfract@{nfract}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{nfract}{nfract}}
+{\footnotesize\ttfamily unsigned int nfract}
+
+total number of fractures in the D\+FN mesh 
+
+Definition at line 31 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a0049b706bb5b3980868a5b1e1b3fac0c}\label{_func_def_8h_a0049b706bb5b3980868a5b1e1b3fac0c}} 
+\index{FuncDef.h@{FuncDef.h}!nnodes@{nnodes}}
+\index{nnodes@{nnodes}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{nnodes}{nnodes}}
+{\footnotesize\ttfamily unsigned int nnodes}
+
+total number of nodes in the D\+FN mesh 
+
+Definition at line 29 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9d0d7da8d3c9e75857a16e168969f89d}\label{_func_def_8h_a9d0d7da8d3c9e75857a16e168969f89d}} 
+\index{FuncDef.h@{FuncDef.h}!node@{node}}
+\index{node@{node}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{node}{node}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structvertex}{vertex}}$\ast$ node}
+
+D\+Y\+N\+A\+M\+IC A\+R\+R\+AY OF N\+O\+D\+ES in D\+FN mesh 
+
+Definition at line 40 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_ae04e94bac8fc762dd97706043f25eaa4}\label{_func_def_8h_ae04e94bac8fc762dd97706043f25eaa4}} 
+\index{FuncDef.h@{FuncDef.h}!nodezonein@{nodezonein}}
+\index{nodezonein@{nodezonein}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{nodezonein}{nodezonein}}
+{\footnotesize\ttfamily unsigned int$\ast$ nodezonein}
+
+pointer to the dynamic array with a list of in-\/flow boundary nodes 
+
+Definition at line 36 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a8e227a7bdba87548413eeac3daae26a6}\label{_func_def_8h_a8e227a7bdba87548413eeac3daae26a6}} 
+\index{FuncDef.h@{FuncDef.h}!nodezoneout@{nodezoneout}}
+\index{nodezoneout@{nodezoneout}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{nodezoneout}{nodezoneout}}
+{\footnotesize\ttfamily unsigned int$\ast$ nodezoneout}
+
+pointer to the dynamic array with a list of out-\/flow boundary nodes 
+
+Definition at line 37 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a67b3bde25c933874d93fd30f06b55f65}\label{_func_def_8h_a67b3bde25c933874d93fd30f06b55f65}} 
+\index{FuncDef.h@{FuncDef.h}!np@{np}}
+\index{np@{np}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{np}{np}}
+{\footnotesize\ttfamily unsigned int np}
+
+index of current particle, idex in particle\textquotesingle{}s loop 
+
+Definition at line 34 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a9c5371905330e52a346417559120efec}\label{_func_def_8h_a9c5371905330e52a346417559120efec}} 
+\index{FuncDef.h@{FuncDef.h}!npart@{npart}}
+\index{npart@{npart}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{npart}{npart}}
+{\footnotesize\ttfamily unsigned int npart}
+
+initial number of particles set up in the simulation 
+
+Definition at line 33 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a6d971fbeb47db134f84ff99053b7c47d}\label{_func_def_8h_a6d971fbeb47db134f84ff99053b7c47d}} 
+\index{FuncDef.h@{FuncDef.h}!nzone\_in@{nzone\_in}}
+\index{nzone\_in@{nzone\_in}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{nzone\_in}{nzone\_in}}
+{\footnotesize\ttfamily unsigned int nzone\+\_\+in}
+
+number of nodes in in-\/flow boundary face/zone 
+
+Definition at line 35 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a821d6a33fadb1aacb1a231c2c38cf7ca}\label{_func_def_8h_a821d6a33fadb1aacb1a231c2c38cf7ca}} 
+\index{FuncDef.h@{FuncDef.h}!particle@{particle}}
+\index{particle@{particle}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{particle}{particle}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structcontam}{contam}}$\ast$ particle}
+
+D\+Y\+N\+A\+M\+IC A\+R\+R\+AY OF P\+A\+R\+T\+I\+C\+L\+ES 
+
+Definition at line 41 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a7f54a7ad2e8c4f2214887aeac797ce91}\label{_func_def_8h_a7f54a7ad2e8c4f2214887aeac797ce91}} 
+\index{FuncDef.h@{FuncDef.h}!pflotran@{pflotran}}
+\index{pflotran@{pflotran}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{pflotran}{pflotran}}
+{\footnotesize\ttfamily unsigned int pflotran}
+
+pflotran=1 when P\+F\+L\+O\+T\+R\+AN flow solver is used 
+
+Definition at line 27 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a38299b3e08d348a2a1c11cac9a7f01bd}\label{_func_def_8h_a38299b3e08d348a2a1c11cac9a7f01bd}} 
+\index{FuncDef.h@{FuncDef.h}!porosity@{porosity}}
+\index{porosity@{porosity}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{porosity}{porosity}}
+{\footnotesize\ttfamily double porosity}
+
+Fracture porosity, used in velocity reconstructions, defined by user 
+
+Definition at line 46 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_af8cb639b360600b7ca938a3e275b017f}\label{_func_def_8h_af8cb639b360600b7ca938a3e275b017f}} 
+\index{FuncDef.h@{FuncDef.h}!saturation@{saturation}}
+\index{saturation@{saturation}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{saturation}{saturation}}
+{\footnotesize\ttfamily double saturation}
+
+Flow saturation, defined by user 
+
+Definition at line 50 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a20238819f2c84ce6d3f083ded9ac612d}\label{_func_def_8h_a20238819f2c84ce6d3f083ded9ac612d}} 
+\index{FuncDef.h@{FuncDef.h}!thickness@{thickness}}
+\index{thickness@{thickness}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{thickness}{thickness}}
+{\footnotesize\ttfamily double thickness}
+
+One value for all fractures aperture (defined by user), used in case when fracture aperture is not provided by user 
+
+Definition at line 49 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a15415d9923eaa4ed9145037c60199b99}\label{_func_def_8h_a15415d9923eaa4ed9145037c60199b99}} 
+\index{FuncDef.h@{FuncDef.h}!timesteps@{timesteps}}
+\index{timesteps@{timesteps}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{timesteps}{timesteps}}
+{\footnotesize\ttfamily unsigned long int timesteps}
+
+Max number of time steps used for each particles movements, defined by user 
+
+Definition at line 48 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_a5799b26fb87c6d98cd44352eb84a2e7e}\label{_func_def_8h_a5799b26fb87c6d98cd44352eb84a2e7e}} 
+\index{FuncDef.h@{FuncDef.h}!timeunit@{timeunit}}
+\index{timeunit@{timeunit}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{timeunit}{timeunit}}
+{\footnotesize\ttfamily double timeunit}
+
+Time unit multiplier, converts calculated time/velocities according to required time units 
+
+Definition at line 51 of file main.\+c.
+
+\mbox{\Hypertarget{_func_def_8h_aa27b8bb0d1e8acff46eaadd07476ed04}\label{_func_def_8h_aa27b8bb0d1e8acff46eaadd07476ed04}} 
+\index{FuncDef.h@{FuncDef.h}!totalFluxIn@{totalFluxIn}}
+\index{totalFluxIn@{totalFluxIn}!FuncDef.h@{FuncDef.h}}
+\subsubsection{\texorpdfstring{totalFluxIn}{totalFluxIn}}
+{\footnotesize\ttfamily double total\+Flux\+In}
+
+Total Flow flux on in-\/flow boundary, calculated in the code 
+
+Definition at line 52 of file main.\+c.
+

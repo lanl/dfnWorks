@@ -1,0 +1,630 @@
+\hypertarget{_tracking_part_8c}{}\section{Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\+Tracking\+Part.c File Reference}
+\label{_tracking_part_8c}\index{Docs\_PT/ParticleTracking\_source/TrackingPart.c@{Docs\_PT/ParticleTracking\_source/TrackingPart.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$search.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Func\+Def.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}}
+\item 
+struct \mbox{\hyperlink{structlagrangian}{lagrangian}}
+\item 
+struct \mbox{\hyperlink{structintcoef}{intcoef}}
+\item 
+struct \mbox{\hyperlink{structposit3d}{posit3d}}
+\item 
+struct \mbox{\hyperlink{structtempout}{tempout}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a70ceb6e59ecdae0487126a86c88523bb}{Particle\+Track}} ()
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_ab72ec3059b077bf933070124a6f64a03}{Check\+New\+Cell}} ()
+\item 
+struct \mbox{\hyperlink{structintcoef}{intcoef}} \mbox{\hyperlink{_tracking_part_8c_a288d5ddd917552bb6640483eaa1b7add}{Calculate\+Weights}} (int nn1, int nn2, int nn3)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a3202503f7885b8b7db52a53134351045}{Search\+Neighbor\+Cells}} (int nn1, int nn2, int nn3)
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a5c8fe8978ce1689f5dcf12bc7b56793d}{Inside\+Cell}} (unsigned int numc)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_aeab4f78b54bf9ba581dcc8f5246d658d}{Predictor\+Step}} ()
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a31b6a7f477cbead6448a5c27a867f86d}{Corrector\+Step}} ()
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_acefa073fc2b27b20856d5e8a2ae09fd1}{Neighbor\+Cells}} (int k)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_ae1803816ac80e7c427387495c19a41c8}{Define\+Time\+Step}} ()
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a92f5b1ab36094a7f2007161931bb0fdb}{Check\+Distance}} ()
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_a6f447de1387b9a1e610decc755e43bd8}{In\+Out\+Flow\+Cell}} (int indcell, int int1, double nposx, double nposy)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}{Across\+Intersection}} (int prevcell, int int1, int int2, int \mbox{\hyperlink{_tracking_part_8c_abcfbff992646c011bd630b5df97eeebe}{mixing\+\_\+rule}})
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a1da16dbc53cf2728df74a0184f76e1ef}{Streamline\+Random\+Sampling}} (double products\mbox{[}4\mbox{]}, double speedsq\mbox{[}4\mbox{]}, int indj, int int1, int indk, int neighborcellind\mbox{[}4\mbox{]}, int neighborfracind\mbox{[}4\mbox{]}, int prevfrac, int prevcell)
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a7ff6ac949c292978394b28d9e0a9977b}{Complete\+Mixing\+Random\+Sampling}} (double products\mbox{[}4\mbox{]}, double speedsq\mbox{[}4\mbox{]}, int indj, int int1, int indk)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a69f9dfd9f5eba61f40439fc5dc92f3b6}{Moving2\+Center}} (int nnp, int cellnumber)
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a9541c2c154a6c03a5bf820ac7522fc04}{Moving2\+Next\+Cell}} (int stuck, int k)
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_a181c33224a0f02a5196c0c7e088744ec}{Calculate\+Current\+DT}} ()
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_a60337725a775035e26cf11f796197fb0}{Xindex}} (int nodenum, int nnp)
+\item 
+int \mbox{\hyperlink{_tracking_part_8c_ae72215fb2ccc4e1c6fe645aec42c6ff9}{Yindex}} (int nodenum, int nnp)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_a3655e04df015e152f63d69abfbf9fdee}{Moving2\+Next\+Cell\+Bound}} (int prevcell)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_add14e959474dac3e9dc7a0b82af4978b}{Particle\+Output}} (int currentt, int fract\+\_\+p)
+\item 
+void \mbox{\hyperlink{_tracking_part_8c_aff6510d8f65513c2356dc171c2191086}{Final\+Position}} ()
+\item 
+struct \mbox{\hyperlink{structlagrangian}{lagrangian}} \mbox{\hyperlink{_tracking_part_8c_a9fbd79304ae6c1759d1e903f5626ab87}{Calculate\+Lagrangian}} (double xcurrent, double ycurrent, double zcurrent, double xprev, double yprev, double zprev)
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_abeed81e7f6a295e7af7da3721dd07d66}{Time\+Domain\+RW}} (double time\+\_\+advect)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structlagrangian}{lagrangian}} \mbox{\hyperlink{_tracking_part_8c_aae06b27f74226725f3664a2b53467553}{lagvariable}}
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a1d090dc1bc431eb7753cca8a46c5b65c}{F\+L\+A\+G\+\_\+\+O\+UT}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a6d342b64b20e55a0478c7c52c47ac746}{all\+\_\+out}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a67b3bde25c933874d93fd30f06b55f65}{np}}
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a4b29f9c2e6a8e8da90992985304f0b78}{t}}
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a35bb87da21d354b827425c8cf4428fe9}{node\+ID}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_aa2fcd785cc85fd176b09473b4cfcca07}{avs\+\_\+o}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a4c82cb7b570cde4cbf47b95a56130948}{traj\+\_\+o}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a526f545a0cd984e3aeea379a5f566231}{curv\+\_\+o}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a3883c8054aad6431fa7abb3b55be8a20}{no\+\_\+out}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a47bac93a59407fc80f873f14625552df}{tdrw}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_abcfbff992646c011bd630b5df97eeebe}{mixing\+\_\+rule}} =1
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a7530c338b58fe878c151e5b4a1a16f19}{marfa}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a2c8fb935fea8f63cfbb4e768f2f7edb4}{plumec}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_adf7de66e9362ab9e455afe82ec91a3f5}{disp\+\_\+o}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a46a51bd2a4a54a3fdb92ad918816d1c6}{timecounter}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a0e6d306e376daacaaffc67739cf22316}{frac\+\_\+o}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a0d6bf595b25906760b9c824c66afc33a}{tfile}} =0
+\item 
+unsigned int \mbox{\hyperlink{_tracking_part_8c_a531d5d9aafd742ee661c27de55926627}{tdrw\+\_\+o}} =0
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_aca9c704b192b82aaa3d33d12882a1c2f}{tdrw\+\_\+porosity}} =0.\+0
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_a0779a8c7e2a72abcda717f87b68d4bfc}{tdrw\+\_\+diffcoeff}} =0.\+0
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_a4952850f8949cccbdef08a6f01dfec20}{t\+\_\+adv0}} =0.\+0
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_ae332144a969481cf5f9e1c954c332ee5}{t\+\_\+adv}} =0.\+0
+\item 
+double \mbox{\hyperlink{_tracking_part_8c_af11f3d6258b0839dfb97fe3875aa0a5b}{timediff}} =0.\+0
+\item 
+struct \mbox{\hyperlink{structtempout}{tempout}} $\ast$ \mbox{\hyperlink{_tracking_part_8c_a1c990391d3ca9179d3ea9e6bb6e4d16a}{tempdata}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_tracking_part_8c_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}\label{_tracking_part_8c_a5db4b51d7dc78cb8deb4fe9ab4e0a4c6}} 
+\index{TrackingPart.c@{TrackingPart.c}!AcrossIntersection@{AcrossIntersection}}
+\index{AcrossIntersection@{AcrossIntersection}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{AcrossIntersection()}{AcrossIntersection()}}
+{\footnotesize\ttfamily void Across\+Intersection (\begin{DoxyParamCaption}\item[{int}]{prevcell,  }\item[{int}]{int1,  }\item[{int}]{int2,  }\item[{int}]{mixing\+\_\+rule }\end{DoxyParamCaption})}
+
+Particle is moving through intersection line 
+
+Definition at line 2013 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a181c33224a0f02a5196c0c7e088744ec}\label{_tracking_part_8c_a181c33224a0f02a5196c0c7e088744ec}} 
+\index{TrackingPart.c@{TrackingPart.c}!CalculateCurrentDT@{CalculateCurrentDT}}
+\index{CalculateCurrentDT@{CalculateCurrentDT}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CalculateCurrentDT()}{CalculateCurrentDT()}}
+{\footnotesize\ttfamily double Calculate\+Current\+DT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Functions returns particle instanteneous time step 
+
+Definition at line 2527 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a9fbd79304ae6c1759d1e903f5626ab87}\label{_tracking_part_8c_a9fbd79304ae6c1759d1e903f5626ab87}} 
+\index{TrackingPart.c@{TrackingPart.c}!CalculateLagrangian@{CalculateLagrangian}}
+\index{CalculateLagrangian@{CalculateLagrangian}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CalculateLagrangian()}{CalculateLagrangian()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structlagrangian}{lagrangian}} Calculate\+Lagrangian (\begin{DoxyParamCaption}\item[{double}]{xcurrent,  }\item[{double}]{ycurrent,  }\item[{double}]{zcurrent,  }\item[{double}]{xprev,  }\item[{double}]{yprev,  }\item[{double}]{zprev }\end{DoxyParamCaption})}
+
+Function calculates Lagrangian variables\+: tau and beta. 
+
+Definition at line 3140 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a288d5ddd917552bb6640483eaa1b7add}\label{_tracking_part_8c_a288d5ddd917552bb6640483eaa1b7add}} 
+\index{TrackingPart.c@{TrackingPart.c}!CalculateWeights@{CalculateWeights}}
+\index{CalculateWeights@{CalculateWeights}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CalculateWeights()}{CalculateWeights()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structintcoef}{intcoef}} Calculate\+Weights (\begin{DoxyParamCaption}\item[{int}]{nn1,  }\item[{int}]{nn2,  }\item[{int}]{nn3 }\end{DoxyParamCaption})}
+
+Function calculates interpolation weights for velocity instanteneous particles velocity and time step. 
+
+Definition at line 1416 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a92f5b1ab36094a7f2007161931bb0fdb}\label{_tracking_part_8c_a92f5b1ab36094a7f2007161931bb0fdb}} 
+\index{TrackingPart.c@{TrackingPart.c}!CheckDistance@{CheckDistance}}
+\index{CheckDistance@{CheckDistance}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CheckDistance()}{CheckDistance()}}
+{\footnotesize\ttfamily int Check\+Distance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function checks the distance from particle to intersection line when particles is located at the intersection triangular cell 
+
+Definition at line 1655 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_ab72ec3059b077bf933070124a6f64a03}\label{_tracking_part_8c_ab72ec3059b077bf933070124a6f64a03}} 
+\index{TrackingPart.c@{TrackingPart.c}!CheckNewCell@{CheckNewCell}}
+\index{CheckNewCell@{CheckNewCell}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CheckNewCell()}{CheckNewCell()}}
+{\footnotesize\ttfamily void Check\+New\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a check, did particle move to a new triangular cell during last time step or stayed at the same cell 
+
+Definition at line 1273 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a7ff6ac949c292978394b28d9e0a9977b}\label{_tracking_part_8c_a7ff6ac949c292978394b28d9e0a9977b}} 
+\index{TrackingPart.c@{TrackingPart.c}!CompleteMixingRandomSampling@{CompleteMixingRandomSampling}}
+\index{CompleteMixingRandomSampling@{CompleteMixingRandomSampling}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CompleteMixingRandomSampling()}{CompleteMixingRandomSampling()}}
+{\footnotesize\ttfamily int Complete\+Mixing\+Random\+Sampling (\begin{DoxyParamCaption}\item[{double}]{products\mbox{[}4\mbox{]},  }\item[{double}]{speedsq\mbox{[}4\mbox{]},  }\item[{int}]{indj,  }\item[{int}]{int1,  }\item[{int}]{indk }\end{DoxyParamCaption})}
+
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1\+: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection Arg 2\+: Vector of the speed squared for each cell at the intersection Arg 3\+: index of current cell in int1 node list Arg 4\+: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5\+: indk gives the position in the list of the 4 intersection cells that is previous cell Return\+: The Exit cell at the intersection 
+
+Definition at line 2344 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a31b6a7f477cbead6448a5c27a867f86d}\label{_tracking_part_8c_a31b6a7f477cbead6448a5c27a867f86d}} 
+\index{TrackingPart.c@{TrackingPart.c}!CorrectorStep@{CorrectorStep}}
+\index{CorrectorStep@{CorrectorStep}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{CorrectorStep()}{CorrectorStep()}}
+{\footnotesize\ttfamily void Corrector\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Corrector step in Predictor-\/\+Corrector technique. Function calculates new particle position using calculated velocity in Predictor step. 
+
+Definition at line 1576 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_ae1803816ac80e7c427387495c19a41c8}\label{_tracking_part_8c_ae1803816ac80e7c427387495c19a41c8}} 
+\index{TrackingPart.c@{TrackingPart.c}!DefineTimeStep@{DefineTimeStep}}
+\index{DefineTimeStep@{DefineTimeStep}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{DefineTimeStep()}{DefineTimeStep()}}
+{\footnotesize\ttfamily void Define\+Time\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function performs a loop through all the nodes in the mesh and defines a time step at each node. The time step of particles will be interpolated from time steps defined at each node. 
+
+Definition at line 1622 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_aff6510d8f65513c2356dc171c2191086}\label{_tracking_part_8c_aff6510d8f65513c2356dc171c2191086}} 
+\index{TrackingPart.c@{TrackingPart.c}!FinalPosition@{FinalPosition}}
+\index{FinalPosition@{FinalPosition}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{FinalPosition()}{FinalPosition()}}
+{\footnotesize\ttfamily void Final\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Function calculates particles final position at out-\/flow boundary 
+
+Definition at line 2996 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a6f447de1387b9a1e610decc755e43bd8}\label{_tracking_part_8c_a6f447de1387b9a1e610decc755e43bd8}} 
+\index{TrackingPart.c@{TrackingPart.c}!InOutFlowCell@{InOutFlowCell}}
+\index{InOutFlowCell@{InOutFlowCell}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{InOutFlowCell()}{InOutFlowCell()}}
+{\footnotesize\ttfamily double In\+Out\+Flow\+Cell (\begin{DoxyParamCaption}\item[{int}]{indcell,  }\item[{int}]{int1,  }\item[{double}]{nposx,  }\item[{double}]{nposy }\end{DoxyParamCaption})}
+
+Function defines if velocities on cell vertices pointing in or out of intersection line 
+
+Definition at line 1949 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a5c8fe8978ce1689f5dcf12bc7b56793d}\label{_tracking_part_8c_a5c8fe8978ce1689f5dcf12bc7b56793d}} 
+\index{TrackingPart.c@{TrackingPart.c}!InsideCell@{InsideCell}}
+\index{InsideCell@{InsideCell}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{InsideCell()}{InsideCell()}}
+{\footnotesize\ttfamily int Inside\+Cell (\begin{DoxyParamCaption}\item[{unsigned int}]{numc }\end{DoxyParamCaption})}
+
+Function checks if particle is in the cell (numc is cell ID) 
+
+Definition at line 1487 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a69f9dfd9f5eba61f40439fc5dc92f3b6}\label{_tracking_part_8c_a69f9dfd9f5eba61f40439fc5dc92f3b6}} 
+\index{TrackingPart.c@{TrackingPart.c}!Moving2Center@{Moving2Center}}
+\index{Moving2Center@{Moving2Center}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{Moving2Center()}{Moving2Center()}}
+{\footnotesize\ttfamily void Moving2\+Center (\begin{DoxyParamCaption}\item[{int}]{nnp,  }\item[{int}]{cellnumber }\end{DoxyParamCaption})}
+
+Function moves particle to the center of the same cell 
+
+Definition at line 2440 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a9541c2c154a6c03a5bf820ac7522fc04}\label{_tracking_part_8c_a9541c2c154a6c03a5bf820ac7522fc04}} 
+\index{TrackingPart.c@{TrackingPart.c}!Moving2NextCell@{Moving2NextCell}}
+\index{Moving2NextCell@{Moving2NextCell}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{Moving2NextCell()}{Moving2NextCell()}}
+{\footnotesize\ttfamily int Moving2\+Next\+Cell (\begin{DoxyParamCaption}\item[{int}]{stuck,  }\item[{int}]{k }\end{DoxyParamCaption})}
+
+Functions performs the movement of particle from one cell to the center of neighbouring cell. 
+
+Definition at line 2471 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a3655e04df015e152f63d69abfbf9fdee}\label{_tracking_part_8c_a3655e04df015e152f63d69abfbf9fdee}} 
+\index{TrackingPart.c@{TrackingPart.c}!Moving2NextCellBound@{Moving2NextCellBound}}
+\index{Moving2NextCellBound@{Moving2NextCellBound}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{Moving2NextCellBound()}{Moving2NextCellBound()}}
+{\footnotesize\ttfamily void Moving2\+Next\+Cell\+Bound (\begin{DoxyParamCaption}\item[{int}]{prevcell }\end{DoxyParamCaption})}
+
+In the pathological rare case, when particle is out of fracture, the function is called and it\textquotesingle{}s moving particle to internal cell 
+
+Definition at line 2572 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_acefa073fc2b27b20856d5e8a2ae09fd1}\label{_tracking_part_8c_acefa073fc2b27b20856d5e8a2ae09fd1}} 
+\index{TrackingPart.c@{TrackingPart.c}!NeighborCells@{NeighborCells}}
+\index{NeighborCells@{NeighborCells}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{NeighborCells()}{NeighborCells()}}
+{\footnotesize\ttfamily void Neighbor\+Cells (\begin{DoxyParamCaption}\item[{int}]{k }\end{DoxyParamCaption})}
+
+Function checks neighboring cells to find a particle 
+
+Definition at line 1600 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_add14e959474dac3e9dc7a0b82af4978b}\label{_tracking_part_8c_add14e959474dac3e9dc7a0b82af4978b}} 
+\index{TrackingPart.c@{TrackingPart.c}!ParticleOutput@{ParticleOutput}}
+\index{ParticleOutput@{ParticleOutput}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{ParticleOutput()}{ParticleOutput()}}
+{\footnotesize\ttfamily void Particle\+Output (\begin{DoxyParamCaption}\item[{int}]{currentt,  }\item[{int}]{fract\+\_\+p }\end{DoxyParamCaption})}
+
+The function of particles trajectories outputs. Function is called at every intersection and outputs to file at each segment of particles trajectory\+: from intersection to intersection. The curvature of the trajectory is defined and dictate number of time steps for outputs (unless user requested every time step output). 
+
+Definition at line 2669 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a70ceb6e59ecdae0487126a86c88523bb}\label{_tracking_part_8c_a70ceb6e59ecdae0487126a86c88523bb}} 
+\index{TrackingPart.c@{TrackingPart.c}!ParticleTrack@{ParticleTrack}}
+\index{ParticleTrack@{ParticleTrack}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{ParticleTrack()}{ParticleTrack()}}
+{\footnotesize\ttfamily void Particle\+Track (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The main driving function of particles tracking procedure.
+\begin{DoxyEnumerate}
+\item The all necessary options for particle tracking and for the outputs are read from input control file.
+\item The subroutine for particle initial positions is called.
+\item External loop on paticles is organised. One particle at a time.
+\item Internal loop on time steps, where particles are mobing through fracture network. 4.\+1 Predictor -\/corrector technique is used for particles to move through fractures. 4.\+2 Complete mixing or streamline routing rule (defined by user) are used on intersections. 4.\+3 Particles data outputs. 
+\end{DoxyEnumerate}
+
+Definition at line 66 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_aeab4f78b54bf9ba581dcc8f5246d658d}\label{_tracking_part_8c_aeab4f78b54bf9ba581dcc8f5246d658d}} 
+\index{TrackingPart.c@{TrackingPart.c}!PredictorStep@{PredictorStep}}
+\index{PredictorStep@{PredictorStep}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{PredictorStep()}{PredictorStep()}}
+{\footnotesize\ttfamily void Predictor\+Step (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Predictor step in Predictor-\/\+Corrector technique. Function calculates new velocities and new particle position. 
+
+Definition at line 1541 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a3202503f7885b8b7db52a53134351045}\label{_tracking_part_8c_a3202503f7885b8b7db52a53134351045}} 
+\index{TrackingPart.c@{TrackingPart.c}!SearchNeighborCells@{SearchNeighborCells}}
+\index{SearchNeighborCells@{SearchNeighborCells}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{SearchNeighborCells()}{SearchNeighborCells()}}
+{\footnotesize\ttfamily void Search\+Neighbor\+Cells (\begin{DoxyParamCaption}\item[{int}]{nn1,  }\item[{int}]{nn2,  }\item[{int}]{nn3 }\end{DoxyParamCaption})}
+
+Function performs a search of neighbouring cells of current particles position. 
+
+Definition at line 1450 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a1da16dbc53cf2728df74a0184f76e1ef}\label{_tracking_part_8c_a1da16dbc53cf2728df74a0184f76e1ef}} 
+\index{TrackingPart.c@{TrackingPart.c}!StreamlineRandomSampling@{StreamlineRandomSampling}}
+\index{StreamlineRandomSampling@{StreamlineRandomSampling}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{StreamlineRandomSampling()}{StreamlineRandomSampling()}}
+{\footnotesize\ttfamily int Streamline\+Random\+Sampling (\begin{DoxyParamCaption}\item[{double}]{products\mbox{[}4\mbox{]},  }\item[{double}]{speedsq\mbox{[}4\mbox{]},  }\item[{int}]{indj,  }\item[{int}]{int1,  }\item[{int}]{indk,  }\item[{int}]{neighborcellind\mbox{[}4\mbox{]},  }\item[{int}]{neighborfracind\mbox{[}4\mbox{]},  }\item[{int}]{prevfrac,  }\item[{int}]{prevcell }\end{DoxyParamCaption})}
+
+Particle motion at a fracture intersection is determined by the streamline routing rule Arg 1\+: Cross product to define outgoing and incoming cells. Vector contains value for each cell at the intersection Arg 2\+: Vector of the speed squared for each cell at the intersection Arg 3\+: index of current cell in int1 node list Arg 4\+: int1 is the index of the node of the incoming cell that lies on the intersection Arg 5\+: indk gives the position in the list of the 4 intersection cells that is previous cell Arg 6\+: Vector of the indicies for the 4 neighboring cells Arg 7\+: Vector of the fracture index for the 4 neighboring cells Arg 8\+: Fracture a particle is coming from Arg 9\+: Cell index a particle is coming from Return\+: The Exit cell at the intersection 
+
+Definition at line 2142 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_abeed81e7f6a295e7af7da3721dd07d66}\label{_tracking_part_8c_abeed81e7f6a295e7af7da3721dd07d66}} 
+\index{TrackingPart.c@{TrackingPart.c}!TimeDomainRW@{TimeDomainRW}}
+\index{TimeDomainRW@{TimeDomainRW}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{TimeDomainRW()}{TimeDomainRW()}}
+{\footnotesize\ttfamily double Time\+Domain\+RW (\begin{DoxyParamCaption}\item[{double}]{time\+\_\+advect }\end{DoxyParamCaption})}
+
+Time Domain Random Walk (T\+D\+RW) procedure. Returns a diffusion time of particle per racture. Called at each intersection. 
+
+Definition at line 3175 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a60337725a775035e26cf11f796197fb0}\label{_tracking_part_8c_a60337725a775035e26cf11f796197fb0}} 
+\index{TrackingPart.c@{TrackingPart.c}!Xindex@{Xindex}}
+\index{Xindex@{Xindex}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{Xindex()}{Xindex()}}
+{\footnotesize\ttfamily int Xindex (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{nnp }\end{DoxyParamCaption})}
+
+Functions returns the index of X coordination of intersection node 
+
+Definition at line 2550 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_ae72215fb2ccc4e1c6fe645aec42c6ff9}\label{_tracking_part_8c_ae72215fb2ccc4e1c6fe645aec42c6ff9}} 
+\index{TrackingPart.c@{TrackingPart.c}!Yindex@{Yindex}}
+\index{Yindex@{Yindex}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{Yindex()}{Yindex()}}
+{\footnotesize\ttfamily int Yindex (\begin{DoxyParamCaption}\item[{int}]{nodenum,  }\item[{int}]{nnp }\end{DoxyParamCaption})}
+
+Functions returns the index of Y coordination of intersection node 
+
+Definition at line 2561 of file Tracking\+Part.\+c.
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{_tracking_part_8c_a6d342b64b20e55a0478c7c52c47ac746}\label{_tracking_part_8c_a6d342b64b20e55a0478c7c52c47ac746}} 
+\index{TrackingPart.c@{TrackingPart.c}!all\_out@{all\_out}}
+\index{all\_out@{all\_out}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{all\_out}{all\_out}}
+{\footnotesize\ttfamily unsigned int all\+\_\+out =0}
+
+
+
+Definition at line 29 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_aa2fcd785cc85fd176b09473b4cfcca07}\label{_tracking_part_8c_aa2fcd785cc85fd176b09473b4cfcca07}} 
+\index{TrackingPart.c@{TrackingPart.c}!avs\_o@{avs\_o}}
+\index{avs\_o@{avs\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{avs\_o}{avs\_o}}
+{\footnotesize\ttfamily unsigned int avs\+\_\+o =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a526f545a0cd984e3aeea379a5f566231}\label{_tracking_part_8c_a526f545a0cd984e3aeea379a5f566231}} 
+\index{TrackingPart.c@{TrackingPart.c}!curv\_o@{curv\_o}}
+\index{curv\_o@{curv\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{curv\_o}{curv\_o}}
+{\footnotesize\ttfamily unsigned int curv\+\_\+o =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_adf7de66e9362ab9e455afe82ec91a3f5}\label{_tracking_part_8c_adf7de66e9362ab9e455afe82ec91a3f5}} 
+\index{TrackingPart.c@{TrackingPart.c}!disp\_o@{disp\_o}}
+\index{disp\_o@{disp\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{disp\_o}{disp\_o}}
+{\footnotesize\ttfamily unsigned int disp\+\_\+o =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a1d090dc1bc431eb7753cca8a46c5b65c}\label{_tracking_part_8c_a1d090dc1bc431eb7753cca8a46c5b65c}} 
+\index{TrackingPart.c@{TrackingPart.c}!FLAG\_OUT@{FLAG\_OUT}}
+\index{FLAG\_OUT@{FLAG\_OUT}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{FLAG\_OUT}{FLAG\_OUT}}
+{\footnotesize\ttfamily unsigned int F\+L\+A\+G\+\_\+\+O\+UT =0}
+
+
+
+Definition at line 29 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a0e6d306e376daacaaffc67739cf22316}\label{_tracking_part_8c_a0e6d306e376daacaaffc67739cf22316}} 
+\index{TrackingPart.c@{TrackingPart.c}!frac\_o@{frac\_o}}
+\index{frac\_o@{frac\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{frac\_o}{frac\_o}}
+{\footnotesize\ttfamily unsigned int frac\+\_\+o =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_aae06b27f74226725f3664a2b53467553}\label{_tracking_part_8c_aae06b27f74226725f3664a2b53467553}} 
+\index{TrackingPart.c@{TrackingPart.c}!lagvariable@{lagvariable}}
+\index{lagvariable@{lagvariable}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{lagvariable}{lagvariable}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structlagrangian}{lagrangian}} lagvariable}
+
+
+
+Definition at line 28 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a7530c338b58fe878c151e5b4a1a16f19}\label{_tracking_part_8c_a7530c338b58fe878c151e5b4a1a16f19}} 
+\index{TrackingPart.c@{TrackingPart.c}!marfa@{marfa}}
+\index{marfa@{marfa}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{marfa}{marfa}}
+{\footnotesize\ttfamily unsigned int marfa =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_abcfbff992646c011bd630b5df97eeebe}\label{_tracking_part_8c_abcfbff992646c011bd630b5df97eeebe}} 
+\index{TrackingPart.c@{TrackingPart.c}!mixing\_rule@{mixing\_rule}}
+\index{mixing\_rule@{mixing\_rule}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{mixing\_rule}{mixing\_rule}}
+{\footnotesize\ttfamily unsigned int mixing\+\_\+rule =1}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a3883c8054aad6431fa7abb3b55be8a20}\label{_tracking_part_8c_a3883c8054aad6431fa7abb3b55be8a20}} 
+\index{TrackingPart.c@{TrackingPart.c}!no\_out@{no\_out}}
+\index{no\_out@{no\_out}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{no\_out}{no\_out}}
+{\footnotesize\ttfamily unsigned int no\+\_\+out =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a35bb87da21d354b827425c8cf4428fe9}\label{_tracking_part_8c_a35bb87da21d354b827425c8cf4428fe9}} 
+\index{TrackingPart.c@{TrackingPart.c}!nodeID@{nodeID}}
+\index{nodeID@{nodeID}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{nodeID}{nodeID}}
+{\footnotesize\ttfamily unsigned int node\+ID =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a67b3bde25c933874d93fd30f06b55f65}\label{_tracking_part_8c_a67b3bde25c933874d93fd30f06b55f65}} 
+\index{TrackingPart.c@{TrackingPart.c}!np@{np}}
+\index{np@{np}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{np}{np}}
+{\footnotesize\ttfamily unsigned int np}
+
+index of current particle, idex in particle\textquotesingle{}s loop 
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a2c8fb935fea8f63cfbb4e768f2f7edb4}\label{_tracking_part_8c_a2c8fb935fea8f63cfbb4e768f2f7edb4}} 
+\index{TrackingPart.c@{TrackingPart.c}!plumec@{plumec}}
+\index{plumec@{plumec}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{plumec}{plumec}}
+{\footnotesize\ttfamily unsigned int plumec =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a4b29f9c2e6a8e8da90992985304f0b78}\label{_tracking_part_8c_a4b29f9c2e6a8e8da90992985304f0b78}} 
+\index{TrackingPart.c@{TrackingPart.c}!t@{t}}
+\index{t@{t}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{t}{t}}
+{\footnotesize\ttfamily unsigned int t}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_ae332144a969481cf5f9e1c954c332ee5}\label{_tracking_part_8c_ae332144a969481cf5f9e1c954c332ee5}} 
+\index{TrackingPart.c@{TrackingPart.c}!t\_adv@{t\_adv}}
+\index{t\_adv@{t\_adv}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{t\_adv}{t\_adv}}
+{\footnotesize\ttfamily double t\+\_\+adv =0.\+0}
+
+
+
+Definition at line 32 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a4952850f8949cccbdef08a6f01dfec20}\label{_tracking_part_8c_a4952850f8949cccbdef08a6f01dfec20}} 
+\index{TrackingPart.c@{TrackingPart.c}!t\_adv0@{t\_adv0}}
+\index{t\_adv0@{t\_adv0}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{t\_adv0}{t\_adv0}}
+{\footnotesize\ttfamily double t\+\_\+adv0 =0.\+0}
+
+
+
+Definition at line 32 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a47bac93a59407fc80f873f14625552df}\label{_tracking_part_8c_a47bac93a59407fc80f873f14625552df}} 
+\index{TrackingPart.c@{TrackingPart.c}!tdrw@{tdrw}}
+\index{tdrw@{tdrw}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tdrw}{tdrw}}
+{\footnotesize\ttfamily unsigned int tdrw =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a0779a8c7e2a72abcda717f87b68d4bfc}\label{_tracking_part_8c_a0779a8c7e2a72abcda717f87b68d4bfc}} 
+\index{TrackingPart.c@{TrackingPart.c}!tdrw\_diffcoeff@{tdrw\_diffcoeff}}
+\index{tdrw\_diffcoeff@{tdrw\_diffcoeff}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tdrw\_diffcoeff}{tdrw\_diffcoeff}}
+{\footnotesize\ttfamily double tdrw\+\_\+diffcoeff =0.\+0}
+
+
+
+Definition at line 32 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a531d5d9aafd742ee661c27de55926627}\label{_tracking_part_8c_a531d5d9aafd742ee661c27de55926627}} 
+\index{TrackingPart.c@{TrackingPart.c}!tdrw\_o@{tdrw\_o}}
+\index{tdrw\_o@{tdrw\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tdrw\_o}{tdrw\_o}}
+{\footnotesize\ttfamily unsigned int tdrw\+\_\+o =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_aca9c704b192b82aaa3d33d12882a1c2f}\label{_tracking_part_8c_aca9c704b192b82aaa3d33d12882a1c2f}} 
+\index{TrackingPart.c@{TrackingPart.c}!tdrw\_porosity@{tdrw\_porosity}}
+\index{tdrw\_porosity@{tdrw\_porosity}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tdrw\_porosity}{tdrw\_porosity}}
+{\footnotesize\ttfamily double tdrw\+\_\+porosity =0.\+0}
+
+
+
+Definition at line 32 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a1c990391d3ca9179d3ea9e6bb6e4d16a}\label{_tracking_part_8c_a1c990391d3ca9179d3ea9e6bb6e4d16a}} 
+\index{TrackingPart.c@{TrackingPart.c}!tempdata@{tempdata}}
+\index{tempdata@{tempdata}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tempdata}{tempdata}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structtempout}{tempout}}$\ast$ tempdata}
+
+
+
+Definition at line 56 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a0d6bf595b25906760b9c824c66afc33a}\label{_tracking_part_8c_a0d6bf595b25906760b9c824c66afc33a}} 
+\index{TrackingPart.c@{TrackingPart.c}!tfile@{tfile}}
+\index{tfile@{tfile}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{tfile}{tfile}}
+{\footnotesize\ttfamily unsigned int tfile =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a46a51bd2a4a54a3fdb92ad918816d1c6}\label{_tracking_part_8c_a46a51bd2a4a54a3fdb92ad918816d1c6}} 
+\index{TrackingPart.c@{TrackingPart.c}!timecounter@{timecounter}}
+\index{timecounter@{timecounter}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{timecounter}{timecounter}}
+{\footnotesize\ttfamily unsigned int timecounter =0}
+
+
+
+Definition at line 31 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_af11f3d6258b0839dfb97fe3875aa0a5b}\label{_tracking_part_8c_af11f3d6258b0839dfb97fe3875aa0a5b}} 
+\index{TrackingPart.c@{TrackingPart.c}!timediff@{timediff}}
+\index{timediff@{timediff}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{timediff}{timediff}}
+{\footnotesize\ttfamily double timediff =0.\+0}
+
+
+
+Definition at line 32 of file Tracking\+Part.\+c.
+
+\mbox{\Hypertarget{_tracking_part_8c_a4c82cb7b570cde4cbf47b95a56130948}\label{_tracking_part_8c_a4c82cb7b570cde4cbf47b95a56130948}} 
+\index{TrackingPart.c@{TrackingPart.c}!traj\_o@{traj\_o}}
+\index{traj\_o@{traj\_o}!TrackingPart.c@{TrackingPart.c}}
+\subsubsection{\texorpdfstring{traj\_o}{traj\_o}}
+{\footnotesize\ttfamily unsigned int traj\+\_\+o =0}
+
+
+
+Definition at line 30 of file Tracking\+Part.\+c.
+
