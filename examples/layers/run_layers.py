@@ -41,10 +41,13 @@ function = "log-normal"
 params = {"mu":6.3*10**-9,"sigma":0.5}
 b4,perm4,T4 = DFN.generate_hydraulic_values(variable,function,params,family_id=4)
 
-T = T1 + T2 + T2 + T4
+T = T1 + T2 + T3 + T4
 b = b1 + b2 + b3 + b4
 perm = perm1 + perm2 + perm3 + perm4 
 DFN.dump_hydraulic_values(b,perm,T)
+
+# Add transmissivity values to the mesh for visulazation
+DFN.add_variable_to_mesh("trans","transmissivity.dat","full_mesh.inp")
 
 ##dfnFlow()
 DFN.lagrit2pflotran()
