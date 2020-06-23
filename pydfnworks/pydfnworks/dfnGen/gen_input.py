@@ -409,6 +409,7 @@ def check_input(self, input_file='', output_file=''):
         'esd': [],
         'insertUserRectanglesFirst': [],
         'keepOnlyLargestCluster': [],
+        'keepIsolatedFractures': [],
         'rmin': [],
         'rAngleOption': [],
         'boundaryFaces': [],
@@ -499,8 +500,8 @@ def check_input(self, input_file='', output_file=''):
         'outputFinalRadiiPerFamily', 'outputAcceptedRadiiPerFamily',
         'domainSize', 'numOfLayers', 'layers', 'h', 'tripleIntersections',
         'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
-        'domainSizeIncrease', 'keepOnlyLargestCluster', 'ignoreBoundaryFaces',
-        'boundaryFaces', 'rejectsPerFracture', 'famProb',
+        'domainSizeIncrease', 'keepOnlyLargestCluster', 'keepIsolatedFractures',
+        'ignoreBoundaryFaces', 'boundaryFaces', 'rejectsPerFracture', 'famProb',
         'insertUserRectanglesFirst', 'nFamEll', 'eLayer', 'edistr',
         'ebetaDistribution', 'e_p32Targets', 'easpect', 'enumPoints',
         'eAngleOption', 'etheta', 'ephi', 'ebeta', 'ekappa', 'eLogMean', 'esd',
@@ -524,7 +525,8 @@ def check_input(self, input_file='', output_file=''):
         'outputFinalRadiiPerFamily', 'outputAcceptedRadiiPerFamily',
         'tripleIntersections', 'printRejectReasons', 'disableFram',
         'visualizationMode', 'seed', 'domainSizeIncrease',
-        'keepOnlyLargestCluster', 'ignoreBoundaryFaces', 'rejectsPerFracture',
+        'keepOnlyLargestCluster', 'keepIsolatedFractures',
+        'ignoreBoundaryFaces', 'rejectsPerFracture',
         'famProb', 'insertUserRectanglesFirst', 'nFamEll', 'nFamRect',
         'userEllipsesOnOff', 'userRectanglesOnOff', 'userEllByCoord',
         'userRecByCoord', 'aperture', 'permOption', 'forceLargeFractures',
@@ -536,7 +538,7 @@ def check_input(self, input_file='', output_file=''):
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'tripleIntersections',
         'printRejectReasons', 'visualizationMode', 'keepOnlyLargestCluster',
-        'insertUserRectanglesFirst', 'forceLargeFractures'
+        'keepIsolatedFractures','insertUserRectanglesFirst', 'forceLargeFractures'
     ]
 
     examples = {
