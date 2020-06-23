@@ -60,6 +60,11 @@ bool boundaryFaces[6];
     cluster which connects at least any two sides of the domain.*/
 bool keepOnlyLargestCluster;
 
+/*! 0 - remove isolated fractures and clusters
+    1 - Keep isolated fractures and clusters
+    */
+bool keepIsolatedFractures;
+
 /*! Useful for debugging,
     This option will print all fracture rejection reasons as they occur.
         0 - Disable
@@ -548,6 +553,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> ch >> domainSizeIncrease[0] >> ch >> domainSizeIncrease[1] >> ch >> domainSizeIncrease[2];
     searchVar(inputFile, "keepOnlyLargestCluster:");
     inputFile >> keepOnlyLargestCluster;
+    searchVar(inputFile, "keepIsolatedFractures:");
+    inputFile >> keepIsolatedFractures;
     searchVar(inputFile, "ignoreBoundaryFaces:");
     inputFile >> ignoreBoundaryFaces;
     searchVar(inputFile, "boundaryFaces:");

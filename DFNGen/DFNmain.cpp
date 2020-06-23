@@ -578,7 +578,10 @@ int main (int argc, char **argv) {
         If ignoreBoundaryFaces input option is on,
         DFN will keep all fractures with intersections.
     */
+
+
     std::vector<unsigned int> finalFractures =  getCluster(pstats);
+
     // Sort fracture indecies to retain order by acceptance
     std::sort (finalFractures.begin(), finalFractures.end());
     // Error check for no boundary connection
@@ -586,7 +589,7 @@ int main (int argc, char **argv) {
     
     if (finalFractures.size() == 0 && ignoreBoundaryFaces == 0 ) {
         printConnectivityError = 1;
-        //if there is no fracture network connected useres liststed boundary faces
+        //if there is no fracture network connected users defined boundary faces
         //switch to ignore boundary faces option with notice to user that there is no connectivity
         finalFractures =  getCluster(pstats);
         //if still no fractures, there is no fracture network
