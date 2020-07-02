@@ -405,7 +405,6 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
             }
         }
         else{
-                std::cout << "Here\n";
                 std::vector<Point> tempTripPts;
                 IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[0],
                                              acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
