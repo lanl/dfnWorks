@@ -7,6 +7,7 @@
 
 import subprocess
 import os
+import sys
 import time
 import multiprocessing as mp
 from shutil import copy, rmtree
@@ -245,9 +246,8 @@ def merge_worker(job):
     cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
                 + '> log_merge_poly_part%d'
     if subprocess.call(cmd % (job, job), shell=True):
-        print("Error " + job + " failed!!!")
+        print("Error {0} failed".format(job))
         return True
-
     toc = time.time()
     elapsed = toc - tic
     print("--> Merge Number %d Complete. Time elapsed: %0.2f seconds\n" %

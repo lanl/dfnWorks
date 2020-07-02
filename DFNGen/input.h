@@ -15,6 +15,7 @@ extern bool visualizationMode;
 extern bool tripleIntersections;
 extern bool boundaryFaces[6];
 extern bool keepOnlyLargestCluster;
+extern bool keepIsolatedFractures;
 extern bool printRejectReasons;
 extern bool outputFinalRadiiPerFamily;
 extern bool outputAcceptedRadiiPerFamily;

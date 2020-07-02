@@ -250,8 +250,7 @@ def correlated(params, variable, radii):
         print("b ={1}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
     if variable == "permeability":
-        print("k ={1}*r^{2} {3}".format(variable, params["alpha"]h
-
+        print("k ={1}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
     if variable == "transmissivity":
         print("T ={1}*r^{2} {3}".format(variable, params["alpha"],
