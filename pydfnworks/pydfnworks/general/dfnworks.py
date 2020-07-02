@@ -153,12 +153,6 @@ def commandline_options():
                 Number of CPUS (Optional, default=4)
             -input : string 
                 Input file with paths to run files (Mandatory if the next three options are not specified)
-            -gen : string 
-                Generator Input File (Mandatory, can be included within the input file)
-            -flow : string 
-                PFLORAN Input File (Mandatory, can be included within the input file)
-            -trans : string
-                Transport Input File (Mandatory, can be included within the input file)
             -prune_file : string
                 Absolute path to the prune Input File 
             -path : string
@@ -186,21 +180,6 @@ def commandline_options():
                         default="",
                         type=str,
                         help="input file with paths to run files")
-    parser.add_argument("-gen",
-                        "--dfnGen",
-                        default="",
-                        type=str,
-                        help="Path to dfnGen run file")
-    parser.add_argument("-flow",
-                        "--dfnFlow",
-                        default="",
-                        type=str,
-                        help="Path to dfnFlow run file")
-    parser.add_argument("-trans",
-                        "--dfnTrans",
-                        default="",
-                        type=str,
-                        help="Path to dfnTrans run file")
     parser.add_argument("-path",
                         "--path",
                         default="",
@@ -211,16 +190,11 @@ def commandline_options():
                         default=False,
                         action="store_true",
                         help="Binary For Cell Based Apereture / Perm")
-    parser.add_argument("-prune_file",
+    parser.add_argument("-e_file",
                         "--prune_file",
                         default="",
                         type=str,
                         help="Path to prune DFN list file")
-    parser.add_argument("-prune_path",
-                        "--prune_path",
-                        default="",
-                        type=str,
-                        help="Path to original DFN files")
     options = parser.parse_args()
     if options.jobname == "":
         error = "Error: Jobname is required. Exiting.\n"
@@ -292,12 +266,6 @@ def create_dfn():
         print('--> DFN Path: ', DFN.path)
     else:
         DFN.path = ""
-
-    if options.prune_file != "":
-        DFN.prune_file = options.prune_file
-        print('--> DFN prune file: ', DFN.prune_file)
-    else:
-        DFN.prune_file = ""
 
     if options.cell is True:
         print('--> Expecting Cell Based Aperture and Permeability')
