@@ -636,7 +636,7 @@ def dump_fractures(self, G, filename):
         nodes = list(set(nodes))
 
     nodes = pull_source_and_target(nodes)
-    fractures = [int(i) + 1 for i in nodes]
+    fractures = [int(i) for i in nodes]
     fractures = sorted(fractures)
     print("--> Dumping %s" % filename)
     np.savetxt(filename, fractures, fmt="%d")

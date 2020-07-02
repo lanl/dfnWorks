@@ -190,7 +190,7 @@ def commandline_options():
                         default=False,
                         action="store_true",
                         help="Binary For Cell Based Apereture / Perm")
-    parser.add_argument("-e_file",
+    parser.add_argument("-prune_file",
                         "--prune_file",
                         default="",
                         type=str,
@@ -264,6 +264,12 @@ def create_dfn():
             options.path += os.sep
         DFN.path = options.path
         print('--> DFN Path: ', DFN.path)
+    else:
+        DFN.path = ""
+
+    if options.prune_file != "":
+        DFN.prune_file = options.prune_file
+        print('--> DFN Prune File: ', DFN.prune_file)
     else:
         DFN.path = ""
 
