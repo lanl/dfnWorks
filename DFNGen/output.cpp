@@ -258,7 +258,7 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
     std::cout << "Writing Intersection Files\n";
     std::ofstream fractIntFile;
     //int keepIsolated = 1;
-
+    
     // Go through finalFractures. Rotate poly, intersections, and triple intersection points
     // to XY plane. Discretize and write to file
     for (unsigned int i = 0; i < finalFractures.size(); i++) {
@@ -277,7 +277,8 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
         fractIntFile << "                                                               \n";
         // Go through each final fracture's intersections and write to output
         unsigned int size = acceptedPoly[finalFractures[i]].intersectionIndex.size();
-        if (size > 0 || keepIsolatedFractures == 0){
+        
+        if (size > 0 || keepIsolatedFractures == 0) {
             for (unsigned int j = 0; j < size; j++) {
                 // tempTripPts holds rotated triple points for an intersection. Triple pts must be rotated 3 different
                 // ways so we cannot change the original data
@@ -405,12 +406,12 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
                 
                 intStart.push_back(count);
             }
+        } else {
+            std::vector<Point> tempTripPts;
+            IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[0],
+                                         acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
         }
-        else{
-                std::vector<Point> tempTripPts;
-                IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[0],
-                                             acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
-        }
+        
         // Done with fracture and intersections
         pstats.intersectionNodeCount += numIntPts;
         // Write line connectivity and header

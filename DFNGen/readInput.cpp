@@ -1006,22 +1006,21 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> userEllByCoord;
     searchVar(inputFile, "userRecByCoord:");
     inputFile >> userRecByCoord;
-   
     searchVar(inputFile, "userPolygonByCoord:");
     inputFile >> userPolygonByCoord;
-
+    
     if ((userRectanglesOnOff == 1 || userRecByCoord == 1) && (userEllipsesOnOff == 1 || userEllByCoord == 1)) {
         searchVar(inputFile, "insertUserRectanglesFirst:");
         inputFile >> insertUserRectanglesFirst;
     } else {
         insertUserRectanglesFirst = 0;
     }
-
+    
     if (userPolygonByCoord != 0) {
         searchVar(inputFile, "PolygonByCoord_Input_File_Path:");
         inputFile >> polygonFile;
     }
-     
+    
     if (userEllByCoord != 0) {
         searchVar(inputFile, "EllByCoord_Input_File_Path:");
         inputFile >> tempstring;

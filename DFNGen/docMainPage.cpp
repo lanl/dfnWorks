@@ -1,11 +1,11 @@
 // This is used to generate the main page content in the html documentation
 
 /*! \mainpage DFNgen
- 
+
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  ~~~~~~~~~~~~~~~~~~ Program: DFNWorks  V2.2 ~~~~~~~~~~~~~~~~~~~~~~~~
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
  This program was prepared at Los Alamos National Laboratory (LANL),
  Earth and Environmental Sciences Division, Computational Earth
  Science Group (EES-16), Subsurface Flow and Transport Team.
@@ -15,18 +15,18 @@
  authorship are reproduced on all copies. Neither the U.S. Government
  nor LANS makes any warranty, express or implied, or assumes
  any liability or responsibility for the use of this software.
- 
+
  Contact Information : dfnworks@lanl.gov
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
  \section license License
- 
+
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  LA-CC-17-027
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
  (or copyright) 2018 Triad National Security, LLC. All rights reserved.
  This program was produced under U.S. Government contract 89233218CNA000001
  for Los Alamos National Laboratory (LANL), which is operated by Triad
@@ -38,14 +38,14 @@
  nonexclusive, paid-up, irrevocable worldwide license in this material
  to reproduce, prepare derivative works, distribute copies to the public,
  perform publicly and display publicly, and to permit others to do so.
- 
+
  The U.S. Government has rights to use, reproduce, and distribute this software.
  NEITHER THE GOVERNMENT NOR TRIAD NATIONAL SECURITY, LLC MAKES ANY WARRANTY,
  EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.
  If software is modified to  produce derivative works, such modified
  software should be clearly marked, so as not to confuse it with the
  version available from LANL.
- 
+
  Additionally, this program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published by the
  Free Software Foundation; either version 2 of the License, or (at your option)
@@ -53,17 +53,17 @@
  will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
  License for more details.
- 
+
  Additionally, redistribution and use in source and binary forms, with or
  without modification, are permitted provided that the following conditions are
  met:
  1.       Redistributions of source code must retain the above copyright notice,
  this list of conditions and the following disclaimer.
- 
+
  2.      Redistributions in binary form must reproduce the above copyright
  notice, this list of conditions and the following disclaimer in the
  documentation and/or other materials provided with the distribution.
- 
+
  3.      Neither the name of Los Alamos National Security, LLC, Los Alamos
  National Laboratory, LANL, the U.S. Government, nor the names of its
  contributors may be used to endorse or promote products derived from this
@@ -79,8 +79,8 @@
  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
- 
- 
+
+
  */
 
 

@@ -117,8 +117,8 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
         createBoundingBox(newPoly);
         // Line of intersection and FRAM
         int rejectCode = intersectionChecking(newPoly, acceptedPoly, intpts, pstats, triplePoints);
+        
         if(rejectCode == 0) {
-            
             // Incriment counter of accepted polys
             pstats.acceptedPolyCount++;
             // Calculate poly's area
@@ -134,7 +134,7 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
             std::cout << "\nRejected User Defined Polygon Fracture (Defined By Coordinates) " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
         }
-    
     }
+    
     file.close();
 }

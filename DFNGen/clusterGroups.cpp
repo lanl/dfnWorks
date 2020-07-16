@@ -47,15 +47,14 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
     std::vector<unsigned int> matchingGroups;
     std::vector<unsigned int> finalPolyList;
     //int keepIsolated = 1;
-    
     std::cout << "In cluster groups\n";
-    std::cout << "Number of fractures: "<< pstats.acceptedPolyCount << "\n";
-    std::cout << "Number of groups: "<< pstats.groupData.size() << "\n";
-
-    if (keepIsolatedFractures == 0){
-    // NOTE: (groupNumber-1) = corresponding groupData structures' index of the arary
-    //       similarly, the index of groupData + 1 = groupNumber (due to groupNumber starting at 1, array starting at 0)
-
+    std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
+    std::cout << "Number of groups: " << pstats.groupData.size() << "\n";
+    
+    if (keepIsolatedFractures == 0) {
+        // NOTE: (groupNumber-1) = corresponding groupData structures' index of the arary
+        //       similarly, the index of groupData + 1 = groupNumber (due to groupNumber starting at 1, array starting at 0)
+        
         // Find all matching groups:
         // Get matching groups from pstats.groupData[]
         for (unsigned int i = 0; i < pstats.groupData.size(); i++) {
@@ -72,6 +71,7 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
                 }
             }
         }
+        
         if (keepOnlyLargestCluster == 1 && matchingGroups.size() > 1) {
             // If only keeping the largest cluster, find group with largest size
             // Initialize largestGroup
@@ -87,7 +87,7 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
             matchingGroups.clear(); // Clear group numbers
             matchingGroups.push_back(largestGroup); // Save only the largest group
         }
-
+        
         // Gather the final polygon numbers/indecies.
         for (unsigned int i = 0; i < matchingGroups.size(); i++) {
             for (unsigned int k = 0; k < pstats.fractGroup.size(); k++) {
@@ -100,13 +100,14 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
                 }
             }
         }
-    }
-    else{
-        std::cout << "Number of fractures: "<< pstats.acceptedPolyCount << "\n";
+    } else {
+        std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
+        
         for (unsigned int i = 0; i < pstats.acceptedPolyCount; i++) {
             finalPolyList.push_back(i);
         }
     }
+    
     return finalPolyList;
 }
 
