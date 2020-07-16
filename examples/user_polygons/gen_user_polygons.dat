@@ -421,7 +421,7 @@ EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/input
 userRectanglesOnOff: 0    //0 - User Rectangles off
                         //1 - User Rectangles on
                           
-UserRect_Input_File_Path: /Users/jhyman/src/dfnworks-main/examples/4_user_rects/define_4_user_rects.dat 
+UserRect_Input_File_Path: /DUMMY/dfnworks-main/examples/4_user_rects/define_4_user_rects.dat 
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their
@@ -452,7 +452,7 @@ userPolygonByCoord: 1
 //  0 - user defined rectangles not used
 //  1 - user defined rectangles used and defined by input file:
 
-PolygonByCoord_Input_File_Path: /Users/jhyman/src/dfnworks-main/examples/user_polygons/polygons.dat 
+PolygonByCoord_Input_File_Path: /DUMMY/dfnworks-main/examples/user_polygons/polygons.dat 
 
 
 /*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
