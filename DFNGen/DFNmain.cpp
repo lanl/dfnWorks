@@ -162,7 +162,10 @@ int main (int argc, char **argv) {
     /*********  END SETUP HOT KEY **********/
     
     /********************* User Defined Shapes Insertion ************************/
-    
+    // User Polygons are always inserted first
+    if (userPolygonByCoord != 0) {
+        insertUserPolygonByCoord(acceptedPoly, intPts, pstats, triplePoints);
+    }
     if (insertUserRectanglesFirst == 1) {
         // Insert user rects first
         if (userRectanglesOnOff != 0) {
@@ -501,7 +504,8 @@ int main (int argc, char **argv) {
         double vol = area * acceptedPoly[i].aperture;
         pstats.areaBeforeRemoval += area;
         pstats.volBeforeRemoval += vol;
-        
+
+
         if (acceptedPoly[i].familyNum >= 0) {
             familyArea[acceptedPoly[i].familyNum] += area;
             familyVol[acceptedPoly[i].familyNum] += vol;
@@ -510,7 +514,9 @@ int main (int argc, char **argv) {
             userDefinedVol += vol;
         }
     }
-    
+   
+
+
     std::cout << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
     std::cout << "Total Fractures Volume: " << pstats.volBeforeRemoval << " m^3\n";
     std::cout << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";

@@ -39,6 +39,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     adjustIntFractIDs(finalFractures, acceptedPoly, intPts);
     // Write out graph information
     writeGraphData(finalFractures, acceptedPoly, intPts);
+    // Write polygon.dat file
+    writePolys(finalFractures, acceptedPoly, output);
     // Write intersection files (must be first file written, rotates polys to x-y plane)
     writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
     // Write polys.inp
@@ -489,6 +491,40 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
     }
     
     polyOutput.close(); // Done with polygons inp file
+}
+
+/* writePolys() ****************************************************************************/
+/*! Parses and writes all poly_x.inp files containing polygon (fracture) vertice and connectivity data
+    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
+    Arg 2: std::vector array of all accetped fractures
+    Arg 3: Path to output folder */
+void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+    std::ofstream polyOutput;
+    std::cout << "Writing Polygon Files\n";
+    int polyCount = finalFractures.size();
+    std::string polyOutputFile = output + "/polygons.dat";
+    polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
+    polyOutput << "nPolygons: " << polyCount << "\n";
+    
+    for (int j = 0; j < polyCount; j++) {
+        // Write vertices
+        int numberOfNodes = acceptedPoly[finalFractures[j]].numberOfNodes;
+        //polyOutput << acceptedPoly[finalFractures[j]].familyNum << " ";
+        polyOutput << numberOfNodes << " ";
+        
+        for (int i = 0; i < numberOfNodes; i++) {
+            int idx = i * 3;
+            polyOutput << std::setprecision(12) << "{"
+                       << acceptedPoly[finalFractures[j]].vertices[idx] << ", "
+                       << acceptedPoly[finalFractures[j]].vertices[idx + 1] << ", "
+                       << acceptedPoly[finalFractures[j]].vertices[idx + 2] << "} ";
+        }
+        
+        polyOutput << "\n";
+    }
+    
+    polyOutput.close();
+    std::cout << "Writing Polygon Files Complete\n";
 }
 
 /* writePolysInp() ****************************************************************************/
