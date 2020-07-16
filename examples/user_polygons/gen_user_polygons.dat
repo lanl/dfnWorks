@@ -45,7 +45,7 @@ layers:
 */   
 
 
-h: 0.050
+h: 0.25
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
 
@@ -64,7 +64,7 @@ printRejectReasons: 0
         1: print all rejection reasons to screen
 */
 
-visualizationMode: 1 
+visualizationMode: 0 
 /* Options: 0 or 1 
    Used during meshing: 
    0: creates a fine mesh, according to h parameter;
