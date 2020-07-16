@@ -54,13 +54,13 @@ class input_helper():
             self.error(
                 "\"{}\" can only correspond to 1 list. {} lists have been defined."
                 .format(key, len(self.params[key])))
-        #try:
-        val = self.params[key][0]
-        if val == '' or val == []:
-            self.error("\"{}\" does not have a value.".format(key))
-        return val
-        #except IndexError:
-        #    self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
+        try:
+            val = self.params[key][0]
+            if val == '' or val == []:
+                self.error("\"{}\" does not have a value.".format(key))
+            return val
+        except IndexError:
+            self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
 
     def get_groups(self, line, valList, key):
         """ extract values between { and } 
@@ -416,7 +416,6 @@ def check_input(self, input_file='', output_file=''):
         'userRectanglesOnOff': [],
         'printRejectReasons': [],
         'numOfLayers': [],
-        'RectByCoord_Input_File_Path': [],
         'eLogMean': [],
         'rExpMin': [],
         'lengthCorrelatedAperture': [],
@@ -435,10 +434,16 @@ def check_input(self, input_file='', output_file=''):
         'outputAllRadii': [],
         'r_p32Targets': [],
         'permOption': [],
-        'userEllByCoord': [],
         'userRecByCoord': [],
+        'RectByCoord_Input_File_Path': [],
+        'userRectanglesOnOff': [],
+        'UserRect_Input_File_Path': [],
+        'userEllByCoord': [],
+        'EllByCoord_Input_File_Path': [],
         'userEllipsesOnOff': [],
         'UserEll_Input_File_Path': [],
+        'userPolygonByCoord': [],
+        'PolygonByCoord_Input_File_Path': [],
         'rExpMean': [],
         'rbetaDistribution': [],
         'aperture': [],
@@ -465,8 +470,6 @@ def check_input(self, input_file='', output_file=''):
         'easpect': [],
         'rtheta': [],
         'rdistr': [],
-        'UserRect_Input_File_Path': [],
-        'EllByCoord_Input_File_Path': [],
         'rconst': [],
         'rExpMax': [],
         'ignoreBoundaryFaces': [],
@@ -513,7 +516,8 @@ def check_input(self, input_file='', output_file=''):
         'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path',
         'userRectanglesOnOff', 'UserRect_Input_File_Path',
         'EllByCoord_Input_File_Path', 'userEllByCoord', 'userRecByCoord',
-        'RectByCoord_Input_File_Path', 'aperture', 'meanAperture',
+        'userPolygonByCoord','RectByCoord_Input_File_Path', 'PolygonByCoord_Input_File_Path',
+        'aperture', 'meanAperture',
         'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
         'lengthCorrelatedAperture', 'permOption', 'constantPermeability',
         'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'
@@ -529,7 +533,7 @@ def check_input(self, input_file='', output_file=''):
         'ignoreBoundaryFaces', 'rejectsPerFracture',
         'famProb', 'insertUserRectanglesFirst', 'nFamEll', 'nFamRect',
         'userEllipsesOnOff', 'userRectanglesOnOff', 'userEllByCoord',
-        'userRecByCoord', 'aperture', 'permOption', 'forceLargeFractures',
+        'userRecByCoord', 'userPolygonByCoord','aperture', 'permOption', 'forceLargeFractures',
         'radiiListIncrease', 'removeFracturesLessThan'
     }
 
@@ -781,10 +785,12 @@ def check_input(self, input_file='', output_file=''):
         userRs = "userRectanglesOnOff"
         recByCoord = "userRecByCoord"
         ellByCoord = "userEllByCoord"
+        polygonByCoord = "userPolygonByCoord"
         ePath = "UserEll_Input_File_Path"
         rPath = "UserRect_Input_File_Path"
         coordPath = "RectByCoord_Input_File_Path"
         ecoordPath = "EllByCoord_Input_File_Path"
+        polycoordPath = "PolygonByCoord_Input_File_Path"
         invalid = "\"{}\" is not a valid path."
 
         if input_helper_methods.verify_flag(
