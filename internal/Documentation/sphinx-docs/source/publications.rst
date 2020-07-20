@@ -81,11 +81,11 @@ The following are publications that use *dfnWorks*:
 
 #. `\T. Sherman, J. D. Hyman, M. Dentz, and D. Bolster. Characterizing the influence of fracture density on network scale transport. J. Geophys. Res. Sol. Ea., 2019 <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JB018547>`_.
 
-#. D. Osthus, J. D. Hyman, S. Karra, N. Panda, and G. Srinivasan. A probabilistic clustering approach for identifying primary subnetworks of discrete fracture networks with quantified uncertainty. SIAM ASA Journal on Uncertainty Quantification, 2020.
+#. `\D. Osthus, J. D. Hyman, S. Karra, N. Panda, and G. Srinivasan. A probabilistic clustering approach for identifying primary subnetworks of discrete fracture networks with quantified uncertainty. SIAM/ASA Journal on Uncertainty Quantification, 8(2), pp.573-600. <https://epubs.siam.org/doi/pdf/10.1137/19M1279265>`_.
 
 #. `\V. Romano, S. Bigi, F. Carnevale, J. D. Hyman, S. Karra, A. Valocchi, M. Tartarello, and M. Battaglia. Hydraulic characterization of a fault zone from fracture distribution. Journal of Structural Geology, 2020 <https://www.sciencedirect.com/science/article/pii/S0191814119305061>`_.
 
-#. S. Srinivasan, E. Cawi, J. D. Hyman, D. Osthus, A. Hagberg, H. Viswanathan, and G. Srinivasan. Physics-informed machine-learning for backbone identification in discrete fracture networks. Comput. Geosci., 2020
+#. `\S. Srinivasan, E. Cawi, J. D. Hyman, D. Osthus, A. Hagberg, H. Viswanathan, and G. Srinivasan. Physics-informed machine-learning for backbone identification in discrete fracture networks. Comput. Geosci., 2020 <https://link.springer.com/content/pdf/10.1007/s10596-020-09962-5.pdf>`_.
 
 
-
+#. `\N. Makedonska, S. Karra, H.S. Viswanathan, and G.D. Guthrie,. Role of Interaction between Hydraulic and Natural Fractures on Production. Journal of Natural Gas Science and Engineering 2020, p.103451. <https://www.sciencedirect.com/science/article/pii/S187551002030305X>`_.
