@@ -81,7 +81,7 @@ The following are publications that use *dfnWorks*:
 
 #. `\T. Sherman, J. D. Hyman, M. Dentz, and D. Bolster. Characterizing the influence of fracture density on network scale transport. J. Geophys. Res. Sol. Ea., 2019 <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JB018547>`_.
 
-#. `\D. Osthus, J. D. Hyman, S. Karra, N. Panda, and G. Srinivasan. A probabilistic clustering approach for identifying primary subnetworks of discrete fracture networks with quantified uncertainty. SIAM/ASA Journal on Uncertainty Quantification, 8(2), pp.573-600. <https://epubs.siam.org/doi/pdf/10.1137/19M1279265>`_.
+#. `\D. Osthus, J. D. Hyman, S. Karra, N. Panda, and G. Srinivasan. A probabilistic clustering approach for identifying primary subnetworks of discrete fracture networks with quantified uncertainty. SIAM/ASA Journal on Uncertainty Quantification, 2020 8(2), pp.573-600. <https://epubs.siam.org/doi/pdf/10.1137/19M1279265>`_.
 
 #. `\V. Romano, S. Bigi, F. Carnevale, J. D. Hyman, S. Karra, A. Valocchi, M. Tartarello, and M. Battaglia. Hydraulic characterization of a fault zone from fracture distribution. Journal of Structural Geology, 2020 <https://www.sciencedirect.com/science/article/pii/S0191814119305061>`_.
 
@@ -89,3 +89,5 @@ The following are publications that use *dfnWorks*:
 
 
 #. `\N. Makedonska, S. Karra, H.S. Viswanathan, and G.D. Guthrie,. Role of Interaction between Hydraulic and Natural Fractures on Production. Journal of Natural Gas Science and Engineering 2020, p.103451. <https://www.sciencedirect.com/science/article/pii/S187551002030305X>`_.
+
+#. `\H. Pham, R. Parashar, N. Sund, and K. Pohlmann. A Method to Represent a Well in a Three‐dimensional Discrete Fracture Network Model. Groundwater. 2020 <https://ngwa.onlinelibrary.wiley.com/doi/abs/10.1111/gwat.13030>`_.
