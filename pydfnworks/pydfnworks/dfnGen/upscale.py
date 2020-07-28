@@ -50,13 +50,18 @@ def upscale(self, mat_perm, mat_por):
     print("Generating permeability and porosity for octree mesh: Starting")
     print('=' * 80)
 
-    os.symlink("../params.txt", "params.txt")
-    num_poly, _, _, _, domain = mh.parse_params_file()
-
     # Bring in all the relevant data
-    os.symlink("../aperture.dat", "aperture.dat")
-    os.symlink("../normal_vectors.dat", "normal_vectors.dat")
+    files = ["params.txt", "aperture.dat", "normal_vectors.dat"]
+    for f in files:
+            if not os.path.isfile(f):
+                try:
+                    os.symlink("../{0}".format(f), "{0}".format(f))
+                except:
+                    error = "ERROR!!! Symbolic link to {0}. Cannot be created.\nExiting".format(f)
+                    sys.stderr.write(error)
+                    sys.exit(1)
 
+    num_poly, _, _, _, domain = mh.parse_params_file()
     aperture = np.genfromtxt('aperture.dat', skip_header=1)[:, -1]
     normal_vectors = np.genfromtxt('normal_vectors.dat', delimiter=' ')
 
