@@ -11,7 +11,7 @@ from time import time
 from numpy import genfromtxt, sort
 # pydfnworks Modules
 from pydfnworks.dfnGen import mesh_dfn_helper as mh
-from pydfnworks.dfnGen import lagrit_scripts as lagrit
+from pydfnworks.dfnGen import lagrit_scripts_poisson_disc as lagrit
 from pydfnworks.dfnGen import run_meshing as run_mesh
 
 
@@ -93,7 +93,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     ncpu = min(self.ncpu, num_poly)
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     lagrit.create_lagrit_scripts(visual_mode, ncpu)
-    lagrit.create_user_functions()
+    #lagrit.create_user_functions()
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
     if failure:
         mh.cleanup_dir()

@@ -13,7 +13,6 @@ import multiprocessing as mp
 from shutil import copy, rmtree
 from numpy import genfromtxt
 
-
 def mesh_fracture(fracture_id, visual_mode, num_poly):
     """Child function for parallelized meshing of fractures
 
@@ -25,6 +24,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             True/False for reduced meshing
         num_poly : int 
             Total Number of Fractures in the DFN
+        poisson : bool
+            True/False if running with Poisson sampling 
     
     Returns
     -------
@@ -38,21 +39,24 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     t = time.time()
     p = mp.current_process()
-    print('Fracture %d \tstarting on %s\n' % (fracture_id, p.name))
+    print('Fracture {0} \tstarting on {1}\n'.format(fracture_id, p.name))
     a, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
 
     # Create Symbolic Links
-    os.symlink("polys/poly_%d.inp" % fracture_id, "poly_CPU%d.inp" % cpu_id)
+    os.symlink("polys/poly_{0}.inp".format(fracture_id), "poly_CPU{0}.inp".format(cpu_id))
+
     os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
         "parameters_CPU%d.mlgi"%cpu_id)
-
 
     os.symlink('intersections/intersections_%d.inp'%fracture_id,\
         'intersections_CPU%d.inp'%cpu_id)
 
+    os.symlink("points/points_{0}.xyz".format(fracture_id),"points_CPU{0}.xyz".format(cpu_id))
+
     cmd = os.environ['LAGRIT_EXE']+ ' < mesh_poly_CPU%d.lgi' \
          + ' > lagrit_logs/log_lagrit_%d'
+
     subprocess.call(cmd % (cpu_id, fracture_id), shell=True)
 
     if not visual_mode:
@@ -64,7 +68,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         cmd_check = cmd_check % (cpu_id, cpu_id, fracture_id, fracture_id)
         failure = subprocess.call(cmd_check, shell=True)
         if failure > 0:
-            print("MESH CHECKING HAS FAILED!!!!")
+            print("WARNING: MESH CHECKING FAILED!!!!")
             print('Fracture %d \tstarting on %s\n' % (fracture_id, p.name))
 
             with open("failure.txt", "a") as failure_file:
@@ -95,16 +99,16 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     # Remove old links and files
     files = [
-        'poly_CPU%d.inp', 'intersections_CPU%d.inp', 'parameters_CPU%d.mlgi'
-    ]
+        'poly_CPU{0}.inp', 'intersections_CPU{0}.inp', 'points_CPU{0}.xyz',
+        'parameters_CPU{0}.mlgi']
     for f in files:
-        fp = f % cpu_id
+        fp = f.format(cpu_id)
         try:
-            os.remove(fp)
+            os.unlink(fp)
         except:
-            print('Could not remove %s' % fp)
-    elapsed = time.time() - t
+            print('Warning: Could unlink %s' % fp)
 
+    elapsed = time.time() - t
     if failure > 0:
         error = 'Fracture %d out of %d complete, but mesh checking failed\n' % (
             fracture_id, num_poly)
