@@ -67,11 +67,12 @@ def parse_params_file(quite=False):
         else:
             visual_mode = False
             print("Visual mode is off")
-        print("Expected Number of dudded points: %d" % dudded_points)
-        print("X Domain Size %d m" % domain['x'])
-        print("Y Domain Size %d m" % domain['y'])
-        print("Z Domain Size %d m" % domain['z'])
+        print(f"Expected Number of dudded points: {dudded_points}")
+        print(f"X Domain Size {domain['x']} m")
+        print(f"Y Domain Size {domain['y']} m")
+        print(f"Z Domain Size {domain['z']} m")
         print("--> Parsing params.txt complete\n")
+        
     return (num_poly, h, visual_mode, dudded_points, domain)
 
 
@@ -110,8 +111,8 @@ def check_dudded_points(dudded, hard=False):
 
     diff = abs(dudded - pts)
     print(f"Expected Number of dudded points: {dudded}")
-    print("Actual Number of dudded points: %d" % pts)
-    print("Difference between expected and actual dudded points: %d" % diff)
+    print(f"Actual Number of dudded points: {pts}")
+    print(f"Difference between expected and actual dudded points: {diff}")
     if diff == 0:
         print('--> Correct Number of points removed\n')
         return True
@@ -121,12 +122,12 @@ def check_dudded_points(dudded, hard=False):
             match expected value')
         diff_ratio = float(diff) / float(total_points)
         if diff_ratio < 0.002 or hard == False:
-            print("However value is small: %d" % diff)
+            print(f"However value is small: {diff}")
             print("Proceeding\n")
             return True
         else:
             print('ERROR! Incorrect Number of points removed')
-            print('Over 1% of node removed %f' % diff_ratio)
+            print(f"Over 1% of node removed {diff_ratio}")
             return False
 
 
