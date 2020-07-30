@@ -72,7 +72,7 @@ def parse_params_file(quite=False):
         print(f"Y Domain Size {domain['y']} m")
         print(f"Z Domain Size {domain['z']} m")
         print("--> Parsing params.txt complete\n")
-        
+
     return (num_poly, h, visual_mode, dudded_points, domain)
 
 
@@ -95,26 +95,26 @@ def check_dudded_points(dudded, hard=False):
     If number of dudded points is incorrect by over 1%, program will exit. 
 
     """
-    print("Checking that number of dudded points is correct")
+    print("--> Checking that number of dudded points is correct")
     with open("log_merge_all.txt", "r") as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
-                print(f'From LaGriT: {line}')
+                print(f'--> From LaGriT: {line}')
                 try:
                     pts = int(line.split()[1])
                 except:
                     pts = int(line.split()[-1])
             if 'RMPOINT:' in line:
-                print(f'From LaGriT: {line}')
+                print(f'--> From LaGriT: {line}')
                 total_pts = int(line.split()[-1])
                 break
 
     diff = abs(dudded - pts)
-    print(f"Expected Number of dudded points: {dudded}")
-    print(f"Actual Number of dudded points: {pts}")
-    print(f"Difference between expected and actual dudded points: {diff}")
+    print(f"--> Expected Number of dudded points: {dudded}")
+    print(f"--> Actual Number of dudded points: {pts}\n")
+    print(f"--> Difference between expected and actual dudded points: {diff}")
     if diff == 0:
-        print('--> Correct Number of points removed\n')
+        print('--> The correct number of points were removed. Onward!\n')
         return True
     elif diff > 0:
         ## compare with total number poins
@@ -434,12 +434,14 @@ def run_lagrit_script(lagrit_file):
         lagrit_file : string
             Name of LaGriT output file
     """
-    cmd = "{0} < {1}".format(os.environ["LAGRIT_EXE"],lagrit_file)
-    print("--> Running: {0}".format(cmd))
+    cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
+    print(f"--> Running: {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure:
-        error = 'ERROR: \n'
+        error = 'ERROR running LaGriT. Exiting \n'
         sys.stderr.write(error)
         sys.exit(1)
-    print("--> Complete")
+    else:
+        print("--> Complete")
+
     
