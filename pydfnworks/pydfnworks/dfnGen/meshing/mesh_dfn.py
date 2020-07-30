@@ -53,7 +53,7 @@ def mesh_network(self,
     '''
 
     print('=' * 80)
-    print("Meshing DFN Using LaGriT : Starting")
+    print("Meshing DFN using LaGriT : Starting")
     print('=' * 80)
 
     if uniform_mesh:
@@ -73,7 +73,9 @@ did not provide file of fractures to keep.\nExiting program.\n"
         if visual_mode == None:
             visual_mode = params_visual_mode
 
-        print(f"Loading list of fractures to remain in network from {self.prune_file}")
+        print(
+            f"Loading list of fractures to remain in network from {self.prune_file}"
+        )
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print(fracture_list)
         if not visual_mode:
@@ -132,5 +134,5 @@ did not provide file of fractures to keep.\nExiting program.\n"
 
     mh.output_meshing_report(self.local_jobname, visual_mode)
     print('=' * 80)
-    print("Meshing DFN Using LaGriT : Complete")
+    print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)

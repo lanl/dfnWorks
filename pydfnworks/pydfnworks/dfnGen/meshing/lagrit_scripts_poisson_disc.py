@@ -55,10 +55,11 @@ def edit_intersection_files(num_poly, fracture_list, path):
     #for fl in fl_list:
     #   os.remove(fl)
 
-    print("Editing Intersection Files")
+    print("--> Editing Intersection Files")
+    ## Note this could be easily changed to run in parallel if needed. Just use mp
     for i in fracture_list:
-        filename = 'intersections_%d.inp' % i
-        print('--> Working on: %s' % filename)
+        filename = f'intersections_{i}.inp'
+        print(f'--> Working on: {filename}')
         intersecting_fractures = connectivity[i - 1]
         pull_list = list(
             set(intersecting_fractures).intersection(set(fractures_to_remove)))
@@ -66,18 +67,18 @@ def edit_intersection_files(num_poly, fracture_list, path):
             # Create Symlink to origignal intersection file
             os.symlink(path + 'intersections/' + filename, filename)
             # Create LaGriT script to remove intersections with fractures not in prune_file
-            lagrit_script = 'read / %s / mo1' % filename
-            lagrit_script += '''
-pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
-    ''' % pull_list[0]
+            lagrit_script = f"""
+read / {filename} / mo1' 
+pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
+"""
             for j in pull_list[1:]:
-                lagrit_script += '''
-pset / prune / attribute / b_a / 1,0,0 / eq / %d
+                lagrit_script += f'''
+pset / prune / attribute / b_a / 1,0,0 / eq / {j}
 pset / pset2remove / union / pset2remove, prune
 #rmpoint / pset, get, prune
 pset / prune / delete
-     ''' % j
-            lagrit_script += '''
+     '''
+            lagrit_script += f'''
 rmpoint / pset, get, pset2remove 
 rmpoint / compress
     
@@ -87,20 +88,21 @@ cmo / modatt / mo1 / isn / ioflag / l
 cmo / modatt / mo1 / icr / ioflag / l
     
 cmo / status / brief
-dump / intersections_%d_prune.inp / mo1
+dump / intersections_{i}_prune.inp / mo1
 finish
 
-''' % i
+'''
 
             lagrit_filename = 'prune_intersection.lgi'
             f = open(lagrit_filename, 'w')
             f.write(lagrit_script)
             f.flush()
             f.close()
-            subprocess.call(os.environ['LAGRIT_EXE'] + \
-                '< prune_intersection.lgi > out_%d.txt'%i,shell=True)
+            mh.run_lagrit_script("prune_intersection.lgi",
+                                 f"out_{i}.txt",
+                                 quite=True)
             os.remove(filename)
-            move("intersections_%d_prune.inp" % i, "intersections_%d.inp" % i)
+            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
         else:
             try:
                 copy(path + 'intersections/' + filename, filename)
@@ -167,59 +169,91 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         z2 = data[i - 1, 8]
         family = data[i - 1, 1]
 
-        fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
-        f = open(fparameter_name, 'w')
-        f.write('define / ID / ' + str(index + 1) + '\n')
-        f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
-        f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
-        f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
-        f.write('define / POLY_FILE / poly_' + long_name + '.inp\n')
-        f.write('define / QUAD_FILE / tmp_quad_' + frac_id + '.inp\n')
-        f.write('define / EXCAVATE_FILE / tmp_excavate_' + frac_id + '.inp\n')
-        f.write('define / PRE_FINAL_FILE / tmp_pre_final_' + frac_id +
-                '.inp\n')
-        f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' +
-                frac_id + '.gmv\n')
+        # fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
+        # f = open(fparameter_name, 'w')
+        # f.write('define / ID / ' + str(index + 1) + '\n')
+        # f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
+        # f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
+        # f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
+        # f.write('define / POLY_FILE / poly_' + long_name + '.inp\n')
+        # f.write('define / QUAD_FILE / tmp_quad_' + frac_id + '.inp\n')
+        # f.write('define / EXCAVATE_FILE / tmp_excavate_' + frac_id + '.inp\n')
+        # f.write('define / PRE_FINAL_FILE / tmp_pre_final_' + frac_id +
+        #         '.inp\n')
+        # f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' +
+        #         frac_id + '.gmv\n')
 
-        f.write('define / H_SCALE / %e \n' % h)
-        f.write('define / H_EPS / %e \n' % (h * 10**-7))
-        f.write('define / H_SCALE2 / %e \n' % (1.5 * h))
+        # f.write('define / H_SCALE / %e \n' % h)
+        # f.write('define / H_EPS / %e \n' % (h * 10**-7))
+        # f.write('define / H_SCALE2 / %e \n' % (1.5 * h))
 
-        f.write('define / H_EXTRUDE / %e \n' % (h_extrude))
-        f.write('define / H_TRANS / %e \n' % (h_trans))
+        # f.write('define / H_EXTRUDE / %e \n' % (h_extrude))
+        # f.write('define / H_TRANS / %e \n' % (h_trans))
 
-        f.write('define / H_PRIME / %e \n' % (0.8 * h))
-        f.write('define / H_PRIME2 / %e \n' % (0.3 * h))
+        # f.write('define / H_PRIME / %e \n' % (0.8 * h))
+        # f.write('define / H_PRIME2 / %e \n' % (0.3 * h))
 
-        f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
-        f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
-        f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
-        f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
-        f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
+        # f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
+        # f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
+        # f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
+        # f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
+        # f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
 
-        f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
-        f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
-        f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
-        f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
+        # f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
+        # f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
+        # f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
+        # f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
 
-        f.write('define / PARAM_A / %f \n' % slope)
-        f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
+        # f.write('define / PARAM_A / %f \n' % slope)
+        # f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
 
-        f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
-        f.write('define / PARAM_B2 / %f \n' %
-                (h * (1 - 0.5 * slope * refine_dist)))
+        # f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
+        # f.write('define / PARAM_B2 / %f \n' %
+        #         (h * (1 - 0.5 * slope * refine_dist)))
 
-        f.write('define / THETA  / %0.12f \n' % theta)
-        f.write('define / X1 /  %0.12f \n' % x1)
-        f.write('define / Y1 / %0.12f \n' % y1)
-        f.write('define / Z1 / %0.12f \n' % z1)
-        f.write('define / X2 / %0.12f \n' % x2)
-        f.write('define / Y2 / %0.12f \n' % y2)
-        f.write('define / Z2 / %0.12f \n' % z2)
-        f.write('define / FAMILY / %d \n' % family)
-        f.write('finish \n')
-        f.flush()
-        f.close()
+        # f.write('define / THETA  / %0.12f \n' % theta)
+        # f.write('define / X1 /  %0.12f \n' % x1)
+        # f.write('define / Y1 / %0.12f \n' % y1)
+        # f.write('define / Z1 / %0.12f \n' % z1)
+        # f.write('define / X2 / %0.12f \n' % x2)
+        # f.write('define / Y2 / %0.12f \n' % y2)
+        # f.write('define / Z2 / %0.12f \n' % z2)
+        # f.write('define / FAMILY / %d \n' % family)
+        # f.write('finish \n')
+        # f.flush()
+        # f.close()
+
+        lagrit_input = f"""
+define / ID / {index + 1}
+define / OUTFILE_AVS / mesh_{long_name}.inp
+define / OUTFILE_LG / mesh_{long_name}.lg
+define / POLY_FILE / poly_{long_name}.inp
+
+define / H_SCALE / {h:e}
+define / H_EPS / {h*10**-7:0.12e}
+define / H_SCALE2 / {h*1.5:0.12e}
+define / H_EXTRUDE / {h_extrude:0.12e}
+define / H_TRANS / {h_trans:0.12e}
+define / H_PRIME / {0.8*h:0.12e}
+
+define / THETA  / {theta:0.12f}
+define / X1 / {x1:0.12f}
+define / Y1 / {y1:0.12f}
+define / Z1 / {z1:0.12f}
+
+define / X2 / {x2:0.12f}
+define / Y2 / {y2:0.12f}
+define / Z2 / {z2:0.12f}
+define / FAMILY / {family} 
+
+finish
+
+"""
+        with open(f'parameters/parameters_{long_name}.mlgi', 'w') as fp:
+            fp.write(lagrit_input)
+            fp.flush()
+            fp.close()
+
     print("--> Creating parameter*.mlgi files: Complete\n")
 
 

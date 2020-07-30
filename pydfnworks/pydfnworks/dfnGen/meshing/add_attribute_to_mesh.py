@@ -34,23 +34,24 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
 
     """
 
-    print("--> Making {0} by node file".format(variable))
+    print(f"--> Making {variable} by node file")
     values = genfromtxt(variable_file)
     if not os.path.isfile(matid_file):
-        error = "ERROR!!! Cannot Located the file '{0}'\nExiting\n"
-        sys.stderr.write(error)
+        error = f"ERROR!!! Cannot locate the file '{matid_file}'\nExiting\n"
+        sys.stderr.write()
         sys.exit(1)
     nodes = genfromtxt(matid_file, skip_header=3).astype(int)
     value_by_node = zeros(len(nodes))
     for i, n in enumerate(nodes):
         value_by_node[i] = values[n - 1]
-    variable_file_by_node = "{0}_by_node.dat".format(variable)
+    variable_file_by_node = f"{variable}_by_node.dat"
     savetxt(variable_file_by_node, value_by_node)
     print("--> Complete")
     return variable_file_by_node
 
 
-def create_lagrit_script(variable, variable_file, mesh_file_in, mesh_file_out):
+def create_append_lagrit_script(variable, variable_file, mesh_file_in,
+                                mesh_file_out):
     """
     Creates a LaGriT script to append the attribute to the mesh 
 
@@ -70,16 +71,16 @@ def create_lagrit_script(variable, variable_file, mesh_file_in, mesh_file_out):
             Name of LaGriT output file
     """
     print("Making LaGriT script")
-    lagrit_script = '''
-read / {0} / mo1
-cmo / addatt / mo1 / {1} / vdouble / scalar / nnodes
-cmo / setatt / mo1 / {1} / 1 0 0 / 1
-cmo / readatt / mo1 / {1} / 1, 0, 0 / {2} 
-dump / {3} / mo1 
+    lagrit_script = f'''
+read / {mesh_file_in} / mo1
+cmo / addatt / mo1 / {variable} / vdouble / scalar / nnodes
+cmo / setatt / mo1 / {variable} / 1 0 0 / 1
+cmo / readatt / mo1 / {variable} / 1, 0, 0 / {variable_file} 
+dump / {mesh_file_out} / mo1 
 finish
-'''.format(mesh_file_in, variable, variable_file, mesh_file_out)
+'''
 
-    lagrit_file = "add_{0}_to_mesh.lgi".format(variable)
+    lagrit_file = f"add_{variable}_to_mesh.lgi"
     fp = open(lagrit_file, "w")
     fp.write(lagrit_script)
     fp.flush()
@@ -128,6 +129,7 @@ def add_variable_to_mesh(self,
                                            mesh_file_in, mesh_file_out)
     else:
         variable_file_by_node = create_variable_file(variable, variable_file)
-        lagrit_file = create_lagrit_script(variable, variable_file_by_node,
-                                           mesh_file_in, mesh_file_out)
+        lagrit_file = create_lagrit_append_script(variable,
+                                                  variable_file_by_node,
+                                                  mesh_file_in, mesh_file_out)
     run_lagrit_script(lagrit_file)

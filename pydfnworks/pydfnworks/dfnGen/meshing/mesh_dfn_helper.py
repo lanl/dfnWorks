@@ -78,7 +78,7 @@ def parse_params_file(quite=False):
 
 
 def check_dudded_points(dudded, hard=False):
-    """Parses LaGrit log_merge_all.txt and checks if number of dudded points is the expected number
+    """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
 
     Parameters
     ---------
@@ -97,7 +97,7 @@ def check_dudded_points(dudded, hard=False):
 
     """
     print("--> Checking that number of dudded points is correct\n")
-    with open("lagrit_logs/log_merge_all.txt", "r") as fp:
+    with open("lagrit_logs/log_merge_all.out", "r") as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
                 print(f'--> From LaGriT: {line}')
@@ -107,7 +107,7 @@ def check_dudded_points(dudded, hard=False):
                     pts = int(line.split()[-1])
             if 'RMPOINT:' in line:
                 print(f'--> From LaGriT: {line}')
-                total_pts = int(line.split()[-1])
+                total_points = int(line.split()[-1])
                 break
 
     diff = abs(dudded - pts)
@@ -119,16 +119,17 @@ def check_dudded_points(dudded, hard=False):
         return True
     elif diff > 0:
         ## compare with total number poins
-        print('--> WARNING!!! Number of points removed does not \
-            match expected value')
-        diff_ratio = float(diff) / float(total_points)
-        if diff_ratio < 0.002 or hard == False:
-            print(f"However value is small: {diff}")
-            print("Proceeding\n")
+        print(
+            '--> WARNING!!! Number of points removed does not match the expected value'
+        )
+        diff_ratio = 100 * (float(diff) / float(total_points))
+        if diff_ratio < 0.01 and hard == False:
+            print(f"--> However value is small: {diff}")
+            print("--> Proceeding\n")
             return True
         else:
             print('ERROR! Incorrect Number of points removed')
-            print(f"Over 1% of node removed {diff_ratio}")
+            print(f"Over 0.01% of nodes removed. Value is {diff_ratio:.2f}")
             return False
 
 
