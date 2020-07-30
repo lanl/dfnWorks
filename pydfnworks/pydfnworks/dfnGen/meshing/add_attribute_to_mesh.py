@@ -94,7 +94,6 @@ def add_variable_to_mesh(self,
                          mesh_file_in,
                          mesh_file_out=None,
                          cell_based=None):
-
     """
     Adds a variable to the nodes of a mesh. Can be either fracture (material) based 
     or node based. 
@@ -132,4 +131,3 @@ def add_variable_to_mesh(self,
         lagrit_file = create_lagrit_script(variable, variable_file_by_node,
                                            mesh_file_in, mesh_file_out)
     run_lagrit_script(lagrit_file)
-

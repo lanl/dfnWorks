@@ -12,6 +12,7 @@ import time
 import multiprocessing as mp
 from shutil import copy, rmtree
 from numpy import genfromtxt
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
 def mesh_fracture(fracture_id, visual_mode, num_poly):
     """Child function for parallelized meshing of fractures
@@ -39,90 +40,93 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     t = time.time()
     p = mp.current_process()
-    print('Fracture {0} \tstarting on {1}\n'.format(fracture_id, p.name))
-    a, cpu_id = p.name.split("-")
+    print(f"--> Fracture {fracture_id} \tstarting on {p.name}")
+
+    _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
 
     # Create Symbolic Links
-    os.symlink("polys/poly_{0}.inp".format(fracture_id), "poly_CPU{0}.inp".format(cpu_id))
+    os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
 
-    os.symlink("parameters/parameters_%d.mlgi"%fracture_id,\
-        "parameters_CPU%d.mlgi"%cpu_id)
-
-    if not visual_mode:
-        os.symlink('intersections/intersections_%d.inp'%fracture_id,\
-            'intersections_CPU%d.inp'%cpu_id)
-
-        os.symlink("points/points_{0}.xyz".format(fracture_id),"points_CPU{0}.xyz".format(cpu_id))
-
-    cmd = os.environ['LAGRIT_EXE']+ ' < mesh_poly_CPU%d.lgi' \
-         + ' > lagrit_logs/log_lagrit_%d'
-
-    subprocess.call(cmd % (cpu_id, fracture_id), shell=True)
+    os.symlink(f"parameters/parameters_{fracture_id}.mlgi",\
+        f"parameters_CPU{cpu_id}.mlgi")
 
     if not visual_mode:
-        cmd_check = os.environ['CONNECT_TEST_EXE'] \
-        + ' intersections_CPU%d.inp' \
-        + ' id_tri_node_CPU%d.list ' \
-        + ' mesh_%d.inp' \
-        + ' %d'
-        cmd_check = cmd_check % (cpu_id, cpu_id, fracture_id, fracture_id)
+        os.symlink(f"intersections/intersections_{fracture_id}.inp",\
+            f"intersections_CPU{cpu_id}.inp")
+
+        os.symlink(f"points/points_{fracture_id}.xyz",f"points_CPU{cpu_id}.xyz")
+
+    mh.run_lagrit_script(f"mesh_poly_CPU{cpu_id}.lgi",output_file=f"lagrit_logs/log_lagrit_{fracture_id}",quite=True)
+
+    if not visual_mode:
+        ## Once meshing is complete, check if the lines of intersection are in the final mesh
+        cmd_check = f"{os.environ['CONNECT_TEST_EXE']} \
+            intersections_CPU{cpu_id}.inp \
+            id_tri_node_CPU{cpu_id}.list \
+            mesh_{fracture_id}.inp \
+            {fracture_id}"
         failure = subprocess.call(cmd_check, shell=True)
-        if failure > 0:
-            print("WARNING: MESH CHECKING FAILED!!!!")
-            print('Fracture %d \tstarting on %s\n' % (fracture_id, p.name))
+
+        # If the lines of intersection are not in the final mesh, put depending files
+        # into a directory for debugging. 
+        if failure:
+            print(f"--> WARNING: MESH CHECKING FAILED on {fracture_id}!!!!")
 
             with open("failure.txt", "a") as failure_file:
-                failure_file.write("%d\n" % fracture_id)
+                failure_file.write(f"{fracture_id}\n")
 
-            folder = 'failure_' + str(fracture_id)
-            os.mkdir(folder)
-            copy('mesh_' + str(fracture_id) + '.inp', folder + '/')
-            copy(str(fracture_id) + '_mesh_errors.txt', folder + '/')
-            copy('poly_CPU' + str(cpu_id) + '.inp', folder + '/')
-            copy('id_tri_node_CPU' + str(cpu_id) + '.list', folder + '/')
-            copy('intersections_CPU' + str(cpu_id) + '.inp', folder + '/')
-            copy('lagrit_logs/log_lagrit_' + str(fracture_id), folder + '/')
-            copy('parameters_CPU' + str(cpu_id) + '.mlgi', folder + '/')
-            copy('mesh_poly_CPU' + str(cpu_id) + '.lgi', folder + '/')
-            copy('user_function.lgi', folder + '/')
-            copy('user_function2.lgi', folder + '/')
-        try:
-            os.remove('id_tri_node_CPU%d.list' % cpu_id)
-        except:
-            print('Could not remove id_tri_node_CPU%d.list' % cpu_id)
-        try:
-            os.remove('mesh_%d.inp' % fracture_id)
-        except:
-            print('Could not remove mesh_%d.inp' % fracture_id)
+            folder = f"failure_{fracture_id}/"
+            try:
+                os.mkdir(folder)
+            except:
+                print(f"Warning! Unable to make new folder: {folder}")
+
+            copy(f"mesh_{fracture_id}.inp", folder)
+            copy(f"{fracture_id}_mesh_errors.txt", folder)
+            copy(f"poly_CPU{cpu_id}.inp", folder)
+            copy(f"id_tri_node_CPU{cpu_id}.list", folder)
+            copy(f"intersections_CPU{cpu_id}.inp", folder )
+            copy(f"lagrit_logs/log_lagrit_{fracture_id}", folder)
+            copy(f"parameters_CPU{cpu_id}.mlgi", folder)
+            copy(f"mesh_poly_CPU{cpu_id}.lgi", folder)
+
+            ## remove links
+            files = [f'poly_CPU{cpu_id}.inp', f'intersections_CPU{cpu_id}.inp', 
+                f'points_CPU{cpu_id}.xyz',f'parameters_CPU{cpu_id}.mlgi']
+            for f in files:
+                try:
+                    os.unlink(f)
+                except:
+                    print(f'Warning: Could unlink {f}')
+            # exit run
+            sys.stderr.write(error)
+            sys.exit(1)
+
+        # Mesh checking was a success. Remove check files and move on
+        files = [f"id_tri_node_CPU{cpu_id}.list", f"mesh_{fracture_id}.inp"]
+        for f in files:
+            try:
+                os.remove(f)
+            except:
+                print(f"Could not remove {f}\n")
     else:
         failure = 0
 
     # Remove old links and files
     if visual_mode:
-        files = ['poly_CPU{0}.inp','parameters_CPU{0}.mlgi']
+        files = [f'poly_CPU{cpu_id}.inp',f'parameters_CPU{cpu_id}.mlgi']
     else:
-        files = [
-            'poly_CPU{0}.inp', 'intersections_CPU{0}.inp', 'points_CPU{0}.xyz',
-            'parameters_CPU{0}.mlgi']
-
+        files = [f'poly_CPU{cpu_id}.inp', f'intersections_CPU{cpu_id}.inp', 
+            f'points_CPU{cpu_id}.xyz',f'parameters_CPU{cpu_id}.mlgi']
     for f in files:
-        fp = f.format(cpu_id)
         try:
-            os.unlink(fp)
+            os.unlink(f)
         except:
-            print('Warning: Could unlink %s' % fp)
+            print(f'Warning: Could unlink {f}')
 
-
-    if failure > 0:
-        error = 'Fracture %d out of %d complete, but mesh checking failed\n' % (
-            fracture_id, num_poly)
-        sys.stderr.write(error)
-        sys.exit(1)
-    else:
-        elapsed = time.time() - t
-        print('Fracture %d of %d took %0.2f seconds to mesh\n' %
-              (fracture_id, num_poly, elapsed))
+    elapsed = time.time() - t
+    print(f"--> Meshing fracture {fracture_id} out of {num_poly} complete. Time required: {elapsed:.2f} seconds\n")
 
 
 def single_worker(work_queue, visual_mode, num_poly):
@@ -185,8 +189,8 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
 
     """
     t_all = time.time()
-    print("\n--> Triangulating %d fractures using %d CPUS" %
-          (len(fracture_list), ncpu))
+    print('=' * 80)
+    print(f"\n--> Triangulating {len(fracture_list)} fractures using {ncpu} CPUS")
     try:
         rmtree('lagrit_logs')
     except OSError:
@@ -215,10 +219,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     for p in processes:
         p.join()
 
-    elapsed = time.time() - t_all
-    print('Total Time to Mesh Network: %0.2f seconds' % elapsed)
-    elapsed /= 60.
-    print('--> %0.2f Minutes' % elapsed)
+    elapsed = (time.time() - t_all) /60.
 
     if os.stat("failure.txt").st_size > 0:
         failure_list = genfromtxt("failure.txt")
@@ -226,14 +227,15 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
         if type(failure_list) is list:
             failure_list = sort(failure_list)
         else:
-            print('Fractures:', failure_list, 'Failed')
-        print('Main process exiting.')
+            print('--> Fractures:', failure_list, 'Failed')
+        print('--> Main process exiting.')
     else:
         failure_flag = False
         os.remove("failure.txt")
-        print('Triangulating Polygons: Complete')
+        print('--> Triangulating Polygons: Complete')
+        print(f"--> Total Time to Mesh Network: {elapsed:.2f} minutes")
+        print('=' * 80)
     return failure_flag
-
 
 def merge_worker(job):
     """Parallel worker for merge meshes into final mesh 
@@ -251,17 +253,16 @@ def merge_worker(job):
     -----
     """
 
-    print("--> Starting merge: {}\n".format(job))
+    print(f"--> Starting merge: {job}")
     tic = time.time()
-    cmd = os.environ['LAGRIT_EXE']+ ' < merge_poly_part_%d.lgi ' \
-                + '> log_merge_poly_part%d'
-    if subprocess.call(cmd % (job, job), shell=True):
-        print("Error {0} failed".format(job))
+
+    if mh.run_lagrit_script(f"merge_poly_part_{job}.lgi",f"lagrit_logs/log_merge_poly_part{job}",quite=True):
+        print(f"Error {job} failed")
         return True
+
     toc = time.time()
     elapsed = toc - tic
-    print("--> Merge Number %d Complete. Time elapsed: %0.2f seconds\n" %
-          (job, elapsed))
+    print(f"--> Merge Number {job} Complete. Time elapsed: {elapsed:.2f} seconds")
     return False
 
 
@@ -287,7 +288,8 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     -----
         Meshes are merged in batches for efficiency  
     """
-    print("\nMerging triangulated polygon meshes using %d processors" % n_jobs)
+    print('=' * 80)
+    print(f"--> Merging triangulated polygon meshes using {n_jobs} processors")
 
     jobs = range(1, n_jobs + 1)
 
@@ -321,25 +323,27 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     #     if pid > 0:
     #         print('Process ' + str(j+1) + ' finished')
     #         j += 1
-
-    print("\n--> Starting Final Merge")
+    print('=' * 80)
+    print("--> Starting Final Merge")
     tic = time.time()
-    subprocess.call(os.environ['LAGRIT_EXE'] +' < merge_rmpts.lgi '\
-        + ' > log_merge_all.txt', shell=True) # run remove points
+    mh.run_lagrit_script('merge_rmpts.lgi','lagrit_logs/log_merge_all.txt',quite=True)
     toc = time.time()
-    print("--> Final Merge took %0.2f seconds" % (toc - tic))
+    elapsed = toc - tic
+    print(f"--> Final merge took {elapsed:.2f} seconds")
     # Check log_merge_all.txt for LaGriT complete successfully
     if not visual_mode:
         if (os.stat("full_mesh.lg").st_size > 0):
-            print("--> Final Merge Complete\n")
+            print("--> Final merge successful")
+
         else:
-            error = "Final Merge Failed\n"
+            error = "ERROR: Final merge Failed\n"
             sys.stderr.write(error)
             sys.exit(1)
     else:
         if os.stat("reduced_mesh.inp").st_size > 0:
-            print("--> Final Merge Complete\n")
+            print("--> Final merge successful")
         else:
-            error = "Final Merge Failed\n"
+            error = "ERROR: Final merge Failed\n"
             sys.stderr.write(error)
             sys.exit(1)
+    print('=' * 80)

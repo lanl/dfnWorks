@@ -9,6 +9,7 @@ import glob
 from numpy import genfromtxt, sort
 import subprocess
 
+
 def parse_params_file(quite=False):
     """ Reads params.txt file from DFNGen and parses information
 
@@ -95,8 +96,8 @@ def check_dudded_points(dudded, hard=False):
     If number of dudded points is incorrect by over 1%, program will exit. 
 
     """
-    print("--> Checking that number of dudded points is correct")
-    with open("log_merge_all.txt", "r") as fp:
+    print("--> Checking that number of dudded points is correct\n")
+    with open("lagrit_logs/log_merge_all.txt", "r") as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
                 print(f'--> From LaGriT: {line}')
@@ -111,7 +112,7 @@ def check_dudded_points(dudded, hard=False):
 
     diff = abs(dudded - pts)
     print(f"--> Expected Number of dudded points: {dudded}")
-    print(f"--> Actual Number of dudded points: {pts}\n")
+    print(f"--> Actual Number of dudded points: {pts}")
     print(f"--> Difference between expected and actual dudded points: {diff}")
     if diff == 0:
         print('--> The correct number of points were removed. Onward!\n')
@@ -178,8 +179,9 @@ def output_meshing_report(local_jobname, visual_mode):
     f = open(local_jobname + '_mesh_information.txt', 'w')
     f.write('The final mesh of DFN consists of: \n')
     if not visual_mode:
-        print("\nOutput files for flow calculations are written in :")
-        print("--> full_mesh.*")
+        print(
+            "--> Output files for flow calculations are written in : full_mesh.*"
+        )
 
         finp = open('full_mesh.inp', 'r')
         g = finp.readline()
@@ -201,9 +203,10 @@ def output_meshing_report(local_jobname, visual_mode):
             ' geometrical coefficients / control volume faces. \n')
         fstor.close()
     else:
-        print("Output files for visualization are written in :")
-        print("--> reduced_mesh.inp")
-        print("Warning!!! Mesh is not suitable for flow and transport.")
+        print(
+            "--> Output files for visualization are written in : reduced_mesh.inp"
+        )
+        print("--> Warning!!! Mesh is not suitable for flow and transport.")
 
         finp = open('reduced_mesh.inp', 'r')
         g = finp.readline()
@@ -408,19 +411,20 @@ def inp2gmv(self, inp_file=''):
     gmv_file = inp_file[:-4] + '.gmv'
 
     with open('inp2gmv.lgi', 'w') as fid:
-        fid.write('read / avs / ' + inp_file + ' / mo\n')
-        fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
+        fid.write(f'read / avs / {inp_file} / mo\n')
+        fid.write(f'dump / gmv / {gmv_file} / mo\n')
         fid.write('finish \n\n')
 
-    cmd = os.environ["LAGRIT_EXE"] + ' < inp2gmv.lgi ' 
-    failure = subprocess.call(cmd, shell=True)
+    failure = run_lagrit_script('inp2gmv.lgi')
+
     if failure:
         error = 'ERROR: Failed to run LaGrit to get gmv from inp file!\n'
         sys.stderr.write(error)
         sys.exit(1)
     print("--> Finished writing gmv format from avs format")
 
-def run_lagrit_script(lagrit_file):
+
+def run_lagrit_script(lagrit_file, output_file=None, quite=False):
     """
     Runs LaGriT
 
@@ -429,19 +433,25 @@ def run_lagrit_script(lagrit_file):
     ----------
         lagrit_file : string
             Name of LaGriT script to run
+        output_file : string
+            Name of file to dump LaGriT output
+        quite : bool
+            If false, information will be printed to screen.
+
     Returns
     ----------
-        lagrit_file : string
-            Name of LaGriT output file
+        failure: int
+            If the run was successful, then 0 is returned. 
+
     """
-    cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
-    print(f"--> Running: {cmd}")
+    if output_file == None:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
+    else:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} > {output_file}"
+    if not quite:
+        print(f"--> Running: {cmd}")
+
     failure = subprocess.call(cmd, shell=True)
     if failure:
-        error = 'ERROR running LaGriT. Exiting \n'
-        sys.stderr.write(error)
-        sys.exit(1)
-    else:
-        print("--> Complete")
-
-    
+        error = f"ERROR running LaGriT on script {lagrit_file}. Exiting Program.\n"
+    return failure

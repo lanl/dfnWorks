@@ -22,7 +22,6 @@ def mesh_network(self,
                  refine_factor=1,
                  slope=2,
                  visual_mode=None):
-
     ''' Mesh fracture network using LaGriT
 
     Parameters
@@ -52,8 +51,9 @@ def mesh_network(self,
     2. All fractures in self.prune_file must intersect at least 1 other fracture
 
     '''
+
     print('=' * 80)
-    print("Meshing Network Using LaGriT : Starting")
+    print("Meshing DFN Using LaGriT : Starting")
     print('=' * 80)
 
     if uniform_mesh:
@@ -73,8 +73,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
         if visual_mode == None:
             visual_mode = params_visual_mode
 
-        print("Loading list of fractures to remain in network from %s" %
-              self.prune_file)
+        print(f"Loading list of fractures to remain in network from {self.prune_file}")
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print(fracture_list)
         if not visual_mode:
@@ -84,7 +83,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     else:
         num_poly, h, params_visual_mode, dudded_points, domain = mh.parse_params_file(
         )
-        if visual_mode== None:
+        if visual_mode == None:
             visual_mode = params_visual_mode
 
         fracture_list = range(1, num_poly + 1)
@@ -93,13 +92,14 @@ did not provide file of fractures to keep.\nExiting program.\n"
     # only use num_poly CPUs. This change is only made here, so ncpus
     # is still used in PFLOTRAN
     ncpu = min(self.ncpu, num_poly)
-    
-    lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
 
+    print('=' * 80)
+    lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     if visual_mode:
         lagrit.create_lagrit_scripts_reduced(ncpu)
     else:
         lagrit.create_lagrit_scripts_poisson(ncpu)
+    print('=' * 80)
 
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
     if failure:
@@ -131,4 +131,6 @@ did not provide file of fractures to keep.\nExiting program.\n"
         mh.clean_up_files_after_prune(self)
 
     mh.output_meshing_report(self.local_jobname, visual_mode)
-    print("--> Meshing Complete")
+    print('=' * 80)
+    print("Meshing DFN Using LaGriT : Complete")
+    print('=' * 80)

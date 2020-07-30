@@ -166,7 +166,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         y2 = data[i - 1, 7]
         z2 = data[i - 1, 8]
         family = data[i - 1, 1]
-     
+
         fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
         f = open(fparameter_name, 'w')
         f.write('define / ID / ' + str(index + 1) + '\n')
@@ -484,6 +484,7 @@ finish
 
     print('--> Writing LaGriT Control Files: Complete')
 
+
 def create_lagrit_scripts_reduced(ncpu):
     """ Creates LaGriT scripts to create a coarse (non-conforming) 
     mesh of each fracture. 
@@ -512,7 +513,7 @@ def create_lagrit_scripts_reduced(ncpu):
 
     print("--> Writing LaGriT Control Files")
 
-    lagrit_input ="""
+    lagrit_input = """
 
 # LaGriT Parameter file 
 infile parameters_CPU{0}.mlgi
@@ -558,6 +559,7 @@ finish
             f.flush()
 
     print('--> Writing LaGriT Control Files: Complete')
+
 
 def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode,
                             domain, flow_solver):
@@ -688,13 +690,13 @@ dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
 """
         if flow_solver == "PFLOTRAN":
-            print("\nDumping output for %s" % flow_solver)
+            print("\n--> Dumping output for %s" % flow_solver)
             lagrit_input += """
 dump / pflotran / full_mesh / mo_all / nofilter_zero
 dump / stor / full_mesh / mo_all / ascii
     """
         elif flow_solver == "FEHM":
-            print("\nDumping output for %s" % flow_solver)
+            print("\n--> Dumping output for %s" % flow_solver)
             lagrit_input += """
 dump / stor / full_mesh / mo_all / ascii
 dump / coord / full_mesh / mo_all 
@@ -706,7 +708,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("WARNING!!!!!!!\nUnkown flow solver selection: %s" %
+            print("WARNING!!!!!!!\nUnknown flow solver selection: %s" %
                   flow_solver)
         lagrit_input += """ 
 # Dump out Material ID Dat file
