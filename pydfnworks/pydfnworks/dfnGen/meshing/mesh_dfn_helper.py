@@ -60,18 +60,18 @@ def parse_params_file(quite=False):
     fparams.close()
 
     if not quite:
-        print("Number of Polygons: %d" % num_poly)
-        print("H_SCALE %f" % h)
+        print("--> Number of Polygons: %d" % num_poly)
+        print("--> H_SCALE %f" % h)
         if visual_mode > 0:
             visual_mode = True
-            print("Visual mode is on")
+            print("--> Visual mode is on")
         else:
             visual_mode = False
-            print("Visual mode is off")
-        print(f"Expected Number of dudded points: {dudded_points}")
-        print(f"X Domain Size {domain['x']} m")
-        print(f"Y Domain Size {domain['y']} m")
-        print(f"Z Domain Size {domain['z']} m")
+            print("--> Visual mode is off")
+        print(f"--> Expected Number of dudded points: {dudded_points}")
+        print(f"--> X Domain Size {domain['x']} m")
+        print(f"--> Y Domain Size {domain['y']} m")
+        print(f"--> Z Domain Size {domain['z']} m")
         print("--> Parsing params.txt complete\n")
 
     return (num_poly, h, visual_mode, dudded_points, domain)

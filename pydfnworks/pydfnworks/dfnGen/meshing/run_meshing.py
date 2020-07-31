@@ -318,7 +318,10 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
         Meshes are merged in batches for efficiency  
     """
     print('=' * 80)
-    print(f"--> Merging triangulated polygon meshes using {n_jobs} processors")
+    if n_jobs == 1:
+        print(f"--> Merging triangulated fracture meshes using {n_jobs} processor")
+    else:
+        print(f"--> Merging triangulated fracture meshes using {n_jobs} processors")
 
     jobs = range(1, n_jobs + 1)
 
