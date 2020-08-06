@@ -38,7 +38,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     values = genfromtxt(variable_file)
     if not os.path.isfile(matid_file):
         error = f"ERROR!!! Cannot locate the file '{matid_file}'\nExiting\n"
-        sys.stderr.write()
+        sys.stderr.write(error)
         sys.exit(1)
     nodes = genfromtxt(matid_file, skip_header=3).astype(int)
     value_by_node = zeros(len(nodes))
@@ -50,7 +50,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     return variable_file_by_node
 
 
-def create_append_lagrit_script(variable, variable_file, mesh_file_in,
+def create_lagrit_append_script(variable, variable_file, mesh_file_in,
                                 mesh_file_out):
     """
     Creates a LaGriT script to append the attribute to the mesh 
@@ -125,7 +125,7 @@ def add_variable_to_mesh(self,
         mesh_file_out = mesh_file_in
 
     if cell_based:
-        lagrit_file = create_lagrit_script(variable, variable_file,
+        lagrit_file = create_lagrit_append_script(variable, variable_file,
                                            mesh_file_in, mesh_file_out)
     else:
         variable_file_by_node = create_variable_file(variable, variable_file)
