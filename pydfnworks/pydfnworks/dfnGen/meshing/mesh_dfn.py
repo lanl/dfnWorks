@@ -13,6 +13,8 @@ from numpy import genfromtxt, sort
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
+from pydfnworks.dfnGen.meshing.poisson_disc import run_poisson_disc as poisson_disc
+
 
 
 def mesh_network(self,
@@ -98,8 +100,9 @@ did not provide file of fractures to keep.\nExiting program.\n"
     print('=' * 80)
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     if visual_mode:
-        lagrit.create_lagrit_scripts_reduced(ncpu)
+        lagrit.create_lagrit_scripts_reduced_mesh(ncpu)
     else:
+        poisson_disc.prepare_poisson_points(num_poly,ncpu,h)
         lagrit.create_lagrit_scripts_poisson(ncpu)
     print('=' * 80)
 

@@ -47,7 +47,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     )
 
     _, cpu_id = p.name.split("-")
-    cpu_id = int(cpu_id)
+    cpu_id = int(cpu_id)-16
 
     # Create Symbolic Links
     os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")

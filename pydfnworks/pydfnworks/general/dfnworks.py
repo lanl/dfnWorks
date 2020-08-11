@@ -42,18 +42,18 @@ class DFNWORKS(Frozen):
 
     # dfnGen functions
     import pydfnworks.dfnGen
-    from pydfnworks.dfnGen.gen_input import check_input
-    from pydfnworks.dfnGen.generator import dfn_gen, make_working_directory, create_network
-    from pydfnworks.dfnGen.gen_output import output_report
-    from pydfnworks.dfnGen.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
+    from pydfnworks.dfnGen.generation.gen_input import check_input
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.generation.gen_output import output_report
+    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
 
-    from pydfnworks.dfnGen.map2continuum import map_to_continuum
-    from pydfnworks.dfnGen.upscale import upscale
+    from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv
+    from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
-    from pydfnworks.dfnGen.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
-
-    from pydfnworks.dfnGen.add_attribute_to_mesh import add_variable_to_mesh
+    from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
+    from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
+  
     
     # dfnFlow
     import pydfnworks.dfnFlow
