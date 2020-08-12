@@ -6,14 +6,18 @@ import multiprocessing as mp
 from pydfnworks.dfnGen.meshing.poisson_disc import cfg as cfg 
 from pydfnworks.dfnGen.meshing.poisson_disc import poisson_functions as pf
 
-def single_fracture_poisson(params):
+def single_fracture_poisson(fracture_id, h, R = 100, A = 0.1, F = 1, concurrent_samples = 5, grid_size = 100):
 
-    print(f"--> Starting Fracture Number {params['fracture_id']}")
-    c = cfg.Pseudo_Globals(f"polys/poly_{params['fracture_id']}.inp",\
-                           f"intersections/intersections_{params['fracture_id']}.inp", \
-                            params['h'], params["R"], params["A"], params["F"],\
-                            params["concurrent_samples"], params["grid_size"])
+    # print(f"--> Starting Fracture Number {params['fracture_id']}")
+    # c = cfg.Pseudo_Globals(f"polys/poly_{params['fracture_id']}.inp",\
+    #                        f"intersections/intersections_{params['fracture_id']}.inp", \
+    #                         params['h'], params["R"], params["A"], params["F"],\
+    #                         params["concurrent_samples"], params["grid_size"])
 
+    print(f"--> Starting Poisson Sampling for Fracture Number {fracture_id}")
+    c = cfg.Pseudo_Globals(f"polys/poly_{fracture_id}.inp",\
+                           f"intersections/intersections_{fracture_id}.inp", \
+                            2*h, R, A, F,concurrent_samples, grid_size)
 
     start = timeit.default_timer()
     ############################################
@@ -42,13 +46,12 @@ def single_fracture_poisson(params):
     ############################################
 
     # Uncomment to store Coordinates in .xyz file
-    output_file_name = f'points/points_{params["fracture_id"]}.xyz'
+#    output_file_name = f'points/points_{params["fracture_id"]}.xyz'
+    output_file_name = f'points/points_{fracture_id}.xyz'
     pf.print_coordinates(c, output_file_name)
 
     runtime = timeit.default_timer() - start
-    print(f"--> Fracture Number {params['fracture_id']} Complete. Time: {runtime:0.2f} seconds")
-    print(f"--> Fracture Number {params['fracture_id']} Complete")
-
+    print(f"--> Fracture Number {fracture_id} Poisson Sampling Complete. Time: {runtime:0.2f} seconds")
 
 def single_worker(work_queue, params):
     """ Worker function for parallelized meshing 
@@ -97,7 +100,6 @@ def prepare_poisson_points(num_poly, ncpu, h, R = 100, A = 0.1, F = 1, concurren
     else:
         os.mkdir("points")
 
-
     params = []
     for i in range(1,num_poly+1):
         job = {"fracture_id":i,"h":2*h,"R":R,"A":A,"F":F,\
@@ -105,7 +107,7 @@ def prepare_poisson_points(num_poly, ncpu, h, R = 100, A = 0.1, F = 1, concurren
         params.append(job)
    
     for i in range(num_poly):
-        single_fracture_poisson(params[i])
+        single_fracture_poisson(i+1,h)
 
    #  work_queue = mp.Queue()  # reader() reads from queue
    #  processes = []

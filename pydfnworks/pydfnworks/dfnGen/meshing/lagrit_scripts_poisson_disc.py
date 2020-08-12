@@ -148,10 +148,11 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     # h_trans : amount needed to translate to create delta buffer
     # It's  just a little trig!
     delta = 0.75
-    h_extrude = 0.5 * h  # upper limit on spacing of points on interssction line
+    h_extrude = 0.5 * h  # upper limit on spacing of points on intersection line
     h_radius = sqrt((0.5 * h_extrude)**2 + (0.5 * h_extrude)**2)
     h_trans = -0.5 * h_extrude + h_radius * cos(arcsin(delta))
 
+    print(h,delta,h_extrude,h_radius,h_trans)
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
@@ -169,90 +170,89 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         z2 = data[i - 1, 8]
         family = data[i - 1, 1]
 
-        # fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
-        # f = open(fparameter_name, 'w')
-        # f.write('define / ID / ' + str(index + 1) + '\n')
-        # f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
-        # f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
-        # f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
-        # f.write('define / POLY_FILE / poly_' + long_name + '.inp\n')
-        # f.write('define / QUAD_FILE / tmp_quad_' + frac_id + '.inp\n')
-        # f.write('define / EXCAVATE_FILE / tmp_excavate_' + frac_id + '.inp\n')
-        # f.write('define / PRE_FINAL_FILE / tmp_pre_final_' + frac_id +
-        #         '.inp\n')
-        # f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' +
-        #         frac_id + '.gmv\n')
+        fparameter_name = 'parameters/parameters_' + long_name + '.mlgi'
+        f = open(fparameter_name, 'w')
+        f.write('define / ID / ' + str(index + 1) + '\n')
+        f.write('define / OUTFILE_GMV / mesh_' + long_name + '.gmv\n')
+        f.write('define / OUTFILE_AVS / mesh_' + long_name + '.inp\n')
+        f.write('define / OUTFILE_LG / mesh_' + long_name + '.lg\n')
+        f.write('define / POLY_FILE / poly_' + long_name + '.inp\n')
+        f.write('define / QUAD_FILE / tmp_quad_' + frac_id + '.inp\n')
+        f.write('define / EXCAVATE_FILE / tmp_excavate_' + frac_id + '.inp\n')
+        f.write('define / PRE_FINAL_FILE / tmp_pre_final_' + frac_id +
+                '.inp\n')
+        f.write('define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_' +
+                frac_id + '.gmv\n')
 
-        # f.write('define / H_SCALE / %e \n' % h)
-        # f.write('define / H_EPS / %e \n' % (h * 10**-7))
-        # f.write('define / H_SCALE2 / %e \n' % (1.5 * h))
+        f.write('define / H_SCALE / %e \n' % h)
+        f.write('define / H_EPS / %e \n' % (h * 10**-7))
+        f.write('define / H_SCALE2 / %e \n' % (1.5 * h))
 
-        # f.write('define / H_EXTRUDE / %e \n' % (h_extrude))
-        # f.write('define / H_TRANS / %e \n' % (h_trans))
+        f.write('define / H_EXTRUDE / %e \n' % (h_extrude))
+        f.write('define / H_TRANS / %f \n' % (h_trans))
 
-        # f.write('define / H_PRIME / %e \n' % (0.8 * h))
-        # f.write('define / H_PRIME2 / %e \n' % (0.3 * h))
+        f.write('define / H_PRIME / %e \n' % (0.4 * h))
 
-        # f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
-        # f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
-        # f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
-        # f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
-        # f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
+        f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
+        f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
+        f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
+        f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
+        f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
 
-        # f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
-        # f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
-        # f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
-        # f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
+        f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
+        f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
+        f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
+        f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
 
-        # f.write('define / PARAM_A / %f \n' % slope)
-        # f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
+        f.write('define / PARAM_A / %f \n' % slope)
+        f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
 
-        # f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
-        # f.write('define / PARAM_B2 / %f \n' %
-        #         (h * (1 - 0.5 * slope * refine_dist)))
+        f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
+        f.write('define / PARAM_B2 / %f \n' %
+                (h * (1 - 0.5 * slope * refine_dist)))
 
-        # f.write('define / THETA  / %0.12f \n' % theta)
-        # f.write('define / X1 /  %0.12f \n' % x1)
-        # f.write('define / Y1 / %0.12f \n' % y1)
-        # f.write('define / Z1 / %0.12f \n' % z1)
-        # f.write('define / X2 / %0.12f \n' % x2)
-        # f.write('define / Y2 / %0.12f \n' % y2)
-        # f.write('define / Z2 / %0.12f \n' % z2)
-        # f.write('define / FAMILY / %d \n' % family)
-        # f.write('finish \n')
-        # f.flush()
-        # f.close()
+        f.write('define / THETA  / %0.12f \n' % theta)
+        f.write('define / X1 /  %0.12f \n' % x1)
+        f.write('define / Y1 / %0.12f \n' % y1)
+        f.write('define / Z1 / %0.12f \n' % z1)
+        f.write('define / X2 / %0.12f \n' % x2)
+        f.write('define / Y2 / %0.12f \n' % y2)
+        f.write('define / Z2 / %0.12f \n' % z2)
+        f.write('define / FAMILY / %d \n' % family)
+        f.write('finish \n')
+        f.flush()
+        f.close()
 
-        lagrit_input = f"""
-define / ID / {index + 1}
-define / OUTFILE_AVS / mesh_{long_name}.inp
-define / OUTFILE_LG / mesh_{long_name}.lg
-define / POLY_FILE / poly_{long_name}.inp
+#         lagrit_input = f"""
+# define / ID / {index + 1}
+# define / OUTFILE_AVS / mesh_{long_name}.inp
+# define / OUTFILE_LG / mesh_{long_name}.lg
+# define / POLY_FILE / poly_{long_name}.inp
 
-define / H_SCALE / {h:e}
-define / H_EPS / {h*10**-7:0.12e}
-define / H_SCALE2 / {h*1.5:0.12e}
-define / H_EXTRUDE / {h_extrude:0.12e}
-define / H_TRANS / {h_trans:0.12e}
-define / H_PRIME / {0.8*h:0.12e}
+# define / H_SCALE / {h:e}
+# define / H_EPS / {h*10**-7:0.12e}
+# define / H_SCALE2 / {h*1.5:0.12e}
+# define / H_EXTRUDE / {h_extrude:0.12e}
+# define / H_TRANS / {h_trans:0.12e}
+# define / H_PRIME / {0.8*h:0.12e}
 
-define / THETA  / {theta:0.12f}
-define / X1 / {x1:0.12f}
-define / Y1 / {y1:0.12f}
-define / Z1 / {z1:0.12f}
+# define / THETA  / {theta:0.12f}
+# define / X1 / {x1:0.12f}
+# define / Y1 / {y1:0.12f}
+# define / Z1 / {z1:0.12f}
 
-define / X2 / {x2:0.12f}
-define / Y2 / {y2:0.12f}
-define / Z2 / {z2:0.12f}
-define / FAMILY / {family} 
+# define / X2 / {x2:0.12f}
+# define / Y2 / {y2:0.12f}
+# define / Z2 / {z2:0.12f}
+# define / FAMILY / {family} 
 
-finish
+# finish
 
-"""
-        with open(f'parameters/parameters_{long_name}.mlgi', 'w') as fp:
-            fp.write(lagrit_input)
-            fp.flush()
-            fp.close()
+# # """
+#         with open(f'parameters/parameters_{long_name}.mlgi', 'w') as fp:
+#             fp.write(lagrit_input)
+#             fp.flush()
+#             fp.close()
 
     print("--> Creating parameter*.mlgi files: Complete\n")
 
@@ -359,6 +359,7 @@ read / LINE_FILE / mo_line_work
 # Extrude the line mesh a distance H_EXTRUDE in the Z direction (vector 0.,0.,1.) to create a quad mesh.
 extrude / mo_quad / mo_line_work / const / H_EXTRUDE / volume / 0. 0. 1. 
 
+
 # Translate extruded lines of intersection down slightly to excavate 
 # nearby points from the mesh 
 
@@ -372,8 +373,8 @@ addmesh / excavate / mo_excavate / mo_pts / mo_tri
 ##### DEBUG #####
 # If meshing fails, uncomment and rerun the script to get tmp meshes, 
 # which are otherwise not output 
-# dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
-# dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
+dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
+dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
 dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0
 ##### DEBUG #####
 

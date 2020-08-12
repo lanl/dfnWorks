@@ -7,22 +7,24 @@
 
 import os
 import sys
-from time import time
 from numpy import genfromtxt, sort
 # pydfnworks Modules
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
-from pydfnworks.dfnGen.meshing.poisson_disc import run_poisson_disc as poisson_disc
-
+from pydfnworks.dfnGen.meshing.poisson_disc.run_poisson_disc import prepare_poisson_points
+from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson, dump_poisson_params
 
 
 def mesh_network(self,
                  prune=False,
                  uniform_mesh=False,
                  production_mode=True,
-                 refine_factor=1,
-                 slope=2,
+                 slope=0.2,
+                 max_dist = 100, 
+                 min_dist = 1, 
+                 concurrent_samples = 5, 
+                 grid_size = 100,
                  visual_mode=None):
     ''' Mesh fracture network using LaGriT
 
@@ -36,8 +38,6 @@ def mesh_network(self,
             If true, mesh is uniform resolution. If False, mesh is spatially variable            
         production_mode : bool
             If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
-        refine_factor : float
-            Determines distance for mesh refinement (default=1)
         slope : float 
             Slope of piecewise linear function determining rate of coarsening. 
         visual_mode : None
@@ -102,11 +102,12 @@ did not provide file of fractures to keep.\nExiting program.\n"
     if visual_mode:
         lagrit.create_lagrit_scripts_reduced_mesh(ncpu)
     else:
-        poisson_disc.prepare_poisson_points(num_poly,ncpu,h)
+        dump_poisson_params(h, A=slope, R=max_dist, F=min_dist,
+            concurrent_samples = concurrent_samples,grid_size = grid_size)
         lagrit.create_lagrit_scripts_poisson(ncpu)
     print('=' * 80)
 
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode, h)
     if failure:
         mh.cleanup_dir()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"

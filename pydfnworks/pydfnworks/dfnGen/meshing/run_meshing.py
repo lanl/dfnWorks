@@ -8,14 +8,16 @@
 import subprocess
 import os
 import sys
-import time
+import timeit
+
 import multiprocessing as mp
 from shutil import copy, rmtree
 from numpy import genfromtxt
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson
 
 
-def mesh_fracture(fracture_id, visual_mode, num_poly):
+def mesh_fracture(fracture_id, visual_mode, h, num_poly):
     """Child function for parallelized meshing of fractures
 
     Parameters
@@ -39,7 +41,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     """
 
-    tic = time.time()
+    tic = timeit.default_timer()
     p = mp.current_process()
     digits = len(str(num_poly))
     print(
@@ -47,7 +49,11 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     )
 
     _, cpu_id = p.name.split("-")
-    cpu_id = int(cpu_id)-16
+    cpu_id = int(cpu_id)
+
+    ## insert Poisson Disc Sampling Code Here ##
+    single_fracture_poisson(fracture_id)
+    ## insert Poisson Disc Sampling Code Here ##
 
     # Create Symbolic Links
     os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
@@ -139,14 +145,13 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         except:
             print(f'Warning: Could unlink {f}')
 
-    elapsed = time.time() - tic
-
+    elapsed = timeit.default_timer() - tic
     print(
         f"--> Fracture {fracture_id:0{digits}d} out of {num_poly} is complete on {p.name}. Time required: {elapsed:.2f} seconds\n"
     )
 
 
-def single_worker(work_queue, visual_mode, num_poly):
+def single_worker(work_queue, visual_mode, h, num_poly):
     """ Worker function for parallelized meshing 
     
     Parameters
@@ -166,14 +171,14 @@ def single_worker(work_queue, visual_mode, num_poly):
 """
     try:
         for fracture_id in iter(work_queue.get, 'STOP'):
-            mesh_fracture(fracture_id, visual_mode, num_poly)
+            mesh_fracture(fracture_id, visual_mode, h, num_poly)
     except:
         #print('Error on Fracture ',fracture_id)
         pass
     return True
 
 
-def mesh_fractures_header(fracture_list, ncpu, visual_mode):
+def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
     """ Header function for Parallel meshing of fractures
     
     Creates a queue of fracture numbers ranging from 1, num_poly
@@ -205,16 +210,20 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
         If one fracture fails meshing, program will exit. 
 
     """
-    t_all = time.time()
+    t_all = timeit.default_timer()
     print()
     print('=' * 80)
     print(
         f"\n--> Triangulating {len(fracture_list)} fractures using {ncpu} processors\n\n"
     )
 
-    if os.path.isdir('lagrit_logs'):
-        rmtree('lagrit_logs')
-    os.mkdir('lagrit_logs')
+    dirs = ["points","lagrit_logs"]
+    for d in dirs:
+        if os.path.isdir(d):
+            rmtree(d)
+            os.mkdir(d)
+        else:
+            os.mkdir(d)
 
     # create failure log file
     f = open('failure.txt', 'w')
@@ -229,7 +238,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
 
     for i in range(ncpu):
         p = mp.Process(target=single_worker, args=(work_queue, \
-            visual_mode, len(fracture_list)))
+            visual_mode, h, len(fracture_list)))
         p.daemon = True
         p.start()
         processes.append(p)
@@ -238,7 +247,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
     for p in processes:
         p.join()
 
-    elapsed = (time.time() - t_all)
+    elapsed = timeit.default_timer() - t_all
 
     if os.stat("failure.txt").st_size > 0:
         failure_list = genfromtxt("failure.txt")
@@ -254,7 +263,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode):
         print('--> Triangulating Polygons: Complete')
 
         if elapsed > 60:
-            print(f"--> Total Time to Mesh Network: {elapsed:.2f} minutes")
+            print(f"--> Total Time to Mesh Network: {elapsed/60:.2f} seconds")
         else:
             print(f"--> Total Time to Mesh Network: {elapsed:.2f} seconds")
 
@@ -279,7 +288,7 @@ def merge_worker(job):
     """
 
     print(f"--> Starting merge: {job}")
-    tic = time.time()
+    tic = timeit.default_timer()
 
     if mh.run_lagrit_script(f"merge_poly_part_{job}.lgi",
                             f"lagrit_logs/log_merge_poly_part{job}.out",
@@ -287,8 +296,7 @@ def merge_worker(job):
         print(f"Error {job} failed")
         return True
 
-    toc = time.time()
-    elapsed = toc - tic
+    elapsed = timeit.default_timer() - tic
     print(
         f"--> Merge Number {job} Complete. Time elapsed: {elapsed:.2f} seconds"
     )
@@ -340,12 +348,11 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     print('=' * 80)
     print("--> Starting Final Merge")
-    tic = time.time()
+    tic = timeit.default_timer()
     mh.run_lagrit_script('merge_rmpts.lgi',
                          'lagrit_logs/log_merge_all.out',
                          quite=True)
-    toc = time.time()
-    elapsed = toc - tic
+    elapsed = timeit.default_timer() - tic
     print(f"--> Final merge took {elapsed:.2f} seconds")
 
     if not visual_mode:

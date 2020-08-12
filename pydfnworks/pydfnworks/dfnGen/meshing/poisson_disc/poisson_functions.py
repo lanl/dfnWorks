@@ -4,6 +4,9 @@ import numpy as np
 from random import random, shuffle
 from math import sqrt, floor, ceil, cos, sin, pi
 from matplotlib import pyplot as plt
+import timeit
+import pickle
+
 #from seaborn import heatmap
 #######################################################################
 #######################################################################
@@ -753,7 +756,7 @@ def boundary_sampling(c):
             #is there space for at least two samples on the boundary?
             start = c.vertices[i] - r_start * \
                 current_line / sqrt(norm_sq(current_line))
-            end = c.vertices[(i + 1) % c.no_of_vertices] * \
+            end = c.vertices[(i + 1) % c.no_of_vertices] + \
                 r_end * current_line / sqrt(norm_sq(current_line))
             if distance(
                 start, end) > min(
@@ -766,15 +769,15 @@ def boundary_sampling(c):
             else:
                 #If just two samples on the boundary are already too close
                 #pick random point between them instead
-                r = random() * sqrt(norm_sq(current_line)) - r_start - r_end
+                r = random() * (sqrt(norm_sq(current_line)) - r_start - r_end)
                 start = c.vertices[i] - (r_start + r) * \
                     current_line / sqrt(norm_sq(current_line))
-                boundary_points.append(start)
+                boundary_points.append(np.append(start,exclusion_radius(c,start)))
         elif sqrt(norm_sq(current_line)) - r_start - r_end == 0:
             #just enough space for one sample on the boundary?
             start = c.vertices[i] - r_start * \
                 current_line / sqrt(norm_sq(current_line))
-            boundary_points.append(start)
+            boundary_points.append(np.append(start,exclusion_radius(c,start)))
     vertices = [np.append(v, exclusion_radius(c, v)) for v in c.vertices]
     return vertices + boundary_points
 
@@ -824,6 +827,7 @@ def sampling_along_line(c, x, y):
                 c, previous_sample), exclusion_radius(
                 c, y))
         line_sample.append(np.append(previous_sample, ex_rad))
+    line_sample.append(np.append(y, exclusion_radius(c,y)))
     return line_sample
 
 
@@ -1441,4 +1445,54 @@ def dot_product(X, Y):
     """
     return X[0] * Y[0] + X[1] * Y[1]
 
+def dump_poisson_params(h, R = 100, A = 0.1, F = 1, concurrent_samples = 5, grid_size = 100):
+
+    params = {"h":h,"R":R,"A":A,"F":F,\
+        "concurrent_samples":concurrent_samples,"grid_size":grid_size}
+    pickle.dump(params, open("poisson_params.p","wb"))
+
 #######################################################################
+def single_fracture_poisson(fracture_id):
+
+    print(f"--> Starting Poisson Sampling for Fracture Number {fracture_id}")
+    params = pickle.load(open("poisson_params.p","rb"))
+    c = cfg.Pseudo_Globals(f"polys/poly_{fracture_id}.inp",\
+                           f"intersections/intersections_{fracture_id}.inp", \
+                            params["h"], params["R"], params["A"],\
+                            params["F"],params["concurrent_samples"],\
+                            params["grid_size"])
+
+    start = timeit.default_timer()
+    ############################################
+    ###########___Core-Algorithm___#############
+    ############################################
+    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+    main_init(c)
+    # Reads geometry from input files, sets all derived parameters and
+    # creates inital set of nodes on the boundary(could be done within
+    # Pseudo_Globals)
+
+    main_sample(c)
+    # samples in majority of domain      (1)
+
+    search_undersampled_cells(c)
+
+    # fills in holes in the sampling to guarantee maximality
+
+    main_sample(c)
+    # Takes off sampling from where it stopped at (1) to increase density
+    # in previously undersampled regions to average.
+
+    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ############################################
+    ############################################
+
+    # Uncomment to store Coordinates in .xyz file
+#    output_file_name = f'points/points_{params["fracture_id"]}.xyz'
+    output_file_name = f'points/points_{fracture_id}.xyz'
+    print_coordinates(c, output_file_name)
+
+    runtime = timeit.default_timer() - start
+    print(f"--> Fracture Number {fracture_id} Poisson Sampling Complete. Time: {runtime:0.2f} seconds")
+
