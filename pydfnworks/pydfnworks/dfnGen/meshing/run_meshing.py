@@ -51,9 +51,6 @@ def mesh_fracture(fracture_id, visual_mode, h, num_poly):
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
 
-    ## insert Poisson Disc Sampling Code Here ##
-    single_fracture_poisson(fracture_id)
-    ## insert Poisson Disc Sampling Code Here ##
 
     # Create Symbolic Links
     os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
@@ -67,6 +64,11 @@ def mesh_fracture(fracture_id, visual_mode, h, num_poly):
 
         os.symlink(f"points/points_{fracture_id}.xyz",
                    f"points_CPU{cpu_id}.xyz")
+        
+        ## insert Poisson Disc Sampling Code Here ##
+        single_fracture_poisson(fracture_id)
+        ## insert Poisson Disc Sampling Code Here ##
+
 
     mh.run_lagrit_script(
         f"mesh_poly_CPU{cpu_id}.lgi",
@@ -263,7 +265,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
         print('--> Triangulating Polygons: Complete')
 
         if elapsed > 60:
-            print(f"--> Total Time to Mesh Network: {elapsed/60:.2f} seconds")
+            print(f"--> Total Time to Mesh Network: {elapsed/60:.2f} minutes")
         else:
             print(f"--> Total Time to Mesh Network: {elapsed:.2f} seconds")
 

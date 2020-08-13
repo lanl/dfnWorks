@@ -1377,18 +1377,18 @@ def upper_boundary(c, x):
 
 
 def distance(X, Y):
-    """ returns euclidian distane between X and Y
+    """ returns Euclidean distance between X and Y
         Parameters
         ---------
             X/Y : ndarrya(float)
-                2d coordinates of points X and Y
+                2D coordinates of points X and Y
         Returns
         ---------
             distance : float
                 euclidean distance
         Notes
         -----
-        faster than numpy equivalent for 2d
+        faster than numpy equivalent for 2D
     """
     return sqrt((X[0] - Y[0]) * (X[0] - Y[0]) + (X[1] - Y[1]) * (X[1] - Y[1]))
 
@@ -1416,8 +1416,8 @@ def norm_sq(X):
     """ returns euclidean square norm of X
          Parameters
         ---------
-            X : ndarrya(float)
-                2d coordinates of points X and Y
+            X : nd-array (float)
+                2D coordinates of points X and Y
         Returns
         ---------
             norm_sq : float
@@ -1433,20 +1433,24 @@ def dot_product(X, Y):
     """returns dotproduct of X and Y
         Parameters
         ---------
-            X/Y : ndarrya(float)
-                2d coordinates of points X and Y
+            X/Y : nd-array (float)
+                2D coordinates of points X and Y
         Returns
         ---------
             dot_product : float
-                euclidean dotproduct
+                euclidean dot-product
         Notes
         -----
-        faster than numpy equivalent for 2d
+        faster than numpy equivalent for 2D
     """
     return X[0] * Y[0] + X[1] * Y[1]
 
-def dump_poisson_params(h, R = 100, A = 0.1, F = 1, concurrent_samples = 5, grid_size = 100):
+def dump_poisson_params(h, R = 20, A = 0.1, F = 1, concurrent_samples = 5, grid_size = 20):
 
+    # A > 0 
+    # 0 < A < 1.0, if user A > 1; A = 0.95 with warning. 
+    # uniform A = 0
+    # 
     params = {"h":h,"R":R,"A":A,"F":F,\
         "concurrent_samples":concurrent_samples,"grid_size":grid_size}
     pickle.dump(params, open("poisson_params.p","wb"))

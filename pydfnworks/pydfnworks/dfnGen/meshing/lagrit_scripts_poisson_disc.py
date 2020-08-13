@@ -152,7 +152,6 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     h_radius = sqrt((0.5 * h_extrude)**2 + (0.5 * h_extrude)**2)
     h_trans = -0.5 * h_extrude + h_radius * cos(arcsin(delta))
 
-    print(h,delta,h_extrude,h_radius,h_trans)
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
