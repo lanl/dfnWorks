@@ -105,6 +105,7 @@ class DFNWORKS(Frozen):
         self.dfnGen_file = dfnGen_file
         self.local_dfnGen_file = ntpath.basename(self.dfnGen_file)
 
+
         self.output_file = ntpath.basename(self.dfnGen_file)
 
         self.dfnFlow_file = dfnFlow_file
@@ -271,7 +272,7 @@ def create_dfn():
         DFN.prune_file = options.prune_file
         print('--> DFN Prune File: ', DFN.prune_file)
     else:
-        DFN.path = ""
+        DFN.prune_file = ""
 
     if options.cell is True:
         print('--> Expecting Cell Based Aperture and Permeability')
