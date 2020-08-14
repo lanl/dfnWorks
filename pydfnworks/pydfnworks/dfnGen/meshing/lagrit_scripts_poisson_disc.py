@@ -372,9 +372,9 @@ addmesh / excavate / mo_excavate / mo_pts / mo_tri
 ##### DEBUG #####
 # If meshing fails, uncomment and rerun the script to get tmp meshes, 
 # which are otherwise not output 
-dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
-dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
-dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0
+#dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
+#dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
+#dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0
 ##### DEBUG #####
 
 cmo / delete / mo_tri 
