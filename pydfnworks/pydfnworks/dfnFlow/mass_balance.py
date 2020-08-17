@@ -8,7 +8,7 @@
 
 import numpy as np
 import glob
-from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
+from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
 
 __author__ = 'Satish Karra'
 __email__ = 'satkarra@lanl.gov'
