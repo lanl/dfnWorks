@@ -102,9 +102,10 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     -------
         success index: 
             0 - run was successful
-            1 - run failed in Poisson Sampling
-            2 - run failed to produce mesh files
-            3 - line of intersection not preserved
+            -1 - error making symbolic link
+            -2 - run failed in Poisson Sampling
+            -3 - run failed to produce mesh files
+            -4 - line of intersection not preserved
     
     Notes
     -----
@@ -146,8 +147,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         print(f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n")
         return (fracture_id,-1)
 
-
-
     if not visual_mode:
         try:
             os.symlink(f"intersections/intersections_{fracture_id}.inp",\
@@ -166,7 +165,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
                 f"-->\n\n\nERROR occurred generating points for fracture {fracture_id}\n\n\n"
             )
             cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, 1)
+            return (fracture_id, -2)
         try:
             os.symlink(f"points/points_{fracture_id}.xyz",
                        f"points_{fracture_id}.xyz")
@@ -187,7 +186,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             f"\n\n\n--> ERROR occurred during meshing fracture {fracture_id}\n\n\n"
         )
         cleanup_failed_run(fracture_id, digits)
-        return (fracture_id, 2)
+        return (fracture_id, -3)
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
     if not visual_mode:
@@ -204,7 +203,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
                 f"\n\n\n--> ERROR: MESH CHECKING FAILED on {fracture_id}!!!\n\nEXITING PROGRAM\n\n\n"
             )
             cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, 3)
+            return (fracture_id, -4)
 
         # Mesh checking was a success. Remove check files and move on
         files = [f"id_tri_node_{fracture_id}.list", f"mesh_{fracture_id}.inp"]
@@ -212,7 +211,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             try:
                 os.remove(f)
             except:
-                print(f"Could not remove {f}\n")
+                print(f"--> Could not remove {f}\n")
+                pass
 
     # Remove symbolic
     if visual_mode:
@@ -226,7 +226,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         try:
             os.unlink(f)
         except:
-            print(f'Warning: Could unlink {f}')
+            print(f'--> Warning: Could unlink {f}')
+            pass
 
     elapsed = timeit.default_timer() - tic
     print(
@@ -321,9 +322,13 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
             print("--> Cleaning up directory")
             pool.terminate()
             # If a run fails, kill all other processes, and clean up the directory
-            files_to_remove = glob.glob("*CPU*")
-            for f in files_to_remove:
-                os.remove(f)
+            names = ["poly_*.inp","mesh_poly_*.lgi",
+                "parameters_*.mlgi","intersections_*.inp",
+                "points_*.xzy"]
+            for name in names:
+                files_to_remove = glob.glob(name)
+                for f in files_to_remove:
+                    os.remove(f)
 
     for i in fracture_list:
         pool.apply_async(mesh_fracture,
