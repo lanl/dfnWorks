@@ -12,18 +12,16 @@ from numpy import genfromtxt, sort
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
-from pydfnworks.dfnGen.meshing.poisson_disc.run_poisson_disc import prepare_poisson_points
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson, dump_poisson_params
-
 
 def mesh_network(self,
                  prune=False,
                  uniform_mesh=False,
                  production_mode=True,
-                 slope=0.2,
-                 max_dist = 100, 
+                 slope=0.05,
+                 max_dist = 10, 
                  min_dist = 1, 
-                 concurrent_samples = 5, 
+                 concurrent_samples = 10, 
                  grid_size = 100,
                  visual_mode=None):
     ''' Mesh fracture network using LaGriT
