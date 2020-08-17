@@ -1,5 +1,5 @@
 # func.py
-from pydfnworks.dfnGen.meshing.poisson_disc import cfg as cfg 
+from pydfnworks.dfnGen.meshing.poisson_disc import poisson_class as pc 
 import numpy as np
 from random import random, shuffle
 from math import sqrt, floor, ceil, cos, sin, pi
@@ -1460,7 +1460,7 @@ def single_fracture_poisson(fracture_id):
 
     print(f"--> Starting Poisson Sampling for Fracture Number {fracture_id}")
     params = pickle.load(open("poisson_params.p","rb"))
-    c = cfg.Pseudo_Globals(f"polys/poly_{fracture_id}.inp",\
+    c = pc.Poisson_Variables(f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \
                             params["h"], params["R"], params["A"],\
                             params["F"],params["concurrent_samples"],\
