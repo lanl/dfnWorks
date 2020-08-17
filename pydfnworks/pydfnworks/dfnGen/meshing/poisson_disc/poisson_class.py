@@ -1,15 +1,14 @@
 # contains global variables
 class Poisson_Variables():
-    def __init__(
-            self,
-            path_to_polygon,
-            path_to_intersections,
-            H=.1,
-            R=100,
-            A=.1,
-            F=1.,
-            concurrent_samples=10,
-            occupancy_factor=2):
+    def __init__(self,
+                 path_to_polygon,
+                 path_to_intersections,
+                 H=.1,
+                 R=100,
+                 A=.1,
+                 F=1.,
+                 concurrent_samples=10,
+                 occupancy_factor=2):
         import numpy as np
         """ Takes in input-parameters and contains all variables derived from
             those, that are used by multiple functions.
@@ -34,8 +33,8 @@ class Poisson_Variables():
                 Notes
                 -----
         """
-    # Input parameters
-    ###############################################################
+        # Input parameters
+        ###############################################################
         self.path_poly = path_to_polygon
         self.path_inter = path_to_intersections
         self.k = concurrent_samples
@@ -46,8 +45,8 @@ class Poisson_Variables():
         self.F = F
         self.occupancy_grid_side_length = self.H / occupancy_factor
 
-    # Derived from input
-    ###################################
+        # Derived from input
+        ###################################
         # maximal- minimal distance between nodes
         self.max_exclusion_radius = (self.A * self.R + .5) * self.H
         self.z_plane = 0.0
@@ -62,7 +61,7 @@ class Poisson_Variables():
         # two components being x/y-coordinates and the third entry being
         # the local exclusion radius of the node.
 
-    # Geometry of Polygon
+        # Geometry of Polygon
         self.vertices = []  # corner vertices of the polygon,
         # clockwise order is required!!
         self.no_of_vertices = len(self.vertices)
@@ -81,14 +80,14 @@ class Poisson_Variables():
         self.slope_lower_boundary = 0  # boundaries of polygon are piecewise linear
         self.slope_upper_boundary = 0
 
-    # Neighbor-grid variables
+        # Neighbor-grid variables
         self.neighbor_cell_size = self.H / 2 / np.sqrt(2)
         self.neighbor_cell_size_inv = 1 / self.neighbor_cell_size
         self.no_of_horizontal_neighbor_cells = 1
         self.no_of_horizontal_neighbor_cells = 1
         self.neighbor_grid = np.zeros(1)
 
-    # Intersection-related variables
+        # Intersection-related variables
         self.intersect_range_sq = ((self.R + self.F) * self.H)**2
         # distance along which an intersection affects the local
         # exclusion radius  (squared)
@@ -108,7 +107,7 @@ class Poisson_Variables():
         # and the numbers corresponding to directions as follows:
         # 1->right, 3->left, 2->up, 4->down.
 
-    # Occupancy-grid variables
+        # Occupancy-grid variables
         self.occupancy_grid_side_length_inv = 1 / self.occupancy_grid_side_length
         self.no_of_horizontal_occupancy_cells = 1
         self.no_of_horizontal_occupancy_cells = 1
