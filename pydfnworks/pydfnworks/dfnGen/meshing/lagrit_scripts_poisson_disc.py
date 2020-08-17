@@ -155,11 +155,13 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
+
     for index, i in enumerate(fracture_list):
         # using i - 1 do to python indexing from 0
         # fracture index starts at 1
         frac_id = str(int(data[i - 1, 0]))
         long_name = str(int(data[i - 1, 0]))
+
         theta = data[i - 1, 2]
         x1 = data[i - 1, 3]
         y1 = data[i - 1, 4]
@@ -222,6 +224,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         f.flush()
         f.close()
 
+
 #         lagrit_input = f"""
 # define / ID / {index + 1}
 # define / OUTFILE_AVS / mesh_{long_name}.inp
@@ -243,7 +246,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
 # define / X2 / {x2:0.12f}
 # define / Y2 / {y2:0.12f}
 # define / Z2 / {z2:0.12f}
-# define / FAMILY / {family} 
+# define / FAMILY / {family}
 
 # finish
 

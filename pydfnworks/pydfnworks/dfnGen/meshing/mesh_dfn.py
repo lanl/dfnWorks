@@ -14,15 +14,16 @@ from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson, dump_poisson_params
 
+
 def mesh_network(self,
                  prune=False,
                  uniform_mesh=False,
                  production_mode=True,
                  slope=0.05,
-                 max_dist = 10, 
-                 min_dist = 1, 
-                 concurrent_samples = 10, 
-                 grid_size = 100,
+                 max_dist=10,
+                 min_dist=1,
+                 concurrent_samples=10,
+                 grid_size=100,
                  visual_mode=None):
     ''' Mesh fracture network using LaGriT
 
@@ -100,12 +101,17 @@ did not provide file of fractures to keep.\nExiting program.\n"
     if visual_mode:
         lagrit.create_lagrit_scripts_reduced_mesh(ncpu)
     else:
-        dump_poisson_params(h, A=slope, R=max_dist, F=min_dist,
-            concurrent_samples = concurrent_samples,grid_size = grid_size)
+        dump_poisson_params(h,
+                            A=slope,
+                            R=max_dist,
+                            F=min_dist,
+                            concurrent_samples=concurrent_samples,
+                            grid_size=grid_size)
         lagrit.create_lagrit_scripts_poisson(ncpu)
     print('=' * 80)
 
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode, h)
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode,
+                                             h)
     if failure:
         mh.cleanup_dir()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"

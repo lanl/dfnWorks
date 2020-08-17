@@ -126,7 +126,7 @@ def add_variable_to_mesh(self,
 
     if cell_based:
         lagrit_file = create_lagrit_append_script(variable, variable_file,
-                                           mesh_file_in, mesh_file_out)
+                                                  mesh_file_in, mesh_file_out)
     else:
         variable_file_by_node = create_variable_file(variable, variable_file)
         lagrit_file = create_lagrit_append_script(variable,
