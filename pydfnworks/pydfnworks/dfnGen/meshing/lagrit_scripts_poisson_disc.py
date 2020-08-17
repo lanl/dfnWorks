@@ -259,14 +259,14 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     print("--> Creating parameter*.mlgi files: Complete\n")
 
 
-def create_lagrit_scripts_poisson(ncpu):
+def create_lagrit_scripts_poisson(fracture_list):
     """ Creates LaGriT script to be mesh each polygon using Poisson-Disc
     sampling method
     
     Parameters
     ---------- 
-        ncpu : int
-            Number of cpus
+        fracture_list : list
+            list of fracture numbers to be meshed
 
     Returns
     -------
@@ -274,8 +274,7 @@ def create_lagrit_scripts_poisson(ncpu):
 
     Notes
     -----
-    1. Only ncpu of these files are created
-    2. Symbolic links are used to rotate through fractures on different CPUs 
+
     """
 
     #Section 2 : Creates LaGriT script to be run for each polygon
@@ -297,16 +296,16 @@ def create_lagrit_scripts_poisson(ncpu):
 # in binary LaGriT and AVS UCD format. 
 
 # LaGriT Parameter file 
-infile parameters_CPU{0}.mlgi
+infile parameters_{0}.mlgi
 
 # Name of input files that contains the lines of intersection
 # and Poisson Points
 
-define / POINT_FILE / points_CPU{0}.xyz
-define / LINE_FILE / intersections_CPU{0}.inp
+define / POINT_FILE / points_{0}.xyz
+define / LINE_FILE / intersections_{0}.inp
 
 # connectivity file used in mesh checking
-define / OUTPUT_INTER_ID_SSINT / id_tri_node_CPU{0}.list
+define / OUTPUT_INTER_ID_SSINT / id_tri_node_{0}.list
 
 #### READ IN POISSON DISC POINTS
 
@@ -512,15 +511,19 @@ finish
 
 """
 
-    # Create a different run file for each CPU
-    for i in range(1, ncpu + 1):
-        file_name = 'mesh_poly_CPU{0}.lgi'.format(i)
+    if os.path.isdir('lagrit_scripts'):
+        rmtree("lagrit_scripts")
+        os.mkdir("lagrit_scripts")
+    else:
+        os.mkdir("lagrit_scripts")
+
+    # Create a different run file for each fracture
+    for i in fracture_list:
+        file_name = 'lagrit_scripts/mesh_poly_{0}.lgi'.format(i)
         with open(file_name, 'w') as f:
             f.write(lagrit_input.format(i))
             f.flush()
-
     print('--> Writing LaGriT Control Files: Complete')
-
 
 def create_lagrit_scripts_reduced_mesh(ncpu):
     """ Creates LaGriT scripts to create a coarse (non-conforming) 

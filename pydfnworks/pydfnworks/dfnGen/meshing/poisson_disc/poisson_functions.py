@@ -1446,7 +1446,7 @@ def dump_poisson_params(h,
 #######################################################################
 def single_fracture_poisson(fracture_id):
 
-    print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
+    print(f"--> Starting Poisson sampling for fracture number {fracture_id}\n")
     params = pickle.load(open("poisson_params.p", "rb"))
     c = pc.Poisson_Variables(f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \

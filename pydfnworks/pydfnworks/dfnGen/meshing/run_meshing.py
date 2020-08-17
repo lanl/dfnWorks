@@ -17,7 +17,7 @@ from numpy import genfromtxt
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson
 
-def cleanup_failed_run(fracture_id, cpu_id, digits):
+def cleanup_failed_run(fracture_id, digits):
     """ If meshing fails, this function moves all relavent files
     to a folder for debugging
 
@@ -25,8 +25,6 @@ def cleanup_failed_run(fracture_id, cpu_id, digits):
     ----------
         fracture_id : int
             Current Fracture ID number
-        cpu_id : int 
-            CPU index
         digits : int
             Number of digits in total number of fractures
 
@@ -42,7 +40,7 @@ def cleanup_failed_run(fracture_id, cpu_id, digits):
 """
 
     print(
-        f"--> Cleaning up meshing run for fracture {fracture_id} running on CPU number {cpu_id}"
+        f"--> Cleaning up meshing run for fracture {fracture_id}"
     )
 
     if not os.path.isfile("failure.txt"):
@@ -61,7 +59,7 @@ def cleanup_failed_run(fracture_id, cpu_id, digits):
 
     files = [
         f"mesh_{fracture_id}.inp", f"{fracture_id}_mesh_errors.txt",
-        f"id_tri_node_CPU{cpu_id}.list",
+        f"id_tri_node_{fracture_id}.list",
         f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out"
     ]
 
@@ -73,9 +71,9 @@ def cleanup_failed_run(fracture_id, cpu_id, digits):
             pass
 
     symlinks = [
-        f"poly_CPU{cpu_id}.inp", f"intersections_CPU{cpu_id}.inp",
-        f"parameters_CPU{cpu_id}.mlgi", f"mesh_poly_CPU{cpu_id}.lgi",
-        f'points_CPU{cpu_id}.xyz'
+        f"poly_{fracture_id}.inp", f"intersections_{fracture_id}.inp",
+        f"parameters_{fracture_id}.mlgi", f"mesh_poly_{fracture_id}.lgi",
+        f'points_{fracture_id}.xyz'
     ]
 
     for f in symlinks:
@@ -116,7 +114,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     # get current process information
     p = mp.current_process()
-    print(p.name)
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
 
@@ -130,22 +127,31 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     tic = timeit.default_timer()
     # Create Symbolic Links
     try:
-        os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
+        os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
     except:
         print(f"-->\n\n\nError creating link for poly_{fracture_id}.inp\n\n\n")
         return (fracture_id,-1)
 
     try:
         os.symlink(f"parameters/parameters_{fracture_id}.mlgi",\
-            f"parameters_CPU{cpu_id}.mlgi")
+            f"parameters_{fracture_id}.mlgi")
     except:
         print(f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n")
         return (fracture_id,-1)
 
+    try:
+        os.symlink(f"lagrit_scripts/mesh_poly_{fracture_id}.lgi",\
+            f"mesh_poly_{fracture_id}.lgi")
+    except:
+        print(f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n")
+        return (fracture_id,-1)
+
+
+
     if not visual_mode:
         try:
             os.symlink(f"intersections/intersections_{fracture_id}.inp",\
-                f"intersections_CPU{cpu_id}.inp")
+                f"intersections_{fracture_id}.inp")
         except:
             print(f"\n\n\n--> Error creating link for intersections_{fracture_id}.inp\n\n\n")
             return (fracture_id,-1)
@@ -159,18 +165,18 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             print(
                 f"-->\n\n\nERROR occurred generating points for fracture {fracture_id}\n\n\n"
             )
-            cleanup_failed_run(fracture_id, cpu_id, digits)
+            cleanup_failed_run(fracture_id, digits)
             return (fracture_id, 1)
         try:
             os.symlink(f"points/points_{fracture_id}.xyz",
-                       f"points_CPU{cpu_id}.xyz")
+                       f"points_{fracture_id}.xyz")
         except:
             print(f"-->\n\n\nError creating link for points_{fracture_id}.xyz\n\n\n")
             return (fracture_id,-1)
 
     # run LaGriT Meshing
     mh.run_lagrit_script(
-        f"mesh_poly_CPU{cpu_id}.lgi",
+        f"mesh_poly_{fracture_id}.lgi",
         output_file=f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out",
         quite=True)
 
@@ -180,14 +186,14 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         print(
             f"\n\n\n--> ERROR occurred during meshing fracture {fracture_id}\n\n\n"
         )
-        cleanup_failed_run(fracture_id, cpu_id, digits)
+        cleanup_failed_run(fracture_id, digits)
         return (fracture_id, 2)
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
     if not visual_mode:
         cmd_check = f"{os.environ['CONNECT_TEST_EXE']} \
-            intersections_CPU{cpu_id}.inp \
-            id_tri_node_CPU{cpu_id}.list \
+            intersections_{fracture_id}.inp \
+            id_tri_node_{fracture_id}.list \
             mesh_{fracture_id}.inp \
             {fracture_id}"
 
@@ -197,11 +203,11 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             print(
                 f"\n\n\n--> ERROR: MESH CHECKING FAILED on {fracture_id}!!!\n\nEXITING PROGRAM\n\n\n"
             )
-            cleanup_failed_run(fracture_id, cpu_id, digits)
+            cleanup_failed_run(fracture_id, digits)
             return (fracture_id, 3)
 
         # Mesh checking was a success. Remove check files and move on
-        files = [f"id_tri_node_CPU{cpu_id}.list", f"mesh_{fracture_id}.inp"]
+        files = [f"id_tri_node_{fracture_id}.list", f"mesh_{fracture_id}.inp"]
         for f in files:
             try:
                 os.remove(f)
@@ -210,12 +216,12 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     # Remove symbolic
     if visual_mode:
-        files = [f'poly_CPU{cpu_id}.inp', f'parameters_CPU{cpu_id}.mlgi']
+        files = [f'poly_{fracture_id}.inp', f'parameters_{fracture_id}.mlgi']
     else:
         files = [
-            f'poly_CPU{cpu_id}.inp', f'intersections_CPU{cpu_id}.inp',
-            f'points_CPU{cpu_id}.xyz', f'parameters_CPU{cpu_id}.mlgi'
-        ]
+            f'poly_{fracture_id}.inp', f'intersections_{fracture_id}.inp',
+            f'points_{fracture_id}.xyz', f'parameters_{fracture_id}.mlgi',
+            f"mesh_poly_{fracture_id}.lgi"]
     for f in files:
         try:
             os.unlink(f)

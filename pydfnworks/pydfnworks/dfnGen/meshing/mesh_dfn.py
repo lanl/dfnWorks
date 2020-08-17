@@ -107,7 +107,9 @@ did not provide file of fractures to keep.\nExiting program.\n"
                             F=min_dist,
                             concurrent_samples=concurrent_samples,
                             grid_size=grid_size)
-        lagrit.create_lagrit_scripts_poisson(ncpu)
+
+        lagrit.create_lagrit_scripts_poisson(fracture_list)
+        
     print('=' * 80)
 
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode,
