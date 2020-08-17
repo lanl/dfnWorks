@@ -17,7 +17,6 @@ from numpy import genfromtxt
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson
 
-
 def cleanup_failed_run(fracture_id, cpu_id, digits):
     """ If meshing fails, this function moves all relavent files
     to a folder for debugging
@@ -115,8 +114,9 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     """
 
-    # se
+    # get current process information
     p = mp.current_process()
+    print(p.name)
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
 
@@ -129,17 +129,26 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     tic = timeit.default_timer()
     # Create Symbolic Links
-    os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
+    try:
+        os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_CPU{cpu_id}.inp")
+    except:
+        print(f"-->\n\n\nError creating link for poly_{fracture_id}.inp\n\n\n")
+        return (fracture_id,-1)
 
-    os.symlink(f"parameters/parameters_{fracture_id}.mlgi",\
-        f"parameters_CPU{cpu_id}.mlgi")
+    try:
+        os.symlink(f"parameters/parameters_{fracture_id}.mlgi",\
+            f"parameters_CPU{cpu_id}.mlgi")
+    except:
+        print(f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n")
+        return (fracture_id,-1)
 
     if not visual_mode:
-        os.symlink(f"intersections/intersections_{fracture_id}.inp",\
-            f"intersections_CPU{cpu_id}.inp")
-
-        os.symlink(f"points/points_{fracture_id}.xyz",
-                   f"points_CPU{cpu_id}.xyz")
+        try:
+            os.symlink(f"intersections/intersections_{fracture_id}.inp",\
+                f"intersections_CPU{cpu_id}.inp")
+        except:
+            print(f"\n\n\n--> Error creating link for intersections_{fracture_id}.inp\n\n\n")
+            return (fracture_id,-1)
 
         ## Poisson Disc Sampling Code Here ##
         single_fracture_poisson(fracture_id)
@@ -148,10 +157,16 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         # check if points were created, if not exit
         if not os.path.isfile(f'points/points_{fracture_id}.xyz'):
             print(
-                f"--> ERROR occurred generating points for fracture {fracture_id}"
+                f"-->\n\n\nERROR occurred generating points for fracture {fracture_id}\n\n\n"
             )
             cleanup_failed_run(fracture_id, cpu_id, digits)
             return (fracture_id, 1)
+        try:
+            os.symlink(f"points/points_{fracture_id}.xyz",
+                       f"points_CPU{cpu_id}.xyz")
+        except:
+            print(f"-->\n\n\nError creating link for points_{fracture_id}.xyz\n\n\n")
+            return (fracture_id,-1)
 
     # run LaGriT Meshing
     mh.run_lagrit_script(

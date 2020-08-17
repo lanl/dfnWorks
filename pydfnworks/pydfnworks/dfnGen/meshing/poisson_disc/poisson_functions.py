@@ -1487,4 +1487,4 @@ def single_fracture_poisson(fracture_id):
 
     runtime = timeit.default_timer() - start
     print(
-        f"--> Poisson sampling for {fracture_id} took {runtime:0.2f} seconds")
+        f"--> Poisson sampling for fracture {fracture_id} took {runtime:0.2f} seconds")
