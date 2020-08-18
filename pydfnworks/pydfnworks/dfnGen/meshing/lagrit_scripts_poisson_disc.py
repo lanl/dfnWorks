@@ -194,23 +194,23 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
 
         f.write('define / H_PRIME / %e \n' % (0.4 * h))
 
-        f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
-        f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
-        f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
-        f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
-        f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
+        # f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
+        # f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
+        # f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
+        # f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
+        # f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
 
-        f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
-        f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
-        f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
-        f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
+        # f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
+        # f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
+        # f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
+        # f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
 
-        f.write('define / PARAM_A / %f \n' % slope)
-        f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
+        # f.write('define / PARAM_A / %f \n' % slope)
+        # f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
 
-        f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
-        f.write('define / PARAM_B2 / %f \n' %
-                (h * (1 - 0.5 * slope * refine_dist)))
+        # f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
+        # f.write('define / PARAM_B2 / %f \n' %
+        #         (h * (1 - 0.5 * slope * refine_dist)))
 
         f.write('define / THETA  / %0.12f \n' % theta)
         f.write('define / X1 /  %0.12f \n' % x1)
@@ -525,6 +525,7 @@ finish
             f.flush()
     print('--> Writing LaGriT Control Files: Complete')
 
+
 def create_lagrit_scripts_reduced_mesh(ncpu):
     """ Creates LaGriT scripts to create a coarse (non-conforming) 
     mesh of each fracture. 
@@ -669,7 +670,7 @@ finish \n
 """
 
     j = 0  # Counter for cpus
-    fout = 'merge_poly_part_1.lgi'
+    fout = 'lagrit_scripts/merge_poly_part_1.lgi'
     f = open(fout, 'w')
     for i in fracture_list:
         tmp = 'mesh_' + str(i) + '.lg'
@@ -681,7 +682,7 @@ finish \n
             f.flush()
             f.close()
             j += 1
-            fout = 'merge_poly_part_' + str(j + 1) + '.lgi'
+            fout = 'lagrit_scripts/merge_poly_part_' + str(j + 1) + '.lgi'
             f = open(fout, 'w')
 
     f.flush()
@@ -695,7 +696,7 @@ read / lagrit / part%d.lg / junk / binary
 addmesh / merge / mo_all / mo_all / cmo_tmp 
 cmo / delete / cmo_tmp 
     """
-    f = open('merge_rmpts.lgi', 'w')
+    f = open('lagrit_scripts/merge_rmpts.lgi', 'w')
     for j in range(1, n_jobs + 1):
         f.write(lagrit_input % (j))
 

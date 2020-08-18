@@ -20,10 +20,10 @@ def mesh_network(self,
                  uniform_mesh=False,
                  production_mode=True,
                  slope=0.05,
-                 max_dist=10,
+                 max_dist=50,
                  min_dist=1,
                  concurrent_samples=10,
-                 grid_size=100,
+                 grid_size=10,
                  visual_mode=None):
     ''' Mesh fracture network using LaGriT
 
@@ -109,7 +109,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
                             grid_size=grid_size)
 
         lagrit.create_lagrit_scripts_poisson(fracture_list)
-        
+
     print('=' * 80)
 
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode,

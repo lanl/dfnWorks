@@ -1,13 +1,15 @@
 # func.py
 from pydfnworks.dfnGen.meshing.poisson_disc import poisson_class as pc
-import numpy as np
+
+from numpy import arange, array, ogrid, nonzero, zeros, append
 from random import random, shuffle
 from math import sqrt, floor, ceil, cos, sin, pi
 from matplotlib import pyplot as plt
+from scipy.sparse import lil_matrix
 import timeit
 import pickle
 
-#from seaborn import heatmap
+#from memory_profiler import profile
 #######################################################################
 #######################################################################
 """
@@ -19,7 +21,7 @@ The contained functions in order are:
     - intersect_sample()
     - main_sample()
     - search_undersampled_cells()
-    - print_coordinates()
+    - dump_coordinates()
     - plot_coordinates()
     - print()
 
@@ -61,6 +63,7 @@ The contained functions in order are:
 ###########___Functions called directly by main.py____#################
 
 
+#@profile
 def main_init(c):  # polygons, intersections):
     """Reads inputs and initializes variables in c, i.e. initialized the polygon,
         the intersections, samples along the boundary and initializes
@@ -91,6 +94,7 @@ def main_init(c):  # polygons, intersections):
 #####################################################################
 
 
+#@profile
 def main_sample(c):
     """ Runs over already accepted nodes and samples new candidates  on an
          annulus around them. valid candidates are added to c.coordinates
@@ -127,6 +131,7 @@ def main_sample(c):
 #######################################################################
 
 
+#@profile
 def search_undersampled_cells(c):
     """ Creates the occupancy-grid, searches for empty cells in it and
         uniformly samples candidates in those empty cells. Accepted cells
@@ -162,8 +167,6 @@ def search_undersampled_cells(c):
 
 
 #######################################################################
-
-
 def dump_coordinates(c, output_file="points.xyz"):
     """Prints accepted coordinates to file
 
@@ -250,6 +253,7 @@ def neighbor_cell(c, X):
 #######################################################################
 
 
+#@profile
 def neighbor_grid_init(c):
     """ Initializes background grid
         Parameters
@@ -273,8 +277,8 @@ def neighbor_grid_init(c):
         (c.x_max - c.x_min) * c.neighbor_cell_size_inv)
     c.no_vertical_neighbor_cells = ceil(
         (c.y_max - c.y_min) * c.neighbor_cell_size_inv)
-    neighbor_grid = np.zeros((c.no_horizontal_neighbor_cells + 1,
-                              c.no_vertical_neighbor_cells + 1)).astype(int)
+    neighbor_grid = zeros((c.no_horizontal_neighbor_cells + 1,
+                           c.no_vertical_neighbor_cells + 1)).astype(int)
     for node_number in range(0, len(c.coordinates)):
         neighbor_grid[neighbor_cell(
             c, c.coordinates[node_number])] = node_number + 1
@@ -368,7 +372,9 @@ def accept_candidate(c, candidate):
     candidates_ex_rad_sq = candidates_ex_rad**2
     for node_number in neighboring_cells(c, candidates_neighbor_cell,
                                          candidates_ex_rad):
+
         closeby_node = c.coordinates[node_number - 1]
+
         # last entry contains loc. ex_rad.
         closeby_ex_rad_sq = closeby_node[2]**2
         if distance_sq(candidate, closeby_node) < min(candidates_ex_rad_sq,
@@ -377,7 +383,7 @@ def accept_candidate(c, candidate):
 
     # Appends candidate and its loc. ex-rad to accepted nodes and updates
     # neighbor-cells
-    c.coordinates.append(np.append(candidate, candidates_ex_rad))
+    c.coordinates.append(append(candidate, candidates_ex_rad))
     c.neighbor_grid[candidates_neighbor_cell] = c.no_of_nodes + 1
     return True
 
@@ -569,14 +575,15 @@ def neighboring_cells(c, center_cell, exclusion_radius):
                                   ):min(center_cell[1] + max_cell_distance +
                                         1, c.no_vertical_neighbor_cells + 1)]
     # slice neighboring cells out of grid
-    closeby_nodes = subgrid[np.nonzero(subgrid)]
+    #sub=subgrid#.toarray()
+    closeby_nodes = subgrid[nonzero(subgrid)]
+
     return closeby_nodes
 
 
 #######################################################################
 #################___Initializing functions___##########################
-
-
+#@profile
 def read_vertices(c, path_to_polygon):
     """ reads vertices from file, initializes all variables related to
         geometry of polygon (z_plane, x_min, x_max,y_min, y_max,
@@ -600,7 +607,7 @@ def read_vertices(c, path_to_polygon):
         lines = inputfile.readlines()
     c.no_of_vertices = int(lines[0].split()[0])
     vertices = [
-        np.array([float(Y) for Y in X.split()[1:3]])
+        array([float(Y) for Y in X.split()[1:3]])
         for X in lines[1:1 + c.no_of_vertices]
     ]
     c.z_plane = float((lines[1]).split()[3])
@@ -624,8 +631,8 @@ def read_vertices(c, path_to_polygon):
                        c.no_of_vertices] == c.vertices_x[c.last_x_min_index]:
         c.last_x_min_index = (c.last_x_min_index + 1) % c.no_of_vertices
 
-    c.slope_lower_boundary = np.zeros(c.no_of_vertices)
-    c.slope_upper_boundary = np.zeros(c.no_of_vertices)
+    c.slope_lower_boundary = zeros(c.no_of_vertices)
+    c.slope_upper_boundary = zeros(c.no_of_vertices)
     i = c.last_x_min_index
     while c.vertices_x[i] < c.x_max:
         c.slope_lower_boundary[i] = (c.vertices_y[
@@ -638,12 +645,14 @@ def read_vertices(c, path_to_polygon):
             (i - 1) % c.no_of_vertices] - c.vertices_y[i]) / (c.vertices_x[
                 (i - 1) % c.no_of_vertices] - c.vertices_x[i])
         i = (i - 1) % c.no_of_vertices
+    del lines
     return vertices
 
 
 #######################################################################
 
 
+#@profile
 def read_intersections(c, path_to_intersections):
     """ reads Intersection endpoints from file
     Parameters
@@ -663,6 +672,13 @@ def read_intersections(c, path_to_intersections):
         no intersections.
     """
     end_pts = []
+    #short edges require smaller closer nodes to guarantee good triangles
+    for i in range(0, c.no_of_vertices):
+        if distance_sq(c.vertices[i], c.vertices[
+            (i + 1) % c.no_of_vertices]) < c.max_exclusion_radius**2:
+            end_pts.append(c.vertices[i])
+            end_pts.append(c.vertices[(i + 1) % c.no_of_vertices])
+
     with open(path_to_intersections) as inputfile:
         lines = inputfile.readlines()
     if len(lines) != 0:
@@ -677,7 +693,7 @@ def read_intersections(c, path_to_intersections):
         # listed after points, line-commands and 4 lines of text.
         first_line_intersect_j = 1
         for j in range(0, no_of_intersections):
-            start_j = np.array(
+            start_j = array(
                 [float(Y) for Y in lines[first_line_intersect_j].split()[1:3]])
             # find first line that contains current label add it as start
             end_pts.append(start_j)
@@ -685,7 +701,7 @@ def read_intersections(c, path_to_intersections):
                 intersect_labels[::-1].index(intersect_labels[first_line_intersect_j])
             # look backwards through the file to find last line with current
             # label
-            end_j = np.array(
+            end_j = array(
                 [float(Y) for Y in lines[last_line_intersect_j].split()[1:3]])
             # add it as end
             end_pts.append(end_j)
@@ -693,16 +709,16 @@ def read_intersections(c, path_to_intersections):
             first_line_intersect_j = last_line_intersect_j + 1
             # next line has different label
     if end_pts == []:
-        c.neighbor_cell_size = c.max_exclusion_radius / np.sqrt(2)
+        c.neighbor_cell_size = c.max_exclusion_radius / sqrt(2)
         c.neighbor_cell_size_inv = 1 / c.neighbor_cell_size
         # if there's no intersections, the neighbor-cells can be defined
         # via the max distance, saving time
+    del lines
     return end_pts
 
 
 ######################################################################
-
-
+#@profile
 def boundary_sampling(c):
     """ Samples points around the boundary
         Parameters
@@ -768,14 +784,13 @@ def boundary_sampling(c):
                 start = c.vertices[i] - (r_start + r) * \
                     current_line / sqrt(norm_sq(current_line))
                 boundary_points.append(
-                    np.append(start, exclusion_radius(c, start)))
+                    append(start, exclusion_radius(c, start)))
         elif sqrt(norm_sq(current_line)) - r_start - r_end == 0:
             #just enough space for one sample on the boundary?
             start = c.vertices[i] - r_start * \
                 current_line / sqrt(norm_sq(current_line))
-            boundary_points.append(np.append(start, exclusion_radius(c,
-                                                                     start)))
-    vertices = [np.append(v, exclusion_radius(c, v)) for v in c.vertices]
+            boundary_points.append(append(start, exclusion_radius(c, start)))
+    vertices = [append(v, exclusion_radius(c, v)) for v in c.vertices]
     return vertices + boundary_points
 
 
@@ -808,13 +823,13 @@ def sampling_along_line(c, x, y):
     previous_sample = x
     direction = (y - x) / distance(y, x)
     ex_rad = exclusion_radius(c, previous_sample)
-    line_sample = [np.append(previous_sample, ex_rad)]
+    line_sample = [append(previous_sample, ex_rad)]
     while distance(previous_sample, y) > 2.3 * ex_rad:
         # distance to endpoint still large enough to use full range
         increment = .3 * random() * ex_rad + ex_rad
         previous_sample = previous_sample + direction * increment
         ex_rad = exclusion_radius(c, previous_sample)
-        line_sample.append(np.append(previous_sample, ex_rad))
+        line_sample.append(append(previous_sample, ex_rad))
     ex_rad = min(exclusion_radius(c, previous_sample), exclusion_radius(c, y))
     while distance(previous_sample, y) >= 2 * ex_rad:
         # place for another sample, but in more restricted area
@@ -823,8 +838,8 @@ def sampling_along_line(c, x, y):
         previous_sample = previous_sample + direction * increment
         ex_rad = min(exclusion_radius(c, previous_sample),
                      exclusion_radius(c, y))
-        line_sample.append(np.append(previous_sample, ex_rad))
-    line_sample.append(np.append(y, exclusion_radius(c, y)))
+        line_sample.append(append(previous_sample, ex_rad))
+    line_sample.append(append(y, exclusion_radius(c, y)))
     return line_sample
 
 
@@ -855,6 +870,7 @@ def intersect_cell(c, X):
 #########################################################################
 
 
+#@profile
 def intersect_grid_init(c):
     """ Initiallizes Intersect-Grid, looks at all intersecions as directed
           arrows from start to end and marks cell that are crossed by it
@@ -1032,7 +1048,7 @@ def intersect_mark_next_cells(c, direction, center_cell, intersect_number):
                 c.intersect_cells[center_cell[0] +
                                   2 * x_shift, center_cell[1] - 1 +
                                   j] = [intersect_number]
-    new_center_cell = center_cell + np.array([x_shift, y_shift])
+    new_center_cell = center_cell + array([x_shift, y_shift])
     return new_center_cell
 
 
@@ -1073,13 +1089,13 @@ def intersect_crossing_cell_wall(c, direction, current_cell, delta_x, delta_y,
     # c.square contains nodes of a unit square
     # we select the two nodes at the edge of the cell, that
     # bounds it in the direction the intersection is moving.
-    square_node_1 = (np.array(current_cell) +
-                     cell_nodes_k[0, :]) * (c.R * c.H + c.F * c.H)
-    square_node_2 = (np.array(current_cell) +
-                     cell_nodes_k[1, :]) * (c.R * c.H + c.F * c.H)
+    square_node_1 = (array(current_cell) + cell_nodes_k[0, :]) * (c.R * c.H +
+                                                                  c.F * c.H)
+    square_node_2 = (array(current_cell) + cell_nodes_k[1, :]) * (c.R * c.H +
+                                                                  c.F * c.H)
     # translates unit-square node into actual nodes of the cell
-    return intersect_cell_sign(c, square_node_1 + np.array([c.x_min, c.y_min]),
-                               square_node_2 + np.array([c.x_min, c.y_min]),
+    return intersect_cell_sign(c, square_node_1 + array([c.x_min, c.y_min]),
+                               square_node_2 + array([c.x_min, c.y_min]),
                                delta_x, delta_y, y_intercept)
 
 
@@ -1156,6 +1172,7 @@ def occupancy_cell(c, X):
 #######################################################################
 
 
+#@profile
 def occupancy_undersampled(c):
     """ Determines and fills the occupancy grid and returns the indices of
         empty cells. A cell is considered occupied if the disk centered at any
@@ -1180,18 +1197,17 @@ def occupancy_undersampled(c):
         (c.x_max - c.x_min) * c.occupancy_grid_side_length_inv)
     c.no_vertical_occupancy_cells = ceil(
         (c.y_max - c.y_min) * c.occupancy_grid_side_length_inv)
-    c.occupancy_grid = np.zeros(
-        (c.no_horizontal_occupancy_cells + 1,
-         c.no_vertical_occupancy_cells + 1)).astype(int)
-    c.occupancy_grid[:, -1] = c.occupancy_grid[:, -1] + 1
-    c.occupancy_grid[:, 0] = c.occupancy_grid[:, 0] + 1
-    c.occupancy_grid[-1, :] = c.occupancy_grid[-1, :] + 1
-    c.occupancy_grid[0, :] = c.occupancy_grid[0, :] + 1
+    c.occupancy_grid = zeros((c.no_horizontal_occupancy_cells + 1,
+                              c.no_vertical_occupancy_cells + 1)).astype(bool)
+    c.occupancy_grid[:, -1] = True  #c.occupancy_grid[:, -1] + 1
+    c.occupancy_grid[:, 0] = True  #c.occupancy_grid[:, 0] + 1
+    c.occupancy_grid[-1, :] = True  #c.occupancy_grid[-1, :] + 1
+    c.occupancy_grid[0, :] = True  #c.occupancy_grid[0, :] + 1
     # Boundary cells should are either occupied or outside of the domain
     # Takes care of rare cases, where x_max is not in the last boundary cell
     # (x_max a multiple of the grid size.)
 
-    xs = np.arange(
+    xs = arange(
         c.x_min, c.x_min +
         c.no_horizontal_occupancy_cells * c.occupancy_grid_side_length,
         .5 * c.occupancy_grid_side_length)
@@ -1207,15 +1223,17 @@ def occupancy_undersampled(c):
             # everything above/below, i.w. outside of the domain as
             # occupied, otherwise the algorithm tries to fill in
             # holes outside of the domain, which wastes a lot of time
-            c.occupancy_grid[boundary_cell[0], (boundary_cell[1]):] = (
-                c.occupancy_grid[boundary_cell[0], (boundary_cell[1]):]) + 1
+            c.occupancy_grid[boundary_cell[0], (boundary_cell[1]):] = True  #(
+            #c.occupancy_grid[boundary_cell[0], (boundary_cell[1]):]) + 1
             boundary_cell = occupancy_cell(c, lower_boundary(c, points))
-            (c.occupancy_grid[boundary_cell[0], :(boundary_cell[1])]
-             ) = (c.occupancy_grid[boundary_cell[0], :(boundary_cell[1])]) + 1
+            (c.occupancy_grid[boundary_cell[0], :(
+                boundary_cell[1])]) = True  # (
+            #c.occupancy_grid[boundary_cell[0], :(boundary_cell[1])]) + 1
     # marks cells around boundary points
     for i in range(0, len(c.coordinates)):
         occupancy_mark(c, c.coordinates[i])
-    undersampled_cells = np.nonzero(c.occupancy_grid == 0)
+    undersampled_cells = nonzero(c.occupancy_grid == 0)
+    del c.occupancy_grid
     return undersampled_cells
 
 
@@ -1243,17 +1261,16 @@ def occupancy_mark(c, node):
     occupied_radius = ceil(node[2] * c.occupancy_grid_side_length_inv)
     # furthest number of cells that could still contain a node conflicting
     # with a node in center cell.
-    X, Y = np.ogrid[max(center_cell[0] - occupied_radius, 0
-                        ):min(center_cell[0] + occupied_radius +
-                              1, c.no_horizontal_occupancy_cells + 1),
-                    max(center_cell[1] - occupied_radius, 0
-                        ):min(center_cell[1] + occupied_radius +
-                              1, c.no_vertical_occupancy_cells + 1)]
+    X, Y = ogrid[max(center_cell[0] - occupied_radius, 0
+                     ):min(center_cell[0] + occupied_radius +
+                           1, c.no_horizontal_occupancy_cells + 1),
+                 max(center_cell[1] - occupied_radius, 0
+                     ):min(center_cell[1] + occupied_radius +
+                           1, c.no_vertical_occupancy_cells + 1)]
     distance_from_center = ((X - center_cell[0])**2 + (Y - center_cell[1])**2)
-    occupied_by_node = (distance_from_center <=
-                        (occupied_radius + 1)**2).astype(int)
+    occupied_by_node = (distance_from_center <= (occupied_radius + 1)**2)
     # create a circular mask of ones of cells occupied by center node.
-    c.occupancy_grid[X, Y] = (c.occupancy_grid[X, Y]) + occupied_by_node
+    c.occupancy_grid[X, Y] = (c.occupancy_grid[X, Y]) | occupied_by_node
     # add circilar mask to grid, to mark cells occupied by center node
     # unoccupied cells remain 0.
 
@@ -1279,7 +1296,7 @@ def resample(c, cell_x, cell_y):
             by choice of the empty cells, points sampled by this function
             can only conflict with each other.
     """
-    candidate = np.array([
+    candidate = array([
         c.x_min + (cell_x + random()) * c.occupancy_grid_side_length,
         c.y_min + (cell_y + random()) * c.occupancy_grid_side_length
     ])
@@ -1314,9 +1331,9 @@ def lower_boundary(c, x):
                                                       c.no_of_vertices]:
             y = c.vertices_y[i] + \
                 c.slope_lower_boundary[i] * (x - c.vertices_x[i])
-            return np.array([x, y])
+            return array([x, y])
         i = (i + 1) % c.no_of_vertices
-    return np.array([x, c.y_max])
+    return array([x, c.y_max])
 
 
 #######################################################################
@@ -1347,9 +1364,9 @@ def upper_boundary(c, x):
                                                       c.no_of_vertices]:
             y = c.vertices_y[i] + \
                 c.slope_upper_boundary[i] * (x - c.vertices_x[i])
-            return np.array([x, y])
+            return array([x, y])
         i = (i - 1) % c.no_of_vertices
-    return np.array([x, c.y_min])
+    return array([x, c.y_min])
 
 
 #######################################################################
@@ -1358,18 +1375,18 @@ def upper_boundary(c, x):
 
 
 def distance(X, Y):
-    """ returns Euclidean distance between X and Y
+    """ returns euclidian distane between X and Y
         Parameters
         ---------
             X/Y : ndarrya(float)
-                2D coordinates of points X and Y
+                2d coordinates of points X and Y
         Returns
         ---------
             distance : float
                 euclidean distance
         Notes
         -----
-        faster than numpy equivalent for 2D
+        faster than numpy equivalent for 2d
     """
     return sqrt((X[0] - Y[0]) * (X[0] - Y[0]) + (X[1] - Y[1]) * (X[1] - Y[1]))
 
@@ -1397,8 +1414,8 @@ def norm_sq(X):
     """ returns euclidean square norm of X
          Parameters
         ---------
-            X : nd-array (float)
-                2D coordinates of points X and Y
+            X : ndarrya(float)
+                2d coordinates of points X and Y
         Returns
         ---------
             norm_sq : float
@@ -1414,25 +1431,23 @@ def dot_product(X, Y):
     """returns dotproduct of X and Y
         Parameters
         ---------
-            X/Y : nd-array (float)
-                2D coordinates of points X and Y
+            X/Y : ndarrya(float)
+                2d coordinates of points X and Y
         Returns
         ---------
             dot_product : float
-                euclidean dot-product
+                euclidean dotproduct
         Notes
         -----
-        faster than numpy equivalent for 2D
+        faster than numpy equivalent for 2d
     """
     return X[0] * Y[0] + X[1] * Y[1]
 
 
-def dump_poisson_params(h,
-                        R=20,
-                        A=0.1,
-                        F=1,
-                        concurrent_samples=5,
-                        grid_size=20):
+#######################################################################
+
+
+def dump_poisson_params(h, R, A, F, concurrent_samples, grid_size):
 
     # A > 0
     # 0 < A < 1.0, if user A > 1; A = 0.95 with warning.
@@ -1446,7 +1461,7 @@ def dump_poisson_params(h,
 #######################################################################
 def single_fracture_poisson(fracture_id):
 
-    print(f"--> Starting Poisson sampling for fracture number {fracture_id}\n")
+    print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
     c = pc.Poisson_Variables(f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \
@@ -1487,4 +1502,5 @@ def single_fracture_poisson(fracture_id):
 
     runtime = timeit.default_timer() - start
     print(
-        f"--> Poisson sampling for fracture {fracture_id} took {runtime:0.2f} seconds")
+        f"--> Poisson sampling for fracture {fracture_id} took {runtime:0.2f} seconds"
+    )
