@@ -1445,15 +1445,49 @@ def dot_product(X, Y):
 
 
 #######################################################################
+def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
+                        concurrent_samples, grid_size):
 
+    print("--> Writing Poisson Disc Parameters")
+    # Check parameter ranges
+    if 0 <= slope < 1:
+        pass
+    else:
+        print(f"--> Slope Parameter is outside correct range [0,1)")
+        print(f"--> Value provided: {slope}")
+        print("--> Setting to default: 0.1")
+        slope = 0.1
 
-def dump_poisson_params(h, R, A, F, concurrent_samples, grid_size):
+    if min_dist < 0:
+        print("--> Warning: Provided min_dist greater 0")
+        print(f"--> min_dist provided: {min_dist}")
+        print("--> Setting to default: 1")
+        min_dist = 1
 
-    # A > 0
-    # 0 < A < 1.0, if user A > 1; A = 0.95 with warning.
-    # uniform A = 0
-    #
-    params = {"h":h,"R":R,"A":A,"F":F,\
+    if min_dist > max_dist:
+        print("--> Warning: Provided min_dist greater than max_dist")
+        print(f"--> min_dist provided: {min_dist}")
+        print(f"--> max_dist provided: {max_dist}")
+        print("Setting to default: min_dist=1, max_dist=40")
+        min_dist = 1
+        max_dist = 40
+
+    if coarse_factor != 8:
+        slope = 0.1
+        max_dist = (coarse_factor - 1) / (2 * slope)
+
+    ## Write information to screen about meshing parameters
+    print("--> Poisson Sampling Parameters:")
+    print(f"--> h: {h}")
+    print(f"--> coarse_factor: {coarse_factor}")
+    print(f"--> min_dist: {min_dist}")
+    print(f"--> max_dist: {max_dist}")
+    print(f"--> concurrent_samples: {concurrent_samples}")
+    print(f"--> grid_size: {grid_size}\n")
+    print(f"--> Lower bound on mesh size: {h/2:0.2e}")
+    print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}")
+
+    params = {"h":h,"R":max_dist,"A":slope,"F":min_dist,\
         "concurrent_samples":concurrent_samples,"grid_size":grid_size}
     pickle.dump(params, open("poisson_params.p", "wb"))
 

@@ -19,9 +19,10 @@ def mesh_network(self,
                  prune=False,
                  uniform_mesh=False,
                  production_mode=True,
-                 slope=0.05,
-                 max_dist=50,
+                 coarse_factor=8,
+                 slope=0.1,
                  min_dist=1,
+                 max_dist=40,
                  concurrent_samples=10,
                  grid_size=10,
                  visual_mode=None):
@@ -101,12 +102,8 @@ did not provide file of fractures to keep.\nExiting program.\n"
     if visual_mode:
         lagrit.create_lagrit_scripts_reduced_mesh(ncpu)
     else:
-        dump_poisson_params(h,
-                            A=slope,
-                            R=max_dist,
-                            F=min_dist,
-                            concurrent_samples=concurrent_samples,
-                            grid_size=grid_size)
+        dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
+                            concurrent_samples, grid_size)
 
         lagrit.create_lagrit_scripts_poisson(fracture_list)
 
