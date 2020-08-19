@@ -91,3 +91,8 @@ The following are publications that use *dfnWorks*:
 #. `\N. Makedonska, S. Karra, H.S. Viswanathan, and G.D. Guthrie,. Role of Interaction between Hydraulic and Natural Fractures on Production. Journal of Natural Gas Science and Engineering 2020, p.103451. <https://www.sciencedirect.com/science/article/pii/S187551002030305X>`_.
 
 #. `\H. Pham, R. Parashar, N. Sund, and K. Pohlmann. A Method to Represent a Well in a Three‐dimensional Discrete Fracture Network Model. Groundwater. 2020 <https://ngwa.onlinelibrary.wiley.com/doi/abs/10.1111/gwat.13030>`_.
+
+
+#. `\M.R. Sweeney, and J.D. Hyman. Stress effects on flow and transport in three‐dimensional fracture networks. Journal of Geophysical Research: Solid Earth, 125, e2020JB019754. 2020 <https://agupubs.onlinelibrary.wiley.com/doi/epdf/10.1029/2020JB019754>`_.
+
+
