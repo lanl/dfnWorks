@@ -526,14 +526,14 @@ finish
     print('--> Writing LaGriT Control Files: Complete')
 
 
-def create_lagrit_scripts_reduced_mesh(ncpu):
+def create_lagrit_scripts_reduced_mesh(fracture_list):
     """ Creates LaGriT scripts to create a coarse (non-conforming) 
     mesh of each fracture. 
     
     Parameters
     ---------- 
-        ncpu : int
-            Number of cpus
+        fracture_list : list
+            list of fracture numbers to be meshed
 
     Returns
     -------
@@ -541,8 +541,6 @@ def create_lagrit_scripts_reduced_mesh(ncpu):
 
     Notes
     -----
-    1. Only ncpu of these files are created
-    2. Symbolic links are used to rotate through fractures on different CPUs 
     """
 
     #Section 2 : Creates LaGriT script to be run for each polygon
@@ -557,11 +555,11 @@ def create_lagrit_scripts_reduced_mesh(ncpu):
     lagrit_input = """
 
 # LaGriT Parameter file 
-infile parameters_CPU{0}.mlgi
+infile parameters_{0}.mlgi
 
 # Name of input files that contains the boundary of the polygon/fracture 
 
-define / POLY_FILE / poly_CPU{0}.inp
+define / POLY_FILE / poly_{0}.inp
 
 ## Triangulate Fracture perimeter without point addition 
 read / POLY_FILE / mo_poly_work
@@ -592,12 +590,21 @@ dump / OUTFILE_AVS / mo_final
 finish
 
 """
-    # Create a different Run file for each CPU
-    for i in range(1, ncpu + 1):
-        file_name = 'mesh_poly_CPU{0}.lgi'.format(i)
+
+    if os.path.isdir('lagrit_scripts'):
+        rmtree("lagrit_scripts")
+        os.mkdir("lagrit_scripts")
+    else:
+        os.mkdir("lagrit_scripts")
+
+    # Create a different run file for each fracture
+    for i in fracture_list:
+        file_name = f'lagrit_scripts/mesh_poly_{i}.lgi'
         with open(file_name, 'w') as f:
             f.write(lagrit_input.format(i))
             f.flush()
+    print('--> Writing LaGriT Control Files: Complete')
+
 
     print('--> Writing LaGriT Control Files: Complete')
 

@@ -100,7 +100,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     print('=' * 80)
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     if visual_mode:
-        lagrit.create_lagrit_scripts_reduced_mesh(ncpu)
+        lagrit.create_lagrit_scripts_reduced_mesh(fracture_list)
     else:
         dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
                             concurrent_samples, grid_size)
