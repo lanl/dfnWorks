@@ -89,12 +89,6 @@ keepOnlyLargestCluster: 0
            the specified boundary faces in boundaryFaces option below
     */
 
-keepIsolatedFractures: 0 
-/*  0 - Remove any isolated fracture (not clusters)
-    1 - Keep all fractures in the domain
-*/
-
-
 ignoreBoundaryFaces: 1  
 /*
      0 = use boundaryFaces option below 
@@ -447,23 +441,6 @@ vertices are not put in clockwise or counter-clockwise order.
 If errors (Usualy seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
 Also, coordinates must be co-planar */
-
-
-
-/*===========================================================================*/
-/*===========================================================================*/
-/*                                                                           */
-/*  User Polygon Defined By Coordinates                                   */
-/*                                                                           */
-/*===========================================================================*/
-/*===========================================================================*/
-
-userPolygonByCoord: 0
-/*  0 - User defined polygon by coordinates off
-    1 - User defined polygon by coordinates on
-*/
-
-PolygonByCoord_Input_File_Path: ./
 
 /*===========================================================================*/
 // Aperture [m]
