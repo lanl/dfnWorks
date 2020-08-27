@@ -1,1 +1,1 @@
-python run.py -name DUMMY/dfnworks-main/examples/4_user_rects_example/example -input 4_user_defined_rectangles_run_file.txt  
+python run.py -name DUMMY/dfnworks-main/examples/4_user_rects/example -input 4_user_defined_rectangles_run_file.txt  
