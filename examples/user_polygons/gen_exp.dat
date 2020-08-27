@@ -15,7 +15,7 @@ nPoly: 40
     like to have in the DFN.  
 */
 
-domainSize: {10,10,10} 
+domainSize: {20,20,20} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -641,6 +641,10 @@ permOption: 1
 constantPermeability: 1e-12  //Constant permeability for all fractures 
 
 /*===========================================================================*/
+keepIsolatedFractures: 0
+userPolygonByCoord: 0
+PolygonByCoord_Input_File_Path: ./polygons.dat
+
  
 
 

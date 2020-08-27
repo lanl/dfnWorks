@@ -535,3 +535,32 @@ forceLargeFractures:0 /* Force large fractures (fractures that X)  to be include
 radiiListIncrease: 0.1 /* Increase the length of the radii list by this percentage */
 removeFracturesLessThan: 0 /*Used to change the lower cutoff of fracture size*/
  
+
+
+keepIsolatedFractures: 0 
+/*  0 - Remove any isolated fracture (not clusters)
+    1 - Keep all fractures in the domain
+*/
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*                                                                           */
+/*  User Polygon Defined By Coordinates                                   */
+/*                                                                           */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userPolygonByCoord: 0
+/*  0 - User defined polygon by coordinates off
+    1 - User defined polygon by coordinates on
+*/
+
+PolygonByCoord_Input_File_Path: ./
+
+/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+vertices are not put in clockwise or counter-clockwise order.
+If errors (Usualy seg fualt during meshing if using LaGriT), 
+try to reorder the points till u get it right.
+Also, coordinates must be co-planar */
+
