@@ -1,4 +1,0 @@
-Runs times for 
-Function: make_working_directory : 0.00 seconds
-Function: check_input : 0.01 seconds
-Function: create_network : 2.27 seconds
