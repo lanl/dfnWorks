@@ -11,6 +11,8 @@ from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
 import subprocess
 
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+
 
 def edit_intersection_files(num_poly, fracture_list, path):
     """ If pruning a DFN, this function walks through the intersection files
