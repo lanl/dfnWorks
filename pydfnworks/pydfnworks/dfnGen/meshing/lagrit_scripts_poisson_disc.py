@@ -66,18 +66,18 @@ def edit_intersection_files(num_poly, fracture_list, path):
         pull_list = list(
             set(intersecting_fractures).intersection(set(fractures_to_remove)))
         if len(pull_list) > 0:
-            # Create Symlink to origignal intersection file
+            # Create Symlink to original intersection file
             os.symlink(path + 'intersections/' + filename, filename)
             # Create LaGriT script to remove intersections with fractures not in prune_file
             lagrit_script = f"""
-read / {filename} / mo1' 
+read / {filename} / mo1 
 pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
 """
             for j in pull_list[1:]:
                 lagrit_script += f'''
 pset / prune / attribute / b_a / 1,0,0 / eq / {j}
 pset / pset2remove / union / pset2remove, prune
-#rmpoint / pset, get, prune
+rmpoint / pset, get, prune
 pset / prune / delete
      '''
             lagrit_script += f'''
