@@ -1,0 +1,1178 @@
+ 
+ 
+*               * * * * * * * * * * * * * * * * * * * * * * * *                 
+*               *                                             *                 
+*               *    Program:  LaGriT V3.300   macOS          *                 
+*               *    date_compile: 2019/01/15 Release         *                 
+*               *    Run Time: 2020/Apr 21  08:20:12          *                 
+*               *    Manual:   http://lagrit.lanl.gov         *                 
+*               *                                             *                 
+*               * * * * * * * * * * * * * * * * * * * * * * * *                 
+ 
+                               -----oOo-----                                    
+             LaGriT V3 LA-CC-15-069  https://github.com/lanl/LaGriT             
+Copyright 2015. Los Alamos National Security, LLC.  This software was produced  
+under U.S. Government contract DE-AC52-06NA25396 for Los Alamos National        
+Laboratory (LANL), which is operated by Los Alamos National Security, LLC       
+for the U.S. Department of Energy. The U.S. Government has rights to use,       
+reproduce, and distribute this software. Neither the  government nor Los Alamos 
+National Security, LLC makes any warranty, express or  implied, or assumes any  
+liability for the use of this software. If software is modified to produce      
+derivative works, such modified software should be  clearly marked, so as not   
+to confuse it with the version available from LANL.                             
+                               -----oOo-----                                    
+ 
+ 
+Output log file: outx3dgen                                                      
+Command log file: logx3dgen                                                     
+ 
+ Enter a command
+infile parameters_CPU5.mlgi                                                     
+define/ID/5                                                                     
+define/OUTFILE_GMV/mesh_5.gmv                                                   
+define/OUTFILE_AVS/mesh_5.inp                                                   
+define/OUTFILE_LG/mesh_5.lg                                                     
+define/POLY_FILE/poly_5.inp                                                     
+define/QUAD_FILE/tmp_quad_5.inp                                                 
+define/EXCAVATE_FILE/tmp_excavate_5.inp                                         
+define/PRE_FINAL_FILE/tmp_pre_final_5.inp                                       
+define/PRE_FINAL_MASSAGE/tmp_pre_final_massage_5.gmv                            
+define/H_SCALE/1.000000e-01                                                     
+define/H_EPS/1.000000e-08                                                       
+define/H_SCALE2/1.500000e-01                                                    
+define/H_EXTRUDE/5.000000e-02                                                   
+define/H_TRANS/-1.614641e-03                                                    
+define/H_PRIME/8.000000e-02                                                     
+define/H_PRIME2/3.000000e-02                                                    
+define/H_SCALE3/3.000000e-01                                                    
+define/H_SCALE8/8.000000e-01                                                    
+define/H_SCALE16/1.600000e+00                                                   
+define/H_SCALE32/3.200000e+00                                                   
+define/H_SCALE64/6.400000e+00                                                   
+define/PERTURB8/4.000000e-02                                                    
+define/PERTURB16/8.000000e-02                                                   
+define/PERTURB32/1.600000e-01                                                   
+define/PERTURB64/3.200000e-01                                                   
+define/PARAM_A/2.000000                                                         
+define/PARAM_B/0.000000                                                         
+define/PARAM_A2/1.000000                                                        
+define/PARAM_B2/0.050000                                                        
+define/THETA/75.606014583529                                                    
+define/X1/109.083893262160                                                      
+define/Y1/14.167012062171                                                       
+define/Z1/-0.000000000000                                                       
+define/X2/-109.083893262160                                                     
+define/Y2/-14.167012062171                                                      
+define/Z2/0.000000000000                                                        
+define/FAMILY/1                                                                 
+finish                                                                          
+ Enter a command
+#LaGriT Script                                                                  
+ Enter a command
+# Name the input files that contain the polygons                                
+ Enter a command
+# and lines of intersection.                                                    
+ Enter a command
+                                                                                
+define/POLY_FILE/poly_CPU5.inp                                                  
+ Enter a command
+define/LINE_FILE/intersections_CPU5.inp                                         
+ Enter a command
+define/OUTPUT_INTER_ID_SSINT/id_tri_node_CPU5.list                              
+ Enter a command
+                                                                                
+# Define parameters such as:                                                    
+ Enter a command
+# length scale to refine triangular mesh                                        
+ Enter a command
+# purturbation distance to break symmetry of refined mesh#                      
+ Enter a command
+                                                                                
+# Read in line and polygon files                                                
+ Enter a command
+read/POLY_FILE/mo_poly_work                                                     
+read/avs/poly_CPU5.inp/mo_poly_work                                             
+                    0                    0
+geniee                                                                          
+finish                                                                          
+cmo/status/brief                                                                
+ 
+The current-mesh-object(CMO) is: mo_poly_work                                   
+ 
+  1 Mesh Object name: mo_poly_work                                              
+    number of nodes =             5        number of elements =            4    
+    dimensions geometry =         3        element type =                lin    
+    dimensions topology =         1        2 nodes      2 faces      1 edges    
+    boundary flag =        16000000        status =                   active    
+ 
+ 
+finish                                                                          
+finish                                                                          
+ Enter a command
+                                                                                
+read/LINE_FILE/mo_line_work                                                     
+read/avs/intersections_CPU5.inp/mo_line_work                                    
+                    2                    0
+cmo/addatt/mo_line_work/a_b/VINT/scalar/nnodes/linear/permanent/gxaf/0.0        
+finish                                                                          
+cmo/addatt/mo_line_work/b_a/VINT/scalar/nnodes/linear/permanent/gxaf/0.0        
+finish                                                                          
+geniee                                                                          
+finish                                                                          
+cmo/status/brief                                                                
+ 
+The current-mesh-object(CMO) is: mo_line_work                                   
+ 
+  1 Mesh Object name: mo_poly_work                                              
+    number of nodes =             5        number of elements =            4    
+    dimensions geometry =         3        element type =                lin    
+    dimensions topology =         1        2 nodes      2 faces      1 edges    
+    boundary flag =        16000000        status =                 inactive    
+ 
+  2 Mesh Object name: mo_line_work                                              
+    number of nodes =           162        number of elements =          155    
+    dimensions geometry =         3        element type =                lin    
+    dimensions topology =         1        2 nodes      2 faces      1 edges    
+    boundary flag =        16000000        status =                   active    
+ 
+ 
+finish                                                                          
+finish                                                                          
+ Enter a command
+                                                                                
+## Triangulate Fracture without point addition                                  
+ Enter a command
+cmo/create/mo_pts///triplane                                                    
+ Enter a command
+copypts/mo_pts/mo_poly_work                                                     
+copypts added nodes          1 to          5                                    
+ Enter a command
+cmo/select/mo_pts                                                               
+ Enter a command
+triangulate/counterclockwise                                                    
+filter/1,0,0                                                                    
+FILTER:Use internal epsilonl value =   0.930354138758E-12                       
+FILTER:Dudding duplicate points:           0                                    
+finish                                                                          
+rmpoint/compress                                                                
+         0 points removed and          0 elements removed.                      
+RMPOINT: new point count is            5                                        
+RMPOINT: new element count is          3                                        
+finish                                                                          
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+finish                                                                          
+ Enter a command
+                                                                                
+cmo/setatt/mo_pts/imt/1 0 0/ID                                                  
+         5 values reset for attribute imt1                                      
+ 
+ Enter a command
+cmo/setatt/mo_pts/itetclr/1 0 0/ID                                              
+         3 values reset for attribute itetclr                                   
+ 
+ Enter a command
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+ Enter a command
+cmo/delete/mo_poly_work                                                         
+     Released Mesh Object: mo_poly_work                                         
+ Enter a command
+cmo/select/mo_pts                                                               
+ Enter a command
+                                                                                
+                                                                                
+# Creates a Coarse Mesh and then refines it using the distance field from inters
+ Enter a command
+massage/H_SCALE64/H_EPS/H_EPS                                                   
+nodes in point set  =          5                                                
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          1               
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =          5                                                
+SGD:      0 total relaxations on point set of      5 indept. nodes.             
+nodes in point set  =          5                                                
+ Enter a command
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+ Enter a command
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+ 
+ THE PSET  p_move  HAS          0 POINTS                                        
+ Enter a command
+perturb/pset get p_move/PERTURB64 PERTURB64 0.0                                 
+perturb mo_pts                                                                  
+ 
+No points in indexed point set!                                                 
+ 
+                         Error from:   PJ¥êþ    ØÂ  XpÖÂ  @£7     Errors.
+ Enter a command
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          5                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1077784E+00                                      
+ Max. area BEFORE smoothing= 0.2541635E+01                                      
+Iteration=   1; root mean square error= 0.0000000E+00                           
+Iteration=   2; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.1077784E+00                                       
+ Max. area AFTER smoothing= 0.2541635E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+                                                                                
+massage/H_SCALE32/H_EPS/H_EPS                                                   
+nodes in point set  =          5                                                
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =          5                                                
+SGD:      0 total relaxations on point set of      5 indept. nodes.             
+nodes in point set  =          5                                                
+Face iteration, number of faces:          1         1                           
+Face iteration, number of faces:          1         1                           
+Face iteration, number of faces:          1         1                           
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          1               
+RECON: done.                                                                    
+finish                                                                          
+ Enter a command
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+ Enter a command
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+ 
+ THE PSET  p_move  HAS          1 POINTS                                        
+ Enter a command
+perturb/pset get p_move/PERTURB32 PERTURB32 0.0                                 
+perturb mo_pts                                                                  
+nodes in indexed point set  =          1                                        
+ 
+ Enter a command
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.3402910E+00                                      
+ Max. area BEFORE smoothing= 0.8599309E+00                                      
+Iteration=   1; root mean square error= 0.1153481E+00                           
+Iteration=   2; root mean square error= 0.1373751E-01                           
+Iteration=   3; root mean square error= 0.0000000E+00                           
+ Min. area AFTER smoothing= 0.5072515E+00                                       
+ Max. area AFTER smoothing= 0.7875385E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          1               
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.2238801E+00                                      
+ Max. area BEFORE smoothing= 0.1050770E+01                                      
+Iteration=   1; root mean square error= 0.1332503E+00                           
+Iteration=   2; root mean square error= 0.6364956E-01                           
+Iteration=   3; root mean square error= 0.1962616E-16                           
+ Min. area AFTER smoothing= 0.4477612E+00                                       
+ Max. area AFTER smoothing= 0.1050770E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4477612E+00                                      
+ Max. area BEFORE smoothing= 0.1050770E+01                                      
+Iteration=   1; root mean square error= 0.1962616E-16                           
+Iteration=   2; root mean square error= 0.5887847E-16                           
+Iteration=   3; root mean square error= 0.1962616E-16                           
+Iteration=   4; root mean square error= 0.1962616E-16                           
+Iteration=   5; root mean square error= 0.1962616E-16                           
+Iteration=   6; root mean square error= 0.5887847E-16                           
+Iteration=   7; root mean square error= 0.1962616E-16                           
+Iteration=   8; root mean square error= 0.1962616E-16                           
+Iteration=   9; root mean square error= 0.1962616E-16                           
+Iteration=  10; root mean square error= 0.5887847E-16                           
+Iteration=  11; root mean square error= 0.1962616E-16                           
+Iteration=  12; root mean square error= 0.1962616E-16                           
+Iteration=  13; root mean square error= 0.1962616E-16                           
+Iteration=  14; root mean square error= 0.5887847E-16                           
+Iteration=  15; root mean square error= 0.1962616E-16                           
+Iteration=  16; root mean square error= 0.1962616E-16                           
+Iteration=  17; root mean square error= 0.1962616E-16                           
+Iteration=  18; root mean square error= 0.5887847E-16                           
+Iteration=  19; root mean square error= 0.1962616E-16                           
+Iteration=  20; root mean square error= 0.1962616E-16                           
+Iteration=  21; root mean square error= 0.1962616E-16                           
+Iteration=  22; root mean square error= 0.5887847E-16                           
+Iteration=  23; root mean square error= 0.1962616E-16                           
+Iteration=  24; root mean square error= 0.1962616E-16                           
+Iteration=  25; root mean square error= 0.1962616E-16                           
+ Min. area AFTER smoothing= 0.4477612E+00                                       
+ Max. area AFTER smoothing= 0.1050770E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4477612E+00                                      
+ Max. area BEFORE smoothing= 0.1050770E+01                                      
+Iteration=   1; root mean square error= 0.5887847E-16                           
+Iteration=   2; root mean square error= 0.1962616E-16                           
+Iteration=   3; root mean square error= 0.1962616E-16                           
+Iteration=   4; root mean square error= 0.1962616E-16                           
+Iteration=   5; root mean square error= 0.5887847E-16                           
+Iteration=   6; root mean square error= 0.1962616E-16                           
+Iteration=   7; root mean square error= 0.1962616E-16                           
+Iteration=   8; root mean square error= 0.1962616E-16                           
+Iteration=   9; root mean square error= 0.5887847E-16                           
+Iteration=  10; root mean square error= 0.1962616E-16                           
+Iteration=  11; root mean square error= 0.1962616E-16                           
+Iteration=  12; root mean square error= 0.1962616E-16                           
+Iteration=  13; root mean square error= 0.5887847E-16                           
+Iteration=  14; root mean square error= 0.1962616E-16                           
+Iteration=  15; root mean square error= 0.1962616E-16                           
+Iteration=  16; root mean square error= 0.1962616E-16                           
+Iteration=  17; root mean square error= 0.5887847E-16                           
+Iteration=  18; root mean square error= 0.1962616E-16                           
+Iteration=  19; root mean square error= 0.1962616E-16                           
+Iteration=  20; root mean square error= 0.1962616E-16                           
+Iteration=  21; root mean square error= 0.5887847E-16                           
+Iteration=  22; root mean square error= 0.1962616E-16                           
+Iteration=  23; root mean square error= 0.1962616E-16                           
+Iteration=  24; root mean square error= 0.1962616E-16                           
+Iteration=  25; root mean square error= 0.5887847E-16                           
+ Min. area AFTER smoothing= 0.4477612E+00                                       
+ Max. area AFTER smoothing= 0.1050770E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4477612E+00                                      
+ Max. area BEFORE smoothing= 0.1050770E+01                                      
+Iteration=   1; root mean square error= 0.1962616E-16                           
+Iteration=   2; root mean square error= 0.1962616E-16                           
+Iteration=   3; root mean square error= 0.1962616E-16                           
+Iteration=   4; root mean square error= 0.5887847E-16                           
+Iteration=   5; root mean square error= 0.1962616E-16                           
+Iteration=   6; root mean square error= 0.1962616E-16                           
+Iteration=   7; root mean square error= 0.1962616E-16                           
+Iteration=   8; root mean square error= 0.5887847E-16                           
+Iteration=   9; root mean square error= 0.1962616E-16                           
+Iteration=  10; root mean square error= 0.1962616E-16                           
+Iteration=  11; root mean square error= 0.1962616E-16                           
+Iteration=  12; root mean square error= 0.5887847E-16                           
+Iteration=  13; root mean square error= 0.1962616E-16                           
+Iteration=  14; root mean square error= 0.1962616E-16                           
+Iteration=  15; root mean square error= 0.1962616E-16                           
+Iteration=  16; root mean square error= 0.5887847E-16                           
+Iteration=  17; root mean square error= 0.1962616E-16                           
+Iteration=  18; root mean square error= 0.1962616E-16                           
+Iteration=  19; root mean square error= 0.1962616E-16                           
+Iteration=  20; root mean square error= 0.5887847E-16                           
+Iteration=  21; root mean square error= 0.1962616E-16                           
+Iteration=  22; root mean square error= 0.1962616E-16                           
+Iteration=  23; root mean square error= 0.1962616E-16                           
+Iteration=  24; root mean square error= 0.5887847E-16                           
+Iteration=  25; root mean square error= 0.1962616E-16                           
+ Min. area AFTER smoothing= 0.4477612E+00                                       
+ Max. area AFTER smoothing= 0.1050770E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =          8                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4477612E+00                                      
+ Max. area BEFORE smoothing= 0.1050770E+01                                      
+Iteration=   1; root mean square error= 0.1962616E-16                           
+Iteration=   2; root mean square error= 0.1962616E-16                           
+Iteration=   3; root mean square error= 0.5887847E-16                           
+Iteration=   4; root mean square error= 0.1962616E-16                           
+Iteration=   5; root mean square error= 0.1962616E-16                           
+Iteration=   6; root mean square error= 0.1962616E-16                           
+Iteration=   7; root mean square error= 0.5887847E-16                           
+Iteration=   8; root mean square error= 0.1962616E-16                           
+Iteration=   9; root mean square error= 0.1962616E-16                           
+Iteration=  10; root mean square error= 0.1962616E-16                           
+Iteration=  11; root mean square error= 0.5887847E-16                           
+Iteration=  12; root mean square error= 0.1962616E-16                           
+Iteration=  13; root mean square error= 0.1962616E-16                           
+Iteration=  14; root mean square error= 0.1962616E-16                           
+Iteration=  15; root mean square error= 0.5887847E-16                           
+Iteration=  16; root mean square error= 0.1962616E-16                           
+Iteration=  17; root mean square error= 0.1962616E-16                           
+Iteration=  18; root mean square error= 0.1962616E-16                           
+Iteration=  19; root mean square error= 0.5887847E-16                           
+Iteration=  20; root mean square error= 0.1962616E-16                           
+Iteration=  21; root mean square error= 0.1962616E-16                           
+Iteration=  22; root mean square error= 0.1962616E-16                           
+Iteration=  23; root mean square error= 0.5887847E-16                           
+Iteration=  24; root mean square error= 0.1962616E-16                           
+Iteration=  25; root mean square error= 0.1962616E-16                           
+ Min. area AFTER smoothing= 0.4477612E+00                                       
+ Max. area AFTER smoothing= 0.1050770E+01                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+                                                                                
+massage/H_SCALE16/H_EPS/H_EPS                                                   
+nodes in point set  =          8                                                
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =          8                                                
+SGD:      0 total relaxations on point set of      8 indept. nodes.             
+nodes in point set  =          8                                                
+Face iteration, number of faces:          1         3                           
+Face iteration, number of faces:          1         2                           
+Face iteration, number of faces:          1         1                           
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+ Enter a command
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+ Enter a command
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+ 
+ THE PSET  p_move  HAS          3 POINTS                                        
+ Enter a command
+perturb/pset get p_move/PERTURB16 PERTURB16 0.0                                 
+perturb mo_pts                                                                  
+nodes in indexed point set  =          3                                        
+ 
+ Enter a command
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1386357E+00                                      
+ Max. area BEFORE smoothing= 0.5526100E+00                                      
+Iteration=   1; root mean square error= 0.4386860E-01                           
+Iteration=   2; root mean square error= 0.3399440E-02                           
+Iteration=   3; root mean square error= 0.4184732E-03                           
+ Min. area AFTER smoothing= 0.1748682E+00                                       
+ Max. area AFTER smoothing= 0.5318081E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          2               
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.8825271E-01                                      
+ Max. area BEFORE smoothing= 0.5318081E+00                                      
+Iteration=   1; root mean square error= 0.8616494E-01                           
+Iteration=   2; root mean square error= 0.1852713E-01                           
+Iteration=   3; root mean square error= 0.4008644E-02                           
+Iteration=   4; root mean square error= 0.3933733E-03                           
+ Min. area AFTER smoothing= 0.1828328E+00                                       
+ Max. area AFTER smoothing= 0.5230082E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          1               
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.1828328E+00                                      
+ Max. area BEFORE smoothing= 0.5230082E+00                                      
+Iteration=   1; root mean square error= 0.5198801E-01                           
+Iteration=   2; root mean square error= 0.7094038E-02                           
+Iteration=   3; root mean square error= 0.7885424E-03                           
+Iteration=   4; root mean square error= 0.8747767E-04                           
+ Min. area AFTER smoothing= 0.2133552E+00                                       
+ Max. area AFTER smoothing= 0.5230082E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.2133552E+00                                      
+ Max. area BEFORE smoothing= 0.5230082E+00                                      
+Iteration=   1; root mean square error= 0.9700772E-05                           
+Iteration=   2; root mean square error= 0.1075715E-05                           
+Iteration=   3; root mean square error= 0.1192851E-06                           
+Iteration=   4; root mean square error= 0.1322741E-07                           
+ Min. area AFTER smoothing= 0.2133591E+00                                       
+ Max. area AFTER smoothing= 0.5230082E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.2133591E+00                                      
+ Max. area BEFORE smoothing= 0.5230082E+00                                      
+Iteration=   1; root mean square error= 0.1466775E-08                           
+Iteration=   2; root mean square error= 0.1626492E-09                           
+Iteration=   3; root mean square error= 0.1803619E-10                           
+Iteration=   4; root mean square error= 0.1999821E-11                           
+ Min. area AFTER smoothing= 0.2133591E+00                                       
+ Max. area AFTER smoothing= 0.5230082E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         14                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.2133591E+00                                      
+ Max. area BEFORE smoothing= 0.5230082E+00                                      
+Iteration=   1; root mean square error= 0.2217203E-12                           
+Iteration=   2; root mean square error= 0.2459023E-13                           
+Iteration=   3; root mean square error= 0.2821529E-14                           
+Iteration=   4; root mean square error= 0.5661049E-15                           
+ Min. area AFTER smoothing= 0.2133591E+00                                       
+ Max. area AFTER smoothing= 0.5230082E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+                                                                                
+massage/H_SCALE8/H_EPS/H_EPS                                                    
+nodes in point set  =         14                                                
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =         14                                                
+SGD:      0 total relaxations on point set of     14 indept. nodes.             
+nodes in point set  =         14                                                
+Face iteration, number of faces:          1         6                           
+Face iteration, number of faces:          1         5                           
+Face iteration, number of faces:          1         5                           
+Face iteration, number of faces:          1         2                           
+Face iteration, number of faces:          1         1                           
+recon/0/0.10000000E-07/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          2               
+RECON: done.                                                                    
+finish                                                                          
+ Enter a command
+resetpts/itp                                                                    
+geniee                                                                          
+finish                                                                          
+ Enter a command
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+ 
+ THE PSET  p_move  HAS         13 POINTS                                        
+ Enter a command
+perturb/pset get p_move/PERTURB8 PERTURB8 0.0                                   
+perturb mo_pts                                                                  
+nodes in indexed point set  =         13                                        
+ 
+ Enter a command
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          1               
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4266809E-01                                      
+ Max. area BEFORE smoothing= 0.2367166E+00                                      
+Iteration=   1; root mean square error= 0.4800313E-01                           
+Iteration=   2; root mean square error= 0.1300634E-01                           
+Iteration=   3; root mean square error= 0.4020556E-02                           
+Iteration=   4; root mean square error= 0.1943735E-02                           
+Iteration=   5; root mean square error= 0.1039382E-02                           
+Iteration=   6; root mean square error= 0.5551224E-03                           
+Iteration=   7; root mean square error= 0.2941695E-03                           
+ Min. area AFTER smoothing= 0.5811767E-01                                       
+ Max. area AFTER smoothing= 0.2235628E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=          3               
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.4827872E-01                                      
+ Max. area BEFORE smoothing= 0.2235628E+00                                      
+Iteration=   1; root mean square error= 0.2896483E-01                           
+Iteration=   2; root mean square error= 0.9496104E-02                           
+Iteration=   3; root mean square error= 0.2717806E-02                           
+Iteration=   4; root mean square error= 0.1266812E-02                           
+Iteration=   5; root mean square error= 0.6415154E-03                           
+Iteration=   6; root mean square error= 0.3332940E-03                           
+Iteration=   7; root mean square error= 0.1740201E-03                           
+ Min. area AFTER smoothing= 0.5714572E-01                                       
+ Max. area AFTER smoothing= 0.2165903E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.5714572E-01                                      
+ Max. area BEFORE smoothing= 0.2165903E+00                                      
+Iteration=   1; root mean square error= 0.9099324E-04                           
+Iteration=   2; root mean square error= 0.4760500E-04                           
+Iteration=   3; root mean square error= 0.2491180E-04                           
+Iteration=   4; root mean square error= 0.1303807E-04                           
+Iteration=   5; root mean square error= 0.6824197E-05                           
+Iteration=   6; root mean square error= 0.3571968E-05                           
+Iteration=   7; root mean square error= 0.1869710E-05                           
+Iteration=   8; root mean square error= 0.9786952E-06                           
+Iteration=   9; root mean square error= 0.5123007E-06                           
+ Min. area AFTER smoothing= 0.5717285E-01                                       
+ Max. area AFTER smoothing= 0.2165434E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.5717285E-01                                      
+ Max. area BEFORE smoothing= 0.2165434E+00                                      
+Iteration=   1; root mean square error= 0.2681668E-06                           
+Iteration=   2; root mean square error= 0.1403740E-06                           
+Iteration=   3; root mean square error= 0.7348008E-07                           
+Iteration=   4; root mean square error= 0.3846388E-07                           
+Iteration=   5; root mean square error= 0.2013432E-07                           
+Iteration=   6; root mean square error= 0.1053953E-07                           
+Iteration=   7; root mean square error= 0.5517031E-08                           
+Iteration=   8; root mean square error= 0.2887951E-08                           
+Iteration=   9; root mean square error= 0.1511730E-08                           
+ Min. area AFTER smoothing= 0.5717293E-01                                       
+ Max. area AFTER smoothing= 0.2165433E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.5717293E-01                                      
+ Max. area BEFORE smoothing= 0.2165433E+00                                      
+Iteration=   1; root mean square error= 0.7913319E-09                           
+Iteration=   2; root mean square error= 0.4142315E-09                           
+Iteration=   3; root mean square error= 0.2168342E-09                           
+Iteration=   4; root mean square error= 0.1135043E-09                           
+Iteration=   5; root mean square error= 0.5941501E-10                           
+Iteration=   6; root mean square error= 0.3110162E-10                           
+Iteration=   7; root mean square error= 0.1628029E-10                           
+Iteration=   8; root mean square error= 0.8522219E-11                           
+Iteration=   9; root mean square error= 0.4460991E-11                           
+ Min. area AFTER smoothing= 0.5717293E-01                                       
+ Max. area AFTER smoothing= 0.2165433E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+smooth                                                                          
+SMOOTH: position option                                                         
+nodes in point set  =         33                                                
+SMOOTH: Smooth 2D triangular mesh using ESUG                                    
+ Min. area BEFORE smoothing= 0.5717293E-01                                      
+ Max. area BEFORE smoothing= 0.2165433E+00                                      
+Iteration=   1; root mean square error= 0.2335226E-11                           
+Iteration=   2; root mean square error= 0.1222484E-11                           
+Iteration=   3; root mean square error= 0.6398657E-12                           
+Iteration=   4; root mean square error= 0.3349432E-12                           
+Iteration=   5; root mean square error= 0.1753518E-12                           
+Iteration=   6; root mean square error= 0.9177790E-13                           
+Iteration=   7; root mean square error= 0.4808338E-13                           
+Iteration=   8; root mean square error= 0.2498886E-13                           
+Iteration=   9; root mean square error= 0.1325082E-13                           
+ Min. area AFTER smoothing= 0.5717293E-01                                       
+ Max. area AFTER smoothing= 0.2165433E+00                                       
+recon 0                                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+ Enter a command
+                                                                                
+cmo/addatt/mo_pts/x_four/vdouble/scalar/nnodes                                  
+ Enter a command
+cmo/addatt/mo_pts/fac_n/vdouble/scalar/nnodes                                   
+ Enter a command
+                                                                                
+# Massage points based on linear function down to h_prime                       
+ Enter a command
+massage2/user_function2.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength   
+cmo/addatt/mo_pts/target_edge_length/real/scalar/scalar//temporary              
+finish                                                                          
+cmo/setatt/mo_pts/target_edge_length/0.0800                                     
+         1 values reset for attribute target_edge_length                        
+ 
+finish                                                                          
+quality/edge_max/y                                                              
+cmo/addatt//edgemax/VDOUBLE/scalar/nelements                                    
+finish                                                                          
+ 
+epsilonl, epsilonaspect:   9.3035414E-13  8.0527623E-37                         
+--------------------------------------------                                    
+element norm max edge length < .01:                    0                        
+element norm edge length b/w .01 and .02:          0                            
+element norm edge length b/w .02 and .05:          0                            
+element norm edge length b/w .05 and .1 :          0                            
+element norm edge length b/w .1  and .2 :          0                            
+element norm edge length b/w .2  and .5 :          1                            
+element norm edge length b/w .5  and 1. :         43                            
+min max edge length =  0.3735E+00  max max edge length =  0.7707E+00            
+-----------------------------------------------------------                     
+        44 total elements evaluated.                                            
+ 
+finish                                                                          
+infile/user_function2.lgi                                                       
+                                                                                
+cmo/DELATT/mo_pts/dfield                                                        
+DELATT no action, attribute does not exist: dfield                              
+compute/distance_field/mo_pts/mo_line_work/dfield                               
+ mo_pts                          mo_line_work                    dfield                          
+cmo/addatt/mo_pts/temp_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/xobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/yobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/zobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/dfield/VDOUBLE/scalar/nnodes/linear/permanent//-1.0           
+finish                                                                          
+interpolate/voronoi/mo_pts/xobj_tmp_var/1 0 0/mo_line_work/xic/keepatt          
+nodes in indexed point set  =         33                                        
+cmo/addatt/mo_pts/pt_gtg/VINT/scalar/nnodes//permanent/agfx/0                   
+finish                                                                          
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1  0.599619647112E+01             
+ 
+pt_gtg attribute will be added and kept.                                        
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+              9                9              9       25 %                      
+             17               17             17       50 %                      
+             25               25             25       75 %                      
+             33               33             33    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+interpolate/voronoi/mo_pts/yobj_tmp_var/1 0 0/mo_line_work/yic/keepatt          
+nodes in indexed point set  =         33                                        
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1  0.209803545333E+01             
+ 
+SKIPPING POINT SEARCH... using lookup attribute pt_gtg                          
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+              9                9              9       25 %                      
+             17               17             17       50 %                      
+             25               25             25       75 %                      
+             33               33             33    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+interpolate/voronoi/mo_pts/zobj_tmp_var/1 0 0/mo_line_work/zic                  
+nodes in indexed point set  =         33                                        
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1 -0.132890701836E+01             
+ 
+SKIPPING POINT SEARCH... using lookup attribute pt_gtg                          
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+              9                9              9       25 %                      
+             17               17             17       50 %                      
+             25               25             25       75 %                      
+             33               33             33    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/xic/mo_pts/xobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/dfield/1,0,0/mo_pts/temp_tmp_var/2.0                          
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/yic/mo_pts/yobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/temp_tmp_var/1,0,0/mo_pts/temp_tmp_var/2.0                    
+finish                                                                          
+math/add/mo_pts/dfield/1 0 0/mo_pts/dfield/mo_pts/temp_tmp_var                  
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/zic/mo_pts/zobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/temp_tmp_var/1,0,0/mo_pts/temp_tmp_var/2.0                    
+finish                                                                          
+math/add/mo_pts/dfield/1 0 0/mo_pts/dfield/mo_pts/temp_tmp_var                  
+finish                                                                          
+math/power/mo_pts/dfield/1,0,0/mo_pts/dfield/0.5                                
+finish                                                                          
+cmo/delatt/mo_pts/temp_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/xobj_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/yobj_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/zobj_tmp_var                                                  
+finish                                                                          
+COMPUTE distance_field: Done.                                                   
+math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A2/                       
+math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B2/                            
+cmo/copyatt/mo_pts/mo_pts/fac_n/x_four                                          
+        33 copied from mo_pts x_four to -> mo_pts fac_n                         
+ 
+finish                                                                          
+finish                                                                          
+math/floor/mo_pts/fac_n/1,0,0/mo_pts/fac_n/0.6194                               
+finish                                                                          
+cmo/printatt/mo_pts/fac_n/minmax                                                
+ATTRIBUTE NAME              MIN               MAX         DIFFERENCE    LENGTH  
+ fac_n              6.194000000E-01  6.194000000E-01 0.000000000E+00        33  
+ 
+finish                                                                          
+massage/fac_n/1.e-5/1.e-5/1/0/0/strictmergelength                               
+nodes in point set  =         33                                                
+recon/0/0.10000000E-04/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =         33                                                
+SGD:      0 total relaxations on point set of     33 indept. nodes.             
+nodes in point set  =         33                                                
+cmo/DELATT/mo_pts/rf_field_name                                                 
+DELATT no action, attribute does not exist: rf_field_name                       
+finish                                                                          
+cmo/addatt/mo_pts/rf_field_name                                                 
+finish                                                                          
+cmo/setatt/mo_pts/rf_field_name////fac_n                                        
+        33 values reset for attribute rf_field_name                             
+ 
+finish                                                                          
+Face iteration, number of faces:          1        11                           
+Face iteration, number of faces:          1        13                           
+Face iteration, number of faces:          1        12                           
+Face iteration, number of faces:          1        16                           
+Face iteration, number of faces:          1        18                           
+Face iteration, number of faces:          1        18                           
+Face iteration, number of faces:          1        21                           
+Face iteration, number of faces:          1        18                           
+Face iteration, number of faces:          1        16                           
+Face iteration, number of faces:          1        18                           
+Face iteration, number of faces:          1        14                           
+Face iteration, number of faces:          1        17                           
+Face iteration, number of faces:          1        16                           
+Face iteration, number of faces:          1        11                           
+Face iteration, number of faces:          1         6                           
+Face iteration, number of faces:          1         2                           
+Face iteration, number of faces:          1         1                           
+recon/0/0.10000000E-04/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=         35               
+RECON: done.                                                                    
+finish                                                                          
+finish                                                                          
+infile/user_function2.lgi                                                       
+                                                                                
+cmo/DELATT/mo_pts/dfield                                                        
+compute/distance_field/mo_pts/mo_line_work/dfield                               
+ mo_pts                          mo_line_work                    dfield                          
+cmo/addatt/mo_pts/temp_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/xobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/yobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/zobj_tmp_var/VDOUBLE/scalar/nnodes/linear/temporary//-1.0     
+finish                                                                          
+cmo/addatt/mo_pts/dfield/VDOUBLE/scalar/nnodes/linear/permanent//-1.0           
+finish                                                                          
+interpolate/voronoi/mo_pts/xobj_tmp_var/1 0 0/mo_line_work/xic/keepatt          
+nodes in indexed point set  =        261                                        
+cmo/addatt/mo_pts/pt_gtg/VINT/scalar/nnodes//permanent/agfx/0                   
+finish                                                                          
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1  0.599619647112E+01             
+ 
+pt_gtg attribute will be added and kept.                                        
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+             66               66             66       25 %                      
+            131              131            131       50 %                      
+            196              196            196       75 %                      
+            261              261            261    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+interpolate/voronoi/mo_pts/yobj_tmp_var/1 0 0/mo_line_work/yic/keepatt          
+nodes in indexed point set  =        261                                        
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1  0.209803545333E+01             
+ 
+SKIPPING POINT SEARCH... using lookup attribute pt_gtg                          
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+             66               66             66       25 %                      
+            131              131            131       50 %                      
+            196              196            196       75 %                      
+            261              261            261    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+interpolate/voronoi/mo_pts/zobj_tmp_var/1 0 0/mo_line_work/zic                  
+nodes in indexed point set  =        261                                        
+ 
+INTRP METHOD:    voronoi   FUNCTION:     linear                                 
+      TIEBREAKER:     maxtie   FLAG:      plus1 -0.132890701836E+01             
+ 
+SKIPPING POINT SEARCH... using lookup attribute pt_gtg                          
+ 
+     Sink point   Points searched   Points Found  Percent Done                  
+             66               66             66       25 %                      
+            131              131            131       50 %                      
+            196              196            196       75 %                      
+            261              261            261    Total                        
+ 
+intrp/voronoi done.                                                             
+ 
+cmo kdtree release                                                              
+finish                                                                          
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/xic/mo_pts/xobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/dfield/1,0,0/mo_pts/temp_tmp_var/2.0                          
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/yic/mo_pts/yobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/temp_tmp_var/1,0,0/mo_pts/temp_tmp_var/2.0                    
+finish                                                                          
+math/add/mo_pts/dfield/1 0 0/mo_pts/dfield/mo_pts/temp_tmp_var                  
+finish                                                                          
+math/sub/mo_pts/temp_tmp_var/1,0,0/mo_pts/zic/mo_pts/zobj_tmp_var               
+finish                                                                          
+math/power/mo_pts/temp_tmp_var/1,0,0/mo_pts/temp_tmp_var/2.0                    
+finish                                                                          
+math/add/mo_pts/dfield/1 0 0/mo_pts/dfield/mo_pts/temp_tmp_var                  
+finish                                                                          
+math/power/mo_pts/dfield/1,0,0/mo_pts/dfield/0.5                                
+finish                                                                          
+cmo/delatt/mo_pts/temp_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/xobj_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/yobj_tmp_var                                                  
+finish                                                                          
+cmo/delatt/mo_pts/zobj_tmp_var                                                  
+finish                                                                          
+COMPUTE distance_field: Done.                                                   
+math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A2/                       
+math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B2/                            
+cmo/copyatt/mo_pts/mo_pts/fac_n/x_four                                          
+       261 copied from mo_pts x_four to -> mo_pts fac_n                         
+ 
+finish                                                                          
+finish                                                                          
+math/floor/mo_pts/fac_n/1,0,0/mo_pts/fac_n/0.4796                               
+finish                                                                          
+cmo/printatt/mo_pts/fac_n/minmax                                                
+ATTRIBUTE NAME              MIN               MAX         DIFFERENCE    LENGTH  
+ fac_n              4.796000000E-01  5.853836348E-01 1.057836348E-01       261  
+ 
+finish                                                                          
+massage/fac_n/1.e-5/1.e-5/1/0/0/strictmergelength                               
+nodes in point set  =        261                                                
+recon/0/0.10000000E-04/                                                         
+RECON2D reconnection loop2d:     1                                              
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =        261                                                
+SGD:    275 total relaxations on point set of    261 indept. nodes.             
+rmpoint/compress                                                                
+         0 points removed and          0 elements removed.                      
+RMPOINT: new point count is          261                                        
+RMPOINT: new element count is        465                                        
+finish                                                                          
+nodes in point set  =        261                                                
+recon/0/0.10000000E-04/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=         44               
+Recon2d: iteration number=          2 number of flips=          4               
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =        261                                                
+SGD:    138 total relaxations on point set of    261 indept. nodes.             
+rmpoint/compress                                                                
+         0 points removed and          0 elements removed.                      
+RMPOINT: new point count is          261                                        
+RMPOINT: new element count is        465                                        
+finish                                                                          
+nodes in point set  =        261                                                
+recon/0/0.10000000E-04/                                                         
+RECON2D reconnection loop2d:     1                                              
+Recon2d: iteration number=          1 number of flips=         27               
+Recon2d: iteration number=          2 number of flips=          3               
+Recon2d: iteration number=          3 number of flips=          1               
+RECON: done.                                                                    
+finish                                                                          
+nodes in point set  =        261                                                
+SGD:     51 total relaxations on point set of    261 indept. nodes.             
+rmpoint/compress                                                                
+         0 points removed and          0 elements removed.                      

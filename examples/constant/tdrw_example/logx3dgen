@@ -1,0 +1,102 @@
+infile parameters_CPU3.mlgi                                                     
+define/ID/3                                                                     
+define/OUTFILE_GMV/mesh_3.gmv                                                   
+define/OUTFILE_AVS/mesh_3.inp                                                   
+define/OUTFILE_LG/mesh_3.lg                                                     
+define/POLY_FILE/poly_3.inp                                                     
+define/QUAD_FILE/tmp_quad_3.inp                                                 
+define/EXCAVATE_FILE/tmp_excavate_3.inp                                         
+define/PRE_FINAL_FILE/tmp_pre_final_3.inp                                       
+define/PRE_FINAL_MASSAGE/tmp_pre_final_massage_3.gmv                            
+define/H_SCALE/1.000000e-01                                                     
+define/H_EPS/1.000000e-08                                                       
+define/H_SCALE2/1.500000e-01                                                    
+define/H_EXTRUDE/5.000000e-02                                                   
+define/H_TRANS/-1.614641e-03                                                    
+define/H_PRIME/8.000000e-02                                                     
+define/H_PRIME2/3.000000e-02                                                    
+define/H_SCALE3/3.000000e-01                                                    
+define/H_SCALE8/8.000000e-01                                                    
+define/H_SCALE16/1.600000e+00                                                   
+define/H_SCALE32/3.200000e+00                                                   
+define/H_SCALE64/6.400000e+00                                                   
+define/PERTURB8/4.000000e-02                                                    
+define/PERTURB16/8.000000e-02                                                   
+define/PERTURB32/1.600000e-01                                                   
+define/PERTURB64/3.200000e-01                                                   
+define/PARAM_A/2.000000                                                         
+define/PARAM_B/0.000000                                                         
+define/PARAM_A2/1.000000                                                        
+define/PARAM_B2/0.050000                                                        
+define/THETA/24.585777515837                                                    
+define/X1/109.811123301308                                                      
+define/Y1/-6.443384150031                                                       
+define/Z1/-0.000000000000                                                       
+define/X2/-109.811123301308                                                     
+define/Y2/6.443384150031                                                        
+define/Z2/0.000000000000                                                        
+define/FAMILY/1                                                                 
+finish                                                                          
+define/POLY_FILE/poly_CPU3.inp                                                  
+define/LINE_FILE/intersections_CPU3.inp                                         
+define/OUTPUT_INTER_ID_SSINT/id_tri_node_CPU3.list                              
+read/POLY_FILE/mo_poly_work                                                     
+read/LINE_FILE/mo_line_work                                                     
+cmo/create/mo_pts///triplane                                                    
+copypts/mo_pts/mo_poly_work                                                     
+cmo/select/mo_pts                                                               
+triangulate/counterclockwise                                                    
+cmo/setatt/mo_pts/imt/1 0 0/ID                                                  
+cmo/setatt/mo_pts/itetclr/1 0 0/ID                                              
+resetpts/itp                                                                    
+cmo/delete/mo_poly_work                                                         
+cmo/select/mo_pts                                                               
+massage/H_SCALE64/H_EPS/H_EPS                                                   
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+resetpts/itp                                                                    
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+perturb/pset get p_move/PERTURB64 PERTURB64 0.0                                 
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+massage/H_SCALE32/H_EPS/H_EPS                                                   
+resetpts/itp                                                                    
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+perturb/pset get p_move/PERTURB32 PERTURB32 0.0                                 
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+massage/H_SCALE16/H_EPS/H_EPS                                                   
+resetpts/itp                                                                    
+pset/p_move/attribute/itp/1 0 0/0/eq                                            
+perturb/pset get p_move/PERTURB16 PERTURB16 0.0                                 
+recon 0                                                                         
+smooth                                                                          
+recon 0                                                                         
+smooth                                                                          
