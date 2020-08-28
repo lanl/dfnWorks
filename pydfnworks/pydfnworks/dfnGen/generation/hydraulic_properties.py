@@ -1,12 +1,3 @@
-"""
-.. file:: hydraulic_properties.py
-   :synopsis: Allows user to modify hydraulic properties of fractures based on functional relationships with radii
-   :version: 1.0
-   :maintainer: Jeffrey Hyman
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-
-"""
-
 import numpy as np
 import sys
 

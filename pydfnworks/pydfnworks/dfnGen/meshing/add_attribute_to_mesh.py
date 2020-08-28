@@ -1,12 +1,3 @@
-"""
-.. file:: add_attribute_mesh.py
-   :synopsis: Add a node based attribute to a DFN mesh
-   :version: 1.0
-   :maintainer: Jeffrey Hyman
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-
-"""
-
 import subprocess
 from numpy import genfromtxt, zeros, savetxt
 import sys

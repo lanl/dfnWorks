@@ -65,20 +65,21 @@ The contained functions in order are:
 
 #@profile
 def main_init(c):  # polygons, intersections):
-    """Reads inputs and initializes variables in c, i.e. initialized the polygon,
-        the intersections, samples along the boundary and initializes
-        neighbor-grid.
+    """ Reads inputs and initializes variables in c, i.e. initialized the polygon,
+    the intersections, samples along the boundary and initializes
+    neighbor-grid.
 
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
+    Parameters
+    ---------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
 
-        Returns
-        ---------
+    Returns
+    ---------
+        None
 
-        Notes
-        -----
+    Notes
+    -----
 
         """
 
@@ -97,24 +98,25 @@ def main_init(c):  # polygons, intersections):
 #@profile
 def main_sample(c):
     """ Runs over already accepted nodes and samples new candidates  on an
-         annulus around them. valid candidates are added to c.coordinates
-         c.k candidates are sampled at once. If all k
-         are rejected, move on to next already accepted node. Terminate
-         after their are no new already accepted nodes.
+    annulus around them. valid candidates are added to c.coordinates
+    c.k candidates are sampled at once. If all k
+    are rejected, move on to next already accepted node. Terminate
+    after their are no new already accepted nodes.
 
 
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
 
-        Returns
-        ---------
+    Returns
+    ---------
+        None
 
-        Notes
-        -----
-            Proceeds from, where it terminated the previous time, if called
-            more than once.
+    Notes
+    -----
+        Proceeds from, where it terminated the previous time, if called
+        more than once.
     """
     while c.current_node < c.no_of_nodes:  # sample around all accepted nodes
         next_node = False
@@ -134,19 +136,20 @@ def main_sample(c):
 #@profile
 def search_undersampled_cells(c):
     """ Creates the occupancy-grid, searches for empty cells in it and
-        uniformly samples candidates in those empty cells. Accepted cells
-        are added to c.coordinates.
+    uniformly samples candidates in those empty cells. Accepted cells
+    are added to c.coordinates.
 
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
 
-        Returns
-        ---------
+    Returns
+    ---------
+        None
 
-        Notes
-        -----
+    Notes
+    -----
     """
 
     undersampled_x, undersampled_y = occupancy_undersampled(c)
@@ -168,20 +171,23 @@ def search_undersampled_cells(c):
 
 #######################################################################
 def dump_coordinates(c, output_file="points.xyz"):
-    """Prints accepted coordinates to file
+    """ Prints accepted coordinates to file
 
-       Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            output_file : string
-                coordinates will be printed to a file with this name
-        Returns
-        ---------
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        output_file : string
+            coordinates will be printed to a file with this name
 
-        Notes
-        -----
-            creates the file output_file
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+        None
+
         """
 
     col_format = "{:<30}" * 3 + "\n"
@@ -196,19 +202,23 @@ def dump_coordinates(c, output_file="points.xyz"):
 
 def plot_coordinates(c, output_file=""):
     """ Plots accepted nodes to screen or file
-    Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            output_file : string
-                name of the file in which c.coordinated-plot will be saved.
-                c.coordinates are plotted to screen, if empty.
-        Returns
-        ---------
 
-        Notes
-        -----
-            creates the file "output_file", if this string is not empty.
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        output_file : string
+            name of the file in which c.coordinated-plot will be saved.
+            c.coordinates are plotted to screen, if empty.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+        creates the file "output_file", if this string is not empty.
+
     """
 
     xcoord = [x[0] for x in c.coordinates]
@@ -231,19 +241,22 @@ def plot_coordinates(c, output_file=""):
 
 def neighbor_cell(c, X):
     """ Returns look up-Grid index of the point X
+
     Parameters
-    ---------
-        c : class
+    -----------
+        c : Poisson Disc Class
             contains input parameters and widely used variables
         X : ndarray(float)
             2D coordinates of a point inside the neighbor-grid
 
     Returns
     ---------
-        (x,y) : tupel(int,int)
-            horizontal and verticel neighbor-cell number
+        (x,y) : tuple(int,int)
+            horizontal and vertical neighbor-cell number
+
     Notes
     -----
+
     """
     x = floor((X[0] - c.x_min) * c.neighbor_cell_size_inv)
     y = floor((X[1] - c.y_min) * c.neighbor_cell_size_inv)
@@ -253,23 +266,26 @@ def neighbor_cell(c, X):
 #######################################################################
 
 
-#@profile
 def neighbor_grid_init(c):
     """ Initializes background grid
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
 
-        Returns
-        ---------
-            neighbor_grid : ndarray(int)
-                array, where each components corresponds to a neighbor cell.
-                0, if corresponding cell is empty
-                i, if c.coordinate[i-1] occupies corresponding cell.
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+
+    Returns
+    ---------
+        neighbor_grid : ndarray(int)
+            array, where each components corresponds to a neighbor cell.
+            0, if corresponding cell is empty
+            i, if c.coordinate[i-1] occupies corresponding cell.
+
+    Notes
+    -----
+
     """
+
     #!!!consider using sparse matrix instead to save space
     #!!!slicing might be slower though
 
@@ -294,19 +310,21 @@ def neighbor_grid_init(c):
 def new_candidate(c, X):
     """ Returns a random point in a annular neighborhood of X
 
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                first two entries: x,y-coordinates of a already accepted node.
-                last entry: local exclusion_radius of that node.
-        Returns
-        ---------
-            candidate : ndarray(float)
-                x,y- coordinates of a potential new node.
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            first two entries: x,y-coordinates of a already accepted node.
+            last entry: local exclusion_radius of that node.
+
+    Returns
+    ---------
+        candidate : ndarray(float)
+            x,y- coordinates of a potential new node.
+
+    Notes
+    -----
 
     """
     radius = random() * c.max_exclusion_radius + X[2]
@@ -323,27 +341,27 @@ def new_candidate(c, X):
 
 
 def accept_candidate(c, candidate):
-    """ accepts a candidate p, if no conflicts with domain
-        or already accepted nodes arise
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            candidate : ndarray(float)
-                x,y-coordinates of a potential new node
+    """ accepts a candidate p, if no conflicts with domain or already accepted nodes arise
 
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        candidate : ndarray(float)
+            x,y-coordinates of a potential new node
 
+    Returns
+    ---------
+        True/False : bool
+            True, if candidate is accepted as new node
+            False otherwise
 
-        Returns
-        ---------
-            True/False : bool
-                True, if candidate is accepted as new node
-                False otherwise
-        Notes
-        -----
-            If the candidate is accepted, it is added to c.coordinates
-            (including its local_exclusion_radius) and the neighbor grid
-            is updated.
+    Notes
+    -----
+        If the candidate is accepted, it is added to c.coordinates
+        (including its local_exclusion_radius) and the neighbor grid
+        is updated.
+
     """
 
     # Checks if candidate is within rectangle defined by polygon
@@ -393,21 +411,22 @@ def accept_candidate(c, candidate):
 
 def exclusion_radius(c, X):
     """ returns the local min-distance of particle X
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                first two entries: x,y-coordinates of a node
 
-        Returns
-        ---------
-            local_exclusion_radius : float
-                exclusion radius at point X
-        Notes
-        -----
-            X can have more than 2 entries. Anything, but the first
-            two will be ignored
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            first two entries: x,y-coordinates of a node
+
+    Returns
+    ---------
+        local_exclusion_radius : float
+            exclusion radius at point X
+    Notes
+    -----
+        X can have more than 2 entries. Anything, but the first
+        two will be ignored
 
         """
 
@@ -439,21 +458,24 @@ def exclusion_radius(c, X):
 
 def intersect_distance_sq(c, X, closeby_intersections):
     """ returns square distance to closest intersection
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                x,y-coordinates of a node
-            closeby_intersections : list(int)
-                numbers of intersections, that pass X in a distance of 2*(H*(R+F)) or less
-        Returns
-        ---------
-            suqare_dist : float
-                square of the distance to the closest intersection
-                of 'inf', if no intersection is closeby.
-        Notes
-        -----
+
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            x,y-coordinates of a node
+        closeby_intersections : list(int)
+            numbers of intersections, that pass X in a distance of 2*(H*(R+F)) or less
+
+    Returns
+    ---------
+        suqare_dist : float
+            square of the distance to the closest intersection
+            of 'inf', if no intersection is closeby.
+
+    Notes
+    -----
     """
     possible_output = []  # min of this list will be output
     for i in closeby_intersections:
@@ -485,19 +507,21 @@ def intersect_distance_sq(c, X, closeby_intersections):
 
 def in_domain(c, X):
     """ Tests if the node X is within the polyon defined by c.vertices.
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                x,y-coordinates of a node
-        Returns
-        ---------
-            True/False : bool
-                False if X lies within the polygon
-                True otherwise
-        Notes
-        -----
+
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            x,y-coordinates of a node
+
+    Returns
+    ---------
+        True/False : bool
+            False if X lies within the polygon
+            True otherwise
+    Notes
+    -----
 
 
 
@@ -547,22 +571,25 @@ def in_domain(c, X):
 
 
 def neighboring_cells(c, center_cell, exclusion_radius):
-    """ returns coordinate number of all non-empy cells neigboring
-        the input-index
+    """ Returns the coordinate number of all non-empty cells neighboring
+    the input-index
+
     Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            center_cell : ndarray(int)
-                neighbor-cell index (x,y) of candidate
-            exclusion_radius : float
-                local exclusion radius of candidate
-        Returns
-        ---------
-            closeby_nodes : list(int)
-                node numbers of all closeby nodes
-        Notes
-        -----
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        center_cell : ndarray(int)
+            neighbor-cell index (x,y) of candidate
+        exclusion_radius : float
+            local exclusion radius of candidate
+
+    Returns
+    ---------
+        closeby_nodes : list(int)
+            node numbers of all close by nodes
+
+    Notes
+    -----
 
     """
     max_cell_distance = ceil(exclusion_radius * c.neighbor_cell_size_inv)
@@ -585,22 +612,23 @@ def neighboring_cells(c, center_cell, exclusion_radius):
 #################___Initializing functions___##########################
 #@profile
 def read_vertices(c, path_to_polygon):
-    """ reads vertices from file, initializes all variables related to
-        geometry of polygon (z_plane, x_min, x_max,y_min, y_max,
-        lower and upper slope of polygon, ...)
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            path_to_polygon : string
-                file containing coordinates of vertices
-        Returns
-        ---------
-            vertices : list(ndarray(float))
-                list of coordinates of the polygon vertices
+    """ Reads polygon vertices from file, initializes all variables related to
+    geometry of polygon (z_plane, x_min, x_max,y_min, y_max, lower and upper slope of polygon, ...)
 
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        path_to_polygon : string
+            file containing coordinates of vertices
+
+    Returns
+    ---------
+        vertices : list(ndarray(float))
+            list of coordinates of the polygon vertices
+
+    Notes
+    -----
 
     """
     with open(path_to_polygon) as inputfile:
@@ -655,21 +683,26 @@ def read_vertices(c, path_to_polygon):
 #@profile
 def read_intersections(c, path_to_intersections):
     """ reads Intersection endpoints from file
+
     Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            path_to_intersections : string
-                file containing intersection points
-        Returns
-        ---------
-            end_pts : list(ndarray(floats))
-                list of coordinates of start and end points of intersections
-                ordered by intersection:   [start_1,end_1,start_2,end_2,...]
-        Notes
-        -----
-        sets neighbor_grid width to max_exclusion_radius/sqrt(2), if there's
-        no intersections.
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        path_to_intersections : string
+            file containing intersection points
+
+    Returns
+    ---------
+        end_pts : list(ndarray(floats))
+            list of coordinates of start and end points of intersections
+            ordered by intersection:   [start_1,end_1,start_2,end_2,...]
+
+    Notes
+    -----
+    sets neighbor_grid width to max_exclusion_radius/sqrt(2), if there's
+    no intersections.
+
+
     """
     end_pts = []
     #short edges require smaller closer nodes to guarantee good triangles
@@ -721,18 +754,19 @@ def read_intersections(c, path_to_intersections):
 #@profile
 def boundary_sampling(c):
     """ Samples points around the boundary
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
 
-        Returns
-        ---------
-            boundary_points : list(ndarray(float))
-                coordinates of a poisson-disk sampling along
-                the boundary of the polygon.
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+
+    Returns
+    ---------
+        boundary_points : list(ndarray(float))
+            coordinates of a poisson-disk sampling along
+            the boundary of the polygon.
+    Notes
+    -----
 
 
 
@@ -798,26 +832,27 @@ def boundary_sampling(c):
 
 
 def sampling_along_line(c, x, y):
-    """ samples points on a line with min distance r and max distance 1.3r
-        (poisson disk sampling on a line)
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            x,y : ndarray(float)
-                coordinates of start and end point of the line to be sampled
+    """ Samples points on a line with min distance r and max distance 1.3r
+    (Poisson disk sampling on a line)
 
-        Returns
-        ---------
-            line_sample : list(ndarray(float))
-                coordinates of a poisson disk sampling along the line from x to  y
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        x,y : ndarray(float)
+            coordinates of start and end point of the line to be sampled
 
-        Notes
-        -----
-        choosing new points in distance between r and 1.3r is rather arbitrary.
-        However greater than r is necessary to maintain Poisson-disk sampling
-        and significantly greater distances  of boundary nodes
-        decrease the quality of the triangulation.
+    Returns
+    ---------
+        line_sample : list(ndarray(float))
+            coordinates of a Poisson disk sampling along the line from x to  y
+
+    Notes
+    -----
+    choosing new points in distance between r and 1.3r is rather arbitrary.
+    However greater than r is necessary to maintain Poisson-disk sampling
+    and significantly greater distances  of boundary nodes
+    decrease the quality of the triangulation.
     """
 
     previous_sample = x
@@ -849,18 +884,21 @@ def sampling_along_line(c, x, y):
 
 def intersect_cell(c, X):
     """ Returns Intersect-Grid index of the point X
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                x,y-coordinates of the point C
-        Returns
-        ---------
-            x,y : int
-                horizontal and vertical intersection_cell_index
-        Notes
-        -----
+
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            x,y-coordinates of the point C
+
+    Returns
+    ---------
+        x,y : int
+            horizontal and vertical intersection_cell_index
+
+    Notes
+    -----
     """
     x = floor((X[0] - c.x_min) * c.intersect_grid_inv)
     y = floor((X[1] - c.y_min) * c.intersect_grid_inv)
@@ -872,23 +910,25 @@ def intersect_cell(c, X):
 
 #@profile
 def intersect_grid_init(c):
-    """ Initiallizes Intersect-Grid, looks at all intersecions as directed
-          arrows from start to end and marks cell that are crossed by it
-          and neighboring cells
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
+    """ Initialize Intersect-Grid, looks at all intersections as 
+    directed arrows from start to end and marks cell that are crossed by it and neighboring cells
 
-        Returns
-        ---------
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
 
-        Notes
-        -----
-            The domain is split into square-cells of side length intersect_range.
-            The cells are numbered by integer indexes (i,j). This function add the
-            number (i,j):m to the dictionary c.intersect_cells if the m-th intersection
-            crosses the cell with index (i,j) are a neighboring cell.
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+        The domain is split into square-cells of side length intersect_range.
+        The cells are numbered by integer indexes (i,j). This function add the
+        number (i,j):m to the dictionary c.intersect_cells if the m-th intersection
+        crosses the cell with index (i,j) are a neighboring cell.
+
     """
     c.intersect_cells = {}
     for intersect_number in range(0, int(len(c.intersect_endpts) / 2)):
@@ -922,22 +962,25 @@ def intersect_grid_init(c):
 
 
 def intersect_mark_start_cells(c, center_cell, intersect_number):
-    """ marks 3x3 cells
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            center_cell : ndarrya(int)
-                index-pair of an intersection-cell
-            intersect_number : int
-                contains the number of an intersection if the are enumerated starting at 1.
-        Returns
-        ---------
+    """ Adds the intersection number to the center cell and all its 8 neighbor cells in
+    the dictionary c.intersect_cells. Marks 3x3 cells
 
-        Notes
-        -----
-            Adds the intersection number to the center cell and all its 8 neighbor cells in
-            the dictionary c.intersect_cells
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        center_cell : ndarrya(int)
+            index-pair of an intersection-cell
+        intersect_number : int
+            contains the number of an intersection if the are enumerated starting at 1.
+
+    Returns
+    ---------
+
+    Notes
+    -----
+        Adds the intersection number to the center cell and all its 8 neighbor cells in
+        the dictionary c.intersect_cells
     """
 
     for j in range(0, 9):  # loop through 3x3 grid around center cell
@@ -957,24 +1000,26 @@ def intersect_mark_start_cells(c, center_cell, intersect_number):
 
 
 def intersect_direction(c, delta_x, delta_y):
-    """determins direction and intersection is pointing if interpreted as an arrow
-        from start to end.( right, left, up, down, combinations possible)
+    """ Determines the direction and intersection is pointing if interpreted as an arrow from start to end.( right, left, up, down, combinations possible)
 
     Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            delta_x/delta_y : float
-                x/y distance between start and end point of an intersection
-        Returns
-        ---------
-            directions : list(int)
-                up to 2 numbers between 1 and 4 corresponding to the directions
-                1-> right, 3->left, 2->up and 4->down.
-        Notes
-        -----
-        This is used to determine which sides of a intersect-cell an intersection
-        could cross.
+    ---------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        delta_x/delta_y : float
+            x/y distance between start and end point of an intersection
+
+    Returns
+    ---------
+        directions : list(int)
+            up to 2 numbers between 1 and 4 corresponding to the directions
+            1-> right, 3->left, 2->up and 4->down.
+
+    Notes
+    -----
+    This is used to determine which sides of a intersect-cell an intersection
+    could cross.
+
     """
 
     directions = []
@@ -994,28 +1039,32 @@ def intersect_direction(c, delta_x, delta_y):
 
 def intersect_mark_next_cells(c, direction, center_cell, intersect_number):
     """ Determines the next intersect-cell the current intersection is crossing
-        and adds all neighboring cells of that cell to the dictionary
-        c.intersect_cells.
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            direction : list(int)
-                integer between 1 and 4 corresponding to directions
-                    right,left,up,down (1,3,2,4)
-            center_cell : ndarray(int)
-                index-pair of an intersection-cell
-            intersect_number : int
-                number of an intersection if they were enumerated starting at 1
-        Returns
-        ---------
-            new_center_cell : ndarray(int)
-                index-pair of the most recent cell known to be crossed by the
-                current intersection
-        Notes
-        -----
-            5 of the 8 neighboring cells of new_center_cell are already added to
-            c.intersect_cells, so it is sufficient to only add the remaining 3.
+    and adds all neighboring cells of that cell to the dictionary
+    c.intersect_cells.
+
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        direction : list(int)
+            integer between 1 and 4 corresponding to directions
+                right,left,up,down (1,3,2,4)
+        center_cell : ndarray(int)
+            index-pair of an intersection-cell
+        intersect_number : int
+            number of an intersection if they were enumerated starting at 1
+
+    Returns
+    ---------
+        new_center_cell : ndarray(int)
+            index-pair of the most recent cell known to be crossed by the
+            current intersection
+
+    Notes
+    -----
+        5 of the 8 neighboring cells of new_center_cell are already added to
+        c.intersect_cells, so it is sufficient to only add the remaining 3.
+
     """
 
     x_shift = (direction % 2) * (-1)**(int((direction - 1) / 2))
@@ -1057,30 +1106,33 @@ def intersect_mark_next_cells(c, direction, center_cell, intersect_number):
 
 def intersect_crossing_cell_wall(c, direction, current_cell, delta_x, delta_y,
                                  y_intercept):
-    """ Determins if intersection crosses cell in given direction
-            Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            direction : list(int)
-                integer between 1 and 4 corresponding to the
-                directions right,left,up,down (1,3,2,4)
-            delta_x/delta_y : ndarray(float)
-                x/y distance between start and end point of current intersection
-            y_intercept : float
-                y-value of the y-axis interception of the intersection if extended
-                to an infinite line.
-                x-value of the intersection, if it is parallel to the y-axis
-        Returns
-        ---------
-            True/False : bool
-                True if the two nodes of the current intersection-cell into the
-                input direction are on different sides of the intersection
-                (or if one of those nodes lies on the intersection), i.e. if the
-                intersection crosses the side of the cell in that direction.
-                False otherwise.
-        Notes
-        -----
+    """ Determines if intersection crosses cell in given direction
+
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        direction : list(int)
+            integer between 1 and 4 corresponding to the
+            directions right,left,up,down (1,3,2,4)
+        delta_x/delta_y : ndarray(float)
+            x/y distance between start and end point of current intersection
+        y_intercept : float
+            y-value of the y-axis interception of the intersection if extended
+            to an infinite line.
+            x-value of the intersection, if it is parallel to the y-axis
+
+    Returns
+    ---------
+        True/False : bool
+            True if the two nodes of the current intersection-cell into the
+            input direction are on different sides of the intersection
+            (or if one of those nodes lies on the intersection), i.e. if the
+            intersection crosses the side of the cell in that direction.
+            False otherwise.
+
+    Notes
+    -----
 
 
      """
@@ -1103,26 +1155,27 @@ def intersect_crossing_cell_wall(c, direction, current_cell, delta_x, delta_y,
 
 
 def intersect_cell_sign(c, X, Y, dx, dy, yshift):
-    """ returns True if X& Y are on the same side of the line determined by dx,dy and yshift
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X/Y : ndarray(float)
-                coordinates of two points
-            dx/dy : float
-                x/y distance between start and end points of a line segment
-            yshift : float
-                y-intercept of an infinite line in 2d or x-value of line
-                 is parallel to y axis
-        Returns
-        ---------
-            True/False : bool
-                True, if X and Y are on the same side of the line determined by dx,dy,yshift
-                or if one of the points lies on the line
-                False otherwise.
-        Notes
-        -----
+    """ Check intersection cell sign. Returns True if X& Y are on the same side of the line determined by dx,dy and yshift
+    
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X/Y : ndarray(float)
+            coordinates of two points
+        dx/dy : float
+            x/y distance between start and end points of a line segment
+        yshift : float
+            y-intercept of an infinite line in 2d or x-value of line
+             is parallel to y axis
+    Returns
+    ---------
+        True/False : bool
+            True, if X and Y are on the same side of the line determined by dx,dy,yshift
+            or if one of the points lies on the line
+            False otherwise.
+    Notes
+    -----
 
     """
     if dx != 0:
@@ -1149,18 +1202,21 @@ def intersect_cell_sign(c, X, Y, dx, dy, yshift):
 
 def occupancy_cell(c, X):
     """ Returns Occupancy-Grid index of the point X
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            X : ndarray(float)
-                x,y-coordinats of a points
-        Returns
-        ---------
-            x,y : int
-                index-pair of the occupancy-grid-cell, in which X lies
-        Notes
-        -----
+
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        X : ndarray(float)
+            x,y-coordinats of a points
+
+    Returns
+    ---------
+        x,y : int
+            index-pair of the occupancy-grid-cell, in which X lies
+
+    Notes
+    -----
 
 
     """
@@ -1175,20 +1231,21 @@ def occupancy_cell(c, X):
 #@profile
 def occupancy_undersampled(c):
     """ Determines and fills the occupancy grid and returns the indices of
-        empty cells. A cell is considered occupied if the disk centered at any
-        node with a radius of the local exclusion radius of that node overlaps
-        with said cell.
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
+    empty cells. A cell is considered occupied if the disk centered at any
+    node with a radius of the local exclusion radius of that node overlaps
+    with said cell.
 
-        Returns
-        ---------
-            undersampled_cells : list(ndarray(int))
-                indices of emtpy occupancy-grid-cells
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+
+    Returns
+    ---------
+        undersampled_cells : list(ndarray(int))
+            indices of emtpy occupancy-grid-cells
+    Notes
+    -----
 
 
 
@@ -1244,17 +1301,19 @@ def occupancy_mark(c, node):
     """marks circular region around  as occupied. Region is chosen such,
     that cells overlapping with a circle of radius r(C) around C are
     marked, hence Cells that are unmarked are guaranteed to be empty.
-    Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            node : ndarray(float)
-                x,y coordinates of an accepted node
-        Returns
-        ---------
 
-        Notes
-        -----
+    Parameters
+    ------------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        node : ndarray(float)
+            x,y coordinates of an accepted node
+
+    Returns
+    ---------
+
+    Notes
+    -----
 
     """
     center_cell = occupancy_cell(c, node[0:2])
@@ -1279,22 +1338,24 @@ def occupancy_mark(c, node):
 
 
 def resample(c, cell_x, cell_y):
-    """ uniformly samples a point from an undersampled cell
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            cell_x/cell_y : int
-                x,y index of an empty occupancy cell
+    """ Uniformly samples a point from an under-sampled cell
 
-        Returns
-        ---------
-            candidate : ndarray(float)
-                coordinates of a point within the empty occupancy cell
-        Notes
-        -----
-            by choice of the empty cells, points sampled by this function
-            can only conflict with each other.
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        cell_x/cell_y : int
+            x,y index of an empty occupancy cell
+
+    Returns
+    ---------
+        candidate : ndarray(float)
+            coordinates of a point within the empty occupancy cell
+
+    Notes
+    -----
+        by choice of the empty cells, points sampled by this function
+        can only conflict with each other.
     """
     candidate = array([
         c.x_min + (cell_x + random()) * c.occupancy_grid_side_length,
@@ -1308,20 +1369,22 @@ def resample(c, cell_x, cell_y):
 
 def lower_boundary(c, x):
     """ lower bounding function at x
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            x : float
-                x-value between c.x_min and c.x_max
-        Returns
-        ---------
-            x,y : ndarray(float)
-                coordinates of apoint on the upper boundary with x-
-                coordinate x.
 
-        Notes
-        -----
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        x : float
+            x-value between c.x_min and c.x_max
+
+    Returns
+    ---------
+        x,y : ndarray(float)
+            coordinates of apoint on the upper boundary with x-
+            coordinate x.
+
+    Notes
+    -----
 
     """
     i = c.last_x_min_index
@@ -1341,20 +1404,22 @@ def lower_boundary(c, x):
 
 def upper_boundary(c, x):
     """ upper bounding function at x
-        Parameters
-        ---------
-            c : class
-                contains input parameters and widely used variables
-            x : float
-                x-value between c.x_min and c.x_max
-        Returns
-        ---------
-            x,y : ndarray(float)
-                coordinates of a point on the upper boundary with x-
-                coordinate x.
 
-        Notes
-        -----
+    Parameters
+    -----------
+        c : Poisson Disc Class
+            contains input parameters and widely used variables
+        x : float
+            x-value between c.x_min and c.x_max
+
+    Returns
+    ---------
+        x,y : ndarray(float)
+            coordinates of a point on the upper boundary with x-
+            coordinate x.
+
+    Notes
+    -----
 
     """
 
@@ -1375,35 +1440,41 @@ def upper_boundary(c, x):
 
 
 def distance(X, Y):
-    """ returns euclidian distane between X and Y
-        Parameters
-        ---------
-            X/Y : ndarrya(float)
-                2d coordinates of points X and Y
-        Returns
-        ---------
-            distance : float
-                euclidean distance
-        Notes
-        -----
-        faster than numpy equivalent for 2d
+    """ Returns the Euclidean distance between X and Y
+
+    Parameters
+    -----------
+        X/Y : ndarrya(float)
+            2d coordinates of points X and Y
+
+    Returns
+    ---------
+        distance : float
+            euclidean distance
+
+    Notes
+    -----
+    faster than numpy equivalent for 2d
     """
     return sqrt((X[0] - Y[0]) * (X[0] - Y[0]) + (X[1] - Y[1]) * (X[1] - Y[1]))
 
 
 def distance_sq(X, Y):
-    """ returns euclidian square distane between X and Y
-         Parameters
-        ---------
-            X/Y : ndarrya(float)
-                2d coordinates of points X and Y
-        Returns
-        ---------
-            distance_sq : float
-                euclidean distance squared
-        Notes
-        -----
-        faster than numpy equivalent for 2d
+    """ Returns the square of the Euclidean distance between X and Y
+
+    Parameters
+    ------------
+        X/Y : ndarrya(float)
+            2d coordinates of points X and Y
+
+    Returns
+    ---------
+        distance_sq : float
+            euclidean distance squared
+
+    Notes
+    -----
+    faster than numpy equivalent for 2d
 
 
     """
@@ -1412,34 +1483,42 @@ def distance_sq(X, Y):
 
 def norm_sq(X):
     """ returns euclidean square norm of X
-         Parameters
-        ---------
-            X : ndarrya(float)
-                2d coordinates of points X and Y
-        Returns
-        ---------
-            norm_sq : float
-                euclidean norm squared
-        Notes
-        -----
-        faster than numpy equivalent for 2d
+
+    Parameters
+    ------------
+        X : ndarrya(float)
+            2d coordinates of points X and Y
+
+    Returns
+    ---------
+        norm_sq : float
+            euclidean norm squared
+
+    Notes
+    -----
+    faster than numpy equivalent for 2d
+
     """
     return X[0] * X[0] + X[1] * X[1]
 
 
 def dot_product(X, Y):
     """returns dotproduct of X and Y
-        Parameters
-        ---------
-            X/Y : ndarrya(float)
-                2d coordinates of points X and Y
-        Returns
-        ---------
-            dot_product : float
-                euclidean dotproduct
-        Notes
-        -----
-        faster than numpy equivalent for 2d
+
+    Parameters
+    -----------
+        X/Y : ndarrya(float)
+            2d coordinates of points X and Y
+
+    Returns
+    ---------
+        dot_product : float
+            euclidean dotproduct
+
+    Notes
+    -----
+    faster than numpy equivalent for 2d
+
     """
     return X[0] * Y[0] + X[1] * Y[1]
 
@@ -1454,37 +1533,36 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
 
     If coarse_factor is not default (8), then the parameters used in coarsening are 
 
+    Parameters
+    ------------
+        h : float
+            Min distance of the system. defined in params.txt
+        coarse_factor: float
+            Maximum resolution of the mesh. Given as a factor of h
+        slope : float
+            slope of variable coarsening resolution. 
+        min_dist : float 
+            Range of constant min-distance around an intersection (in units of h). 
+        max_dist : float 
+            Range over which the min-distance between nodes increases (in units of h)
+        concurrent_samples : int
+            number of new candidates sampled around an accepted node at a time.
+        grid_size : float
+            side length of the occupancy grid is given by H/occupancy_factor
 
-        Parameters
-        ---------
-            h : float
-                Min distance of the system. defined in params.txt
-            coarse_factor: float
-                Maximum resolution of the mesh. Given as a factor of h
-            slope : float
-                slope of variable coarsening resolution. 
-            min_dist : float 
-                Range of constant min-distance around an intersection (in units of h). 
-            max_dist : float 
-                Range over which the min-distance between nodes increases (in units of h)
-            concurrent_samples : int
-                number of new candidates sampled around an accepted node at a time.
-            grid_size : float
-                side length of the occupancy grid is given by H/occupancy_factor
+    Returns
+    ---------
+        None
 
-        Returns
-        ---------
-            None
+    Notes
+    -----
+        Variable names here are not consistent with those used in the function called to construct
+        the Poisson Samples. Below is a conversion table:
 
-        Notes
-        -----
-            Variable names here are not consistent with those used in the function called to construct
-            the Poisson Samples. Below is a conversion table:
-
-            min_dist = F
-            max_dist = R
-            slope = A
-            grid_size = occupancy_factor
+        min_dist = F
+        max_dist = R
+        slope = A
+        grid_size = occupancy_factor
 
     """
     print("--> Writing Poisson Disc Parameters")
@@ -1531,30 +1609,30 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
     pickle.dump(params, open("poisson_params.p", "wb"))
 
 
-#######################################################################
 def single_fracture_poisson(fracture_id):
     """ Generates a point distribution for meshing fracture {fracture_id} using Poisson Disc
-    Sampling. Resulting points are written into 'points/points_{fracture_id}.xyz' file with format
+    Sampling. Resulting points are written into 'points/points_{fracture_id}.xyz' file with format:
+
     x_0 y_0 z_0
     x_1 y_1 z_1
     ...
     x_n y_n z_n
 
-        Parameters
-        -----------
-            fracture_id : int
-                fracture index
+    Parameters
+    -----------
+        fracture_id : int
+            fracture index
 
-        Returns
-        ---------
-            None
+    Returns
+    ---------
+        None
 
-        Notes
-        -----
-            Parameters for point generation are in a pickled python dictionary "poisson_params.p"
-            created by dump_poisson_params. 
+    Notes
+    -----
+        Parameters for point generation are in a pickled python dictionary "poisson_params.p"
+        created by dump_poisson_params. 
 
-    """
+        """
 
     print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
