@@ -29,13 +29,13 @@ DFN.mesh_network(visual_mode=False)
 os.chdir(DFN.jobname)
 
 # call LaGriT to run a script for identifying all the nodes on the well
-cmd = '/dfnWorks/bin/lagrit < /dfnWorks/work/ReservoirExample/CreateWellZone.lgi '
+cmd = os.environ['LAGRIT_EXE'] + ' < DUMMY/dfnworks-main/examples/ReservoirExample/CreateWellZone.lgi '
 subprocess.call(cmd,shell=True)
 
 # run python  script to combine 4 boundary faces nodes into one zone file  -> inflow boundary
 # and the well zone file -> outflow boundary 
 os.chdir(DFN.jobname)
-cmd = 'python /dfnWorks/work/ReservoirExample/create_boundaries.py'
+cmd = 'python DUMMY/dfnworks-main/examples/ReservoirExample/create_boundaries.py'
 subprocess.call(cmd,shell=True)
 
 DFN.lagrit2pflotran()
