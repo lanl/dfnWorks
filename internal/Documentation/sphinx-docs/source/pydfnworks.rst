@@ -24,57 +24,67 @@ dfnGen
 
 Processing generator input
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.gen_input
+.. automodule:: pydfnworks.dfnGen.generation.gen_input
     :members:
 
-.. automodule:: pydfnworks.dfnGen.distributions
+.. automodule:: pydfnworks.dfnGen.generation.distributions
     :members:
 
 Running the generator
 ^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.generator
+.. automodule:: pydfnworks.dfnGen.generation.generator
     :members:
 
 Analysis of generated DFN 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.gen_output
+.. automodule:: pydfnworks.dfnGen.generation.gen_output
     :members:
 
 Modification of hydraulic properties of the DFN 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.hydraulic_properties
+.. automodule:: pydfnworks.dfnGen.generation.hydraulic_properties
     :members:
 
 Meshing - LaGriT
 -----------------
 
-Mesh DFN
-^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.mesh_dfn
+Primary DFN meshing driver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn
     :members:
 
-LaGrit scripts
-^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.lagrit_scripts
+Generation LaGrit scripts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.meshing.lagrit_scripts_poisson_disc
     :members:
 
 Run meshing in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.run_meshing
+.. automodule:: pydfnworks.dfnGen.meshing.run_meshing
     :members:
 
-Mesh helper methods
-^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.mesh_dfn_helper
+Meshing helper methods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn_helper
     :members:
 
+.. automodule:: pydfnworks.dfnGen.meshing.add_attribute_to_mesh
+    :members:
+
+Point Generation : Poisson-Disc Sampling
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.meshing.poisson_disc.poisson_class
+    :members:
+
+.. automodule:: pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions
+    :members:
 
 Creating an upscaled mesh of the DFN
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.map2continuum
+.. automodule:: pydfnworks.dfnGen.meshing.udfm.map2continuum
     :members:
 
-.. automodule:: pydfnworks.dfnGen.upscale
+.. automodule:: pydfnworks.dfnGen.meshing.udfm.upscale
     :members:
 
 dfnFlow
