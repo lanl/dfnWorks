@@ -607,7 +607,6 @@ finish
             f.flush()
     print('--> Writing LaGriT Control Files: Complete')
 
-
     print('--> Writing LaGriT Control Files: Complete')
 
 

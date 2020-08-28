@@ -250,8 +250,10 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
 
     # Remove symbolic
     if visual_mode:
-        files = [f'poly_{fracture_id}.inp', f'parameters_{fracture_id}.mlgi',
-        f"mesh_poly_{fracture_id}.lgi"]
+        files = [
+            f'poly_{fracture_id}.inp', f'parameters_{fracture_id}.mlgi',
+            f"mesh_poly_{fracture_id}.lgi"
+        ]
     else:
         files = [
             f'poly_{fracture_id}.inp', f'intersections_{fracture_id}.inp',

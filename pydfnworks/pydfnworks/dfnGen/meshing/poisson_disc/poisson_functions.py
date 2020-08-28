@@ -1533,7 +1533,6 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
 
 #######################################################################
 def single_fracture_poisson(fracture_id):
-
     """ Generates a point distribution for meshing fracture {fracture_id} using Poisson Disc
     Sampling. Resulting points are written into 'points/points_{fracture_id}.xyz' file with format
     x_0 y_0 z_0
