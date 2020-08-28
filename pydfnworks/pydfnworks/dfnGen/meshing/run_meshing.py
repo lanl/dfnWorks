@@ -105,11 +105,11 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     Returns
     -------
         success index: 
-            0 - run was successful
-            -1 - error making symbolic link
-            -2 - run failed in Poisson Sampling
-            -3 - run failed to produce mesh files
-            -4 - line of intersection not preserved
+        0 - run was successful
+        -1 - error making symbolic link
+        -2 - run failed in Poisson Sampling
+        -3 - run failed to produce mesh files
+        -4 - line of intersection not preserved
     
     Notes
     -----
@@ -127,10 +127,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     print(
         f"--> Fracture {fracture_id:0{digits}d} out of {num_poly} is starting on worker {cpu_id}"
     )
-
-    # if fracture_id == 4:
-    #     print(f"\n\n\n--> Error on {fracture_id}\n\n\n")
-    #     return (fracture_id,-1)
 
     tic = timeit.default_timer()
     # Create Symbolic Links
@@ -276,33 +272,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     return (fracture_id, 0)
 
 
-# def single_worker(work_queue, visual_mode, num_poly):
-#     """ worker function for parallelized meshing
-
-#     parameters
-#     ----------
-#         work_queue : multiprocessing queue
-#             queue of fractures to be meshed
-#         visual_mode : bool
-#             true/false for reduced meshing
-#         num_poly : int
-#             total number of fractures
-
-#     returns
-#     -------
-#         true : bool
-#             if job is complete
-
-# """
-#     for fracture_id in iter(work_queue.get, 'stop'):
-#         output = mesh_fracture(fracture_id, visual_mode, num_poly)
-#         if output > 0:
-#             error = f"--> fracture {fracture_id} returned error {output}\n--> exiting\n"
-#             sys.stderr.write(error)
-#             sys.exit(1)
-#     return true
-
-
 def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
     """ Header function for Parallel meshing of fractures
     
@@ -381,21 +350,15 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
             print(
                 f"\n\n--> Fracture number {result[0]} failed with error {result[1]}\n"
             )
+            details = """
+Error Index:
+-1 - error making symbolic link
+-2 - run failed in Poisson Sampling
+-3 - run failed to produce mesh files
+-4 - line of intersection not preserved
+        """
+            print(details)
             return 1
-
-    # work_queue = mp.Queue()  # reader() reads from queue
-    # processes = []
-
-    # for i in range(ncpu):
-    #     p = mp.Process(target=single_worker, args=(work_queue, \
-    #         visual_mode, h, len(fracture_list)))
-    #     p.daemon = True
-    #     p.start()
-    #     processes.append(p)
-    #     work_queue.put('STOP')
-
-    # for p in processes:
-    #     p.join()
 
     elapsed = timeit.default_timer() - t_all
 

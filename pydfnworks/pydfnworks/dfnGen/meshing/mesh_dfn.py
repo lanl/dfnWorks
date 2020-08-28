@@ -38,10 +38,22 @@ def mesh_network(self,
             If true, mesh is uniform resolution. If False, mesh is spatially variable            
         production_mode : bool
             If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
-        slope : float 
-            Slope of piecewise linear function determining rate of coarsening. 
         visual_mode : None
-            If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode
+            If the user wants to run in a different meshing mode from what is in params.txt, 
+            set visual_mode = True/False on command line to override meshing mode
+        coarse_factor: float
+            Maximum resolution of the mesh. Given as a factor of h
+        slope : float
+            slope of variable coarsening resolution. 
+        min_dist : float 
+            Range of constant min-distance around an intersection (in units of h). 
+        max_dist : float 
+            Range over which the min-distance between nodes increases (in units of h)
+        concurrent_samples : int
+            number of new candidates sampled around an accepted node at a time.
+        grid_size : float
+            side length of the occupancy grid is given by H/occupancy_factor
+
 
     Returns
     -------

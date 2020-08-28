@@ -3,12 +3,12 @@ class Poisson_Variables():
     def __init__(self,
                  path_to_polygon,
                  path_to_intersections,
-                 H=.1,
-                 R=100,
-                 A=.1,
-                 F=1.,
-                 concurrent_samples=10,
-                 occupancy_factor=2):
+                 H,
+                 R,
+                 A,
+                 F,
+                 concurrent_samples,
+                 occupancy_factor):
         import numpy as np
         """ Takes in input-parameters and contains all variables derived from
             those, that are used by multiple functions.
@@ -19,17 +19,20 @@ class Poisson_Variables():
                 path_to_intersections : string
                     path to the intersections-file
                 H : float
-                    double the min distance of the system
+                    double the min distance of the system. defined in params.txx
                 R : float
-                    Range over which the min-distance between nodes increses (in uinits of H)
+                    Range over which the min-distance between nodes increases (in units of H)
+                    named max_dist in mesh_dfn.py
                 A : float
-                    slope of min-distance
+                    slope of min-distance. Named slope in mesh_dfn.py
                 F : float
-                    Range of constant min-distance around an intersection (in units of H)
+                    Range of constant min-distance around an intersection (in units of H). 
+                    Named min_dist in mesh_dfn.py
                 concurrent_samples : int
-                    number of new candidates sampled around an accepted node at a time
+                    number of new candidates sampled around an accepted node at a time.
                 occupancy_factor : float
                     side length of the occupancy grid is given by H/occupancy_factor
+                    named grid_size in mesh_dfn.py
                 Notes
                 -----
         """

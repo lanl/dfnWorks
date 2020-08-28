@@ -1447,7 +1447,46 @@ def dot_product(X, Y):
 #######################################################################
 def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
                         concurrent_samples, grid_size):
+    """ Writes the parameters used for Poisson point generation to a pickled python dictionary 
+    named 'poisson_params.p'. 
 
+    Checks if parameters are within acceptable ranges. If not, they are returned to default values. 
+
+    If coarse_factor is not default (8), then the parameters used in coarsening are 
+
+
+        Parameters
+        ---------
+            h : float
+                Min distance of the system. defined in params.txt
+            coarse_factor: float
+                Maximum resolution of the mesh. Given as a factor of h
+            slope : float
+                slope of variable coarsening resolution. 
+            min_dist : float 
+                Range of constant min-distance around an intersection (in units of h). 
+            max_dist : float 
+                Range over which the min-distance between nodes increases (in units of h)
+            concurrent_samples : int
+                number of new candidates sampled around an accepted node at a time.
+            grid_size : float
+                side length of the occupancy grid is given by H/occupancy_factor
+
+        Returns
+        ---------
+            None
+
+        Notes
+        -----
+            Variable names here are not consistent with those used in the function called to construct
+            the Poisson Samples. Below is a conversion table:
+
+            min_dist = F
+            max_dist = R
+            slope = A
+            grid_size = occupancy_factor
+
+    """
     print("--> Writing Poisson Disc Parameters")
     # Check parameter ranges
     if 0 <= slope < 1:
@@ -1485,7 +1524,7 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
     print(f"--> concurrent_samples: {concurrent_samples}")
     print(f"--> grid_size: {grid_size}\n")
     print(f"--> Lower bound on mesh size: {h/2:0.2e}")
-    print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}")
+    print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
 
     params = {"h":h,"R":max_dist,"A":slope,"F":min_dist,\
         "concurrent_samples":concurrent_samples,"grid_size":grid_size}
@@ -1494,6 +1533,29 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
 
 #######################################################################
 def single_fracture_poisson(fracture_id):
+
+    """ Generates a point distribution for meshing fracture {fracture_id} using Poisson Disc
+    Sampling. Resulting points are written into 'points/points_{fracture_id}.xyz' file with format
+    x_0 y_0 z_0
+    x_1 y_1 z_1
+    ...
+    x_n y_n z_n
+
+        Parameters
+        -----------
+            fracture_id : int
+                fracture index
+
+        Returns
+        ---------
+            None
+
+        Notes
+        -----
+            Parameters for point generation are in a pickled python dictionary "poisson_params.p"
+            created by dump_poisson_params. 
+
+    """
 
     print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
@@ -1507,32 +1569,26 @@ def single_fracture_poisson(fracture_id):
     ############################################
     ###########___Core-Algorithm___#############
     ############################################
-    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-    main_init(c)
     # Reads geometry from input files, sets all derived parameters and
-    # creates initial set of nodes on the boundary(could be done within
-    # Pseudo_Globals)
+    # creates initial set of nodes on the boundary
+    main_init(c)
 
     # samples in majority of domain      (1)
     main_sample(c)
 
+    # fills in holes in the sampling to guarantee maximality
     search_undersampled_cells(c)
 
-    # fills in holes in the sampling to guarantee maximality
-
-    main_sample(c)
     # Takes off sampling from where it stopped at (1) to increase density
-    # in previously undersampled regions to average.
+    # in previously under-sampled regions to average.
+    main_sample(c)
 
-    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     ############################################
     ############################################
 
-    # Uncomment to store Coordinates in .xyz file
-    #    output_file_name = f'points/points_{params["fracture_id"]}.xyz'
-    output_file_name = f'points/points_{fracture_id}.xyz'
-    dump_coordinates(c, output_file_name)
+    # write coordinates to file
+    dump_coordinates(c, f'points/points_{fracture_id}.xyz')
 
     runtime = timeit.default_timer() - start
     print(
