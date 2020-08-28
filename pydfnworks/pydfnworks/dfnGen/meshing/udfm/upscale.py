@@ -11,7 +11,7 @@ import sys
 import subprocess
 import shutil
 import h5py
-from pydfnworks.dfnGen import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 import time
 import math as m
 import glob

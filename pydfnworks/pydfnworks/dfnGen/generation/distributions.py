@@ -1,6 +1,6 @@
 # pydfnwork modules
 import pydfnworks
-from pydfnworks.dfnGen import gen_input
+from pydfnworks.dfnGen.generation import gen_input
 
 
 class distr():

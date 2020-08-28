@@ -6,7 +6,7 @@ import scipy.integrate
 import re
 
 #pydfnworks modules
-from pydfnworks.dfnGen import distributions as distr_module
+from pydfnworks.dfnGen.generation import distributions as distr_module
 
 
 class input_helper():

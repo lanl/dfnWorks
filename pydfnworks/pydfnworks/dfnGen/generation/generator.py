@@ -3,7 +3,7 @@ import sys
 import shutil
 from time import time
 import subprocess
-from pydfnworks.dfnGen.mesh_dfn_helper import parse_params_file
+from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
 
 
 def dfn_gen(self, output=True, visual_mode=None):

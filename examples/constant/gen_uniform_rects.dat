@@ -1,5 +1,5 @@
 /*=========================================================================*/
-/*  Gereral Options & Fracture Network Parameters:                         */
+/*  General Options & Fracture Network Parameters:                         */
 /*=========================================================================*/
 
 stopCondition: 0
@@ -8,14 +8,14 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 500
+nPoly: 10
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {10,5,5} 
+domainSize: {10,10,10} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -107,7 +107,7 @@ outputAcceptedRadiiPerFamily: 1
            fracture removal.         
 */ 
 
-
+keepIsolatedFractures: 1
 
 /*==========================================================================*/
 /*  Fracture Network Parameters:                                            */
@@ -153,7 +153,7 @@ seed: 2185506701
     Enter 0 for time based seed.
 */        
 
-domainSizeIncrease: {2,2,2} 
+domainSizeIncrease: {0,0,0} 
 /*  Size increase for inserting fracture centers outside the domain.
     Fracture will be truncated based on domainSize above. 
     Increases the entire width by this ammount. So, {1,1,1} will increase
@@ -168,6 +168,11 @@ keepOnlyLargestCluster: 0
 
     If ignoreBoundaryFaces is also set to 1, DFNGen will keep the largest
     cluster which connects at least any two sides of the domain.
+*/
+
+keepIsolatedFractures: 0 
+/*  0 - Remove any isolated fracture (not clusters)
+    1 - Keep all fractures in the domain
 */
 
 ignoreBoundaryFaces: 0
@@ -289,8 +294,8 @@ enumPoints: {8, 12}
 
 eAngleOption: 0     
 /*  All angles for ellipses are in: 
-        0 - degrees
-        0 - Radians (Must use numerical value for PI) 
+        0 - radians (Must use numerical value for PI) 
+        1 - degrees
 */
                         
 etheta: {0, 45} 
@@ -567,12 +572,31 @@ userEllByCoord: 0
 
 EllByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
+/*===========================================================================*/
+/*===========================================================================*/
+/*                                                                           */
+/*  User Polygon Defined By Coordinates                                   */
+/*                                                                           */
+/*===========================================================================*/
+/*===========================================================================*/
 
+userPolygonByCoord: 0
+/*  0 - User defined polygon by coordinates off
+    1 - User defined polygon by coordinates on
+*/
+
+PolygonByCoord_Input_File_Path: ./
+
+/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+vertices are not put in clockwise or counter-clockwise order.
+If errors (Usualy seg fualt during meshing if using LaGriT), 
+try to reorder the points till u get it right.
+Also, coordinates must be co-planar */
 
 /*===========================================================================*/
 /*===========================================================================*/
 /*  Aperture Options                                                         */
-/*  Mandatory Paramter                                                       */
+/*  Mandatory Parameter                                                       */
 /*  NOTE: Only one aperture type may be used at a time                       */
 /*===========================================================================*/
 /*===========================================================================*/
@@ -647,6 +671,11 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
  
 
 
+keepIsolatedFractures: 0 
+/*  0 - Remove any isolated fracture (not clusters)
+    1 - Keep all fractures in the domain
+*/
+
 
 /*===========================================================================*/
 /*===========================================================================*/
@@ -668,12 +697,4 @@ vertices are not put in clockwise or counter-clockwise order.
 If errors (Usualy seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
 Also, coordinates must be co-planar */
-
-
-
-keepIsolatedFractures: 0 
-/*  0 - Remove any isolated fracture (not clusters)
-    1 - Keep all fractures in the domain
-*/
-
 

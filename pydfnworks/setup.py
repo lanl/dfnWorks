@@ -13,7 +13,7 @@ if you don't have admin privileges.
 import os
 import sys
 import shutil
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 dirs = ["build", "pydfnworks.egg-info", "dist"]
 for d in dirs:
     if os.path.exists(d):
@@ -23,8 +23,8 @@ if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'")
     print()
 
-if sys.version_info[:2] < (3, 5):
-    error = """pydfnworks 2.2+ requires Python 3.5  or later (%d.%d detected).
+if sys.version_info[:2] < (3, 6):
+    error = """pydfnworks 2.4+ requires Python 3.6 or later (%d.%d detected).
 """ % sys.version_info[:2]
     sys.stderr.write(error + "\n")
     sys.exit(1)

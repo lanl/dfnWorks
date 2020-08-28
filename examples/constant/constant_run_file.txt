@@ -1,0 +1,3 @@
+dfnGen /Users/jhyman/src/dfnworks-main/examples/constant/gen_uniform_rects.dat
+dfnFlow /Users/jhyman/src/dfnworks-main/examples/constant/dfn_explicit.in
+dfnTrans /Users/jhyman/src/dfnworks-main/examples/constant/PTDFN_control_constant.dat

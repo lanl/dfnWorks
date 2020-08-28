@@ -10,7 +10,7 @@ import sys
 import subprocess
 import shutil
 import numpy as np
-from pydfnworks.dfnGen import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 import time
 import multiprocessing as mp
 #import Queue

@@ -10,7 +10,7 @@ from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.mlab as mlab
 #pydfnworks modules
-import pydfnworks.dfnGen.generator
+import pydfnworks.dfnGen.generation.generator
 
 
 def output_report(self,

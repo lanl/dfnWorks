@@ -9,6 +9,7 @@ import glob
 from numpy import genfromtxt, sort
 import subprocess
 
+
 def parse_params_file(quite=False):
     """ Reads params.txt file from DFNGen and parses information
 
@@ -59,24 +60,25 @@ def parse_params_file(quite=False):
     fparams.close()
 
     if not quite:
-        print("Number of Polygons: %d" % num_poly)
-        print("H_SCALE %f" % h)
+        print("--> Number of Polygons: %d" % num_poly)
+        print("--> H_SCALE %f" % h)
         if visual_mode > 0:
             visual_mode = True
-            print("Visual mode is on")
+            print("--> Visual mode is on")
         else:
             visual_mode = False
-            print("Visual mode is off")
-        print("Expected Number of dudded points: %d" % dudded_points)
-        print("X Domain Size %d m" % domain['x'])
-        print("Y Domain Size %d m" % domain['y'])
-        print("Z Domain Size %d m" % domain['z'])
+            print("--> Visual mode is off")
+        print(f"--> Expected Number of dudded points: {dudded_points}")
+        print(f"--> X Domain Size {domain['x']} m")
+        print(f"--> Y Domain Size {domain['y']} m")
+        print(f"--> Z Domain Size {domain['z']} m")
         print("--> Parsing params.txt complete\n")
+
     return (num_poly, h, visual_mode, dudded_points, domain)
 
 
 def check_dudded_points(dudded, hard=False):
-    """Parses LaGrit log_merge_all.txt and checks if number of dudded points is the expected number
+    """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
 
     Parameters
     ---------
@@ -94,39 +96,40 @@ def check_dudded_points(dudded, hard=False):
     If number of dudded points is incorrect by over 1%, program will exit. 
 
     """
-    print("Checking that number of Dudded points is correct")
-    with open("log_merge_all.txt", "r") as fp:
+    print("--> Checking that number of dudded points is correct\n")
+    with open("lagrit_logs/log_merge_all.out", "r") as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
-                print('From LaGriT: %s' % line)
+                print(f'--> From LaGriT: {line}')
                 try:
                     pts = int(line.split()[1])
                 except:
                     pts = int(line.split()[-1])
             if 'RMPOINT:' in line:
-                print('From LaGriT: %s' % line)
-                total_pts = int(line.split()[-1])
+                print(f'--> From LaGriT: {line}')
+                total_points = int(line.split()[-1])
                 break
 
     diff = abs(dudded - pts)
-    print("Expected Number of dudded points: %d" % dudded)
-    print("Actual Number of dudded points: %d" % pts)
-    print("Difference between expected and actual dudded points: %d" % diff)
+    print(f"--> Expected Number of dudded points: {dudded}")
+    print(f"--> Actual Number of dudded points: {pts}")
+    print(f"--> Difference between expected and actual dudded points: {diff}")
     if diff == 0:
-        print('--> Correct Number of points removed\n')
+        print('--> The correct number of points were removed. Onward!\n')
         return True
     elif diff > 0:
         ## compare with total number poins
-        print('--> WARNING!!! Number of points removed does not \
-            match expected value')
-        diff_ratio = float(diff) / float(total_points)
-        if diff_ratio < 0.002 or hard == False:
-            print("However value is small: %d" % diff)
-            print("Proceeding\n")
+        print(
+            '--> WARNING!!! Number of points removed does not match the expected value'
+        )
+        diff_ratio = 100 * (float(diff) / float(total_points))
+        if diff_ratio < 0.01 and hard == False:
+            print(f"--> However value is small: {diff}")
+            print("--> Proceeding\n")
             return True
         else:
             print('ERROR! Incorrect Number of points removed')
-            print('Over 1% of node removed %f' % diff_ratio)
+            print(f"Over 0.01% of nodes removed. Value is {diff_ratio:.2f}")
             return False
 
 
@@ -177,8 +180,9 @@ def output_meshing_report(local_jobname, visual_mode):
     f = open(local_jobname + '_mesh_information.txt', 'w')
     f.write('The final mesh of DFN consists of: \n')
     if not visual_mode:
-        print("\nOutput files for flow calculations are written in :")
-        print("--> full_mesh.*")
+        print(
+            "--> Output files for flow calculations are written in : full_mesh.*"
+        )
 
         finp = open('full_mesh.inp', 'r')
         g = finp.readline()
@@ -200,9 +204,10 @@ def output_meshing_report(local_jobname, visual_mode):
             ' geometrical coefficients / control volume faces. \n')
         fstor.close()
     else:
-        print("Output files for visualization are written in :")
-        print("--> reduced_mesh.inp")
-        print("Warning!!! Mesh is not suitable for flow and transport.")
+        print(
+            "--> Output files for visualization are written in : reduced_mesh.inp"
+        )
+        print("--> Warning!!! Mesh is not suitable for flow and transport.")
 
         finp = open('reduced_mesh.inp', 'r')
         g = finp.readline()
@@ -407,19 +412,20 @@ def inp2gmv(self, inp_file=''):
     gmv_file = inp_file[:-4] + '.gmv'
 
     with open('inp2gmv.lgi', 'w') as fid:
-        fid.write('read / avs / ' + inp_file + ' / mo\n')
-        fid.write('dump / gmv / ' + gmv_file + ' / mo\n')
+        fid.write(f'read / avs / {inp_file} / mo\n')
+        fid.write(f'dump / gmv / {gmv_file} / mo\n')
         fid.write('finish \n\n')
 
-    cmd = os.environ["LAGRIT_EXE"] + ' < inp2gmv.lgi ' 
-    failure = subprocess.call(cmd, shell=True)
+    failure = run_lagrit_script('inp2gmv.lgi')
+
     if failure:
         error = 'ERROR: Failed to run LaGrit to get gmv from inp file!\n'
         sys.stderr.write(error)
         sys.exit(1)
     print("--> Finished writing gmv format from avs format")
 
-def run_lagrit_script(lagrit_file):
+
+def run_lagrit_script(lagrit_file, output_file=None, quite=False):
     """
     Runs LaGriT
 
@@ -428,17 +434,25 @@ def run_lagrit_script(lagrit_file):
     ----------
         lagrit_file : string
             Name of LaGriT script to run
+        output_file : string
+            Name of file to dump LaGriT output
+        quite : bool
+            If false, information will be printed to screen.
+
     Returns
     ----------
-        lagrit_file : string
-            Name of LaGriT output file
+        failure: int
+            If the run was successful, then 0 is returned. 
+
     """
-    cmd = "{0} < {1}".format(os.environ["LAGRIT_EXE"],lagrit_file)
-    print("--> Running: {0}".format(cmd))
+    if output_file == None:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
+    else:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} > {output_file}"
+    if not quite:
+        print(f"--> Running: {cmd}")
+
     failure = subprocess.call(cmd, shell=True)
     if failure:
-        error = 'ERROR: \n'
-        sys.stderr.write(error)
-        sys.exit(1)
-    print("--> Complete")
-    
+        error = f"ERROR running LaGriT on script {lagrit_file}. Exiting Program.\n"
+    return failure

@@ -199,8 +199,8 @@ enumPoints: {12, 12} /*Number of vertices used in creating each elliptical
                            of ellipse families (first number in nShape) */
 
 eAngleOption: 0     /* All angles for ellipses: 
-                       0 - degrees
-                       1 - radians (Must use numerical value for PI) */
+                       1 - degrees
+                       0 - radians (Must use numerical value for PI) */
                         
 etheta: {-45, 45,} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
@@ -436,7 +436,7 @@ userRecByCoord: 0
 RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
 
-/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+/*WARNING: userDefCoord* can cause LaGriT errors because the polygon 
 vertices are not put in clockwise or counter-clockwise order.
 If errors (Usualy seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
@@ -512,3 +512,32 @@ forceLargeFractures:0 /* Force large fractures (fractures that X)  to be include
 radiiListIncrease: 0.1 /* Increase the length of the radii list by this percentage */
 removeFracturesLessThan: 0 /*Used to change the lower cutoff of fracture size*/
  
+
+
+keepIsolatedFractures: 0 
+/*  0 - Remove any isolated fracture (not clusters)
+    1 - Keep all fractures in the domain
+*/
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*                                                                           */
+/*  User Polygon Defined By Coordinates                                   */
+/*                                                                           */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userPolygonByCoord: 0
+/*  0 - User defined polygon by coordinates off
+    1 - User defined polygon by coordinates on
+*/
+
+PolygonByCoord_Input_File_Path: ./
+
+/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+vertices are not put in clockwise or counter-clockwise order.
+If errors (Usualy seg fualt during meshing if using LaGriT), 
+try to reorder the points till u get it right.
+Also, coordinates must be co-planar */
+

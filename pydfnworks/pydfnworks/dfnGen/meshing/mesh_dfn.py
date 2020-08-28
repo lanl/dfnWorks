@@ -7,20 +7,24 @@
 
 import os
 import sys
-from time import time
 from numpy import genfromtxt, sort
 # pydfnworks Modules
-from pydfnworks.dfnGen import mesh_dfn_helper as mh
-from pydfnworks.dfnGen import lagrit_scripts as lagrit
-from pydfnworks.dfnGen import run_meshing as run_mesh
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
+from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
+from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson, dump_poisson_params
 
 
 def mesh_network(self,
                  prune=False,
                  uniform_mesh=False,
                  production_mode=True,
-                 refine_factor=1,
-                 slope=2,
+                 coarse_factor=8,
+                 slope=0.1,
+                 min_dist=1,
+                 max_dist=40,
+                 concurrent_samples=10,
+                 grid_size=10,
                  visual_mode=None):
     ''' Mesh fracture network using LaGriT
 
@@ -34,12 +38,22 @@ def mesh_network(self,
             If true, mesh is uniform resolution. If False, mesh is spatially variable            
         production_mode : bool
             If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
-        refine_factor : float
-            Determines distance for mesh refinement (default=1)
-        slope : float 
-            Slope of piecewise linear function determining rate of coarsening. 
         visual_mode : None
-            If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode
+            If the user wants to run in a different meshing mode from what is in params.txt, 
+            set visual_mode = True/False on command line to override meshing mode
+        coarse_factor: float
+            Maximum resolution of the mesh. Given as a factor of h
+        slope : float
+            slope of variable coarsening resolution. 
+        min_dist : float 
+            Range of constant min-distance around an intersection (in units of h). 
+        max_dist : float 
+            Range over which the min-distance between nodes increases (in units of h)
+        concurrent_samples : int
+            number of new candidates sampled around an accepted node at a time.
+        grid_size : float
+            side length of the occupancy grid is given by H/occupancy_factor
+
 
     Returns
     -------
@@ -51,8 +65,9 @@ def mesh_network(self,
     2. All fractures in self.prune_file must intersect at least 1 other fracture
 
     '''
+
     print('=' * 80)
-    print("Meshing Network Using LaGriT : Starting")
+    print("Meshing DFN using LaGriT : Starting")
     print('=' * 80)
 
     if uniform_mesh:
@@ -72,8 +87,9 @@ did not provide file of fractures to keep.\nExiting program.\n"
         if visual_mode == None:
             visual_mode = params_visual_mode
 
-        print("Loading list of fractures to remain in network from %s" %
-              self.prune_file)
+        print(
+            f"Loading list of fractures to remain in network from {self.prune_file}"
+        )
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print(fracture_list)
         if not visual_mode:
@@ -85,16 +101,28 @@ did not provide file of fractures to keep.\nExiting program.\n"
         )
         if visual_mode == None:
             visual_mode = params_visual_mode
+
         fracture_list = range(1, num_poly + 1)
 
     # if number of fractures is greater than number of CPUS,
     # only use num_poly CPUs. This change is only made here, so ncpus
     # is still used in PFLOTRAN
     ncpu = min(self.ncpu, num_poly)
+
+    print('=' * 80)
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
-    lagrit.create_lagrit_scripts(visual_mode, ncpu)
-    lagrit.create_user_functions()
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode)
+    if visual_mode:
+        lagrit.create_lagrit_scripts_reduced_mesh(fracture_list)
+    else:
+        dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
+                            concurrent_samples, grid_size)
+
+        lagrit.create_lagrit_scripts_poisson(fracture_list)
+
+    print('=' * 80)
+
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, visual_mode,
+                                             h)
     if failure:
         mh.cleanup_dir()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"
@@ -104,6 +132,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     n_jobs = lagrit.create_merge_poly_files(ncpu, num_poly, fracture_list, h,
                                             visual_mode, domain,
                                             self.flow_solver)
+
     run_mesh.merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode)
 
     if (not visual_mode and not prune):
@@ -123,4 +152,6 @@ did not provide file of fractures to keep.\nExiting program.\n"
         mh.clean_up_files_after_prune(self)
 
     mh.output_meshing_report(self.local_jobname, visual_mode)
-    print("--> Meshing Complete")
+    print('=' * 80)
+    print("Meshing DFN using LaGriT : Complete")
+    print('=' * 80)
