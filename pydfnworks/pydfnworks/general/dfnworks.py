@@ -35,25 +35,30 @@ class DFNWORKS(Frozen):
         * freeze: indicates whether the class attributes can be modified
         * h : FRAM length scale 
 '''
-    # genearl functions
+    # general functions
     from pydfnworks.general.legal import legal
     from pydfnworks.general.paths import define_paths
     from pydfnworks.general.general_functions import dump_time, print_run_time
 
     # dfnGen functions
     import pydfnworks.dfnGen
-    from pydfnworks.dfnGen.gen_input import check_input
-    from pydfnworks.dfnGen.generator import dfn_gen, make_working_directory, create_network
-    from pydfnworks.dfnGen.gen_output import output_report
-    from pydfnworks.dfnGen.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.mesh_dfn_helper import inp2gmv
 
-    from pydfnworks.dfnGen.map2continuum import map_to_continuum
-    from pydfnworks.dfnGen.upscale import upscale
+    from pydfnworks.dfnGen.generation.gen_input import check_input
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.generation.gen_output import output_report
+    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
+
+
+    from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv
+    from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
+
+    from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
+    from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
 
     # dfnFlow
     import pydfnworks.dfnFlow
-    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver, uncorrelated
+    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
@@ -100,6 +105,7 @@ class DFNWORKS(Frozen):
 
         self.dfnGen_file = dfnGen_file
         self.local_dfnGen_file = ntpath.basename(self.dfnGen_file)
+
 
         self.output_file = ntpath.basename(self.dfnGen_file)
 
@@ -149,12 +155,6 @@ def commandline_options():
                 Number of CPUS (Optional, default=4)
             -input : string 
                 Input file with paths to run files (Mandatory if the next three options are not specified)
-            -gen : string 
-                Generator Input File (Mandatory, can be included within the input file)
-            -flow : string 
-                PFLORAN Input File (Mandatory, can be included within the input file)
-            -trans : string
-                Transport Input File (Mandatory, can be included within the input file)
             -prune_file : string
                 Absolute path to the prune Input File 
             -path : string
@@ -182,21 +182,6 @@ def commandline_options():
                         default="",
                         type=str,
                         help="input file with paths to run files")
-    parser.add_argument("-gen",
-                        "--dfnGen",
-                        default="",
-                        type=str,
-                        help="Path to dfnGen run file")
-    parser.add_argument("-flow",
-                        "--dfnFlow",
-                        default="",
-                        type=str,
-                        help="Path to dfnFlow run file")
-    parser.add_argument("-trans",
-                        "--dfnTrans",
-                        default="",
-                        type=str,
-                        help="Path to dfnTrans run file")
     parser.add_argument("-path",
                         "--path",
                         default="",
@@ -212,11 +197,6 @@ def commandline_options():
                         default="",
                         type=str,
                         help="Path to prune DFN list file")
-    parser.add_argument("-prune_path",
-                        "--prune_path",
-                        default="",
-                        type=str,
-                        help="Path to original DFN files")
     options = parser.parse_args()
     if options.jobname == "":
         error = "Error: Jobname is required. Exiting.\n"
@@ -291,7 +271,7 @@ def create_dfn():
 
     if options.prune_file != "":
         DFN.prune_file = options.prune_file
-        print('--> DFN prune file: ', DFN.prune_file)
+        print('--> DFN Prune File: ', DFN.prune_file)
     else:
         DFN.prune_file = ""
 

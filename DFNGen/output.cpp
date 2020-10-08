@@ -39,6 +39,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     adjustIntFractIDs(finalFractures, acceptedPoly, intPts);
     // Write out graph information
     writeGraphData(finalFractures, acceptedPoly, intPts);
+    // Write polygon.dat file
+    writePolys(finalFractures, acceptedPoly, output);
     // Write intersection files (must be first file written, rotates polys to x-y plane)
     writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
     // Write polys.inp
@@ -255,6 +257,7 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
     Point tempPoint1, tempPoint2; // Keeps track of current un-rotated points we are working with
     std::cout << "Writing Intersection Files\n";
     std::ofstream fractIntFile;
+    //int keepIsolated = 1;
     
     // Go through finalFractures. Rotate poly, intersections, and triple intersection points
     // to XY plane. Discretize and write to file
@@ -275,132 +278,138 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
         // Go through each final fracture's intersections and write to output
         unsigned int size = acceptedPoly[finalFractures[i]].intersectionIndex.size();
         
-        for (unsigned int j = 0; j < size; j++) {
-            // tempTripPts holds rotated triple points for an intersection. Triple pts must be rotated 3 different
-            // ways so we cannot change the original data
-            std::vector<Point> tempTripPts;
-            // Used to measure current length before rotation (used to calculate number of points
-            // to discretize) based on original intersection. This fixes any precision errors we
-            // when calculating length after rotation, both rotations for the same intersection will
-            // always have the same step size and same number of discretized points.
-            double curLength = 0;
-            unsigned int polyIntIdx = acceptedPoly[finalFractures[i]].intersectionIndex[j];
-            // Similarly to above, the intersection must be rotated two different ways,
-            // one for each intersecting poly. We can't change the original data so we must use temp data
-            IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[polyIntIdx],
-                                         acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
-            // poly and intersection now rotated
-            int triplePtsSize = tempTripPts.size();
-            // fracture 1 is i
-            // fracture 2 is the other intersecting fracture
-            unsigned int fract2;
-            
-            if (-intPts[polyIntIdx].fract1 == i + 1) {
-                fract2 = -intPts[polyIntIdx].fract2;
-                intersectingFractures.push_back(fract2);
-            } else {
-                fract2 = -intPts[polyIntIdx].fract1;
-                intersectingFractures.push_back(fract2);
-            }
-            
-            // If triple points exist on intersection, discretize from endpoint to closest triple point,
-            // from triple to next triple point, and finally to other end point
-            if (triplePtsSize != 0) {
-                // Keep track of number of triple points which will be in the
-                // DFN (this is after isolated fracture removal)
-                // NOTE: This will need to be divided by six to get correct value.
-                // Division by six was determined through testing.
-                pstats.tripleNodeCount += triplePtsSize;
-                // Order the triple points by distances to know to discretize from point to next closest point
-                double *distances = new double[triplePtsSize];
-                double pt1[3] = {tempIntersection.x1, tempIntersection.y1, tempIntersection.z1};
-                tempPoint1.x = intPts[polyIntIdx].x1;
-                tempPoint1.y = intPts[polyIntIdx].y1;
-                tempPoint1.z = intPts[polyIntIdx].z1;
+        if (size > 0 || keepIsolatedFractures == 0) {
+            for (unsigned int j = 0; j < size; j++) {
+                // tempTripPts holds rotated triple points for an intersection. Triple pts must be rotated 3 different
+                // ways so we cannot change the original data
+                std::vector<Point> tempTripPts;
+                // Used to measure current length before rotation (used to calculate number of points
+                // to discretize) based on original intersection. This fixes any precision errors we
+                // when calculating length after rotation, both rotations for the same intersection will
+                // always have the same step size and same number of discretized points.
+                double curLength = 0;
+                unsigned int polyIntIdx = acceptedPoly[finalFractures[i]].intersectionIndex[j];
+                // Similarly to above, the intersection must be rotated two different ways,
+                // one for each intersecting poly. We can't change the original data so we must use temp data
+                IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[polyIntIdx],
+                                             acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
+                // poly and intersection now rotated
+                int triplePtsSize = tempTripPts.size();
+                // fracture 1 is i
+                // fracture 2 is the other intersecting fracture
+                unsigned int fract2;
                 
-                // Create array of distances first end point to triple points
-                for (int k = 0; k < triplePtsSize; k++) { //loop through triple points on  intersection i
-                    double point[3] = {tempTripPts[k].x, tempTripPts[k].y, tempTripPts[k].z};//triple pt
-                    distances[k] = euclideanDistance(pt1, point);//create array of distances
+                if (-intPts[polyIntIdx].fract1 == i + 1) {
+                    fract2 = -intPts[polyIntIdx].fract2;
+                    intersectingFractures.push_back(fract2);
+                } else {
+                    fract2 = -intPts[polyIntIdx].fract1;
+                    intersectingFractures.push_back(fract2);
                 }
                 
-                // Order the indices of the distances array shortest to largest distance
-                // this lets us know which point to discritize to next
-                int *s = sortedIndex(distances, triplePtsSize);
-                // Discretize from end point1 to first triple pt
-                // pt1 already = enpoint1
-                double pt2[3] = {tempTripPts[s[0]].x, tempTripPts[s[0]].y, tempTripPts[s[0]].z};
-                tempPoint2 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[0]]];
-                curLength = euclideanDistance(tempPoint1, tempPoint2);
-                std::vector<Point> points = discretizeLineOfIntersection(pt1, pt2, curLength);
-                // Write points to file
-                numIntPts += points.size();
-                writePoints(fractIntFile, points, 0, count);
-                
-                // If one trip pt, set up points to discretize from only triple pt to other end point
-                if (triplePtsSize == 1) {
-                    pt1[0] = pt2[0];
-                    pt1[1] = pt2[1];
-                    pt1[2] = pt2[2];
-                    pt2[0] = tempIntersection.x2;
-                    pt2[1] = tempIntersection.y2;
-                    pt2[2] = tempIntersection.z2;
-                    tempPoint1 = tempPoint2;
-                    tempPoint2.x = intPts[polyIntIdx].x2;
-                    tempPoint2.y = intPts[polyIntIdx].y2;
-                    tempPoint2.z = intPts[polyIntIdx].z2;
-                } else { // More than 1 triple point
-                    for (int jj = 0; jj < (triplePtsSize - 1); jj++) {
-                        pt1[0] = tempTripPts[s[jj]].x;
-                        pt1[1] = tempTripPts[s[jj]].y;
-                        pt1[2] = tempTripPts[s[jj]].z;
-                        pt2[0] = tempTripPts[s[jj + 1]].x;
-                        pt2[1] = tempTripPts[s[jj + 1]].y;
-                        pt2[2] = tempTripPts[s[jj + 1]].z;
-                        tempPoint1 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[jj]]];
-                        tempPoint2 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[jj + 1]]];
-                        curLength = euclideanDistance(tempPoint1, tempPoint2);
-                        points = discretizeLineOfIntersection(pt1, pt2, curLength);
-                        // Write points for first fracture to file, save second set of points to temp
-                        numIntPts += points.size() - 1;
-                        writePoints(fractIntFile, points, 1, count);
+                // If triple points exist on intersection, discretize from endpoint to closest triple point,
+                // from triple to next triple point, and finally to other end point
+                if (triplePtsSize != 0) {
+                    // Keep track of number of triple points which will be in the
+                    // DFN (this is after isolated fracture removal)
+                    // NOTE: This will need to be divided by six to get correct value.
+                    // Division by six was determined through testing.
+                    pstats.tripleNodeCount += triplePtsSize;
+                    // Order the triple points by distances to know to discretize from point to next closest point
+                    double *distances = new double[triplePtsSize];
+                    double pt1[3] = {tempIntersection.x1, tempIntersection.y1, tempIntersection.z1};
+                    tempPoint1.x = intPts[polyIntIdx].x1;
+                    tempPoint1.y = intPts[polyIntIdx].y1;
+                    tempPoint1.z = intPts[polyIntIdx].z1;
+                    
+                    // Create array of distances first end point to triple points
+                    for (int k = 0; k < triplePtsSize; k++) { //loop through triple points on  intersection i
+                        double point[3] = {tempTripPts[k].x, tempTripPts[k].y, tempTripPts[k].z};//triple pt
+                        distances[k] = euclideanDistance(pt1, point);//create array of distances
                     }
                     
-                    // Set up points to go from last triple point to last endpoint
-                    pt1[0] = pt2[0];
-                    pt1[1] = pt2[1];
-                    pt1[2] = pt2[2];
-                    pt2[0] = tempIntersection.x2;
-                    pt2[1] = tempIntersection.y2;
-                    pt2[2] = tempIntersection.z2;
-                    tempPoint1 = tempPoint2;
+                    // Order the indices of the distances array shortest to largest distance
+                    // this lets us know which point to discritize to next
+                    int *s = sortedIndex(distances, triplePtsSize);
+                    // Discretize from end point1 to first triple pt
+                    // pt1 already = enpoint1
+                    double pt2[3] = {tempTripPts[s[0]].x, tempTripPts[s[0]].y, tempTripPts[s[0]].z};
+                    tempPoint2 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[0]]];
+                    curLength = euclideanDistance(tempPoint1, tempPoint2);
+                    std::vector<Point> points = discretizeLineOfIntersection(pt1, pt2, curLength);
+                    // Write points to file
+                    numIntPts += points.size();
+                    writePoints(fractIntFile, points, 0, count);
+                    
+                    // If one trip pt, set up points to discretize from only triple pt to other end point
+                    if (triplePtsSize == 1) {
+                        pt1[0] = pt2[0];
+                        pt1[1] = pt2[1];
+                        pt1[2] = pt2[2];
+                        pt2[0] = tempIntersection.x2;
+                        pt2[1] = tempIntersection.y2;
+                        pt2[2] = tempIntersection.z2;
+                        tempPoint1 = tempPoint2;
+                        tempPoint2.x = intPts[polyIntIdx].x2;
+                        tempPoint2.y = intPts[polyIntIdx].y2;
+                        tempPoint2.z = intPts[polyIntIdx].z2;
+                    } else { // More than 1 triple point
+                        for (int jj = 0; jj < (triplePtsSize - 1); jj++) {
+                            pt1[0] = tempTripPts[s[jj]].x;
+                            pt1[1] = tempTripPts[s[jj]].y;
+                            pt1[2] = tempTripPts[s[jj]].z;
+                            pt2[0] = tempTripPts[s[jj + 1]].x;
+                            pt2[1] = tempTripPts[s[jj + 1]].y;
+                            pt2[2] = tempTripPts[s[jj + 1]].z;
+                            tempPoint1 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[jj]]];
+                            tempPoint2 = triplePoints[intPts[polyIntIdx].triplePointsIdx[s[jj + 1]]];
+                            curLength = euclideanDistance(tempPoint1, tempPoint2);
+                            points = discretizeLineOfIntersection(pt1, pt2, curLength);
+                            // Write points for first fracture to file, save second set of points to temp
+                            numIntPts += points.size() - 1;
+                            writePoints(fractIntFile, points, 1, count);
+                        }
+                        
+                        // Set up points to go from last triple point to last endpoint
+                        pt1[0] = pt2[0];
+                        pt1[1] = pt2[1];
+                        pt1[2] = pt2[2];
+                        pt2[0] = tempIntersection.x2;
+                        pt2[1] = tempIntersection.y2;
+                        pt2[2] = tempIntersection.z2;
+                        tempPoint1 = tempPoint2;
+                        tempPoint2.x = intPts[polyIntIdx].x2;
+                        tempPoint2.y = intPts[polyIntIdx].y2;
+                        tempPoint2.z = intPts[polyIntIdx].z2;
+                    }
+                    
+                    curLength = euclideanDistance(tempPoint1, tempPoint2);
+                    points = discretizeLineOfIntersection(pt1, pt2, curLength);
+                    numIntPts += points.size() - 1;
+                    writePoints(fractIntFile, points, 1, count);
+                    delete[] s; // Need to delete these manually. created with new[]
+                    delete[] distances;
+                } else { // No triple intersection points on intersection line
+                    double pt1[3] = {tempIntersection.x1, tempIntersection.y1, tempIntersection.z1};
+                    double pt2[3] = {tempIntersection.x2, tempIntersection.y2, tempIntersection.z2};
+                    tempPoint1.x = intPts[polyIntIdx].x1;
+                    tempPoint1.y = intPts[polyIntIdx].y1;
+                    tempPoint1.z = intPts[polyIntIdx].z1;
                     tempPoint2.x = intPts[polyIntIdx].x2;
                     tempPoint2.y = intPts[polyIntIdx].y2;
                     tempPoint2.z = intPts[polyIntIdx].z2;
+                    curLength = euclideanDistance(tempPoint1, tempPoint2);
+                    std::vector<Point> points = discretizeLineOfIntersection(pt1, pt2, curLength);
+                    numIntPts += points.size();
+                    writePoints(fractIntFile, points, 0, count);
                 }
                 
-                curLength = euclideanDistance(tempPoint1, tempPoint2);
-                points = discretizeLineOfIntersection(pt1, pt2, curLength);
-                numIntPts += points.size() - 1;
-                writePoints(fractIntFile, points, 1, count);
-                delete[] s; // Need to delete these manually. created with new[]
-                delete[] distances;
-            } else { // No triple intersection points on intersection line
-                double pt1[3] = {tempIntersection.x1, tempIntersection.y1, tempIntersection.z1};
-                double pt2[3] = {tempIntersection.x2, tempIntersection.y2, tempIntersection.z2};
-                tempPoint1.x = intPts[polyIntIdx].x1;
-                tempPoint1.y = intPts[polyIntIdx].y1;
-                tempPoint1.z = intPts[polyIntIdx].z1;
-                tempPoint2.x = intPts[polyIntIdx].x2;
-                tempPoint2.y = intPts[polyIntIdx].y2;
-                tempPoint2.z = intPts[polyIntIdx].z2;
-                curLength = euclideanDistance(tempPoint1, tempPoint2);
-                std::vector<Point> points = discretizeLineOfIntersection(pt1, pt2, curLength);
-                numIntPts += points.size();
-                writePoints(fractIntFile, points, 0, count);
+                intStart.push_back(count);
             }
-            
-            intStart.push_back(count);
+        } else {
+            std::vector<Point> tempTripPts;
+            IntPoints tempIntersection = polyAndIntersection_RotationToXY(intPts[0],
+                                         acceptedPoly[finalFractures[i]], triplePoints, tempTripPts);
         }
         
         // Done with fracture and intersections
@@ -483,6 +492,40 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
     }
     
     polyOutput.close(); // Done with polygons inp file
+}
+
+/* writePolys() ****************************************************************************/
+/*! Parses and writes all poly_x.inp files containing polygon (fracture) vertice and connectivity data
+    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
+    Arg 2: std::vector array of all accetped fractures
+    Arg 3: Path to output folder */
+void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+    std::ofstream polyOutput;
+    std::cout << "Writing Polygon Files\n";
+    int polyCount = finalFractures.size();
+    std::string polyOutputFile = output + "/polygons.dat";
+    polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
+    polyOutput << "nPolygons: " << polyCount << "\n";
+    
+    for (int j = 0; j < polyCount; j++) {
+        // Write vertices
+        int numberOfNodes = acceptedPoly[finalFractures[j]].numberOfNodes;
+        //polyOutput << acceptedPoly[finalFractures[j]].familyNum << " ";
+        polyOutput << numberOfNodes << " ";
+        
+        for (int i = 0; i < numberOfNodes; i++) {
+            int idx = i * 3;
+            polyOutput << std::setprecision(12) << "{"
+                       << acceptedPoly[finalFractures[j]].vertices[idx] << ", "
+                       << acceptedPoly[finalFractures[j]].vertices[idx + 1] << ", "
+                       << acceptedPoly[finalFractures[j]].vertices[idx + 2] << "} ";
+        }
+        
+        polyOutput << "\n";
+    }
+    
+    polyOutput.close();
+    std::cout << "Writing Polygon Files Complete\n";
 }
 
 /* writePolysInp() ****************************************************************************/

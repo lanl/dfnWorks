@@ -23,10 +23,10 @@ groupData structure:
 fractGroups structure:
 *************************
     fractGroups[] holds the actual pointers/index numbers to the polygon array along with the group number. Unlike
-    groupData[] described above, fractGroups does not stay aligned to group numbers. To keep from copying, deleteing, and
+    groupData[] described above, fractGroups does not stay aligned to group numbers. To keep from copying, deleting, and
     re-allocating memory when groups merge together, we simply change the variable groupNum to the new group number.
 
-    Because of this, there will be multiples of the same group numbers, but with differnt polygons listed. To get all the
+    Because of this, there will be multiples of the same group numbers, but with different polygons listed. To get all the
     polygons from a group we must search the fractGroups array for all matching groups
 */
 
@@ -46,53 +46,65 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
     // The max number of groups is pstats.nextGroupNum - 1
     std::vector<unsigned int> matchingGroups;
     std::vector<unsigned int> finalPolyList;
+    //int keepIsolated = 1;
+    std::cout << "In cluster groups\n";
+    std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
+    std::cout << "Number of groups: " << pstats.groupData.size() << "\n";
     
-// NOTE: (groupNumber-1) = corresponding groupData structures' index of the arary
-//       similarly, the index of groupData + 1 = groupNumber (due to groupNumber starting at 1, array starting at 0)
-
-    // Find all matching groups:
-    // Get matching groups from pstats.groupData[]
-    for (unsigned int i = 0; i < pstats.groupData.size(); i++) {
-        // If the data is valid, meaning that group still exists (hasn't been merged to a new group) and
-        // if the group has more than 1 fracture meaning there are intersections and
-        // the cluster matches the reqirements of the user's boundaryFaces option
-        if (ignoreBoundaryFaces == 0) {
-            if (pstats.groupData[i].valid == 1 && pstats.groupData[i].size > 1  && facesMatch(boundaryFaces, pstats.groupData[i].faces)) {
-                matchingGroups.push_back(i + 1); //save matching group number
-            }
-        } else { // Get all cluster groups
-            if (pstats.groupData[i].valid == 1 && pstats.groupData[i].size > 1) {
-                matchingGroups.push_back(i + 1); // Save matching group number
-            }
-        }
-    }
-    
-    if (keepOnlyLargestCluster == 1 && matchingGroups.size() > 1) {
-        // If only keeping the largest cluster, find group with largest size
-        // Initialize largestGroup
-        unsigned int largestGroup = matchingGroups[0];
+    if (keepIsolatedFractures == 0) {
+        // NOTE: (groupNumber-1) = corresponding groupData structures' index of the arary
+        //       similarly, the index of groupData + 1 = groupNumber (due to groupNumber starting at 1, array starting at 0)
         
-        for (unsigned int i = 0; i < matchingGroups.size(); i++) {
-            // If largest group < current group, the current group is the new largest group
-            if (largestGroup < pstats.groupData[matchingGroups[i] - 1].size) {
-                largestGroup = matchingGroups[i];
-            }
-        }
-        
-        matchingGroups.clear(); // Clear group numbers
-        matchingGroups.push_back(largestGroup); // Save only the largest group
-    }
-    
-    // Gather the final polygon numbers/indecies.
-    for (unsigned int i = 0; i < matchingGroups.size(); i++) {
-        for (unsigned int k = 0; k < pstats.fractGroup.size(); k++) {
-            if (matchingGroups[i] == pstats.fractGroup[k].groupNum) {
-                // If the groupNumbers match
-                // copy all poly indecies of matching group
-                for (unsigned int j = 0; j < pstats.fractGroup[k].polyList.size(); j++) {
-                    finalPolyList.push_back(pstats.fractGroup[k].polyList[j]);
+        // Find all matching groups:
+        // Get matching groups from pstats.groupData[]
+        for (unsigned int i = 0; i < pstats.groupData.size(); i++) {
+            // If the data is valid, meaning that group still exists (hasn't been merged to a new group) and
+            // if the group has more than 1 fracture meaning there are intersections and
+            // the cluster matches the requirements of the user's boundaryFaces option
+            if (ignoreBoundaryFaces == 0) {
+                if (pstats.groupData[i].valid == 1 && pstats.groupData[i].size > 1  && facesMatch(boundaryFaces, pstats.groupData[i].faces)) {
+                    matchingGroups.push_back(i + 1); //save matching group number
+                }
+            } else { // Get all cluster groups
+                if (pstats.groupData[i].valid == 1 && pstats.groupData[i].size > 1) {
+                    matchingGroups.push_back(i + 1); // Save matching group number
                 }
             }
+        }
+        
+        if (keepOnlyLargestCluster == 1 && matchingGroups.size() > 1) {
+            // If only keeping the largest cluster, find group with largest size
+            // Initialize largestGroup
+            unsigned int largestGroup = matchingGroups[0];
+            
+            for (unsigned int i = 0; i < matchingGroups.size(); i++) {
+                // If largest group < current group, the current group is the new largest group
+                if (largestGroup < pstats.groupData[matchingGroups[i] - 1].size) {
+                    largestGroup = matchingGroups[i];
+                }
+            }
+            
+            matchingGroups.clear(); // Clear group numbers
+            matchingGroups.push_back(largestGroup); // Save only the largest group
+        }
+        
+        // Gather the final polygon numbers/indecies.
+        for (unsigned int i = 0; i < matchingGroups.size(); i++) {
+            for (unsigned int k = 0; k < pstats.fractGroup.size(); k++) {
+                if (matchingGroups[i] == pstats.fractGroup[k].groupNum) {
+                    // If the groupNumbers match
+                    // copy all poly indecies of matching group
+                    for (unsigned int j = 0; j < pstats.fractGroup[k].polyList.size(); j++) {
+                        finalPolyList.push_back(pstats.fractGroup[k].polyList[j]);
+                    }
+                }
+            }
+        }
+    } else {
+        std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
+        
+        for (unsigned int i = 0; i < pstats.acceptedPolyCount; i++) {
+            finalPolyList.push_back(i);
         }
     }
     
