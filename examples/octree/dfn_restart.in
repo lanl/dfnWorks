@@ -1,22 +1,26 @@
 # Sept 12, 2018
 # Matthew Sweeney, Satish Karra, Jeffrey Hyman (LANL)
 #================================================
- 
+
 SIMULATION
   SIMULATION_TYPE SUBSURFACE
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        SKIP_RESTART
+      /
     /
     SUBSURFACE_TRANSPORT transport
-      MODE GIRT
+        MODE GIRT 
     /
   /
-  CHECKPOINT
-    FORMAT HDF5
-    TIMES s 100000.0d0
-  /
+#  CHECKPOINT
+#    TIMES s 100.0d0
+#  /
+  RESTART dfn_explicit-restart.h5 0.
 END
+
 SUBSURFACE
 
 CHEMISTRY
@@ -71,7 +75,7 @@ MATERIAL_PROPERTY soil1
   TORTUOSITY 0.5d0
   CHARACTERISTIC_CURVES default
 #  PERMEABILITY
-#    PERM_ISO 8.333333333333335d-12
+#    PERM_ISO 1.3020833333333334d-7
 #  PERMEABILITY
 #    ANISOTROPIC
 #    DATASET perm
@@ -96,7 +100,8 @@ END
 
 #=========================== output options ===================================
 OUTPUT
-#  PERIODIC TIME 0.00002d0 second
+  PERIODIC TIME 0.005d0 s between 0.005d0 s and 0.249d0 s
+  PERIODIC TIME 10000.d0 s between 10000.d0 s and 199000.d0 s
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
@@ -114,8 +119,15 @@ END
 #=========================== times ============================================
 TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 s
-  FINAL_TIME 100000.0d0 s
-  MAXIMUM_TIMESTEP_SIZE 100000.0d0 s
+  FINAL_TIME 1000000.d0 s
+  MAXIMUM_TIMESTEP_SIZE 0.005d0 s at 0.005d0 s
+  MAXIMUM_TIMESTEP_SIZE 0.1d0 s at 0.5d0 s
+  MAXIMUM_TIMESTEP_SIZE 1.d0 s at 1.d0 s
+  MAXIMUM_TIMESTEP_SIZE 10.d0 s at 10.d0 s
+  MAXIMUM_TIMESTEP_SIZE 100.d0 s at 100.d0 s
+  MAXIMUM_TIMESTEP_SIZE 1000.d0 s at 1000.d0 s
+  MAXIMUM_TIMESTEP_SIZE 10000.d0 s at 10000.d0 s
+  MAXIMUM_TIMESTEP_SIZE 100000.d0 s at 100000.d0 s
 END
 
 #=========================== regions ==========================================
