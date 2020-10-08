@@ -107,8 +107,6 @@ outputAcceptedRadiiPerFamily: 1
            fracture removal.         
 */ 
 
-keepIsolatedFractures: 1
-
 /*==========================================================================*/
 /*  Fracture Network Parameters:                                            */
 /*==========================================================================*/
@@ -669,12 +667,6 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 
 /*===========================================================================*/
  
-
-
-keepIsolatedFractures: 0 
-/*  0 - Remove any isolated fracture (not clusters)
-    1 - Keep all fractures in the domain
-*/
 
 
 /*===========================================================================*/

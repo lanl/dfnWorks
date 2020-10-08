@@ -518,8 +518,6 @@ forceLargeFractures: 0
 outputFinalRadiiPerFamily: 0 
 radiiListIncrease: 0.1
 removeFracturesLessThan: 0
-keepIsolatedFractures: 0
-
 
 
 keepIsolatedFractures: 0 
