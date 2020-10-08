@@ -80,8 +80,12 @@ out_curv: no
 out_avs:  no 
 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
+<<<<<<< HEAD
 out_traj: no
 out_fract: no 
+=======
+out_traj: no 
+>>>>>>> master
 
 /* use outputs to file or memory buffer. Memory buffer by default */
 out_filetemp: no

@@ -288,7 +288,7 @@ enumPoints: {8, 12}
 eAngleOption: 0     
 /*  All angles for ellipses are in: 
         0 - degrees
-        1 - radians (Must use numerical value for PI) 
+        0 - Radians (Must use numerical value for PI) 
 */
                         
 etheta: {0, 45} 
@@ -642,3 +642,32 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 
 /*===========================================================================*/
  
+
+
+keepIsolatedFractures: 0 
+/*  0 - Remove any isolated fracture (not clusters)
+    1 - Keep all fractures in the domain
+*/
+
+
+/*===========================================================================*/
+/*===========================================================================*/
+/*                                                                           */
+/*  User Polygon Defined By Coordinates                                   */
+/*                                                                           */
+/*===========================================================================*/
+/*===========================================================================*/
+
+userPolygonByCoord: 0
+/*  0 - User defined polygon by coordinates off
+    1 - User defined polygon by coordinates on
+*/
+
+PolygonByCoord_Input_File_Path: ./
+
+/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+vertices are not put in clockwise or counter-clockwise order.
+If errors (Usualy seg fualt during meshing if using LaGriT), 
+try to reorder the points till u get it right.
+Also, coordinates must be co-planar */
+

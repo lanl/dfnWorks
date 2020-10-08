@@ -1,0 +1,312 @@
+\hypertarget{_read_grid_init_8c}{}\section{/\+Users/nataliia/\+Desktop/dfn\+Gen-\/docs/\+Docs\+\_\+\+P\+T/\+Particle\+Tracking\+\_\+source/\+Read\+Grid\+Init.c File Reference}
+\label{_read_grid_init_8c}\index{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/ReadGridInit.c@{/Users/nataliia/Desktop/dfnGen-\/docs/Docs\_PT/ParticleTracking\_source/ReadGridInit.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$search.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Func\+Def.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a361538379ec6b2e063a620235b010bfc}{Read\+Init}} ()
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a60556e448bef6314a77260487c969ced}{Read\+Data\+Files}} ()
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a9730ad314b17991a43fca06a97274ff1}{Adjacent\+Cells}} (int ln, int in, int jn, int kn)
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_adf46a0a89792c3085aa47f07957c6955}{Read\+Boundary\+Nodes}} ()
+\item 
+F\+I\+LE $\ast$ \mbox{\hyperlink{_read_grid_init_8c_a205add90a27292ac5f18188fa35bcdf5}{Open\+File}} (char filen\mbox{[}120\mbox{]}, char fileopt\mbox{[}2\mbox{]})
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a335450331ee81be8a4f3dfda40186f5b}{Read\+P\+F\+L\+O\+T\+R\+A\+Nfile}} (int nedges)
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a9bf66a3ae3be79cacf8836e88dbdcef1}{Read\+F\+E\+H\+Mfile}} (int nedges)
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_aee37300c235f6fed3eea46ac342e7be6}{Writing\+Init}} ()
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_aac796a2c642d933ded40275edb457d16}{Check\+Grid}} ()
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_read_grid_init_8c_a2afbea1a5d0b14d8a098f551fe055420}{Control\+\_\+\+File}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_read_grid_init_8c_a484100bd5902d4efcdd15c21d1cb9048}{Control\+\_\+\+File\+\_\+\+Optional}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+int \mbox{\hyperlink{_read_grid_init_8c_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}{String\+\_\+\+Compare}} (char string1\mbox{[}$\,$\mbox{]}, char string2\mbox{[}$\,$\mbox{]})
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_read_grid_init_8c_a9bb4185d1b46d02dc42d5889e4d70ebf}{Control\+\_\+\+Data}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+struct \mbox{\hyperlink{structinpfile}{inpfile}} \mbox{\hyperlink{_read_grid_init_8c_a922a07b425353141b29d8d57e830a7c1}{Control\+\_\+\+Param}} (char fileobject\mbox{[}$\,$\mbox{]}, int ctr)
+\item 
+void \mbox{\hyperlink{_read_grid_init_8c_a977295cc5cf9eca6fa850ec922f4a6b0}{Read\+Aperture}} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_read_grid_init_8c_a9730ad314b17991a43fca06a97274ff1}\label{_read_grid_init_8c_a9730ad314b17991a43fca06a97274ff1}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!AdjacentCells@{AdjacentCells}}
+\index{AdjacentCells@{AdjacentCells}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{AdjacentCells()}{AdjacentCells()}}
+{\footnotesize\ttfamily void Adjacent\+Cells (\begin{DoxyParamCaption}\item[{int}]{ln,  }\item[{int}]{in,  }\item[{int}]{jn,  }\item[{int}]{kn }\end{DoxyParamCaption})}
+
+The function defines adjacent triangular cells for each node 
+
+Definition at line 540 of file Read\+Grid\+Init.\+c.
+
+
+
+References cell, vertex\+::cells, vertex\+::fracts, vertex\+::fracture, element\+::fracture, fracture, node, and vertex\+::numneighb.
+
+
+
+Referenced by Read\+Data\+Files().
+
+\mbox{\Hypertarget{_read_grid_init_8c_aac796a2c642d933ded40275edb457d16}\label{_read_grid_init_8c_aac796a2c642d933ded40275edb457d16}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!CheckGrid@{CheckGrid}}
+\index{CheckGrid@{CheckGrid}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{CheckGrid()}{CheckGrid()}}
+{\footnotesize\ttfamily void Check\+Grid (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function checks the grid\+: looking for nodes that are defined as internal or external, but belong to two fractures and should be defined as interface nodes 
+
+Definition at line 1055 of file Read\+Grid\+Init.\+c.
+
+
+
+References fracture, nnodes, node, and vertex\+::numneighb.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a9bb4185d1b46d02dc42d5889e4d70ebf}\label{_read_grid_init_8c_a9bb4185d1b46d02dc42d5889e4d70ebf}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!Control\_Data@{Control\_Data}}
+\index{Control\_Data@{Control\_Data}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{Control\_Data()}{Control\_Data()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+Data (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1201 of file Read\+Grid\+Init.\+c.
+
+
+
+References controlfile, inpfile\+::flag, Open\+File(), inpfile\+::param, and String\+\_\+\+Compare().
+
+
+
+Referenced by Init\+Pos(), main(), and Read\+Boundary\+Nodes().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a2afbea1a5d0b14d8a098f551fe055420}\label{_read_grid_init_8c_a2afbea1a5d0b14d8a098f551fe055420}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!Control\_File@{Control\_File}}
+\index{Control\_File@{Control\_File}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{Control\_File()}{Control\_File()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+File (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns the file name and/or input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1090 of file Read\+Grid\+Init.\+c.
+
+
+
+References controlfile, inpfile\+::filename, inpfile\+::flag, Open\+File(), inpfile\+::param, and String\+\_\+\+Compare().
+
+
+
+Referenced by Init\+In\+Matrix(), Init\+Pos(), main(), Output\+Mar\+Plum\+Disp(), Particle\+Track(), Read\+Aperture(), Read\+Boundary\+Nodes(), Read\+Data\+Files(), Read\+F\+E\+H\+Mfile(), Read\+Init(), and Read\+P\+F\+L\+O\+T\+R\+A\+Nfile().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a484100bd5902d4efcdd15c21d1cb9048}\label{_read_grid_init_8c_a484100bd5902d4efcdd15c21d1cb9048}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!Control\_File\_Optional@{Control\_File\_Optional}}
+\index{Control\_File\_Optional@{Control\_File\_Optional}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{Control\_File\_Optional()}{Control\_File\_Optional()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+File\+\_\+\+Optional (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns the file name and/or input parameter value. This function is called for the optional parameters only. If the parameter is not defined in the control file, the default value is used. 
+
+Definition at line 1135 of file Read\+Grid\+Init.\+c.
+
+
+
+References controlfile, inpfile\+::filename, inpfile\+::flag, Open\+File(), inpfile\+::param, and String\+\_\+\+Compare().
+
+
+
+Referenced by Init\+Pos(), Particle\+Track(), and Read\+Init().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a922a07b425353141b29d8d57e830a7c1}\label{_read_grid_init_8c_a922a07b425353141b29d8d57e830a7c1}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!Control\_Param@{Control\_Param}}
+\index{Control\_Param@{Control\_Param}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{Control\_Param()}{Control\_Param()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structinpfile}{inpfile}} Control\+\_\+\+Param (\begin{DoxyParamCaption}\item[{char}]{fileobject\mbox{[}$\,$\mbox{]},  }\item[{int}]{ctr }\end{DoxyParamCaption})}
+
+The function reads control file with input parameters to dfn\+Trans; returns input parameter value. If the parameter is not defined in the control file, the program is terminated. 
+
+Definition at line 1245 of file Read\+Grid\+Init.\+c.
+
+
+
+References controlfile, inpfile\+::flag, Open\+File(), inpfile\+::param, and String\+\_\+\+Compare().
+
+
+
+Referenced by Init\+Pos(), main(), Particle\+Track(), and Time\+From\+Matrix().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a205add90a27292ac5f18188fa35bcdf5}\label{_read_grid_init_8c_a205add90a27292ac5f18188fa35bcdf5}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!OpenFile@{OpenFile}}
+\index{OpenFile@{OpenFile}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{OpenFile()}{OpenFile()}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ Open\+File (\begin{DoxyParamCaption}\item[{char}]{filen\mbox{[}120\mbox{]},  }\item[{char}]{fileopt\mbox{[}2\mbox{]} }\end{DoxyParamCaption})}
+
+The function opens file for reading or writing. If error -\/ the program is terminated. 
+
+Definition at line 728 of file Read\+Grid\+Init.\+c.
+
+
+
+Referenced by Control\+\_\+\+Data(), Control\+\_\+\+File(), Control\+\_\+\+File\+\_\+\+Optional(), Control\+\_\+\+Param(), Coordinations2\+D(), Init\+In\+Matrix(), Output\+Mar\+Plum\+Disp(), Particle\+Track(), Read\+Aperture(), Read\+Boundary\+Nodes(), Read\+Data\+Files(), Read\+F\+E\+H\+Mfile(), Read\+Init(), Read\+P\+F\+L\+O\+T\+R\+A\+Nfile(), Velocity3\+D(), and Writing\+Init().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a977295cc5cf9eca6fa850ec922f4a6b0}\label{_read_grid_init_8c_a977295cc5cf9eca6fa850ec922f4a6b0}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadAperture@{ReadAperture}}
+\index{ReadAperture@{ReadAperture}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadAperture()}{ReadAperture()}}
+{\footnotesize\ttfamily void Read\+Aperture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads apertures of fractures in D\+FN. Aperture can be defined for each fracture or for every node/cell, representing internal heterogeneity. 
+
+Definition at line 1289 of file Read\+Grid\+Init.\+c.
+
+
+
+References vertex\+::aperture, Control\+\_\+\+File(), inpfile\+::filename, vertex\+::fracture, fracture, nfract, nnodes, node, and Open\+File().
+
+
+
+Referenced by Read\+Data\+Files().
+
+\mbox{\Hypertarget{_read_grid_init_8c_adf46a0a89792c3085aa47f07957c6955}\label{_read_grid_init_8c_adf46a0a89792c3085aa47f07957c6955}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadBoundaryNodes@{ReadBoundaryNodes}}
+\index{ReadBoundaryNodes@{ReadBoundaryNodes}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadBoundaryNodes()}{ReadBoundaryNodes()}}
+{\footnotesize\ttfamily void Read\+Boundary\+Nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The functions reads node\textquotesingle{}s I\+Ds assigned to in-\/flow and out-\/flow boundaries. the total input flow flux is calculated. 
+
+Definition at line 581 of file Read\+Grid\+Init.\+c.
+
+
+
+References Control\+\_\+\+Data(), Control\+\_\+\+File(), density, inpfile\+::filename, vertex\+::flux, maindir, node, nodezonein, nodezoneout, vertex\+::numneighb, nzone\+\_\+in, Open\+File(), total\+Flux\+In, and vertex\+::typeN.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a60556e448bef6314a77260487c969ced}\label{_read_grid_init_8c_a60556e448bef6314a77260487c969ced}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadDataFiles@{ReadDataFiles}}
+\index{ReadDataFiles@{ReadDataFiles}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadDataFiles()}{ReadDataFiles()}}
+{\footnotesize\ttfamily void Read\+Data\+Files (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads D\+FN mesh from inp and stor files if no aperture file specified, the aperture of all fractures will be equal to thickness value 
+
+Definition at line 180 of file Read\+Grid\+Init.\+c.
+
+
+
+References Adjacent\+Cells(), vertex\+::aperture, vertex\+::area, cell, vertex\+::cells, Control\+\_\+\+File(), fehm, inpfile\+::filename, material\+::firstcell, material\+::firstnode, vertex\+::flux, vertex\+::fracts, vertex\+::fracture, element\+::fracture, fracture, vertex\+::indnodes, material\+::lastnode, max\+\_\+neighb, ncells, nfract, nnodes, node, material\+::numbcells, vertex\+::numneighb, Open\+File(), pflotran, Read\+Aperture(), Read\+F\+E\+H\+Mfile(), Read\+P\+F\+L\+O\+T\+R\+A\+Nfile(), thickness, vertex\+::type, vertex\+::typeN, and element\+::veloc\+\_\+ind.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a9bf66a3ae3be79cacf8836e88dbdcef1}\label{_read_grid_init_8c_a9bf66a3ae3be79cacf8836e88dbdcef1}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadFEHMfile@{ReadFEHMfile}}
+\index{ReadFEHMfile@{ReadFEHMfile}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadFEHMfile()}{ReadFEHMfile()}}
+{\footnotesize\ttfamily void Read\+F\+E\+H\+Mfile (\begin{DoxyParamCaption}\item[{int}]{nedges }\end{DoxyParamCaption})}
+
+The function opens and reads F\+E\+HM outputs; read in flow fluxes and cell volumes. 
+
+Definition at line 879 of file Read\+Grid\+Init.\+c.
+
+
+
+References Control\+\_\+\+File(), max\+\_\+neighb, nnodes, node, Open\+File(), and vertex\+::pressure.
+
+
+
+Referenced by Read\+Data\+Files().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a361538379ec6b2e063a620235b010bfc}\label{_read_grid_init_8c_a361538379ec6b2e063a620235b010bfc}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadInit@{ReadInit}}
+\index{ReadInit@{ReadInit}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadInit()}{ReadInit()}}
+{\footnotesize\ttfamily void Read\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The function reads total number of nodes, triangular cells, fractures in D\+FN mesh. The memory is allocated for data structures\+: N\+O\+DE, C\+E\+LL, F\+R\+A\+C\+T\+U\+RE 
+
+Definition at line 16 of file Read\+Grid\+Init.\+c.
+
+
+
+References vertex\+::area, cell, vertex\+::cells, Control\+\_\+\+File(), Control\+\_\+\+File\+\_\+\+Optional(), vertex\+::flux, vertex\+::fracts, fracture, vertex\+::indnodes, max\+\_\+neighb, ncells, nfract, nnodes, node, material\+::nvect\+\_\+xy, material\+::nvect\+\_\+z, Open\+File(), material\+::theta, and vertex\+::type.
+
+
+
+Referenced by main().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a335450331ee81be8a4f3dfda40186f5b}\label{_read_grid_init_8c_a335450331ee81be8a4f3dfda40186f5b}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!ReadPFLOTRANfile@{ReadPFLOTRANfile}}
+\index{ReadPFLOTRANfile@{ReadPFLOTRANfile}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{ReadPFLOTRANfile()}{ReadPFLOTRANfile()}}
+{\footnotesize\ttfamily void Read\+P\+F\+L\+O\+T\+R\+A\+Nfile (\begin{DoxyParamCaption}\item[{int}]{nedges }\end{DoxyParamCaption})}
+
+The function opens and reads P\+F\+L\+O\+T\+R\+AN files, read in flow fluxes, areas, pressure. 
+
+Definition at line 742 of file Read\+Grid\+Init.\+c.
+
+
+
+References vertex\+::area, Control\+\_\+\+File(), density, inpfile\+::filename, inpfile\+::flag, vertex\+::flux, nnodes, node, vertex\+::numneighb, Open\+File(), and vertex\+::pressure.
+
+
+
+Referenced by Read\+Data\+Files().
+
+\mbox{\Hypertarget{_read_grid_init_8c_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}\label{_read_grid_init_8c_a0bbf0ae1391d4e6a5a3fbc8d360d18b3}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!String\_Compare@{String\_Compare}}
+\index{String\_Compare@{String\_Compare}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{String\_Compare()}{String\_Compare()}}
+{\footnotesize\ttfamily int String\+\_\+\+Compare (\begin{DoxyParamCaption}\item[{char}]{string1\mbox{[}$\,$\mbox{]},  }\item[{char}]{string2\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+The finction performs a string comparison, used in the control file reading. 
+
+Definition at line 1176 of file Read\+Grid\+Init.\+c.
+
+
+
+Referenced by Control\+\_\+\+Data(), Control\+\_\+\+File(), Control\+\_\+\+File\+\_\+\+Optional(), Control\+\_\+\+Param(), main(), and Particle\+Track().
+
+\mbox{\Hypertarget{_read_grid_init_8c_aee37300c235f6fed3eea46ac342e7be6}\label{_read_grid_init_8c_aee37300c235f6fed3eea46ac342e7be6}} 
+\index{ReadGridInit.c@{ReadGridInit.c}!WritingInit@{WritingInit}}
+\index{WritingInit@{WritingInit}!ReadGridInit.c@{ReadGridInit.c}}
+\subsubsection{\texorpdfstring{WritingInit()}{WritingInit()}}
+{\footnotesize\ttfamily void Writing\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Functions write the data structure of nodes, cells and fractures into files in A\+S\+C\+II format with detail explanations. This output is optional and can be helpful in code debugging. 
+
+Definition at line 981 of file Read\+Grid\+Init.\+c.
+
+
+
+References cell, inpfile\+::filename, fracture, maindir, nfract, nnodes, node, material\+::numbcells, vertex\+::numneighb, and Open\+File().
+
+
+
+Referenced by main().
+

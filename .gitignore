@@ -1,38 +1,31 @@
-*DS_Store
-*logx3dgen*
-*outx3dgen*
+#CMake
 *CMakeFiles*
-*egg*
-*.o
-*~
-*.nfs*
-*.swp
-*.so
 *.cmake
-*.pyc
+*FracMan_interface*
+
+#macOS folder config
+*DS_Store
+
+pydfnworks/pydfnworks/only_gen_output.py
+pydfnworks/pydfnworks/paths.py
 
 # dfnWorks Executables
-DFNGen/DFNGen
-C_uge_correct/correct_uge
-DFN_MESH_Connectivity_Test/ConnectivityTest
 ParticleTracking/DFNTrans
+DFNTrans/DFNTrans_TDRW
+ParticleTracking_TDRW/DFNTrans_TDRW
+C_uge_correct/correct_uge
+C_uge_stor/correct_stor
+DFN_Mesh_Connectivity_Test/ConnectivityTest
+DFNGen/DFNGen
 
-# LaTex files
-*doctree*
-*pickle*
+internal/Documentation/sphinx-docs/build/*
+
 */build/*
-*aux*
-*idx*
-*ilg*
-*.ind*
-*.tex*
-*.toc*
+*/dist/*
+*.egg
 
-# pdf files
 *.pdf
 !dfnWorks.pdf
-
-*break*
 
 # Compiled Object files
 *.slo
@@ -59,12 +52,11 @@ ParticleTracking/DFNTrans
 *.a
 *.lib
 
-# Other Executables
+# Executables
 *.exe
 *.out
 *.app
 *.pyc
-main
 
 # Other
 *~

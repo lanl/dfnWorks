@@ -60,6 +60,11 @@ bool boundaryFaces[6];
     cluster which connects at least any two sides of the domain.*/
 bool keepOnlyLargestCluster;
 
+/*! 0 - remove isolated fractures and clusters
+    1 - Keep isolated fractures and clusters
+    */
+bool keepIsolatedFractures;
+
 /*! Useful for debugging,
     This option will print all fracture rejection reasons as they occur.
         0 - Disable
@@ -343,6 +348,10 @@ bool userRecByCoord;
     False - No ellpsies defined by coordinates are being used.*/
 bool userEllByCoord;
 
+/*! True  - User polygons defined by coordinates are being used.
+    False - No polygons defined by coordinates are being used.*/
+bool userPolygonByCoord;
+
 /*! False - Permeability of each fracture is a function of fracture aperture,
             given by k=(b^2)/12, where b is an aperture and k is permeability
     True  - Constant permeabilty for all fractures*/
@@ -395,6 +404,9 @@ double *userRectCoordVertices;
 /*! Array of ellipse coordiates.
     Number of elements =  3 * nEllNodes * nEllByCoord*/
 double *userEllCoordVertices;
+
+/*! Name of userPolygon File */
+std::string polygonFile;
 
 /*! Log-normal aperture option.
     Mean of underlying normal distribution. */
@@ -548,6 +560,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> ch >> domainSizeIncrease[0] >> ch >> domainSizeIncrease[1] >> ch >> domainSizeIncrease[2];
     searchVar(inputFile, "keepOnlyLargestCluster:");
     inputFile >> keepOnlyLargestCluster;
+    searchVar(inputFile, "keepIsolatedFractures:");
+    inputFile >> keepIsolatedFractures;
     searchVar(inputFile, "ignoreBoundaryFaces:");
     inputFile >> ignoreBoundaryFaces;
     searchVar(inputFile, "boundaryFaces:");
@@ -992,12 +1006,19 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> userEllByCoord;
     searchVar(inputFile, "userRecByCoord:");
     inputFile >> userRecByCoord;
+    searchVar(inputFile, "userPolygonByCoord:");
+    inputFile >> userPolygonByCoord;
     
     if ((userRectanglesOnOff == 1 || userRecByCoord == 1) && (userEllipsesOnOff == 1 || userEllByCoord == 1)) {
         searchVar(inputFile, "insertUserRectanglesFirst:");
         inputFile >> insertUserRectanglesFirst;
     } else {
         insertUserRectanglesFirst = 0;
+    }
+    
+    if (userPolygonByCoord != 0) {
+        searchVar(inputFile, "PolygonByCoord_Input_File_Path:");
+        inputFile >> polygonFile;
     }
     
     if (userEllByCoord != 0) {

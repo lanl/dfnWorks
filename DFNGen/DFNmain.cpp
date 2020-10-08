@@ -162,6 +162,10 @@ int main (int argc, char **argv) {
     /*********  END SETUP HOT KEY **********/
     
     /********************* User Defined Shapes Insertion ************************/
+    // User Polygons are always inserted first
+    if (userPolygonByCoord != 0) {
+        insertUserPolygonByCoord(acceptedPoly, intPts, pstats, triplePoints);
+    }
     
     if (insertUserRectanglesFirst == 1) {
         // Insert user rects first
@@ -586,7 +590,7 @@ int main (int argc, char **argv) {
     
     if (finalFractures.size() == 0 && ignoreBoundaryFaces == 0 ) {
         printConnectivityError = 1;
-        //if there is no fracture network connected useres liststed boundary faces
+        //if there is no fracture network connected users defined boundary faces
         //switch to ignore boundary faces option with notice to user that there is no connectivity
         finalFractures =  getCluster(pstats);
         //if still no fractures, there is no fracture network

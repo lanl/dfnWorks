@@ -1,0 +1,1 @@
+python run_layers.py -name DUMMY/dfnworks-main/examples/layers/layers_example -input layers_run_file.txt -ncpu 16 

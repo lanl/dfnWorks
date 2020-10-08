@@ -1,11 +1,11 @@
 
 name = "pydfnWorks"
 
-date = "9 April 2020"
+date = "7 October 2020"
 
-version = "2.3"
+version = "2.4.0"
 
-description = "Python package serves as a wrapper for dfnWorks"
+description = "This python package serves as a wrapper for dfnWorks"
 
 long_description = \
     """
@@ -49,7 +49,6 @@ classifiers = [
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3 :: Only',
@@ -61,6 +60,10 @@ classifiers = [
 packages=["pydfnworks",
           "pydfnworks.general", 
           "pydfnworks.dfnGen",
+          "pydfnworks.dfnGen.generation",
+          "pydfnworks.dfnGen.meshing",
+          "pydfnworks.dfnGen.meshing.udfm",
+          "pydfnworks.dfnGen.meshing.poisson_disc",
           "pydfnworks.dfnFlow",
           "pydfnworks.dfnTrans",
           "pydfnworks.dfnGraph"]

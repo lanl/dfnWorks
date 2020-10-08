@@ -15,6 +15,7 @@ extern bool visualizationMode;
 extern bool tripleIntersections;
 extern bool boundaryFaces[6];
 extern bool keepOnlyLargestCluster;
+extern bool keepIsolatedFractures;
 extern bool printRejectReasons;
 extern bool outputFinalRadiiPerFamily;
 extern bool outputAcceptedRadiiPerFamily;
@@ -86,6 +87,7 @@ extern double *urtranslation;
 extern double *urnormal;
 extern bool userRecByCoord;
 extern bool userEllByCoord;
+extern bool userPolygonByCoord;
 extern unsigned int nRectByCoord;
 extern double *userRectCoordVertices;
 extern double *userEllCoordVertices;
@@ -112,6 +114,7 @@ extern int rejectsPerFracture;
 extern float *e_p32Targets;
 extern float *r_p32Targets;
 extern float removeFracturesLessThan;
+extern std::string polygonFile;
 
 #endif
 
