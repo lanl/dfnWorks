@@ -107,13 +107,23 @@ class distr():
 
         for param in paramNames:
             zTmp = True if "sd" not in param else False  ## Turns off noZeros check only for 'sd' for better error msg
-            errResult = distr_helper_methods.verify_list(
+            if "LogMean" in param:
+                errResult = distr_helper_methods.verify_list(
+                    distr_helper_methods.value_of(param),
+                    param,
+                    distr_helper_methods.verify_float,
+                    desiredLength=distribList[1],
+                    noZeros=zTmp,
+                    noNegs=False)
+            else:
+                errResult = distr_helper_methods.verify_list(
                 distr_helper_methods.value_of(param),
                 param,
                 distr_helper_methods.verify_float,
                 desiredLength=distribList[1],
                 noZeros=zTmp,
-                noNegs=True)
+                noNegs=True)  
+
             if errResult != None:
                 distr_helper_methods.error(
                     errString.format(param, -errResult, distribList[1],
