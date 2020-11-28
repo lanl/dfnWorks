@@ -501,6 +501,10 @@ cmo / addatt / mo_final / unit_area_normal / xyz / vnorm
 cmo / addatt / mo_final / scalar / xnorm ynorm znorm / vnorm 
 cmo / DELATT / mo_final / vnorm
 
+# Create Family element set
+cmo / addatt / mo_final / family_id / vint / scalar / nelements 
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
+
 # Output mesh in AVS UCD format - required for connectivity checking, is promptly deleted
 dump / OUTFILE_AVS / mo_final
 # Output mesh in LaGriT binary format. 
@@ -787,7 +791,7 @@ cmo / modatt / mo_all / pt_gtg / ioflag / l
 dump / avs2 / materialid.dat / mo_all / 0 0 2 0
 
 cmo / modatt / mo_all / imt1 / ioflag / l
-cmo / modatt / mo_all / family_id / ioflag / l
+#cmo / modatt / mo_all / family_id / ioflag / l
 cmo / modatt / mo_all / evol_onen / ioflag / l
 # Dump mesh with no attributes for viz
 dump / full_mesh_viz.inp / mo_all
