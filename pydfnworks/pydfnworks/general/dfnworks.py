@@ -45,9 +45,8 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.generation.gen_input import check_input
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
-    from pydfnworks.dfnGen.generation.gen_output import output_report
+    from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
-
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv
@@ -55,6 +54,8 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
+    from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
+
 
     # dfnFlow
     import pydfnworks.dfnFlow

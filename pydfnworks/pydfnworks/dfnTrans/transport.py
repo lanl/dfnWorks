@@ -174,6 +174,8 @@ def check_dfn_trans_run_files(self):
         "init_totalnumber:": None,
         "init_oneregion:": None,
         "in_partn:": None,
+        "init_well:": None,
+        "init_nodepart:": None,
         "in_xmin:": None,
         "in_xmax:": None,
         "in_ymin:": None,
@@ -245,9 +247,12 @@ def check_dfn_trans_run_files(self):
 
     # Check if file required for the run are in the directory and are not empty
     for key in files:
-        if not os.path.isfile(params[key]) or os.stat(
-                params[key]).st_size == 0:
-            error = "ERROR!!!!!\nRequired file %s is either empty of not in the current directory.\nPlease check required files\nExiting Program\n" % params[
+        if params[key] is None:
+            error = f"ERROR!!!!!\nRequired file {key} was not provided.\nPlease check DFNTrans control file\nExiting Program\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        elif not os.path.isfile(params[key]):
+            error = "ERROR!!!!!\nRequired file %s is not the current directory.\nPlease check required files\nExiting Program\n" % params[
                 key]
             sys.stderr.write(error)
             sys.exit(1)
@@ -273,17 +278,16 @@ def check_dfn_trans_run_files(self):
     # required parameters have been defined
     print("--> Checking Initial Conditions")
     initial_conditions = [
-        ("init_nf:", "init_partn:"), 
-        ("init_eqd:", "init_npart:"),
-        ("init_fluxw:", "init_totalnumber:"), 
-        ("init_random:", "in_randpart:"),
+        ("init_nf:", "init_partn:"), ("init_eqd:", "init_npart:"),
+        ("init_fluxw:", "init_totalnumber:"), ("init_random:", "in_randpart:"),
         ("init_oneregion:", "in_partn:", "in_xmin:", "in_ymin:", "in_zmin:",
          "in_xmax:", "in_ymax:", "in_zmax:"),
-        ("init_matrix:", "inm_coord:", "inm_nodeID:", "inm_porosity:")
+        ("init_matrix:", "inm_coord:", "inm_nodeID:", "inm_porosity:"),
+        ("init_well:", "init_nodepart:")
     ]
     ic_selected = []
     for ic in initial_conditions:
-        
+        #print(ic,params[ic[0]])
         if params[ic[0]] == "yes":
             ic_selected.append(ic[0])
             for i in ic:

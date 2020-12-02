@@ -328,10 +328,12 @@ int main (int argc, char **argv) {
                     newPoly.area = getArea(newPoly);
                     
                     // Update P32
-                    if (shapeFamilies[familyIndex].layer == 0) { // Whole domain
+                    if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region == 0) { // Whole domain
                         shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / domVol;
-                    } else { // Layer
+                    } else if (shapeFamilies[familyIndex].layer > 0 && shapeFamilies[familyIndex].region == 0) { // Layer
                         shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / layerVol[shapeFamilies[familyIndex].layer - 1];
+                    } else if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region > 0) { // Region
+                        shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / regionVol[shapeFamilies[familyIndex].region - 1];
                     }
                     
                     if (stopCondition == 1) {
@@ -453,14 +455,14 @@ int main (int argc, char **argv) {
     file << "\n========================================================\n";
     file << "            Network Generation Complete\n";
     file << "========================================================\n";
-    file << "Version of DFNGen: 2.1\n";
+    file << "Version of DFNGen: 2.2\n";
     std::time_t result = std::time(nullptr);
-    file << "Time Stamp:" << std::asctime(std::localtime(&result)) << "\n";
+    file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
     std::cout << "\n========================================================\n";
     std::cout << "            Network Generation Complete\n";
     std::cout << "========================================================\n";
-    std::cout << "Version of DFNGen: 2.1\n";
-    std::cout << "Time Stamp:" << std::asctime(std::localtime(&result)) << "\n";
+    std::cout << "Version of DFNGen: 2.2\n";
+    std::cout << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
     
     if (stopCondition == 1 ) {
         std::cout << "\nFinal p32 values per family:\n";
@@ -528,10 +530,10 @@ int main (int argc, char **argv) {
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
-        std::cout << "Family " << i + 1 << ":\n";
+        std::cout << "Family: " << i + 1 << "\n";
         std::cout << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
         std::cout << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
-        file << "Family " << i + 1 << ":\n";
+        file << "Family: " << i + 1 << "\n";
         file << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
         file << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
         
@@ -544,6 +546,17 @@ int main (int argc, char **argv) {
         } else {
             std::cout << "    Layer: Whole Domain \n";
             file << "    Layer: Whole Domain \n";
+        }
+        
+        if ( shapeFamilies[i].region > 0) {
+            int idx = (shapeFamilies[i].region - 1) * 6;
+            std::cout << "    Region: " << shapeFamilies[i].region << "\n";
+            std::cout << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+            file << "    Region: " << shapeFamilies[i].region << "\n";
+            file << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+        } else {
+            std::cout << "    Region: Whole Domain \n";
+            file << "    Region: Whole Domain \n";
         }
         
         std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
@@ -681,13 +694,13 @@ int main (int argc, char **argv) {
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
-        std::cout << "Family " << i + 1 << ":\n";
-        std::cout << "    Fractures After Isloated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
+        std::cout << "Family: " << i + 1 << "\n";
+        std::cout << "    Fractures After Isolated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
         std::cout << "    Isolated Fractures Removed: " << pstats.acceptedFromFam[i] - acceptedFromFamCounters[i] << "\n";
         std::cout << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
         std::cout << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
-        file << "Family " << i + 1 << ":\n";
-        file << "    Fractures After Isloated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
+        file << "Family: " << i + 1 << "\n";
+        file << "    Fractures After Isolated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
         file << "    Isolated Fractures Removed: " << pstats.acceptedFromFam[i] - acceptedFromFamCounters[i] << "\n";
         file << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
         file << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
@@ -703,12 +716,23 @@ int main (int argc, char **argv) {
             file << "    Layer: Whole Domain \n";
         }
         
+        if ( shapeFamilies[i].region > 0) {
+            int idx = (shapeFamilies[i].region - 1) * 6;
+            std::cout << "    Region: " << shapeFamilies[i].region << "\n";
+            std::cout << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+            file << "    Region: " << shapeFamilies[i].region << "\n";
+            file << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+        } else {
+            std::cout << "    Region: Whole Domain \n";
+            file << "    Region: Whole Domain \n";
+        }
+        
         std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
         std::cout << "    Volume: " << familyVol[i] << " m^3\n";
-        std::cout << "    Fracture Intesnsity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
+        std::cout << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
         file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
         file << "    Volume: " << familyVol[i] << " m^3\n";
-        file << "    Fracture Intesnsity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
+        file << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
@@ -740,12 +764,12 @@ int main (int argc, char **argv) {
     if (printConnectivityError == 1) {
         std::cout << "\nERROR: DFN generation has finished but the formed\n"
                   << "fracture network does not make a connection between\n"
-                  << "the user's specifed boundary faces.\n";
+                  << "the user's specified boundary faces.\n";
         std::cout << "Try increasing the fracture density, shrinking the domain\n"
                   << "or consider using the 'ignoreBoundaryFaces' option.\n";
         file << "\nERROR: DFN generation has finished but the formed\n"
              << "fracture network does not make a connection between\n"
-             << "the user's specifed boundary faces.\n";
+             << "the user's specified boundary faces.\n";
         file << "Try increasing the fracture density, shrinking the domain\n"
              << "or consider using the 'ignoreBoundaryFaces' option.\n";
         file.close();
@@ -757,21 +781,23 @@ int main (int argc, char **argv) {
     file << "\nNumber of Triple Intersection Points (Before Isolated Fracture Removal): " << triplePoints.size() << "\n";
     // Shrink intersection stats
     std::cout << "\nIntersection Statistics:\n";
-    std::cout << "    " << pstats.intersectionsShortened << " of " << intPts.size() << " Intersections Shortened\n";
-    std::cout << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << "m\n";
-    std::cout << "    Intersection Length Discarded: " << pstats.discardedLength << "m\n";
-    std::cout << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << "m\n";
+    std::cout << "    Number of Intersections: " << intPts.size() << " \n";
+    std::cout << "    Intersections Shortened: " << pstats.intersectionsShortened << " \n";
+    std::cout << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << " m\n";
+    std::cout << "    Intersection Length Discarded: " << pstats.discardedLength << " m\n";
+    std::cout << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << " m\n";
     file << "\nIntersection Statistics:\n";
-    file << "    " << pstats.intersectionsShortened << " of " << intPts.size() << " Intersections Shortened\n";
-    file << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << "m\n";
-    file << "    Intersection Length Discarded: " << pstats.discardedLength << "m\n";
-    file << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << "m\n";
+    file << "    Number of Intersections: " << intPts.size() << " \n";
+    file << "    Intersections Shortened: " << pstats.intersectionsShortened << " \n";
+    file << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << " m\n";
+    file << "    Intersection Length Discarded: " << pstats.discardedLength << " m\n";
+    file << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << " m\n";
     //*********** Rejection Stats *******************
     std::cout << "\nRejection Statistics: \n";
     std::cout << "    " << pstats.rejectionReasons.shortIntersection << " Short Intersections \n";
     std::cout << "    " << pstats.rejectionReasons.closeToNode << " Close to Node\n";
     std::cout << "    " << pstats.rejectionReasons.closeToEdge << " Close to Edge\n";
-    std::cout << "    " << pstats.rejectionReasons.closePointToEdge << " Vertice Close to Edge\n";
+    std::cout << "    " << pstats.rejectionReasons.closePointToEdge << " Vertex Close to Edge\n";
     std::cout << "    " << pstats.rejectionReasons.outside << " Outside of Domain\n";
     std::cout << "    " << pstats.rejectionReasons.triple << " Triple intersection Rejections\n";
     std::cout << "    " << pstats.rejectionReasons.interCloseToInter << " Intersections Close to Other Intersections\n\n";
@@ -811,7 +837,7 @@ int main (int argc, char **argv) {
                           << "Estimated: " << pstats.expectedFromFam[i] << "\n";
                 std::cout << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n\n";
                 file << shapeType(shapeFamilies[i]) << " Family "
-                     << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
+                     << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Estimated: " << pstats.expectedFromFam[i] << "\n";
                 file << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n\n";
             }

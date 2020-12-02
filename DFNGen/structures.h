@@ -410,7 +410,11 @@ struct Shape {
     /*! Layer the family belongs to. 0 is entire domain, greater than 0 is a layer.
         e.g. 2 would be the second layer listed in the input file under "layers:".  */
     short layer;
-    
+   
+    /*! Region the family belongs to. 0 is entire domain, greater than 0 is a region.
+        e.g. 2 would be the second region listed in the input file under "regions:".  */
+    short region;
+   
     /*! Aspect ratio for family. */
     float aspectRatio;
     

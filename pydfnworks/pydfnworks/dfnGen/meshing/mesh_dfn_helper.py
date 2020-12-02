@@ -10,12 +10,12 @@ from numpy import genfromtxt, sort
 import subprocess
 
 
-def parse_params_file(quite=False):
+def parse_params_file(quiet=False):
     """ Reads params.txt file from DFNGen and parses information
 
     Parameters
     ---------
-        quite : bool
+        quiet : bool
             If True details are not printed to screen, if False they area 
 
     Returns
@@ -35,7 +35,7 @@ def parse_params_file(quite=False):
     -----
         None
     """
-    if not quite:
+    if not quiet:
         print("\n--> Parsing  params.txt")
     fparams = open('params.txt', 'r')
     # Line 1 is the number of polygons
@@ -59,7 +59,7 @@ def parse_params_file(quite=False):
     domain['z'] = (float(fparams.readline()))
     fparams.close()
 
-    if not quite:
+    if not quiet:
         print("--> Number of Polygons: %d" % num_poly)
         print("--> H_SCALE %f" % h)
         if visual_mode > 0:
@@ -425,7 +425,7 @@ def inp2gmv(self, inp_file=''):
     print("--> Finished writing gmv format from avs format")
 
 
-def run_lagrit_script(lagrit_file, output_file=None, quite=False):
+def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
     """
     Runs LaGriT
 
@@ -436,7 +436,7 @@ def run_lagrit_script(lagrit_file, output_file=None, quite=False):
             Name of LaGriT script to run
         output_file : string
             Name of file to dump LaGriT output
-        quite : bool
+        quiet : bool
             If false, information will be printed to screen.
 
     Returns
@@ -449,7 +449,7 @@ def run_lagrit_script(lagrit_file, output_file=None, quite=False):
         cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
     else:
         cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} > {output_file}"
-    if not quite:
+    if not quiet:
         print(f"--> Running: {cmd}")
 
     failure = subprocess.call(cmd, shell=True)

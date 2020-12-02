@@ -173,15 +173,31 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     delete[] norm;
     double *t;
     
-    if (shapeFam.layer == 0 ) { // The family layer is the whole domain
-        t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2, (domainSize[2] + domainSizeIncrease[2]) / 2);
-    } else { // Family belongs to a certain layer, shapeFam.layer is > zero
-        // Layers start at 1, but the array of layers start at 0 hence sub of 1
-        // Layer 0 is reservered to denote the entire domain
+    // HERE
+    if (shapeFam.layer == 0 && shapeFam.region == 0) { // The family layer is the whole domain
+        t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                              (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                              (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2,
+                              (domainSize[2] + domainSizeIncrease[2]) / 2);
+    } else if (shapeFam.layer > 0 && shapeFam.region == 0) { // Family belongs to a certain layer, shapeFam.layer is > zero
+        // Layers start at 1, but the array of layers start at 0, hence
+        // the subtraction by 1
+        // Layer 0 is reservered to be the entire domain
         int layerIdx = (shapeFam.layer - 1) * 2;
         // Layers only apply to z coordinates
-        t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
-    } // End else
+        t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                              (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                              (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
+    } else if (shapeFam.layer == 0 && shapeFam.region > 0) {
+        int regionIdx = (shapeFam.region - 1) * 6;
+        // Layers only apply to z coordinates
+        t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
+        //std::cout << "Translation "<< t[0] << " " << t[1] << " " << t[2]<<"\n";
+    } else {
+        t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
+        std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        exit(1);
+    }
     
     // Translate - will also set translation vector in poly structure
     translate(newPoly, t);
@@ -256,12 +272,12 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     delete[] norm;
     double *t;
     
-    if (shapeFam.layer == 0 ) { // The family layer is the whole domain
+    if (shapeFam.layer == 0 && shapeFam.region == 0) { // The family layer is the whole domain
         t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
                               (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
                               (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2,
                               (domainSize[2] + domainSizeIncrease[2]) / 2);
-    } else { // Family belongs to a certain layer, shapeFam.layer is > zero
+    } else if (shapeFam.layer > 0 && shapeFam.region == 0) { // Family belongs to a certain layer, shapeFam.layer is > zero
         // Layers start at 1, but the array of layers start at 0, hence
         // the subtraction by 1
         // Layer 0 is reservered to be the entire domain
@@ -270,7 +286,14 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
         t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
                               (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
                               (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
-    } // End else
+    } else if (shapeFam.layer == 0 && shapeFam.region > 0) {
+        int regionIdx = (shapeFam.region - 1) * 6;
+        // Layers only apply to z coordinates
+        t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
+    } else {
+        std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        exit(1);
+    }
     
     // Translate - will also set translation vector in poly structure
     translate(newPoly, t);
@@ -434,14 +457,30 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
         // Translate to new position
         double *t;
         
-        if (shapeFam.layer == 0 ) { // The family layer is the whole domain
-            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2, (domainSize[2] + domainSizeIncrease[2]) / 2);
-        } else { // Family belongs to a certain layer
-            // Layers start at 1, but the array of layers start at 0. Layer 0 is reservered to be the entire domain
+        if (shapeFam.layer == 0 && shapeFam.region == 0) { // The family layer is the whole domain
+            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                                  (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                                  (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2,
+                                  (domainSize[2] + domainSizeIncrease[2]) / 2);
+        } else if (shapeFam.layer > 0 && shapeFam.region == 0) { // Family belongs to a certain layer, shapeFam.layer is > zero
+            // Layers start at 1, but the array of layers start at 0, hence
+            // the subtraction by 1
+            // Layer 0 is reservered to be the entire domain
             int layerIdx = (shapeFam.layer - 1) * 2;
             // Layers only apply to z coordinates
-            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
-        } // End else
+            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                                  (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                                  (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
+        } else if (shapeFam.layer == 0 && shapeFam.region > 0) {
+            int regionIdx = (shapeFam.region - 1) * 6;
+            // Layers only apply to z coordinates
+            t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
+        } else {
+            // you should never get here
+            t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
+            std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            exit(1);
+        }
         
         // Translate - will also set translation vector in poly structure
         translate(newPoly, t);
@@ -508,14 +547,29 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
         // Translate() will also set translation vector in poly structure
         double *t;
         
-        if (shapeFam.layer == 0 ) { // The family layer is the whole domain
-            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2, (domainSize[2] + domainSizeIncrease[2]) / 2);
-        } else { // Family belongs to a certain layer
-            // Layers start at #1, but the array index of layers start at 0. ShapeFam.layer=0 is reservered to be the entire domain
+        if (shapeFam.layer == 0 && shapeFam.region == 0) { // The family layer is the whole domain
+            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                                  (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                                  (domainSize[1] + domainSizeIncrease[1]) / 2, (-domainSize[2] - domainSizeIncrease[2]) / 2,
+                                  (domainSize[2] + domainSizeIncrease[2]) / 2);
+        } else if (shapeFam.layer > 0 && shapeFam.region == 0) { // Family belongs to a certain layer, shapeFam.layer is > zero
+            // Layers start at 1, but the array of layers start at 0, hence
+            // the subtraction by 1
+            // Layer 0 is reservered to be the entire domain
             int layerIdx = (shapeFam.layer - 1) * 2;
             // Layers only apply to z coordinates
-            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2, (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2, (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
-        } // End else
+            t = randomTranslation(generator, (-domainSize[0] - domainSizeIncrease[0]) / 2,
+                                  (domainSize[0] + domainSizeIncrease[0]) / 2, (-domainSize[1] - domainSizeIncrease[1]) / 2,
+                                  (domainSize[1] + domainSizeIncrease[1]) / 2, layers[layerIdx], layers[layerIdx + 1]);
+        } else if (shapeFam.layer == 0 && shapeFam.region > 0) {
+            int regionIdx = (shapeFam.region - 1) * 6;
+            // Layers only apply to z coordinates
+            t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
+        } else {
+            t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
+            std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            exit(1);
+        }
         
         translate(newPoly, t);
         delete[] t;

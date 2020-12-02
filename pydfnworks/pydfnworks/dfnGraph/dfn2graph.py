@@ -85,7 +85,7 @@ def create_fracture_graph(inflow,
         for i, line in enumerate(infile):
             conn = [int(n) for n in line.split()]
             for j in conn:
-                G.add_edge(i+1, j)
+                G.add_edge(i + 1, j)
     ## Create Source and Target and add edges
     inflow_filename = inflow + ".dat"
     outflow_filename = outflow + ".dat"
@@ -97,7 +97,7 @@ def create_fracture_graph(inflow,
             inflow = list(inflow)
     except:
         inflow = [inflow.tolist()]
-       
+
     try:
         if len(outflow) > 1:
             outflow = list(outflow)
@@ -362,7 +362,7 @@ def create_bipartite_graph(inflow,
     return B
 
 
-def add_fracture_source(self,G,source):
+def add_fracture_source(self, G, source):
     """Returns the k shortest paths in a graph 
     
     Parameters
@@ -400,14 +400,14 @@ def add_fracture_source(self,G,source):
         G.nodes['s']['iperm'] = 1.0
 
         for u in source:
-            G.add_edge(u,'s')
+            G.add_edge(u, 's')
 
     elif G.graph['representation'] == "intersection":
         # removing old source term and all connections
         nodes_to_remove = ['s']
-        for u,d in G.nodes(data=True):
+        for u, d in G.nodes(data=True):
             if u != 's' and u != 't':
-                f1,f2 = d["frac"]
+                f1, f2 = d["frac"]
                 #print("node {0}: f1 {1}, f2 {2}".format(u,f1,f2))
                 if f2 == 's':
                     nodes_to_remove.append(u)
@@ -417,16 +417,20 @@ def add_fracture_source(self,G,source):
 
         # add new source node
         G.add_node('s')
-        for u,d in G.nodes(data=True):
+        for u, d in G.nodes(data=True):
             if u != 's' and u != 't':
                 f1 = d["frac"][0]
                 f2 = d["frac"][1]
                 if f1 in source:
-                    print("--> Adding edge between {0} and new source / fracture {1}".format(u,f1))
-                    G.add_edge(u,'s',frac=f1,length=0.,perm=1.,iperm=1.)
+                    print(
+                        "--> Adding edge between {0} and new source / fracture {1}"
+                        .format(u, f1))
+                    G.add_edge(u, 's', frac=f1, length=0., perm=1., iperm=1.)
                 elif f2 in source:
-                    print("--> Adding edge between {0} and new source / fracture {1}".format(u,f2)) 
-                    G.add_edge(u,'s',frac=f2,length=0.,perm=1.,iperm=1.)
+                    print(
+                        "--> Adding edge between {0} and new source / fracture {1}"
+                        .format(u, f2))
+                    G.add_edge(u, 's', frac=f2, length=0., perm=1., iperm=1.)
 
     elif G.graph['representation'] == "bipartite":
         print("--> Not supported for bipartite graph")
@@ -434,7 +438,7 @@ def add_fracture_source(self,G,source):
     return G
 
 
-def add_fracture_target(self,G,target):
+def add_fracture_target(self, G, target):
     """Returns the k shortest paths in a graph 
     
     Parameters
@@ -469,14 +473,14 @@ def add_fracture_target(self,G,target):
         G.nodes['t']['iperm'] = 1.0
 
         for u in target:
-            G.add_edge(u,'t')
+            G.add_edge(u, 't')
 
     elif G.graph['representation'] == "intersection":
         # removing old target term and all connections
         nodes_to_remove = ['t']
-        for u,d in G.nodes(data=True):
+        for u, d in G.nodes(data=True):
             if u != 's' and u != 't':
-                f1,f2 = d["frac"]
+                f1, f2 = d["frac"]
                 #print("node {0}: f1 {1}, f2 {2}".format(u,f1,f2))
                 if f2 == 't':
                     nodes_to_remove.append(u)
@@ -486,22 +490,25 @@ def add_fracture_target(self,G,target):
 
         # add new target node
         G.add_node('t')
-        for u,d in G.nodes(data=True):
+        for u, d in G.nodes(data=True):
             if u != 's' and u != 't':
                 f1 = d["frac"][0]
                 f2 = d["frac"][1]
                 if f1 in target:
-                    print("--> Adding edge between {0} and new target / fracture {1}".format(u,f1))
-                    G.add_edge(u,'t',frac=f1,length=0.,perm=1.,iperm=1.)
+                    print(
+                        "--> Adding edge between {0} and new target / fracture {1}"
+                        .format(u, f1))
+                    G.add_edge(u, 't', frac=f1, length=0., perm=1., iperm=1.)
                 elif f2 in target:
-                    print("--> Adding edge between {0} and new target / fracture {1}".format(u,f2)) 
-                    G.add_edge(u,'t',frac=f2,length=0.,perm=1.,iperm=1.)
+                    print(
+                        "--> Adding edge between {0} and new target / fracture {1}"
+                        .format(u, f2))
+                    G.add_edge(u, 't', frac=f2, length=0., perm=1., iperm=1.)
 
     elif G.graph['representation'] == "bipartite":
         print("--> Not supported for bipartite graph")
         print("--> Returning unchanged graph")
     return G
-
 
 
 def k_shortest_paths(G, k, source, target, weight):
@@ -832,8 +839,8 @@ def add_perm(G, fracture_info="fracture_info.dat"):
         nodes = list(nx.nodes(G))
         for n in nodes:
             if n != 's' and n != 't':
-                G.nodes[n]['perm'] = perm[n-1]
-                G.nodes[n]['iperm'] = 1.0 / perm[n-1]
+                G.nodes[n]['perm'] = perm[n - 1]
+                G.nodes[n]['iperm'] = 1.0 / perm[n - 1]
             else:
                 G.nodes[n]['perm'] = 1.0
                 G.nodes[n]['iperm'] = 1.0
@@ -843,8 +850,8 @@ def add_perm(G, fracture_info="fracture_info.dat"):
         for u, v in edges:
             x = G[u][v]['frac']
             if x != 's' and x != 't':
-                G[u][v]['perm'] = perm[x-1]
-                G[u][v]['iperm'] = 1.0 / perm[x-1]
+                G[u][v]['perm'] = perm[x - 1]
+                G[u][v]['iperm'] = 1.0 / perm[x - 1]
             else:
                 G[u][v]['perm'] = 1.0
                 G[u][v]['iperm'] = 1.0
@@ -882,8 +889,9 @@ def add_area(G, fracture_info="fracture_info.dat"):
     for u, v in edges:
         x = G.edges[u, v]['frac']
         if x != 's' and x != 't':
-            G.edges[u, v]['area'] = aperture[x-1] * (G.nodes[u]['length'] +
-                                                   G.nodes[v]['length']) / 2.0
+            G.edges[u,
+                    v]['area'] = aperture[x - 1] * (G.nodes[u]['length'] +
+                                                    G.nodes[v]['length']) / 2.0
         else:
             G.edges[u, v]['area'] = 1.0
     return
@@ -903,6 +911,6 @@ def add_weight(G):
     edges = list(nx.edges(G))
     for u, v in edges:
         if G.edges[u, v]['length'] > 0:
-            G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[u, v][
-                'area'] / G.edges[u, v]['length']
+            G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[
+                u, v]['area'] / G.edges[u, v]['length']
     return

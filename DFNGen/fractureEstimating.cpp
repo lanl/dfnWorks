@@ -247,18 +247,20 @@ void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64
         // Calculate poly's area
         newPoly.area = getArea(newPoly);
         
-        // Update p32 (fracture intensity) per family if using P32 option
-        if (shapeFamilies[familyIndex].layer == 0) {
+        // Update P32
+        if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region == 0) { // Whole domain
             shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / domVol;
-        } else {
+        } else if (shapeFamilies[familyIndex].layer > 0 && shapeFamilies[familyIndex].region == 0) { // Layer
             shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / layerVol[shapeFamilies[familyIndex].layer - 1];
+        } else if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region > 0) { // Region
+            shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / regionVol[shapeFamilies[familyIndex].region - 1];
         }
-        
+
         // Save radius for real DFN generation
         shapeFamilies[familyIndex].radiiList.push_back(newPoly.xradius);
         
-        // If the last inserted pologon met the p32 reqirement, set that familiy to no longer
-        // insert any more fractures. ajust the CDF and familiy probababilties
+        // If the last inserted polygon met the p32 requirement, set that family to no longer
+        // insert any more fractures. adjust the CDF and family probabilities
         if (shapeFamilies[familyIndex].currentP32 >= shapeFamilies[familyIndex].p32Target ) {
             p32Status[familyIndex] = 1; //mark family as having its p32 requirement met
             

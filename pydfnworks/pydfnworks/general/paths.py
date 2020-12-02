@@ -164,5 +164,3 @@ def define_paths():
         compile_dfn_exe(os.environ['dfnworks_PATH'] +
                         'DFN_Mesh_Connectivity_Test/')
     valid('CONNECT_TEST_EXE',os.environ['CONNECT_TEST_EXE'],"executable")
-
-    

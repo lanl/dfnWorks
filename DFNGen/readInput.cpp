@@ -450,6 +450,13 @@ double constantPermeability;
     families (Set to 1 to ignore this feature)*/
 int rejectsPerFracture;
 
+
+// Z - layers in the DFN
+
+/*! Number of layers defined. */
+int numOfLayers;
+
+
 /*! Array of layers:
     e.g. {+z1, -z1, +z2, -z2, ... , +zn, -zn}*/
 float *layers;
@@ -458,17 +465,42 @@ float *layers;
     which layers were listed.*/
 float *layerVol;
 
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc*/
+    Layers numbered > 0 correspond to layers defined above (see 'Layers:').
+    1 correspond to the first layer listed, 2 is the next layer listed, etc*/
 int *rLayer;
 
-/*! Defines which domain, or layer, the family belings to.
+/*! Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc*/
+    Layers numbered > 0 correspond to layers defined above (see 'Layers:').
+    1 correspond to the first layer listed, 2 is the next layer listed, etc*/
 int *eLayer;
+
+// Regions in the DFN
+
+/*! Number of regions defined. */
+int numOfRegions;
+
+/*! Array of regions:
+    e.g. {+z1, -z1, +z2, -z2, ... , +zn, -zn}*/
+float *regions;
+
+/*! Array of volumes for each defined layer, in the same order
+    which regions were listed.*/
+float *regionVol;
+
+/*  Defines which domain, or regions, the family belongs to.
+    Regions 0 is the entire domain ('domainSize').
+    regions numbered > 0 correspond to regions defined above (see 'regions:').
+    1 correspond to the first layer listed, 2 is the next layer listed, etc*/
+int *rRegion;
+
+/*! Defines which domain, or regions, the family belongs to.
+    Layer 0 is the entire domain ('domainSize').
+    regions numbered > 0 correspond to regions defined above (see 'regions:').
+    1 correspond to the first layer listed, 2 is the next layer listed, etc*/
+int *eRegion;
 
 /*! Global boolean array. Used with stopCondition = 1, P32 option.
     Number of elements is equal to the number of stochastic shape families.
@@ -483,9 +515,6 @@ bool *p32Status;
     True  - Ignore boundaryFaces option, keep all clusters
             and remove fractures with no intersections */
 bool ignoreBoundaryFaces;
-
-/*! Number of layers defined. */
-int numOfLayers;
 
 /******************************************************************/
 /*! Reads in all input variables.
@@ -523,6 +552,26 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             std::cout << "    Layer " << i + 1 << "{-z,+z}: {" << layers[idx] << "," << layers[idx + 1] << "}, Volume: ";
             layerVol[i] = domainSize[0] * domainSize[1] * (std::abs(layers[idx + 1] - layers[idx]));
             std::cout << layerVol[i] << "m^3\n";
+        }
+        
+        std::cout << "\n";
+    }
+    
+    searchVar(inputFile, "numOfRegions:");
+    inputFile >> numOfRegions;
+    
+    if (numOfRegions > 0 ) {
+        regions = new float[numOfRegions * 6]; // Multiply by 6 xmin, xmax, ymin, ymax, zmin, zmax
+        regionVol = new float[numOfRegions];
+        searchVar(inputFile, "regions:");
+        std::cout << "Number of Regions: " << numOfRegions << "\n";
+        
+        for (int i = 0; i < numOfRegions; i++) {
+            int idx = i * 6;
+            inputFile >> ch >> regions[idx] >> ch >> regions[idx + 1] >> ch >> regions[idx + 2] >> ch >> regions[idx + 3] >> ch >> regions[idx + 4] >> ch >> regions[idx + 5] >> ch;
+            std::cout << " Region " << i + 1 << ": {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+            regionVol[i] = (std::abs(regions[idx + 1] - regions[idx])) * (std::abs(regions[idx + 3] - regions[idx + 2])) * (std::abs(regions[idx + 5] - regions[idx + 4])) ;
+            std::cout << " Volume: " << regionVol[i] << "m^3\n";
         }
         
         std::cout << "\n";
@@ -593,6 +642,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "eLayer:");
         eLayer = new int[nFamEll];
         getInputAry(inputFile, eLayer, nFamEll);
+        searchVar(inputFile, "eRegion:");
+        eRegion = new int[nFamEll];
+        getInputAry(inputFile, eRegion, nFamEll);
         searchVar(inputFile, "edistr:");
         edistr = new int[nFamEll];
         getInputAry(inputFile, edistr, nFamEll);
@@ -666,7 +718,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     int shape4 = 0; //constant dist counter
     int betaCount = 0;
     
-    // Create shape strucutres from data gathered above
+    // Create shape structures from data gathered above
     for (int i = 0; i < nFamEll; i++) {
         struct Shape newShapeFam;
         newShapeFam.shapeFamily = 0; // shapFam = 0 = ellipse, 1 = rect
@@ -678,6 +730,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.kappa = ekappa[i];
         newShapeFam.angleOption = eAngleOption;
         newShapeFam.layer = eLayer[i];
+        newShapeFam.region = eRegion[i];
         generateTheta(newShapeFam.thetaList, newShapeFam.aspectRatio, newShapeFam.numPoints);
         
         if (ebetaDistribution[i] == 1 ) { // If constant user defined beta option
@@ -745,6 +798,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] ealpha;
         delete[] econst;
         delete[] eLayer;
+        delete[] eRegion;
         delete[] eLogMin;
         delete[] eLogMax;
         delete[] eExpMin;
@@ -765,6 +819,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "rLayer:");
         rLayer = new int[nFamRect];
         getInputAry(inputFile, rLayer, nFamRect);
+        searchVar(inputFile, "rRegion:");
+        rRegion = new int[nFamRect];
+        getInputAry(inputFile, rRegion, nFamRect);
         searchVar(inputFile, "raspect:");
         raspect = new float[nFamRect];
         getInputAry(inputFile, raspect, nFamRect);
@@ -860,6 +917,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.kappa = rkappa[i];
         newShapeFam.angleOption = rAngleOption;
         newShapeFam.layer = rLayer[i];
+        newShapeFam.region = rRegion[i];
         
         if (rbetaDistribution[i] == 1 ) { // If constant beta option
             newShapeFam.betaDistribution = 1;
@@ -925,6 +983,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] ralpha;
         delete[] rconst;
         delete[] rLayer;
+        delete[] rRegion;
         delete[] rLogMin;
         delete[] rLogMax;
         delete[] rExpMin;
