@@ -8,7 +8,7 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 10
+nPoly: 50
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
@@ -24,10 +24,19 @@ numOfLayers: 0
 //  Number of layers
 
 layers:
-{40,50}
-{-20,37}
-{-50,-17}
+{}
 
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
 
 removeFracturesLessThan: 0
 
@@ -146,7 +155,7 @@ visualizationMode: 0
             modeling of flow and transport is possible. 
 */ 
 
-seed: 2185506701 
+seed: 2
 /*  Seed for random generator. 
     Enter 0 for time based seed.
 */        
@@ -168,7 +177,7 @@ keepOnlyLargestCluster: 0
     cluster which connects at least any two sides of the domain.
 */
 
-keepIsolatedFractures: 0 
+keepIsolatedFractures: 1
 /*  0 - Remove any isolated fracture (not clusters)
     1 - Keep all fractures in the domain
 */
@@ -251,6 +260,13 @@ eLayer: {0,0}
     Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
+
+eRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
+
 
 edistr: {2,3}   
 /*  Mandatory parameter if using statistically generated ellipses. 
@@ -389,11 +405,19 @@ nFamRect: 2
 */
 
 rLayer: {0,0}
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc 
+    Layers numbered > 0 corresponds to layers defined above (see 'Layers:').
+    1 corresponds to the first layer listed, 2 is the next layer listed, etc 
 */
+
+rRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
+
 
 rdistr: {4,4}   
 /*  Mandatory parameter if using statistically generated rectangles.
@@ -667,5 +691,3 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 
 /*===========================================================================*/
  
-
-

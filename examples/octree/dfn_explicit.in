@@ -1,7 +1,7 @@
 # Sept 12, 2018
 # Matthew Sweeney, Satish Karra, Jeffrey Hyman (LANL)
 #================================================
- 
+
 SIMULATION
   SIMULATION_TYPE SUBSURFACE
   PROCESS_MODELS
@@ -9,7 +9,7 @@ SIMULATION
       MODE RICHARDS
     /
     SUBSURFACE_TRANSPORT transport
-      MODE GIRT
+      GLOBAL_IMPLICIT
     /
   /
   CHECKPOINT
@@ -34,6 +34,9 @@ GRID
   GRAVITY 0.d0 0.d0 0.d0
 END
 
+NEWTON_SOLVER TRANSPORT
+  ITOL 1.d-8
+END
 
 #=========================== fluid properties =================================
 FLUID_PROPERTY

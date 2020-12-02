@@ -57,8 +57,11 @@ flow
 -1 0 0 0 -50 -1e-1 
 
 cont
-tec 25 500
-geom
+silo 25 500
+geo
+mat
+xyc
+perm
 pressure 
 liquid
 temp

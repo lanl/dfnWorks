@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 400 
+nPoly: 500 
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -30,8 +30,6 @@ domainSize: {15,15,15}
         Creates a domain with dimension x*y*z centered at the origin.*/
 
 numOfLayers: 0    //number of layers
-
-
 layers: 
 {0,0}
 
@@ -40,7 +38,20 @@ layers:
     
     The first layer listed is layer 1, the second is layer 2, etc
     Stochastic families can be assigned to theses layers (see stochastic
-    shape familiy section) 
+    shape family section) 
+*/   
+
+
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
 */   
 
 
@@ -72,7 +83,7 @@ visualizationMode:  0
    1: produce only first round of triangulations. In this case no 
    modeling of flow and transport is possible. */ 
 
-seed: 1 
+seed: 0 
     //Seed for random generator. 0 = seed off clock 
         
 
@@ -164,10 +175,19 @@ nFamEll: 2
     //Having this option = 0 will ignore all rectangle family variables
 
 eLayer: {0,0}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+
+eRegion: {0,,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
+
+
 
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,2}   /* Ellipse statistical distribution options:
@@ -177,7 +197,7 @@ edistr: {2,2}   /* Ellipse statistical distribution options:
                       4 - constant */
                                                                                        
                       
-ebetaDistribution: {0,0}   /* Beta is the rotation around the polygon's normal
+ebetaDistribution: {0,1}   /* Beta is the rotation around the polygon's normal
                     vector, with the polygon centered on x-y plane at the orgin 
                     
                     0 - uniform distribution [0, 2PI]    
@@ -203,7 +223,7 @@ enumPoints: {8,8} /*Number of vertices used in creating each elliptical
                            fracture family. Number of elements must match number 
                            of ellipse families (first number in nShape) */
 
-eAngleOption: 0     /* All angles for ellipses: 
+eAngleOption: 1     /* All angles for ellipses: 
                        0 - degrees
                        0 - Radians (Must use numerical value for PI) */
                         
@@ -214,7 +234,7 @@ ephi: {0,0}   /* Ellipse fracture orientation.
                     The angle the projection of the normal onto the x-y plane
                     makes with the x-axis */
 
-ebeta: {0,0}   /* rotation around the normal vector */
+ebeta: {30}   /* rotation around the normal vector */
 
 
 ekappa: {0.1,0.1}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
@@ -284,10 +304,17 @@ nFamRect: 0
 
 
 rLayer: {}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+
+rRegion: {}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
 
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */
@@ -548,4 +575,3 @@ vertices are not put in clockwise or counter-clockwise order.
 If errors (Usualy seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
 Also, coordinates must be co-planar */
-

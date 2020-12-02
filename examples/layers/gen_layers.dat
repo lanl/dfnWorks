@@ -30,11 +30,15 @@ domainSize: {10,10,20}
         Creates a domain with dimension x*y*z centered at the origin.*/
 
 numOfLayers: 2   //number of layers
-
-
 layers: 
 {-10,-2}
 {2,10}
+
+numOfRegions: 0
+regions:
+{}
+
+
 
 /*  Layers need to be listed line by line
     Format: {minZ, maxZ}
@@ -73,7 +77,7 @@ visualizationMode:  0
    1: produce only first round of triangulations. In this case no 
    modeling of flow and transport is possible. */ 
 
-seed: 2745757210
+seed: 1
     //Seed for random generator. 0 = seed off clock 
         
 
@@ -170,6 +174,12 @@ eLayer: {1,1,2,2}
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+eRegion: {0,0,0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
+
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,2,2,2}   /* Ellipse statistical distribution options:
                       1 - lognormal distribution
@@ -179,17 +189,17 @@ edistr: {2,2,2,2}   /* Ellipse statistical distribution options:
                                                                                        
                       
 ebetaDistribution: {0,0,0,0}   /* Beta is the rotation around the polygon's normal
-                    vector, with the polygon centered on x-y plane at the orgin 
+                    vector, with the polygon centered on x-y plane at the origin 
                     
                     0 - uniform distribution [0, 2PI]    
-                    1 - constant angle (specefied below by "ebeta")    */                
+                    1 - constant angle (specified below by "ebeta")    */                
     
     
-e_p32Targets: {0.5,0.5,1.5,1.5}
+e_p32Targets: {0.65,0.75,1.5,1.55}
  
 /* Elliptical families target fracture intensity per family.
 When using stopCondition = 1 (defined at the top of the input file), families will 
-be inserted untill the families desired fracture intensity has been reached. 
+be inserted until the families desired fracture intensity has been reached. 
 Once all families desired fracture intensity has been met, fracture generation will 
 be complete.
 */                      
@@ -206,10 +216,10 @@ enumPoints: {8,8,8,8} /*Number of vertices used in creating each elliptical
                            of ellipse families (first number in nShape) */
 
 eAngleOption: 1     /* All angles for ellipses: 
-                       0 - degrees
+                       1 - degrees
                        0 - Radians (Must use numerical value for PI) */
                         
-etheta: {-90,0,-90,0} /*Ellipse fracture orientation.
+etheta: {90,0,90,0} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
 ephi: {0,0,0,0}   /* Ellipse fracture orientation.
@@ -290,6 +300,12 @@ rLayer: {}
      Layer 0 is the entire domain.
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+
+rRegion: {}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
 
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */

@@ -30,7 +30,7 @@ def get_domain():
     -----
         parse_params_file() is in mesh_dfn_helper.py
 '''
-    _, _, _, _, domain = parse_params_file(quite=True)
+    _, _, _, _, domain = parse_params_file(quiet=True)
     return domain
 
 

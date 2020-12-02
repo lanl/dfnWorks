@@ -24,11 +24,19 @@ numOfLayers: 0
 //  Number of layers
 
 layers:
-{40,50}
-{-20,37}
-{-50,-17}
+{}
 
+numOfRegions: 0 // Number of regions
+regions: 
+{}
 
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
 removeFracturesLessThan: 0
 
 /*
@@ -247,6 +255,14 @@ eLayer: {0,0}
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
 
+eRegion: {0,0}
+/*  Defines which domain, or layer, the family belings to.
+    Layer 0 is the entire domain ('domainSize').
+    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
+    1 corresponts to the first layer listed, 2 is the next layer listed, etc 
+*/
+
+
 edistr: {2,3}   
 /*  Mandatory parameter if using statistically generated ellipses. 
     Statistical distribution options:
@@ -384,11 +400,13 @@ nFamRect: 1
 */
 
 rLayer: { 0 }
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
     Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
+
+rRegion: {0 }
 
 rdistr: { 3 }   
 /*  Mandatory parameter if using statistically generated rectangles.

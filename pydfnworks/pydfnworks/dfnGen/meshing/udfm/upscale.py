@@ -56,7 +56,7 @@ def upscale(self, mat_perm, mat_por, path='../'):
         os.symlink(path + 'params.txt', 'params.txt')
     except:
         pass
-    num_poly, _, _, _, domain = mh.parse_params_file(quite=True)
+    num_poly, _, _, _, domain = mh.parse_params_file(quiet=True)
 
     aperture = np.genfromtxt(path + 'aperture.dat', skip_header=1)[:, -1]
     normal_vectors = np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
@@ -108,7 +108,8 @@ def upscale(self, mat_perm, mat_por, path='../'):
                     fline = f.readline().strip().split()
                     gline = g.readline().strip().split()
                     iarray[j] = int(float(gline[0]))
-                    if int(float(gline[1])) != (num_poly + 1) and float(gline[6]) > 0:
+                    if int(float(gline[1])) != (num_poly + 1) and float(
+                            gline[6]) > 0:
                         f_dict.setdefault(j + 1, []).append(
                             (i, float(gline[6])))
             g.close()
@@ -117,7 +118,6 @@ def upscale(self, mat_perm, mat_por, path='../'):
     p_out = open("connections.p", "wb")
     pickle.dump(f_dict, p_out)
     p_out.close()
-
 
     with open('full_mesh.uge', 'r') as f:
         f.readline()

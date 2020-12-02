@@ -15,7 +15,7 @@ nPoly: 300
     like to have in the DFN.  
 */
 
-domainSize: {50,50,50} 
+domainSize: {50,20,20} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -27,6 +27,18 @@ layers:
 {40,50}
 {-20,37}
 {-50,-17}
+
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
 
 
 removeFracturesLessThan: 0
@@ -134,7 +146,7 @@ printRejectReasons: 0
         1 - Print all rejection reasons to screen
 */
 
-disableFram: 0
+disableFram:  0 
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
         0 - Disable FRAM
@@ -153,7 +165,7 @@ seed: 2
     Enter 0 for time based seed.
 */        
 
-domainSizeIncrease: {20,20,20} 
+domainSizeIncrease: {10,5,5} 
 /*  Size increase for inserting fracture centers outside the domain.
     Fracture will be truncated based on domainSize above. 
     Increases the entire width by this ammount. So, {1,1,1} will increase
@@ -243,13 +255,20 @@ nFamEll: 0
 */
 
 eLayer: {0,0}
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc 
+    Layers numbered > 0 corresponds to layers defined above (see 'Layers:').
+    1 corresponds to the first layer listed, 2 is the next layer listed, etc 
 */
 
-edistr: {2,3}   
+eRegion: {0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
+
+edistr: {2,2}   
 /*  Mandatory parameter if using statistically generated ellipses. 
     Statistical distribution options:
         1 - Log-normal distribution
@@ -261,7 +280,7 @@ edistr: {2,3}
 ebetaDistribution: {0,0}   
 /*  Beta is the rotation around the polygon's normal vector
         0 - Uniform distribution [0, 2PI)
-        1 - Constant angle (specefied below by 'ebeta')
+        1 - Constant angle (specified below by 'ebeta')
 */  
     
 e_p32Targets: {.1,.1} 
@@ -392,6 +411,14 @@ rLayer: {0,0}
     1 corresponts to the first layer listed, 2 is the next layer listed, etc 
 */
 
+rRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
+
+
 rdistr: {1,1}   
 /*  Mandatory parameter if using statistically generated rectangles.
     Rectangle statistical distribution options:
@@ -421,7 +448,7 @@ r_p32Targets: {.3,.3}
 //  Mandatory Parameters if using statistically generated rectangles         */
 /*===========================================================================*/
 
-raspect: {5,5}  
+raspect: {1,1}  
 //  Aspect ratio for stochasic rectangles.
  
 rAngleOption: 1
@@ -454,18 +481,25 @@ rkappa:{25.78, 32}
 /*===========================================================================*/
 // Rectangle Log-normal Distribution Options (rdistr = 1)                    */
 // Mandatory Parameters if using rectangles with log-normal distribution     */
+// Note that the LogMean and sd are those from the underlaying normal        */
+// Use the lognormal_params.py function in example/lognormal/ to convert     */
+// from the mean and variance of the lognormal distribution to these         */
+// parameters.                                                               */
 /*===========================================================================*/
 
-rLogMean: {1.,1. }    
-//  Mean of the underlying normal distribution
+// For this example, fracture set 1 has a mean of 4 and variance of 0.25
+// fracture set 2 has a mean of 8 and variance of 0.15
 
-rsd: {0.5, 0.5 }     
+//  Mean of the underlying normal distribution
+rLogMean: {1.38, 2.08}    
+
+rsd: {0.06, 0.06}     
 //  Standard deviation of the underlying normal distribution
                       
-rLogMin: {0.5, 0.5}
+rLogMin: {1, 1}
 //  Minimum radius
 
-rLogMax: {50.0, 50.0}   
+rLogMax: {10.0, 20}   
 //  Maximum radius                 
 
 
@@ -631,14 +665,14 @@ lengthCorrelatedAperture: {5e-5, 0.5}
 /*===========================================================================*/
 /*===========================================================================*/
 /*  Permeability Options                                                     */
-/*  Mandaatory Parameter                                                     */
+/*  Mandatory Parameter                                                     */
 /*===========================================================================*/
 /*===========================================================================*/
 
 permOption: 0
 /*  0 - Permeability of each fracture is a function of fracture aperture, 
         given by k=(b^2)/12, where b is an aperture and k is permeability
-    1 - Constant permeabilty for all fractures 
+    1 - Constant permeability for all fractures 
 */
 
 constantPermeability: 1e-12  //Constant permeability for all fractures 

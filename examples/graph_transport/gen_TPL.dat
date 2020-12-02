@@ -1,5 +1,5 @@
 //==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+//General Options & Fracture Network Parameters: 
 
 stopCondition: 0
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -40,8 +40,22 @@ layers:
     
     The first layer listed is layer 1, the second is layer 2, etc
     Stochastic families can be assigned to theses layers (see stochastic
-    shape familiy section) 
+    shape family section) 
 */   
+
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
+
+
 
 
 h: 0.10
@@ -164,10 +178,19 @@ nFamEll: 2
     //Having this option = 0 will ignore all rectangle family variables
 
 eLayer: {0,0}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+
+
+eRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
+
 
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,2}   /* Ellipse statistical distribution options:
@@ -284,10 +307,18 @@ nFamRect: 0
 
 
 rLayer: {}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+rRegion: {}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
+
 
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */
@@ -309,7 +340,7 @@ rbetaDistribution: {}   /* Beta is the rotation/twist about the z axis
 r_p32Targets: {} 
 /* Rectangle families target fracture intensity per family.
 When using stopCondition = 1 (defined at the top of the input file), families will 
-be inserted untill the families desired fracture intensity has been reached. 
+be inserted until the families desired fracture intensity has been reached. 
 Once all families desired fracture intensity has been met, fracture generation will 
 be complete.
 */      
@@ -545,7 +576,6 @@ PolygonByCoord_Input_File_Path: ./
 
 /*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
 vertices are not put in clockwise or counter-clockwise order.
-If errors (Usualy seg fualt during meshing if using LaGriT), 
+If errors (Usually seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
 Also, coordinates must be co-planar */
-

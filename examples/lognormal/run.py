@@ -14,7 +14,7 @@ define_paths()
 main_time = time()
 DFN = create_dfn()
 # General Work Flow
-DFN.dfn_gen(output=False)
+DFN.dfn_gen()
 DFN.dfn_flow()
 DFN.dfn_trans()
 
