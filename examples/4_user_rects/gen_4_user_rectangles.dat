@@ -36,6 +36,11 @@ layers:
 {-500,0}
 {0,500}
 
+
+numOfRegions: 0
+regions: 
+
+
 /*  Layers need to be listed line by line
     Format: {minZ, maxZ}
     
@@ -164,6 +169,8 @@ eLayer: {0,0}
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+eRegion: {}
+
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,3}   /* Ellipse statistical distribution options:
                       1 - lognormal distribution
@@ -283,6 +290,7 @@ rLayer: {0,0}
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+rRegion: {}
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */
 rdistr: {2,3}   /*  Rectangle statistical distribution options:

@@ -45,6 +45,19 @@ layers:
 */   
 
 
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape familiy section) 
+*/   
+
+
 h: 0.025
 
   /* Minimum fracture length scale(meters)
@@ -165,6 +178,13 @@ eLayer: {0,0}
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+eRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
+
+
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,3}   /* Ellipse statistical distribution options:
                       1 - lognormal distribution
@@ -267,7 +287,7 @@ ealpha: {2.4} // Alpha. Used in truncated power-law
 
 /*==================================================================================*/
 /*==================================================================================*/
-/*                             Rctangular Fractures Options                         */
+/*                             Rectangular Fractures Options                         */
 /* NOTE: Number of elements must match number of rectangle families                 */
 /*       (second number in nShape parameter)                                        */
 /*==================================================================================*/
@@ -283,6 +303,13 @@ rLayer: {0,0}
      Layer 0 is the entire domain.
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+
+
+rRegion: {}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 correspond to the first region listed, 2 is the next region listed, etc */
 
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */

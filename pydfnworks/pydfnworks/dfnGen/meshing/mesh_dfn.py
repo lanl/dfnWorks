@@ -25,7 +25,8 @@ def mesh_network(self,
                  max_dist=40,
                  concurrent_samples=10,
                  grid_size=10,
-                 visual_mode=None):
+                 visual_mode=None,
+                 well_flag=False):
     ''' Mesh fracture network using LaGriT
 
     Parameters
@@ -53,7 +54,8 @@ def mesh_network(self,
             number of new candidates sampled around an accepted node at a time.
         grid_size : float
             side length of the occupancy grid is given by H/occupancy_factor
-
+        well_flag : bool
+            If well flag is true, higher resolution around the points in 
 
     Returns
     -------
@@ -87,6 +89,8 @@ did not provide file of fractures to keep.\nExiting program.\n"
         if visual_mode == None:
             visual_mode = params_visual_mode
 
+        if visual_mode:
+            print("\n--> Running in Visual Mode\n")
         print(
             f"Loading list of fractures to remain in network from {self.prune_file}"
         )
@@ -110,14 +114,32 @@ did not provide file of fractures to keep.\nExiting program.\n"
     ncpu = min(self.ncpu, num_poly)
 
     print('=' * 80)
+    if visual_mode:
+        print("\n--> Running in Visual Mode\n")
+    else:
+        print("\n--> Running in Full Meshing Mode\n")
+    print('=' * 80)
+
     lagrit.create_parameter_mlgi_file(fracture_list, h, slope=slope)
     if visual_mode:
         lagrit.create_lagrit_scripts_reduced_mesh(fracture_list)
     else:
+
+        # Check for well points well.
+        if well_flag:
+            if not os.path.isfile("well_points.dat"):
+                error = "ERROR!!! Well flag is set to True in DFN.mesh_network(), but file 'well_points.dat' cannot be found.\nPlease run DFN.find_well_intersection_points() for each well prior to meshing\nOr set well_flag = False\nExiting Program\n"
+                sys.stderr.write(error)
+                sys.exit(1)
+
         dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
-                            concurrent_samples, grid_size)
+                            concurrent_samples, grid_size, well_flag)
 
         lagrit.create_lagrit_scripts_poisson(fracture_list)
+    ##### FOR SERIAL DEBUG ######
+    #     for f in fracture_list:
+    #         run_mesh.mesh_fracture(f, visual_mode, len(fracture_list))
+    # exit()
 
     print('=' * 80)
 

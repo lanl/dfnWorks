@@ -86,6 +86,13 @@ def main_init(c):  # polygons, intersections):
     # initializes all geometry variables
     c.vertices = read_vertices(c, c.path_poly)
     c.intersect_endpts = read_intersections(c, c.path_inter)
+
+    if c.well_flag:
+        well_pts = read_well_points(c)
+        for i in range(len(well_pts)):
+            c.intersect_endpts.append(well_pts[i])
+            #print(c.intersect_endpts)
+
     intersect_grid_init(c)
     c.coordinates = boundary_sampling(c)
     c.neighbor_grid = neighbor_grid_init(c)
@@ -153,7 +160,7 @@ def search_undersampled_cells(c):
     """
 
     undersampled_x, undersampled_y = occupancy_undersampled(c)
-    # indices of emtpy cells
+    # indices of empty cells
     no_of_undersampled = len(undersampled_x)
     random_permutation = [m for m in range(0, no_of_undersampled)]
     shuffle(random_permutation)
@@ -749,6 +756,23 @@ def read_intersections(c, path_to_intersections):
     del lines
     return end_pts
 
+def read_well_points(c):
+
+    pts = []
+
+    with open("well_points.dat","r") as fwell:
+        fwell.readline() # ignore header (fracture_id, x, y, z)
+        for line in fwell.readlines():
+            if c.fracture_id == int(line.split()[0]):
+                pt = zeros(2)
+                pt[0] = float(line.split()[1])
+                pt[1] = float(line.split()[2])
+                pts.append(pt)
+                pt[0] += c.H
+                pt[1] += c.H
+                pts.append(pt)
+                del pt
+    return pts
 
 ######################################################################
 #@profile
@@ -1525,7 +1549,7 @@ def dot_product(X, Y):
 
 #######################################################################
 def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
-                        concurrent_samples, grid_size):
+                        concurrent_samples, grid_size, well_flag):
     """ Writes the parameters used for Poisson point generation to a pickled python dictionary 
     named 'poisson_params.p'. 
 
@@ -1549,6 +1573,8 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
             number of new candidates sampled around an accepted node at a time.
         grid_size : float
             side length of the occupancy grid is given by H/occupancy_factor
+        well_flag : bool
+            boolean if wells are included in the meshing.
 
     Returns
     ---------
@@ -1605,7 +1631,7 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
     print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
 
     params = {"h":h,"R":max_dist,"A":slope,"F":min_dist,\
-        "concurrent_samples":concurrent_samples,"grid_size":grid_size}
+        "concurrent_samples":concurrent_samples,"grid_size":grid_size,"well_flag": well_flag}
     pickle.dump(params, open("poisson_params.p", "wb"))
 
 
@@ -1636,11 +1662,11 @@ def single_fracture_poisson(fracture_id):
 
     print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
-    c = pc.Poisson_Variables(f"polys/poly_{fracture_id}.inp",\
+    c = pc.Poisson_Variables(fracture_id, f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \
                             params["h"], params["R"], params["A"],\
                             params["F"],params["concurrent_samples"],\
-                            params["grid_size"])
+                            params["grid_size"],params["well_flag"])
 
     start = timeit.default_timer()
     ############################################

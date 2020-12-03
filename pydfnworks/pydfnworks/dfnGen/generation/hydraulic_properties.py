@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 
+
 def get_units(variable):
     """
     Returns a string of appropriate units for different variable
@@ -438,8 +439,11 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
             fp.write('-{0:d} 0 0 {1:0.5e} {1:0.5e} {1:0.5e}\n'.format(
                 i + 7, perm[i]))
 
-    print("--> Writing {0}".format(trans_filename))
-    np.savetxt(trans_filename, T)
+    print(f"--> Writing {trans_filename}")
+    with open(trans_filename, 'w+') as fp:
+        fp.write('transmissivty\n')
+        for i in range(n):
+            fp.write('-{0:d} {1:0.5e}\n'.format(i + 7, T[i]))
     print("Complete")
 
 

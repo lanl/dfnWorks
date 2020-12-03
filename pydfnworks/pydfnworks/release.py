@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "7 October 2020"
+date = "30 November 2020"
 
-version = "2.4.0"
+version = "2.4.3"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -61,9 +61,11 @@ packages=["pydfnworks",
           "pydfnworks.general", 
           "pydfnworks.dfnGen",
           "pydfnworks.dfnGen.generation",
+          "pydfnworks.dfnGen.generation.output_report",
           "pydfnworks.dfnGen.meshing",
           "pydfnworks.dfnGen.meshing.udfm",
           "pydfnworks.dfnGen.meshing.poisson_disc",
+          "pydfnworks.dfnGen.well_package",
           "pydfnworks.dfnFlow",
           "pydfnworks.dfnTrans",
           "pydfnworks.dfnGraph"]
@@ -72,5 +74,7 @@ install_requires=["numpy",
           "scipy",
           "h5py",
           "pyvtk",
-          "networkx",
+          "fpdf",
+          "networkx>=2.4",
+          "mplstereonet",
           "matplotlib<3.0"]

@@ -7,12 +7,9 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
-      OPTIONS
-        SKIP_RESTART
-      /
     /
     SUBSURFACE_TRANSPORT transport
-        MODE GIRT 
+      MODE GIRT 
     /
   /
 #  CHECKPOINT
@@ -20,8 +17,8 @@ SIMULATION
 #  /
   RESTART dfn_explicit-restart.h5 0.
 END
-
 SUBSURFACE
+
 
 CHEMISTRY
   PRIMARY_SPECIES
@@ -38,47 +35,32 @@ GRID
   GRAVITY 0.d0 0.d0 0.d0
 END
 
+NUMERICAL_METHODS TRANSPORT
+  NEWTON_SOLVER
+    ITOL 1.d-8
+  / 
+END
 
 #=========================== fluid properties =================================
 FLUID_PROPERTY
-  DIFFUSION_COEFFICIENT 1.d-12
+  DIFFUSION_COEFFICIENT 1.d-9
 END
-
-#DATASET permX
-#  FILENAME mesh_permeability.h5
-#  HDF5_DATASET_NAME Perm_X
-#END
-
-#DATASET permY
-#  FILENAME mesh_permeability.h5
-#  HDF5_DATASET_NAME Perm_Y
-#END
-
-#DATASET permZ
-#  FILENAME mesh_permeability.h5
-#  HDF5_DATASET_NAME Perm_Z
-#END
 
 DATASET Permeability
   FILENAME mesh_permeability.h5
 END
 
-DATASET Porosity
+DATASET Porosity 
   FILENAME mesh_porosity.h5
 END
+
 
 #=========================== material properties ==============================
 MATERIAL_PROPERTY soil1
   ID 1
-#  POROSITY 1.0
   POROSITY DATASET Porosity
   TORTUOSITY 0.5d0
   CHARACTERISTIC_CURVES default
-#  PERMEABILITY
-#    PERM_ISO 1.3020833333333334d-7
-#  PERMEABILITY
-#    ANISOTROPIC
-#    DATASET perm
   PERMEABILITY
     DATASET Permeability
   /
@@ -100,8 +82,7 @@ END
 
 #=========================== output options ===================================
 OUTPUT
-  PERIODIC TIME 0.005d0 s between 0.005d0 s and 0.249d0 s
-  PERIODIC TIME 10000.d0 s between 10000.d0 s and 199000.d0 s
+  PERIODIC TIME 1.d-2 second
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
@@ -119,15 +100,9 @@ END
 #=========================== times ============================================
 TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 s
-  FINAL_TIME 1000000.d0 s
-  MAXIMUM_TIMESTEP_SIZE 0.005d0 s at 0.005d0 s
-  MAXIMUM_TIMESTEP_SIZE 0.1d0 s at 0.5d0 s
-  MAXIMUM_TIMESTEP_SIZE 1.d0 s at 1.d0 s
-  MAXIMUM_TIMESTEP_SIZE 10.d0 s at 10.d0 s
-  MAXIMUM_TIMESTEP_SIZE 100.d0 s at 100.d0 s
-  MAXIMUM_TIMESTEP_SIZE 1000.d0 s at 1000.d0 s
-  MAXIMUM_TIMESTEP_SIZE 10000.d0 s at 10000.d0 s
-  MAXIMUM_TIMESTEP_SIZE 100000.d0 s at 100000.d0 s
+  FINAL_TIME 5d-1 s
+  MAXIMUM_TIMESTEP_SIZE 1.d3 s
+  #STEADY_STATE
 END
 
 #=========================== regions ==========================================
@@ -146,6 +121,11 @@ REGION outflow
   FILE pboundary_right_e.ex
 END
 
+REGION inlet_fractures
+    FILE inflow.ex
+END
+
+
 TRANSPORT_CONDITION initial
   TYPE dirichlet 
     CONSTRAINT_LIST
@@ -157,7 +137,7 @@ TRANSPORT_CONDITION inject
   TYPE dirichlet_zero_gradient
     CONSTRAINT_LIST
     0.d0 inlet
-#    0.005d0 initial 
+    0.1d0 initial 
   /
 END
 
@@ -169,7 +149,7 @@ END
 
 CONSTRAINT inlet
   CONCENTRATIONS
-    TRACER 1.d-3 T
+    TRACER 1.d-1 T
   /
 END
 
@@ -196,6 +176,9 @@ FLOW_CONDITION inflow
   PRESSURE 1.1d6
 END
 
+
+
+
 #=========================== condition couplers ===============================
 # initial condition
 INITIAL_CONDITION
@@ -208,6 +191,12 @@ BOUNDARY_CONDITION INFLOW
   FLOW_CONDITION inflow
   TRANSPORT_CONDITION inject
   REGION inflow
+END
+
+BOUNDARY_CONDITION INFLOW 
+  FLOW_CONDITION inflow
+  TRANSPORT_CONDITION inject
+  REGION inlet_fractures 
 END
 
 BOUNDARY_CONDITION OUTFLOW

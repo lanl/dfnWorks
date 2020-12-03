@@ -16,7 +16,7 @@ import multiprocessing as mp
 #import Queue
 
 
-def map_to_continuum(self, l, orl, path="./",dir_name="octree"):
+def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     """ This function generates an octree-refined continuum mesh using the
     reduced_mesh.inp as input.  To generate the reduced_mesh.inp, one must 
     turn visualization mode on in the DFN input card.
@@ -58,13 +58,14 @@ def map_to_continuum(self, l, orl, path="./",dir_name="octree"):
     # Read in normal vectors and points from dfnWorks output
     normal_vectors = np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
 
-    with open(path + 'translations.dat') as old, open('points.dat', 'w') as new:
+    with open(path + 'translations.dat') as old, open('points.dat',
+                                                      'w') as new:
         old.readline()
         for line in old:
             if not 'R' in line:
                 new.write(line)
     points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
-    
+
     try:
         os.symlink(path + 'params.txt', 'params.txt')
     except:
@@ -96,18 +97,18 @@ def map_to_continuum(self, l, orl, path="./",dir_name="octree"):
         shutil.rmtree(dir_name)
         os.mkdir(dir_name)
 
-    lagrit_driver(dir_name,nx, ny, nz, num_poly, normal_vectors, points)
-    lagrit_parameters(dir_name,orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
+    lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points)
+    lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
     lagrit_build(dir_name)
     lagrit_intersect(dir_name)
     lagrit_hex_to_tet(dir_name)
     lagrit_remove(dir_name)
-    lagrit_run(path,dir_name)
+    lagrit_run(path, dir_name)
     lagrit_strip(num_poly)
     driver_parallel(self, num_poly)
 
 
-def lagrit_driver(dir_name,nx, ny, nz, num_poly, normal_vectors, points):
+def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     """ This function creates the main lagrit driver script, which calls all 
     lagrit scripts.
 
@@ -399,7 +400,7 @@ finish
     print("Creating driver_octree.lgi file: Complete\n")
 
 
-def lagrit_parameters(dir_name,orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
+def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
     """ This function creates the parameters_octree_dfn.mlgi lagrit script.
     
     Parameters
@@ -704,7 +705,7 @@ finish
     print("Creating remove_cells.mlgi file: Complete\n")
 
 
-def lagrit_run(path,dir_name):
+def lagrit_run(path, dir_name):
     """ This function executes the lagrit scripts. 
     
     Parameters
@@ -722,7 +723,7 @@ def lagrit_run(path,dir_name):
     """
     # Run LaGriT
     os.chdir(dir_name)
-    
+
     if os.path.isfile(path + "reduced_mesh.inp"):
         os.symlink(path + "reduced_mesh.inp", "reduced_mesh.inp")
     elif os.path.isfile(path + "../" + "reduced_mesh.inp"):
@@ -871,6 +872,7 @@ def upscale_parallel(f_id):
     # cmd = os.environ['LAGRIT_EXE'] + '< driver{0}.lgi'.format(f_id)
     # subprocess.call(cmd, shell=True)
     mh.run_lagrit_script("driver{0}.lgi".format(f_id))
+
 
 def worker(tasks_to_accomplish, tasks_that_are_done):
     """ Worker function for python parallel. See multiprocessing module 

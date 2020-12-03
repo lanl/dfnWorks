@@ -102,7 +102,7 @@ finish
             f.close()
             mh.run_lagrit_script("prune_intersection.lgi",
                                  f"out_{i}.txt",
-                                 quite=True)
+                                 quiet=True)
             os.remove(filename)
             move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
         else:

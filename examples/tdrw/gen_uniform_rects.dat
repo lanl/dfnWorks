@@ -1,5 +1,5 @@
 /*=========================================================================*/
-/*  Gereral Options & Fracture Network Parameters:                         */
+/*  General Options & Fracture Network Parameters:                         */
 /*=========================================================================*/
 
 stopCondition: 0
@@ -24,9 +24,20 @@ numOfLayers: 0
 //  Number of layers
 
 layers:
-{40,50}
-{-20,37}
-{-50,-17}
+{}
+
+
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
 
 
 removeFracturesLessThan: 0
@@ -243,11 +254,19 @@ nFamEll: 0
 */
 
 eLayer: {0,0}
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc 
+    Layers numbered > 0 corresponds to layers defined above (see 'Layers:').
+    1 corresponds to the first layer listed, 2 is the next layer listed, etc 
 */
+
+
+eRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 corresponds to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
 
 edistr: {2,3}   
 /*  Mandatory parameter if using statistically generated ellipses. 
@@ -374,7 +393,7 @@ ealpha: {2.4}
 /*============================================================================*/
 /*============================================================================*/
 /*                                                                            */
-/*  Rctangular Fractures Options                                              */
+/*  Rectangular Fractures Options                                              */
 /*  NOTE: Number of elements must match number of rectangle families          */
 /*                                                                            */
 /*============================================================================*/
@@ -386,11 +405,17 @@ nFamRect: 2
 */
 
 rLayer: {0,0}
-/*  Defines which domain, or layer, the family belings to.
+/*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
-    Layers numbered > 0 coorespond to layers defined above (see 'Layers:').
-    1 corresponts to the first layer listed, 2 is the next layer listed, etc 
+    Layers numbered > 0 corresponds to layers defined above (see 'Layers:').
+    1 corresponds to the first layer listed, 2 is the next layer listed, etc 
 */
+
+rRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
 
 rdistr: {4,4}   
 /*  Mandatory parameter if using statistically generated rectangles.
@@ -404,7 +429,7 @@ rdistr: {4,4}
 rbetaDistribution: {1,1}  
 /*  Beta is the rotation around the polygon's normal vector
         0: Uniform distribution [0, 2PI)
-        1: Constant angle (specefied below by 'rbeta')
+        1: Constant angle (specified below by 'rbeta')
 */                
                 
 r_p32Targets: {.3,.3}
@@ -422,7 +447,7 @@ r_p32Targets: {.3,.3}
 /*===========================================================================*/
 
 raspect: {1,1}  
-//  Aspect ratio for stochasic rectangles.
+//  Aspect ratio for stochastic rectangles.
  
 rAngleOption: 1
 /*  All angles for rectangles are in: 
@@ -558,7 +583,7 @@ RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
 /*  WARNING: This option can cause LaGriT errors because the polygon
              vertices are not put in clockwise or counter-clockwise order.
-             If errors (Usualy seg fualt during meshing with LaGriT),
+             If errors (Usually seg fualt during meshing with LaGriT),
              make sure the vertices are in clockwise or counter clockwise
              order. Also, coordinates must be co-planar.
 */

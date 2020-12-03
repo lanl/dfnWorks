@@ -44,6 +44,18 @@ layers:
     shape familiy section) 
 */   
 
+numOfRegions: 0 // Number of regions
+regions: 
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
+
 
 h: 0.25
   /* Minimum fracture length scale(meters)
@@ -159,10 +171,17 @@ nFamEll: 0
     //Having this option = 0 will ignore all rectangle family variables
 
 eLayer: {0,0}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+
+eRegion: {0,0}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 corresponds to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
 
 //edist is a mandatory parameter if using statistically generated ellipses 
 edistr: {2,3}   /* Ellipse statistical distribution options:
@@ -278,10 +297,18 @@ nFamRect: 0
 
 
 rLayer: {0,0}
-    /* Defines which domain the family belings to.
+    /* Defines which domain the family belongs to.
      Layer 0 is the entire domain.
-     Layers numbered > 0 coorespond to layers defined above
-     1 corresponts to the first layer listed, 2 is the next layer listed, etc */
+     Layers numbered > 0 corresponds to layers defined above
+     1 corresponds to the first layer listed, 2 is the next layer listed, etc */
+
+rRegion: {}
+    /* Defines which domain the family belongs to.
+     Region 0 is the entire domain.
+     Regions numbered > 0 correspond to layers defined above
+     1 corresponds to the first region listed, 2 is the next region listed, etc */
+
+
 
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */
@@ -421,7 +448,7 @@ EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/input
 userRectanglesOnOff: 0    //0 - User Rectangles off
                         //1 - User Rectangles on
                           
-UserRect_Input_File_Path: /DUMMY/dfnworks-main/examples/4_user_rects/define_4_user_rects.dat 
+UserRect_Input_File_Path: DUMMY/dfnworks-main/examples/4_user_rects/define_4_user_rects.dat 
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their
@@ -452,7 +479,7 @@ userPolygonByCoord: 1
 //  0 - user defined rectangles not used
 //  1 - user defined rectangles used and defined by input file:
 
-PolygonByCoord_Input_File_Path: /DUMMY/dfnworks-main/examples/user_polygons/polygons.dat 
+PolygonByCoord_Input_File_Path: DUMMY/dfnworks-main/examples/user_polygons/polygons.dat 
 
 
 /*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
@@ -532,11 +559,10 @@ insertUserRectanglesFirst:1 /* 1 if user defined
 forceLargeFractures:0 /* Force large fractures (fractures that X)  to be included in the network */
 radiiListIncrease: 0.1 /* Increase the length of the radii list by this percentage */
 removeFracturesLessThan: 0 /*Used to change the lower cutoff of fracture size*/
-
+ 
 
 keepIsolatedFractures: 0 
 /*  0 - Remove any isolated fracture (not clusters)
     1 - Keep all fractures in the domain
 */
-
 

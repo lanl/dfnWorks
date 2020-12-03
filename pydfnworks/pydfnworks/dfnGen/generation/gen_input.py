@@ -6,7 +6,7 @@ import scipy.integrate
 import re
 
 #pydfnworks modules
-from pydfnworks.dfnGen.generation import distributions as distr_module
+from pydfnworks.dfnGen.generation import gen_distributions as distr_module
 
 
 class input_helper():
@@ -60,7 +60,8 @@ class input_helper():
                 self.error("\"{}\" does not have a value.".format(key))
             return val
         except IndexError:
-            self.error("\"{}\" has not been defined.".format(key)) ## Include assumptions (ie no Angleoption -> degrees?)
+            self.error("\"{}\" has not been defined.".format(
+                key))  ## Include assumptions (ie no Angleoption -> degrees?)
 
     def get_groups(self, line, valList, key):
         """ extract values between { and } 
@@ -68,7 +69,7 @@ class input_helper():
         curlyGroup = re.compile('({.*?})')
         groups = re.findall(curlyGroup, line)
         for group in groups:
-            line = line.replace(group, '', 1)  ## only delete first occurence
+            line = line.replace(group, '', 1)  ## only delete first occurrence
             valList.append(self.curly_to_list(group))
 
         if line.strip() != "":
@@ -238,7 +239,7 @@ class input_helper():
             self.process_line(line, unfoundKeys, inputIterator, warningFile)
 
     def find_key(self, line, unfoundKeys, warningFile):
-        """ Input: line containing a paramter (key) preceding a ":" 
+        """ Input: line containing a parameter (key) preceding a ":" 
            
         Returns: 
             * key -- if it has not been defined yet and is valid
@@ -344,7 +345,7 @@ class input_helper():
         if valList == ['']: return 0
         if type(valList) is not list:
             self.error(
-                "\"{}\"'s value must be a list encolsed in curly brackets {{}}."
+                "\"{}\"'s value must be a list enclosed in curly brackets {{}}."
                 .format(key))
         if desiredLength != 0 and int(len(valList)) != int(desiredLength):
             print('list desired length is ', desiredLength, 'but valList is ',
@@ -362,12 +363,10 @@ class input_helper():
                 self.error("\"{}\" must be a list of {}s {}. non-{} found in "\
                       "list".format(key, listType, examples[listType], listType))
             if noZeros and verifiedVal == 0:
-                self.error(
-                    "\"{}\" list cannot contain any zeroes.".format(key))
+                self.error("\"{}\" list cannot contain any zeros.".format(key))
             if noNegs and self.is_negative(float(verifiedVal)):
                 self.error(
-                    "\"{}\" list cannot contain any negative values.".format(
-                        key))
+                    "\"{}\" list cannot contain negative values.".format(key))
             valList[i] = verifiedVal
 
     ## def verifynumvalsis(length, key):f
@@ -416,12 +415,15 @@ def check_input(self, input_file='', output_file=''):
         'userRectanglesOnOff': [],
         'printRejectReasons': [],
         'numOfLayers': [],
+        'numOfRegions': [],
+        'RectByCoord_Input_File_Path': [],
         'eLogMean': [],
         'rExpMin': [],
         'lengthCorrelatedAperture': [],
         'ebetaDistribution': [],
         'tripleIntersections': [],
         'layers': [],
+        'regions': [],
         'stdAperture': [],
         'ealpha': [],
         'constantPermeability': [],
@@ -451,6 +453,7 @@ def check_input(self, input_file='', output_file=''):
         'eExpMean': [],
         'e_p32Targets': [],
         'eLayer': [],
+        'eRegion': [],
         'domainSizeIncrease': [],
         'h': [],
         'outputFinalRadiiPerFamily': [],
@@ -461,6 +464,7 @@ def check_input(self, input_file='', output_file=''):
         'eExpMin': [],
         'ekappa': [],
         'rLayer': [],
+        'rRegion': [],
         'seed': [],
         'constantAperture': [],
         'stopCondition': [],
@@ -501,23 +505,24 @@ def check_input(self, input_file='', output_file=''):
     unfoundKeys = {
         'stopCondition', 'nPoly', 'outputAllRadii', 'outputAllRadii',
         'outputFinalRadiiPerFamily', 'outputAcceptedRadiiPerFamily',
-        'domainSize', 'numOfLayers', 'layers', 'h', 'tripleIntersections',
-        'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
-        'domainSizeIncrease', 'keepOnlyLargestCluster', 'keepIsolatedFractures',
-        'ignoreBoundaryFaces', 'boundaryFaces', 'rejectsPerFracture', 'famProb',
-        'insertUserRectanglesFirst', 'nFamEll', 'eLayer', 'edistr',
-        'ebetaDistribution', 'e_p32Targets', 'easpect', 'enumPoints',
+        'domainSize', 'numOfLayers', 'layers', 'numOfRegions', 'regions', 'h',
+        'tripleIntersections', 'printRejectReasons', 'disableFram',
+        'visualizationMode', 'seed', 'domainSizeIncrease',
+        'keepOnlyLargestCluster', 'keepIsolatedFractures',
+        'ignoreBoundaryFaces', 'boundaryFaces', 'rejectsPerFracture',
+        'famProb', 'insertUserRectanglesFirst', 'nFamEll', 'eLayer', 'eRegion',
+        'edistr', 'ebetaDistribution', 'e_p32Targets', 'easpect', 'enumPoints',
         'eAngleOption', 'etheta', 'ephi', 'ebeta', 'ekappa', 'eLogMean', 'esd',
         'eLogMin', 'eLogMax', 'eExpMean', 'eExpMin', 'eExpMax', 'econst',
-        'emin', 'emax', 'ealpha', 'nFamRect', 'rLayer', 'rdistr',
+        'emin', 'emax', 'ealpha', 'nFamRect', 'rLayer', 'rRegion', 'rdistr',
         'rbetaDistribution', 'r_p32Targets', 'raspect', 'rAngleOption',
         'rtheta', 'rphi', 'rbeta', 'rkappa', 'rLogMean', 'rsd', 'rLogMin',
         'rLogMax', 'rmin', 'rmax', 'ralpha', 'rExpMean', 'rExpMin', 'rExpMax',
         'rconst', 'userEllipsesOnOff', 'UserEll_Input_File_Path',
         'userRectanglesOnOff', 'UserRect_Input_File_Path',
         'EllByCoord_Input_File_Path', 'userEllByCoord', 'userRecByCoord',
-        'userPolygonByCoord','RectByCoord_Input_File_Path', 'PolygonByCoord_Input_File_Path',
-        'aperture', 'meanAperture',
+        'userPolygonByCoord', 'RectByCoord_Input_File_Path',
+        'PolygonByCoord_Input_File_Path', 'aperture', 'meanAperture',
         'stdAperture', 'apertureFromTransmissivity', 'constantAperture',
         'lengthCorrelatedAperture', 'permOption', 'constantPermeability',
         'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'
@@ -525,16 +530,16 @@ def check_input(self, input_file='', output_file=''):
 
     global mandatory
     mandatory = {
-        'stopCondition', 'domainSize', 'numOfLayers', 'outputAllRadii',
-        'outputFinalRadiiPerFamily', 'outputAcceptedRadiiPerFamily',
-        'tripleIntersections', 'printRejectReasons', 'disableFram',
-        'visualizationMode', 'seed', 'domainSizeIncrease',
-        'keepOnlyLargestCluster', 'keepIsolatedFractures',
-        'ignoreBoundaryFaces', 'rejectsPerFracture',
+        'stopCondition', 'domainSize', 'numOfLayers', 'numOfRegions',
+        'outputAllRadii', 'outputFinalRadiiPerFamily',
+        'outputAcceptedRadiiPerFamily', 'tripleIntersections',
+        'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
+        'domainSizeIncrease', 'keepOnlyLargestCluster',
+        'keepIsolatedFractures', 'ignoreBoundaryFaces', 'rejectsPerFracture',
         'famProb', 'insertUserRectanglesFirst', 'nFamEll', 'nFamRect',
         'userEllipsesOnOff', 'userRectanglesOnOff', 'userEllByCoord',
-        'userRecByCoord', 'userPolygonByCoord','aperture', 'permOption', 'forceLargeFractures',
-        'radiiListIncrease', 'removeFracturesLessThan'
+        'userRecByCoord', 'userPolygonByCoord', 'aperture', 'permOption',
+        'forceLargeFractures', 'radiiListIncrease', 'removeFracturesLessThan'
     }
 
     global noDependancyFlags
@@ -542,9 +547,10 @@ def check_input(self, input_file='', output_file=''):
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'tripleIntersections',
         'printRejectReasons', 'visualizationMode', 'keepOnlyLargestCluster',
-        'keepIsolatedFractures','insertUserRectanglesFirst', 'forceLargeFractures'
+        'keepIsolatedFractures', 'insertUserRectanglesFirst',
+        'forceLargeFractures'
     ]
-
+    global examples
     examples = {
         "Flag": "(0 or 1)",
         "Float": "(0.5, 1.6, 4.0, etc.)",
@@ -557,6 +563,8 @@ def check_input(self, input_file='', output_file=''):
     rectFams = 0
     global numLayers
     numLayers = 0
+    global numRegions
+    numRegions = 0
     global minFracSize
     minFracSize = None
 
@@ -694,6 +702,9 @@ def check_input(self, input_file='', output_file=''):
                     "\"layers\" has defined the same layer more than once.")
             minZ = layer[0]
             maxZ = layer[1]
+            if maxZ <= minZ:
+                input_helper_methods.error("\"layers\" has defined layer #{0} where zmin: {1} is "\
+                    "greater than zmax {2}".format(i+1,minZ, maxZ))
             if minZ <= -halfZdomain and maxZ <= -halfZdomain:
                 input_helper_methods.error("\"layers\" has defined layer #{} to have both upper and lower bounds completely "\
                       "below the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
@@ -704,6 +715,94 @@ def check_input(self, input_file='', output_file=''):
                       "above the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
                       "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
                       "(z-dimension) in both positive and negative directions.".format(i+1, -halfZdomain, halfZdomain))
+
+    def num_of_regions():
+        """ Check the number of regions parameter."""
+        global numRegions
+        numRegions = input_helper_methods.verify_int(
+            input_helper_methods.value_of('numOfRegions', params),
+            'numOfRegions',
+            noNeg=True)
+        if numRegions > 0:
+            print("Number of Regions {0}".format(numRegions))
+            if numRegions != len(params['regions']):
+                input_helper_methods.error("\"regions\" has defined {} regions but \"numOfRegions\" was defined to "\
+                      "be {}.".format(len(params['regions']), numRegions))
+            else:
+                regions()
+
+    def regions():
+        """ Check the regions parameters provided. """
+        half_x_domain = params['domainSize'][0][
+            0] / 2.0  ## -index[1] because domainSize = [x,y,z]
+        half_y_domain = params['domainSize'][0][
+            1] / 2.0  ## -index[1] because domainSize = [x,y,z]
+        half_z_domain = params['domainSize'][0][
+            2] / 2.0  ## -index[2] because domainSize = [x,y,z]
+        ## -center of z-domain at z = 0 so
+        ##  whole Zdomain is -zDomainSize to +zDomainSize
+        for i, region in enumerate(params['regions']):
+            errResult = input_helper_methods.verify_list(
+                region,
+                "regions #{}".format(i + 1),
+                input_helper_methods.verify_float,
+                desiredLength=6)
+            if errResult != None:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have {} element(s) but each region must "\
+                      "have 6 elements, which define its upper and lower bounds".format(i+1, -errResult))
+            if params['regions'].count(regions) > 1:
+                input_helper_methods.error(
+                    "\"regions\" has defined the same region more than once.")
+            # min_x = regions[0]
+            # max_x = regions[1]
+            # min_y = regions[2]
+            # max_y = regions[3]
+            # min_z = regions[4]
+            # max_z = regions[5]
+
+            # X direction
+            if region[1] <= region[0]:
+                input_helper_methods.error("\"regions\" has defined region #{0} where xmin: {1} is "\
+                    "greater than xmax {2}".format(i+1,region[0], region[1]))
+            if region[0] <= -half_x_domain and region[1] <= -half_x_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "below the domain's x-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 1st value in \"domainSize\" "\
+                      "(x-dimension) in both positive and negative directions.".format(i+1, -half_x_domain, half_x_domain))
+            if region[0] >= half_x_domain and region[1] >= half_x_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "above the domain's x-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 1st  value in \"domainSize\" "\
+                      "(x-dimension) in both positive and negative directions.".format(i+1, -half_x_domain, half_x_domain))
+            # Y direction
+            if region[3] <= region[2]:
+                input_helper_methods.error("\"regions\" has defined region #{0} where ymin: {1} is "\
+                    "greater than ymax {2}".format(i+1,region[3], region[2]))
+            if region[2] <= -half_y_domain and region[3] <= -half_y_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "below the domain's y-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 2nd value in \"domainSize\" "\
+                      "(y-dimension) in both positive and negative directions.".format(i+1, -half_x_domain, half_x_domain))
+            if region[2] >= half_y_domain and region[3] >= half_y_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "above the domain's y-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 2nd  value in \"domainSize\" "\
+                      "(y-dimension) in both positive and negative directions.".format(i+1, -half_y_domain, half_y_domain))
+
+            # Z direction
+            if region[5] <= region[4]:
+                input_helper_methods.error("\"regions\" has defined region #{0} where zmin: {1} is "\
+                    "greater than zmax {2}".format(i+1,region[5], region[4]))
+            if region[4] <= -half_z_domain and region[5] <= -half_z_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "below the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 3rd value in \"domainSize\" "\
+                      "(z-dimension) in both positive and negative directions.".format(i+1, -half_z_domain, half_z_domain))
+            if region[4] >= half_z_domain and region[5] >= half_z_domain:
+                input_helper_methods.error("\"regions\" has defined layer #{} to have both upper and lower bounds completely "\
+                      "above the domain's z-dimensional range ({} to {}). At least one boundary must be within "\
+                      "the domain's range. The domain's range is half of 3rd  value in \"domainSize\" "\
+                      "(z-dimension) in both positive and negative directions.".format(i+1, -half_z_domain, half_z_domain))
 
     def disable_fram():
         """ Verify the flag that indicates whether if FRAM is disabled.
@@ -1161,8 +1260,35 @@ def check_input(self, input_file='', output_file=''):
                       "domain.".format(paramName, numLayers))
             if int(layer) > numLayers:
                 input_helper_methods.error("\"{}\" contains value '{}' but only {} layer(s) is(are) defined. Make sure the "\
-                      "layer numbers referenced here are found in that same postion in \"layers\" "\
+                      "layer numbers referenced here are found in that same position in \"layers\" "\
                       "parameter.".format(paramName, layer, numLayers))
+
+    def region(prefix):
+        """ Check the number of region. """
+        shape = "ellipse" if prefix == 'e' else "rectangle"
+        numFamilies = ellipseFams if prefix == 'e' else rectFams
+        paramName = prefix + "Region"
+
+        errResult = input_helper_methods.verify_list(
+            input_helper_methods.value_of(paramName),
+            paramName,
+            input_helper_methods.verify_int,
+            desiredLength=numFamilies)
+        if errResult != None:
+            input_helper_methods.error("\"{}\" has defined {} layer(s) but there is(are) {} {} families. "\
+                  "Need one layer per {} family. Regions are numbered by the order they "\
+                  "are defined in 'region' parameter. Layer 0 is the whole domain."\
+                  .format(paramName, -errResult, numFamilies, shape, shape))
+
+        for region in input_helper_methods.value_of(paramName):
+            if input_helper_methods.is_negative(int(region)):
+                input_helper_methods.error("\"{}\" contains a negative layer number. Only values from 0 to "\
+                      "{} (numOfRegions) are accepted. Layer 0 corresponds to the entire"\
+                      "domain.".format(paramName, numRegions))
+            if int(region) > numRegions:
+                input_helper_methods.error("\"{}\" contains value '{}' but only {} region(s) is(are) defined. Make sure the "\
+                      "region numbers referenced here are found in that same position in \"region\" "\
+                      "parameter.".format(paramName, region, numRegions))
 
     def theta_phi_kappa(prefix):
         """ Check the angle parameters used for Fisher distributions 
@@ -1231,13 +1357,13 @@ def check_input(self, input_file='', output_file=''):
                                            minFracSize)
         firstPriority = [
             n_fam_ell, n_fam_rect, stop_condition, domain_size, num_of_layers,
-            seed, domain_size_increase, ignore_boundary_faces,
+            num_of_regions, seed, domain_size_increase, ignore_boundary_faces,
             rejects_per_fracture, user_defined,
             input_helper_methods.check_fam_count, check_no_dep_flags, fam_prob
         ]
 
         generalized = [
-            layer, aspect, angle_option, theta_phi_kappa,
+            layer, region, aspect, angle_option, theta_phi_kappa,
             distributions.beta_distribution, distributions.distr
         ]
 
@@ -1282,6 +1408,14 @@ def check_input(self, input_file='', output_file=''):
                     writer.write(
                         input_helper_methods.list_to_curly(str(layer)) + " ")
                 writer.write('\n')
+
+            elif param == 'regions':
+                writer.write(param + ': ')
+                for region in params['regions']:
+                    writer.write(
+                        input_helper_methods.list_to_curly(str(region)) + " ")
+                writer.write('\n')
+
             elif type(input_helper_methods.value_of(param,
                                                     writing=True)) is list:
                 curl = input_helper_methods.list_to_curly(

@@ -239,7 +239,6 @@ class Particle():
                 # f2.write("\n")
 
 
-
 def prepare_output_files(partime_file, frac_id_file):
     """ opens the output files partime_file and frac_id_file and writes the
         header for each
@@ -280,7 +279,6 @@ def prepare_output_files(partime_file, frac_id_file):
             frac_id_file)
         sys.stderr.write(error)
         sys.exit(1)
-
 
 
 def dump_particle_info(particles, partime_file, frac_id_file):
