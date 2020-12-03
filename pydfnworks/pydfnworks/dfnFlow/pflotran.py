@@ -1,5 +1,5 @@
 """
-functions for using pflotran in dfnworks
+Functions for using pflotran in dfnworks
 """
 import os
 import subprocess
@@ -16,7 +16,9 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex
    
     Parameters    
-    ------- 
+    --------------
+        self : object
+            DFN Class 
         inp_file : str
             Name of the inp (AVS) file produced by LaGriT 
         mesh_type : str
@@ -91,13 +93,18 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print("\n\n")
 
 
-def zone2ex(self, uge_file='', zone_file='', face='',
+def zone2ex(self,
+            uge_file='',
+            zone_file='',
+            face='',
             boundary_cell_area=1.e-1):
     """
     Convert zone files from LaGriT into ex format for LaGriT
     
     Parameters
     -----------
+        self : object
+            DFN Class
         uge_file : string
             Name of uge file
         zone_file : string
@@ -106,7 +113,7 @@ def zone2ex(self, uge_file='', zone_file='', face='',
         zone_file : string
             Name of zone file to work on. Can be 'all' processes all directions, top, bottom, left, right, front, back
         boundary_cell_area : double 
-            Boundary cells are moved a distance of boundary_cell_area 1e-1
+            should be a large value relative to the mesh size to force pressure boundary conditions. 
 
     Returns
     ----------
@@ -212,7 +219,7 @@ def zone2ex(self, uge_file='', zone_file='', face='',
 
         if self.h == "":
             from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
-            _, self.h, _, _, _ = parse_params_file(quite=True)
+            _, self.h, _, _, _ = parse_params_file(quiet=True)
 
         Boundary_cell_area = np.zeros(num_nodes, 'float')
         for i in range(num_nodes):
@@ -242,6 +249,9 @@ def zone2ex(self, uge_file='', zone_file='', face='',
                                    for cell in boundary_cell_coord]
         elif (face == 'west'):
             boundary_cell_coord = [[cell[0] - epsilon, cell[1], cell[2]]
+                                   for cell in boundary_cell_coord]
+        elif (face == 'well'):
+            boundary_cell_coord = [[cell[0], cell[1], cell[2] + epsilon]
                                    for cell in boundary_cell_coord]
         elif (face == 'none'):
             boundary_cell_coord = [[cell[0], cell[1], cell[2]]
@@ -419,13 +429,19 @@ def write_perms_and_correct_volumes_areas(self):
         print('--> Done writing permeability to h5 file')
 
 
-def pflotran(self, restart=False, restart_file=''):
+def pflotran(self, transient=False, restart=False, restart_file=''):
     """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
 
     Parameters
     ----------
         self : object
             DFN Class
+        transient : bool
+            Boolean if PFLOTRAN is running in transient mode
+        restart : bool
+            Boolean if PFLOTRAN is restarting from checkpoint
+        restart_file : string
+            Filename of restart file
 
     Returns
     ----------
@@ -454,7 +470,7 @@ def pflotran(self, restart=False, restart_file=''):
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
     print("Running: %s" % cmd)
     subprocess.call(cmd, shell=True)
-    if not restart:
+    if not transient:
         if not check_pflotran_convergence(self.local_dfnFlow_file):
             error = "ERROR!!!! PFLOTRAN did not converge. Consider running in transient mode to march to steady-state\n"
             sys.stderr.write(error)
@@ -465,7 +481,7 @@ def pflotran(self, restart=False, restart_file=''):
             shutil.copy(os.path.abspath(restart_file),
                         os.path.abspath(os.getcwd()))
         except:
-            error = "--> ERROR!! Unable to copy PFLOTRAN input file\n"
+            error = "--> ERROR!! Unable to copy PFLOTRAN restart input file\n"
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -582,86 +598,14 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
 
 
-def inp2vtk_python(self):
-    """ Using Python VTK library, convert inp file to VTK file.  
-
-    Parameters
-    ----------
-        self : object 
-            DFN Class
-
-    Returns
-    --------
-        None
-
-    Notes
-    --------
-        For a mesh base.inp, this dumps a VTK file named base.vtk
-    """
-    import pyvtk as pv
-    if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    print("--> Using Python to convert inp files to VTK files")
-    if self.inp_file:
-        inp_file = self.inp_file
-
-    if inp_file == '':
-        error = 'ERROR: Please provide inp filename!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    if self.vtk_file:
-        vtk_file = self.vtk_file
-    else:
-        vtk_file = inp_file[:-4]
-        self.vtk_file = vtk_file + '.vtk'
-
-    print("--> Reading inp data")
-
-    with open(inp_file, 'r') as f:
-        line = f.readline()
-        num_nodes = int(line.strip(' ').split()[0])
-        num_elems = int(line.strip(' ').split()[1])
-
-        coord = np.zeros((num_nodes, 3), 'float')
-        elem_list_tri = []
-        elem_list_tetra = []
-
-        for i in range(num_nodes):
-            line = f.readline()
-            coord[i, 0] = float(line.strip(' ').split()[1])
-            coord[i, 1] = float(line.strip(' ').split()[2])
-            coord[i, 2] = float(line.strip(' ').split()[3])
-
-        for i in range(num_elems):
-            line = f.readline().strip(' ').split()
-            line.pop(0)
-            line.pop(0)
-            elem_type = line.pop(0)
-            if elem_type == 'tri':
-                elem_list_tri.append([int(i) - 1 for i in line])
-            if elem_type == 'tet':
-                elem_list_tetra.append([int(i) - 1 for i in line])
-
-    print('--> Writing inp data to vtk format')
-    vtk = pv.VtkData(
-        pv.UnstructuredGrid(coord,
-                            tetra=elem_list_tetra,
-                            triangle=elem_list_tri),
-        'Unstructured pflotran grid')
-
-    vtk.tofile(vtk_file)
-
-
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
-    """ Replace CELL_DATA with POINT_DATA in the VTK output.
+    """ Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
+
     Parameters
     ----------
         self : object 
             DFN Class
+
         grid_vtk_file : string
             Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
 
@@ -671,7 +615,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     Notes
     --------
-    If DFN class does not have a vtk file, inp2vtk_python is called
+        If DFN class does not have a vtk file, inp2vtk_python is called
     """
     print('--> Parsing PFLOTRAN output with Python')
 
@@ -683,20 +627,25 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
     else:
+        from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2vtk_python
         self.inp2vtk_python()
 
     grid_file = self.vtk_file
 
     files = glob.glob('*-[0-9][0-9][0-9].vtk')
+    files.sort()
+
     with open(grid_file, 'r') as f:
         grid = f.readlines()[3:]
 
     out_dir = 'parsed_vtk'
+
     for line in grid:
         if 'POINTS' in line:
             num_cells = line.strip(' ').split()[1]
 
     for file in files:
+        print(f"--> Processing file: {file}")
         with open(file, 'r') as f:
             pflotran_out = f.readlines()[4:]
         pflotran_out = [

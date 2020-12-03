@@ -154,8 +154,8 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
                 Gtilde.edges[u, v]['perm'] / fluid_viscosity
             ) * abs(Gtilde.nodes[u]['pressure'] -
                     Gtilde.nodes[v]['pressure']) / Gtilde.edges[u, v]['length']
-            Gtilde.edges[u, v]['time'] = Gtilde.edges[u, v][
-                'length'] / Gtilde.edges[u, v]['flux']
+            Gtilde.edges[u, v]['time'] = Gtilde.edges[
+                u, v]['length'] / Gtilde.edges[u, v]['flux']
         else:
             Gtilde.edges[u, v]['flux'] = 0
 

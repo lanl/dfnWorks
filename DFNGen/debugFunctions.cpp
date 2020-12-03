@@ -177,6 +177,19 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
                  << "}" << endl;
         }
         
+        // Print layer family belongs to
+        if (shapeFamilies[i].region == 0) {
+            cout << "Region: Entire domain" << endl;
+        } else {
+            int idx = (shapeFamilies[i].region - 1) * 6;
+            cout << "Region Number " << shapeFamilies[i].region << ": {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+        }
+        
+        if (shapeFamilies[i].layer  > 0 && shapeFamilies[i].region > 0) {
+            cout << "ERROR Layer and Region both defined for this Family.\nExiting Program\n" << endl;
+            exit(1);
+        }
+        
         // Print distribution data
         switch (shapeFamilies[i].distributionType) {
         case 1: // lognormal

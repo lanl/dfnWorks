@@ -45,21 +45,25 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.generation.gen_input import check_input
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
-    from pydfnworks.dfnGen.generation.gen_output import output_report
+    from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
 
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, inp2vtk_python
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
+    from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
+
+    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells
+
 
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, inp2vtk_python, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 

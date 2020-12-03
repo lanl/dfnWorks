@@ -1,7 +1,7 @@
 # contains global variables
 class Poisson_Variables():
-    def __init__(self, path_to_polygon, path_to_intersections, H, R, A, F,
-                 concurrent_samples, occupancy_factor):
+    def __init__(self, fracture_id, path_to_polygon, path_to_intersections, H, R, A, F,
+                 concurrent_samples, occupancy_factor, well_flag):
         import numpy as np
         """ Takes in input-parameters and contains all variables derived from
             those, that are used by multiple functions.
@@ -31,6 +31,7 @@ class Poisson_Variables():
         """
         # Input parameters
         ###############################################################
+        self.fracture_id = fracture_id
         self.path_poly = path_to_polygon
         self.path_inter = path_to_intersections
         self.k = concurrent_samples
@@ -40,6 +41,7 @@ class Poisson_Variables():
         # is bounded by (1-A)/2, require 1-A>eps>0
         self.F = F
         self.occupancy_grid_side_length = self.H / occupancy_factor
+        self.well_flag = well_flag
 
         # Derived from input
         ###################################

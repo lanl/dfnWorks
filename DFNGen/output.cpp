@@ -92,6 +92,11 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
             // Fractures are marked -1 for user ellipses
             writeAllAcceptedRadii_OfFamily(-1, acceptedPoly, radiiFolder);
         }
+        
+        if (userPolygonByCoord) {
+            // Fractures are marked -3 for user user polygons
+            writeAllAcceptedRadii_OfFamily(-3, acceptedPoly, radiiFolder);
+        }
     }
     
     if (outputFinalRadiiPerFamily) {
@@ -108,6 +113,10 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
         
         if (userEllipsesOnOff) {
             writeFinalRadii_OfFamily(finalFractures, -2, acceptedPoly, radiiFolder);
+        }
+        
+        if (userPolygonByCoord) {
+            writeFinalRadii_OfFamily(finalFractures, -3, acceptedPoly, radiiFolder);
         }
     }
     
@@ -641,7 +650,7 @@ void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     std::ofstream radii;
     radii.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(radii, file);
-    radii << "Format: xRadius yRadius Family# Removed (-1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
+    radii << "Format: xRadius yRadius Family# Removed (-2 = userPolygon, -1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
     unsigned int finalFractLimit = finalFractures.size() - 1;
     unsigned int size = acceptedPoly.size();
     unsigned int curFinalIdx = 0;
@@ -723,7 +732,7 @@ void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<
     radiiFinal.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(radiiFinal, file);
     radiiFinal << "Fracture Radii List After Isolated Fracture and Cluster Removal\n";
-    radiiFinal << "Format: xRadius yRadius Family# (-1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
+    radiiFinal << "Format: xRadius yRadius Family# (-2 = userPolygon, -1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
     int size =   finalFractures.size();
     
     for (int i = 0; i < size; i++) {
@@ -769,7 +778,7 @@ void writeAllAcceptedRadii(std::vector<Poly> &acceptedPoly, std::string &output)
     radiiAcpt.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(radiiAcpt, file);
     radiiAcpt << "Fracture Radii List Before Isolated Fracture and Cluster Removal\n";
-    radiiAcpt << "Format: xRadius yRadius Distrubution# (-1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
+    radiiAcpt << "Format: xRadius yRadius Distribution # (-2 = userPolygon, -1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
     int size = acceptedPoly.size();
     
     for (int i = 0; i < size; i++) {
@@ -794,7 +803,7 @@ void writeAllAcceptedRadii_OfFamily(int familyNum, std::vector<Poly> &acceptedPo
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileName);
     file << "Fracture Radii List Before Isolated Fracture and Cluster Removal (Family " << familyNum + 1 << ")\n";
-    file << "Format: xRadius yRadius Distrubution# (-1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
+    file << "Format: xRadius yRadius Distrubution# (-2 = userPolygon, -1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
     int size = acceptedPoly.size();
     
     for (int i = 0; i < size; i++) {
@@ -820,7 +829,7 @@ void writeFinalRadii_OfFamily(std::vector<unsigned int> &finalFractures, int fam
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileName);
     file << "Fracture Radii List After Isolated Fracture and Cluster Removal (Family " << familyNum + 1 << ")\n";
-    file << "Format: xRadius yRadius Distrubution# (-1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
+    file << "Format: xRadius yRadius Distrubution# (-2 = userPolygon, -1 = userRectangle, 0 = userEllipse, > 0 is family in order of famProb)\n";
     int size = finalFractures.size();
     
     for (int i = 0; i < size; i++) {
@@ -909,13 +918,13 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     std::ofstream file;
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileName);
-    file << pstats.rejectionReasons.shortIntersection << " Short Intersections \n";
-    file << pstats.rejectionReasons.closeToNode << " Close to Node\n";
-    file << pstats.rejectionReasons.closeToEdge << " Close to Edge\n";
-    file << pstats.rejectionReasons.closePointToEdge << " Vertice Close to Edge\n";
-    file << pstats.rejectionReasons.outside << " Outside of Domain\n";
-    file << pstats.rejectionReasons.triple << " Triple intersection Rejections\n";
-    file << pstats.rejectionReasons.interCloseToInter << " Intersections Close to Other Intersections\n";
+    file << "Short Intersection: " << pstats.rejectionReasons.shortIntersection << "\n";
+    file << "Close to Node: " << pstats.rejectionReasons.closeToNode << "\n";
+    file << "Close to Edge: " << pstats.rejectionReasons.closeToEdge << "\n";
+    file << "Vertex Close to Edge: " << pstats.rejectionReasons.closePointToEdge << "\n";
+    file << "Outside of Domain: " << pstats.rejectionReasons.outside << "\n";
+    file << "Triple Intersection: " << pstats.rejectionReasons.triple << " \n";
+    file << "Intersections Too Close: " << pstats.rejectionReasons.interCloseToInter << "\n";
     file.close();
 }
 
@@ -935,20 +944,22 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     
     //TODO: add stub code in families.dat for userDefined fractures, IF there are user defined fractures
     if (userRectanglesOnOff) {
-        file << "UserDefined Rectangle Family "
-             << "-1;\n\n";
+        file << "UserDefined Rectangle Family: -1\n\n";
     }
     
     if (userEllipsesOnOff) {
-        file << "UserDefined Ellipse Family "
-             << "-2;\n\n";
+        file << "UserDefined Ellipse Family: -2\n\n";
+    }
+    
+    if (userPolygonByCoord) {
+        file << "UserDefined Polygon Family: -3\n\n";
     }
     
     for(unsigned int i = 0; i < shapeFamilies.size(); i++) {
         //name(rect or ell) and number of family
-        file << shapeType(shapeFamilies[i]) << " Family "
-             << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << ":\n";
-        file << "Global Family " << i + 1 << "\n";
+        file << shapeType(shapeFamilies[i]) << " Family: "
+             << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n";
+        file << "Global Family: " << i + 1 << "\n";
         
         // Print vertice number
         if (shapeFamilies[i].shapeFamily == 0) {  // If ellipse family
@@ -968,19 +979,18 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
         
         // beta distribution, rotation around normal vector
         if (shapeFamilies[i].betaDistribution == 0) {
-            file << "Beta Distribution (Rotation Around Normal Vector): [0, 2PI)" << endl;
+            file << "Beta Distribution (Rotation Around Normal Vector): Uniform" << endl;
         } else {
-            file << "Beta (Rotation Around Normal Vector): "
-                 << shapeFamilies[i].beta << " rad, "
-                 << shapeFamilies[i].beta * radToDeg << " deg" << endl;
+            file << "Beta (Rotation Around Normal Vector)-rad: " << shapeFamilies[i].beta << endl;
+            file << "Beta (Rotation Around Normal Vector)-deg: " << shapeFamilies[i].beta * radToDeg << endl;
         }
         
         // Theta (angle normal makes with z axis
-        file << "Theta: " << shapeFamilies[i].theta << " rad, "
-             << shapeFamilies[i].theta * radToDeg << " deg" << endl;
+        file << "Theta-rad: " << shapeFamilies[i].theta << endl;
+        file << "Theta-deg: " << shapeFamilies[i].theta * radToDeg << endl;
         // Phi (angle the projection of normal onto x-y plane  makes with +x axis
-        file << "Phi: " << shapeFamilies[i].phi << " rad, "
-             << shapeFamilies[i].phi * radToDeg << " deg" << endl;
+        file << "Phi-rad: " << shapeFamilies[i].phi << endl;
+        file << "Phi-deg: " << shapeFamilies[i].phi * radToDeg << endl;
         // kappa
         file << "Kappa: " << shapeFamilies[i].kappa << endl;
         
@@ -989,9 +999,17 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             file << "Layer: Entire domain" << endl;
         } else {
             int idx = (shapeFamilies[i].layer - 1) * 2;
-            file << "Layer: " << shapeFamilies[i].layer << " {" << layers[idx]
-                 << ", " << layers[idx + 1]
-                 << "}" << endl;
+            file << "Layer Number: " << shapeFamilies[i].layer << "\n";
+            file << "Layer: {" << layers[idx] << "," << layers[idx + 1] << "}" << endl;
+        }
+        
+        // Print layer family belongs to
+        if (shapeFamilies[i].region == 0) {
+            file << "Region: Entire domain" << endl;
+        } else {
+            int idx = (shapeFamilies[i].region - 1) * 6;
+            file << "Region Number: " << shapeFamilies[i].region << "\n";
+            file << "Region: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
         }
         
         // Print distribution data
@@ -1000,28 +1018,28 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             file << "Distribution: Lognormal\n";
             file << "Mean: " << shapeFamilies[i].mean << endl;
             file << "Standard Deviation: " << shapeFamilies[i].sd <<  endl;
-            file << "Minimum Radius: " << shapeFamilies[i].logMin << "m" << endl;
-            file << "Maximum Radius: " << shapeFamilies[i].logMax << "m" << endl;
+            file << "Minimum Radius (m): " << shapeFamilies[i].logMin << endl;
+            file << "Maximum Radius (m): " << shapeFamilies[i].logMax << endl;
             break;
             
         case 2: // power-law
             file << "Distribution: Truncated Power-Law\n";
             file << "Alpha: " << shapeFamilies[i].alpha << endl;
-            file << "Minimum Radius: " << shapeFamilies[i].min << "m" << endl;
-            file << "Maximum Radius: " << shapeFamilies[i].max << "m" << endl;
+            file << "Minimum Radius (m): " << shapeFamilies[i].min << endl;
+            file << "Maximum Radius (m): " << shapeFamilies[i].max <<  endl;
             break;
             
         case 3: // exponential
             file << "Distribution: Exponential\n";
             file << "Mean: " << shapeFamilies[i].expMean << endl;
             file << "Lambda: " << shapeFamilies[i].expLambda << endl;
-            file << "Minimum Radius: " << shapeFamilies[i].expMin << "m" << endl;
-            file << "Maximum Radius: " << shapeFamilies[i].expMax << "m" << endl;
+            file << "Minimum Radius (m): " << shapeFamilies[i].expMin << endl;
+            file << "Maximum Radius (m): " << shapeFamilies[i].expMax << endl;
             break;
             
         case 4: // constant
             file << "Distribution: Constant\n";
-            file << "Radius: " << shapeFamilies[i].constRadi << "m" << endl;
+            file << "Radius (m): " << shapeFamilies[i].constRadi << endl;
         }
         
         file << "Family Insertion Probability: " << famProbOriginal[i] << "\n\n";

@@ -84,24 +84,29 @@ def make_working_directory(self, delete=False):
         try:
             os.mkdir(self.jobname)
         except OSError:
-            print('\nFolder ', self.jobname, ' exists')
-            keep = input('Do you want to delete it? [yes/no] \n')
-            if keep == 'yes' or keep == 'y':
-                print('Deleting', self.jobname)
-                shutil.rmtree(self.jobname)
-                print('Creating', self.jobname)
-                os.mkdir(self.jobname)
-            elif keep == 'no' or 'n':
-                error = "Not deleting folder. Exiting Program\n"
-                sys.stderr.write(error)
-                sys.exit(1)
+            if os.path.isdir(self.jobname):
+                print('\nFolder ', self.jobname, ' exists')
+                keep = input('Do you want to delete it? [yes/no] \n')
+                if keep == 'yes' or keep == 'y':
+                    print('Deleting', self.jobname)
+                    shutil.rmtree(self.jobname)
+                    print('Creating', self.jobname)
+                    os.mkdir(self.jobname)
+                elif keep == 'no' or 'n':
+                    error = "Not deleting folder. Exiting Program\n"
+                    sys.stderr.write(error)
+                    sys.exit(1)
+                else:
+                    error = "Unknown Response. Exiting Program\n"
+                    sys.stderr.write(error)
+                    sys.exit(1)
             else:
-                error = "Unknown Response. Exiting Program\n"
+                error = f"Unable to create working directory {self.jobname}\n. Please check the provided path.\nExiting\n"
                 sys.stderr.write(error)
                 sys.exit(1)
     else:
         shutil.rmtree(self.jobname)
-        print('Creating', self.jobname)
+        print('Creating ', self.jobname)
         os.mkdir(self.jobname)
 
     os.mkdir(self.jobname + '/radii')
@@ -143,7 +148,7 @@ def create_network(self):
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        num_poly, h, _, _, _ = parse_params_file(quite=True)
+        num_poly, h, _, _, _ = parse_params_file(quiet=True)
         self.num_frac = num_poly
         self.h = h
         print('-' * 80)

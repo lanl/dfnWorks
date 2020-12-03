@@ -18,7 +18,7 @@ from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson
 
 
-def cleanup_failed_run(fracture_id, digits, quite=True):
+def cleanup_failed_run(fracture_id, digits, quiet=True):
     """ If meshing fails, this function moves all relavent files
     to a folder for debugging
 
@@ -40,7 +40,7 @@ def cleanup_failed_run(fracture_id, digits, quite=True):
 
 """
 
-    if not quite:
+    if not quiet:
         print(f"--> Cleaning up meshing run for fracture {fracture_id}")
 
     if not os.path.isfile("failure.txt"):
@@ -54,7 +54,7 @@ def cleanup_failed_run(fracture_id, digits, quite=True):
     try:
         os.mkdir(folder)
     except:
-        if not quite:
+        if not quiet:
             print(f"Warning! Unable to make new folder: {folder}")
         pass
 
@@ -68,7 +68,7 @@ def cleanup_failed_run(fracture_id, digits, quite=True):
         try:
             copy(f, folder)
         except:
-            if not quite:
+            if not quiet:
                 print(f'--> Warning: Could copy {f} to failure folder')
             pass
 
@@ -82,11 +82,11 @@ def cleanup_failed_run(fracture_id, digits, quite=True):
         try:
             os.unlink(f)
         except:
-            if not quite:
+            if not quiet:
                 print(f'--> Warning: Could not unlink {f}')
             pass
 
-    if not quite:
+    if not quiet:
         print(f"--> Cleanup for Fracture {fracture_id} complete")
 
 
@@ -197,7 +197,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         mh.run_lagrit_script(
             f"mesh_poly_{fracture_id}.lgi",
             output_file=f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out",
-            quite=True)
+            quiet=True)
     except:
         print(
             f"\n\n\n--> ERROR occurred during meshing fracture {fracture_id}\n\n\n"
@@ -410,7 +410,7 @@ def merge_worker(job):
 
     if mh.run_lagrit_script(f"lagrit_scripts/merge_poly_part_{job}.lgi",
                             f"lagrit_logs/log_merge_poly_part{job}.out",
-                            quite=True):
+                            quiet=True):
         print(f"Error {job} failed")
         return True
 
@@ -477,7 +477,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
 
     mh.run_lagrit_script('lagrit_scripts/merge_rmpts.lgi',
                          'lagrit_logs/log_merge_all.out',
-                         quite=True)
+                         quiet=True)
 
     elapsed = timeit.default_timer() - tic
     print(f"--> Final merge took {elapsed:.2f} seconds")
