@@ -9,8 +9,8 @@
 from fpdf import FPDF
 
 # NEED TO BE SET TO /Users/jhyman/src
-dfnworks_image_black = "DUMMY/dfnworks-main/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "DUMMY/dfnworks-main/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+dfnworks_image_black = "DUMMY/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
+lanl_image = "DUMMY/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
 
 class PDF(FPDF):
     global name
