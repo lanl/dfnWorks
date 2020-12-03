@@ -1,0 +1,105 @@
+#
+# OUTPUT: intersected_fracture.list tells you the list of fractures intersected by the well.
+# OUTPUT: well_segments_intersect.inp is a subset of the well line segments that intersect fractures.
+#         The segments are tagged so itetclr and imt are set to the value of the fracture they intersect.
+#
+define / INPUT_DFN  / reduced_mesh.inp
+define / INPUT_WELL / well_coords.inp
+define / OUTPUT_WELL_SEGMENTS / well_segments_intersect.inp
+define / OUTPUT_FRACTURE_LIST / intersected_fracture.list
+#
+read / avs / INPUT_DFN  / mo_tri
+read / avs / INPUT_WELL / mo_line
+#
+# Find the triangles of the DFN mesh that intersect the well lines.
+# Get rid of all the non-intersecting triangles.
+#
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+#
+dump / avs / reduced_reduced_mesh.inp / mo_tri
+cmo / addatt / mo_tri / id_fracture / vint / scalar / nelements
+cmo / copyatt / mo_tri / mo_tri / id_fracture / itetclr
+dump / avs / OUTPUT_FRACTURE_LIST / mo_tri / 0 0 0 1
+#
+# Find the segments of the well (line object) that intersect the fracture planes (triangles)
+#
+intersect_elements / mo_line / mo_tri / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_line / if_intersect
+# BEGIN DEBUG
+dump / avs / OUTPUT_WELL_SEGMENTS / mo_line
+# END DEBUG
+#
+# Reduce the size of the triangles so interpolation works.
+#
+cmo / select / mo_tri
+# Refine 2**7  128
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+refine2d
+intersect_elements / mo_tri / mo_line / if_intersect
+eltset / e_not_intersect / if_intersect / eq / 0
+rmpoint / element / eltset get e_not_intersect
+rmpoint / compress
+cmo / DELATT / mo_tri / if_intersect
+
+# BEGIN DEBUG
+dump / avs / tmp_refine.inp / mo_tri
+# END DEBUG
+
+interpolate / voronoi / mo_line itetclr / 1 0 0 / mo_tri imt
+interpolate / voronoi / mo_line imt     / 1 0 0 / mo_tri imt
+
+cmo / modatt / mo_line / itp / ioflag / l
+cmo / modatt / mo_line / icr / ioflag / l
+cmo / modatt / mo_line / isn / ioflag / l
+
+dump / avs / OUTPUT_WELL_SEGMENTS / mo_line
+
+finish

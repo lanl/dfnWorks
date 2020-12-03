@@ -1,9 +1,5 @@
 """
-  :filename: gen_output.py
-  :synopsis: Main driver for dfnGen output report
-  :version: 1.0
-  :maintainer: Jeffrey Hyman 
-  :moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
+Main driver for dfnGen output report
 """
 
 import os
