@@ -1,5 +1,5 @@
 """
-functions for using pflotran in dfnworks
+Functions for using pflotran in dfnworks
 """
 import os
 import subprocess
@@ -598,86 +598,14 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
 
 
-def inp2vtk_python(self):
-    """ Using Python VTK library, convert inp file to VTK file.  
-
-    Parameters
-    ----------
-        self : object 
-            DFN Class
-
-    Returns
-    --------
-        None
-
-    Notes
-    --------
-        For a mesh base.inp, this dumps a VTK file named base.vtk
-    """
-    import pyvtk as pv
-    if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    print("--> Using Python to convert inp files to VTK files")
-    if self.inp_file:
-        inp_file = self.inp_file
-
-    if inp_file == '':
-        error = 'ERROR: Please provide inp filename!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    if self.vtk_file:
-        vtk_file = self.vtk_file
-    else:
-        vtk_file = inp_file[:-4]
-        self.vtk_file = vtk_file + '.vtk'
-
-    print("--> Reading inp data")
-
-    with open(inp_file, 'r') as f:
-        line = f.readline()
-        num_nodes = int(line.strip(' ').split()[0])
-        num_elems = int(line.strip(' ').split()[1])
-
-        coord = np.zeros((num_nodes, 3), 'float')
-        elem_list_tri = []
-        elem_list_tetra = []
-
-        for i in range(num_nodes):
-            line = f.readline()
-            coord[i, 0] = float(line.strip(' ').split()[1])
-            coord[i, 1] = float(line.strip(' ').split()[2])
-            coord[i, 2] = float(line.strip(' ').split()[3])
-
-        for i in range(num_elems):
-            line = f.readline().strip(' ').split()
-            line.pop(0)
-            line.pop(0)
-            elem_type = line.pop(0)
-            if elem_type == 'tri':
-                elem_list_tri.append([int(i) - 1 for i in line])
-            if elem_type == 'tet':
-                elem_list_tetra.append([int(i) - 1 for i in line])
-
-    print('--> Writing inp data to vtk format')
-    vtk = pv.VtkData(
-        pv.UnstructuredGrid(coord,
-                            tetra=elem_list_tetra,
-                            triangle=elem_list_tri),
-        'Unstructured pflotran grid')
-
-    vtk.tofile(vtk_file)
-
-
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
+
     Parameters
     ----------
         self : object 
             DFN Class
+
         grid_vtk_file : string
             Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
 
@@ -687,7 +615,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     Notes
     --------
-    If DFN class does not have a vtk file, inp2vtk_python is called
+        If DFN class does not have a vtk file, inp2vtk_python is called
     """
     print('--> Parsing PFLOTRAN output with Python')
 
@@ -699,6 +627,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
     else:
+        from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2vtk_python
         self.inp2vtk_python()
 
     grid_file = self.vtk_file

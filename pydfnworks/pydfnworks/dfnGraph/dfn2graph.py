@@ -363,7 +363,7 @@ def create_bipartite_graph(inflow,
 
 
 def add_fracture_source(self, G, source):
-    """Returns the k shortest paths in a graph 
+    """ Adds a source node/nodes to the graph G. 
     
     Parameters
     ----------
@@ -380,8 +380,9 @@ def add_fracture_source(self, G, source):
 
     Notes
     -----
-        bipartite graph not supported
-         
+        Bipartite graph not supported
+        If a source node already exists, it is removed from the graph
+
     """
 
     if not type(source) == list:
@@ -439,7 +440,7 @@ def add_fracture_source(self, G, source):
 
 
 def add_fracture_target(self, G, target):
-    """Returns the k shortest paths in a graph 
+    """ Adds a target node/nodes to the graph G. 
     
     Parameters
     ----------
@@ -453,7 +454,8 @@ def add_fracture_target(self, G, target):
 
     Notes
     -----
-        bipartite graph not supported
+        Bipartite graph not supported
+        If a target node already exists, it is removed from the graph
          
     """
 

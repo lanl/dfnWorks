@@ -1,7 +1,7 @@
 
 name = "pydfnWorks"
 
-date = "2 December 2020"
+date = "30 November 2020"
 
 version = "2.4.3"
 
