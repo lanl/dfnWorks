@@ -50,6 +50,12 @@ def upscale(self, mat_perm, mat_por, path='../'):
     print('=' * 80)
     print("Generating permeability and porosity for octree mesh: Starting")
     print('=' * 80)
+    
+    # Check values of porosity and permeability
+    if  mat_por < 0 or mat_por > 1:
+        error = "Matrix porosity must be between 0 and 1. Exiting\n"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     # Bring in all the relevant data
     try:
@@ -67,69 +73,31 @@ def upscale(self, mat_perm, mat_por, path='../'):
         with open("rock_fehm.dat", "w") as g:
             g.write("rock\n")
 
-    # Make dictionary w/ cell IDs (keys) and intersecting fractures, areas  (values)
-    for i in range(1, num_poly + 1):
-        if i == 1:
-            with open('frac1.inp', 'r') as f:
-                line = f.readline().strip().split()
-                num_nodes = int(float(line[0]))
-                num_cells = int(float(line[1]))
-                f_dict = {}
-                perm_var = np.zeros(num_nodes, 'float')
-                por_var = np.zeros(num_nodes, 'float')
-                cv_vol = np.zeros(num_nodes, 'float')
-                iarray = np.zeros(num_nodes, '=i4')
-                frac_vol = np.zeros(num_nodes, 'float')
-                permX = np.zeros(num_nodes, 'float')
-                permY = np.zeros(num_nodes, 'float')
-                permZ = np.zeros(num_nodes, 'float')
-            f.close()
-        with open('frac{0}.inp'.format(i), 'r') as f:
-            with open('area_sum{0}.inp'.format(i), 'r') as g:
-                for j in range(num_nodes):
-                    f.readline()
-                    g.readline()
-                f.readline()
-                g.readline()
-                for j in range(num_cells):
-                    f.readline()
-                    g.readline()
-                f.readline()
-                f.readline()
-                f.readline()
-                g.readline()
-                g.readline()
-                g.readline()
-                g.readline()
-                g.readline()
-                g.readline()
-                g.readline()
-                for j in range(num_nodes):
-                    fline = f.readline().strip().split()
-                    gline = g.readline().strip().split()
-                    iarray[j] = int(float(gline[0]))
-                    if int(float(gline[1])) != (num_poly + 1) and float(
-                            gline[6]) > 0:
-                        f_dict.setdefault(j + 1, []).append(
-                            (i, float(gline[6])))
-            g.close()
-        f.close()
-
-    p_out = open("connections.p", "wb")
-    pickle.dump(f_dict, p_out)
-    p_out.close()
-
-    with open('full_mesh.uge', 'r') as f:
-        f.readline()
-        for j in range(num_nodes):
+    # Bring in f_dict dictionary
+    f_dict = pickle.load(open("connections.p", "rb"))
+   
+    with open('full_mesh.uge') as f:
+        num_nodes = int(f.readline().strip().split()[1]) 
+        cv_vol = np.zeros(num_nodes, 'float')
+        iarray = np.zeros(num_nodes, '=i4')
+        for i in range(num_nodes):
             fline = f.readline().strip().split()
-            cv_vol[j] = float(fline[4])
+            cv_vol[i] = float(fline[4])
+            iarray[i] = int(fline[0])
     f.close()
+
+    perm_var = np.zeros(num_nodes, 'float')
+    por_var = np.zeros(num_nodes, 'float')
+    #cv_vol = np.zeros(num_nodes, 'float')
+    #iarray = np.zeros(num_nodes, '=i4')
+    frac_vol = np.zeros(num_nodes, 'float')
+    permX = np.zeros(num_nodes, 'float')
+    permY = np.zeros(num_nodes, 'float')
+    permZ = np.zeros(num_nodes, 'float')
 
     # Populate permeability and porosity arrays here
     for i in range(1, num_nodes + 1):
         if i in f_dict:
-
             # Get porosity:
             for j in range(len(f_dict[i])):
                 # Calculate total volume of fractures in cv cell i
@@ -216,15 +184,6 @@ def upscale(self, mat_perm, mat_por, path='../'):
             permY[i - 1] *= cf_y
             permZ[i - 1] *= cf_z
 
-            # Correct 0 perm if exists
-            # Note I don't think it's possible for 0 perm to exist
-            # because of L177-9 and 110.  Will leave for now...
-            if permX[i - 1] == 0:
-                permX[i - 1] += mat_perm
-            if permY[i - 1] == 0:
-                permY[i - 1] += mat_perm
-            if permZ[i - 1] == 0:
-                permZ[i - 1] += mat_perm
             perm_var[i - 1] = max(permX[i - 1], permY[i - 1], permZ[i - 1])
         else:
             # Assign matrix properties
@@ -283,19 +242,22 @@ def upscale(self, mat_perm, mat_por, path='../'):
         h5dset = h5file.create_dataset(dataset_name, data=por_var)
         h5file.close()
 
-    upscale_cleanup()
+    #upscale_cleanup()
 
     # What nodes are fractures vs. matrix
     tag = perm_var > mat_perm
     tag.astype("uint8")
     np.savetxt("tag_frac.dat", tag, '%d', delimiter=",")
 
+    print('=' * 80)
+    print("Generating permeability and porosity for octree mesh: Finished")
+    print('=' * 80)
 
-def upscale_cleanup():
-    files_to_remove = [
-        "area*", "build*", "driver*", "ex*", "frac*", "hex*", "intersect*",
-        "log*", "out*", "parame*", "remove*", "time*", "tmp*"
-    ]
-    for name in files_to_remove:
-        for fl in glob.glob(name):
-            os.remove(fl)
+#def upscale_cleanup():
+#    files_to_remove = [
+#        "area*", "build*", "driver*", "ex*", "frac*", "hex*", "intersect*",
+#        "log*", "out*", "parame*", "remove*", "time*", "tmp*"
+#    ]
+#    for name in files_to_remove:
+#        for fl in glob.glob(name):
+#            os.remove(fl)
