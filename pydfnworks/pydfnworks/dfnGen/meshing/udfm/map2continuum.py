@@ -13,8 +13,7 @@ import numpy as np
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 import time
 import multiprocessing as mp
-#import Queue
-
+import pickle
 
 def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     """ This function generates an octree-refined continuum mesh using the
@@ -33,7 +32,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
             path to primary DFN directory
         dir_name : string
             name of directory where the octree mesh is created
-
+    
     Returns
     -------
         None
@@ -103,10 +102,10 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     lagrit_intersect(dir_name)
     lagrit_hex_to_tet(dir_name)
     lagrit_remove(dir_name)
-    lagrit_run(path, dir_name)
+    lagrit_run(self, num_poly, path, dir_name)
     lagrit_strip(num_poly)
     driver_parallel(self, num_poly)
-
+    build_dict(self, num_poly, delete_files = True)
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     """ This function creates the main lagrit driver script, which calls all 
@@ -135,17 +134,21 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     
     """
     xn, yn, zn, xp, yp, zp = 0, 0, 0, 0, 0, 0
-    j = num_poly + 1
+    j = num_poly
     floop = ""
-    for i in range(1, int(num_poly + 2)):
-        if j != num_poly + 1:
-            xn = normal_vectors[j - 1][0]
-            yn = normal_vectors[j - 1][1]
-            zn = normal_vectors[j - 1][2]
-            xp = points[j - 1][0]
-            yp = points[j - 1][1]
-            zp = points[j - 1][2]
-        floop += """cmo / create / FRACTURE{0} 
+    for i in range(1, int(num_poly + 1)):
+        xn = normal_vectors[j - 1][0]
+        yn = normal_vectors[j - 1][1]
+        zn = normal_vectors[j - 1][2]
+        xp = points[j - 1][0]
+        yp = points[j - 1][1]
+        zp = points[j - 1][2]
+        floop = """read / avs / mohex2.inp / mohex2 
+    cmo / DELATT / mohex2 / if_int
+    read / avs / MOTET_np1.inp / MOTET_np1
+    read / avs / MOTET.inp / MOTET
+    read / avs / reduced_mesh.inp / MODFN
+    cmo / create / FRACTURE{0} 
     cmo / copy / FRACTURE{0} / MODFN
     cmo / select / FRACTURE{0}
     pset / pdel / attribute imt / 1 0 0 / ne / {0}
@@ -188,10 +191,6 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     pset / pfrac / attribute / dfield / 1 0 0 / le / 1.e-8
     cmo / setatt / TETCOPY / imt / 1 0 0 / {1}
     cmo / setatt / TETCOPY / imt / pset get pfrac / {0}
-    eltset / etemp / itetclr / ne / {0}
-    cmo / setatt / TETCOPY / itetclr / eltset get etemp / {1}    
-    eltset / etemp / delete
-    pset / pfrac / delete
     
     cmo / set_id / MOTET_np1 / element / id_cell
     cmo / set_id / MOTET_np1 / node / id_vertex
@@ -230,10 +229,16 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     pset / pinter / delete
     cmo / DELATT / mohex2 / if_int
     cmo / delete / FRACTURE{0}
+    finish
     """.format(j, num_poly + 1, xp, yp, zp, xn, yn, zn)
+        f_name = f'{dir_name}/driver_frac{j}.lgi'                
+        f = open(f_name, 'w')
+        f.write(floop)
+        f.flush()
+        f.close()        
         j = j - 1
-
-    f_name = f'{dir_name}/driver_octree.lgi'
+        
+    f_name = f'{dir_name}/driver_octree_start.lgi'
     f = open(f_name, 'w')
     fin = ("""# 
 # LaGriT control files to build an octree refined hex mesh with refinement
@@ -309,7 +314,7 @@ cmo / select / mohex2
 #
 # Remove all but the most refined hex cells
 #
-loop / do / NTIMES / 0 N_OCTREE_REFINE_M1 1 / loop_end &
+loop / do / NTIMEs / 0 N_OCTREE_REFINE_M1 1 / loop_end &
 infile remove_cells.mlgi
 #
 cmo / select / mohex2
@@ -321,37 +326,17 @@ rmpoint / element / eltset get edelete
 eltset / edelete / release
 rmpoint / compress
 #
-# NOTE: I commented out the following lines for unknown but seemingly
-# important reason
+dump / avs / mohex2.inp / mohex2 
+dump / avs / MOTET_np1.inp / MOTET_np1
+dump / avs / MOTET.inp / MOTET
 #
-#cmo / setatt / mohex2 / itetclr / 1 0 0 / 1
-#cmo / setatt / mohex2 / imt     / 1 0 0 / 1
-""" + floop + """
-#
-#dump / avs / tmp_remove_cells.inp / mohex2
-#dump / avs / tmp_tet.inp / MOTET
-#
-interpolate / map / MOTET / itetclr / 1 0 0 / mohex2 / itetclr
-compute / distance_field / MOTET / mohex2 / dfield
 cmo / select / MOTET
 #
-# This use of 1.e-8 is fine for now but might cause problems if the
-# bounding box of the problem was very small (<1.e-7)
-#
-pset / pfrac / attribute / dfield / 1 0 0 / le / 1.e-8
-cmo / setatt / MOTET / imt / 1 0 0 / 2
-cmo / setatt / MOTET / imt / pset get pfrac / 1
 #
 cmo / modatt / MOTET / itp / ioflag / l
 cmo / modatt / MOTET / isn / ioflag / l
 cmo / modatt / MOTET / icr / ioflag / l
 #
-dump / pflotran / full_mesh / MOTET / nofilter_zero
-dump / avs2 /         octree_dfn.inp / MOTET
-dump / coord  /       octree_dfn     / MOTET
-dump / stor /         octree_dfn     / MOTET
-dump / zone_imt /     octree_dfn     / MOTET
-dump / zone_outside / octree_dfn     / MOTET
 
 define / ZONE / 1
 define / FOUT / pboundary_top
@@ -383,22 +368,18 @@ define / FOUT / pboundary_back_s
 pset / back_s / attribute / yic / 1 0 0 / lt / YMIN
 pset / back_s / zone / FOUT / ascii / ZONE
 
-#
-# Work around for getting *.fehnm file
-# Do we need this?
-#
-cmo / setatt / MOTET / itetclr / 1 0 0 / 1
-cmo / setatt / MOTET / imt / 1 0 0 / 1
-resetpts / itp
-dump / fehm        / tmp_tmp_     / MOTET
-#
+dump / pflotran / full_mesh / MOTET / nofilter_zero
+dump / avs2 /         octree_dfn.inp / MOTET
+dump / coord  /       octree_dfn     / MOTET
+dump / stor /         octree_dfn     / MOTET
+dump / zone_imt /     octree_dfn     / MOTET
+dump / zone_outside / octree_dfn     / MOTET
 finish
 """)
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating driver_octree.lgi file: Complete\n")
-
+    print("Creating driver_octree_start.lgi file: Complete\n")
 
 def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
     """ This function creates the parameters_octree_dfn.mlgi lagrit script.
@@ -507,7 +488,7 @@ cmo / copy / MOHEX_np1 / MOHEX
 # and refine hex mesh based on cell intersections. Loop through 
 # N_OCTREE_REFINE times
 #
-loop / do / NTIMES / 1 N_OCTREE_REFINE 1 / loop_end &
+loop / do / NTIMEs / 1 N_OCTREE_REFINE 1 / loop_end &
 infile intersect_refine.mlgi
 # 
 # See above - except do it once additional time ("np1")
@@ -604,7 +585,7 @@ def lagrit_hex_to_tet(dir_name):
     Parameters
     ----------
         dir_name : string
-            name of working directory    
+            name of working directory 
 
     Returns
     -------
@@ -675,7 +656,7 @@ def lagrit_remove(dir_name):
     Parameters
     ----------
         dir_name : string
-            name of working directory    
+            name of working directory 
 
     Returns
     -------
@@ -692,7 +673,7 @@ def lagrit_remove(dir_name):
 # Remove cells from hex mesh based on the level of refinement
 # itetlev is the refinement level. Original mesh itetlev=0
 #
-eltset / edelete / itetlev / eq / NTIMES
+eltset / edelete / itetlev / eq / NTIMEs
 rmpoint / element / eltset get edelete
 eltset / edelete / release
 rmpoint / compress
@@ -705,12 +686,15 @@ finish
     print("Creating remove_cells.mlgi file: Complete\n")
 
 
-def lagrit_run(path, dir_name):
+def lagrit_run(self, num_poly, path, dir_name):
     """ This function executes the lagrit scripts. 
     
     Parameters
     ----------
-        None    
+        path : string
+            path to primary DFN directory
+        dir_name : string
+            name of directory where the octree mesh is created       
 
     Returns
     -------
@@ -733,10 +717,9 @@ def lagrit_run(path, dir_name):
         sys.stderr.write(error)
         sys.exit(1)
 
-    mh.run_lagrit_script("driver_octree.lgi")
-    # cmd = os.environ['LAGRIT_EXE'] + '< driver_octree.lgi'
-    # subprocess.call(cmd, shell=True)
+    mh.run_lagrit_script("driver_octree_start.lgi")
 
+    driver_interpolate_parallel(self, num_poly)
 
 def lagrit_strip(num_poly):
     """ This function strips and replaces the headers of the files, which is 
@@ -762,7 +745,7 @@ def lagrit_strip(num_poly):
             for k, l in enumerate(infile):
                 pass
             node_dict.setdefault(i, []).append(k - 4)
-    print(node_dict)
+#    print(node_dict)
 
     for i in range(1, num_poly + 1):
         with open('ex_xyz{0}.table'.format(i), 'r') as infile:
@@ -774,6 +757,7 @@ def lagrit_strip(num_poly):
                         outfile.write(line)
             outfile.close()
         infile.close()
+        os.remove(f"ex_xyz{i}.table")
         with open('ex_area{0}.table'.format(i), 'r') as infile:
             with open('ex_area{0}_2.table'.format(i), 'w') as outfile:
                 for j, line in enumerate(infile):
@@ -782,7 +766,52 @@ def lagrit_strip(num_poly):
                         outfile.write("\n")
             outfile.close()
         infile.close()
+        os.remove(f"ex_area{i}.table")
 
+def driver_interpolate_parallel(self, num_poly):
+    """ This function drives the parallelization of the area sums upscaling.
+    
+    Parameters
+    ----------
+        self : object
+            DFN Class
+        num_poly : int
+            Number of fractures
+
+    Returns
+    -------
+        None
+    
+    Notes
+    -----
+        None
+ 
+    """
+    frac_index = range(1, int(num_poly + 1))
+    number_of_task = len(frac_index)
+    number_of_processes = self.ncpu
+    tasks_to_accomplish = mp.Queue()
+    tasks_that_are_done = mp.Queue()
+    processes = []
+
+    for i in range(number_of_task):
+        tasks_to_accomplish.put(i + 1)
+
+    # Creating processes
+    for w in range(number_of_processes):
+        p = mp.Process(target=worker_interpolate,
+                       args=(tasks_to_accomplish, tasks_that_are_done))
+        processes.append(p)
+        p.start()
+        tasks_to_accomplish.put('STOP')
+
+    for p in processes:
+        p.join()
+
+    while not tasks_that_are_done.empty():
+        print(tasks_that_are_done.get())
+
+    return True
 
 def driver_parallel(self, num_poly):
     """ This function drives the parallelization of the area sums upscaling.
@@ -858,7 +887,13 @@ def upscale_parallel(f_id):
     cmo / addatt / frac / area_sum / vdouble / scalar / nnodes
 
     upscale / sum / frac, area_sum / 1 0 0 / mo_vertex, area_tri
-    dump / avs / area_sum{0}.inp / frac 
+
+    cmo / DELATT / frac / itp1
+    cmo / DELATT / frac / icr1
+    cmo / DELATT / frac / isn1 
+    cmo / DELATT / frac / dfield 
+
+    dump / avs / area_sum{0}.table / frac / 0 0 2 0
         
     cmo / delete / mo_vertex
     cmo / delete / frac
@@ -869,11 +904,12 @@ def upscale_parallel(f_id):
     f.flush()
     f.close()
 
-    # cmd = os.environ['LAGRIT_EXE'] + '< driver{0}.lgi'.format(f_id)
-    # subprocess.call(cmd, shell=True)
-    mh.run_lagrit_script("driver{0}.lgi".format(f_id))
-
-
+    mh.run_lagrit_script(f"driver{f_id}.lgi")
+    # Delete files
+    os.remove(f"ex_xyz{f_id}_2.inp")
+    os.remove(f"ex_area{f_id}_2.table")
+    os.remove(f"frac{f_id}.inp")
+ 
 def worker(tasks_to_accomplish, tasks_that_are_done):
     """ Worker function for python parallel. See multiprocessing module 
     documentation for details.
@@ -896,3 +932,43 @@ def worker(tasks_to_accomplish, tasks_that_are_done):
     except:
         pass
     return True
+
+def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
+    """ Worker function for python parallel. See multiprocessing module 
+    documentation for details.
+
+    Parameters
+    ----------
+        tasks_to_accomplish : ?
+            Processes still in queue 
+        tasks_that_are_done : ?
+            Processes complete
+
+    Notes
+    -----
+        None
+ 
+    """
+    try:
+        for f_id in iter(tasks_to_accomplish.get, 'STOP'):
+            interpolate_parallel(f_id)
+    except:
+        pass
+    return True
+
+def interpolate_parallel(f_id):
+    mh.run_lagrit_script(f"driver_frac{f_id}.lgi")
+
+def build_dict(self, num_poly, delete_files):
+    f_dict = {}
+    for i in range(1, num_poly + 1):
+        imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:,0]
+        area_sums = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:,1]
+        for j in range(len(imts)):
+            if int(float(imts[j])) != (num_poly + 1) and float(area_sums[j]) > 0:
+                f_dict.setdefault(j + 1, []).append((i, float(area_sums[j])))
+        if delete_files:
+            os.remove(f"area_sum{i}.table")
+    p_out = open("connections.p", "wb")
+    pickle.dump(f_dict, p_out, pickle.HIGHEST_PROTOCOL)
+    p_out.close()
