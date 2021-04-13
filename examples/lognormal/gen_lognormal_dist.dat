@@ -1,5 +1,5 @@
 /*=========================================================================*/
-/*  Gereral Options & Fracture Network Parameters:                         */
+/*  General Options & Fracture Network Parameters:                         */
 /*=========================================================================*/
 
 stopCondition: 0
@@ -8,14 +8,14 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 300
+nPoly: 100
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
     like to have in the DFN.  
 */
 
-domainSize: {50,20,20} 
+domainSize: {20,20,20} 
 /*  Mandatory Parameter.
     Creates a domain with dimension x*y*z centered at the origin.
 */
@@ -39,6 +39,15 @@ regions:
     Stochastic families can be assigned to theses layers (see stochastic
     shape family section) 
 */   
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
 
 
 removeFracturesLessThan: 0
@@ -165,7 +174,7 @@ seed: 2
     Enter 0 for time based seed.
 */        
 
-domainSizeIncrease: {10,5,5} 
+domainSizeIncrease: {5,5,5} 
 /*  Size increase for inserting fracture centers outside the domain.
     Fracture will be truncated based on domainSize above. 
     Increases the entire width by this ammount. So, {1,1,1} will increase
@@ -344,7 +353,7 @@ eLogMean: {4}
 esd: {1} 
 //  Standard deviation of the underlying normal distribution
 
-eLogMin: {1}
+eLogMin: {2}
 //  Minimum radius
 
 eLogMax: {15}
@@ -496,10 +505,10 @@ rLogMean: {1.38, 2.08}
 rsd: {0.06, 0.06}     
 //  Standard deviation of the underlying normal distribution
                       
-rLogMin: {1, 1}
+rLogMin: {2, 2}
 //  Minimum radius
 
-rLogMax: {10.0, 20}   
+rLogMax: {20.0, 20}   
 //  Maximum radius                 
 
 

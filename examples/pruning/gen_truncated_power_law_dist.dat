@@ -1,5 +1,5 @@
 //==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+//General Options & Fracture Network Parameters: 
 
 stopCondition: 1
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -54,6 +54,14 @@ regions:
     Stochastic families can be assigned to theses layers (see stochastic
     shape family section) 
 */   
+
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
 
 
 

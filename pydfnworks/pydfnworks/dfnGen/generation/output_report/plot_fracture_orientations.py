@@ -57,7 +57,7 @@ def convert_to_trend_and_plunge(normal_vectors):
 
 
 def plot_fracture_orientations(params, families, fractures):
-    """ Creates Stereonets and Rose Diagrams for Fractures by family and the entire network
+    """ Creates Stereonets and Rose Diagrams for Fractures by family and the entire network. mplstereonet provides lower-hemisphere equal-area and equal-angle sterenotes for matplotlib. 
 
     Parameters
     ------------
@@ -148,7 +148,7 @@ def plot_fracture_orientations(params, families, fractures):
 
     trends, plunges = convert_to_trend_and_plunge(normal_vectors)
     ax1.density_contourf(plunges, trends, measurement='lines', cmap='Greys')
-    ax1.set_title('Density contour of trends and plunges', y=1.10, fontsize=24)
+    ax1.set_title('Density contour of trends and plunges (lower-hemisphere)', y=1.10, fontsize=24)
     #ax1.legend(loc="lower left", fontsize=14)
 
     # plot all families

@@ -1,0 +1,1 @@
+python run_wells.py -name DUMMY/dfnworks-main/examples/well_example/example -input well_run_file.txt -ncpu 8 

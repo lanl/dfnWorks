@@ -1,4 +1,4 @@
-# Sept 12, 2018
+# 6, April, 2021
 # Matthew Sweeney, Satish Karra, Jeffrey Hyman (LANL)
 #================================================
 
@@ -9,7 +9,9 @@ SIMULATION
       MODE RICHARDS
     /
     SUBSURFACE_TRANSPORT transport
-      GLOBAL_IMPLICIT
+      MODE GIRT
+      OPTIONS
+      /
     /
   /
 #  CHECKPOINT
@@ -17,6 +19,7 @@ SIMULATION
 #  /
   RESTART dfn_explicit-restart.h5 0.
 END
+
 SUBSURFACE
 
 
@@ -31,13 +34,16 @@ CHEMISTRY
 END
 #=========================== discretization ===================================
 GRID
-  TYPE unstructured_explicit full_mesh.uge 
+  TYPE unstructured_explicit full_mesh_vol_area.uge
   GRAVITY 0.d0 0.d0 0.d0
 END
 
-NEWTON_SOLVER TRANSPORT
-  ITOL 1.d-8
+NUMERICAL_METHODS TRANSPORT
+  NEWTON_SOLVER 
+    ITOL 1.d-8
+  END
 END
+
 
 #=========================== fluid properties =================================
 FLUID_PROPERTY

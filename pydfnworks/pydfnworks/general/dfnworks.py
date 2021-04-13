@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.3"
+__version__ = "2.5"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -43,14 +43,14 @@ class DFNWORKS(Frozen):
     # dfnGen functions
     import pydfnworks.dfnGen
 
-    from pydfnworks.dfnGen.generation.gen_input import check_input
+    from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
 
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, inp2vtk_python
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
@@ -109,7 +109,6 @@ class DFNWORKS(Frozen):
 
         self.dfnGen_file = dfnGen_file
         self.local_dfnGen_file = ntpath.basename(self.dfnGen_file)
-
 
         self.output_file = ntpath.basename(self.dfnGen_file)
 
@@ -225,6 +224,9 @@ def create_dfn():
     -----
     None
     '''
+    from pydfnworks import define_paths
+    
+    define_paths()
 
     options = commandline_options()
     print("Command Line Inputs:")
@@ -245,23 +247,24 @@ def create_dfn():
         print("--> Reading Input from " + options.input_file)
 
     with open(options.input_file, "r") as f:
-        for line in f.readlines():
+        for i,line in enumerate(f.readlines()):
             line = line.rstrip('\n')
             line = line.split()
-            if "dfnGen" in line:
-                DFN.dfnGen_file = line[1]
-                print('--> dfnGen input file: ', DFN.dfnGen_file)
-                DFN.local_dfnGen_file = line[1].split('/')[-1]
-            elif "dfnFlow" in line:
-                DFN.dfnFlow_file = line[1]
-                print('--> dfnFlow input file: ', DFN.dfnFlow_file)
-                DFN.local_dfnFlow_file = line[1].split('/')[-1]
-            elif "dfnTrans" in line:
-                DFN.dfnTrans_file = line[1]
-                print('--> dfnTrans input file: ', DFN.dfnTrans_file)
-                DFN.local_dfnTrans_file = line[1].split('/')[-1]
-            else:
-                error = "ERROR Reading Input File\nUnknown line: %s\n" % line
+            try:
+                if "dfnGen" in line:
+                    DFN.dfnGen_file = line[1]
+                    print('--> dfnGen input file: ', DFN.dfnGen_file)
+                    DFN.local_dfnGen_file = line[1].split('/')[-1]
+                elif "dfnFlow" in line:
+                    DFN.dfnFlow_file = line[1]
+                    print('--> dfnFlow input file: ', DFN.dfnFlow_file)
+                    DFN.local_dfnFlow_file = line[1].split('/')[-1]
+                elif "dfnTrans" in line:
+                    DFN.dfnTrans_file = line[1]
+                    print('--> dfnTrans input file: ', DFN.dfnTrans_file)
+                    DFN.local_dfnTrans_file = line[1].split('/')[-1]
+            except:
+                error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error)
                 sys.exit(1)
 

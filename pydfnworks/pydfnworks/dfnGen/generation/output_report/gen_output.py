@@ -1,5 +1,9 @@
 """
-Main driver for dfnGen output report
+  :filename: gen_output.py
+  :synopsis: Main driver for dfnGen output report
+  :version: 1.0
+  :maintainer: Jeffrey Hyman 
+  :moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
 """
 
 import os
@@ -15,6 +19,7 @@ from pydfnworks.dfnGen.generation.output_report.plot_fracture_orientations impor
 from pydfnworks.dfnGen.generation.output_report.plot_fracture_radii import plot_fracture_radii
 from pydfnworks.dfnGen.generation.output_report.plot_fracture_centers import plot_fracture_centers
 from pydfnworks.dfnGen.generation.output_report.plot_fram_information import plot_fram_information
+from pydfnworks.dfnGen.generation.output_report.plot_intersection_lengths import plot_intersection_lengths
 from pydfnworks.dfnGen.generation.output_report.make_pdf import make_pdf
 
 
@@ -98,7 +103,7 @@ def output_report(self,
         plot_fracture_radii(params, families, fractures)
         plot_fracture_orientations(params, families, fractures)
         plot_fram_information(params)
-        # Combine plots into a pdf
+        # # Combine plots into a pdf
         make_pdf(params, families, fractures)
         print(
             f"--> Output report is written into {self.local_jobname}_output_report.pdf\n"

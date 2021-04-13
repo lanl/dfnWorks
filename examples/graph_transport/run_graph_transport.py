@@ -1,36 +1,26 @@
 """
-.. file:: run_dfnworks.py
-   :synopsis: run file for dfnworks 
+.. file:: run_graph_transport.py
+   :synopsis: run file for dfnWorks 
    :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
-.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+   :maintainer: Jeffrey Hyman, Carl Gable
+.. moduleauthor:: Shriram Srinivasan <shrirams@lanl.gov>
 
 """
 
-import os, sys
-from time import time
-from pydfnworks import * 
-import subprocess
 
-define_paths()
-main_time = time()
+from pydfnworks import * 
+
 DFN = create_dfn()
 
 DFN.make_working_directory()
 DFN.check_input()
 DFN.create_network()
-#DFN.output_report()
-#DFN.mesh_network()
+DFN.mesh_network(visual_mode=True)
 
-G = DFN.run_graph_flow("left","right",2*10**6,10**6)
-DFN.run_graph_transport(G,10**3,"graph_partime.dat","graph_frac_sequence.dat")
+pressure_in = 2*10**6
+pressure_out = 10**6
+G = DFN.run_graph_flow("left","right",pressure_in,pressure_out)
 
-## Stuff for graph transport
+number_of_particles = 10**4
 
-
-main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print("*"*80)
-print(DFN.jobname+' complete')
-print("Thank you for using dfnWorks")
-print("*"*80)
+DFN.run_graph_transport(G,number_of_particles,"graph_partime.dat","graph_frac_sequence.dat")

@@ -58,6 +58,16 @@ regions:
 */   
 
 
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
+
+
 h: 0.050
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
@@ -222,7 +232,7 @@ eAngleOption: 0     /* All angles for ellipses:
                        0 - degrees
                        0 - Radians (Must use numerical value for PI) */
                         
-etheta: {-45, 45,} /*Ellipse fracture orientation.
+etheta: {-45, 45} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
 ephi: {0,0}   /* Ellipse fracture orientation.

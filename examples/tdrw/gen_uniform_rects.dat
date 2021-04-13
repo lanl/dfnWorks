@@ -8,7 +8,7 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 500
+nPoly: 1250
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
@@ -20,22 +20,38 @@ domainSize: {10,5,5}
     Creates a domain with dimension x*y*z centered at the origin.
 */
 
-numOfLayers: 0    
-//  Number of layers
 
-layers:
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
+
+numOfLayers: 0    //number of layers
+layers: 
 {}
 
+/*  Layers need to be listed line by line
+    Format: {minZ, maxZ}
+    
+    The first layer listed is layer 1, the second is layer 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
 
-numOfRegions: 0 // Number of regions
+
+numOfRegions: 0
 regions: 
-{}
 
 /*  Regions need to be listed line by line
     Format: {minX, maxX, minY, maxY, minZ, maxZ}
     
     The first region listed is region 1, the second is region 2, etc
-    Stochastic families can be assigned to theses layers (see stochastic
+    Stochastic families can be assigned to theses region (see stochastic
     shape family section) 
 */   
 
@@ -96,7 +112,7 @@ outputAllRadii: 0
     Outputs all fractures which were generated during 
     DFN generation (Accepted + Rejected).
         0: Do not output all radii file.
-        1: Include file of all raddii, acepted + rejected fractures,
+        1: Include file of all raddii, accepted + rejected fractures,
            in output files (radii_All.dat).
 */
 
@@ -159,7 +175,7 @@ visualizationMode: 0
             modeling of flow and transport is possible. 
 */ 
 
-seed: 2185506701 
+seed: 1 
 /*  Seed for random generator. 
     Enter 0 for time based seed.
 */        
@@ -527,7 +543,7 @@ rExpMax: {125.0, 125.0, 125.0}
 /*===========================================================================*/
 /* Rectangle Constant Size of rectangles (edistr = 4)                        */
 /*===========================================================================*/
-rconst: {2,2}  
+rconst: {1,1}  
 //  Constant radius, defined per family.
                
 

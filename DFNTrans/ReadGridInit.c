@@ -1044,7 +1044,8 @@ struct inpfile Control_File(char fileobject[], int ctr)
 /////////////////////////////////////////////////////////////////////////////
 struct inpfile Control_File_Optional(char fileobject[], int ctr)
 /*! The function reads control file with input parameters to dfnTrans;
- returns the file name and/or input parameter value. This function is called for the optional parameters only. If the parameter is not defined in the control file, the default value is used.  */
+ returns the file name and/or input parameter value. This function is called for the optional parameters only.
+ If the parameter is not defined in the control file, the default value is used.  */
 {
     FILE *cf = OpenFile(controlfile, "r");
     struct inpfile inputfile;

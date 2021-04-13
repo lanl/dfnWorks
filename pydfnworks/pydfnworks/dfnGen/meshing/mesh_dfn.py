@@ -83,7 +83,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
             sys.stderr.write(error)
             sys.exit(1)
 
-        mh.create_mesh_links(self.path)
+        self.create_mesh_links(self.path)
         num_poly, h, params_visual_mode, dudded_points, domain = mh.parse_params_file(
         )
         if visual_mode == None:

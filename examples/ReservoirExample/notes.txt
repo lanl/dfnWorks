@@ -1,1 +1,0 @@
-python run_explicit_RM.py -name DUMMY/dfnworks-main/examples/RM_example_output -input RM_run_files.txt  -ncpu 16 

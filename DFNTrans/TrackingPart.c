@@ -6,8 +6,9 @@
 #include "FuncDef.h"
 #include <unistd.h>
 #include <time.h>
-#include<sys/stat.h>
+#include <sys/stat.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 struct inpfile {
     char filename[120];
@@ -27,9 +28,9 @@ struct lagrangian { /*! data structure of Lagrangian variables */
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT = 0, all_out = 0;
 unsigned int np, t, nodeID = 0, avs_o = 0, traj_o = 0, curv_o = 0, no_out = 0, tdrw = 0, mixing_rule = 1;
-unsigned int marfa = 0, plumec = 0, disp_o = 0, timecounter = 0, frac_o = 0, tfile = 0, tdrw_o = 0;
-double tdrw_porosity = 0.0, tdrw_diffcoeff = 0.0, t_adv0 = 0.0, t_adv = 0.0, timediff = 0.0;
-struct intcoef { /*! Interpolation coefficients: barycentric interpolation is used to define instanteneous particle's velocity from Darcy velocities defined on triangular cell vertices.*/
+unsigned int marfa = 0, plumec = 0, disp_o = 0, timecounter = 0, frac_o = 0, tfile = 0, tdrw_o = 0, tdrw_limited = 0;
+double tdrw_porosity = 0.0, tdrw_diffcoeff = 0.0, t_adv0 = 0.0, t_adv = 0.0, timediff = 0.0; //, tdrw_lambda = 0.0;
+struct intcoef { /*! Interpolation coefficients: barycentric interpolation is used to define instantaneous particle's velocity from Darcy velocities defined on triangular cell vertices.*/
     double weights[3];
 };
 
@@ -37,7 +38,7 @@ struct posit3d {
     double cord3[3];
 };
 
-struct tempout  /*! strucuture of the particle data, saved temporary for output purpose */
+struct tempout  /*! structure of the particle data, saved temporary for output purpose */
 
 {
     unsigned int times; // count of the time steps
@@ -110,9 +111,9 @@ void ParticleTrack ()
     
     if (res == 0) {
         mixing_rule = 0;
-        printf("Fracture Intersection Rule: Streamline Routing \n");
+        printf("\nFracture Intersection Rule: Streamline Routing \n");
     } else {
-        printf("Fracture Intersection Rule: Complete Mixing \n");
+        printf("\nFracture Intersection Rule: Complete Mixing \n");
     }
     
     // Output according to trajectory curvature (not every time step)
@@ -196,11 +197,25 @@ void ParticleTrack ()
         res = strncmp(inputfile.filename, "yes", 3);
         
         if (res == 0) {
+            printf("\nRunning with Time Domain Random Walk\n");
             tdrw = 1;
             inputfile = Control_Param("tdrw_porosity:", 14);
             tdrw_porosity = inputfile.param;
             inputfile = Control_Param("tdrw_diffcoeff:", 15);
             tdrw_diffcoeff = inputfile.param;
+            // inputfile = Control_File_Optional("tdrw_rate_limited:", 5);
+            // res = strncmp(inputfile.filename, "yes", 3);
+            
+            // if (res == 0) {
+            //     tdrw_limited = true;
+            //     printf("--> Running with Rate Limited TDRW\n");
+            //     inputfile = Control_Param("tdrw_lambda:", 14);
+            //     tdrw_lambda = inputfile.param;
+            //     printf("--> Rate Limited Distance: %0.2f m\n\n", tdrw_lambda);
+            // }
+            
+            printf("--> Matrix Porosity: %0.2f\n", tdrw_porosity );
+            printf("--> Matrix Diffusivity: %0.2e m^2/s\n\n", tdrw_diffcoeff);
             tdrw_diffcoeff = tdrw_diffcoeff * timeunit;
         }
     }
@@ -455,7 +470,7 @@ void ParticleTrack ()
             // AVS output (should be optional)
             sprintf(filename, "%s/part3D_%d.inp", path, curr_n);
             wpt = OpenFile(filename, "w");
-            fprintf(wpt, "%10d    %10d    %10d    %10d    %10d\n", timesteps, 0, 0, 0, 0);
+            fprintf(wpt, "%10lu    %10d    %10d    %10d    %10d\n", timesteps, 0, 0, 0, 0);
             //open a separate file for attributes, will be attached to the original AVS later
             sprintf(filename, "%s/part3D_%d.att", path, curr_n);
             wpt_att = OpenFile(filename, "w");
@@ -490,13 +505,13 @@ void ParticleTrack ()
         // define capacity for temp data used for outputs
         int capacity = (int) timesteps / 10;
         
-        if (disp_o = !1) {
+        if (disp_o = ! 1) {
             time_d = 1;
         }
         
         double part_squares[time_d][3];
         
-        if (disp_o = !1) {
+        if (disp_o = ! 1) {
             for (ic = 0; ic < time_d; ic++) {
                 part_squares[ic][0] = 0.0;
                 part_squares[ic][1] = 0.0;
@@ -1050,9 +1065,9 @@ void ParticleTrack ()
     } //end of particle loop
     
     if (all_out == 0) {
-        printf("\n  Number of particles that went out through flow-out boundary: %d \n", curr_n - 1);
+        printf("\n  Number of particles that went out through out-flow boundary: %d \n", curr_n - 1);
     } else {
-        printf("\n  Number of particles completed %d, number of particles that went out through flow-out boundary: %d \n", curr_n - 1, curr_n - 1 - curr_o);
+        printf("\n  Number of particles completed %d, number of particles that went out through out-flow boundary: %d \n", curr_n - 1, curr_n - 1 - curr_o);
     }
     
     fclose(tp);
@@ -1411,7 +1426,7 @@ void CorrectorStep()
 void NeighborCells (int k)
 /*! Function checks neighboring cells to find a particle */
 {
-    int i = 0, j, inscell;
+    int i = 0, j, inscell = 0;
     unsigned int nc;
     
     do {
@@ -2752,12 +2767,26 @@ struct lagrangian CalculateLagrangian(double xcurrent, double ycurrent, double z
 ////////////////////////////////////////////////////////////////////////////
 
 double TimeDomainRW (double time_advect)
-/*! Time Domain Random Walk (TDRW) procedure. Returns a diffusion time of particle per racture. Called at each intersection. */
+/*! Time Domain Random Walk (TDRW) procedure to account for matrix diffusion.
+Returns a diffusion time of particle per fracture.
+This function is called at each intersection.
+
+Details on the method can be found in
+
+Hyman, Jeffrey D., Harihar Rajaram, Shriram Srinivasan, Nataliia Makedonska,
+Satish Karra, Hari Viswanathan, and Gowri Srinivasan. "Matrix Diffusion in Fractured Media:
+New Insights Into Power Law Scaling of Breakthrough Curves."
+Geophysical Research Letters 46, no. 23 (2019): 13785-13795.
+
+*/
 {
     double randomnumber = 0.0;
-    randomnumber = drand48();
     double term_a = 0;
     double b = 0;
+    double inverse_erfc = 0.0;
+    double z;
+    double timediff = 0.0;
+    unsigned int cnt = 0.0;
     
     if (particle[np].cell != 0) {
         if ((node[cell[particle[np].cell - 1].node_ind[0] - 1].typeN != 2) && (node[cell[particle[np].cell - 1].node_ind[0] - 1].typeN != 12)) {
@@ -2774,13 +2803,22 @@ double TimeDomainRW (double time_advect)
     }
     
     term_a = (tdrw_porosity * sqrt(tdrw_diffcoeff)) / b;
-    double inverse_erfc = 0.0;
-    double z;
+    randomnumber = drand48();
     z = 1.0 - randomnumber;
+    // Power expansion of inverse ERFC
     inverse_erfc = 0.5 * sqrt(pi) * (z + (pi / 12) * pow(z, 3) + ((7 * pow(pi, 2)) / 480) * pow(z, 5) + ((127 * pow(pi, 3)) / 40320) * pow(z, 7) + ((4369 * pow(pi, 4)) / 5806080) * pow(z, 9) + ((34807 * pow(pi, 5)) / 182476800) * pow(z, 11));
-    double timediff = 0.0;
     timediff = pow(((term_a * time_advect) / inverse_erfc), 2);
-    //  printf("%lf %lf %5.12E %lf %lf %lf\n", z, tdrw_porosity, tdrw_diffcoeff,inverse_erfc, time_advect, b);
+    
+    /* If using rate-limited TDRW, check if the particle diffuses too far into the matrix.
+    If it does, then limit the time to maximum value.
+    */
+    // if (tdrw_limited == 1) {
+    //     double xdiff = sqrt(2 * tdrw_diffcoeff * timediff);
+        
+    //     if (xdiff > tdrw_lambda) {
+    //         timediff = 0.5 * (pow(tdrw_lambda, 2) / tdrw_diffcoeff);
+    //     }
+    // }
+    
     return timediff;
 }
-/////////////////////////////////////////////////////////////////////////////

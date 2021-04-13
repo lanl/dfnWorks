@@ -8,9 +8,10 @@
 
 from fpdf import FPDF
 
-# NEED TO BE SET TO /Users/jhyman/src
-dfnworks_image_black = "DUMMY/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "DUMMY/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+
+dfnworks_image_black = "DUMMY/dfnworks-main/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
+lanl_image = "DUMMY/dfnworks-main/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+
 
 class PDF(FPDF):
     global name
@@ -190,14 +191,18 @@ def create_family_text(family):
         text += f'\t - lambda: {family["Lambda"]}\n'
     if dist != "Constant":
         text += f'\t - Min. Radius: {family["Minimum Radius (m)"]} m, Max. Radius: {family["Maximum Radius (m)"]} m\n'
-    text += f'Orientation - Kappa: {family["Kappa"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+    if "Theta-deg" in keys:
+        text += f'Orientation - Kappa: {family["Kappa"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+    elif "Trend-deg" in keys:
+        text += f'Orientation - Kappa: {family["Kappa"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
+    elif "Dip-deg" in keys:
+        text += f'Orientation - Kappa: {family["Kappa"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
 
     if "P32 (Fracture Intensity) Target" in keys:
         text += f'Target P32: {family["P32 (Fracture Intensity) Target"]}, Final P32: {family["Post-Iso Fracture Intensity (P32)"]}'
     else:
         text += f'Final P32: {family["Post-Iso Fracture Intensity (P32)"]}\n'
     return text
-
 
 def add_family_page(params, family, i, pdf):
     """ Add page about fracture family. 

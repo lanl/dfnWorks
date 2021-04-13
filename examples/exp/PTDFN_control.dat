@@ -56,7 +56,7 @@ out_fract: no
 out_filetemp: no
 
 /************* output directories *************************************/
-out_dir: traj /* path and name of directory where all the particle 
+out_dir: dfnTrans_output /* path and name of directory where all the particle 
                      tracking results will be written*/
 
 
@@ -65,12 +65,12 @@ out_path: trajectories /*name of directory where all particle
 
 /* name of resultant file (in out_dir path), which contains total travel time and 
 				final positions of particles */
-out_time: partime
+out_time: partime.dat
 
 /*************** Intersection Mixing Rule **********************************/
 /****streamline_routing: if yes - streamline routing is the selected subgrid process
      otherwise the complete mixing rule is selected ****/
-streamline_routing: yes
+streamline_routing: no
 
 /**************** PARTICLES INITIAL POSITIONS ******************************/
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
@@ -81,7 +81,7 @@ init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
      each other on all over in-flow boundary edges ***********************/  
-init_eqd: yes  //maximum number of particles that user expects on one boundary edge
+init_eqd: no  //maximum number of particles that user expects on one boundary edge
 init_npart: 1000
 
 /*** all particles start from the same region at in-flow boundary, in a range  
@@ -101,21 +101,9 @@ init_random: no
 // total number of particles
 in_randpart: 100    
 
-/**** all particles are seed randomly over matrix, 
-     they will start travel in DFN from the node/cell that is closest to
-     their initial position in rock matrix ***************************/
-      
-init_matrix: no
-// to obtain these files, run python script RandomPositGener.py
-inm_coord: ParticleInitCoordR.dat
-inm_nodeID: ClosestNodeR.inp
-inm_porosity: 0.02
-inm_diffcoeff: 1.0e-12
-
 /*****  particles positions according to in-flow flux weight *********/
-init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
+init_fluxw: yes //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
 init_totalnumber: 10000
-
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 
@@ -137,7 +125,7 @@ tdrw_porosity: 0.02
 tdrw_diffcoeff: 1.0e-5
 
 /********************  TIME ********************************************/
-timesteps: 2000000
+timesteps: 1000000
 //units of time (years, days, hours, minutes) 
 time_units: seconds 
 
@@ -146,7 +134,6 @@ time_units: seconds
 flux_weight: yes
 /* random generator seed */
 seed: 337799
-
 
 /*********************  Control Plane/Cylinder Output ********************/
 /*** virtual Control planes will be build in the direction of flow. 

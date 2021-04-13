@@ -8,7 +8,7 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
-nPoly: 50
+nPoly: 80
 /*  Used when stopCondition = 0 (nPoly option).
 
     The total number of fractures you would
@@ -20,11 +20,29 @@ domainSize: {10,10,10}
     Creates a domain with dimension x*y*z centered at the origin.
 */
 
-numOfLayers: 0    
-//  Number of layers
+
+orientationOption: 1
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
+
+numOfLayers: 0     //  Number of layers
 
 layers:
 {}
+
+/*  Layers need to be listed line by line
+    Format: {minZ, maxZ}
+    
+    The first layer listed is layer 1, the second is layer 2, etc
+    Stochastic families can be assigned to theses layers (see stochastic
+    shape family section) 
+*/   
+
 
 numOfRegions: 0 // Number of regions
 regions: 
@@ -57,7 +75,7 @@ removeFracturesLessThan: 0
     
     The first layer listed is layer 1, the second is layer 2, etc
     Stochastic families can be assigned to theses layers (see stochastic
-    shape familiy section) 
+    shape family section) 
 */   
 
 h: 0.1
@@ -126,11 +144,10 @@ tripleIntersections: 0
         1 - On  (Accept)  
 */
 
-
-forceLargeFractures: 1
+forceLargeFractures: 0
 /*  Inserts the largest possible fracture for each defined fracture family, 
-    defined by the user-defined maxium radius
-        0 - Off (Do not force insertion of larest fractures)
+    defined by the user-defined maximum radius
+        0 - Off (Do not force insertion of largest fractures)
         1 - On  (Force insertion of largest fractures)
 */
 
@@ -144,8 +161,8 @@ printRejectReasons: 0
 disableFram: 0
 /* This option disables the FRAM algorithm. There will be no 
    fracture rejections or fine mesh. Defaults visualizationMode to 0.
-        0 - Disable FRAM
-        1 - Enable  FRAM
+        0 - FRAM is on
+        1 - FRAM is off
 */
 
 visualizationMode: 0
@@ -177,7 +194,7 @@ keepOnlyLargestCluster: 0
     cluster which connects at least any two sides of the domain.
 */
 
-keepIsolatedFractures: 1
+keepIsolatedFractures: 0
 /*  0 - Remove any isolated fracture (not clusters)
     1 - Keep all fractures in the domain
 */
@@ -218,7 +235,7 @@ rejectsPerFracture: 350
 /*  Shape and Probability Parameters                                         */
 /*===========================================================================*/
 
-famProb: {0.5, 0.5} 
+famProb: {0.25, 0.25, 0.5} 
 
 
 /*  Each element is the probability of chosing a fracture from 
@@ -399,19 +416,19 @@ ealpha: {2.4}
 /*============================================================================*/
 /*============================================================================*/
 
-nFamRect: 2
+nFamRect: 3
 /*  Number of rectangular families defined below.
     Having this option = 0 will ignore all rectangular family variables.
 */
 
-rLayer: {0,0}
+rLayer: {0,0,0}
 /*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
     Layers numbered > 0 corresponds to layers defined above (see 'Layers:').
     1 corresponds to the first layer listed, 2 is the next layer listed, etc 
 */
 
-rRegion: {0,0}
+rRegion: {0,0,0}
     /* Defines which domain the family belongs to.
      Region 0 is the entire domain.
      Regions numbered > 0 correspond to layers defined above
@@ -419,7 +436,7 @@ rRegion: {0,0}
 
 
 
-rdistr: {4,4}   
+rdistr: {4,4,4}   
 /*  Mandatory parameter if using statistically generated rectangles.
     Rectangle statistical distribution options:
         1 - log-normal distribution
@@ -428,7 +445,7 @@ rdistr: {4,4}
         4 - constant 
 */
 
-rbetaDistribution: {1,1}  
+rbetaDistribution: {1,1,1}  
 /*  Beta is the rotation around the polygon's normal vector
         0: Uniform distribution [0, 2PI)
         1: Constant angle (specefied below by 'rbeta')
@@ -448,8 +465,8 @@ r_p32Targets: {.3,.3}
 //  Mandatory Parameters if using statistically generated rectangles         */
 /*===========================================================================*/
 
-raspect: {1,1}  
-//  Aspect ratio for stochasic rectangles.
+raspect: {1,1,1}  
+//  Aspect ratio for stochastic rectangles.
  
 rAngleOption: 1
 /*  All angles for rectangles are in: 
@@ -457,21 +474,21 @@ rAngleOption: 1
         0 - Radians (must be numerical value, cannot use "Pi") 
 */
  
-rtheta: {0,1.42}
+rplunge: {0, 90, 45}
 /*  Rectangle fracture orientation.
     The angle the normal vector makes with the z-axis 
 */
 
-rphi: {23.32, 26.81} 
+rtrend: {0, 35, 70} 
 /*  Rectangle fracture orientation.
     The angle the projection of the normal
     onto the x-y plane makes with the x-axis 
 */
       
-rbeta: {0,0}   
+rbeta: {0,0,0}   
 //  Rotation around the normal vector.
 
-rkappa:{1,1}   
+rkappa:{20,20,20}   
 /*  Parameter for the fisher distribnShaprutions. The 
     bigger, the more similar (less diverging) are the 
     rectangular familiy's normal vectors.
@@ -529,7 +546,7 @@ rExpMax: {125.0, 125.0, 125.0}
 /*===========================================================================*/
 /* Rectangle Constant Size of rectangles (edistr = 4)                        */
 /*===========================================================================*/
-rconst: {2,2}  
+rconst: {2,2,2}  
 //  Constant radius, defined per family.
                
 

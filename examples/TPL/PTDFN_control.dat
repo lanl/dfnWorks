@@ -56,7 +56,7 @@ out_fract: no
 out_filetemp: no
 
 /************* output directories *************************************/
-out_dir: traj_SR /* path and name of directory where all the particle 
+out_dir: dfnTrans_output /* path and name of directory where all the particle 
                      tracking results will be written*/
 
 
@@ -65,7 +65,7 @@ out_path: trajectories /*name of directory where all particle
 
 /* name of resultant file (in out_dir path), which contains total travel time and 
 				final positions of particles */
-out_time: partime
+out_time: partime.dat
 
 /*************** Intersection Mixing Rule **********************************/
 /****streamline_routing: if yes - streamline routing is the selected subgrid process
@@ -101,21 +101,12 @@ init_random: no
 // total number of particles
 in_randpart: 100    
 
-/**** all particles are seed randomly over matrix, 
-     they will start travel in DFN from the node/cell that is closest to
-     their initial position in rock matrix ***************************/
-      
 init_matrix: no
-// to obtain these files, run python script RandomPositGener.py
-inm_coord: ParticleInitCoordR.dat
-inm_nodeID: ClosestNodeR.inp
-inm_porosity: 0.02
-inm_diffcoeff: 1.0e-12
 
-/*****  particles positions according to in-flow flux weight *********/
-init_fluxw: yes //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
-init_totalnumber: 10000
 
+/*****  particles positions distributed according to in-flow flux weight *********/
+init_fluxw: yes
+init_totalnumber: 10000 
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 

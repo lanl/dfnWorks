@@ -1,5 +1,5 @@
 /==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+// General Options & Fracture Network Parameters: 
 
 stopCondition: 0
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -18,9 +18,17 @@ nPoly: 3
             stoppingParameter = -largestSize  */
 
 
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
 outputAllRadii: 0  
 /* 0: Do not output all radii file.
-   1: Include file of all raddii (acepted+rejected fractures)
+   1: Include file of all raddii (accepted+rejected fractures)
       in output files.
 */
                       
@@ -30,35 +38,36 @@ domainSize: {1,1,1}
         Creates a domain with dimension x*y*z centered at the origin.*/
 
 numOfLayers: 0    //number of layers
-
-
 layers: 
-{-500,0}
-{0,500}
-
-
-numOfRegions: 0
-regions: 
-
+{}
 
 /*  Layers need to be listed line by line
     Format: {minZ, maxZ}
     
     The first layer listed is layer 1, the second is layer 2, etc
     Stochastic families can be assigned to theses layers (see stochastic
-    shape familiy section) 
+    shape family section) 
 */   
 
+
+numOfRegions: 0
+regions: 
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses region (see stochastic
+    shape family section) 
+*/   
 
 h: 0.050
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
 
    
-//==========================================================================//
-/* Fracture Network Parameters:                                             */
 
-tripleIntersections: 1
+tripleIntersections: 0
 /* Options:     0: Off
                 1: On    */
 
@@ -124,6 +133,8 @@ rejectsPerFracture: 10  /*If fracture is rejected, it will be re-translated to a
                          (Set to 1 to ignore this feature)    */
 
 
+//==========================================================================//
+/* Fracture Network Parameters:                                             */
 
 
 
@@ -209,7 +220,7 @@ eAngleOption: 0     /* All angles for ellipses:
                        1 - degrees
                        0 - radians (Must use numerical value for PI) */
                         
-etheta: {-45, 45,} /*Ellipse fracture orientation.
+etheta: {-45, 45} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
 ephi: {0,0}   /* Ellipse fracture orientation.

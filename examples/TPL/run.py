@@ -1,30 +1,19 @@
 #"""
-#   :synopsis: run file for dfnworks 
+#   :synopsis: run file for TPL example 
 #   :version: 1.0
 #   :maintainer: Jeffrey Hyman
 #.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 #"""
 
-import os, sys
-from time import time
 from pydfnworks import * 
 
-
-define_paths()
-main_time = time()
 DFN = create_dfn()
-# General Work Flow
-DFN.dfn_gen(output=False)
+
+DFN.make_working_directory()
+DFN.check_input()
+DFN.create_network()
+DFN.output_report()
+DFN.mesh_network(coarse_factor=10)
+
 DFN.dfn_flow()
 DFN.dfn_trans()
-
-main_elapsed = time() - main_time
-timing = 'Time Required: %0.2f Minutes'%(main_elapsed/60.0)
-print(timing)
-DFN.dump_time("Total Time: ",main_elapsed) 
-DFN.print_run_time()	
-print("*"*80)
-print(DFN.jobname+' complete')
-print("Thank you for using dfnWorks")
-print("*"*80)
-

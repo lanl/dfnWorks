@@ -196,7 +196,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     try:
         mh.run_lagrit_script(
             f"mesh_poly_{fracture_id}.lgi",
-            output_file=f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out",
+            output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
             quiet=True)
     except:
         print(
@@ -409,7 +409,7 @@ def merge_worker(job):
     tic = timeit.default_timer()
 
     if mh.run_lagrit_script(f"lagrit_scripts/merge_poly_part_{job}.lgi",
-                            f"lagrit_logs/log_merge_poly_part{job}.out",
+                            f"lagrit_logs/merge_poly_part{job}",
                             quiet=True):
         print(f"Error {job} failed")
         return True
@@ -476,7 +476,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     tic = timeit.default_timer()
 
     mh.run_lagrit_script('lagrit_scripts/merge_rmpts.lgi',
-                         'lagrit_logs/log_merge_all.out',
+                         'lagrit_logs/log_merge_all',
                          quiet=True)
 
     elapsed = timeit.default_timer() - tic

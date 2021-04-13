@@ -115,6 +115,11 @@ unsigned int seed;
     the domain by adding .5 to the +x, and subbtracting .5 to the -x, etc*/
 float domainSizeIncrease[3];
 
+/*! Selection of orientation Option
+    0 - spherical coordinates
+    1 - trend / plunge
+    2 - dip / strike .*/
+int orientationOption;
 
 /*! Number of rectangular families defined below.
     Having this option = 0 will ignore all rectangular family variables.*/
@@ -167,16 +172,26 @@ unsigned int *enumPoints;
         1 - radians (Must use numerical value for PI)*/
 bool  eAngleOption;
 
-/*! Ellipse fracture orientation.
-    The angle the normal vector makes with the z-axis
-    Ellipse family parameter.*/
-float *etheta;
+/*! First Ellipse fracture orientation.
+    If orientationOption = 0 (Spherical coordinates)
+    This The angle the normal vector makes with the z-axis
+    If  orientationOption = 1
+    This is the trend of Ellipse fracture orientation.
+    If  orientationOption = 2
+    This is the mean dip of Ellipse fracture orientation.
+    */
+float *eAngleOne;
 
-/*! Ellipse fracture orientation.
+/*! Second Ellipse fracture orientation.
+    If orientationOption = 0 (Spherical coordinates)
     The angle the projection of the normal
     onto the x-y plane makes with the x-axis
-    Ellipse family parameter.*/
-float *ephi;
+    If  orientationOption = 1
+    This is the plunge of Ellipse fracture orientation.
+    If  orientationOption = 2
+    This is the mean strike of Ellipse fracture orientation.*/
+float *eAngleTwo;
+
 
 /*! Rotation around the fractures' normal vector.
     Ellipse family parameter.*/
@@ -264,21 +279,33 @@ bool rAngleOption;
         distributions will still be used while generating the DFN.*/
 float removeFracturesLessThan;
 
-/*! Rectangle fracture orientation.
-    The angle the normal vector makes with the z-axis */
-float *rtheta;
 
-/*! Rectangle fracture orientation.
+/*! First Rectangle fracture orientation.
+    If orientationOption = 0 (Spherical coordinates)
+    This The angle the normal vector makes with the z-axis
+    If orientationOption = 1
+    This is the trend of Rectangle fracture orientation.
+    If orientationOption = 2
+    This is the mean dip of Rectangle fracture orientation.
+    */
+float *rAngleOne;
+
+/*! Second Rectangle fracture orientation.
+    If orientationOption = 0 (Spherical coordinates)
     The angle the projection of the normal
-    onto the x-y plane makes with the x-axis*/
-float *rphi;
+    onto the x-y plane makes with the x-axis
+    If  orientationOption = 1
+    This is the plunge of Rectangle fracture orientation.
+    If orientationOption = 2
+    This is the mean strike of Rectangle fracture orientation. */
+float *rAngleTwo;
 
 /*! Rotation around the normal vector.*/
 float *rbeta;
 
 /*! Parameter for the fisher distribnShaprutions. The
     bigger, the more similar (less diverging) are the
-    rectangle familiy's normal vectors.*/
+    rectangle family's normal vectors.*/
 float *rkappa;
 
 /*! Log-normal rectangle parameter. Standard deviation of the underlying normal distribution*/
@@ -330,8 +357,21 @@ float *ueaspect;
 /*! User ellipses translation array.*/
 double *uetranslation;
 
+/*! User Orientation Option for ellipses
+    0 = normal vector
+    1 = trend / plunge
+    2 = dip / strike
+*/
+int userEllOrientationOption;
+
 /*! User ellipses normal vector array. */
 double *uenormal;
+
+/*! User ellipses trend and plunge array.*/
+double *ueTrendPlunge;
+
+/*! User ellipses dip and strike array.*/
+double *ueDipStrike;
 
 /*! User ellipses number of points per ellipse array. */
 unsigned int *uenumPoints;
@@ -385,8 +425,21 @@ float *uraspect;
 /*! User rectangles translation array. */
 double *urtranslation;
 
+/*! User Orientation Option for rectangles
+    0 = normal vector
+    1 = trend / plunge
+    2 = dip / strike
+    */
+int userRectOrientationOption;
+
 /*! User rectangles normal vector array.*/
 double *urnormal;
+
+/*! User rectangles trend and plunge array.*/
+double *urTrendPlunge;
+
+/*! User rectangles dip and strike array.*/
+double *urDipStrike;
 
 /*! Number of user rectangles defined by coordinates.*/
 unsigned int nRectByCoord;
@@ -623,6 +676,16 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> nFamEll;
     searchVar(inputFile, "removeFracturesLessThan:");
     inputFile >> removeFracturesLessThan;
+    searchVar(inputFile, "orientationOption:");
+    inputFile >> orientationOption;
+    
+    if (orientationOption == 0) {
+        std::cout << "Expecting Theta and phi for orientations\n";
+    } else if  (orientationOption == 1) {
+        std::cout << "Expecting Trend and Plunge for orientations\n";
+    } else if (orientationOption == 2) {
+        std::cout << "Expecting Dip and Strike (RHR) for orientations\n";
+    }
     
     if (nFamEll > 0 || nFamRect > 0) {
         searchVar(inputFile, "famProb:");
@@ -656,12 +719,30 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         getInputAry(inputFile, enumPoints, nFamEll);
         searchVar(inputFile, "eAngleOption:");
         inputFile >> eAngleOption;
-        searchVar(inputFile, "etheta:");
-        etheta = new float[nFamEll];
-        getInputAry(inputFile, etheta, nFamEll);
-        searchVar(inputFile, "ephi:");
-        ephi = new float[nFamEll];
-        getInputAry(inputFile, ephi, nFamEll);
+        
+        if (orientationOption == 0) {
+            searchVar(inputFile, "etheta:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "ephi:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        } else if (orientationOption == 1) {
+            searchVar(inputFile, "etrend:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "eplunge:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        } else if (orientationOption == 2) {
+            searchVar(inputFile, "edip:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "estrike:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        }
+        
         searchVar(inputFile, "ebeta:");
         ebeta = new float[nFamEll];
         getInputAry(inputFile, ebeta, nFamEll);
@@ -725,8 +806,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.distributionType = edistr[i];
         newShapeFam.numPoints = enumPoints[i];
         newShapeFam.aspectRatio = easpect[i];
-        newShapeFam.theta = etheta[i];
-        newShapeFam.phi = ephi[i];
+        newShapeFam.angleOne = eAngleOne[i];
+        newShapeFam.angleTwo = eAngleTwo[i];
         newShapeFam.kappa = ekappa[i];
         newShapeFam.angleOption = eAngleOption;
         newShapeFam.layer = eLayer[i];
@@ -786,8 +867,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] edistr;
         delete[] easpect;
         delete[] enumPoints;
-        delete[] etheta;
-        delete[] ephi;
+        delete[] eAngleOne;
+        delete[] eAngleTwo;
         delete[] ebeta;
         delete[] ekappa;
         delete[] eLogMean;
@@ -827,12 +908,30 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         getInputAry(inputFile, raspect, nFamRect);
         searchVar(inputFile, "rAngleOption:");
         inputFile >> rAngleOption;
-        searchVar(inputFile, "rtheta:");
-        rtheta = new float[nFamRect];
-        getInputAry(inputFile, rtheta, nFamRect);
-        searchVar(inputFile, "rphi:");
-        rphi = new float[nFamRect];
-        getInputAry(inputFile, rphi, nFamRect);
+        
+        if (orientationOption == 0) {
+            searchVar(inputFile, "rtheta:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rphi:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        } else if (orientationOption == 1) {
+            searchVar(inputFile, "rtrend:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rplunge:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        } else if (orientationOption == 2) {
+            searchVar(inputFile, "rdip:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rstrike:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        }
+        
         searchVar(inputFile, "rbeta:");
         rbeta = new float[nFamRect];
         getInputAry(inputFile, rbeta, nFamRect);
@@ -912,8 +1011,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.distributionType = rdistr[i];
         newShapeFam.numPoints = 4; // Rectangle
         newShapeFam.aspectRatio = raspect[i];
-        newShapeFam.theta = rtheta[i];
-        newShapeFam.phi = rphi[i];
+        newShapeFam.angleOne = rAngleOne[i];
+        newShapeFam.angleTwo = rAngleTwo[i];
         newShapeFam.kappa = rkappa[i];
         newShapeFam.angleOption = rAngleOption;
         newShapeFam.layer = rLayer[i];
@@ -971,8 +1070,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] rbetaDistribution;
         delete[] rdistr;
         delete[] raspect;
-        delete[] rtheta;
-        delete[] rphi;
+        delete[] rAngleOne;
+        delete[] rAngleTwo;
         delete[] rbeta;
         delete[] rkappa;
         delete[] rLogMean;
@@ -1020,9 +1119,58 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(uEllFile, "Translation:");
         uetranslation = new double[3 * nUserEll];
         get2dAry(uEllFile, uetranslation, nUserEll);
-        searchVar(uEllFile, "Normal:");
-        uenormal = new double[3 * nUserEll];
-        get2dAry(uEllFile, uenormal, nUserEll);
+        //
+        searchVar(uEllFile, "userOrientationOption:");
+        uEllFile >> userEllOrientationOption;
+        
+        if (userEllOrientationOption == 0) {
+            searchVar(uEllFile, "Normal:");
+            uenormal = new double[3 * nUserEll];
+            get2dAry(uEllFile, uenormal, nUserEll);
+        } else if (userEllOrientationOption == 1) {
+            searchVar(uEllFile, "Trend_Plunge:");
+            ueTrendPlunge = new double[2 * nUserEll];
+            get2dAry2(uEllFile, ueTrendPlunge, nUserEll);
+            uenormal = new double[3 * nUserEll];
+            // Convert Trend and Plunge into Dip and Strike
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserEll; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // ueTrendPlunge[index1] = Trend
+                // ueTrendPlunge[index1+1] = Plunge
+                double trend = ueTrendPlunge[index1] * temp;
+                double plunge = ueTrendPlunge[index1 + 1] * temp;
+                //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
+                uenormal[index2] = cos(trend) * cos(plunge);
+                uenormal[index2 + 1] = sin(trend) * cos(plunge);
+                uenormal[index2 + 2] = sin(plunge);
+            }
+        } else if (userEllOrientationOption == 2) {
+            searchVar(uEllFile, "Dip_Strike:");
+            ueDipStrike = new double[2 * nUserEll];
+            get2dAry2(uEllFile, ueDipStrike, nUserEll);
+            urnormal = new double[3 * nUserEll];
+            // Convert Trend and Plunge into Dip and Strike
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserEll; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // angleOne = Trend
+                // angleTwo = Plunge
+                double dip = ueDipStrike[index1] * temp;
+                double strike = ueDipStrike[index1 + 1] * temp;
+                //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
+                uenormal[index2] = sin(dip) * sin(strike);
+                uenormal[index2 + 1] = -sin(dip) * cos(strike);
+                uenormal[index2 + 2] = cos(dip);
+            }
+        }
+        
         searchVar(uEllFile, "Number_of_Vertices:");
         uenumPoints = new unsigned int[nUserEll];
         getElements(uEllFile, uenumPoints, nUserEll);
@@ -1055,9 +1203,62 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(uRectFile, "Translation:");
         urtranslation = new double[3 * nUserRect];
         get2dAry(uRectFile, urtranslation, nUserRect);
-        searchVar(uRectFile, "Normal:");
-        urnormal = new double[3 * nUserRect];
-        get2dAry(uRectFile, urnormal, nUserRect);
+        searchVar(uRectFile, "userOrientationOption:");
+        uRectFile >> userRectOrientationOption;
+        
+        // std::cout << "userRectOrientationOption: " << userRectOrientationOption << " \n";
+        if (userRectOrientationOption == 0) {
+            searchVar(uRectFile, "Normal:");
+            urnormal = new double[3 * nUserRect];
+            get2dAry(uRectFile, urnormal, nUserRect);
+        } else if (userRectOrientationOption == 1) {
+            searchVar(uRectFile, "Trend_Plunge:");
+            urTrendPlunge = new double[2 * nUserRect];
+            get2dAry2(uRectFile, urTrendPlunge, nUserRect);
+            urnormal = new double[3 * nUserRect];
+            double temp = M_PI / 180;
+            
+            // Convert Trend and Plunge into Dip and Strike
+            for (int i = 0; i < nUserRect; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // urTrendPlunge[index1] = Trend
+                // urTrendPlunge[index1+1] = Plunge
+                // convert to radians
+                double trend = urTrendPlunge[index1] * temp;
+                double plunge = urTrendPlunge[index1 + 1] * temp;
+                //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
+                //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
+                urnormal[index2] = cos(trend) * cos(plunge);
+                urnormal[index2 + 1] = sin(trend) * cos(plunge);
+                urnormal[index2 + 2] = sin(plunge);
+                //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
+            }
+        } else if (userRectOrientationOption == 2) {
+            searchVar(uRectFile, "Dip_Strike:");
+            urDipStrike = new double[2 * nUserRect];
+            get2dAry2(uRectFile, urDipStrike, nUserRect);
+            urnormal = new double[3 * nUserRect];
+            // Convert Dip and Strike into normal vectors
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserRect; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // dip and strike
+                // urDipStrike[index1] = dip
+                // urDipStrike[index1+1] = strike
+                // convert to radians
+                double dip = urDipStrike[index1] * temp;
+                double strike = urDipStrike[index1 + 1] * temp;
+                //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
+                urnormal[index2] = sin(dip) * sin(strike);
+                urnormal[index2 + 1] = -sin(dip) * cos(strike);
+                urnormal[index2 + 2] = cos(dip);
+            }
+        }
+        
         uRectFile.close();
     }
     
@@ -1178,8 +1379,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         if (shapeFamily[i].angleOption == 1 ) { // Convert deg to rad
             double temp = M_PI / 180;
             shapeFamily[i].beta *= temp;
-            shapeFamily[i].theta *= temp;
-            shapeFamily[i].phi *= temp;
+            shapeFamily[i].angleOne *= temp;
+            shapeFamily[i].angleTwo *= temp;
             shapeFamily[i].angleOption = 0; // Angles now in radians
         }
     }
@@ -1206,8 +1407,18 @@ void printInputVars() {
     printAry(enumPoints, "enumPoints", nFamEll);
     std::cout << "eAngleOption = " << eAngleOption << std::endl;
     printAry(easpect, "easpect", nFamEll);
-    printAry(etheta, "etheta", nFamEll);
-    printAry(ephi, "ephi", nFamEll);
+    
+    if (orientationOption == 0) {
+        printAry(eAngleOne, "etheta", nFamEll);
+        printAry(eAngleTwo, "ephi", nFamEll);
+    } else if (orientationOption == 1) {
+        printAry(eAngleOne, "etrend", nFamEll);
+        printAry(eAngleTwo, "eplunge", nFamEll);
+    } else if (orientationOption == 2) {
+        printAry(eAngleOne, "edip", nFamEll);
+        printAry(eAngleTwo, "estrike", nFamEll);
+    }
+    
     printAry(ebeta, "ebeta", nFamEll);
     printAry(ekappa, "ekappa", nFamEll);
     printAry(eLogMean, "eLogMean", nFamEll);
@@ -1220,8 +1431,18 @@ void printInputVars() {
     printAry(rdistr, "rdistr", nFamRect);
     printAry(raspect, "raspect", nFamRect);
     std::cout << "rAngleOption = " << rAngleOption << std::endl;
-    printAry(rtheta, "rtheta", nFamRect);
-    printAry(rphi, "rphi", nFamRect);
+    
+    if (orientationOption == 0) {
+        printAry(rAngleOne, "rtheta", nFamRect);
+        printAry(rAngleTwo, "rphi", nFamRect);
+    } else if (orientationOption == 1) {
+        printAry(rAngleOne, "rtrend", nFamRect);
+        printAry(rAngleTwo, "rplunge", nFamRect);
+    } else if (orientationOption == 2) {
+        printAry(rAngleOne, "rdip", nFamRect);
+        printAry(rAngleTwo, "rstrike", nFamRect);
+    }
+    
     printAry(rbeta, "rbeta", nFamRect);
     printAry(rLogMean, "rLogMean", nFamRect);
     printAry(rsd, "rsd", nFamRect);

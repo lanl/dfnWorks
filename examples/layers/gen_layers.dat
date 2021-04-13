@@ -1,5 +1,5 @@
 //==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+//General Options & Fracture Network Parameters: 
 
 stopCondition: 1
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -20,7 +20,7 @@ nPoly: 400
 
 outputAllRadii: 0
 /* 0: Do not output all radii file.
-   1: Include file of all raddii (acepted+rejected fractures)
+   1: Include file of all radii (acepted+rejected fractures)
       in output files.
 */
 
@@ -34,19 +34,36 @@ layers:
 {-10,-2}
 {2,10}
 
-numOfRegions: 0
-regions:
-{}
-
-
-
 /*  Layers need to be listed line by line
     Format: {minZ, maxZ}
     
     The first layer listed is layer 1, the second is layer 2, etc
     Stochastic families can be assigned to theses layers (see stochastic
-    shape familiy section) 
+    shape family section) 
 */   
+
+
+numOfRegions: 0
+regions:
+{}
+
+/*  Regions need to be listed line by line
+    Format: {minX, maxX, minY, maxY, minZ, maxZ}
+    
+    The first region listed is region 1, the second is region 2, etc
+    Stochastic families can be assigned to theses region (see stochastic
+    shape family section) 
+*/   
+
+
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
 
 
 h: 0.1

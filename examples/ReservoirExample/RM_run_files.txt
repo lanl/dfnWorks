@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks-main/example/ReservoirExample/RM_gen_file.dat
-dfnFlow  DUMMY/dfnworks-main/example/ReservoirExample/ResModPFLOTRAN.in  
-dfnTrans  DUMMY/dfnworks-main/example/ReservoirExample/PTDFN_control_RM.dat

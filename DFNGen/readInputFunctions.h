@@ -19,7 +19,7 @@ void getCords(std::ifstream & stream, double *outAry, int nPoly, int nVertices);
 /*****************************************************************/
 /*! Gets multiple arrays from input/ Assumes arrays are format: {x,y,z}
     Reads a 2D array in a 1D format.
-    Arg 1: ifstream object
+    Arg 1: if stream object
     Arg 2: OUTPUT, array to place read values into
     Arg 3: Number of rows of array we are reading */
 template <typename T>
@@ -32,6 +32,24 @@ void get2dAry(std::ifstream &stream, T *var, int rowSize) {
         stream >> ch >> var[x] >> ch >> var[x + 1] >> ch >> var [x + 2] >> ch;
     }
 }
+
+/*****************************************************************/
+/*! Gets multiple arrays from input/ Assumes arrays are format: {x,y}
+    Reads a 2D array in a 1D format.
+    Arg 1: if stream object
+    Arg 2: OUTPUT, array to place read values into
+    Arg 3: Number of rows of array we are reading */
+template <typename T>
+void get2dAry2(std::ifstream &stream, T *var, int rowSize) {
+    int i;
+    char ch;
+    
+    for (i = 0; i < rowSize; i++) {
+        int x = 2 * i;
+        stream >> ch >> var[x] >> ch >> var[x + 1] >> ch;
+    }
+}
+
 
 
 /*****************************************************************/

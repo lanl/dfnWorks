@@ -1,0 +1,3 @@
+dfnGen DUMMY/dfnworks-main/examples/faults/gen_faults.dat
+dfnFlow /none/
+dfnTrans /none/

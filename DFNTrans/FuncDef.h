@@ -296,4 +296,5 @@ int String_Compare(char string1[], char string2[]);
 struct inpfile Control_File_Optional(char fileobject[], int ctr);
 double TimeDomainRW (double time_advect);
 int InitParticles_flux (int k_current, int firstn, int lastn, double weight_p);
+int InitInWell(int nodepart);
 

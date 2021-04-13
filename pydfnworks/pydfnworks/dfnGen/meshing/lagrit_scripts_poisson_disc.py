@@ -51,14 +51,21 @@ def edit_intersection_files(num_poly, fracture_list, path):
     fractures_to_remove = list(
         set(range(1, num_poly + 1)) - set(fracture_list))
     cwd = os.getcwd()
+    if os.path.exists('intersections'):
+        os.unlink('intersections')
+        os.mkdir('intersections')
+
     os.chdir('intersections')
+
+    ## DEBUGGING ## 
     # clean up directory
     #fl_list = glob.glob("*prune.inp")
     #for fl in fl_list:
     #   os.remove(fl)
+    ## DEBUGGING ## 
 
     print("--> Editing Intersection Files")
-    ## Note this could be easily changed to run in parallel if needed. Just use mp
+    ## Note this could be easily changed to run in parallel if needed. Just use cf
     for i in fracture_list:
         filename = f'intersections_{i}.inp'
         print(f'--> Working on: {filename}')

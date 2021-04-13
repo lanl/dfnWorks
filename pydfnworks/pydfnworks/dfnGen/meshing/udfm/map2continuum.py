@@ -92,9 +92,13 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     print("\nCreating *.lgi files for octree mesh\n")
     try:
         os.mkdir(dir_name)
+        os.mkdir(dir_name+os.sep+"lagrit_scripts")
+        os.mkdir(dir_name+os.sep+"lagrit_logs")
     except OSError:
         shutil.rmtree(dir_name)
         os.mkdir(dir_name)
+        os.mkdir(dir_name+os.sep+"lagrit_scripts")
+        os.mkdir(dir_name+os.sep+"lagrit_logs")
 
     lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points)
     lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
@@ -899,17 +903,19 @@ def upscale_parallel(f_id):
     cmo / delete / frac
     """.format(f_id)
     fin += "finish"
-    print(fin)
+    #print(fin)
     f.write(fin)
     f.flush()
     f.close()
 
-    mh.run_lagrit_script(f"driver{f_id}.lgi")
+    mh.run_lagrit_script(f"driver{f_id}.lgi",f"lagrit_logs/driver{f_id}",)
     # Delete files
     os.remove(f"ex_xyz{f_id}_2.inp")
     os.remove(f"ex_area{f_id}_2.table")
     os.remove(f"frac{f_id}.inp")
- 
+    shutil.copy(f"driver{f_id}.lgi", "lagrit_scripts")
+    os.remove(f"driver{f_id}.lgi")
+
 def worker(tasks_to_accomplish, tasks_that_are_done):
     """ Worker function for python parallel. See multiprocessing module 
     documentation for details.
@@ -957,8 +963,10 @@ def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
     return True
 
 def interpolate_parallel(f_id):
-    mh.run_lagrit_script(f"driver_frac{f_id}.lgi")
-
+    mh.run_lagrit_script(f"driver_frac{f_id}.lgi",f"lagrit_logs/driver_frac{f_id}")
+    shutil.copy(f"driver_frac{f_id}.lgi", "lagrit_scripts")
+    os.remove(f"driver_frac{f_id}.lgi")
+    
 def build_dict(self, num_poly, delete_files):
     f_dict = {}
     for i in range(1, num_poly + 1):

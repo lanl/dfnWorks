@@ -7,13 +7,9 @@
 
 """
 
-import os, sys
-from time import time
-from pydfnworks import * 
-import subprocess
 
-define_paths()
-main_time = time()
+from pydfnworks import * 
+
 DFN = create_dfn()
 
 DFN.make_working_directory()
@@ -46,7 +42,7 @@ b = b1 + b2 + b3 + b4
 perm = perm1 + perm2 + perm3 + perm4 
 DFN.dump_hydraulic_values(b,perm,T)
 
-# Add transmissivity values to the mesh for visulazation
+# Add transmissivity values to the mesh for visualization
 DFN.add_variable_to_mesh("trans","transmissivity.dat","full_mesh.inp")
 
 ##dfnFlow()

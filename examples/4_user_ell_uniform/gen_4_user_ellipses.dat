@@ -1,5 +1,5 @@
 //==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+// General Options & Fracture Network Parameters: 
 
 stopCondition: 0
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -20,10 +20,18 @@ nPoly: 3
 
 outputAllRadii: 0  
 /* 0: Do not output all radii file.
-   1: Include file of all raddii (acepted+rejected fractures)
+   1: Include file of all raddii (accepted+rejected fractures)
       in output files.
 */
                       
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
 
 domainSize: {1,1,1} 
      /* Mandatory Parameter.
@@ -223,7 +231,7 @@ eAngleOption: 0     /* All angles for ellipses:
                        0 - degrees
                        0 - Radians (Must use numerical value for PI) */
                         
-etheta: {-45, 45,} /*Ellipse fracture orientation.
+etheta: {-45, 45} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
 ephi: {0,0}   /* Ellipse fracture orientation.

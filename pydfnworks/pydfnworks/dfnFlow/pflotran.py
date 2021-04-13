@@ -1,5 +1,5 @@
 """
-Functions for using pflotran in dfnworks
+functions for using pflotran in dfnworks
 """
 import os
 import subprocess
@@ -598,14 +598,13 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
 
 
+
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     """ Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
-
     Parameters
     ----------
         self : object 
             DFN Class
-
         grid_vtk_file : string
             Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
 
@@ -615,7 +614,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     Notes
     --------
-        If DFN class does not have a vtk file, inp2vtk_python is called
+    If DFN class does not have a vtk file, inp2vtk_python is called
     """
     print('--> Parsing PFLOTRAN output with Python')
 
@@ -627,7 +626,6 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
     else:
-        from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2vtk_python
         self.inp2vtk_python()
 
     grid_file = self.vtk_file

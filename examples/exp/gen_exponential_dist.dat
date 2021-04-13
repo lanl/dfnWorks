@@ -1,5 +1,5 @@
 /*=========================================================================*/
-/*  Gereral Options & Fracture Network Parameters:                         */
+/*  General Options & Fracture Network Parameters:                         */
 /*=========================================================================*/
 
 stopCondition: 0
@@ -39,6 +39,17 @@ regions:
 */   
 removeFracturesLessThan: 0
 
+
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
+
+
 /*
     Options:
         0 - Ignore this option, keep all fractures.
@@ -59,7 +70,7 @@ removeFracturesLessThan: 0
     shape familiy section) 
 */   
 
-h: 0.25
+h: 0.1
 /*  Minimum fracture length scale(meters).
     Any fracture with a feature, such as and intersection, 
     of less than h will be rejected. 

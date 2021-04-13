@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "2 Feb 2021"
+date = "6 April 2021"
 
-version = "2.4.5"
+version = "2.5"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -61,6 +61,7 @@ packages=["pydfnworks",
           "pydfnworks.general", 
           "pydfnworks.dfnGen",
           "pydfnworks.dfnGen.generation",
+          "pydfnworks.dfnGen.generation.input_checking",
           "pydfnworks.dfnGen.generation.output_report",
           "pydfnworks.dfnGen.meshing",
           "pydfnworks.dfnGen.meshing.udfm",

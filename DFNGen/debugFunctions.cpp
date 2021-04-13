@@ -158,12 +158,22 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
                  << shapeFamilies[i].beta * radToDeg << " deg" << endl;
         }
         
+        if (orientationOption == 0) {
+            cout << "Theta: " << shapeFamilies[i].angleOne << " rad, "
+                 << shapeFamilies[i].angleOne * radToDeg << " deg" << endl;
+            // Phi (angle the projection of normal onto x-y plane  makes with +x axis
+            cout << "Phi: " << shapeFamilies[i].angleTwo << " rad, "
+                 << shapeFamilies[i].angleTwo * radToDeg << " deg " << endl;
+        }
         // Theta (angle normal makes with z axis
-        cout << "Theta: " << shapeFamilies[i].theta << " rad, "
-             << shapeFamilies[i].theta * radToDeg << " deg" << endl;
-        // Phi (angle the projection of normal onto x-y plane  makes with +x axis
-        cout << "Phi: " << shapeFamilies[i].phi << " rad, "
-             << shapeFamilies[i].phi * radToDeg << " deg " << endl;
+        else if (orientationOption == 1) {
+            cout << "Trend: " << shapeFamilies[i].angleOne << " rad, "
+                 << shapeFamilies[i].angleOne * radToDeg << " deg" << endl;
+            // Phi (angle the projection of normal onto x-y plane  makes with +x axis
+            cout << "Plunge: " << shapeFamilies[i].angleTwo << " rad, "
+                 << shapeFamilies[i].angleTwo * radToDeg << " deg " << endl;
+        }
+        
         // kappa
         cout << "Kappa: " << shapeFamilies[i].kappa << endl;
         

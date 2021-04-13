@@ -1,13 +1,13 @@
 //==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+// General Options & Fracture Network Parameters: 
 
-stopCondition: 0
+stopCondition: 1
     /* 0: stop once nPoly fractures are accepted (Defined below)
        1: stop once all family's p32 values are equal or greater than the families
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 500 
+nPoly: 650 
      /* Used when stopCondition = 0
         Total number of fractures you would like to have 
         in the domain you defined. The program will complete 
@@ -20,7 +20,7 @@ nPoly: 500
 
 outputAllRadii: 0
 /* 0: Do not output all radii file.
-   1: Include file of all raddii (acepted+rejected fractures)
+   1: Include file of all raddii (accepted+rejected fractures)
       in output files.
 */
 
@@ -55,6 +55,14 @@ regions:
 */   
 
 
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
+
+
 h: 0.10
   /* Minimum fracture length scale(meters)
     Any fracture with a feature, such as and intersection, of less than h will be rejected. */
@@ -83,7 +91,7 @@ visualizationMode:  0
    1: produce only first round of triangulations. In this case no 
    modeling of flow and transport is possible. */ 
 
-seed: 0 
+seed: 1
     //Seed for random generator. 0 = seed off clock 
         
 
@@ -181,7 +189,7 @@ eLayer: {0,0}
      1 corresponds to the first layer listed, 2 is the next layer listed, etc */
 
 
-eRegion: {0,,0}
+eRegion: {0,0}
     /* Defines which domain the family belongs to.
      Region 0 is the entire domain.
      Regions numbered > 0 correspond to layers defined above
@@ -197,14 +205,14 @@ edistr: {2,2}   /* Ellipse statistical distribution options:
                       4 - constant */
                                                                                        
                       
-ebetaDistribution: {0,1}   /* Beta is the rotation around the polygon's normal
+ebetaDistribution: {1,1}   /* Beta is the rotation around the polygon's normal
                     vector, with the polygon centered on x-y plane at the orgin 
                     
                     0 - uniform distribution [0, 2PI]    
                     1 - constant angle (specefied below by "ebeta")    */                
     
     
-e_p32Targets: {.1,0.1} 
+e_p32Targets: {0.5,0.5} 
 /* Elliptical families target fracture intensity per family.
 When using stopCondition = 1 (defined at the top of the input file), families will 
 be inserted untill the families desired fracture intensity has been reached. 
@@ -216,7 +224,7 @@ be complete.
 // Parameters used by all stochastic ellipse families 
 // Mandatory Parameters if using statistically generated ellipses  
 
-easpect: {1,1}  /* Aspect ratio. Used for lognormal and truncated 
+easpect: {2,2}  /* Aspect ratio. Used for lognormal and truncated 
                     power law distribution. */
 
 enumPoints: {8,8} /*Number of vertices used in creating each elliptical 
@@ -227,17 +235,17 @@ eAngleOption: 1     /* All angles for ellipses:
                        0 - degrees
                        0 - Radians (Must use numerical value for PI) */
                         
-etheta: {0,0} /*Ellipse fracture orientation.
+etheta: {0,90} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
-ephi: {0,0}   /* Ellipse fracture orientation.
+ephi: {0,45}   /* Ellipse fracture orientation.
                     The angle the projection of the normal onto the x-y plane
                     makes with the x-axis */
 
-ebeta: {30}   /* rotation around the normal vector */
+ebeta: {45,0}   /* rotation around the normal vector */
 
 
-ekappa: {0.1,0.1}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
+ekappa: {10, 10}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
                         similar (less diverging) are the elliptical familiy's
                         normal vectors */                
 
@@ -286,7 +294,7 @@ emin: {1,1} // Minimum radius for each ellipse family.
 emax: {5,5}  // Maximum radius for each ellipse family.
                   // For power law distributions. 
                     
-ealpha: {2.6, 2.6} // Alpha. Used in truncated power-law 
+ealpha: {1.8, 1.8} // Alpha. Used in truncated power-law 
                         // distribution calculation
 
 

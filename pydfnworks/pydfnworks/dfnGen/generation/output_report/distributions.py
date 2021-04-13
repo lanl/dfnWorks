@@ -35,6 +35,8 @@ def tpl_cdf(xmin, alpha, x):
 def tpl_pdf(norm_const, xmin, alpha, x):
     """ Returns the analytical power laws PDF values.
 
+    p(r) \propto x ^ -{alpha+1}
+
     Parameters
     --------------
         norm_const : double 
@@ -115,7 +117,7 @@ def exp_pdf(norm_const, eLambda, x):
     return pdf
 
 
-def exp_cdf(eLambda, x):
+def exp_cdf(eLambda, x, xmin):
     """ Returns the analytical values of the CDF of the exponential distribution with exponent eLambda for values of x.
 
     Parameters
@@ -133,7 +135,6 @@ def exp_cdf(eLambda, x):
     ---------
         None
     """
-    xmin = min(x)
     cdf = 1 - (np.e**(-eLambda * (x - xmin)))
     return cdf
 
@@ -165,9 +166,9 @@ def exponential(eLambda, xmin, xmax):
 
     """
     x = np.linspace(xmin, xmax, 1000)
-    const = 1.0 / (exp_cdf(eLambda, xmax) - exp_cdf(eLambda, xmin))
+    const = 1.0 / (exp_cdf(eLambda, xmax, xmin) - exp_cdf(eLambda, xmin, xmin))
     pdf = exp_pdf(const, eLambda, x)
-    cdf = exp_cdf(eLambda, x)
+    cdf = exp_cdf(eLambda, x, xmin)
     return x, pdf, cdf
 
 

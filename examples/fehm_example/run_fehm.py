@@ -1,17 +1,14 @@
 """
-.. file:: run_dfnworks.py
-   :synopsis: run file for dfnworks 
+.. file:: run_fehm.py
+   :synopsis: run file for dfnWorks 
    :version: 1.0
-   :maintainer: Jeffrey Hyman, Carl Gable, Nathaniel Knapp
+   :maintainer: Jeffrey Hyman, Carl Gable
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
 
-import os, sys
-from time import time
 from pydfnworks import * 
 
-define_paths()
 main_time = time()
 DFN = create_dfn()
 

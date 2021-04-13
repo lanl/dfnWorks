@@ -1,5 +1,5 @@
 /==============================================================================
-//Gereral Options & Fracture Network Parameters: 
+//General Options & Fracture Network Parameters: 
 
 stopCondition: 0
     /* 0: stop once nPoly fractures are accepted (Defined below)
@@ -7,7 +7,7 @@ stopCondition: 0
                    target p32 values (defined in stochastic family sections)
     */             
 
-nPoly: 3
+nPoly: 1
      /* Used when stopCondition = 0
            Total number of fractures you would like to have 
             in the domain you defined. The program will complete 
@@ -17,6 +17,8 @@ nPoly: 3
             specified fracture cluster size if using 
             stoppingParameter = -largestSize  */
 
+orientationOption: 0
+
 
 outputAllRadii: 0  
 /* 0: Do not output all radii file.
@@ -25,7 +27,7 @@ outputAllRadii: 0
 */
                       
 
-domainSize: {1,1,1} 
+domainSize: {100,100,100} 
      /* Mandatory Parameter.
         Creates a domain with dimension x*y*z centered at the origin.*/
 
@@ -35,6 +37,11 @@ numOfLayers: 0    //number of layers
 layers: 
 {-500,0}
 {0,500}
+
+
+numOfRegions: 0
+regions: 
+
 
 /*  Layers need to be listed line by line
     Format: {minZ, maxZ}
@@ -64,7 +71,7 @@ printRejectReasons: 0
         1: print all rejection reasons to screen
 */
 
-visualizationMode: 0
+visualizationMode: 1
 /* Options: 0 or 1 
    Used during meshing: 
    0: creates a fine mesh, according to h parameter;
@@ -126,13 +133,13 @@ rejectsPerFracture: 10  /*If fracture is rejected, it will be re-translated to a
 //                  Shape and Probability Parameters
 //===========================================================================
 
-//user rectangles and user Ellipses defined in their cooresponding files
+//user rectangles and user Ellipses defined in their corresponding files
 
-famProb: {.5,.5} 
-/* Probability of occurrence of each family of randomly distrubuted rectangles
+famProb: {0.3, 0.3, 0.3} 
+/* Probability of occurrence of each family of randomly distributed rectangles
    and ellipses.
    User-ellipses and user-rectangles insertion will be attempted with 100% 
-   likelihood, but with possability they may be rejected.
+   likelihood, but with possibility they may be rejected.
    The famProb elements should add up to 1.0 (for %100).
    The probabilities are listed in order of families starting with all stochastic
    ellipses, and then all stochastic rectangles.
@@ -158,21 +165,23 @@ famProb: {.5,.5}
 nFamEll: 0
     //Having this option = 0 will ignore all rectangle family variables
 
-eLayer: {0,0}
+eLayer: {0,0,0}
     /* Defines which domain the family belings to.
      Layer 0 is the entire domain.
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+eRegion: {0,0,0}
+
 //edist is a mandatory parameter if using statistically generated ellipses 
-edistr: {2,3}   /* Ellipse statistical distribution options:
+edistr: {4,4,4}   /* Ellipse statistical distribution options:
                       1 - lognormal distribution
                       2 - truncated power law distribution   
                       3 - exponential distribution
                       4 - constant */
                                                                                        
                       
-ebetaDistribution: {1,1}   /* Beta is the rotation around the polygon's normal
+ebetaDistribution: {1,1,1}   /* Beta is the rotation around the polygon's normal
                     vector, with the polygon centered on x-y plane at the orgin 
                     
                     0 - uniform distribution [0, 2PI]    
@@ -191,28 +200,28 @@ be complete.
 // Parameters used by all stochastic ellipse families 
 // Mandatory Parameters if using statistically generated ellipses  
 
-easpect: {1,1}  /* Aspect ratio. Used for lognormal and truncated 
+easpect: {1,1,1}  /* Aspect ratio. Used for lognormal and truncated 
                     power law distribution. */
 
-enumPoints: {12, 12} /*Number of vertices used in creating each elliptical 
+enumPoints: {8, 8, 8} /*Number of vertices used in creating each elliptical 
                            fracture family. Number of elements must match number 
                            of ellipse families (first number in nShape) */
 
-eAngleOption: 0     /* All angles for ellipses: 
-                       0 - degrees
-                       0 - Radians (Must use numerical value for PI) */
+eAngleOption: 1     /* All angles for ellipses: 
+                       1 - degrees
+                       0 - radians (Must use numerical value for PI) */
                         
-etheta: {-45, 45,} /*Ellipse fracture orientation.
+etheta: {0, 45, 45} /*Ellipse fracture orientation.
                      The angle the normal vector makes with the z-axis */
 
-ephi: {0,0}   /* Ellipse fracture orientation.
+ephi: {0, 0, 90}   /* Ellipse fracture orientation.
                     The angle the projection of the normal onto the x-y plane
                     makes with the x-axis */
 
-ebeta: {0, 0}   /* rotation around the normal vector */
+ebeta: {0, 0, 0}   /* rotation around the normal vector */
 
 
-ekappa: {8,8}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
+ekappa: {20, 20, 20}  /*Parameter for the fisher distribnShaprutions. The bigger, the more 
                         similar (less diverging) are the elliptical familiy's
                         normal vectors */                
 
@@ -242,7 +251,7 @@ eExpMin: {1}  //Mean value for Exponential  Distribution
 //===========================================================================
 //    Options Specific For Constant Size of ellipses (edistr=4):
 
-econst: {10, 10, 10}  // Constant radius, defined per family     
+econst: {1, 1, 1}  // Constant radius, defined per family     
                
 //===========================================================================
 // Options Specific For Ellipse Truncated Power-Law Distribution (edistr=2)
@@ -283,6 +292,7 @@ rLayer: {0,0}
      Layers numbered > 0 coorespond to layers defined above
      1 corresponts to the first layer listed, 2 is the next layer listed, etc */
 
+rRegion: {}
 
 /*rdist is a mandatory parameter if using statistically generated rectangles */
 rdistr: {2,3}   /*  Rectangle statistical distribution options:
@@ -384,10 +394,10 @@ rconst: {4,4}  // Constant radius, defined per rectangular family
          user-ellipse, with possibility of being rejected  */
 
    
-userEllipsesOnOff: 0    //0 - User Ellipses off
+userEllipsesOnOff: 1    //0 - User Ellipses off
                         //1 - User Ellipses on
 
-UserEll_Input_File_Path: ./TestCases/test/uEllInput.dat
+UserEll_Input_File_Path: DUMMY/dfnworks-main/examples/faults/fault_ell.dat 
 
 /*===========================================================================*/
 /*===========================================================================*/
@@ -418,10 +428,10 @@ EllByCoord_Input_File_Path: /home/jharrod/GitProjects/DFNGen/DFNC++Version/input
          user-rectangle, with possibility of being rejected  */
          
 
-userRectanglesOnOff: 1    //0 - User Rectangles off
-                        //1 - User Rectangles on
+userRectanglesOnOff: 0   //0 - User Rectangles off
+                          //1 - User Rectangles on
                           
-UserRect_Input_File_Path: DUMMY/dfnworks-main/examples/in_fracture_var/define_4_user_rects.dat 
+UserRect_Input_File_Path: DUMMY/dfnworks-main/examples/user_faults/fault_rect.dat 
 
 /*===========================================================================*/
 /* If you would like to input user specified rectangles according to their
@@ -436,7 +446,7 @@ userRecByCoord: 0
 RectByCoord_Input_File_Path: ./inputFiles/userPolygons/rectCoords.dat
 
 
-/*WARNING: userDefCoordRec can cause LaGriT errors because the polygon 
+/*WARNING: userDefCoord* can cause LaGriT errors because the polygon 
 vertices are not put in clockwise or counter-clockwise order.
 If errors (Usualy seg fualt during meshing if using LaGriT), 
 try to reorder the points till u get it right.
@@ -502,7 +512,7 @@ constantPermeability: 1e-12  //Constant permeability for all fractures
 // TODO: confirm with JDH 
 outputAcceptedRadiiPerFamily:1 /* output radii files for each
                               family containing the final radii chosen */
-disableFram:0 /* 0 if FRAM (feature rejection algorithm for meshing)
+disableFram: 1 /* 0 if FRAM (feature rejection algorithm for meshing)
                  is disabled, 1 otherwise */
 outputFinalRadiiPerFamily:1 /* output radii files
                                  for each family containing the final radii chosen */
@@ -514,7 +524,7 @@ removeFracturesLessThan: 0 /*Used to change the lower cutoff of fracture size*/
  
 
 
-keepIsolatedFractures: 0 
+keepIsolatedFractures: 1
 /*  0 - Remove any isolated fracture (not clusters)
     1 - Keep all fractures in the domain
 */

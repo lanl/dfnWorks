@@ -56,6 +56,12 @@ regions:
 */   
 
 
+orientationOption: 0 
+/* Fracture Orientation Option
+    0 : Spherical Coordinates
+    1 : Trend / Plunge 
+    2 : Dip / Strike 
+*/
 
 
 h: 0.10
