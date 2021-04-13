@@ -410,11 +410,11 @@ struct Shape {
     /*! Layer the family belongs to. 0 is entire domain, greater than 0 is a layer.
         e.g. 2 would be the second layer listed in the input file under "layers:".  */
     short layer;
-   
+    
     /*! Region the family belongs to. 0 is entire domain, greater than 0 is a region.
         e.g. 2 would be the second region listed in the input file under "regions:".  */
     short region;
-   
+    
     /*! Aspect ratio for family. */
     float aspectRatio;
     
@@ -438,13 +438,18 @@ struct Shape {
         or degrees depending on 'angleOption'. */
     float beta;
     
-    /*! Theta value for fisher disturbutions (angle between z axis and polygon's normal).
-        Used to generate stochastic normal vectors.  */
-    double theta;
+    /*!   If orientationOption = 0 (Spherical coordinates)
+        This is the angle the normal vector makes with the z-axis (theta)
+        If  orientationOption = 1
+        This is the trend of Rectangle fracture orientation.
+        */
+    double angleOne;
     
-    /*! Phi value for fisher disturbutions (angle the projection of the polygon's normal makes
-        with the x-y planel). Used to generate stochastic normal vectors.  */
-    double phi;
+    /*! If orientationOption = 0 (Spherical coordinates)
+        This is the angle the normal vector makes with the z-axis (phi)
+        If  orientationOption = 1
+        This is the trend of Rectangle fracture orientation. */
+    double angleTwo;
     
     /*! Parameter for fisher distributions. The
         bigger, the more similar (less diverging) are the

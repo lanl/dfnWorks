@@ -9,7 +9,6 @@ import glob
 from numpy import genfromtxt, sort, zeros
 import subprocess
 
-
 def parse_params_file(quiet=False):
     """ Reads params.txt file from DFNGen and parses information
 
@@ -342,11 +341,12 @@ def clean_up_files_after_prune(self):
     print("--> Editing Fracture Files Complete")
 
 
-def create_mesh_links(path):
+def create_mesh_links(self,path):
     ''' Makes symlinks for files in path required for meshing
     
     Parameters
     ----------
+        self : DFN object
         path : string
             Path to where meshing files are located
 
@@ -364,7 +364,8 @@ def create_mesh_links(path):
     print("--> Creating links for meshing from %s" % path)
     files = [
         'params.txt', 'poly_info.dat', 'connectivity.dat', 'left.dat',
-        'right.dat', 'front.dat', 'back.dat', 'top.dat', 'bottom.dat', 'polys'
+        'right.dat', 'front.dat', 'back.dat', 'top.dat', 'bottom.dat', 'polys',
+        'intersections', 'aperture.dat', 'perm.dat'
     ]
     for f in files:
         if os.path.isfile(f) or os.path.isdir(f):
@@ -497,7 +498,8 @@ def inp2vtk_python(self):
         'Unstructured pflotran grid')
 
     vtk.tofile(vtk_file)
-    
+
+
 def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
     """
     Runs LaGriT
@@ -519,13 +521,16 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
 
     """
     if output_file == None:
-        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file}"
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} -log {lagrit_file}.log -out {lagrit_file}.out"
     else:
-        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} > {output_file}"
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} -log {output_file}.log -out {output_file}.out > {output_file}.dump"
     if not quiet:
         print(f"--> Running: {cmd}")
-
     failure = subprocess.call(cmd, shell=True)
     if failure:
         error = f"ERROR running LaGriT on script {lagrit_file}. Exiting Program.\n"
-    return failure
+        sys.stderr.write(error)
+        sys.exit(1)
+    else:
+        print(f"--> Running LaGriT on script {lagrit_file} successful.\n")
+        return failure

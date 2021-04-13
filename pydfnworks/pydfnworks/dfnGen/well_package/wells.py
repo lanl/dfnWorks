@@ -448,7 +448,7 @@ def expand_well(well):
 
     # Execute LaGriT
     mh.run_lagrit_script(f"expand_well_{well['name']}.lgi",
-                         output_file=f"expand_well_{well['name']}.out",
+                         output_file=f"expand_well_{well['name']}",
                          quiet=False)
 
     print("--> Expanding well complete.")
@@ -530,7 +530,7 @@ finish
 
     # Execute LaGriT
     mh.run_lagrit_script(f"get_well_{well['name']}_zone.lgi",
-                         output_file=f"create_well_{well['name']}.out",
+                         output_file=f"create_well_{well['name']}",
                          quiet=False)
 
     with open(f"well_{well['name']}.zone", "r") as fp:
@@ -793,7 +793,7 @@ finish
 
     # Execute LaGriT
     mh.run_lagrit_script(f"find_well_{well['name']}_segment.lgi",
-                         output_file=f"find_well_{well['name']}_segment.out",
+                         output_file=f"find_well_{well['name']}_segment",
                          quiet=False)
 
 
@@ -1156,6 +1156,7 @@ def cleanup_wells(self, wells):
     --------
         Wells can be a list of well dictionaries
     """
+    print("--> Cleaning up well files: Starting")
 
     if not os.path.isdir("well_data"):
         os.mkdir("well_data")
@@ -1163,20 +1164,30 @@ def cleanup_wells(self, wells):
     files = ["well_{0}_line.inp", "expand_well_{0}.lgi", \
         "well_{0}_volume.inp","expand_well_{0}.out",\
         "get_well_{0}_zone.lgi", "create_well_{0}.out",\
-        "well_{0}_intersect.inp"]
+        "well_{0}_intersect.inp","create_well_{0}.dump",\
+        "create_well_{0}.log"]
 
     if type(wells) is dict:
         well = wells
         for file in files:
-            shutil.move(file.format(well['name']),
+            try:
+                shutil.move(file.format(well['name']),
                         "well_data/" + file.format(well['name']))
+            except:
+                print("Error moving " + file.format(well['name']))
+                pass
+
 
     if type(wells) is list:
         for well in wells:
             for file in files:
-                shutil.move(file.format(well['name']),
-                            "well_data/" + file.format(well['name']))
-
+                try:
+                    shutil.move(file.format(well['name']),
+                                "well_data/" + file.format(well['name']))
+                except:
+                    print("Error moving " + file.format(well['name']))
+                    pass
+    print("--> Cleaning up well files: Complete")
 
 def combine_well_boundary_zones(self, wells):
     """ Processes zone files for particle tracking. All zone files are combined into allboundaries.zone 

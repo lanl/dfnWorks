@@ -158,7 +158,7 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
     // Fisher distribution / get normal vector
-    double *norm = fisherDistribution(shapeFam.theta, shapeFam.phi, shapeFam.kappa, generator);
+    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
     double mag = magnitude(norm[0], norm[1], norm[2]);
     
     if (mag < 1 - eps || mag > 1 + eps) {
@@ -257,7 +257,7 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
     // Fisher distribution / get normal vector
-    double *norm = fisherDistribution(shapeFam.theta, shapeFam.phi, shapeFam.kappa, generator);
+    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
     double mag = magnitude(norm[0], norm[1], norm[2]);
     
     if (mag < 1 - eps || mag > 1 + eps) {

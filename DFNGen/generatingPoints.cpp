@@ -85,12 +85,33 @@ Point lineFunction3D(double *v, double *point, double t) {
     Arg 4: Random generator, see std c++ <random> library
     Return: A fisher distribution array {x, y, z}. Used for random generation of
     polygon normal vectors. */
-double *fisherDistribution(double theta, double phi, double kappa, std::mt19937_64 &generator) {
+double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::mt19937_64 &generator) {
     double ck = (std::exp(kappa) - std::exp(-kappa)) / kappa;
     double v1[3];
-    v1[0] = sin(theta) * cos(phi);
-    v1[1] = sin(theta) * sin(phi);
-    v1[2] = cos(theta);
+    
+    if (orientationOption == 0) {
+        // Spherical Coordinates
+        // angleOne = Theta
+        // angleTwo = Phi
+        v1[0] = sin(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * sin(angleTwo);
+        v1[2] = cos(angleOne);
+    } else if (orientationOption == 1) {
+        // Trend and Plunge
+        // angleOne = Trend
+        // angleTwo = Plunge
+        v1[0] = cos(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * cos(angleTwo);
+        v1[2] = sin(angleTwo);
+    } else if (orientationOption == 2) {
+        // Dip and Strike
+        // angleOne = Dip
+        // angleTwo = Strike
+        v1[0] = sin(angleOne) * sin(angleTwo);
+        v1[1] = -sin(angleOne) * cos(angleTwo);
+        v1[2] = cos(angleOne);
+    }
+    
     double u[3] = {0, 0, 1};
     double *xProd = crossProduct(u, v1);
     double R[9];

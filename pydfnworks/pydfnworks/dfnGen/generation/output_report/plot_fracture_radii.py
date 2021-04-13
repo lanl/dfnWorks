@@ -76,7 +76,6 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
             #print(f"Mean: {np.mean(radii_all)}, Variance: {np.var(radii_all)}")
             min_val = min(min(radii_all), min(radii_accepted))
             max_val = max(max(radii_all), max(radii_accepted))
-
             # Get global min/max radius
             if min_radius is None:
                 min_radius = min_val
@@ -104,15 +103,18 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
                            pdf,
                            params["analytic_color"],
                            label="Analytical PDF")
+
             #axs[0, 0].legend(loc="upper right", fontsize=14)
             axs[0, 0].grid(True, alpha=0.5)
             axs[0, 0].set_xlabel("Fracture Radius [m]", fontsize=18)
             axs[0, 0].set_ylabel("Density", fontsize=18)
 
-            # Set Tick Labels. It's more complicated due to precision errors in python.
-            axs[0, 0].set_xticklabels(axs[0, 0].get_xticks().astype(int),
-                                      fontsize=14)
-
+            ticks = axs[0, 0].get_xticks()
+            labels = [f"{val:0.2f}" for val in ticks]
+            axs[0, 0].set_xticks(ticks)
+            axs[0, 0].set_xticklabels(labels, fontsize=14)
+            axs[0, 0].set_xlim((0.9*fam["Minimum Radius (m)"], 1.05*fam["Maximum Radius (m)"]))
+  
             ticks = axs[0, 0].get_yticks()
             labels = [f"{val:0.2f}" for val in ticks]
             axs[0, 0].set_yticklabels(labels, fontsize=14)
@@ -135,10 +137,13 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
             #axs[0, 1].legend(loc="upper right", fontsize=14)
             axs[0, 1].grid(True, alpha=0.5)
             axs[0, 1].set_xlabel("Fracture Radius [m]", fontsize=18)
-            # Set Tick Labels. It's more complicated due to precision errors in python.
-            axs[0, 1].set_xticklabels(axs[0, 1].get_xticks().astype(int),
-                                      fontsize=14)
-
+ 
+            ticks = axs[0, 1].get_xticks()
+            labels = [f"{val:0.2f}" for val in ticks]
+            axs[0, 1].set_xticks(ticks)
+            axs[0, 1].set_xticklabels(labels, fontsize=14)
+            axs[0, 1].set_xlim((0.9*fam["Minimum Radius (m)"], 1.05*fam["Maximum Radius (m)"]))
+  
             ticks = axs[0, 1].get_yticks()
             labels = [f"{val:0.2f}" for val in ticks]
             axs[0, 1].set_yticklabels(labels, fontsize=14)
@@ -164,8 +169,12 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
             axs[1, 0].set_xlabel("Fracture Radius [m]", fontsize=18)
             axs[1, 0].set_ylabel("Cumulative Density", fontsize=18)
             # Set Tick Labels
-            axs[1, 0].set_xticklabels(axs[1, 0].get_xticks().astype(int),
-                                      fontsize=14)
+            ticks = axs[1, 0].get_xticks()
+            labels = [f"{val:0.2f}" for val in ticks]
+            axs[1, 0].set_xticks(ticks)
+            axs[1, 0].set_xticklabels(labels, fontsize=14)
+            axs[1, 0].set_xlim((0.9*fam["Minimum Radius (m)"], 1.05*fam["Maximum Radius (m)"]))
+  
             ticks = axs[1, 0].get_yticks()
             labels = [f"{val:0.2f}" for val in ticks]
             axs[1, 0].set_yticklabels(labels, fontsize=14)

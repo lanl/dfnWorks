@@ -105,17 +105,25 @@ def make_working_directory(self, delete=False):
                 sys.stderr.write(error)
                 sys.exit(1)
     else:
-        shutil.rmtree(self.jobname)
-        print('Creating ', self.jobname)
-        os.mkdir(self.jobname)
+        if not os.path.isdir(self.jobname):
+            os.mkdir(self.jobname)
+        else:
+            try:
+                shutil.rmtree(self.jobname)
+                print('--> Creating ', self.jobname)
+                os.mkdir(self.jobname)
+            except:
+                error = "ERROR deleting and creating directory.\nExiting\n"
+                sys.stderr.write(error)
+                sys.exit(1)
 
     os.mkdir(self.jobname + '/radii')
     os.mkdir(self.jobname + '/intersections')
     os.mkdir(self.jobname + '/polys')
     os.chdir(self.jobname)
 
-    print("Current directory is now: %s\n" % os.getcwd())
-    print("Jobname is %s" % self.jobname)
+    print(f"Current directory is now: {os.getcwd()}")
+    print(f"Jobname is {self.jobname}")
 
 
 def create_network(self):

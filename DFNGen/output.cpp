@@ -985,12 +985,27 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             file << "Beta (Rotation Around Normal Vector)-deg: " << shapeFamilies[i].beta * radToDeg << endl;
         }
         
-        // Theta (angle normal makes with z axis
-        file << "Theta-rad: " << shapeFamilies[i].theta << endl;
-        file << "Theta-deg: " << shapeFamilies[i].theta * radToDeg << endl;
-        // Phi (angle the projection of normal onto x-y plane  makes with +x axis
-        file << "Phi-rad: " << shapeFamilies[i].phi << endl;
-        file << "Phi-deg: " << shapeFamilies[i].phi * radToDeg << endl;
+        if (orientationOption == 0) {
+            // Theta (angle normal makes with z axis
+            file << "Theta-rad: " << shapeFamilies[i].angleOne << endl;
+            file << "Theta-deg: " << shapeFamilies[i].angleOne * radToDeg << endl;
+            // Phi (angle the projection of normal onto x-y plane  makes with +x axis
+            file << "Phi-rad: " << shapeFamilies[i].angleTwo << endl;
+            file << "Phi-deg: " << shapeFamilies[i].angleTwo * radToDeg << endl;
+        } else if (orientationOption == 1) {
+            file << "Trend-rad: " << shapeFamilies[i].angleOne << endl;
+            file << "Trend-deg: " << shapeFamilies[i].angleOne * radToDeg << endl;
+            // Phi (angle the projection of normal onto x-y plane  makes with +x axis
+            file << "Plunge-rad: " << shapeFamilies[i].angleTwo << endl;
+            file << "Plunge-deg: " << shapeFamilies[i].angleTwo * radToDeg << endl;
+        } else if (orientationOption == 2) {
+            file << "Dip-rad: " << shapeFamilies[i].angleOne << endl;
+            file << "Dip-deg: " << shapeFamilies[i].angleOne * radToDeg << endl;
+            // Phi (angle the projection of normal onto x-y plane  makes with +x axis
+            file << "Strike-rad: " << shapeFamilies[i].angleTwo << endl;
+            file << "Strike-deg: " << shapeFamilies[i].angleTwo * radToDeg << endl;
+        }
+        
         // kappa
         file << "Kappa: " << shapeFamilies[i].kappa << endl;
         

@@ -713,12 +713,19 @@ def read_intersections(c, path_to_intersections):
     """
     end_pts = []
     #short edges require smaller closer nodes to guarantee good triangles
-    for i in range(0, c.no_of_vertices):
-        if distance_sq(c.vertices[i], c.vertices[
-            (i + 1) % c.no_of_vertices]) < c.max_exclusion_radius**2:
-            end_pts.append(c.vertices[i])
-            end_pts.append(c.vertices[(i + 1) % c.no_of_vertices])
-
+    for i in range(c.no_of_vertices):
+        if distance_sq(c.vertices[i],c.vertices[(i+1)%c.no_of_vertices]) < c.max_exclusion_radius**2:
+            if c.A != 0:
+                edge = c.vertices[i]-c.vertices[(i+1)%c.no_of_vertices]
+                edge_length = sqrt(norm_sq(edge))
+                orthogonal = array([-edge[0],edge[1]])/edge_length
+                shift = (edge_length-c.H*c.F)/c.A
+            else:
+                orthogonal = array[0,0]
+                shift = 0
+            end_pts.append(c.vertices[i]+shift*orthogonal)
+            end_pts.append(c.vertices[(i+1)%c.no_of_vertices]+shift*orthogonal)
+            
     with open(path_to_intersections) as inputfile:
         lines = inputfile.readlines()
     if len(lines) != 0:

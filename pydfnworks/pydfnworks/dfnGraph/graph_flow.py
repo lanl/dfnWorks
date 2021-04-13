@@ -51,7 +51,7 @@ def get_laplacian_sparse_mat(G,
     return D, A
 
 
-def prepare_graph_with_attributes(inflow, outflow):
+def prepare_graph_with_attributes(inflow, outflow,G=None):
     """ Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
     
     Parameters
@@ -67,12 +67,18 @@ def prepare_graph_with_attributes(inflow, outflow):
         Gtilde : NetworkX graph
     """
 
-    G = d2g.create_intersection_graph(
-        inflow, outflow, intersection_file="intersection_list.dat")
-    Gtilde = G.copy()
-    d2g.add_perm(Gtilde)
-    d2g.add_area(Gtilde)
-    d2g.add_weight(Gtilde)
+    if G == None:
+        G = d2g.create_intersection_graph(
+            inflow, outflow, intersection_file="intersection_list.dat")
+
+        Gtilde = G.copy()
+        d2g.add_perm(Gtilde)
+        d2g.add_area(Gtilde)
+        d2g.add_weight(Gtilde)
+
+    else:
+        Gtilde = G
+        
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag'] = False
@@ -163,7 +169,7 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
     return Gtilde
 
 
-def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4):
+def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, G = None):
     """ Run the graph flow portion of the workflow
 
     Parameters
@@ -196,6 +202,6 @@ def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4):
     -----
     Information on individual functions in found therein
     """
-    Gtilde = prepare_graph_with_attributes(inflow, outflow)
+    Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity)
     return Gtilde

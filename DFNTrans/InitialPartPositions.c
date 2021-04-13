@@ -45,7 +45,7 @@ int InitPos()
         numbf = 1;
     }
     
-    printf(" %d fracture(s) in in-flow boundary zone \n", numbf);
+    printf("Number of fractures in the in-flow boundary zone: %d\n\n", numbf);
     // define first and last node and their ID for each boundary fracture edge
     unsigned int firstind[numbf], lastind[numbf], firstnode[numbf], lastnode[numbf], numberf = 1, curfr = 0;
     firstnode[0] = nodezonein[0];
@@ -72,7 +72,7 @@ int InitPos()
     lastind[numberf - 1] = nzone_in - 1;
     
     if (numberf > numbf) {
-        printf("check the boundary zone file\n");
+        printf("Please check the boundary zone file\n");
     }
     
     //  check the input options of particles positions
@@ -97,26 +97,43 @@ int InitPos()
         res = strncmp(initfile.filename, "yes", 3);
         
         if (res == 0) {
-            flag_in = 2;
-            flag_w = 1;
             /*! Second option init_eqd: calculate total length of boundary edges;
             define the distance between particles and place particles
              equidistant from each other on all edges */
+
+
+            flag_in = 2;
+            flag_w = 1;
+
             initfile = Control_Data("init_npart:", 11 );
             parts_fracture = initfile.flag;
+            printf("Particle Initial position option: init_eqd with init_npart: %d\n",parts_fracture);
+
             npart = (numbf) * parts_fracture * 2;
-            /*  memory allocatation for particle structures */
+            //npart = parts_fracture;
+
+            /*  memory allocation for particle structures */
             particle = (struct contam*) malloc ((npart) * sizeof(struct contam));
+
             // define a distance between particles
             double length2 = 0.0, t_length = 0.0;
-            
+            // Get the total length of the fractures intersecting with the boundary zone 
             for (i = 0; i < numbf; i++) {
                 length2 = pow((node[firstnode[i] - 1].coord[0] - node[lastnode[i] - 1].coord[0]), 2) + pow((node[firstnode[i] - 1].coord[1] - node[lastnode[i] - 1].coord[1]), 2) + pow((node[firstnode[i] - 1].coord[2] - node[lastnode[i] - 1].coord[2]), 2);
                 t_length = t_length + sqrt(length2);
             }
             
             parts_dist = t_length / (parts_fracture * numbf);
-            printf("\n  Particles placed on %f [m]  from each other. Total length %lf  \n", parts_dist, t_length);
+            //parts_dist = t_length / parts_fracture;
+
+            printf("\n");
+            printf("Total Number of Particles: %d\n",  npart/2);
+            //printf("Total Number of Particles: %d\n", parts_fracture);
+            printf("Number of Fractures: %d\n",numbf);
+            printf("Total Length of Fractures on Boundary: %lf m\n",t_length);
+            //printf("Approximate number of particles per fracture: %d\n", (int) parts_fracture/numbf);
+            printf("Particles will be placed with a spacing of %f [m]\n",parts_dist);
+            printf("\n");
         } else {
             initfile = Control_File("init_oneregion:", 15);
             res = strncmp(initfile.filename, "yes", 3);
@@ -130,7 +147,7 @@ int InitPos()
                 npart = initfile.flag;
                 /*  memory allocatation for particle structures */
                 particle = (struct contam*) malloc ((npart * 2) * sizeof(struct contam));
-                printf("\n Initially particles have the same starting region \n");
+                printf("Initializing particles into a single region \n");
                 initfile = Control_Param("in_xmin:", 8 );
                 ixmin = initfile.param;
                 initfile = Control_Param("in_xmax:", 8 );
@@ -145,8 +162,9 @@ int InitPos()
                 izmax = initfile.param;
                 initfile = Control_Data("in-flow-boundary:", 17 );
                 zonenumb_in = initfile.flag;
+                printf("Box Domain:\nxmin: %0.2f\txmax: %0.2f\nymin: %0.2f\tymax: %0.2f\nzmin: %0.2f\tzmax: %0.2f\n", ixmin, ixmax, iymin, iymax, izmin, izmax);
                 
-                /* define coordinations of region according to in-flow zone */
+                /* define coordinates of region according to in-flow zone */
                 if ((zonenumb_in == 1) || (zonenumb_in == 2)) {
                     px[0] = ixmin;
                     py[0] = iymin;
@@ -256,7 +274,24 @@ int InitPos()
                                 npart_alloc = npart * 3;
                                 /*  memory allocatation for particle structures */
                                 particle = (struct contam*) malloc (npart_alloc * sizeof(struct contam));
-                            }
+                            }  // end if flag_in=6
+                            else {
+                                initfile = Control_File("init_well:", 10);
+                                res = strncmp(initfile.filename, "yes", 3);
+                                
+                                if (res == 0) {
+                                    /* Option 7: init_well. Particles are seeded at the in-flow zone nodes*/
+                                    flag_in = 7;
+                                    flag_w = 0;
+                                    int nodepart = 0, npartalloc = 0;
+                                    initfile = Control_Data("init_nodepart:", 14 );
+                                    nodepart = initfile.flag;
+                                    npartalloc = (nzone_in + 1 ) * nodepart;
+                                    /*  memory allocatation for particle structures */
+                                    particle = (struct contam*) malloc (npartalloc * sizeof(struct contam));
+                                    k_new = InitInWell (nodepart);
+                                } // end if flag_in=7
+                            }// end if/else flag_in=7
                         }//end if/else flag_in=6
                     } //end if/else flag_in=5
                 } //end if flag_in=4
@@ -314,9 +349,9 @@ int InitPos()
     /*** loop on all nodes in zone: define the boundary nodes for each fracture ****/
     //  k_current=0;
     
-    //  fprintf(inp,"%d\n", nzone_in);
+    //fprintf(inp,"%d\n", nzone_in);
     for (i = 0; i < nzone_in - 1; i++) {
-        //        printf(" %d %d %d  %d %d %d\n", i,nodezonein[i], node[nodezonein[i]-1].fracture[0], node[nodezonein[i]-1].fracture[1], firstn, lastn);
+        //printf(" %d %d %d  %d %d %d\n", i,nodezonein[i], node[nodezonein[i]-1].fracture[0], node[nodezonein[i]-1].fracture[1], firstn, lastn);
         if (node[nodezonein[i] - 1].fracture[0] == frc) {
             if (node[nodezonein[i] - 1].coord[firstcoor] != node[firstn - 1].coord[firstcoor]) {
                 if (node[nodezonein[i] - 1].coord[firstcoor] < node[firstn - 1].coord[firstcoor]) {
@@ -359,6 +394,7 @@ int InitPos()
             
             if (firstn != lastn) {
                 if (flag_in == 3) {
+                    //printf("--> initial particles based on one region\n");
                     double cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
                     /* define ends points of fracture edge, then calculate an intersection with starting region */
                     inter_p[frc_count][0] = 1e-10;
@@ -493,16 +529,24 @@ int InitPos()
     
     //   printf("fracture in flow-in zone %d first node %d last node %d \n", frc, firstn, lastn);
     if ((flag_in == 3) && (frc_count == 0)) {
-        printf("\n There is no fracture crosses the given range. Try to increase the range. \n");
-        printf("\n Program is terminated. \n");
+        printf("\nERROR! There are no fractures crossing the provided region. Try to increase the range. \n");
+        printf("\nProgram is terminated.\n");
         exit(1);
     }
     
     /* place particles in starting region: every fracture (or part of fracture
      edge will have the same amount of particles */
-    if (flag_in == 3) {
+    if (flag_in == 3){ 
+        parts_fracture = (int)(npart / frc_count);
+        if (parts_fracture==0){
+            printf("\nERROR! Fewer particles requested than number of fractures.\n");
+            printf("Number of requested particles: %d\n",npart);
+            printf("Fracture Count in inflow region: %d\n\n",frc_count);
+            printf("There must be at least one particle per fracture.\n\n");
+            printf("Exiting Program\n\n");
+            exit(1);
+        }
         for (i = 0; i < frc_count; i++) {
-            parts_fracture = (int) npart / frc_count;
             k_new = InitParticles_ones (k_current, inter_p, inter_fr[i], parts_fracture, i, thirdcoor, zonenumb_in, first_ind, last_ind);
             k_current = k_new;
             //   printf(" %d intersects at %f %f %f %f\n",i, inter_p[i][0], inter_p[i][1], inter_p[i][2], inter_p[i][3]);
@@ -511,8 +555,8 @@ int InitPos()
     
     // fclose(inp);
     if (flag_in == 0) {
-        printf("\n There is no option specified for particles initial positions! \n");
-        printf("\n Program is terminated. \n");
+        printf("\nERROR! No option specified for particles initial positions.\n");
+        printf("\nProgram is terminated. \n");
         exit(1);
     }
     
@@ -593,7 +637,7 @@ int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture
         k_current++;
         
         if (k_current > npart) {
-            printf(" \n Number of particles with allocated memory is less than number of particles set up initially. \n");
+            printf(" \n Number of particles with allocated memory is more than number of particles set up initially. \n");
             printf(" Increase the number of particles. Program is terminated. \n");
             exit(1);
         }
@@ -611,8 +655,9 @@ int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, i
     deltax = (node[lastn - 1].coord_xy[0] - node[firstn - 1].coord_xy[0]);
     deltay = (node[lastn - 1].coord_xy[1] - node[firstn - 1].coord_xy[1]);
     edgelength = sqrt(deltax * deltax + deltay * deltay);
+
     pf = (int)(edgelength / parts_dist);
-    
+
     if (pf < 2) {
         pf = 1;
         eqdist_x = deltax / 2.0;
@@ -632,18 +677,14 @@ int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, i
         particle[k_current].time = 0.0;
         particle[k_current].fl_weight = 0.0;
         particle[k_current].pressure = 0.0;
-        
-        if (particle[k_current].fracture == 13) {
-            printf("os %lf %lf \n", particle[k_current].position[0], particle[k_current].position[1]);
-        }
-        
+        //  if (particle[k_current].fracture == 13) {
+        //       printf("os %lf %lf \n", particle[k_current].position[0], particle[k_current].position[1]);
         k_current++;
-        
-        if (k_current > npart) {
-            printf("\n Number of particles with allocated memory is less than number of particles set up initially. \n");
-            printf(" Increase the number of particles. Program is terminated. \n");
-            exit(1);
-        }
+    }
+    if (k_current > npart) {
+        printf("\n Number of particles with allocated memory is less than number of particles set up initially. \n");
+        printf(" Increase the number of particles. Program is terminated. \n");
+        exit(1);
     }
     
     return k_current;
@@ -1010,4 +1051,31 @@ int InitParticles_flux (int k_current, int first_ind, int last_ind, double weigh
     return k_current;
 }
 ////////////////////////////////////////////////////////////////////////////
-
+int InitInWell(int node_part) {
+// Function defines initial parameters for the particles in Option #7, where certain number of particles are seeded at nodes in in-flow zone.
+    int i = 0, j = 0, k_current = 0;
+    float sum_aperture = 0.0;
+    
+    for (i = 0; i < nzone_in; i++) {
+        for (j = 0; j < node_part; j++) {
+            particle[k_current].position[0] = node[nodezonein[i] - 1].coord_xy[0];
+            particle[k_current].position[1] = node[nodezonein[i] - 1].coord_xy[1];
+            particle[k_current].velocity[0] = 0.;
+            particle[k_current].velocity[1] = 0.;
+            particle[k_current].fracture = node[nodezonein[i] - 1].fracture[0];
+            particle[k_current].cell = 0;
+            particle[k_current].time = 0.0;
+            particle[k_current].fl_weight = node[nodezonein[i] - 1].aperture;
+            particle[k_current].pressure = 0.0;
+            k_current++;
+            sum_aperture = sum_aperture + node[nodezonein[i] - 1].aperture;
+        }
+    }
+    
+    for (i = 0; i < k_current; i++) {
+        particle[i].fl_weight = particle[i].fl_weight / sum_aperture;
+    }
+    
+    return k_current;
+}
+////////////////////////////////////////////////////////////////////////////////

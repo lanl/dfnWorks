@@ -63,7 +63,7 @@ void OutputMarPlumDisp (int currentnum, char path[125])
         traj_o = 1;
     }
     
-    double posx = 0.0, posy = 0.0, posz = 0.0, vx = 0.0, vy = 0.0, vz = 0.0, ttime = 0.0, apert = 0.0, beta = 0.0, ntime, bbet = 0.0;
+    double posx = 0.0, posy = 0.0, posz = 0.0, vx = 0.0, vy = 0.0, vz = 0.0, ttime = 0.0, apert = 0.0, beta = 0.0, ntime, bbet = 0.0, pres = 0.0;
     unsigned int cell, fr, ts, numtimes, inters;
     
     // lopp on particles trajectories files
@@ -83,10 +83,10 @@ void OutputMarPlumDisp (int currentnum, char path[125])
             cs = fgetc(tr);
         } while (cs != '\n');
         
-        //   current time step, x-, y-, z- pos., Vx, Vy, Vz at ths positions, # of cell, #of fracture, travel time, aperture , beta
+        //   current time step, x-, y-, z- pos., Vx, Vy, Vz at ths positions, # of cell, #of fracture, travel time, aperture , beta, intersect. fracture ID, fluid pressure at particle's positiona
         
         for (j = 1; j <= numtimes; j++) {
-            if (fscanf(tr, "%d %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %d \n", &ts, &posx, &posy, &posz, &vx, &vy, &vz, &cell, &fr, &ttime, &apert, &beta, &inters ) != 13) {
+            if (fscanf(tr, "%d %lf %lf %lf %lf %lf %lf %d %d %lf %lf %lf %d %lf\n", &ts, &posx, &posy, &posz, &vx, &vy, &vz, &cell, &fr, &ttime, &apert, &beta, &inters, &pres ) != 14) {
                 printf("ErrorTr");
             }
             

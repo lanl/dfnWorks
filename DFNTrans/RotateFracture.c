@@ -273,7 +273,7 @@ struct posit3d CalculateVelocity3D()
         particle3dvelocity.cord3[1] = particle[np].velocity[1];
         particle3dvelocity.cord3[2] = 0;
     }
-    
+ 
     return particle3dvelocity;
 }
 ///////////////////////////////////////////////////////////////////////////
