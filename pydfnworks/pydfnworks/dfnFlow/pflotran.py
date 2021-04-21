@@ -517,8 +517,9 @@ def check_pflotran_convergence(pflotran_input_file):
     steady = False
     with open(pflotran_input_file, "r") as fp:
         for line in fp.readlines():
-            if "STEADY_STATE" in line:
-                steady = True
+            if "#" not in line:
+                if "STEADY_STATE" in line:
+                    steady = True
 
     if steady:
         pflotran_output_file = pflotran_input_file[:-2] + "out"
