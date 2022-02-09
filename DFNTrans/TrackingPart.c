@@ -27,7 +27,7 @@ struct lagrangian { /*! data structure of Lagrangian variables */
 
 struct lagrangian lagvariable;
 unsigned int FLAG_OUT = 0, all_out = 0;
-unsigned int np, t, nodeID = 0, avs_o = 0, traj_o = 0, curv_o = 0, no_out = 0, tdrw = 0, mixing_rule = 1;
+unsigned int t, nodeID = 0, avs_o = 0, traj_o = 0, curv_o = 0, no_out = 0, tdrw = 0, mixing_rule = 1;
 unsigned int marfa = 0, plumec = 0, disp_o = 0, timecounter = 0, frac_o = 0, tfile = 0, tdrw_o = 0, tdrw_limited = 0;
 double tdrw_porosity = 0.0, tdrw_diffcoeff = 0.0, t_adv0 = 0.0, t_adv = 0.0, timediff = 0.0; //, tdrw_lambda = 0.0;
 struct intcoef { /*! Interpolation coefficients: barycentric interpolation is used to define instantaneous particle's velocity from Darcy velocities defined on triangular cell vertices.*/
