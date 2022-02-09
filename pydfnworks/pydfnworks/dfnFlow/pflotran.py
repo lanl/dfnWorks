@@ -466,7 +466,13 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
 
     print("=" * 80)
     print("--> Running PFLOTRAN")
-    cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
+
+    mpirun = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun'
+    if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
+        # PETSc did not install MPI. Hopefully, the user has their own MPI.
+        mpirun = 'mpirun'
+
+    cmd = mpirun + ' -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
     print("Running: %s" % cmd)
     subprocess.call(cmd, shell=True)
