@@ -12,6 +12,8 @@ import timeit
 import glob
 
 import multiprocessing as mp
+mp.set_start_method("fork")
+
 from shutil import copy, rmtree
 from numpy import genfromtxt
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
@@ -319,6 +321,7 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
             os.mkdir(d)
         else:
             os.mkdir(d)
+
 
     pool = mp.Pool(ncpu)
     result_list = []

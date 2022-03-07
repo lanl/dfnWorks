@@ -34,7 +34,7 @@ def set_flow_solver(self, flow_solver):
         sys.exit(1)
 
 
-def dfn_flow(self, dump_vtk=True, effective_perm=True):
+def dfn_flow(self, dump_vtk=True):
     """ Run the dfnFlow portion of the workflow
        
     Parameters
@@ -78,9 +78,6 @@ def dfn_flow(self, dump_vtk=True, effective_perm=True):
         self.dump_time('Function: pflotran_cleanup', time() - tic)
 
         tic = time()
-        if effective_perm:
-            self.effective_perm()
-            self.dump_time('Function: effective_perm', time() - tic)
 
     elif self.flow_solver == "FEHM":
         print("Using flow solver: %s" % self.flow_solver)
