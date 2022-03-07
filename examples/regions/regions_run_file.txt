@@ -1,3 +1,3 @@
-dfnGen DUMMY/dfnworks-main/examples/regions/gen_regions.dat
-dfnFlow DUMMY/dfnworks-main/examples/regions/dfn_explicit.in
-dfnTrans DUMMY/dfnworks-main/examples/regions/PTDFN_control.dat
+dfnGen DUMMY/dfnworks/examples/regions/gen_regions.dat
+dfnFlow DUMMY/dfnworks/examples/regions/dfn_explicit.in
+dfnTrans DUMMY/dfnworks/examples/regions/PTDFN_control.dat

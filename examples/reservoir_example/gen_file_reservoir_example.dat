@@ -558,7 +558,7 @@ userEllipsesOnOff: 1
     1 - User Ellipses on
 */
 
-UserEll_Input_File_Path: DUMMY/dfnworks-main/examples/reservoir_example/hydraulic_fractures.dat
+UserEll_Input_File_Path: DUMMY/dfnworks/examples/reservoir_example/hydraulic_fractures.dat
 
 
 /*===========================================================================*/
@@ -575,7 +575,7 @@ userRectanglesOnOff: 1
     1 - User Rectangles on
 */
 
-UserRect_Input_File_Path: DUMMY/dfnworks-main/examples/reservoir_example/well.dat
+UserRect_Input_File_Path: DUMMY/dfnworks/examples/reservoir_example/well.dat
 
 
 /*===========================================================================*/

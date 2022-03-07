@@ -1,1 +1,1 @@
-python run_explicit.py -name DUMMY/dfnworks-main/examples/4_user_ell_uniform/4_user_ell_uniform_example -input 4_user_ell_run_file.txt 
+python run_explicit.py -name DUMMY/dfnworks/examples/4_user_ell_uniform/4_user_ell_uniform_example -input 4_user_ell_run_file.txt 

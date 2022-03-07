@@ -20,13 +20,13 @@ DFN.create_network()
 DFN.mesh_network()
 
 # call LaGriT to run a script for identifying all the nodes on the well
-cmd = os.environ['LAGRIT_EXE'] + ' < DUMMY/dfnworks-main/examples/reservoir_example/CreateWellZone.lgi '
+cmd = os.environ['LAGRIT_EXE'] + ' < DUMMY/dfnworks/examples/reservoir_example/CreateWellZone.lgi '
 subprocess.call(cmd,shell=True)
 
 # run python  script to combine 4 boundary faces nodes into one zone file  -> inflow boundary
 # and the well zone file -> outflow boundary 
 
-cmd = 'python DUMMY/dfnworks-main/examples/reservoir_example/create_boundaries.py'
+cmd = 'python DUMMY/dfnworks/examples/reservoir_example/create_boundaries.py'
 subprocess.call(cmd,shell=True)
 
 DFN.lagrit2pflotran()

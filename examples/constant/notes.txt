@@ -2,4 +2,4 @@
 ## This example creates a network of uniform sized squares
 ## Orientations are assigned using Trend and Plunge
 ## 
-python run_explicit.py -name DUMMY/dfnworks-main/examples/constant/constant_example -input constant_run_file.txt -ncpu 4
+python run_explicit.py -name DUMMY/dfnworks/examples/constant/constant_example -input constant_run_file.txt -ncpu 4

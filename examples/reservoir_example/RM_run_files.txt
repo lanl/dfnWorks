@@ -1,3 +1,3 @@
-dfnGen DUMMY/dfnworks-main/examples/reservoir_example/gen_file_reservoir_example.dat
-dfnFlow  DUMMY/dfnworks-main/examples/reservoir_example/reservoir_example_PFLOTRAN.in
-dfnTrans  DUMMY/dfnworks-main/examples/reservoir_example/PTDFN_control_reservoir_example.dat
+dfnGen DUMMY/dfnworks/examples/reservoir_example/gen_file_reservoir_example.dat
+dfnFlow  DUMMY/dfnworks/examples/reservoir_example/reservoir_example_PFLOTRAN.in
+dfnTrans  DUMMY/dfnworks/examples/reservoir_example/PTDFN_control_reservoir_example.dat

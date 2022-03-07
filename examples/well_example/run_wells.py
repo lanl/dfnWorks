@@ -25,7 +25,7 @@ extract_well = {"name": 'extract', "filename": "well_extract.dat","r":0.1}
 wells = [inject_well, extract_well]
 
 
-path = "DUMMY/dfnworks-main/examples/well_example/"
+path = "DUMMY/dfnworks/examples/well_example/"
 os.symlink(f"{path}"+f"{inject_well['filename']}",f"{inject_well['filename']}")
 os.symlink(f"{path}"+f"{extract_well['filename']}",f"{extract_well['filename']}")
 
