@@ -5,6 +5,7 @@
 
 """
 import os
+import sys
 import glob
 from numpy import genfromtxt, sort, zeros
 import subprocess

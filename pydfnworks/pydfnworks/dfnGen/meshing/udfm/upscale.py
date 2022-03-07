@@ -246,8 +246,18 @@ def upscale(self, mat_perm, mat_por, path='../'):
 
     # What nodes are fractures vs. matrix
     tag = perm_var > mat_perm
-    tag.astype("uint8")
+    tag = tag.astype("uint8")
+    # Add 1 since PFLOTRAN doesn't like mat id = 0
+    tag += 1
     np.savetxt("tag_frac.dat", tag, '%d', delimiter=",")
+    # Save as h5
+    h5file = h5py.File("materials.h5", mode="w")
+    dataset_name = 'Materials/Cell Ids'
+    h5dset = h5file.create_dataset(dataset_name, data=iarray)
+
+    dataset_name = 'Materials/Material Ids'
+    h5dset = h5file.create_dataset(dataset_name, data=tag)
+    h5file.close()
 
     print('=' * 80)
     print("Generating permeability and porosity for octree mesh: Finished")

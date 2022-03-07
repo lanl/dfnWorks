@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "6 April 2021"
+date = "7 April 2022"
 
-version = "2.5"
+version = "2.5.3"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -78,4 +78,4 @@ install_requires=["numpy",
           "fpdf",
           "networkx>=2.4",
           "mplstereonet",
-          "matplotlib<3.0"]
+          "matplotlib"]

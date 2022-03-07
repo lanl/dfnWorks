@@ -110,6 +110,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     lagrit_strip(num_poly)
     driver_parallel(self, num_poly)
     build_dict(self, num_poly, delete_files = True)
+    dir_cleanup()
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     """ This function creates the main lagrit driver script, which calls all 
@@ -980,3 +981,19 @@ def build_dict(self, num_poly, delete_files):
     p_out = open("connections.p", "wb")
     pickle.dump(f_dict, p_out, pickle.HIGHEST_PROTOCOL)
     p_out.close()
+
+def dir_cleanup():
+    os.rename("build_octree.mlgi", "lagrit_scripts/build_octree.mlgi")
+    os.rename("driver_octree_start.lgi", "lagrit_scripts/driver_octree_start.lgi")
+    os.rename("driver_octree_start.lgi.log", "lagrit_logs/driver_octree_start.lgi.log")
+    os.rename("driver_octree_start.lgi.out", "lagrit_logs/driver_octree_start.lgi.out")
+    os.rename("hex_to_tet.mlgi", "lagrit_scripts/hex_to_tet.mlgi")
+    os.rename("parameters_octree_dfn.mlgi", "lagrit_scripts/parameters_octree_dfn.mlgi")
+    os.rename("remove_cells.mlgi", "lagrit_scripts/remove_cells.mlgi")
+    os.rename("intersect_refine.mlgi", "lagrit_scripts/intersect_refine.mlgi")
+    os.rename("intersect_refine_np1.mlgi", "lagrit_scripts/intersect_refine_np1.mlgi")
+    os.remove("mohex2.inp")
+    os.remove("MOTET.inp")
+    os.remove("MOTET_np1.inp")
+    
+    

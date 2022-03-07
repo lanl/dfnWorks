@@ -267,8 +267,8 @@ void ParticleTrack ()
     
     if (frac_o > 0) {
         sprintf(filename, "%s/FractureID", maindir);
-        frac =  OpenFile (filename, "w");
-        fprintf(frac, "Fractures ID  \n");
+        fracture_fp =  OpenFile (filename, "w");
+        fprintf(fracture_fp, "Fractures ID  \n");
     }
     
     // output in case of tdrw
@@ -997,11 +997,11 @@ void ParticleTrack ()
                     id = 0;
                     
                     do {
-                        fprintf(frac, "%d  ", fract_id[id]);
+                        fprintf(fracture_fp, "%d  ", fract_id[id]);
                         id++;
                     } while (fract_id[id] != 0);
                     
-                    fprintf(frac, "\n");
+                    fprintf(fracture_fp, "\n");
                 }
                 
                 // output of last control plane - outflow plane
@@ -1085,7 +1085,7 @@ void ParticleTrack ()
     }
     
     if (frac_o > 0) {
-        fclose(frac);
+        fclose(fracture_fp);
     }
     
     sprintf(filename, "%s/TotalNumberP", maindir);

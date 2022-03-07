@@ -103,7 +103,7 @@ double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::
         v1[0] = cos(angleOne) * cos(angleTwo);
         v1[1] = sin(angleOne) * cos(angleTwo);
         v1[2] = sin(angleTwo);
-    } else if (orientationOption == 2) {
+    }else if (orientationOption == 2) {
         // Dip and Strike
         // angleOne = Dip
         // angleTwo = Strike
@@ -111,7 +111,6 @@ double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::
         v1[1] = -sin(angleOne) * cos(angleTwo);
         v1[2] = cos(angleOne);
     }
-    
     double u[3] = {0, 0, 1};
     double *xProd = crossProduct(u, v1);
     double R[9];
