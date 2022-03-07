@@ -106,7 +106,7 @@ def define_paths():
         if env_paths[envVar] == '':
             env_paths[envVar] = os.environ.get(envVar, '')
 
-    # the dfnworks-main  repository
+    # the dfnworks  repository
     os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
     valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
 
