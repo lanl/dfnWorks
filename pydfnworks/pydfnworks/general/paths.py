@@ -101,6 +101,11 @@ def define_paths():
             'FEHM_EXE': ''
         }
 
+    # Or, read the variables from the environment
+    for envVar in env_paths:
+        if env_paths[envVar] == '':
+            env_paths[envVar] = os.environ.get(envVar, '')
+
     # the dfnworks-main  repository
     os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
     valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
