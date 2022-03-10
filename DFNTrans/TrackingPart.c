@@ -263,7 +263,7 @@ void ParticleTrack ()
     }
     
     // open FractureID file
-    FILE *frac;
+    FILE *fracture_fp;
     
     if (frac_o > 0) {
         sprintf(filename, "%s/FractureID", maindir);
