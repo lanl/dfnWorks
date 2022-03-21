@@ -10,6 +10,9 @@
 #include "domain.h"
 #include "readInputFunctions.h"
 
+using std::cout;
+using std::endl;
+
 /**********************************************************************/
 /**********************************************************************/
 /*! Used to read in ellipse coordinates when the user is using
@@ -42,6 +45,7 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
     unsigned int nPolygonByCoord;
     unsigned int nPolyNodes;
     //int familyNum;
+    std::cout << "Domain Size " << domainSize[0] << " " << domainSize[1] << " " << domainSize[2] << std::endl;
     std::cout << "Reading User Defined Polygons from " << polygonFile << "\n";
     std::ifstream file;
     file.open(polygonFile.c_str(), std::ifstream::in);
@@ -49,21 +53,27 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
     searchVar(file, "nPolygons:");
     file >> nPolygonByCoord;
     std::cout << "There are " << nPolygonByCoord << " polygons\n";
+
+    acceptedPoly.reserve(nPolygonByCoord);
     
     for (unsigned int i = 0; i < nPolygonByCoord; i++) {
         Poly newPoly;
         // file >> familyNum;
         newPoly.familyNum = -3;
         file >> nPolyNodes;
-        // std::cout << "There are " << nPolyNodes <<" nodes in this polygon\n";
+         //std::cout << "There are " << nPolyNodes <<" nodes in this polygon\n";
         newPoly.numberOfNodes = nPolyNodes;
         newPoly.vertices = new double[3 * nPolyNodes ]; // 3 * number of nodes
         getPolyCoords(file, newPoly.vertices, nPolyNodes);
-        // int idx = 0;
-        // for(unsigned int j = 0; j < nPolyNodes; j++){
-        //    idx = j*3;
-        //    std::cout << newPoly.vertices[idx] << " " << newPoly.vertices[idx+1] << " " << newPoly.vertices[idx+2] << "\n";
-        // }
+
+        /*
+        int idx = 0;
+        for(unsigned int j = 0; j < nPolyNodes; j++){
+           idx = j*3;
+           std::cout << newPoly.vertices[idx] << " " << newPoly.vertices[idx+1] << " " << newPoly.vertices[idx+2] << "\n";
+        }
+        */
+
         // Get a normal vector
         // Vector from fist node to node across middle of polygon
         int midPtIdx = 3 * (int) (nPolyNodes / 2);
@@ -90,11 +100,12 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
         //std::cout << "Normal Vector " << newPoly.normal[0]<<" "<< newPoly.normal[1] << "  " << newPoly.normal[2] << "\n";
         delete[] xProd1;
         // Estimate radius
-        newPoly.xradius = .5 * magnitude(v2[0], v2[1], v2[2]); // across middle if even number of nodes
-        int tempIdx1 = 3 * (int) (midPtIdx / 2) ; // Get idx for node 1/4 around polygon
-        int tempIdx2 = 3 * (tempIdx1 + midPtIdx);  // Get idx for node 3/4 around polygon
+        // std::cout << "estimating radius" << endl;
+        newPoly.xradius = 0.5 * magnitude(v2[0], v2[1], v2[2]); // across middle if even number of nodes
         // across middle close to perpendicular to xradius magnitude calculation
-        newPoly.yradius = .5 * euclideanDistance(&newPoly.vertices[tempIdx1], &newPoly.vertices[tempIdx2]);
+        int tempIdx1 = 3 * (int) (nPolyNodes/4) ; // Get idx for node 1/4 around polygon
+        int tempIdx2 = 3 * (int) (3*nPolyNodes/4) ; // Get idx for node 1/4 around polygon
+        newPoly.yradius = 0.5 * euclideanDistance(&newPoly.vertices[tempIdx1], &newPoly.vertices[tempIdx2]);
         newPoly.aspectRatio = newPoly.yradius / newPoly.xradius;
         // Estimate translation (middle of poly)
         // Use midpoint between 1st and and half way around polygon
@@ -107,10 +118,15 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
         
         if (domainTruncation(newPoly, domainSize) == 1) {
             // Poly completely outside domain
-            delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
             std::cout << "\nUser Polygon (defined by coordinates) " << i + 1 << " was rejected for being outside the defined domain.\n";
+            int idx = 0;
+            for(unsigned int j = 0; j < nPolyNodes; j++){
+               idx = j*3;
+               std::cout << newPoly.vertices[idx] << " " << newPoly.vertices[idx+1] << " " << newPoly.vertices[idx+2] << "\n";
+            }
+            delete[] newPoly.vertices;
             continue; // Go to next poly (go to next iteration of for loop)
         }
         
@@ -127,6 +143,7 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
             pstats.rejectsPerAttempt.push_back(0);
             std::cout << "\nUser Defined Polygon Fracture (Defined By Coordinates) " << (i + 1) << " Accepted\n";
             acceptedPoly.push_back(newPoly); // Save newPoly to accepted polys list
+            //std::cout << "size of accepted Poly " << acceptedPoly.size() << std::endl;
         } else  {
             delete[] newPoly.vertices; // Need to delete manually, created with new[]
             pstats.rejectsPerAttempt[pstats.acceptedPolyCount]++;
@@ -134,7 +151,6 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
             std::cout << "\nRejected User Defined Polygon Fracture (Defined By Coordinates) " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
         }
-    }
-    
+    }    
     file.close();
 }
