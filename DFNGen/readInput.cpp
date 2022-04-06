@@ -1122,7 +1122,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         //
         searchVar(uEllFile, "userOrientationOption:");
         uEllFile >> userEllOrientationOption;
-        
+        std::cout << "userOrientationOption" << " " <<  userEllOrientationOption << std::endl;
+
         if (userEllOrientationOption == 0) {
             searchVar(uEllFile, "Normal:");
             uenormal = new double[3 * nUserEll];
@@ -1152,7 +1153,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             searchVar(uEllFile, "Dip_Strike:");
             ueDipStrike = new double[2 * nUserEll];
             get2dAry2(uEllFile, ueDipStrike, nUserEll);
-            urnormal = new double[3 * nUserEll];
+            uenormal = new double[3 * nUserEll];
             // Convert Trend and Plunge into Dip and Strike
             double temp = M_PI / 180;
             
