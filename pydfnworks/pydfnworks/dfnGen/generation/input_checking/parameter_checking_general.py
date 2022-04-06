@@ -297,7 +297,6 @@ def check_aperture(params):
 
     if params['aperture']['value'] == 1:
         hf.check_none('meanAperture', params['meanAperture']['value'])
-        hf.check_values('meanAperture', params['meanAperture']['value'], 0)
         hf.check_none('stdAperture', params['stdAperture']['value'])
         hf.check_values('stdAperture', params['stdAperture']['value'], 0)
 
