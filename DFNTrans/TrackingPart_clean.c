@@ -29,7 +29,7 @@ struct lagrangian lagvariable;
 unsigned int FLAG_OUT = 0, all_out = 0;
 unsigned int np, t, nodeID = 0, avs_o = 0, traj_o = 0, curv_o = 0, no_out = 0, tdrw = 0, mixing_rule = 1;
 unsigned int marfa = 0, plumec = 0, disp_o = 0, timecounter = 0, frac_o = 0, tfile = 0, tdrw_o = 0, tdrw_limited = 0;
-double tdrw_porosity = 0.0, tdrw_diffcoeff = 0.0, t_adv0 = 0.0, t_adv = 0.0, timediff = 0.0; //, tdrw_lambda = 0.0;
+double tdrw_porosity = 0.0, tdrw_diffcoeff = 0.0, t_adv0 = 0.0, t_adv = 0.0, timediff = 0.0, tdrw_lambda = 0.0;
 struct intcoef { /*! Interpolation coefficients: barycentric interpolation is used to define instantaneous particle's velocity from Darcy velocities defined on triangular cell vertices.*/
     double weights[3];
 };
@@ -203,16 +203,16 @@ void ParticleTrack ()
             tdrw_porosity = inputfile.param;
             inputfile = Control_Param("tdrw_diffcoeff:", 15);
             tdrw_diffcoeff = inputfile.param;
-            // inputfile = Control_File_Optional("tdrw_rate_limited:", 5);
-            // res = strncmp(inputfile.filename, "yes", 3);
+            inputfile = Control_File_Optional("tdrw_rate_limited:", 5);
+            res = strncmp(inputfile.filename, "yes", 3);
             
-            // if (res == 0) {
-            //     tdrw_limited = true;
-            //     printf("--> Running with Rate Limited TDRW\n");
-            //     inputfile = Control_Param("tdrw_lambda:", 14);
-            //     tdrw_lambda = inputfile.param;
-            //     printf("--> Rate Limited Distance: %0.2f m\n\n", tdrw_lambda);
-            // }
+            if (res == 0) {
+                tdrw_limited = true;
+                printf("--> Running with Rate Limited TDRW\n");
+                inputfile = Control_Param("tdrw_lambda:", 14);
+                tdrw_lambda = inputfile.param;
+                printf("--> Rate Limited Distance: %0.2f m\n\n", tdrw_lambda);
+            }
             
             printf("--> Matrix Porosity: %0.2f\n", tdrw_porosity );
             printf("--> Matrix Diffusivity: %0.2e m^2/s\n\n", tdrw_diffcoeff);
@@ -261,13 +261,7 @@ void ParticleTrack ()
         tort =  OpenFile (filename, "w");
         fprintf(tort, "Data for tortuosity calculation: total length of trajectory, x-,y-, z- of initial pos., x-, y-, z- final pos., number of intersections. \n");
     }
-   
-    // 
-    FILE *initialVelocityFile;
-    sprintf(filename, "%s/particleInitialVelocity.dat", maindir);
-    initialVelocityFile =  OpenFile (filename, "w");
-
-
+    
     // open FractureID file
     FILE *frac;
     
@@ -354,8 +348,8 @@ void ParticleTrack ()
     double sumsquares[time_d][2];//keeps sum of squares, like (x0-x)^2 for all particles
     FILE * dis;
     unsigned int nd[time_d];
-//    int itime;
-//    char filetime[15];
+    int itime;
+    char filetime[15];
     double inflowcoord = 0.0; //define automatically
     double outflowcoord = 0.0;
     double controllength = 0.0;
@@ -390,7 +384,7 @@ void ParticleTrack ()
         if (out_plane == 1) {
             inputfile = Control_Param("flowdir:", 8);
             flowd = inputfile.param;
-            //node[nodezonein[0] - 1].fracture[0];
+            node[nodezonein[0] - 1].fracture[0];
             inflowcoord = node[nodezonein[0] - 1].coord[flowd];
             outflowcoord = node[nodezoneout[0] - 1].coord[flowd];
             controllength = fabs(outflowcoord) + fabs(inflowcoord);
@@ -418,10 +412,8 @@ void ParticleTrack ()
     int numbpart, initweight = 0;
     /*** set up initial positions of particles ***/
     numbpart = InitPos();
-    printf("\n\n***************************************************\n");
-    printf("Seeding %d particles\n", numbpart);
-    printf("There are %ld time steps in the current run\n", timesteps);
-    printf("***************************************************\n");
+    printf("\n  %ld time steps in the current run \n", timesteps);
+    printf("\n  Initial number of particles being placed: %d \n", numbpart);
     inputfile = Control_File("flux_weight:", 12);
     res = strncmp(inputfile.filename, "yes", 3);
     
@@ -442,23 +434,37 @@ void ParticleTrack ()
     if (initweight == 1) {
         FlowInWeight(numbpart);
     }
-
-    double percentDone = 0;
-    double percentCounter = 10;
-    printf("\n***************************************************\n");
-    printf("Starting Main Loop on Particles\n");
-    printf("***************************************************\n");
+    
+    unsigned int percent_done = 0;
+    
     /************ LOOP ON PARTICLES  **********/
     for (np = 0; np < numbpart; np++) {
         t = 0;
         
-        percentDone = 100*(float)np/(float)numbpart;
-        if (percentDone >= percentCounter){
-            printf("%d particles out of %d have completed (%0.2f%%)\n",np,numbpart,percentDone);
-            printf("%d particles out of %d have exited successfully.\n\n",curr_n-1,np);
-            percentCounter += 10;
+        if ((np >= (int)(0.01 * numbpart)) && ( percent_done == 0)) {
+            printf("Done %d particles, 1%%. \n", np);
+            percent_done = 1;
         }
-
+        
+        if ((np >= (int)(0.05 * numbpart)) && ( percent_done == 1)) {
+            printf("Done %d particles, 5%%. \n", np);
+            percent_done = 2;
+        }
+        
+        if ((np >= (int)(0.25 * numbpart)) && ( percent_done == 2)) {
+            printf("Done %d particles, 25%%. \n", np);
+            percent_done = 3;
+        }
+        
+        if ((np >= (int)(0.5 * numbpart)) && ( percent_done == 3)) {
+            printf("Done %d particles, 50%%.  \n", np);
+            percent_done = 4;
+        }
+        
+        if ((np >= (int)(0.75 * numbpart)) && ( percent_done == 4)) {
+            printf("Done %d particles, 75%%. \n", np);
+            percent_done = 5;
+        }
         
         if (avs_o == 1) {
             // AVS output (should be optional)
@@ -499,13 +505,13 @@ void ParticleTrack ()
         // define capacity for temp data used for outputs
         int capacity = (int) timesteps / 10;
         
-        if (disp_o != 1) {
+        if (disp_o = ! 1) {
             time_d = 1;
         }
         
         double part_squares[time_d][3];
         
-        if (disp_o != 1) {
+        if (disp_o = ! 1) {
             for (ic = 0; ic < time_d; ic++) {
                 part_squares[ic][0] = 0.0;
                 part_squares[ic][1] = 0.0;
@@ -629,15 +635,10 @@ void ParticleTrack ()
                 xcop = particle3dposit.cord3[0];
                 ycop = particle3dposit.cord3[1];
                 zcop = particle3dposit.cord3[2];
-                if (t == 1){
-                        //printf("here\n");
-                        particle3dvelocity = CalculateVelocity3D();
-                        fprintf(initialVelocityFile, "%05d  %5.12E  %5.12E  %5.12E  %5.12E \n", np+1, particle3dvelocity.cord3[0], particle3dvelocity.cord3[1], particle3dvelocity.cord3[2], sqrt( particle3dvelocity.cord3[0]*particle3dvelocity.cord3[0] + particle3dvelocity.cord3[1]*particle3dvelocity.cord3[1] +  particle3dvelocity.cord3[2]*    particle3dvelocity.cord3[2]));
-                        //printf("here 2\n");
-                        }
+                
                 if (no_out != 1) {
+                    particle3dvelocity = CalculateVelocity3D();
                     
-
                     if (tfile == 1) {
                         fprintf(tmp, "%05d  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %5.12E  %05d  %05d  %5.12E  %5.12E  %5.12E  %5.12E \n", t, particle[np].position[0], particle[np].position[1], particle3dposit.cord3[0], particle3dposit.cord3[1], particle3dposit.cord3[2], particle3dvelocity.cord3[0], particle3dvelocity.cord3[1], particle3dvelocity.cord3[2], particle[np].cell, particle[np].fracture, particle[np].time, beta, totallength, particle[np].pressure);
                     } else {
@@ -787,7 +788,7 @@ void ParticleTrack ()
                 /*** Calculate new weights and check if particle is in new cell ***/
                 CheckNewCell();
                 
-                if (FLAG_OUT == 1) {
+                if ((FLAG_OUT == 1)) {
                     break;
                 }
                 
@@ -871,11 +872,6 @@ void ParticleTrack ()
             
             /***** if particle did not go out through flow-out zone ****/
             if (FLAG_OUT == 0) {
-                // Add
-
-
-
-
                 if (all_out == 0) {
                     if (tfile == 1) {
                         fclose(tmp);
@@ -1068,16 +1064,10 @@ void ParticleTrack ()
         }
     } //end of particle loop
     
-    printf("***************************************************\n");
-    printf("Main Loop on Particles Complete\n");
-    printf("***************************************************\n\n");
     if (all_out == 0) {
-        percentDone = 100*(float)(curr_n - 1)/(float)numbpart;
-        printf("Number of particles requested: %d \n", numbpart);
-        printf("Number of particles successfully exited : %d \n", curr_n - 1);
-        printf("Percent of particles successfully exited : %0.2f%% \n", percentDone);
+        printf("\n  Number of particles that went out through out-flow boundary: %d \n", curr_n - 1);
     } else {
-        printf("Number of particles completed %d, number of particles that went out through out-flow boundary: %d \n", curr_n - 1, curr_n - 1 - curr_o);
+        printf("\n  Number of particles completed %d, number of particles that went out through out-flow boundary: %d \n", curr_n - 1, curr_n - 1 - curr_o);
     }
     
     fclose(tp);
@@ -1098,9 +1088,6 @@ void ParticleTrack ()
         fclose(frac);
     }
     
-    fclose(initialVelocityFile);
-
-
     sprintf(filename, "%s/TotalNumberP", maindir);
     FILE *tn = OpenFile (filename, "w");
     
@@ -1444,7 +1431,7 @@ void NeighborCells (int k)
     
     do {
         for (j = 0; j < 4; j++) {
-            if (node[k - 1].fracts[i][j] == particle[np].fracture) {
+            if ((node[k - 1].fracts[i][j] == particle[np].fracture)) {
                 nc = node[k - 1].cells[i][j];
                 inscell = InsideCell(nc);
             }
@@ -2799,7 +2786,7 @@ Geophysical Research Letters 46, no. 23 (2019): 13785-13795.
     double inverse_erfc = 0.0;
     double z;
     double timediff = 0.0;
-//    unsigned int cnt = 0.0;
+    unsigned int cnt = 0.0;
     
     if (particle[np].cell != 0) {
         if ((node[cell[particle[np].cell - 1].node_ind[0] - 1].typeN != 2) && (node[cell[particle[np].cell - 1].node_ind[0] - 1].typeN != 12)) {
@@ -2825,13 +2812,13 @@ Geophysical Research Letters 46, no. 23 (2019): 13785-13795.
     /* If using rate-limited TDRW, check if the particle diffuses too far into the matrix.
     If it does, then limit the time to maximum value.
     */
-    // if (tdrw_limited == 1) {
-    //     double xdiff = sqrt(2 * tdrw_diffcoeff * timediff);
+    if (tdrw_limited == 1) {
+        double xdiff = sqrt(2 * tdrw_diffcoeff * timediff);
         
-    //     if (xdiff > tdrw_lambda) {
-    //         timediff = 0.5 * (pow(tdrw_lambda, 2) / tdrw_diffcoeff);
-    //     }
-    // }
+        if (xdiff > tdrw_lambda) {
+            timediff = 0.5 * (pow(tdrw_lambda, 2) / tdrw_diffcoeff);
+        }
+    }
     
     return timediff;
 }

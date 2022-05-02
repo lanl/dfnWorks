@@ -196,7 +196,7 @@ int main (int argc, char* controlf[]) {
     
     printf("\n------------------PARTICLE TRACKING---------------------------\n");
     ParticleTrack ();
-    /****   free memomry that was allocated for data structures *****/
+    /****   free memory that was allocated for data structures *****/
     free(fracture);
     free(node);
     free(cell);
@@ -206,9 +206,11 @@ int main (int argc, char* controlf[]) {
     /**** define time at program end ******/
     current_time = time(NULL);
     c_time_string = ctime(&current_time);
-    printf("\n PROGRAM ENDS. current time: %s\n", c_time_string);
+    printf("\n\n***************************************************\n");
+    printf("DFNTrans completed successfully.\n");
+    printf("Finish Time: %s", c_time_string);
+    printf("***************************************************\n\n");
     return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
-

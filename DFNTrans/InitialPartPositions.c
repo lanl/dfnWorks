@@ -650,22 +650,25 @@ int InitParticles_np (int k_current, int firstnd, int lastnd, int parts_fracture
 int InitParticles_eq (int k_current, int firstn, int lastn, double parts_dist, int first_ind, int last_ind)
 /*! Function defines particles initial positions at a single fracture edge, using calculated before distance between particles. Option #2, init_eqd. */
 {
-    double deltax, deltay, edgelength, eqdist_x, eqdist_y;
+    double deltax, deltay, edgelength, eqdist_x, eqdist_y, pf_double;
     unsigned int j, pf;
     deltax = (node[lastn - 1].coord_xy[0] - node[firstn - 1].coord_xy[0]);
     deltay = (node[lastn - 1].coord_xy[1] - node[firstn - 1].coord_xy[1]);
     edgelength = sqrt(deltax * deltax + deltay * deltay);
 
-    pf = (int)(edgelength / parts_dist);
+    pf_double = (edgelength / parts_dist); 
+    pf = (int) (edgelength / parts_dist);
 
     if (pf < 2) {
         pf = 1;
         eqdist_x = deltax / 2.0;
         eqdist_y = deltay / 2.0;
     } else {
-        eqdist_x = deltax / pf;
-        eqdist_y = deltay / pf;
+        eqdist_x = deltax / pf_double;
+        eqdist_y = deltay / pf_double;
     }
+    
+    // printf("eqdist_x: %f eqdist_y: %f deltax: %f delta: %f\n", eqdist_x, eqdist_y, deltax, deltay);
     
     for (j = 0; j < pf; j++) {
         particle[k_current].position[0] = node[firstn - 1].coord_xy[0] + eqdist_x * (j) + eqdist_x / 2.0;
