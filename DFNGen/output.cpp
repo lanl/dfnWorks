@@ -628,7 +628,7 @@ void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
     perm.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(perm, file);
     std::cout << "Writing perm.dat\n";
-    perm << "permeabiliy" << "\n";
+    perm << "permeability" << "\n";
     int size = finalFractures.size();
     
     for (int i = 0; i < size; i++) {
@@ -943,16 +943,15 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     using namespace std;
     
     //TODO: add stub code in families.dat for userDefined fractures, IF there are user defined fractures
+
+    if (userEllipsesOnOff) {
+        file << "UserDefined Ellipse Family: 0\n\n";
+    }
     if (userRectanglesOnOff) {
         file << "UserDefined Rectangle Family: -1\n\n";
-    }
-    
-    if (userEllipsesOnOff) {
-        file << "UserDefined Ellipse Family: -2\n\n";
-    }
-    
+    }    
     if (userPolygonByCoord) {
-        file << "UserDefined Polygon Family: -3\n\n";
+        file << "UserDefined Polygon Family: -2\n\n";
     }
     
     for(unsigned int i = 0; i < shapeFamilies.size(); i++) {

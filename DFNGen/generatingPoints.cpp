@@ -75,15 +75,15 @@ Point lineFunction3D(double *v, double *point, double t) {
 
 /**************************************************************************/
 /****** Fisher Distributions for Generating polygons Normal Vectors *******/
-/*! Creates and returns an x,y,z array of doubles using fisher distribution.
+/*! Creates and returns an x,y,z array of doubles using Fisher distribution.
 
     NOTE: Uses new[] to return an array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE
 
     Arg 1: theta, the angle the normal vector makes with the z-axis
     Arg 2: phi, the angle the projection of the normal onto the x-y plane makes with the x-axis
-    Arg 3: kappa, parameter for the fisher distribnShaprutions
+    Arg 3: kappa, parameter for the Fisher distribnShaprutions
     Arg 4: Random generator, see std c++ <random> library
-    Return: A fisher distribution array {x, y, z}. Used for random generation of
+    Return: A Fisher distribution array {x, y, z}. Used for random generation of
     polygon normal vectors. */
 double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::mt19937_64 &generator) {
     double ck = (std::exp(kappa) - std::exp(-kappa)) / kappa;
