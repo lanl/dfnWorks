@@ -179,7 +179,7 @@ def check_h(params):
         # Check against Minimum radius
         if params['h']['value'] > params["minimum_fracture_size"]["value"] / 10:
             hf.print_error(
-                f"Provided value  of \"h\" ({params['h']['value']}) is greater 1/10th than minimum fracture size ({params['minimum_fracture_size']['value']}). The generated mesh will be very coarse and there will likely be a high rate of fracture rejection."
+                f"Provided value  of \"h\" ({params['h']['value']}) is greater 1/10th the minimum fracture size ({params['minimum_fracture_size']['value']}). The generated mesh will be very coarse and there will likely be a high rate of fracture rejection."
             )
 
         if params['h'][

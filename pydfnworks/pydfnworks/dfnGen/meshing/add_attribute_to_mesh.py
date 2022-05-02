@@ -61,7 +61,7 @@ def create_lagrit_append_script(variable, variable_file, mesh_file_in,
         lagrit_file : string
             Name of LaGriT output file
     """
-    print("Making LaGriT script")
+    print("--> Making LaGriT script")
     lagrit_script = f'''
 read / {mesh_file_in} / mo1
 cmo / addatt / mo1 / {variable} / vdouble / scalar / nnodes
@@ -85,7 +85,7 @@ def add_variable_to_mesh(self,
                          variable_file,
                          mesh_file_in,
                          mesh_file_out=None,
-                         cell_based=None):
+                         node_based=False):
     """
     Adds a variable to the nodes of a mesh. Can be either fracture (material) based 
     or node based. 
@@ -102,8 +102,8 @@ def add_variable_to_mesh(self,
             Name of source mesh file
         mesh_file_out : string
             Name of Target mesh file.  If no name if provide, mesh_file_in will be used
-        cell_based : bool
-            Set to True if variable_file contains cell-based values, Set to False 
+        node_based : bool
+            Set to True if variable_file contains node-based values, Set to False 
             if variable_file provide fracture based values
 
     Returns
@@ -112,10 +112,26 @@ def add_variable_to_mesh(self,
             Name of LaGriT output file
     """
 
+    # Check input files
+    if not os.path.isfile(variable_file):
+        error = f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename."
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    if not os.path.isfile(mesh_file_in):
+        error = f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename."
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    # if an output mesh file is not provided, set target mesh to be the source mesh. 
     if mesh_file_out is None:
         mesh_file_out = mesh_file_in
 
-    if cell_based:
+
+    print(f"--> Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}")
+
+    if node_based:
+        print(f"--> Expecting node-based values")
         lagrit_file = create_lagrit_append_script(variable, variable_file,
                                                   mesh_file_in, mesh_file_out)
     else:
@@ -123,4 +139,7 @@ def add_variable_to_mesh(self,
         lagrit_file = create_lagrit_append_script(variable,
                                                   variable_file_by_node,
                                                   mesh_file_in, mesh_file_out)
+
     run_lagrit_script(lagrit_file)
+
+    print(f"--> Complete: Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}")

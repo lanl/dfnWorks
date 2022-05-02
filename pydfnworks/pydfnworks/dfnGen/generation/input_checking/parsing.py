@@ -5,11 +5,14 @@ import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
 
-def check_for_mandatory_keys(found_keys, mandatory):
+def check_for_mandatory_keys(params, found_keys, mandatory):
     """ Checks if all required keywords have been found. Exits program if not.
 
     Parameters
     --------------
+        params : dictionary
+            input parameter dictionary
+
         found_keys : list
             list of keys found in the input file
 
@@ -34,9 +37,9 @@ def check_for_mandatory_keys(found_keys, mandatory):
     if missing != []:
         print("Missing the following mandatory parameters:")
         for key in missing:
-            print(f"{key}")
+            print(f"{key}\n")
+            print(f"{params[key]['description']}")
         hf.print_error("Missing parameters!")
-
     else:
         print("--> All Mandatory keywords have been found")
 
@@ -68,8 +71,10 @@ def check_for_mandatory_values(params, mandatory):
     if missing != []:
         print("Missing values for the following mandatory parameters:")
         for key in missing:
-            print(f"{key}")
+            print(f"{key}\n")
+            print(f"{params[key]['description']}")
         hf.print_error("")
+
     print("--> All mandatory values have been found")
 
 
@@ -348,7 +353,7 @@ def parse_input(input_file):
     try:
         reader = open(input_file, 'r')
     except:
-        hf.print_error("Input file path is not valid")
+        hf.print_error(f"Input file path ({input_file} is not valid")
 
     input_iterator = iter(reader)
 
@@ -360,7 +365,7 @@ def parse_input(input_file):
         if (line != "" and ":" in line):
             process_line(line, found_keys, params)
 
-    check_for_mandatory_keys(found_keys, mandatory)
+    check_for_mandatory_keys(params, found_keys, mandatory)
     check_for_mandatory_values(params, mandatory)
 
     params = convert_params(params)
