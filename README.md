@@ -8,15 +8,12 @@ This document contains instructions for setting up dfnWorks natively on your
 machine. To setup dfnWorks using Docker instead, see the next section.
 
 ### Clone the dnfWorks repository
-.. code-block:: bash
 
     $ git clone https://github.com/lanl/dfnWorks.git
 
 ### Fix paths in test directory 
 
 Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script ``fix_paths.py``:
-
-.. code-block:: bash
 
     $ cd dfnWorks/pydfnworks/bin/
     $ python fix_paths.py 
@@ -31,19 +28,13 @@ Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths
 - PYTHON_EXE:  Path to python executable 
 - LAGRIT_EXE:  Path to LaGriT executable 
 
-.. code-block:: bash
-    
     $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
 
 For example:
-
-.. code-block:: python
     
-    os.environ['dfnWorks_PATH'] = '/home/username/dfnWorks/'    
+    os.environ['dfnWorks_PATH'] = '/home/<username>/dfnWorks/'    
 
 Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
-
-.. code-block:: bash
 
     {
         "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
@@ -59,21 +50,14 @@ Alternatively, you can create a ``.dfnworksrc`` file in your home directory with
 ## Installing pydfnworks
 
 Go up into the pydfnworks sub-directory:
-
-.. code-block:: bash
     
     $ cd dfnWorks/pydfnworks/
 
 Complie The pydfnWorks Package:
-
-.. code-block:: bash
     
     $ python setup.py bdist_wheel
 
-
 Install on Your Local Machine:
-
-.. code-block:: bash
     
     $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
 
@@ -99,44 +83,30 @@ pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``
 
 ### LaGriT
 
-The LaGriT_ meshing toolbox is used to create a high resolution computational 
+The LaGriT meshing toolbox is used to create a high resolution computational 
 mesh representation of the DFN in parallel. An algorithm for conforming 
 Delaunay triangulation is implemented so that fracture intersections are 
 coincident with triangle edges in the mesh and Voronoi control volumes are 
 suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
-.. _LaGriT: https://lagrit.lanl.gov
+    https://lagrit.lanl.gov
 
-PFLOTRAN
-********
-PFLOTRAN_  is a massively parallel subsurface flow and reactive transport 
+### PFLOTRAN
+PFLOTRAN  is a massively parallel subsurface flow and reactive transport 
 code. PFLOTRAN solves a system of partial differential equations for 
 multiphase, multicomponent and multi-scale reactive flow and transport in 
 porous media. The code is designed to run on leadership-class supercomputers 
 as well as workstations and laptops.
 
-.. _PFLOTRAN: http://pflotran.org
+    http://pflotran.org
 
-FEHM
-****
-FEHM_ is a subsurface multiphase flow code developed at Los Alamos National 
+### FEHM
+FEHM is a subsurface multiphase flow code developed at Los Alamos National 
 Laboratory.
 
-.. _FEHM: https://fehm.lanl.gov
+    https://fehm.lanl.gov
 
-CMake
-*****************************
-CMake_ is an open-source, cross-platform family of tools designed to build, 
-test and package software. It is needed to use C++ for processing files at a 
-bottleneck IO step of dfnWorks. Using C++ for this file processing optional 
-but can greatly increase the speed of dfnWorks for large fracture networks. 
-Details on how to use C++ for file processing are in the scripts section of 
-this documentation.
-
-.. _CMake: https://cmake.org
-
-Paraview
-*****************************
+### Paraview
 
 Paraview_ is a parallel, open-source visualisation software. PFLOTRAN can 
 output in ``.xmf`` and ``.vtk`` format. These can be imported in Paraview 
@@ -146,4 +116,3 @@ very helpful for visualizing dfnWorks simulations.
 Instructions for downloading and installing Paraview_ can be found at 
 http://www.paraview.org/download/ 
 
-.. _Paraview: http://www.paraview.org
