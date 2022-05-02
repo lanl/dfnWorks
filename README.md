@@ -2,54 +2,148 @@
 
 For information on how to get dfnWorks up and running, please see the document dfnWorks.pdf, in this directory.
 
-# Using Docker
+## Native build from github repository
 
-To build a Docker image, run
+This document contains instructions for setting up dfnWorks natively on your
+machine. To setup dfnWorks using Docker instead, see the next section.
 
-    docker build -t dfnworks .
+### Clone the dnfWorks repository
+.. code-block:: bash
 
-This will take 45 - 60 minutes to complete.
+    $ git clone https://github.com/lanl/dfnWorks.git
 
-After completion, you can launch `bash` (the default command) in the Docker
-container by running:
+### Fix paths in test directory 
 
-    docker run -ti --name NAME dfnworks:latest
+Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script ``fix_paths.py``:
 
-While docker run is still live, you can execute an arbitrary command with 
+.. code-block:: bash
 
-    docker exec -i -t NAME COMMAND
+    $ cd dfnWorks/pydfnworks/bin/
+    $ python fix_paths.py 
 
-where `COMMAND` is the command, such as `python`, `ls`, etc, and `NAME` is
-an arbitrary name for this instance (i.e., `dfn`).
+Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths 
 
-(*Note:* if you are doing many dfnWorks Docker builds, you may have dangling
-images taking up disk space. Use `docker system prune` to clean them)
+**Before executing dfnWorks,** the following paths must be set:
 
-## Note: Proxy issues
+- dfnWorks_PATH: the dfnWorks repository folder
+- PETSC_DIR and PETSC_ARCH: PETSC environmental variables
+- PFLOTRAN_EXE:  Path to PFLOTRAN executable 
+- PYTHON_EXE:  Path to python executable 
+- LAGRIT_EXE:  Path to LaGriT executable 
 
-If download via Git or `apt-get` fails during build, ensure that your Docker 
-config file (`~/.docker/config.json`) has proxy information set.
+.. code-block:: bash
+    
+    $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
 
-For example, my proxy file looks like:
+For example:
 
-```
-{
-    "auths": {
-        "https://index.docker.io/v1/": {}
-    },
-    "HttpHeaders": {
-        "User-Agent": "Docker-Client/18.09.2 (darwin)"
-    },
-    "credsStore": "osxkeychain",
-    "stackOrchestrator": "swarm",
-    "proxies": {
-        "default": {
-            "httpProxy": "http://proxyout.lanl.gov:8080",
-            "httpsProxy": "http://proxyout.lanl.gov:8080"
-        }
+.. code-block:: python
+    
+    os.environ['dfnWorks_PATH'] = '/home/username/dfnWorks/'    
+
+Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
+
+.. code-block:: bash
+
+    {
+        "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
+        "PETSC_DIR": "<your-home-directory>/src/petsc",
+        "PETSC_ARCH": "arch-darwin-c-debug",
+        "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
+        "PYTHON_EXE": "<your-home-directory>/anaconda3/bin/python",
+        "LAGRIT_EXE": "<your-home-directory>/bin/lagrit",
+        "FEHM_EXE": "<your-home-directory>//src/xfehm_v3.3.1"
     }
-}
-```
 
-In addition, you may have to also change proxy settings under 
-*Docker -> Preferences -> Proxies -> Manual proxy configuration*.
+
+## Installing pydfnworks
+
+Go up into the pydfnworks sub-directory:
+
+.. code-block:: bash
+    
+    $ cd dfnWorks/pydfnworks/
+
+Complie The pydfnWorks Package:
+
+.. code-block:: bash
+    
+    $ python setup.py bdist_wheel
+
+
+Install on Your Local Machine:
+
+.. code-block:: bash
+    
+    $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
+
+**Note that the python version in dist/ needs to be consistent with the current release**
+
+## Installation Requirements for Native Build
+Tools that you will need to run the dfnWorks work flow are described in 
+this section. VisIt and ParaView, which enable visualization of desired 
+quantities on the DFNs, are optional, but at least one of them is highly 
+recommended for visualization. CMake is also optional but allows faster IO 
+processing using C++. 
+
+### Operating Systems
+
+dfnWorks currently runs on Macs and Unix machine running Ubuntu. 
+
+### Python 
+
+pydfnworks uses Python 3. We recommend using 
+the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
+pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``networkx``, ``fpdf``, and ``re``.
+
+
+### LaGriT
+
+The LaGriT_ meshing toolbox is used to create a high resolution computational 
+mesh representation of the DFN in parallel. An algorithm for conforming 
+Delaunay triangulation is implemented so that fracture intersections are 
+coincident with triangle edges in the mesh and Voronoi control volumes are 
+suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
+
+.. _LaGriT: https://lagrit.lanl.gov
+
+PFLOTRAN
+********
+PFLOTRAN_  is a massively parallel subsurface flow and reactive transport 
+code. PFLOTRAN solves a system of partial differential equations for 
+multiphase, multicomponent and multi-scale reactive flow and transport in 
+porous media. The code is designed to run on leadership-class supercomputers 
+as well as workstations and laptops.
+
+.. _PFLOTRAN: http://pflotran.org
+
+FEHM
+****
+FEHM_ is a subsurface multiphase flow code developed at Los Alamos National 
+Laboratory.
+
+.. _FEHM: https://fehm.lanl.gov
+
+CMake
+*****************************
+CMake_ is an open-source, cross-platform family of tools designed to build, 
+test and package software. It is needed to use C++ for processing files at a 
+bottleneck IO step of dfnWorks. Using C++ for this file processing optional 
+but can greatly increase the speed of dfnWorks for large fracture networks. 
+Details on how to use C++ for file processing are in the scripts section of 
+this documentation.
+
+.. _CMake: https://cmake.org
+
+Paraview
+*****************************
+
+Paraview_ is a parallel, open-source visualisation software. PFLOTRAN can 
+output in ``.xmf`` and ``.vtk`` format. These can be imported in Paraview 
+for visualization. While not required for running dfnWorks, Paraview is
+very helpful for visualizing dfnWorks simulations.
+
+Instructions for downloading and installing Paraview_ can be found at 
+http://www.paraview.org/download/ 
+
+.. _Paraview: http://www.paraview.org
