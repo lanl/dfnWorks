@@ -19,9 +19,9 @@ void   Convertto2d()
 {
     printf(" \n Converting 3d nodes coordinates to 2d xy parallel plane \n");
     double check = 0;
-    float norm = 0;
+    double norm = 0;
     unsigned int i, j, l;
-    float nve[3] = {0, 0, 0};
+    double nve[3] = {0, 0, 0};
     float angle, anglecos, anglesin;
     
     // loop over all fractures in DFN mesh, defining rotational matrices 3D-2D
@@ -62,7 +62,7 @@ void   Convertto2d()
         } //end if
     } //loop j
     
-    /* loop over all nodes in factrure */
+    /* loop over all nodes in fracture */
     for (i = 0; i < nnodes; i++) {
         if (fracture[node[i].fracture[0] - 1].theta != 0.0) {
             j = node[i].fracture[0] - 1;
@@ -100,10 +100,10 @@ void   Convertto2d()
 void   Convertto3d()
 /*! The function uses rotation matrix to rotate fracture from its position in XY plane to 3D domain*/
 {
-    float norm = 0;
+    double norm = 0;
     unsigned int  j;
-    float nve[3] = {0, 0, 0};
-    float angle, anglecos, anglesin;
+    double nve[3] = {0, 0, 0};
+    double angle, anglecos, anglesin;
     
     for (j = 0; j < nfract; j++) {
         angle = fracture[j].theta * pi / 180;
