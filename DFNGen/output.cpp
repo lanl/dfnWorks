@@ -943,13 +943,15 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     using namespace std;
     
     //TODO: add stub code in families.dat for userDefined fractures, IF there are user defined fractures
-
+    
     if (userEllipsesOnOff) {
         file << "UserDefined Ellipse Family: 0\n\n";
     }
+    
     if (userRectanglesOnOff) {
         file << "UserDefined Rectangle Family: -1\n\n";
-    }    
+    }
+    
     if (userPolygonByCoord) {
         file << "UserDefined Polygon Family: -2\n\n";
     }
