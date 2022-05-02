@@ -9,7 +9,7 @@ def print_error(error_string):
     Args:
         errString (str): a string describing the error
     """
-    error = f"\nERROR while parsing input\n\n{error_string}\n\nProgram terminated.\n"
+    error = f"\nError while parsing input\n\n{error_string}\n\nProgram terminated.\n"
     sys.stderr.write(error)
     sys.exit(1)
 

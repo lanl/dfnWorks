@@ -122,20 +122,25 @@ def check_domain(params):
             )
 
     # Check Boundary Faces
-    if not params['ignoreBoundaryFaces']['value']:
-        if len(params['boundaryFaces']
-               ['value']) != params['boundaryFaces']['list_length']:
-            hf.print_error(
-                f"\"boundaryFaces\" must be a list of 6 flags (0 or 1), {len(params['boundaryFaces']['value'])} have(has) been defined. Each flag represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}."
-            )
-        for i, val in enumerate(params['boundaryFaces']['value']):
-            if val not in [0, 1]:
+    try:
+        if not params['ignoreBoundaryFaces']['value']:
+            if len(params['boundaryFaces']
+                   ['value']) != params['boundaryFaces']['list_length']:
                 hf.print_error(
-                    f"\"boundaryFaces\" entry {i+1} has value {val}. Must be 0 or 1."
+                    f"\"boundaryFaces\" must be a list of 6 flags (0 or 1), {len(params['boundaryFaces']['value'])} have(has) been defined. Each flag represents a side of the domain, {{+x, -x, +y, -y, +z, -z}}."
                 )
-    else:
-        hf.print_warning("--> Ignoring boundary faces. Keeping all clusters.")
-
+            for i, val in enumerate(params['boundaryFaces']['value']):
+                if val not in [0, 1]:
+                    hf.print_error(
+                        f"\"boundaryFaces\" entry {i+1} has value {val}. Must be 0 or 1."
+                    )
+        else:
+            hf.print_warning("--> Ignoring boundary faces. Keeping all clusters.")
+    except:
+        print("Error while checking 'boundaryFaces' parameters.")
+        print(f"Values provided: {params['boundaryFaces']['value']}\n")
+        print(params['boundaryFaces']['description'])
+        hf.print_error("")
 
 def check_rejects_per_fracture(rejectsPerFracture):
     """ Check that the value of the rejectsPerFracture is a positive integer. If a value of 0 is provided, it's changed to 1. 
@@ -297,6 +302,7 @@ def check_aperture(params):
 
     if params['aperture']['value'] == 1:
         hf.check_none('meanAperture', params['meanAperture']['value'])
+        hf.check_values('meanAperture', params['meanAperture']['value'])
         hf.check_none('stdAperture', params['stdAperture']['value'])
         hf.check_values('stdAperture', params['stdAperture']['value'], 0)
 

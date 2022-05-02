@@ -38,4 +38,5 @@ def verify_params(params):
         cross_check(params)
     check_user_defined(params)
     # Check h (Requires information from fracture checking)
+    #if params['disableFram'] == 0:
     check_h(params)

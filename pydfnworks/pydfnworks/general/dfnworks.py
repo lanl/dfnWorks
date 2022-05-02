@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.5"
+__version__ = "2.6"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -9,9 +9,10 @@ DFN object class.
 import os
 import sys
 import ntpath
+from datetime import datetime
 from time import time
-from pydfnworks.general.dfntools import *
 
+from pydfnworks.general.dfntools import *
 
 class DFNWORKS(Frozen):
     '''
@@ -36,9 +37,10 @@ class DFNWORKS(Frozen):
         * h : FRAM length scale 
 '''
     # general functions
-    from pydfnworks.general.legal import legal
+    #from pydfnworks.general.legal import legal
+
     from pydfnworks.general.paths import define_paths
-    from pydfnworks.general.general_functions import dump_time, print_run_time
+    from pydfnworks.general.general_functions import dump_time, print_run_time 
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -47,6 +49,7 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
+    from pydfnworks.dfnGen.generation.stress import stress_based_apertures 
 
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
@@ -73,7 +76,7 @@ class DFNWORKS(Frozen):
 
     # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source, add_fracture_target
+    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source, add_fracture_target, current_flow_threshold
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
 
@@ -91,7 +94,7 @@ class DFNWORKS(Frozen):
                  prune_file='',
                  flow_solver="PFLOTRAN",
                  inp_file='full_mesh.inp',
-                 uge_file='',
+                 uge_file='full_mesh.uge',
                  stor_file='',
                  vtk_file='',
                  mesh_type='dfn',
@@ -106,6 +109,8 @@ class DFNWORKS(Frozen):
         self.jobname = jobname
         self.ncpu = ncpu
         self.local_jobname = ntpath.basename(self.jobname)
+        self.start_time = time()
+        self.finish_time = None
 
         self.dfnGen_file = dfnGen_file
         self.local_dfnGen_file = ntpath.basename(self.dfnGen_file)
@@ -131,11 +136,29 @@ class DFNWORKS(Frozen):
 
         self.h = ""
 
-        self.dfnTrans_version = 2.2
+        self.dfnTrans_version = 1.0
         self.freeze = False
-        self.legal()
         #options = create_dfn.commandline_options()
 
+    def __del__(self):
+        print("=" * 80)
+        now = datetime.now()
+        print(f"--> {self.local_jobname} completed/exited at {now}")
+        elapsed = time() - self.start_time
+        time_sec = elapsed
+        time_min = elapsed / 60
+        time_hrs = elapsed / 3600
+
+        print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+        output = '''
+\t\t\t*********************************************
+\t\t\t*   Thank you for using dfnWorks            *
+\t\t\t*   Learn more at https://dfnworks.lanl.gov *
+\t\t\t*   Contact us at dfnworks@lanl.gov         *
+\t\t\t*********************************************
+
+'''
+        print(output)
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
@@ -225,8 +248,10 @@ def create_dfn():
     None
     '''
     from pydfnworks import define_paths
-    
+    from pydfnworks import legal
+
     define_paths()
+    legal()
 
     options = commandline_options()
     print("Command Line Inputs:")
@@ -238,6 +263,11 @@ def create_dfn():
     print("\n--> Creating DFN class")
     print('--> Jobname: ', DFN.jobname)
     print('--> Number of cpus requested: ', DFN.ncpu)
+
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print(f"--> Start time {current_time} \n")
+    print("=" * 80)
 
     if options.input_file == "":
         error = "ERROR!!! Input file must be provided.\n"
@@ -293,3 +323,4 @@ def create_dfn():
     print("\n--> Creating DFN class: Complete")
     print("=" * 80 + "\n")
     return DFN
+

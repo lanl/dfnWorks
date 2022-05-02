@@ -139,7 +139,7 @@ def convert(x, source, target):
         perm = (b**2) / 12
         return perm
     else:
-        error = "ERROR!!! Unknown names is convert. Either '{0}' or '{1}' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
+        error = "Error in conversion! Unknown name provided in convert. Either '{0}' or '{1}' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
             source, target)
         sys.stderr.write(error)
         sys.exit(1)
@@ -419,10 +419,12 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
         aper_filename = prefix + '_aperture.dat'
         perm_filename = prefix + '_perm.dat'
         trans_filename = prefix + '_transmissivity.dat'
+        frac_info_filename = prefix + '_fracture_info.dat'
     else:
         aper_filename = "aperture.dat"
         perm_filename = "perm.dat"
         trans_filename = "transmissivity.dat"
+        frac_info_filename = "fracture_info.dat"
 
     # write aperture file
     print("--> Writing {0}".format(aper_filename))
@@ -444,8 +446,16 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
         fp.write('transmissivty\n')
         for i in range(n):
             fp.write('-{0:d} {1:0.5e}\n'.format(i + 7, T[i]))
-    print("Complete")
 
+    ## revise fracture_info.dat
+    print(f"--> Writing {frac_info_filename}")
+    connections = np.genfromtxt("fracture_info.dat",skip_header = 1)[:,0].astype(int)
+    with open(frac_info_filename, "w+") as fp:
+        fp.write("num_connections perm aperture\n")
+        for i in range(n):
+            fp.write(f"{connections[i]:d} {perm[i]:0.8e} {b[i]:0.8e}\n")
+
+    print("--> Complete")
 
 def generate_hydraulic_values(self,
                               variable,
@@ -513,9 +523,14 @@ def generate_hydraulic_values(self,
 
     # Load Fracture information
     radii, families, number_of_fractures = load_fractures(radii_filename,
-                                                          quiet=True)
+                                                          quiet=False)
     if family_id is not None:
-        print("--> Working on Fracture Family {0}".format(family_id))
+        print(f"--> Working on Fracture Family {family_id}")
+        idx = np.where(families == family_id)
+        if len(idx[0]) == 0:
+            error = f"ERROR!!! No fractures in the network are in the requested family. {family_id}.\nUser Rectangles = -1\nUser Ellipses = 0.\nStochastic Families > 0.\nExiting\n"
+            sys.stderr.write(error)
+            sys.exit(1)
 
     if relationship == "log-normal":
         keys = ["mu", "sigma"]
@@ -561,7 +576,7 @@ def generate_hydraulic_values(self,
     if family_id == None:
         return b, perm, T
     else:
-        # Sent entrites that are not in the requested family to None
+        # Sent entries that are not in the requested family to None
         idx = np.where(families != family_id)
         b[idx] = 0
         T[idx] = 0

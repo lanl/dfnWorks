@@ -1,5 +1,7 @@
 import os
 import sys
+from datetime import datetime
+from time import time
 
 
 def dump_time(self, function_name, time):

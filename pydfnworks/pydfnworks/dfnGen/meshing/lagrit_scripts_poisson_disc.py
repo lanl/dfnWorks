@@ -793,7 +793,6 @@ cmo / modatt / mo_all / meshid / ioflag / l
 cmo / modatt / mo_all / id_n_1 / ioflag / l
 cmo / modatt / mo_all / id_n_2 / ioflag / l
 cmo / modatt / mo_all / pt_gtg / ioflag / l
-cmo / modatt / mo_all / pt_gtg / ioflag / l
 # Dump out Material ID Dat file
 dump / avs2 / materialid.dat / mo_all / 0 0 2 0
 
