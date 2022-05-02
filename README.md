@@ -89,7 +89,7 @@ Delaunay triangulation is implemented so that fracture intersections are
 coincident with triangle edges in the mesh and Voronoi control volumes are 
 suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
-    https://lagrit.lanl.gov
+https://lagrit.lanl.gov
 
 ### PFLOTRAN
 PFLOTRAN  is a massively parallel subsurface flow and reactive transport 
@@ -98,13 +98,13 @@ multiphase, multicomponent and multi-scale reactive flow and transport in
 porous media. The code is designed to run on leadership-class supercomputers 
 as well as workstations and laptops.
 
-    http://pflotran.org
+http://pflotran.org
 
 ### FEHM
 FEHM is a subsurface multiphase flow code developed at Los Alamos National 
 Laboratory.
 
-    https://fehm.lanl.gov
+https://fehm.lanl.gov
 
 ### Paraview
 
