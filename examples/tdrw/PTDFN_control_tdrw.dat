@@ -101,6 +101,8 @@ init_random: no
 // total number of particles
 in_randpart: 100    
 
+init_matrix: no
+
 /*****  particles positions according to in-flow flux weight *********/
 init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
 init_totalnumber: 10000 // distance [m] between particles at inflow face for equal flux weight calculation
