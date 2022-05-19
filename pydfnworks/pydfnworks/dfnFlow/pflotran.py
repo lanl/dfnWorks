@@ -260,18 +260,15 @@ def zone2ex(self,
             error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.\n'
             sys.stderr.write(error)
             sys.exit(1)
-
+        ## Write out ex files
         with open(ex_file, 'w') as f:
             f.write('CONNECTIONS\t%i\n' % Node_array.size)
             for idx, cell in enumerate(boundary_cell_coord):
-                f.write('%i\t%.6e\t%.6e\t%.6e\t%.6e\n' %
-                        (Node_array[idx], cell[0], cell[1], cell[2],
-                         Boundary_cell_area[idx]))
-        print('--> Finished writing ex file "' + ex_file +
-              '" corresponding to the zone file: ' + zone_file + '\n')
+                f.write(f"{Node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area[idx]:.12e}\n")
+        
 
+        print(f'--> Finished writing ex file {ex_file} corresponding to the zone file: {zone_file} \n')
     print('--> Converting zone files to ex complete')
-
 
 def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
