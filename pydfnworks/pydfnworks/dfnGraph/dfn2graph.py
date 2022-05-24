@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import json
+import sys
 
 from networkx.algorithms.flow.shortestaugmentingpath import *
 from networkx.algorithms.flow.edmondskarp import *
@@ -340,9 +341,15 @@ def create_bipartite_graph(inflow,
 
             B.add_edge(intersection, fracture1, frac=fracture1)
             B.fractures.add(fracture1)
-            if fracture2 > 0 or fracture2 == 's' or fracture2 == 't':
-                B.add_edge(intersection, fracture2, frac=fracture2)
-                B.fractures.add(fracture2)
+
+            if type(fracture2) == str:
+                if fracture2 == 's' or fracture2 == 't':
+                    B.add_edge(intersection, fracture2, frac=fracture2)
+                    B.fractures.add(fracture2)
+            elif type(fracture2) == int:
+                if fracture2 > 0:
+                    B.add_edge(intersection, fracture2, frac=fracture2)
+                    B.fractures.add(fracture2)
 
     # add  source and sink for intersections so they will appear in intersection projection
     B.add_edge('intersection_s', 's')
@@ -510,6 +517,42 @@ def add_fracture_target(self, G, target):
         print("--> Returning unchanged graph")
     return G
 
+def current_flow_threshold(self, G, source = "s", target = "t", weight = None, thrs = 0.0):
+    """ Runs current flow (Potential drop between source and target) on the Graph G, and returns a subgraph such that the current on the edges is greater than the threshold value (thrs).
+    
+    Parameters
+    ----------
+        G : NetworkX Graph
+            NetworkX Graph based on a DFN 
+        source : node 
+            Starting node
+        target : node
+            Ending node
+        weight : string
+            Resistance term used in the solution of Laplace's Equation
+        thrs: float
+            Threshold value for pruning the graph
+
+    Returns 
+    -------
+        H : NetworkX graph
+            Subgraph such that the current on the edges is greater than the threshold value
+
+    Notes
+    -----
+        Graph attributes (node and edge) are not retained on the subgraph H. 
+    """
+
+
+
+    print(f'--> Running Current Flow with weight : {weight} and threshold {thrs}')
+    cf = nx.edge_current_flow_betweenness_centrality_subset(G,sources=[source],targets=[target],weight=weight)
+    print("Current Flow Complete")
+    currentflow_edges = [(u,v) for (u,v),d in cf.items() if d > thrs]
+    H = nx.Graph(currentflow_edges, representation=G.graph["representation"])
+    print(f"--> Of the {G.number_of_nodes()} in the original graph,  {H.number_of_nodes()} are in the thresholded network")
+    print("--> Running Current Flow Complete")
+    return H
 
 def k_shortest_paths(G, k, source, target, weight):
     """Returns the k shortest paths in a graph 
