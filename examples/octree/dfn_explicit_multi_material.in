@@ -95,7 +95,6 @@ TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 s
   FINAL_TIME 100000.0d0 s
   MAXIMUM_TIMESTEP_SIZE 100000.0d0 s
-  STEADY_STATE
 END
 
 #=========================== regions ==========================================
