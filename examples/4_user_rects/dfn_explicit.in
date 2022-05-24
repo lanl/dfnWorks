@@ -58,7 +58,6 @@ END
 
 #=========================== output options ===================================
 OUTPUT
-  TIMES s 0.01 0.05 0.1 0.2 0.5 1
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
@@ -72,10 +71,9 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d-8 s
-  FINAL_TIME 1.d0 d
+  INITIAL_TIMESTEP_SIZE  1.d-1 d
+  FINAL_TIME 1.d2 d
   MAXIMUM_TIMESTEP_SIZE 10.d0 d
-  STEADY_STATE
 END
 
 # REFERENCE_PRESSURE 1500000.
