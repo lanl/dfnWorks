@@ -51,7 +51,7 @@ def get_laplacian_sparse_mat(G,
     return D, A
 
 
-def prepare_graph_with_attributes(inflow, outflow,G=None):
+def prepare_graph_with_attributes(inflow, outflow, G=None):
     """ Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
     
     Parameters
@@ -78,7 +78,9 @@ def prepare_graph_with_attributes(inflow, outflow,G=None):
 
     else:
         Gtilde = G
-        
+        d2g.add_perm(Gtilde)
+        d2g.add_area(Gtilde)
+        d2g.add_weight(Gtilde)   
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag'] = False
@@ -101,12 +103,12 @@ def prepare_graph_with_attributes(inflow, outflow,G=None):
     return Gtilde
 
 
-def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
+def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
     """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
 
     Parameters
     ----------
-        Gtilde : NetworkX graph
+        G : NetworkX graph
 
         Pin : double
             Value of pressure (in Pa) at inlet
@@ -116,60 +118,76 @@ def solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity=8.9e-4):
         
         fluid_viscosity : double
             optional, in Pa-s, default is for water
-    
+
+        phi : double
+            Porosity, default is 1
+
     Returns
     -------
         Gtilde : NetworkX graph 
             Gtilde is updated with vertex pressures, edge fluxes and travel times
     """
 
-    Inlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['inletflag']]
-    Outlet = [v for v in nx.nodes(Gtilde) if Gtilde.nodes[v]['outletflag']]
+    Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
+    Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
 
     if not set(Inlet).isdisjoint(set(Outlet)):
         error = "Incompatible graph: Vertex connected to both source and target\n"
         sys.stderr.write(error)
         sys.exit(1)
 
-    D, A = get_laplacian_sparse_mat(Gtilde, weight='weight', format='lil')
+    D, A = get_laplacian_sparse_mat(G, weight='weight', format='lil')
 
-    rhs = np.zeros(Gtilde.number_of_nodes())
+    b = np.zeros(G.number_of_nodes())
 
     for v in Inlet:
-        rhs[v] = Pin
+        b[v] = Pin
         A[v, :] = 0
         D[v, v] = 1.0
     for v in Outlet:
-        rhs[v] = Pout
+        b[v] = Pout
         A[v, :] = 0
         D[v, v] = 1.0
     L = D - A  # automatically converts to csr when returning L
 
     print("Solving sparse system")
-    Phat = scipy.sparse.linalg.spsolve(L, rhs)
+    pressure = scipy.sparse.linalg.spsolve(L, b)
     print("Updating graph edges with flow solution")
 
-    for v in nx.nodes(Gtilde):
-        Gtilde.nodes[v]['pressure'] = Phat[v]
+    for v in nx.nodes(G):
+        G.nodes[v]['pressure'] = pressure[v]
 
-    for u, v in nx.edges(Gtilde):
-        delta_p = abs(Gtilde.nodes[u]['pressure'] -
-                      Gtilde.nodes[v]['pressure'])
-        if delta_p > np.spacing(Gtilde.nodes[u]['pressure']):
-            Gtilde.edges[u, v]['flux'] = (
-                Gtilde.edges[u, v]['perm'] / fluid_viscosity
-            ) * abs(Gtilde.nodes[u]['pressure'] -
-                    Gtilde.nodes[v]['pressure']) / Gtilde.edges[u, v]['length']
-            Gtilde.edges[u, v]['time'] = Gtilde.edges[
-                u, v]['length'] / Gtilde.edges[u, v]['flux']
-        else:
-            Gtilde.edges[u, v]['flux'] = 0
+    H = nx.DiGraph()
+    H.add_nodes_from(G.nodes(data=True))
 
-    print("Graph flow complete")
-    return Gtilde
+    for u, v in nx.edges(G):
+        # Find direction of flow
+        if G.nodes[u]['pressure'] > G.nodes[v]['pressure']:
+            upstream = u
+            downstream = v
+        elif G.nodes[v]['pressure'] >= G.nodes[u]['pressure']:
+            upstream = v
+            downstream = u
+
+        delta_p = G.nodes[upstream]['pressure'] - G.nodes[downstream]['pressure']
+        if delta_p > 0:
+            ## Create new edge in DiGraph
+            H.add_edge(upstream, downstream)
+            # Transfer edge attributes 
+            for att in ['perm','iperm','length','weight','area','frac']:
+                H.edges[upstream, downstream][att]  = G.edges[upstream, downstream][att]
+
+            H.edges[upstream, downstream]['flux'] = ( H.edges[upstream, downstream]['perm'] /fluid_viscosity ) * (delta_p / H.edges[upstream, downstream]['length'])
+
+            H.edges[upstream, downstream]['velocity'] = H.edges[upstream, downstream]['flux']/phi
+
+            H.edges[upstream, downstream]['time'] = H.edges[upstream, downstream]['length'] / (H.edges[upstream, downstream]['velocity'])
+
+    print("--> Graph flow complete")
+    return H
 
 
-def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, G = None):
+def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, phi = 1,  G = None):
     """ Run the graph flow portion of the workflow
 
     Parameters
@@ -189,10 +207,15 @@ def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, G =
         
         Pout : double
             Value of pressure (in Pa) at outlet
-        
+
         fluid_viscosity : double
             optional, in Pa-s, default is for water
-    
+            
+        phi : double
+            Porosity, default is 1
+
+        G : Input Graph 
+
     Returns
     -------
         Gtilde : NetworkX graph 
@@ -203,5 +226,5 @@ def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, G =
     Information on individual functions in found therein
     """
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
-    Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity)
+    Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity, phi)
     return Gtilde
