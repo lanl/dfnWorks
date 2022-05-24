@@ -79,4 +79,5 @@ install_requires=["numpy",
           "pytz",
           "networkx>=2.4",
           "mplstereonet",
+          "datetime",
           "matplotlib>3.0"]
