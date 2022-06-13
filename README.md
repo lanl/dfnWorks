@@ -61,7 +61,7 @@ Install on Your Local Machine:
     
     $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+**Note: the python version in dist/ needs to be consistent with the current release**
 
 ## Installation Requirements for Native Build
 Tools that you will need to run the dfnWorks work flow are described in 
