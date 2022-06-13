@@ -42,7 +42,9 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     // Write polygon.dat file
     writePolys(finalFractures, acceptedPoly, output);
     // Write intersection files (must be first file written, rotates polys to x-y plane)
-    writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
+    if (disableFram == false){
+        writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
+    }
     // Write polys.inp
     writePolysInp(finalFractures, acceptedPoly, output);
     // Write params.txt
@@ -943,15 +945,13 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     using namespace std;
     
     //TODO: add stub code in families.dat for userDefined fractures, IF there are user defined fractures
-    
+
     if (userEllipsesOnOff) {
         file << "UserDefined Ellipse Family: 0\n\n";
     }
-    
     if (userRectanglesOnOff) {
         file << "UserDefined Rectangle Family: -1\n\n";
-    }
-    
+    }    
     if (userPolygonByCoord) {
         file << "UserDefined Polygon Family: -2\n\n";
     }
