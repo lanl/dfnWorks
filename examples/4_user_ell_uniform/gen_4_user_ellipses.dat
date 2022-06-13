@@ -261,12 +261,12 @@ esd: {.5} // Standard deviation for lognormal distributions of ellipses
 
 //===========================================================================
 //     Options Specific For Ellipse Exponential Distribution (edistr=3): 
-//     Mandatory Parameters if using ellispes with exponential distribution 
+//     Mandatory Parameters if using ellipses with exponential distribution 
 
 
-eExpMean: {2}  //Mean value for Exponential  Distribution     
-eExpMax: {3}  //Mean value for Exponential  Distribution     
-eExpMin: {1}  //Mean value for Exponential  Distribution     
+eExpMean: {2} // Mean value for Exponential  Distribution     
+eExpMax: {3}  // Upper cutoff of the exponential distribution families
+eExpMin: {1}  // Lower cutoff of the exponential distribution families
 
 //===========================================================================
 //    Options Specific For Constant Size of ellipses (edistr=4):
