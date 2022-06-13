@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.6"
+__version__ = "2.6.1"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -11,6 +11,7 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
+import numpy as np
 
 from pydfnworks.general.dfntools import *
 
@@ -138,6 +139,10 @@ class DFNWORKS(Frozen):
 
         self.dfnTrans_version = 1.0
         self.freeze = False
+
+        self.radii = np.array()
+        self.surface_area = np.array()
+
         #options = create_dfn.commandline_options()
 
 #    def __del__(self):
