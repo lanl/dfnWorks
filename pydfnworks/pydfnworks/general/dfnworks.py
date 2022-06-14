@@ -46,8 +46,11 @@ class DFNWORKS(Frozen):
     # dfnGen functions
     import pydfnworks.dfnGen
 
+    # from pydfnworks.dfnGen.generation.dfngen_input_dictionaries import create_domain_dictionary, create_fracture_family, create_fractures
+
+
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, gather_output
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures 
@@ -136,14 +139,11 @@ class DFNWORKS(Frozen):
         self.flow_solver = flow_solver
 
         self.h = ""
-
         self.dfnTrans_version = 1.0
         self.freeze = False
 
-        self.radii = np.array()
-        self.surface_area = np.array()
+        #self.create_domain_dictionary()
 
-        #options = create_dfn.commandline_options()
 
 #    def __del__(self):
 #        print("=" * 80)

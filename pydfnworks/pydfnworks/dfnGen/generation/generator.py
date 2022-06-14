@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 import shutil
 from time import time
 import subprocess
@@ -32,35 +33,19 @@ def dfn_gen(self, output=True, visual_mode=None):
         Details of each portion of the routine are in those sections
 
     '''
-    tic_gen = time()
     # Create Working directory
-    tic = time()
     self.make_working_directory()
-    self.dump_time('Function: make_working_directory', time() - tic)
-
     # Check input file
-    tic = time()
     self.check_input()
-    self.dump_time('Function: check_input', time() - tic)
-
     # Create network
-    tic = time()
     self.create_network()
-    self.dump_time('Function: create_network', time() - tic)
-
     if output:
-        tic = time()
         self.output_report()
-        self.dump_time('output_report', time() - tic)
-
     # Mesh Network
-    tic = time()
     self.mesh_network(visual_mode=visual_mode)
-    self.dump_time('Function: mesh_network', time() - tic)
     print('=' * 80)
     print('dfnGen Complete')
     print('=' * 80)
-    self.dump_time('Process: dfnGen', time() - tic_gen)
 
 
 def make_working_directory(self, delete=False):
@@ -156,9 +141,55 @@ def create_network(self):
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        num_poly, h, _, _, _ = parse_params_file(quiet=True)
-        self.num_frac = num_poly
-        self.h = h
+        self.gather_output()
         print('-' * 80)
         print("Generation Succeeded")
         print('-' * 80)
+
+def gather_output(self):
+    
+    """ Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated 
+
+    Parameters
+    -----------
+        None
+
+    Returns
+    --------
+        fractuers : list
+            List of fracture dictionaries with information.
+    Notes
+    ------
+        Both fractures in the final network and those removed due to being isolated are included in the list. 
+
+    """
+    print("--> Parsing dfnWorks output and adding to object")
+    self.num_frac , self.h, _, _, _ = parse_params_file(quiet=True)
+
+    ## load radii
+    data = np.genfromtxt('radii_Final.dat', skip_header = 2)
+    self.radii = data[:,:2]
+    self.families = data[:,2]
+    ## load surface area
+    self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header = 1)
+    ## load normal vectors
+    self.normal_vectors = np.genfromtxt('normal_vectors.dat')
+    # Get fracture centers
+    centers = []
+    with open('translations.dat', "r") as fp:
+        fp.readline()  # header
+        for i, line in enumerate(fp.readlines()):
+            if "R" not in line:
+                line = line.split()
+                centers.append([float(line[0]), float(line[0]), float(line[2])])
+    self.centers = np.array(centers)
+    self.aperture = np.array(self.num_frac)
+    self.perm = np.array(self.num_frac)
+
+    self.family = []
+    ## get number of families
+    num_families = int(max(self.families))
+    print(f'there are {num_families} families')
+    for i in range(1, num_families+1):
+        idx = np.where(self.families == i)
+        self.family.append(idx) 
