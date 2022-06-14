@@ -185,7 +185,9 @@ def gather_output(self):
     self.centers = np.array(centers)
     self.aperture = np.array(self.num_frac)
     self.perm = np.array(self.num_frac)
-
+    self.transmissivity = np.array(self.num_frac)
+    
+     
     self.family = []
     ## get number of families
     num_families = int(max(self.families))
