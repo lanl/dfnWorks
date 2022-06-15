@@ -335,7 +335,8 @@ def get_fracture_information(self):
     return fractures
 
 
-def combine_family_and_fracture_information(self, families, fractures):
+def combine_family_and_fracture_information(families, fractures, domain,
+                                            num_frac):
     """ Combines information from the fracture families and individual fractures, e.g., list of indicies . Creates the parameter dictionary. 
 
     Parameters
@@ -384,9 +385,9 @@ def combine_family_and_fracture_information(self, families, fractures):
 
     params = {
         "num_families": num_families,
-        "num_accepted_fractures": None,
+        "num_accepted_fractures": num_frac,
         "num_total_fractures": len(fractures),
-        "domain": None,
+        "domain": domain,
         "final_color": "#4787ff",
         "all_color": "#ffe940",
         "analytic_color": "#ff4073"

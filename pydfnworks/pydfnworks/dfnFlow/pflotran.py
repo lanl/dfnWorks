@@ -4,6 +4,7 @@ functions for using pflotran in dfnworks
 import os
 import subprocess
 import sys
+import h5py
 import glob
 import shutil
 import ntpath
@@ -11,7 +12,7 @@ from time import time
 import numpy as np
 
 
-def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
+def lagrit2pflotran(self):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
     Calls the functuon write_perms_and_correct_volumes_areas() and zone2ex
    
@@ -19,12 +20,6 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     --------------
         self : object
             DFN Class 
-        inp_file : str
-            Name of the inp (AVS) file produced by LaGriT 
-        mesh_type : str
-            The type of mesh
-        hex2tet : bool
-            True if hex mesh elements should be converted to tet elements, False otherwise.
 
     Returns
     --------
@@ -43,49 +38,20 @@ def lagrit2pflotran(self, inp_file='', mesh_type='', hex2tet=False):
     print('=' * 80)
     print("Starting conversion of files for PFLOTRAN ")
     print('=' * 80)
-    if inp_file:
-        self.inp_file = inp_file
-    else:
-        inp_file = self.inp_file
 
-    if inp_file == '':
+    if self.inp_file == '':
         error = 'ERROR: Please provide inp filename!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    if mesh_type:
-        if mesh_type in mesh_types_allowed:
-            self.mesh_type = mesh_type
-        else:
-            error = 'ERROR: Unknown mesh type. Select one of dfn, volume or mixed!\n'
-            sys.stderr.write(error)
-            sys.exit(1)
-    else:
-        mesh_type = self.mesh_type
-
-    if mesh_type == '':
-        error = 'ERROR: Please provide mesh type!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
     # Check if UGE file was created by LaGriT, if it does not exists, exit
-    self.uge_file = inp_file[:-4] + '.uge'
+    self.uge_file = self.inp_file[:-4] + '.uge'
     if not os.path.isfile(self.uge_file):
         error = 'ERROR!!! Cannot find .uge file\nExiting\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    if mesh_type == 'dfn':
-        self.write_perms_and_correct_volumes_areas(
-        )  # Make sure perm and aper files are specified
-
-    # Convert zone files to ex format
-    #self.zone2ex(zone_file='boundary_back_s.zone',face='south')
-    #self.zone2ex(zone_file='boundary_front_n.zone',face='north')
-    #self.zone2ex(zone_file='boundary_left_w.zone',face='west')
-    #self.zone2ex(zone_file='boundary_right_e.zone',face='east')
-    #self.zone2ex(zone_file='boundary_top.zone',face='top')
-    #self.zone2ex(zone_file='boundary_bottom.zone',face='bottom')
+    self.write_perms_and_correct_volumes_areas()
     self.zone2ex(zone_file='all')
     print('=' * 80)
     print("Conversion of files for PFLOTRAN complete")
@@ -125,20 +91,15 @@ def zone2ex(self,
     """
 
     print('--> Converting zone files to ex')
-    if self.uge_file:
-        uge_file = self.uge_file
-    else:
-        self.uge_file = uge_file
 
-    uge_file = self.uge_file
-    if uge_file == '':
+    if self.uge_file == '':
         error = 'ERROR: Please provide uge filename!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     # Opening uge file
     print('\n--> Opening uge file')
-    fuge = open(uge_file, 'r')
+    fuge = open(self.uge_file, 'r')
 
     # Reading cell ids, cells centers and cell volumes
     line = fuge.readline()
@@ -260,11 +221,15 @@ def zone2ex(self,
         with open(ex_file, 'w') as f:
             f.write('CONNECTIONS\t%i\n' % Node_array.size)
             for idx, cell in enumerate(boundary_cell_coord):
-                f.write(f"{Node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area[idx]:.12e}\n")
-        
+                f.write(
+                    f"{Node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area[idx]:.12e}\n"
+                )
 
-        print(f'--> Finished writing ex file {ex_file} corresponding to the zone file: {zone_file} \n')
+        print(
+            f'--> Finished writing ex file {ex_file} corresponding to the zone file: {zone_file} \n'
+        )
     print('--> Converting zone files to ex complete')
+
 
 def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
@@ -282,123 +247,105 @@ def write_perms_and_correct_volumes_areas(self):
     ----------
     Calls executable correct_uge
     """
-    import h5py
     if self.flow_solver != "PFLOTRAN":
         error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     print("--> Writing Perms and Correct Volume Areas")
-    inp_file = self.inp_file
-    if inp_file == '':
+    if self.inp_file == '':
         error = 'ERROR: inp file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    uge_file = self.uge_file
-    if uge_file == '':
+    if self.uge_file == '':
         error = 'ERROR: uge file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    perm_file = self.perm_file
-    if perm_file == '' and self.perm_cell_file == '':
+    if self.perm_file == '' and self.perm_cell_file == '':
         error = 'ERROR: perm file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    aper_file = self.aper_file
-    aper_cell_file = self.aper_cell_file
-    if aper_file == '' and self.aper_cell_file == '':
+    if self.aper_file == '' and self.aper_cell_file == '':
         error = 'ERROR: aperture file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
-    mat_file = 'materialid.dat'
     t = time()
     # Make input file for C UGE converter
-    f = open("convert_uge_params.txt", "w")
-    f.write("%s\n" % inp_file)
-    f.write("%s\n" % mat_file)
-    f.write("%s\n" % uge_file)
-    f.write("%s" % (uge_file[:-4] + '_vol_area.uge\n'))
-    if self.aper_cell_file:
-        f.write("%s\n" % self.aper_cell_file)
-        f.write("1\n")
-    else:
-        f.write("%s\n" % self.aper_file)
-        f.write("-1\n")
-    f.close()
+    with open("convert_uge_params.txt", "w") as fp:
+        fp.write(f"{self.inp_file}\n")
+        fp.write(f"{self.mat_file}\n")
+        fp.write(f"{self.uge_file}\n")
+        fp.write(f"{self.uge_file[:-4]}_vol_area.uge\n")
+        if self.aper_cell_file:
+            fp.write(f"{self.aper_cell_file}\n")
+            fp.write("1\n")
+        else:
+            fp.write(f"{self.aper_file}\n")
+            fp.write("-1\n")
 
+    ## dump aperture file
+    self.dump_aperture(self.aper_file, format='fehm')
+    ## execute convert uge C code
     cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
         error = 'ERROR: UGE conversion failed\nExiting Program\n'
         sys.stderr.write(error)
         sys.exit(1)
-
     elapsed = time() - t
-    print('--> Time elapsed for UGE file conversion: %0.3f seconds\n' %
-          elapsed)
-    # need number of nodes and mat ID file
-    print('--> Writing HDF5 File')
-    materialid = np.genfromtxt(mat_file, skip_header=3).astype(int)
-    materialid = -1 * materialid - 6
-    NumIntNodes = len(materialid)
+    print(
+        f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n')
 
-    if perm_file:
-        filename = 'dfn_properties.h5'
+    filename = 'dfn_properties.h5'
+    print(f'--> Writing HDF5 File {filename}')
+
+    if not self.cell:
         h5file = h5py.File(filename, mode='w')
         print('--> Beginning writing to HDF5 file')
         print('--> Allocating cell index array')
-        iarray = np.zeros(NumIntNodes, '=i4')
+        iarray = np.zeros(self.num_nodes, '=i4')
         print('--> Writing cell indices')
         # add cell ids to file
-        for i in range(NumIntNodes):
+        for i in range(self.num_nodes):
             iarray[i] = i + 1
         dataset_name = 'Cell Ids'
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
 
         print('--> Allocating permeability array')
-        perm = np.zeros(NumIntNodes, '=f8')
+        perm = np.zeros(self.num_nodes, '=f8')
 
-        print('--> reading permeability data')
         print('--> Note: this script assumes isotropic permeability')
-        perm_list = np.genfromtxt(perm_file, skip_header=1)
-        perm_list = np.delete(perm_list, np.s_[1:5], 1)
-
-        matid_index = -1 * materialid - 7
-        for i in range(NumIntNodes):
-            j = matid_index[i]
-            if int(perm_list[j, 0]) == materialid[i]:
-                perm[i] = perm_list[j, 1]
-            else:
-                error = 'Indexing Error in Perm File\n'
-                sys.stderr.write(error)
-                sys.exit(1)
+        perm = np.zeros(self.num_nodes, '=f8')
+        # use material id index to assigned node based permeabilities
+        for i in range(self.num_nodes):
+            j = self.materialid[i] - 1
+            perm[i] = self.perm[j]
 
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=perm)
 
         h5file.close()
         print("--> Done writing permeability to h5 file")
-        del perm_list
 
-    if self.perm_cell_file:
+    else:
         filename = 'dfn_properties.h5'
         h5file = h5py.File(filename, mode='w')
 
         print('--> Beginning writing to HDF5 file')
         print('--> Allocating cell index array')
-        iarray = np.zeros(NumIntNodes, '=i4')
+        iarray = np.zeros(self.num_nodes, '=i4')
         print('--> Writing cell indices')
         # add cell ids to file
-        for i in range(NumIntNodes):
+        for i in range(self.num_nodes):
             iarray[i] = i + 1
         dataset_name = 'Cell Ids'
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
         print('--> Allocating permeability array')
-        perm = np.zeros(NumIntNodes, '=f8')
+        perm = np.zeros(self.num_nodes, '=f8')
         print('--> reading permeability data')
         print('--> Note: this script assumes isotropic permeability')
         f = open(self.perm_cell_file, 'r')
@@ -460,14 +407,15 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     print("=" * 80)
     print("--> Running PFLOTRAN")
 
-    mpirun = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun'
+    mpirun = os.environ['PETSC_DIR'] + '/' + os.environ[
+        'PETSC_ARCH'] + '/bin/mpirun'
     if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
         # PETSc did not install MPI. Hopefully, the user has their own MPI.
         mpirun = 'mpirun'
 
     cmd = mpirun + ' -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
-    
+
     print("Running: %s" % cmd)
     subprocess.call(cmd, shell=True)
 
@@ -491,7 +439,6 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     print("--> Running PFLOTRAN Complete")
     print('=' * 80)
     print("\n")
-
 
 
 def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
@@ -552,7 +499,6 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         os.symlink("cellinfo_%03d.dat" % index_finish, "cellinfo.dat")
     except:
         print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
-
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):

@@ -95,7 +95,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
         self.num_frac = len(fracture_list)
 
     else:
-        fracture_list = range(1, self.num_frac)
+        fracture_list = range(1, self.num_frac +1)
 
     # if number of fractures is greater than number of CPUS,
     # only use num_poly CPUs. This change is only made here, so ncpus
@@ -161,7 +161,8 @@ did not provide file of fractures to keep.\nExiting program.\n"
     if prune:
         mh.clean_up_files_after_prune(self)
 
-    mh.output_meshing_report(self.local_jobname, self.visual_mode)
+    self.gather_mesh_information()
+    
     print('=' * 80)
     print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)

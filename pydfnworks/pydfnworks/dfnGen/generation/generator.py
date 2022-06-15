@@ -6,7 +6,7 @@ from time import time
 import subprocess
 
 
-def dfn_gen(self, output=True, visual_mode=None):
+def dfn_gen(self, output=True):
     ''' Wrapper script the runs the dfnGen workflow:    
         1) make_working_directory: Create a directory with name of job
         2) check_input: Check input parameters and create a clean version of the input file
@@ -41,7 +41,7 @@ def dfn_gen(self, output=True, visual_mode=None):
     if output:
         self.output_report()
     # Mesh Network
-    self.mesh_network(visual_mode=visual_mode)
+    self.mesh_network()
     print('=' * 80)
     print('dfnGen Complete')
     print('=' * 80)
@@ -146,7 +146,7 @@ def create_network(self):
         print('-' * 80)
 
 
-def parse_params_file(self,quiet=False):
+def parse_params_file(self, quiet=False):
     """ Reads params.txt file from DFNGen and parses information
 
     Parameters
@@ -210,8 +210,8 @@ def parse_params_file(self,quiet=False):
         print(f"--> Z Domain Size {self.domain['z']} m")
         print("--> Parsing params.txt complete\n")
 
+
 def gather_output(self):
-    
     """ Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated 
 
     Parameters
@@ -228,22 +228,22 @@ def gather_output(self):
 
     """
     print("--> Parsing dfnWorks output and adding to object")
-    self.parse_params_file(quiet = False)
+    self.parse_params_file(quiet=False)
 
     ## load radii
-    data = np.genfromtxt('radii_Final.dat', skip_header = 2)
+    data = np.genfromtxt('radii_Final.dat', skip_header=2)
     ## populate radius array
-    self.radii = np.zeros((self.num_frac,3))
+    self.radii = np.zeros((self.num_frac, 3))
     # First Column is x, second is y, 3rd is max
-    self.radii[:,:2] = data[:,:2]
+    self.radii[:, :2] = data[:, :2]
     for i in range(self.num_frac):
-        self.radii[i,2] = max(self.radii[i,0], self.radii[i,1])
+        self.radii[i, 2] = max(self.radii[i, 0], self.radii[i, 1])
 
     # gather fracture families
-    self.families = data[:,2].astype(int)
+    self.families = data[:, 2].astype(int)
 
     ## load surface area
-    self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header = 1)
+    self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header=1)
     ## load normal vectors
     self.normal_vectors = np.genfromtxt('normal_vectors.dat')
     # Get fracture centers
@@ -253,21 +253,24 @@ def gather_output(self):
         for i, line in enumerate(fp.readlines()):
             if "R" not in line:
                 line = line.split()
-                centers.append([float(line[0]), float(line[0]), float(line[2])])
+                centers.append(
+                    [float(line[0]),
+                     float(line[0]),
+                     float(line[2])])
     self.centers = np.array(centers)
 
     # Grab Polygon information
     self.poly_info = np.genfromtxt('poly_info.dat')
 
     ## create holder arrays for b, k, and T
-    self.aperture = np.array(self.num_frac)
-    self.perm = np.array(self.num_frac)
-    self.transmissivity = np.array(self.num_frac)
+    self.aperture = np.zeros(self.num_frac)
+    self.perm = np.zeros(self.num_frac)
+    self.transmissivity = np.zeros(self.num_frac)
 
     # gather indexes for fracture families
     self.family = []
     ## get number of families
-    num_families = int(max(self.families))
-    for i in range(1, num_families+1):
+    self.num_families = int(max(self.families))
+    for i in range(1, self.num_families + 1):
         idx = np.where(self.families == i)
-        self.family.append(idx) 
+        self.family.append(idx)

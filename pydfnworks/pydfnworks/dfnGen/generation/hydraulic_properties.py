@@ -391,7 +391,52 @@ def constant(params, variable, number_of_fractures):
     return b, perm, T
 
 
-def dump_hydraulic_values(self, b, perm, T, prefix=None):
+
+def dump_aperture(self, filename, format=None):
+    if format is None:
+        np.savetxt(filename, self.aperture)
+    elif format is "fehm":
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('aperture\n')
+            for i,b in enumerate(self.aperture):
+                fp.write(f'-{i+7:d} 0 0 {b:0.5e}\n')
+
+def dump_perm(self, filename, format=None):
+
+    if format is None:
+        np.savetxt(filename, self.perm)
+    elif format is "fehm":
+        # write perm file
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('permeability\n')
+            for i,k in enumerate(self.perm):
+                fp.write(f'-{i+7:d} 0 0 {k:0.5e} {k:0.5e} {k:0.5e}\n')
+
+def dump_transmissivity(self, filename, format=None):
+    if format is None:
+        np.savetxt(filename, self.transmissivity)
+    elif format is "fehm":
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('aperture\n')
+            for i,trans in enumerate(self.transmissivity):
+                fp.write(f'-{i:d} 0 0 {trans:0.5e}\n')
+
+
+def dump_fracture_info(self, filename):
+
+    ## revise fracture_info.dat
+    print(f"--> Writing {filename}")
+    connections = np.genfromtxt("fracture_info.dat",skip_header = 1)[:,0].astype(int)
+    with open(filename, "w+") as fp:
+        fp.write("num_connections perm aperture\n")
+        for i in range(self.num_frac):
+            fp.write(f"{connections[i]:d} {self.perm[i]:0.8e} {self.b[i]:0.8e}\n")
+    print("--> Complete")
+
+def dump_hydraulic_values(self, prefix=None):
     """ Writes variable information to files.  
     
     Parameters
@@ -413,7 +458,6 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
     ----------
     """
     print("--> Dumping values to files")
-    n = len(b)
     # Write out new aperture.dat
     if prefix is not None:
         aper_filename = prefix + '_aperture.dat'
@@ -426,36 +470,68 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
         trans_filename = "transmissivity.dat"
         frac_info_filename = "fracture_info.dat"
 
-    # write aperture file
-    print("--> Writing {0}".format(aper_filename))
-    with open(aper_filename, 'w+') as fp:
-        fp.write('aperture\n')
-        for i in range(n):
-            fp.write('-{0:d} 0 0 {1:0.5e}\n'.format(i + 7, b[i]))
+    self.dump_aperture(aper_filename)
+    self.dump_perm(perm_filename)
+    self.dump_transmissivity(trans_filename)
+    self.dump_fracture_info(frac_info_filename)
 
-    # write perm file
-    print("--> Writing {0}".format(perm_filename))
-    with open(perm_filename, 'w+') as fp:
-        fp.write('permeability\n')
-        for i in range(n):
-            fp.write('-{0:d} 0 0 {1:0.5e} {1:0.5e} {1:0.5e}\n'.format(
-                i + 7, perm[i]))
+def set_fracture_hydraulic_values(self,  variable, fracture_list, value_list):
+    """ Assigns hydraulic properties to a list of provided fractures. 
 
-    print(f"--> Writing {trans_filename}")
-    with open(trans_filename, 'w+') as fp:
-        fp.write('transmissivty\n')
-        for i in range(n):
-            fp.write('-{0:d} {1:0.5e}\n'.format(i + 7, T[i]))
+    Paramters
+    -----------------
+        self : object 
+            DFN Class
+        variable : string
+            base variable in relationship. Options are: aperture, permeability, transmissivity
+        fractture_list : list
+            List of fractures index whose variables are being assigned. *Note* Fractures are indexed starting at 1.
+        value_list : list  
+            values to be assigned. 
 
-    ## revise fracture_info.dat
-    print(f"--> Writing {frac_info_filename}")
-    connections = np.genfromtxt("fracture_info.dat",skip_header = 1)[:,0].astype(int)
-    with open(frac_info_filename, "w+") as fp:
-        fp.write("num_connections perm aperture\n")
-        for i in range(n):
-            fp.write(f"{connections[i]:d} {perm[i]:0.8e} {b[i]:0.8e}\n")
+    Returns 
+    -------------
+        None
 
-    print("--> Complete")
+    Notes
+    ----------------
+        None
+    """ 
+
+    if len(fracture_list) != len(value_list):
+        error = f"Error. Length of fracture list is not equal to the length of the value list provided.\nExiting.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    ## convert to numpy array
+    value_list = np.array(value_list)
+    fracture_list = np.array(fracture_list)
+
+    print(value_list)
+    print(fracture_list)
+    if variable == 'aperture':
+        b = value_list
+        perm = convert(b, variable, "permeability")
+        transmissivity = convert(b, variable, "transmissivity")
+
+    elif variable == 'permeability':
+        perm = value_list
+        b = convert(perm, variable, "aperture")
+        transmissivity = convert(perm, variable, "transmissivity")
+
+    elif variable == 'transmissivity': 
+        transmissivity = value_list
+        b = convert(transmissivity, variable, "aperture")
+        perm = convert(transmissivity, variable, "permeability")
+
+    else: 
+        error = f"Error. The variable of choice '{variable}' is not known\nAcceptable names are aperture, permeability, transmissivity\nExiting.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    self.aperture[fracture_list - 1] = b
+    self.perm[fracture_list - 1] = perm
+    self.transmissivity[fracture_list - 1] = transmissivity
 
 def generate_hydraulic_values(self,
                               variable,
@@ -482,20 +558,14 @@ def generate_hydraulic_values(self,
 
     Returns
     ----------
-        b : array
-            aperture values
-        perm : array
-            permeability values
-        T : array
-            transmissivity values
-        idx : array of bool
-            true / false of fracture families requested. If family_id = None, all entires are true. 
-            Only family members entires of b, perm, and T will be non-zero
+        None
 
     Notes
     ----------
     See Hyman et al. 2016 "Fracture size and transmissivity correlations: Implications for transport simulations in sparse
     three-dimensional discrete fracture networks following a truncated power law distribution of fracture size" Water Resources Research for more details 
+
+    Changes in hydraulic properties are added to DFN object
     """
 
     # Check if the variable choice is defined
@@ -538,7 +608,7 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = log_normal(params, variable, number_of_fractures)
+        b, perm, transmissivity = log_normal(params, variable, number_of_fractures)
 
     if relationship == "correlated":
         keys = ["alpha", "beta"]
@@ -548,7 +618,7 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = correlated(params, variable, radii)
+        b, perm, transmissivity = correlated(params, variable, radii)
 
     if relationship == "semi-correlated":
         keys = ["alpha", "beta", "sigma"]
@@ -558,7 +628,7 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = semi_correlated(params, variable, radii,
+        b, perm, transmissivity = semi_correlated(params, variable, radii,
                                      number_of_fractures)
 
     if relationship == "constant":
@@ -569,40 +639,15 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = constant(params, variable, number_of_fractures)
+        b, perm, transmissivity = constant(params, variable, number_of_fractures)
 
     if family_id == None:
         self.aperture = b
         self.perm = perm
-        self.transmissivity = T
-        return b, perm, T
+        self.transmissivity = transmissivity
     else:
         # Sent entries that are not in the requested family to None
-        idx = np.where(families != family_id)
-        b[idx] = 0
-        T[idx] = 0
-        perm[idx] = 0
-        return b, perm, T
-
-
-# if __name__ == '__main__':
-
-#     variable = "transmissivity"
-
-#     function = "correlated"
-#     params = {"alpha":6.7*10**-9,"beta":1.4}
-#     _,_,T1 = generate_hydraulic_values(variable,function,params,radii_filename="/Users/jhyman/Desktop/radii_Final.dat",family_id=1)
-
-#     function = "semi-correlated"
-#     params = {"alpha":6.3*10**-9,"beta":0.5,"sigma":1.0}
-#     _,_,T2 = generate_hydraulic_values(variable,function,params,radii_filename="/Users/jhyman/Desktop/radii_Final.dat",family_id=2)
-
-#     #combine values
-#     T = T1 + T2
-#     print(T)
-
-#     # convert to other variables
-#     perm = convert(T,"transmissivity","permeability")
-#     b = convert(T,"transmissivity","aperture")
-#     # write to file
-#     #dump_values("testing",b,perm,T)
+        idx = np.where(families == family_id)
+        self.aperture[idx] = b[idx]
+        self.perm[idx] = perm[idx]
+        self.transmissivity[idx] = transmissivity[idx]

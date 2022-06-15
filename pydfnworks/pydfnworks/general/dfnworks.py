@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.6.1"
+__version__ = "2.7"
 __maintainer__ = "Jeffrey Hyman and Satish Karra"
 __email__ = "jhyman@lanl.gov"
 """
@@ -11,9 +11,10 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
-import numpy as np
+import pickle
 
 from pydfnworks.general.dfntools import *
+
 
 class DFNWORKS(Frozen):
     '''
@@ -41,23 +42,25 @@ class DFNWORKS(Frozen):
     #from pydfnworks.general.legal import legal
 
     from pydfnworks.general.paths import define_paths
-    from pydfnworks.general.general_functions import dump_time, print_run_time 
+    from pydfnworks.general.general_functions import dump_time, print_run_time
+
+    from pydfnworks.general.dfnworks_io import save_network
 
     # dfnGen functions
     import pydfnworks.dfnGen
 
     # from pydfnworks.dfnGen.generation.dfngen_input_dictionaries import create_domain_dictionary, create_fracture_family, create_fractures
 
-
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, gather_output, parse_params_file
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
-    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
-    from pydfnworks.dfnGen.generation.stress import stress_based_apertures 
+    from pydfnworks.dfnGen.generation.output_report.gather_information import get_fracture_information, get_family_information
+    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, set_fracture_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity
 
+    from pydfnworks.dfnGen.generation.stress import stress_based_apertures
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
@@ -66,10 +69,9 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells
 
-
     # dfnFlow
     import pydfnworks.dfnFlow
-    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 
+    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
@@ -101,7 +103,6 @@ class DFNWORKS(Frozen):
                  uge_file='full_mesh.uge',
                  stor_file='',
                  vtk_file='',
-                 mesh_type='dfn',
                  perm_file='',
                  aper_file='',
                  perm_cell_file='',
@@ -130,10 +131,10 @@ class DFNWORKS(Frozen):
         self.vtk_file = vtk_file
         self.inp_file = inp_file
         self.uge_file = uge_file
-        self.mesh_type = mesh_type
         self.perm_file = perm_file
         self.aper_file = aper_file
         self.stor_file = stor_file
+        self.mat_file = 'materialid.dat'
         self.perm_cell_file = perm_cell_file
         self.aper_cell_file = aper_cell_file
         self.flow_solver = flow_solver
@@ -144,26 +145,27 @@ class DFNWORKS(Frozen):
 
         #self.create_domain_dictionary()
 
+    def __del__(self):
+        print("=" * 80)
+        print(f"--> {self.local_jobname} completed/exited")
+        elapsed = time() - self.start_time
+        time_sec = elapsed
+        time_min = elapsed / 60
+        time_hrs = elapsed / 3600
 
-#    def __del__(self):
-#        print("=" * 80)
-#        now = datetime.now()
-#        print(f"--> {self.local_jobname} completed/exited at {now}")
-#        elapsed = time() - self.start_time
-#        time_sec = elapsed
-#        time_min = elapsed / 60
-#        time_hrs = elapsed / 3600
-#
-#        print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
-#        output = '''
-#\t\t\t*********************************************
-#\t\t\t*   Thank you for using dfnWorks            *
-#\t\t\t*   Learn more at https://dfnworks.lanl.gov *
-#\t\t\t*   Contact us at dfnworks@lanl.gov         *
-#\t\t\t*********************************************
-#
-#'''
-#        print(output)
+        print(
+            f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours"
+        )
+        output = '''
+        \t\t\t*********************************************
+        \t\t\t*   Thank you for using dfnWorks            *
+        \t\t\t*   Learn more at https://dfnworks.lanl.gov *
+        \t\t\t*   Contact us at dfnworks@lanl.gov         *
+        \t\t\t*********************************************
+
+        '''
+        print(output)
+
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
@@ -282,7 +284,7 @@ def create_dfn():
         print("--> Reading Input from " + options.input_file)
 
     with open(options.input_file, "r") as f:
-        for i,line in enumerate(f.readlines()):
+        for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
             line = line.split()
             try:
@@ -319,13 +321,14 @@ def create_dfn():
 
     if options.cell is True:
         print('--> Expecting Cell Based Aperture and Permeability')
+        DFN.cell = True
         DFN.aper_cell_file = 'aper_node.dat'
         DFN.perm_cell_file = 'perm_node.dat'
     else:
+        DFN.cell = False
         DFN.aper_file = 'aperture.dat'
         DFN.perm_file = 'perm.dat'
 
     print("\n--> Creating DFN class: Complete")
     print("=" * 80 + "\n")
     return DFN
-

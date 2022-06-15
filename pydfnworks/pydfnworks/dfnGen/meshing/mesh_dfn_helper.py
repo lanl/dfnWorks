@@ -91,67 +91,21 @@ def cleanup_dir():
             os.remove(fl)
 
 
-def output_meshing_report(local_jobname, visual_mode):
-    """ Prints information about the final mesh to file
-    
-    Parameters
-    ----------
-        local_jobname : string
-            Name of current DFN job (not path) 
-    visual_mode : bool
-        Determines is reduced_mesh or full_mesh is dumped
+def gather_mesh_information(self):
 
-    Returns
-    -------
-        None
-   
-    Notes
-    -----
-        None 
-"""
+    ## get number of nodes in the mesh
+    with open('full_mesh.inp', 'r') as finp:
+        line = finp.readline()
+        line = line.split()
+        self.num_nodes = int(line[0])
 
-    f = open(local_jobname + '_mesh_information.txt', 'w')
-    f.write('The final mesh of DFN consists of: \n')
-    if not visual_mode:
-        print(
-            "--> Output files for flow calculations are written in : full_mesh.*"
-        )
-
-        finp = open('full_mesh.inp', 'r')
-        g = finp.readline()
-        g = g.split()
-        NumElems = int(g.pop(1))
-        NumIntNodes = int(g.pop(0))
-        f.write(str(NumElems) + ' triangular elements; \n')
-        f.write(str(NumIntNodes) + '  nodes / control volume cells; \n')
-        finp.close()
-
-        fstor = open('full_mesh.stor', 'r')
-        fstor.readline()
-        fstor.readline()
-        gs = fstor.readline()
-        gs = gs.split()
-        NumCoeff = int(gs.pop(0))
-        f.write(
-            str(NumCoeff) +
-            ' geometrical coefficients / control volume faces. \n')
-        fstor.close()
+    ## get node material ids
+    if os.path.isfile(self.mat_file):
+        self.materialid = genfromtxt(self.mat_file, skip_header=3).astype(int)
     else:
-        print(
-            "--> Output files for visualization are written in : reduced_mesh.inp"
-        )
-        print("--> Warning!!! Mesh is not suitable for flow and transport.")
-
-        finp = open('reduced_mesh.inp', 'r')
-        g = finp.readline()
-        g = g.split()
-        NumElems = int(g.pop(1))
-        NumIntNodes = int(g.pop(0))
-        f.write(str(NumElems) + ' triangular elements; \n')
-        f.write(str(NumIntNodes) + '  nodes / control volume cells. \n')
-        finp.close()
-    f.close()
-
+        error = f'Error: {self.mat_file} not found.\n'
+        sys.stderr.write(error)
+        sys.exit(1)
 
 def clean_up_files_after_prune(self):
     ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
@@ -325,7 +279,7 @@ def create_mesh_links(self,path):
     print("--> Complete")
 
 
-def inp2gmv(self, inp_file=''):
+def inp2gmv(self):
     """ Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv
 
     Parameters
@@ -343,29 +297,18 @@ def inp2gmv(self, inp_file=''):
     ---------
     """
 
-    if inp_file:
-        self.inp_file = inp_file
-    else:
-        inp_file = self.inp_file
-
-    if inp_file == '':
-        error = 'ERROR: inp file must be specified in inp2gmv!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    gmv_file = inp_file[:-4] + '.gmv'
+    gmv_file = self.inp_file[:-4] + '.gmv'
 
     with open('inp2gmv.lgi', 'w') as fid:
-        fid.write(f'read / avs / {inp_file} / mo\n')
+        fid.write(f'read / avs / {self.inp_file} / mo\n')
         fid.write(f'dump / gmv / {gmv_file} / mo\n')
         fid.write('finish \n\n')
 
-    failure = run_lagrit_script('inp2gmv.lgi')
-
-    if failure:
-        error = 'ERROR: Failed to run LaGrit to get gmv from inp file!\n'
+    if run_lagrit_script('inp2gmv.lgi'):
+        error = 'Error: Failed to run LaGrit to get gmv from inp file!\n'
         sys.stderr.write(error)
         sys.exit(1)
+        
     print("--> Finished writing gmv format from avs format")
 
 
