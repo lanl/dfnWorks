@@ -33,52 +33,24 @@ def correct_stor_file(self):
         sys.exit(1)
 
     self.stor_file = self.inp_file[:-4] + '.stor'
-    self.mat_file = self.inp_file[:-4] + '_material.zone'
-    f = open("convert_stor_params.txt", "w")
-    f.write("%s\n" % self.mat_file)
-    f.write("%s\n" % self.stor_file)
-    f.write("%s" % (self.stor_file[:-5] + '_vol_area.stor\n'))
-    f.write("%s\n" % self.aper_file)
-    f.close()
+    self.mat_zone_file = self.inp_file[:-4] + '_material.zone'
+    with open("convert_stor_params.txt", "w") as fp:
+        fp.write(f"{self.mat_zone_file}\n")
+        fp.write(f"{self.stor_file}\n")
+        fp.write(f"{self.stor_file[:-5]}_vol_area.stor\n")
+        fp.write(f"{self.aper_file}\n")
+
+    self.dump_aperture(self.aper_file, format='fehm')
 
     t = time()
     cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
-    failure = subprocess.call(cmd, shell=True)
-    if failure > 0:
-        error = 'ERROR: stor conversion failed\nExiting Program\n'
+    if subprocess.call(cmd, shell=True) > 0:
+        error = 'Error: Stor conversion failed\nExiting Program\n'
         sys.stderr.write(error)
         sys.exit(1)
     elapsed = time() - t
     print('--> Time elapsed for STOR file conversion: %0.3f seconds\n' %
           elapsed)
-
-
-def correct_perm_for_fehm():
-    """ FEHM wants an empty line at the end of the perm file
-    This functions adds that line return
-    
-    Parameters
-    ----------
-        None
-
-    Returns
-    ---------
-        None
-
-    Notes
-    ------------
-        Only adds a new line if the last line is not empty
-    """
-    fp = open("perm.dat")
-    lines = fp.readlines()
-    fp.close()
-    # Check if the last line of file is just a new line
-    # If it is not, then add a new line at the end of the file
-    if len(lines[-1].split()) != 0:
-        print("--> Adding line to perm.dat")
-        fp = open("perm.dat", "a")
-        fp.write("\n")
-        fp.close()
 
 
 def fehm(self):
@@ -100,15 +72,15 @@ def fehm(self):
     """
     print("--> Running FEHM")
     if self.flow_solver != "FEHM":
-        error = "ERROR! Wrong flow solver requested\n"
+        error = "Error. Wrong flow solver requested to run FEFHM\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     try:
         shutil.copy(self.dfnFlow_file, os.getcwd())
     except:
-        error = "-->ERROR copying FEHM run file: %s" % self.dfnFlow_file
-        std.stderr.write(error)
+        error = f"-->Error copying FEHM run file: {self.dfnFlow_file}"
+        sys.stderr.write(error)
         sys.exit(1)
 
     path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
@@ -123,7 +95,8 @@ def fehm(self):
         sys.stderr.write(error)
         sys.exit(1)
 
-    correct_perm_for_fehm()
+    # dump perm for fehm
+    self.dump_perm('perm.dat', format='fehm')
     tic = time()
     subprocess.call(os.environ["FEHM_EXE"] + " " + self.local_dfnFlow_file,
                     shell=True)

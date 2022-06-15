@@ -240,13 +240,13 @@ def correlated(params, variable, radii):
     units = get_units(variable)
     if variable == "aperture":
         print("b ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+                                             params["beta"], units))
     if variable == "permeability":
         print("k ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+                                             params["beta"], units))
     if variable == "transmissivity":
         print("T ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+                                             params["beta"], units))
 
     if variable == "aperture":
         b = params["alpha"] * radii**params["beta"]
@@ -391,7 +391,6 @@ def constant(params, variable, number_of_fractures):
     return b, perm, T
 
 
-
 def dump_aperture(self, filename, format=None):
     if format is None:
         np.savetxt(filename, self.aperture)
@@ -399,8 +398,9 @@ def dump_aperture(self, filename, format=None):
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
             fp.write('aperture\n')
-            for i,b in enumerate(self.aperture):
+            for i, b in enumerate(self.aperture):
                 fp.write(f'-{i+7:d} 0 0 {b:0.5e}\n')
+
 
 def dump_perm(self, filename, format=None):
 
@@ -411,8 +411,10 @@ def dump_perm(self, filename, format=None):
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
             fp.write('permeability\n')
-            for i,k in enumerate(self.perm):
+            for i, k in enumerate(self.perm):
                 fp.write(f'-{i+7:d} 0 0 {k:0.5e} {k:0.5e} {k:0.5e}\n')
+            fp.write("\n")
+
 
 def dump_transmissivity(self, filename, format=None):
     if format is None:
@@ -421,7 +423,7 @@ def dump_transmissivity(self, filename, format=None):
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
             fp.write('aperture\n')
-            for i,trans in enumerate(self.transmissivity):
+            for i, trans in enumerate(self.transmissivity):
                 fp.write(f'-{i:d} 0 0 {trans:0.5e}\n')
 
 
@@ -429,12 +431,15 @@ def dump_fracture_info(self, filename):
 
     ## revise fracture_info.dat
     print(f"--> Writing {filename}")
-    connections = np.genfromtxt("fracture_info.dat",skip_header = 1)[:,0].astype(int)
+    connections = np.genfromtxt("fracture_info.dat",
+                                skip_header=1)[:, 0].astype(int)
     with open(filename, "w+") as fp:
         fp.write("num_connections perm aperture\n")
         for i in range(self.num_frac):
-            fp.write(f"{connections[i]:d} {self.perm[i]:0.8e} {self.b[i]:0.8e}\n")
+            fp.write(
+                f"{connections[i]:d} {self.perm[i]:0.8e} {self.b[i]:0.8e}\n")
     print("--> Complete")
+
 
 def dump_hydraulic_values(self, prefix=None):
     """ Writes variable information to files.  
@@ -475,7 +480,8 @@ def dump_hydraulic_values(self, prefix=None):
     self.dump_transmissivity(trans_filename)
     self.dump_fracture_info(frac_info_filename)
 
-def set_fracture_hydraulic_values(self,  variable, fracture_list, value_list):
+
+def set_fracture_hydraulic_values(self, variable, fracture_list, value_list):
     """ Assigns hydraulic properties to a list of provided fractures. 
 
     Paramters
@@ -496,7 +502,7 @@ def set_fracture_hydraulic_values(self,  variable, fracture_list, value_list):
     Notes
     ----------------
         None
-    """ 
+    """
 
     if len(fracture_list) != len(value_list):
         error = f"Error. Length of fracture list is not equal to the length of the value list provided.\nExiting.\n"
@@ -519,12 +525,12 @@ def set_fracture_hydraulic_values(self,  variable, fracture_list, value_list):
         b = convert(perm, variable, "aperture")
         transmissivity = convert(perm, variable, "transmissivity")
 
-    elif variable == 'transmissivity': 
+    elif variable == 'transmissivity':
         transmissivity = value_list
         b = convert(transmissivity, variable, "aperture")
         perm = convert(transmissivity, variable, "permeability")
 
-    else: 
+    else:
         error = f"Error. The variable of choice '{variable}' is not known\nAcceptable names are aperture, permeability, transmissivity\nExiting.\n"
         sys.stderr.write(error)
         sys.exit(1)
@@ -532,6 +538,7 @@ def set_fracture_hydraulic_values(self,  variable, fracture_list, value_list):
     self.aperture[fracture_list - 1] = b
     self.perm[fracture_list - 1] = perm
     self.transmissivity[fracture_list - 1] = transmissivity
+
 
 def generate_hydraulic_values(self,
                               variable,
@@ -587,8 +594,8 @@ def generate_hydraulic_values(self,
         sys.stderr.write(error)
         sys.exit(1)
 
-    ## use max value of radius 
-    radii = self.radii[:,2]
+    ## use max value of radius
+    radii = self.radii[:, 2]
     families = self.families
     number_of_fractures = self.num_frac
 
@@ -608,7 +615,8 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, transmissivity = log_normal(params, variable, number_of_fractures)
+        b, perm, transmissivity = log_normal(params, variable,
+                                             number_of_fractures)
 
     if relationship == "correlated":
         keys = ["alpha", "beta"]
@@ -629,7 +637,7 @@ def generate_hydraulic_values(self,
                 sys.stderr.write(error)
                 sys.exit(1)
         b, perm, transmissivity = semi_correlated(params, variable, radii,
-                                     number_of_fractures)
+                                                  number_of_fractures)
 
     if relationship == "constant":
         keys = ["mu"]
@@ -639,7 +647,8 @@ def generate_hydraulic_values(self,
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, transmissivity = constant(params, variable, number_of_fractures)
+        b, perm, transmissivity = constant(params, variable,
+                                           number_of_fractures)
 
     if family_id == None:
         self.aperture = b
