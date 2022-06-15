@@ -82,14 +82,16 @@ def output_report(self,
     print("=" * 80 + "\n")
     print('--> Gathering Network Information')
     # Create a list of dictionaries with information about fracture family
-    families = get_family_information()
+    families = self.get_family_information()
     # Create a list of dictionaries with information about fracture
-    fractures = get_fracture_information()
+    fractures = self.get_fracture_information()
     # Combine information of the families and fractures, e.g., which fracture are in each family, and create a dictionary with parameters used throughout the output report
-    families, fractures, params = combine_family_and_fracture_information(
+    families, fractures, params = self.combine_family_and_fracture_information(
         families, fractures)
-    params, families = parse_dfn_output(params, families)
-
+    params, families = self.parse_dfn_output(params, families)
+    params.domain = self.domain
+    params['num_accepted_fractures'] = self.num_frac
+    
     params["verbose"] = verbose
     params["jobname"] = self.local_jobname
     params["output_dir"] = output_dir

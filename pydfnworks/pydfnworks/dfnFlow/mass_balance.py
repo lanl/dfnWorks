@@ -10,125 +10,9 @@
 import os
 import numpy as np
 import glob
-from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
 
 __author__ = 'Satish Karra'
 __email__ = 'satkarra@lanl.gov'
-
-
-def get_domain():
-    ''' Return dictionary of domain x,y,z by calling parse_params_file
-
-    Parameters
-    ----------
-        None
-
-    Returns
-    -------
-        domain : dict
-            Dictionary of domain sizes in x, y, z
-
-    Notes
-    -----
-        parse_params_file() is in mesh_dfn_helper.py
-'''
-    _, _, _, _, domain = parse_params_file(quiet=True)
-    return domain
-
-
-# def parse_pflotran_input(pflotran_input_file):
-#     ''' Walk through PFLOTRAN input file and find inflow boundary, inflow and outflow pressure, and direction of flow
-
-#     Parameters
-#     ----------
-#         pflotran_input_file : string
-#             Name of PFLOTRAN input file
-
-#     Returns
-#     -------
-#         inflow_pressure : double
-#             Inflow Pressure boundary condition
-#         outflow_pressure : float
-#             Outflow pressure boundary condition
-#         inflow_file : string
-#             Name of inflow boundary .ex file
-#         direction : string
-#             Primary direction of flow x, y, or z
-
-#     Notes
-#     -----
-#     Currently only works for Dirichlet Boundary Conditions
-# '''
-
-#     with open(pflotran_input_file) as fp:
-#         outflow_found = False
-#         inflow_found = False
-#         for line in fp.readlines():
-#             if "BOUNDARY_CONDITION OUTFLOW" in line:
-#                 outflow_found = True
-#             if outflow_found:
-#                 if "REGION" in line:
-#                     outflow = line.split()[-1]
-#                     outflow_found = False
-#             if "BOUNDARY_CONDITION INFLOW" in line:
-#                 inflow_found = True
-#             if inflow_found:
-#                 if "REGION" in line:
-#                     inflow = line.split()[-1]
-#                     inflow_found = False
-
-#     with open(pflotran_input_file) as fp:
-#         inflow_name_found = False
-#         outflow_name_found = False
-#         inflow_found = False
-#         outflow_found = False
-
-#         for line in fp.readlines():
-#             if "REGION " + inflow in line:
-#                 inflow_name_found = True
-#             if inflow_name_found:
-#                 if "FILE" in line:
-#                     inflow_file = line.split()[-1]
-#                     inflow_name_found = False
-#             if "FLOW_CONDITION " + inflow in line:
-#                 inflow_found = True
-#             if inflow_found:
-#                 if "PRESSURE " in line:
-#                     if "dirichlet" not in line:
-#                         tmp = line.split()[-1]
-#                         tmp = tmp.split('d')
-#                         inflow_pressure = float(tmp[0]) * 10**float(tmp[1])
-#                         inflow_found = False
-
-#             if "REGION " + outflow in line:
-#                 outflow_name_found = True
-#             if outflow_name_found:
-#                 if "FILE" in line:
-#                     outflow_file = line.split()[-1]
-#                     outflow_name_found = False
-#             if "FLOW_CONDITION " + outflow in line:
-#                 outflow_found = True
-#             if outflow_found:
-#                 if "PRESSURE " in line:
-#                     if "dirichlet" not in line:
-#                         tmp = line.split()[-1]
-#                         tmp = tmp.split('d')
-#                         outflow_pressure = float(tmp[0]) * 10**float(tmp[1])
-#                         outflow_found = False
-
-#     if inflow_file == 'pboundary_left_w.ex' or inflow_file == 'pboundary_right_e.ex':
-#         direction = 'x'
-#     if inflow_file == 'pboundary_front_n.ex' or inflow_file == 'pboundary_back_s.ex':
-#         direction = 'y'
-#     if inflow_file == 'pboundary_top.ex' or inflow_file == 'pboundary_bottom.ex':
-#         direction = 'z'
-
-#     print("Inflow file: %s" % inflow_file)
-#     print("Inflow Pressure %e" % inflow_pressure)
-#     print("Outflow Pressure %e" % outflow_pressure)
-#     print("Primary Flow Direction : %s" % direction)
-
-#     return inflow_pressure, outflow_pressure, inflow_file, direction
 
 
 def check_inputs(boundary_file, direction, inflow_pressure, outflow_pressure):
@@ -363,10 +247,9 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
                         outflow_pressure):
         return 1
 
-    domain = get_domain()
     mass_rate, volume_rate = flow_rate(darcy_vel_file, boundary_file)
     keff = dump_effective_perm(self.local_jobname, mass_rate, volume_rate,
-                               domain, direction, inflow_pressure,
+                               self.domain, direction, inflow_pressure,
                                outflow_pressure)
     print("--> Complete\n\n")
     self.keff = keff

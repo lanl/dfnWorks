@@ -9,7 +9,6 @@
 import re
 import sys
 
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.generation.output_report.helper import load_colors
 
 
@@ -120,7 +119,7 @@ def parse_dfn_output(params, families):
     return params, families
 
 
-def get_family_information():
+def get_family_information(self):
     """ Reads in information from families.dat file that lists the data for each fracture family.
 
     Parameters
@@ -259,7 +258,7 @@ def create_fracture_dictionary():
     return fracture
 
 
-def get_fracture_information():
+def get_fracture_information(self):
     """ Reads in information about fractures. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated 
 
     Parameters
@@ -309,7 +308,7 @@ def get_fracture_information():
             fractures[i]["center"]["y"] = float(line[1])
             fractures[i]["center"]["z"] = float(line[2])
             if not fractures[i]["removed"] and len(line) > 3:
-                error = f"ERROR!!! Unexpected removed fracture in output report.\nCheck fracture number {i+1}\n.Exiting Program.\n"
+                error = f"Error. Unexpected removed fracture in output report.\nCheck fracture number {i+1}\n.Exiting Program.\n"
                 sys.stderr.write(error)
                 sys.exit(1)
 
@@ -336,7 +335,7 @@ def get_fracture_information():
     return fractures
 
 
-def combine_family_and_fracture_information(families, fractures):
+def combine_family_and_fracture_information(self, families, fractures):
     """ Combines information from the fracture families and individual fractures, e.g., list of indicies . Creates the parameter dictionary. 
 
     Parameters
@@ -362,7 +361,6 @@ def combine_family_and_fracture_information(families, fractures):
     """
 
     colors = load_colors()
-    num_fractures, _, _, _, domain = mh.parse_params_file(quiet=True)
     num_families = len(families)
 
     for ifam, family in enumerate(families):
@@ -379,15 +377,16 @@ def combine_family_and_fracture_information(families, fractures):
             family["fracture list - final"])
 
         if num_families < 10:
+
             family["color"] = colors[2 * ifam]
         else:
             family["color"] = colors[ifam]
 
     params = {
         "num_families": num_families,
-        "num_accepted_fractures": num_fractures,
+        "num_accepted_fractures": None,
         "num_total_fractures": len(fractures),
-        "domain": domain,
+        "domain": None,
         "final_color": "#4787ff",
         "all_color": "#ffe940",
         "analytic_color": "#ff4073"

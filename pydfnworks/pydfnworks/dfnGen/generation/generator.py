@@ -4,7 +4,6 @@ import numpy as np
 import shutil
 from time import time
 import subprocess
-from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
 
 
 def dfn_gen(self, output=True, visual_mode=None):
@@ -146,6 +145,71 @@ def create_network(self):
         print("Generation Succeeded")
         print('-' * 80)
 
+
+def parse_params_file(self,quiet=False):
+    """ Reads params.txt file from DFNGen and parses information
+
+    Parameters
+    ---------
+        quiet : bool
+            If True details are not printed to screen, if False they area 
+
+    Returns
+    -------
+        num_poly: int
+            Number of Polygons
+        h: float 
+            Meshing length scale h
+        dudded_points: int 
+            Expected number of dudded points in Filter (LaGriT)
+        visual_mode : bool
+            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
+        domain: dict
+             x,y,z domain sizes 
+    
+    Notes
+    -----
+        None
+    """
+    if not quiet:
+        print("\n--> Parsing  params.txt")
+    fparams = open('params.txt', 'r')
+    # Line 1 is the number of polygons
+    self.num_frac = int(fparams.readline())
+    #Line 2 is the h scale
+    self.h = float(fparams.readline())
+    # Line 3 is the visualization mode: '1' is True, '0' is False.
+    self.visual_mode = int(fparams.readline())
+    # line 4 dudded points
+    self.dudded_points = int(fparams.readline())
+
+    # Dict domain contains the length of the domain in x,y, and z
+    self.domain = {'x': 0, 'y': 0, 'z': 0}
+    #Line 5 is the x domain length
+    self.domain['x'] = (float(fparams.readline()))
+
+    #Line 5 is the x domain length
+    self.domain['y'] = (float(fparams.readline()))
+
+    #Line 5 is the x domain length
+    self.domain['z'] = (float(fparams.readline()))
+    fparams.close()
+
+    if not quiet:
+        print("--> Number of Polygons: %d" % self.num_frac)
+        print("--> H_SCALE %f" % self.h)
+        if self.visual_mode > 0:
+            self.visual_mode = True
+            print("--> Visual mode is on")
+        else:
+            self.visual_mode = False
+            print("--> Visual mode is off")
+        print(f"--> Expected Number of dudded points: {self.dudded_points}")
+        print(f"--> X Domain Size {self.domain['x']} m")
+        print(f"--> Y Domain Size {self.domain['y']} m")
+        print(f"--> Z Domain Size {self.domain['z']} m")
+        print("--> Parsing params.txt complete\n")
+
 def gather_output(self):
     
     """ Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated 
@@ -164,12 +228,20 @@ def gather_output(self):
 
     """
     print("--> Parsing dfnWorks output and adding to object")
-    self.num_frac , self.h, _, _, _ = parse_params_file(quiet=True)
+    self.parse_params_file(quiet = False)
 
     ## load radii
     data = np.genfromtxt('radii_Final.dat', skip_header = 2)
-    self.radii = data[:,:2]
-    self.families = data[:,2]
+    ## populate radius array
+    self.radii = np.zeros((self.num_frac,3))
+    # First Column is x, second is y, 3rd is max
+    self.radii[:,:2] = data[:,:2]
+    for i in range(self.num_frac):
+        self.radii[i,2] = max(self.radii[i,0], self.radii[i,1])
+
+    # gather fracture families
+    self.families = data[:,2].astype(int)
+
     ## load surface area
     self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header = 1)
     ## load normal vectors
@@ -183,15 +255,19 @@ def gather_output(self):
                 line = line.split()
                 centers.append([float(line[0]), float(line[0]), float(line[2])])
     self.centers = np.array(centers)
+
+    # Grab Polygon information
+    self.poly_info = np.genfromtxt('poly_info.dat')
+
+    ## create holder arrays for b, k, and T
     self.aperture = np.array(self.num_frac)
     self.perm = np.array(self.num_frac)
     self.transmissivity = np.array(self.num_frac)
-    
-     
+
+    # gather indexes for fracture families
     self.family = []
     ## get number of families
     num_families = int(max(self.families))
-    print(f'there are {num_families} families')
     for i in range(1, num_families+1):
         idx = np.where(self.families == i)
         self.family.append(idx) 

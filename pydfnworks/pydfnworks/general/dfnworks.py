@@ -50,7 +50,7 @@ class DFNWORKS(Frozen):
 
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, gather_output
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, gather_output, parse_params_file
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures 

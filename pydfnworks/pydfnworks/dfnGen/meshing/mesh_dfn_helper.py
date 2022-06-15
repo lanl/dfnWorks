@@ -10,73 +10,6 @@ import glob
 from numpy import genfromtxt, sort, zeros
 import subprocess
 
-def parse_params_file(quiet=False):
-    """ Reads params.txt file from DFNGen and parses information
-
-    Parameters
-    ---------
-        quiet : bool
-            If True details are not printed to screen, if False they area 
-
-    Returns
-    -------
-        num_poly: int
-            Number of Polygons
-        h: float 
-            Meshing length scale h
-        dudded_points: int 
-            Expected number of dudded points in Filter (LaGriT)
-        visual_mode : bool
-            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-        domain: dict
-             x,y,z domain sizes 
-    
-    Notes
-    -----
-        None
-    """
-    if not quiet:
-        print("\n--> Parsing  params.txt")
-    fparams = open('params.txt', 'r')
-    # Line 1 is the number of polygons
-    num_poly = int(fparams.readline())
-    #Line 2 is the h scale
-    h = float(fparams.readline())
-    # Line 3 is the visualization mode: '1' is True, '0' is False.
-    visual_mode = int(fparams.readline())
-    # line 4 dudded points
-    dudded_points = int(fparams.readline())
-
-    # Dict domain contains the length of the domain in x,y, and z
-    domain = {'x': 0, 'y': 0, 'z': 0}
-    #Line 5 is the x domain length
-    domain['x'] = (float(fparams.readline()))
-
-    #Line 5 is the x domain length
-    domain['y'] = (float(fparams.readline()))
-
-    #Line 5 is the x domain length
-    domain['z'] = (float(fparams.readline()))
-    fparams.close()
-
-    if not quiet:
-        print("--> Number of Polygons: %d" % num_poly)
-        print("--> H_SCALE %f" % h)
-        if visual_mode > 0:
-            visual_mode = True
-            print("--> Visual mode is on")
-        else:
-            visual_mode = False
-            print("--> Visual mode is off")
-        print(f"--> Expected Number of dudded points: {dudded_points}")
-        print(f"--> X Domain Size {domain['x']} m")
-        print(f"--> Y Domain Size {domain['y']} m")
-        print(f"--> Z Domain Size {domain['z']} m")
-        print("--> Parsing params.txt complete\n")
-
-    return (num_poly, h, visual_mode, dudded_points, domain)
-
-
 def check_dudded_points(dudded, hard=False):
     """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
 
@@ -240,104 +173,113 @@ def clean_up_files_after_prune(self):
     print("--> Editing DFN file based on fractures in %s" % self.prune_file)
     keep_list = sort(genfromtxt(self.prune_file).astype(int))
     num_frac = len(keep_list)
+    self.num_frac = num_frac
 
-    print("--> Editing params.txt file")
-    fin = open(self.path + '/params.txt')
-    try:
-        os.unlink('params.txt')
-    except:
-        pass
-    fout = open('params.txt', 'w')
-    line = fin.readline()
-    fout.write('%d\n' % num_frac)
-    for i in range(7):
-        line = fin.readline()
-        fout.write(line)
-    fin.close()
-    fout.close()
-    print("--> Complete")
+    # print("--> Editing params.txt file")
+    # fin = open(self.path + '/params.txt')
+    # try:
+    #     os.unlink('params.txt')
+    # except:
+    #     pass
+    # fout = open('params.txt', 'w')
+    # line = fin.readline()
+    # fout.write('%d\n' % num_frac)
+    # for i in range(7):
+    #     line = fin.readline()
+    #     fout.write(line)
+    # fin.close()
+    # fout.close()
+    # print("--> Complete")
 
+    self.poly_info = self.poly_info[keep_list - 1]
     print("--> Editing poly_info.dat file")
-    poly_info = genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
-    try:
-        os.unlink('poly_info.dat')
-    except:
-        pass
-    f = open('poly_info.dat', 'w')
-    for i in range(num_frac):
-        f.write('%d %d %f %f %f %d %f %f %d\n' %
-                (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
-                 poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
-                 poly_info[i, 7], poly_info[i, 8]))
-    f.close()
-    print("--> Complete")
+    #poly_info = genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
+    # try:
+    #     os.unlink('poly_info.dat')
+    # except:
+    #     pass
+    # f = open('poly_info.dat', 'w')
+    # for i in range(num_frac):
+    #     f.write('%d %d %f %f %f %d %f %f %d\n' %
+    #             (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
+    #              poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
+    #              poly_info[i, 7], poly_info[i, 8]))
+    # f.close()
+    # print("--> Complete")
 
-    print("--> Editing perm.dat file")
-    perm = genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
-    f = open('perm.dat', 'w+')
-    f.write('permeability\n')
-    for i in range(num_frac):
-        f.write('-%d 0 0 %e %e %e\n' % (7 + i, perm[i], perm[i], perm[i]))
-    f.close()
-    print("--> Complete")
+    self.perm = self.perm[keep_list-1]
+    # print("--> Editing perm.dat file")
+    # perm = genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
+    # f = open('perm.dat', 'w+')
+    # f.write('permeability\n')
+    # for i in range(num_frac):
+    #     f.write('-%d 0 0 %e %e %e\n' % (7 + i, perm[i], perm[i], perm[i]))
+    # f.close()
+    # print("--> Complete")
 
-    print("--> Editing aperture.dat file")
-    aperture = genfromtxt(self.path + 'aperture.dat',
-                          skip_header=1)[keep_list - 1, -1]
-    f = open('aperture.dat', 'w+')
-    f.write('aperture\n')
-    for i in range(num_frac):
-        f.write('-%d 0 0 %e \n' % (7 + i, aperture[i]))
-    f.close()
-    print("--> Complete")
+    self.aperture = self.aperture[keep_list-1]
+    # print("--> Editing aperture.dat file")
+    # aperture = genfromtxt(self.path + 'aperture.dat',
+    #                       skip_header=1)[keep_list - 1, -1]
+    # f = open('aperture.dat', 'w+')
+    # f.write('aperture\n')
+    # for i in range(num_frac):
+    #     f.write('-%d 0 0 %e \n' % (7 + i, aperture[i]))
+    # f.close()
+    # print("--> Complete")
 
-    print("--> Editing radii_Final.dat file")
-    fin = open(self.path + 'radii_Final.dat')
-    fout = open('radii_Final.dat', 'w')
-    # copy header
-    line = fin.readline()
-    fout.write(line)
-    line = fin.readline()
-    fout.write(line)
-    fin.close()
-    # write radii from remaining fractures
-    radii = genfromtxt(self.path + 'radii_Final.dat',
-                       skip_header=2)[keep_list - 1, :]
-    for i in range(num_frac):
-        fout.write('%f %f %d\n' % (radii[i, 0], radii[i, 1], radii[i, 2]))
-    fout.close()
-    print("--> Complete")
+    self.radii = self.radii[keep_list-1]
+    # print("--> Editing radii_Final.dat file")
+    # fin = open(self.path + 'radii_Final.dat')
+    # fout = open('radii_Final.dat', 'w')
+    # # copy header
+    # line = fin.readline()
+    # fout.write(line)
+    # line = fin.readline()
+    # fout.write(line)
+    # fin.close()
+    # # write radii from remaining fractures
+    # radii = genfromtxt(self.path + 'radii_Final.dat',
+    #                    skip_header=2)[keep_list - 1, :]
+    # for i in range(num_frac):
+    #     fout.write('%f %f %d\n' % (radii[i, 0], radii[i, 1], radii[i, 2]))
+    # fout.close()
+    # print("--> Complete")
 
-    print("--> Editing normal_vectors.dat file")
-    fin = open(self.path + 'normal_vectors.dat')
-    fout = open('normal_vectors.dat', 'w')
-    # copy header
-    normal_vect = genfromtxt(self.path + 'normal_vectors.dat')[keep_list -
-                                                               1, :]
-    for i in range(num_frac):
-        fout.write('%f %f %f\n' %
-                   (normal_vect[i, 0], normal_vect[i, 1], normal_vect[i, 2]))
-    fout.close()
-    print("--> Complete")
+    self.normal_vectors = self.normal_vectors[keep_list - 1]
 
-    print("--> Editing translations.dat file")
-    fin = open(self.path + 'translations.dat')
-    fout = open('translations.dat', 'w')
-    # copy header
-    line = fin.readline()
-    fout.write(line)
-    points = []
-    for line in fin.readlines():
-        tmp = line.split(' ')
-        if tmp[-1] != 'R':
-            points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
-    from numpy import asarray
-    points = asarray(points)
-    points = points[keep_list - 1, :]
-    for i in range(num_frac):
-        fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
-    fout.close()
-    print("--> Complete")
+    # print("--> Editing normal_vectors.dat file")
+    # fin = open(self.path + 'normal_vectors.dat')
+    # fout = open('normal_vectors.dat', 'w')
+    # # copy header
+    # normal_vect = genfromtxt(self.path + 'normal_vectors.dat')[keep_list -
+    #                                                            1, :]
+    # for i in range(num_frac):
+    #     fout.write('%f %f %f\n' %
+    #                (normal_vect[i, 0], normal_vect[i, 1], normal_vect[i, 2]))
+    # fout.close()
+    # print("--> Complete")
+
+
+    self.centers = self.centers[keep_list - 1]
+    # print("--> Editing translations.dat file")
+    # fin = open(self.path + 'translations.dat')
+    # fout = open('translations.dat', 'w')
+    # # copy header
+    # line = fin.readline()
+    # fout.write(line)
+    # points = []
+    # for line in fin.readlines():
+    #     tmp = line.split(' ')
+    #     if tmp[-1] != 'R':
+    #         points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
+    # from numpy import asarray
+    # points = asarray(points)
+    # points = points[keep_list - 1, :]
+    # for i in range(num_frac):
+    #     fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
+    # fout.close()
+    # print("--> Complete")
 
     print("--> Editing Fracture Files Complete")
 

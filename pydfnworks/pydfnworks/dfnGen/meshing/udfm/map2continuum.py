@@ -54,35 +54,30 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
         sys.stderr.write(error)
         sys.exit(1)
 
-    # Read in normal vectors and points from dfnWorks output
-    normal_vectors = np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
 
-    with open(path + 'translations.dat') as old, open('points.dat',
-                                                      'w') as new:
-        old.readline()
-        for line in old:
-            if not 'R' in line:
-                new.write(line)
-    points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
-
-    try:
-        os.symlink(path + 'params.txt', 'params.txt')
-    except:
-        pass
-    num_poly, h, _, _, domain = mh.parse_params_file()
+    # These are now on the DFNWORKS object
+    # # Read in normal vectors and points from dfnWorks output
+    # normal_vectors = np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
+    # with open(path + 'translations.dat') as old, open('points.dat',
+    #                                                   'w') as new:
+    #     old.readline()
+    #     for line in old:
+    #         if not 'R' in line:
+    #             new.write(line)
+    # points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
 
     # Extent of domain
-    x0 = 0 - (domain['x'] / 2.0)
-    x1 = 0 + (domain['x'] / 2.0)
-    y0 = 0 - (domain['y'] / 2.0)
-    y1 = 0 + (domain['y'] / 2.0)
-    z0 = 0 - (domain['z'] / 2.0)
-    z1 = 0 + (domain['z'] / 2.0)
+    x0 = 0 - (self.domain['x'] / 2.0)
+    x1 = 0 + (self.domain['x'] / 2.0)
+    y0 = 0 - (self.domain['y'] / 2.0)
+    y1 = 0 + (self.domain['y'] / 2.0)
+    z0 = 0 - (self.domain['z'] / 2.0)
+    z1 = 0 + (self.domain['z'] / 2.0)
 
     # Number of cell elements in each direction at coarse level
-    nx = domain['x'] / l + 1
-    ny = domain['y'] / l + 1
-    nz = domain['z'] / l + 1
+    nx = self.domain['x'] / l + 1
+    ny = self.domain['y'] / l + 1
+    nz = self.domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
         error = "ERROR: Number of elements > 1e8. Exiting"
@@ -100,16 +95,16 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
         os.mkdir(dir_name+os.sep+"lagrit_scripts")
         os.mkdir(dir_name+os.sep+"lagrit_logs")
 
-    lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points)
-    lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors, self.centers)
+    lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, self.h)
     lagrit_build(dir_name)
     lagrit_intersect(dir_name)
     lagrit_hex_to_tet(dir_name)
     lagrit_remove(dir_name)
-    lagrit_run(self, num_poly, path, dir_name)
-    lagrit_strip(num_poly)
-    driver_parallel(self, num_poly)
-    build_dict(self, num_poly, delete_files = True)
+    lagrit_run(self, self.num_frac, path, dir_name)
+    lagrit_strip(self.num_frac)
+    driver_parallel(self, self.num_frac)
+    build_dict(self, self.num_frac, delete_files = True)
     dir_cleanup()
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
