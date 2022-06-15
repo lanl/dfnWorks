@@ -55,13 +55,13 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, gather_output, parse_params_file
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.output_report.gather_information import get_fracture_information, get_family_information
-    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, set_fracture_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity
+    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, set_fracture_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info
 
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
-    from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
+    from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh, create_variable_file
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale

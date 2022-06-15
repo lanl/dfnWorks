@@ -7,6 +7,7 @@ import math as m
 # from pydfnworks
 from pydfnworks.dfnGen.generation.hydraulic_properties import convert
 
+
 def stress_based_apertures(self,
                            sigma_mat,
                            friction_angle=24.9,
@@ -71,81 +72,71 @@ def stress_based_apertures(self,
 
     # write stress to file.
     with open("stress.dat", "w") as fstress:
-            fstress.write(
-                f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
-            )
-            fstress.write(
-                f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
-            )
-            fstress.write(
-                f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
-            )
+        fstress.write(
+            f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+        )
 
-
-    # read fracture data:
-    # initial_aperture = np.genfromtxt(self.aper_file, skip_header=1)[:, -1]
-    # normals = np.genfromtxt('normal_vectors.dat', skip_header=0)
-    # radii_frac = np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
-
-    # grab data from object. 
-    initial_aperture = self.aperture
-    normals = self.normal_vectors
-    radii_frac = self.radii[:,2]
-    num_frac = self.num_frac
-
-    b = np.zeros(num_frac)
-
+    # make new aperture array
+    b = np.zeros(self.num_frac)
     # Cycle through fractures and compute new aperture base on stress field and user defined parameters
-    for i in range(num_frac):
+    for i in range(self.num_frac):
         # Magnitude of normal stress
-        sigma_mag = sigma_mat[0][0]*(normals[i][0])**2 + \
-                    sigma_mat[1][1]*(normals[i][1])**2 + \
-                    sigma_mat[2][2]*(normals[i][2])**2 + \
-                    2*(sigma_mat[0][1]*normals[i][0]*normals[i][1] + \
-                    sigma_mat[1][2]*normals[i][1]*normals[i][2] + \
-                    sigma_mat[0][2]*normals[i][0]*normals[i][2])
+        sigma_mag = sigma_mat[0][0]*(self.normal_vectors[i][0])**2 + \
+                    sigma_mat[1][1]*(self.normal_vectors[i][1])**2 + \
+                    sigma_mat[2][2]*(self.normal_vectors[i][2])**2 + \
+                    2*(sigma_mat[0][1]*self.normal_vectors[i][0]*self.normal_vectors[i][1] + \
+                    sigma_mat[1][2]*self.normal_vectors[i][1]*self.normal_vectors[i][2] + \
+                    sigma_mat[0][2]*self.normal_vectors[i][0]*self.normal_vectors[i][2])
 
-        T_1 = sigma_mat[0][0]*normals[i][0] + \
-              sigma_mat[0][1]*normals[i][1] + \
-              sigma_mat[0][2]*normals[i][2]
+        T_1 = sigma_mat[0][0]*self.normal_vectors[i][0] + \
+              sigma_mat[0][1]*self.normal_vectors[i][1] + \
+              sigma_mat[0][2]*self.normal_vectors[i][2]
 
-        T_2 = sigma_mat[1][0]*normals[i][0] + \
-              sigma_mat[1][1]*normals[i][1] + \
-              sigma_mat[1][2]*normals[i][2]
+        T_2 = sigma_mat[1][0]*self.normal_vectors[i][0] + \
+              sigma_mat[1][1]*self.normal_vectors[i][1] + \
+              sigma_mat[1][2]*self.normal_vectors[i][2]
 
-        T_3 = sigma_mat[2][0]*normals[i][0] + \
-              sigma_mat[2][1]*normals[i][1] + \
-              sigma_mat[2][2]*normals[i][2]
-              
+        T_3 = sigma_mat[2][0]*self.normal_vectors[i][0] + \
+              sigma_mat[2][1]*self.normal_vectors[i][1] + \
+              sigma_mat[2][2]*self.normal_vectors[i][2]
+
         stress_sqr = (T_1)**2 + (T_2)**2 + (T_3)**2
         # Magnitude of shear stress
         shear_stress = np.sqrt(max(0, stress_sqr - (sigma_mag)**2))
         # Critical normal stress (see Zhao et al. 2013 JRMGE)
-        sigma_nc = (0.487 * initial_aperture[i] * 1e6 + 2.51) * 1e6
+        sigma_nc = (0.487 * self.aperture[i] * 1e6 + 2.51) * 1e6
         # Normal displacement
-        normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (sigma_nc +
-                                                       10 * sigma_mag)
+        normal_displacement = (9 * sigma_mag *
+                               self.aperture[i]) / (sigma_nc + 10 * sigma_mag)
         # Shear dilation
         shear_stress_critical = -sigma_mag * m.tan(friction_angle)
-        # Fracture half length
-        l = radii_frac[i]
-        
+        # half of maximum fracture length (x ~= y if aspect ~= 1)
+        l = self.radii[i, 2]
+
         # rock stiffness
         rock_stiffness = 0.92 * shear_modulus / l
         ks1 = shear_stiffness + rock_stiffness
         ks2 = rock_stiffness
-        # 
+        #
         if shear_stress > shear_stress_critical:
-            dilation_tmp = (shear_stress - shear_stress_critical * (1 - ks2 / ks1)) / (ks2)
+            dilation_tmp = (shear_stress - shear_stress_critical *
+                            (1 - ks2 / ks1)) / (ks2)
         else:
             dilation_tmp = 0
 
-        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(m.degrees(dilation_angle))
+        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(
+            m.degrees(dilation_angle))
 
         # take the max of the computed and provided minimum aperture.
-        b[i] = max(min_b, initial_aperture[i] - normal_displacement + dilation)
+        b[i] = max(min_b, self.aperture[i] - normal_displacement + dilation)
 
-    diff = abs(b - initial_aperture)
+    diff = abs(b - self.aperture)
     diff2 = diff**2
     print(f"--> L2 change in apertures {np.sqrt(diff.sum()):0.2e}")
     print(f"--> Maximum change in apertures {max(diff):0.2e}")
@@ -156,6 +147,6 @@ def stress_based_apertures(self,
     self.perm = k
     T = convert(b, 'aperture', 'transmissivity')
     self.transmissivity = T
-    self.dump_hydraulic_values(b, k, T, prefix='stress')
+    self.dump_hydraulic_values(prefix='stress')
 
     print("--> Computing aperture based on stress field complete ")

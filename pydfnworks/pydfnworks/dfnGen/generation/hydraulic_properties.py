@@ -437,7 +437,8 @@ def dump_fracture_info(self, filename):
         fp.write("num_connections perm aperture\n")
         for i in range(self.num_frac):
             fp.write(
-                f"{connections[i]:d} {self.perm[i]:0.8e} {self.b[i]:0.8e}\n")
+                f"{connections[i]:d} {self.perm[i]:0.8e} {self.aperture[i]:0.8e}\n"
+            )
     print("--> Complete")
 
 
