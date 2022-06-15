@@ -23,7 +23,7 @@ def get_units(variable):
     elif variable == "transmissivity":
         units = "m^2/s"
     else:
-        error = "ERROR!!! The variable of choice '{0}' is not known in the function get_units()\nAcceptable names are aperture, permeability, and transmissivity\nExiting.".format(
+        error = "Error. The variable of choice '{0}' is not known in the function get_units()\nAcceptable names are aperture, permeability, and transmissivity\nExiting.".format(
             variable)
         sys.stderr.write(error)
         sys.exit(1)
@@ -200,7 +200,7 @@ def log_normal(params, variable, number_of_fractures):
         perm = convert(T, variable, "permeability")
 
     else:
-        error = "ERROR!!! The variable of choice '{0}'' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
+        error = "Error. The variable of choice '{0}'' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
             variable)
         sys.stderr.write(error)
         sys.exit(1)
@@ -239,13 +239,13 @@ def correlated(params, variable, radii):
         .format(variable))
     units = get_units(variable)
     if variable == "aperture":
-        print("b ={1}*r^{2} {3}".format(variable, params["alpha"],
+        print("b ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
     if variable == "permeability":
-        print("k ={1}*r^{2} {3}".format(variable, params["alpha"],
+        print("k ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
     if variable == "transmissivity":
-        print("T ={1}*r^{2} {3}".format(variable, params["alpha"],
+        print("T ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
                                         params["beta"], units))
 
     if variable == "aperture":
@@ -461,14 +461,16 @@ def generate_hydraulic_values(self,
                               variable,
                               relationship,
                               params,
-                              radii_filename="radii_Final.dat",
                               family_id=None):
     """ Generates hydraulic property values. 
 
     Parameters
     -----------
         self : object 
-            DFN Class 
+            DFN Class
+        variable : string
+            base variable in relationship. Options are: aperture, permeability, transmissivity
+
         relationship : string
             name of functional relationship for apertures. 
             options are log-normal, correlated, semi-correlated, and
@@ -499,7 +501,7 @@ def generate_hydraulic_values(self,
     # Check if the variable choice is defined
     variables = ["aperture", "permeability", "transmissivity"]
     if variable not in variables:
-        error = "ERROR!!! The variable of choice '{0}'' is not known\nAcceptable names are {1}, {2}, {3}\nExiting.\n".format(
+        error = "Error. The variable of choice '{0}'' is not known\nAcceptable names are {1}, {2}, {3}\nExiting.\n".format(
             variable, variables[0], variables[1], variables[2])
         sys.stderr.write(error)
         sys.exit(1)
@@ -511,24 +513,20 @@ def generate_hydraulic_values(self,
     # check if the function is defined
     functions = ["log-normal", "semi-correlated", "constant", "correlated"]
     if relationship not in functions:
-        error = "ERROR!!! The provided relationship '{0}' is unknown\nAcceptable relationship are {1}, {2}, {3}, {4}\nExiting.\n".format(
-            relationship, functions[0], functions[1], functions[2],
-            functions[3])
+        error = f"Error! The provided relationship '{relationship}' is unknown\nAcceptable relationship are log-normal, semi-correlated, constant, or correlated\nExiting.\n"
         sys.stderr.write(error)
         sys.exit(1)
-    # else:
-    #     print(
-    #         "Creating aperture, permeability, and transmissivity using the {0} function."
-    #         .format(relationship))
 
-    # Load Fracture information
-    radii, families, number_of_fractures = load_fractures(radii_filename,
-                                                          quiet=False)
+    ## use max value of radius 
+    radii = self.radii[:,2]
+    families = self.families
+    number_of_fractures = self.num_frac
+
     if family_id is not None:
         print(f"--> Working on Fracture Family {family_id}")
         idx = np.where(families == family_id)
         if len(idx[0]) == 0:
-            error = f"ERROR!!! No fractures in the network are in the requested family. {family_id}.\nUser Rectangles = -1\nUser Ellipses = 0.\nStochastic Families > 0.\nExiting\n"
+            error = f"Error. No fractures in the network are in the requested family. {family_id}.\nUser Rectangles = -1\nUser Ellipses = 0.\nStochastic Families > 0.\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -536,7 +534,7 @@ def generate_hydraulic_values(self,
         keys = ["mu", "sigma"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
@@ -546,7 +544,7 @@ def generate_hydraulic_values(self,
         keys = ["alpha", "beta"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
@@ -556,7 +554,7 @@ def generate_hydraulic_values(self,
         keys = ["alpha", "beta", "sigma"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
@@ -567,13 +565,16 @@ def generate_hydraulic_values(self,
         keys = ["mu"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
         b, perm, T = constant(params, variable, number_of_fractures)
 
     if family_id == None:
+        self.aperture = b
+        self.perm = perm
+        self.transmissivity = T
         return b, perm, T
     else:
         # Sent entries that are not in the requested family to None
