@@ -49,15 +49,12 @@ def upscale(self, mat_perm, mat_por, path='../'):
     print('=' * 80)
     print("Generating permeability and porosity for octree mesh: Starting")
     print('=' * 80)
-    
+
     # Check values of porosity and permeability
-    if  mat_por < 0 or mat_por > 1:
+    if mat_por < 0 or mat_por > 1:
         error = "Matrix porosity must be between 0 and 1. Exiting\n"
         sys.stderr.write(error)
         sys.exit(1)
-
-    # aperture = self.apreture # np.genfromtxt(path + 'aperture.dat', skip_header=1)[:, -1]
-    # normal_vectors = self.normal_vectors # np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
 
     if self.flow_solver == "FEHM":
         with open("perm_fehm.dat", "w") as f:
@@ -67,9 +64,9 @@ def upscale(self, mat_perm, mat_por, path='../'):
 
     # Bring in f_dict dictionary
     f_dict = pickle.load(open("connections.p", "rb"))
-   
+
     with open('full_mesh.uge') as f:
-        num_nodes = int(f.readline().strip().split()[1]) 
+        num_nodes = int(f.readline().strip().split()[1])
         cv_vol = np.zeros(num_nodes, 'float')
         iarray = np.zeros(num_nodes, '=i4')
         for i in range(num_nodes):
@@ -94,7 +91,7 @@ def upscale(self, mat_perm, mat_por, path='../'):
             for j in range(len(f_dict[i])):
                 # Calculate total volume of fractures in cv cell i
                 frac_vol[i -
-                         1] += aperture[f_dict[i][j][0] - 1] * f_dict[i][j][1]
+                         1] += self.aperture[f_dict[i][j][0] - 1] * f_dict[i][j][1]
             por_var[i - 1] = frac_vol[i - 1] / cv_vol[i - 1]
             if por_var[i - 1] == 0:
                 por_var[i - 1] = mat_por
@@ -254,6 +251,7 @@ def upscale(self, mat_perm, mat_por, path='../'):
     print('=' * 80)
     print("Generating permeability and porosity for octree mesh: Finished")
     print('=' * 80)
+
 
 #def upscale_cleanup():
 #    files_to_remove = [
