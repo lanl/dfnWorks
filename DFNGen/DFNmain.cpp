@@ -305,12 +305,13 @@ int main (int argc, char **argv) {
                 // Find line of intersection and FRAM check
                 rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
                 // Find line of intersection and FRAM check
-                //if (disableFram == false) {
-                //    rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
-                //}
-                //else{
-                //    rejectCode = 0;
-                //}
+                
+                // if (disableFram == false) {
+                //     rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
+                // }
+                // else{
+                //     rejectCode = 0;
+                // }
 
 
 #ifdef TESTING
