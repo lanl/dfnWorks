@@ -42,9 +42,7 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     // Write polygon.dat file
     writePolys(finalFractures, acceptedPoly, output);
     // Write intersection files (must be first file written, rotates polys to x-y plane)
-    if (disableFram == false){
-        writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
-    }
+    writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
     // Write polys.inp
     writePolysInp(finalFractures, acceptedPoly, output);
     // Write params.txt
