@@ -70,7 +70,9 @@ def plot_fram_information(params):
     axs.set_yticklabels(labels, fontsize=14)
     axs.invert_yaxis()  # labels read top-to-bottom
     axs.set_xlabel('Number of re-samples', fontsize=14)
-    axs.set_xticklabels(axs.get_xticks().astype(int), fontsize=16)
+    values_list = axs.get_xticks().astype(int)
+    axs.xaxis.set_ticks(values_list)
+    axs.set_xticklabels(values_list, fontsize=16)
     axs.grid(alpha=0.1)
     axs.axis([0, 1.1 * max(cnts), axs.get_ylim()[0], axs.get_ylim()[1]])
     axs.set_title("Re-sampling Histogram", fontsize=18)

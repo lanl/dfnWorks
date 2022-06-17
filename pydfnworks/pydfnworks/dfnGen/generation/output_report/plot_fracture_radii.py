@@ -254,14 +254,27 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
     axs[0].set_title("All Accepted Fractures", fontsize=24)
     axs[0].set_xlabel("Fracture Radius [m]", fontsize=24)
     axs[0].set_ylabel("Fracture Count", fontsize=24)
-    axs[0].set_xticklabels(axs[0].get_xticks().astype(int), fontsize=14)
-    axs[0].set_yticklabels(axs[0].get_yticks().astype(int), fontsize=14)
+
+    x_ticks =  axs[0].get_xticks().astype(int)
+    axs[0].xaxis.set_ticks(x_ticks)
+    axs[0].set_xticklabels(x_ticks, fontsize=14)
+
+    y_ticks =  axs[0].get_yticks().astype(int)
+    axs[0].yaxis.set_ticks(y_ticks)
+    axs[0].set_yticklabels(y_ticks, fontsize=14)
 
     axs[1].grid(True, alpha=0.5)
     axs[1].set_title("Fractures in the Connected Network", fontsize=24)
     axs[1].set_xlabel("Fracture Radius [m]", fontsize=24)
-    axs[1].set_xticklabels(axs[1].get_xticks().astype(int), fontsize=14)
-    axs[1].set_yticklabels(axs[1].get_yticks().astype(int), fontsize=14)
+
+    x_ticks =  axs[1].get_xticks().astype(int)
+    axs[1].xaxis.set_ticks(x_ticks)
+    axs[1].set_xticklabels(x_ticks, fontsize=14)
+
+    y_ticks =  axs[1].get_yticks().astype(int)
+    axs[1].yaxis.set_ticks(y_ticks)
+    axs[1].set_yticklabels(y_ticks, fontsize=14)
+
     axs[1].axis([
         axs[0].get_xlim()[0], axs[0].get_xlim()[1], axs[0].get_ylim()[0],
         axs[0].get_ylim()[1]
