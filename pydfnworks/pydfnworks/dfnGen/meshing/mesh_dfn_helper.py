@@ -5,10 +5,12 @@
 
 """
 import os
+from re import I
 import sys
 import glob
 from numpy import genfromtxt, sort, zeros
 import subprocess
+
 
 def check_dudded_points(dudded, hard=False):
     """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
@@ -94,18 +96,33 @@ def cleanup_dir():
 def gather_mesh_information(self):
 
     ## get number of nodes in the mesh
-    with open('full_mesh.inp', 'r') as finp:
-        line = finp.readline()
-        line = line.split()
-        self.num_nodes = int(line[0])
-
-    ## get node material ids
-    if os.path.isfile(self.mat_file):
-        self.materialid = genfromtxt(self.mat_file, skip_header=3).astype(int)
+    if self.visual_mode:
+        self.inp_file = 'reduced_mesh.inp'
     else:
-        error = f'Error: {self.mat_file} not found.\n'
+        self.inp_file = "full_mesh.inp"
+
+    if os.path.isfile(self.inp_file):
+
+        with open(self.inp_file, 'r') as finp:
+            line = finp.readline()
+            line = line.split()
+            self.num_nodes = int(line[0])
+
+    else:
+        error = f'Error: {self.inp_file} not found.\n'
         sys.stderr.write(error)
         sys.exit(1)
+
+    if not self.visual_mode:
+        ## get node material ids
+        if os.path.isfile(self.mat_file):
+            self.materialid = genfromtxt(self.mat_file,
+                                         skip_header=3).astype(int)
+        else:
+            error = f'Error: {self.mat_file} not found.\n'
+            sys.stderr.write(error)
+            sys.exit(1)
+
 
 def clean_up_files_after_prune(self):
     ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
@@ -161,7 +178,7 @@ def clean_up_files_after_prune(self):
     # f.close()
     # print("--> Complete")
 
-    self.perm = self.perm[keep_list-1]
+    self.perm = self.perm[keep_list - 1]
     # print("--> Editing perm.dat file")
     # perm = genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
     # f = open('perm.dat', 'w+')
@@ -171,7 +188,7 @@ def clean_up_files_after_prune(self):
     # f.close()
     # print("--> Complete")
 
-    self.aperture = self.aperture[keep_list-1]
+    self.aperture = self.aperture[keep_list - 1]
     # print("--> Editing aperture.dat file")
     # aperture = genfromtxt(self.path + 'aperture.dat',
     #                       skip_header=1)[keep_list - 1, -1]
@@ -182,7 +199,7 @@ def clean_up_files_after_prune(self):
     # f.close()
     # print("--> Complete")
 
-    self.radii = self.radii[keep_list-1]
+    self.radii = self.radii[keep_list - 1]
     # print("--> Editing radii_Final.dat file")
     # fin = open(self.path + 'radii_Final.dat')
     # fout = open('radii_Final.dat', 'w')
@@ -214,7 +231,6 @@ def clean_up_files_after_prune(self):
     # fout.close()
     # print("--> Complete")
 
-
     self.centers = self.centers[keep_list - 1]
     # print("--> Editing translations.dat file")
     # fin = open(self.path + 'translations.dat')
@@ -238,7 +254,7 @@ def clean_up_files_after_prune(self):
     print("--> Editing Fracture Files Complete")
 
 
-def create_mesh_links(self,path):
+def create_mesh_links(self, path):
     ''' Makes symlinks for files in path required for meshing
     
     Parameters
@@ -308,7 +324,7 @@ def inp2gmv(self):
         error = 'Error: Failed to run LaGrit to get gmv from inp file!\n'
         sys.stderr.write(error)
         sys.exit(1)
-        
+
     print("--> Finished writing gmv format from avs format")
 
 
