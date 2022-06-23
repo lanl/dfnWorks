@@ -5,6 +5,7 @@
 
 """
 
+from re import X
 import networkx as nx
 import numpy as np
 import numpy.random
@@ -20,49 +21,33 @@ import os
 import pydfnworks.dfnGraph.graph_flow
 
 
-def create_neighbor_list(G):
-    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
+def interpolate_time(x0, t1, t2, x1, x2):
+    """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
 
     Parameters
     ----------
-        G: NetworkX graph 
-            Directed Graph obtained from output of graph_flow
+        x0 : float
+            current location
+        t1 : float
+            previous time step
+        t2 : float
+            next time step
+        x1 : float
+            previous location
+        x2 : float
+            next location
 
     Returns
     -------
-        dict : nested dictionary.
+        time at location x0
+            
 
     Notes
     -----
-    dict[n]['child'] is a list of vertices downstream to vertex n
-    dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+
     """
 
-    nbrs_dict = {}
-
-    for u in nx.nodes(G):
-
-        if G.nodes[u]['outletflag']:
-            continue
-
-        node_list = []
-        prob_list = []
-        nbrs_dict[u] = {}
-
-        for v in G.successors(u):
-
-            node_list.append(v)
-            prob_list.append(G.edges[u, v]['flux'])
-
-        if node_list:
-            nbrs_dict[u]['child'] = node_list
-            nbrs_dict[u]['prob'] = np.array(prob_list,
-                                            dtype=float) / sum(prob_list)
-        else:
-            nbrs_dict[u]['child'] = None
-            nbrs_dict[u]['prob'] = None
-
-    return nbrs_dict
+    return t1 + (t2 - t1) / (x2 - x1) * (x0 - x1)
 
 class Particle():
     ''' 
@@ -76,12 +61,15 @@ class Particle():
         * flag : True if particle exited system, else False
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
-    def __init__(self):
+    def __init__(self, particle_number):
+        self.particle_number = particle_number
         self.frac_seq = {}
+        self.cp_seq = []
         self.time = float
         self.tdrw_time = float
         self.dist = float
         self.flag = bool
+    
 
     def set_start_time_dist(self, t, L):
         """ Set initial value for travel time and distance
@@ -104,7 +92,7 @@ class Particle():
         self.dist = L
 
     def track(self, G, nbrs_dict, ip, tdrw_flag,
-              matrix_porosity, matrix_diffusivity):
+              matrix_porosity, matrix_diffusivity, control_planes, direction):
         """ track a particle from inlet vertex to outlet vertex
 
         Parameters
@@ -121,7 +109,7 @@ class Particle():
         """
         # Current position is initial positions assigned in get_initial_positions
         curr_v = ip
-
+        cp_index = 0
         while True:
 
             if G.nodes[curr_v]['outletflag']:
@@ -149,11 +137,23 @@ class Particle():
             else:
                 t_tdrw = t
 
-            L = G.edges[curr_v, next_v]['length']
-            self.add_frac_data(frac, t, t_tdrw, L)
+            l = G.edges[curr_v, next_v]['length']
+
+            if G.nodes[next_v][direction] > control_planes[cp_index]:
+                x0 = control_planes[cp_index]  
+                t1 = self.time
+                t2 = t 
+                x1 = G.nodes[curr_v][direction] 
+                x2 = G.nodes[next_v][direction] 
+                tau  = interpolate_time(x0, t1, t2, x1, x2)
+                print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
+                self.cp_seq.append(tau)
+                cp_index += 1
+
+            self.add_frac_data(frac, t, t_tdrw, l)
             curr_v = next_v
 
-    def add_frac_data(self, frac, t, t_tdrw, L):
+    def add_frac_data(self, frac, t, t_tdrw, l):
         """ add details of fracture through which particle traversed
 
         Parameters
@@ -164,13 +164,16 @@ class Particle():
                 index of fracture in graph
 
             t : double
-                time in seconds
+                advective time (seconds)
 
             t_tdrw: double
-                time in seconds
+                time diffusiving into matrix (seconds)
 
-            L : double
-                distance in metres
+            l : double
+                distance traveled by the particle
+
+            x : double 
+                current x position
 
         Returns
         -------
@@ -185,10 +188,10 @@ class Particle():
             }})
         self.frac_seq[frac]['time'] += t
         self.frac_seq[frac]['tdrw_time'] += t_tdrw
-        self.frac_seq[frac]['dist'] += L
+        self.frac_seq[frac]['dist'] += l
         self.time += t
         self.tdrw_time += t_tdrw
-        self.dist += L
+        self.dist += l
 
     def write_file(self, partime_file=None, frac_id_file=None):
         """ write particle data to output files, if supplied
@@ -352,6 +355,18 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     f2.close()
     return pfailcount
 
+def dump_control_planes(particles, control_planes):
+    with open('control_planes.dat', "w") as fp:
+        fp.write(f"cp,")        
+        for cp in control_planes[:-1]:
+            fp.write(f"{cp},")
+        fp.write(f"{control_planes[-1]}\n")
+        for particle in particles:
+            fp.write(f"{particle.particle_number},")
+            for tau in particle.cp_seq[:-1]:
+                fp.write(f"{tau},")
+            fp.write(f"{particle.cp_seq[-1]}\n")
+
 def track_particle(data):
     """ Tracks a single particle through the graph
 
@@ -381,11 +396,13 @@ def track_particle(data):
                 particle trajectory information 
 
         """
-    particle = Particle()
+    particle = Particle(data["particle_number"])
     particle.set_start_time_dist(0, 0)
     particle.track(data["G"], data["nbrs_dict"], data["initial_position"], 
                    data["tdrw_flag"], data["matrix_porosity"],
-                   data["matrix_diffusivity"])
+                   data["matrix_diffusivity"], data["control_planes"], 
+                   data["direction"])
+
     return particle
 
 def get_initial_posititions(G,initial_positions,nparticles):
@@ -461,6 +478,51 @@ def get_initial_posititions(G,initial_positions,nparticles):
 
     return ip,nparticles
 
+
+def create_neighbor_list(G):
+    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
+
+    Parameters
+    ----------
+        G: NetworkX graph 
+            Directed Graph obtained from output of graph_flow
+
+    Returns
+    -------
+        dict : nested dictionary.
+
+    Notes
+    -----
+    dict[n]['child'] is a list of vertices downstream to vertex n
+    dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+    """
+
+    nbrs_dict = {}
+
+    for u in nx.nodes(G):
+
+        if G.nodes[u]['outletflag']:
+            continue
+
+        node_list = []
+        prob_list = []
+        nbrs_dict[u] = {}
+
+        for v in G.successors(u):
+
+            node_list.append(v)
+            prob_list.append(G.edges[u, v]['flux'])
+
+        if node_list:
+            nbrs_dict[u]['child'] = node_list
+            nbrs_dict[u]['prob'] = np.array(prob_list,
+                                            dtype=float) / sum(prob_list)
+        else:
+            nbrs_dict[u]['child'] = None
+            nbrs_dict[u]['prob'] = None
+
+    return nbrs_dict
+    
 def run_graph_transport(self,
                         G,
                         nparticles,
@@ -469,7 +531,9 @@ def run_graph_transport(self,
                         initial_positions="uniform",
                         tdrw_flag=False,
                         matrix_porosity=None,
-                        matrix_diffusivity=None):
+                        matrix_diffusivity=None,
+                        control_planes = None,
+                        direction = None):
     """ Run  particle tracking on the given NetworkX graph
 
     Parameters
@@ -501,6 +565,12 @@ def run_graph_transport(self,
         matrix_diffusivity: float
             Matrix Diffusivity used in TDRW (SI units m^2/s)
 
+        control_planes : list of floats
+            list of control plane locations to dump travel times. Only in primary direction of flow. 
+
+        primary direction : string (x,y,z)
+            string indicating primary direction of flow 
+
     Returns
     -------
         O if completed correctly 
@@ -513,18 +583,37 @@ def run_graph_transport(self,
     # Check parameters for TDRW
     if tdrw_flag:
         if matrix_porosity is None:
-            error = f"ERROR! Requested TDRW but no value for matrix_porosity was provided\n"
+            error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
             sys.stderr.write(error)
             sys.exit(1)
         elif matrix_porosity < 0 or matrix_porosity > 1: 
-            error = f"ERROR! Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
+            error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
             sys.stderr.write(error)
             sys.exit(1)
         if matrix_diffusivity is None:
-            error = f"ERROR! Requested TDRW but no value for matrix_diffusivity was provided\n"
+            error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
             sys.stderr.write(error)
             sys.exit(1)
         print(f"--> Running particle transport with TDRW. Matrix porosity {matrix_porosity} and Matrix Diffusivity {matrix_diffusivity} m^2/s")
+
+    control_plane_flag = False
+    if control_planes != None:
+        if not type(control_planes) is list:
+            error = f"Error. provided controls planes are not a list\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        else: 
+            control_planes.append(7.5)
+            control_planes_flag = True
+
+        if direction is None:
+            error = f"Error. Primary direction not provided. Required for control planes\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        elif direction not in ['x', 'y', 'z']:
+            error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
+            sys.stderr.write(error)
+            sys.exit(1)
 
     print("--> Creating downstream neighbor list")
     nbrs_dict = create_neighbor_list(G)
@@ -548,6 +637,8 @@ def run_graph_transport(self,
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             data["initial_position"] = ip[i]
+            data["control_planes"] = control_planes
+            data["direction"] = direction
             inputs.append(data)
 
         # Run 
@@ -564,6 +655,8 @@ def run_graph_transport(self,
         print(f"--> Writing Data to files: {partime_file} and {frac_id_file}")
         dump_particle_info(particles, partime_file, frac_id_file)
         print("--> Writing Data Complete\n")
+        if control_planes_flag:
+            dump_control_planes(particles, control_planes)
 
     else:
 
@@ -575,7 +668,8 @@ def run_graph_transport(self,
             particle_i = Particle()
             particle_i.set_start_time_dist(0, 0)
             particle_i.track(G, nbrs_dict, ip[i], tdrw_flag,
-                             matrix_porosity, matrix_diffusivity)
+                             matrix_porosity, matrix_diffusivity, 
+                             control_planes, direction)
 
             if particle_i.flag:
                 particle_i.write_file(partime_file, frac_id_file)
