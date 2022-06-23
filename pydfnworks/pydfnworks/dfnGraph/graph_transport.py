@@ -10,7 +10,6 @@ import networkx as nx
 import numpy as np
 import numpy.random
 import sys
-import math
 import scipy.special
 import multiprocessing as mp
 
@@ -64,7 +63,8 @@ class Particle():
     def __init__(self, particle_number):
         self.particle_number = particle_number
         self.frac_seq = {}
-        self.cp_seq = []
+        self.cp_adv_time = []
+        self.cp_tdrw_time = []
         self.time = float
         self.tdrw_time = float
         self.dist = float
@@ -128,12 +128,11 @@ class Particle():
             t = G.edges[curr_v, next_v]['time']
 
             if tdrw_flag:
-                a_nondim = matrix_porosity * math.sqrt(
-                    matrix_diffusivity /
-                    (12.0 * G.edges[curr_v, next_v]['perm']))
+                b = np.sqrt(12.0 * G.edges[curr_v, next_v]['perm']) 
+                a_nondim = matrix_porosity * np.sqrt(
+                    matrix_diffusivity) / b
                 xi = numpy.random.random_sample()
-                t_tdrw = t + math.pow(a_nondim * t / scipy.special.erfcinv(xi),
-                                      2)
+                t_tdrw = t + (a_nondim * t / scipy.special.erfcinv(xi))**2
             else:
                 t_tdrw = t
 
@@ -142,12 +141,22 @@ class Particle():
             if G.nodes[next_v][direction] > control_planes[cp_index]:
                 x0 = control_planes[cp_index]  
                 t1 = self.time
-                t2 = t 
+                t2 = t
                 x1 = G.nodes[curr_v][direction] 
                 x2 = G.nodes[next_v][direction] 
                 tau  = interpolate_time(x0, t1, t2, x1, x2)
-                print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
-                self.cp_seq.append(tau)
+                # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
+                self.cp_adv_time.append(tau)
+                if tdrw_flag:
+                    t1 = self.tdrw_time
+                    t2 = t_tdrw
+                    x1 = G.nodes[curr_v][direction] 
+                    x2 = G.nodes[next_v][direction] 
+                    tau  = interpolate_time(x0, t1, t2, x1, x2)
+                    self.cp_tdrw_time.append(tau) 
+                else:
+                    self.cp_tdrw_time.append(tau) 
+ 
                 cp_index += 1
 
             self.add_frac_data(frac, t, t_tdrw, l)
@@ -356,17 +365,45 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     return pfailcount
 
 def dump_control_planes(particles, control_planes):
-    with open('control_planes.dat', "w") as fp:
+    """ write control plane travel time information to files 
+
+        Parameters
+        ------------
+            particles : list
+                list of particle objects 
+
+            control_planes : list
+                list of control plane values
+            
+        Returns
+        ------------
+            None
+    """
+
+    print('--> Writting advective travel times at control planes to control_planes_adv.dat')
+    with open('control_planes_adv.dat', "w") as fp:
+        fp.write(f"cp,")        
+        for cp in control_planes[:-2]:
+            fp.write(f"{cp},")
+        fp.write(f"{control_planes[-2]}\n")
+        for particle in particles:
+            fp.write(f"{particle.particle_number},")
+            for tau in particle.cp_adv_time[:-2]:
+                fp.write(f"{tau:0.12e},")
+            fp.write(f"{particle.cp_adv_time[-2]:0.12e}\n")
+
+    print('--> Writting total travel times at control planes to control_planes_total.dat')
+    with open('control_planes_total.dat', "w") as fp:
         fp.write(f"cp,")        
         for cp in control_planes[:-1]:
             fp.write(f"{cp},")
         fp.write(f"{control_planes[-1]}\n")
         for particle in particles:
             fp.write(f"{particle.particle_number},")
-            for tau in particle.cp_seq[:-1]:
-                fp.write(f"{tau},")
-            fp.write(f"{particle.cp_seq[-1]}\n")
-
+            for tau in particle.cp_tdrw_time[:-2]:
+                fp.write(f"{tau:0.12e},")
+            fp.write(f"{particle.cp_tdrw_time[-2]:0.12e}\n")
+            
 def track_particle(data):
     """ Tracks a single particle through the graph
 
@@ -603,7 +640,8 @@ def run_graph_transport(self,
             sys.stderr.write(error)
             sys.exit(1)
         else: 
-            control_planes.append(7.5)
+            # add None to indicate the end of the control plane list
+            control_planes.append(None)
             control_planes_flag = True
 
         if direction is None:
