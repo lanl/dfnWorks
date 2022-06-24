@@ -80,14 +80,24 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
         Gtilde = G
         d2g.add_perm(Gtilde)
         d2g.add_area(Gtilde)
-        d2g.add_weight(Gtilde)   
+        d2g.add_weight(Gtilde)
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag'] = False
         Gtilde.nodes[v]['outletflag'] = False
 
+    if len(list(nx.neighbors(Gtilde, 's'))) == 0:
+        error = "Error. There are no nodes in the inlet.\nExiting"
+        sys.stderr.write(error)
+        sys.exit(1)
+
     for v in nx.neighbors(Gtilde, 's'):
         Gtilde.nodes[v]['inletflag'] = True
+
+    if len(list(nx.neighbors(Gtilde, 't'))) == 0:
+        error = "Error. There are no nodes in the outlet.\nExiting"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     for v in nx.neighbors(Gtilde, 't'):
         Gtilde.nodes[v]['outletflag'] = True
@@ -169,25 +179,40 @@ def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
             upstream = v
             downstream = u
 
-        delta_p = G.nodes[upstream]['pressure'] - G.nodes[downstream]['pressure']
+        delta_p = G.nodes[upstream]['pressure'] - G.nodes[downstream][
+            'pressure']
         if delta_p > 0:
             ## Create new edge in DiGraph
             H.add_edge(upstream, downstream)
-            # Transfer edge attributes 
-            for att in ['perm','iperm','length','weight','area','frac']:
-                H.edges[upstream, downstream][att]  = G.edges[upstream, downstream][att]
+            # Transfer edge attributes
+            for att in ['perm', 'iperm', 'length', 'weight', 'area', 'frac']:
+                H.edges[upstream, downstream][att] = G.edges[upstream,
+                                                             downstream][att]
 
-            H.edges[upstream, downstream]['flux'] = ( H.edges[upstream, downstream]['perm'] /fluid_viscosity ) * (delta_p / H.edges[upstream, downstream]['length'])
+            H.edges[upstream, downstream]['flux'] = (
+                H.edges[upstream, downstream]['perm'] / fluid_viscosity) * (
+                    delta_p / H.edges[upstream, downstream]['length'])
 
-            H.edges[upstream, downstream]['velocity'] = H.edges[upstream, downstream]['flux']/phi
+            H.edges[upstream,
+                    downstream]['velocity'] = H.edges[upstream,
+                                                      downstream]['flux'] / phi
 
-            H.edges[upstream, downstream]['time'] = H.edges[upstream, downstream]['length'] / (H.edges[upstream, downstream]['velocity'])
+            H.edges[upstream,
+                    downstream]['time'] = H.edges[upstream, downstream][
+                        'length'] / (H.edges[upstream, downstream]['velocity'])
 
     print("--> Graph flow complete")
     return H
 
 
-def run_graph_flow(self, inflow, outflow, Pin, Pout, fluid_viscosity=8.9e-4, phi = 1,  G = None):
+def run_graph_flow(self,
+                   inflow,
+                   outflow,
+                   Pin,
+                   Pout,
+                   fluid_viscosity=8.9e-4,
+                   phi=1,
+                   G=None):
     """ Run the graph flow portion of the workflow
 
     Parameters

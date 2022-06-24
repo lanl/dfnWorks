@@ -5,19 +5,17 @@
 
 """
 
-from re import X
+import sys
+# from re import I, X
 import networkx as nx
 import numpy as np
-import numpy.random
-import sys
 import scipy.special
 import multiprocessing as mp
-
 import timeit
-import os
 
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow
+import pydfnworks.dfnGraph.particle_io as io
 
 
 def interpolate_time(x0, t1, t2, x1, x2):
@@ -48,10 +46,10 @@ def interpolate_time(x0, t1, t2, x1, x2):
 
     return t1 + (t2 - t1) / (x2 - x1) * (x0 - x1)
 
+
 class Particle():
     ''' 
     Class for graph particle tracking, instantiated for each particle
-
 
     Attributes:
         * time : Total advective time of travel of particle [s]
@@ -60,40 +58,33 @@ class Particle():
         * flag : True if particle exited system, else False
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
-    def __init__(self, particle_number):
+    def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
+                 matrix_diffusivity, cp_flag, control_planes, direction):
         self.particle_number = particle_number
-        self.frac_seq = {}
+        self.ip = ip
+        self.curr_node = ip
+        self.next_node = None
+        self.advect_time = 0
+        self.delta_t = 0
+        self.matrix_diffusion_time = 0
+        self.delta_t_md = 0
+        self.total_time = 0
+        self.length = 0
+        self.delta_l = 0
+        self.tdrw_flag = tdrw_flag
+        self.matrix_porosity = matrix_porosity
+        self.matrix_diffusivity = matrix_diffusivity
+        self.cp_flag = cp_flag
+        self.control_planes = control_planes
+        self.cp_index = 0
+        self.direction = direction
+        self.exit_flag = False
+        self.frac_seq = []
         self.cp_adv_time = []
         self.cp_tdrw_time = []
-        self.time = float
-        self.tdrw_time = float
-        self.dist = float
-        self.flag = bool
-    
 
-    def set_start_time_dist(self, t, L):
-        """ Set initial value for travel time and distance
-
-        Parameters
-        ----------
-            self: object
-            t : double
-                time in seconds
-            L : double
-                distance in metres
-
-        Returns
-        -------
-
-        """
-
-        self.time = t
-        self.tdrw_time = t
-        self.dist = L
-
-    def track(self, G, nbrs_dict, ip, tdrw_flag,
-              matrix_porosity, matrix_diffusivity, control_planes, direction):
-        """ track a particle from inlet vertex to outlet vertex
+    def advect(self, G, nbrs_dict):
+        """ Advection part of particle transport
 
         Parameters
         ----------
@@ -105,305 +96,85 @@ class Particle():
 
         Returns
         -------
-
-        """
-        # Current position is initial positions assigned in get_initial_positions
-        curr_v = ip
-        cp_index = 0
-        while True:
-
-            if G.nodes[curr_v]['outletflag']:
-                self.flag = True
-                break
-
-            if nbrs_dict[curr_v]['child'] is None:
-                self.flag = False
-                break
-
-            next_v = numpy.random.choice(nbrs_dict[curr_v]['child'],
-                                         p=nbrs_dict[curr_v]['prob'])
-
-            frac = G.edges[curr_v, next_v]['frac']
-
-            t = G.edges[curr_v, next_v]['time']
-
-            if tdrw_flag:
-                b = np.sqrt(12.0 * G.edges[curr_v, next_v]['perm']) 
-                a_nondim = matrix_porosity * np.sqrt(
-                    matrix_diffusivity) / b
-                xi = numpy.random.random_sample()
-                t_tdrw = t + (a_nondim * t / scipy.special.erfcinv(xi))**2
-            else:
-                t_tdrw = t
-
-            l = G.edges[curr_v, next_v]['length']
-
-            if G.nodes[next_v][direction] > control_planes[cp_index]:
-                x0 = control_planes[cp_index]  
-                t1 = self.time
-                t2 = t
-                x1 = G.nodes[curr_v][direction] 
-                x2 = G.nodes[next_v][direction] 
-                tau  = interpolate_time(x0, t1, t2, x1, x2)
-                # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
-                self.cp_adv_time.append(tau)
-                if tdrw_flag:
-                    t1 = self.tdrw_time
-                    t2 = t_tdrw
-                    x1 = G.nodes[curr_v][direction] 
-                    x2 = G.nodes[next_v][direction] 
-                    tau  = interpolate_time(x0, t1, t2, x1, x2)
-                    self.cp_tdrw_time.append(tau) 
-                else:
-                    self.cp_tdrw_time.append(tau) 
- 
-                cp_index += 1
-
-            self.add_frac_data(frac, t, t_tdrw, l)
-            curr_v = next_v
-
-    def add_frac_data(self, frac, t, t_tdrw, l):
-        """ add details of fracture through which particle traversed
-
-        Parameters
-        ----------
-            self: object
-
-            frac: int
-                index of fracture in graph
-
-            t : double
-                advective time (seconds)
-
-            t_tdrw: double
-                time diffusiving into matrix (seconds)
-
-            l : double
-                distance traveled by the particle
-
-            x : double 
-                current x position
-
-        Returns
-        -------
-
-        """
-
-        self.frac_seq.update(
-            {frac: {
-                'time': 0.0,
-                'tdrw_time': 0.0,
-                'dist': 0.0
-            }})
-        self.frac_seq[frac]['time'] += t
-        self.frac_seq[frac]['tdrw_time'] += t_tdrw
-        self.frac_seq[frac]['dist'] += l
-        self.time += t
-        self.tdrw_time += t_tdrw
-        self.dist += l
-
-    def write_file(self, partime_file=None, frac_id_file=None):
-        """ write particle data to output files, if supplied
-
-        Parameters
-        ----------
-            self: object
-
-            partime_file : string
-                name of file to  which the total travel times and lengths will be written for each particle, default is None
-
-            frac_id_file : string
-                name of file to which detailed information of each particle's travel will be written, default is None
-        
-        Returns
-        -------
-        """
-
-        if partime_file is not None:
-            with open(partime_file, "a") as f1:
-                # f1.write("{:3.3E} {:3.3E} {:3.3E} {:3.3E} \n".format(
-                #     self.time, self.tdrw_time, self.tdrw_time - self.time,
-                #     self.dist))
-
-                f1.write(f"{self.time:.12e},{self.tdrw_time - self.time:.12e},{self.tdrw_time:.12e},{self.dist:.12e}\n")
-
-
-        if frac_id_file is not None:
-            data1 = []
-            data1 = [
-                key for key in self.frac_seq if isinstance(key, dict) is False
-            ]
-            n = len(data1)
-            with open(frac_id_file, "a") as f2:
-                for i in range(n):
-                    f2.write("{:d}  ".format(data1[i]))
-                f2.write("\n")
-                # f2.write("{:d}".format(n))
-                # for i in range(0, 4 * n):
-                #     if i < n:
-                #         f2.write("{3:d}  ".format(data1[i]))
-                #     elif n - 1 < i < 2 * n:
-                #         f2.write("{:3.2E}  ".format(
-                #             self.frac_seq[data1[i - n]]['time']))
-                #     elif 2 * n - 1 < i < 3 * n:
-                #         f2.write("{:3.2E}  ".format(
-                #             self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
-                #     else:
-                #         f2.write("{:3.2E}  ".format(
-                #             self.frac_seq[data1[i - 3 * n]]['dist']))
-                # f2.write("\n")
-
-
-def prepare_output_files(partime_file, frac_id_file):
-    """ opens the output files partime_file and frac_id_file and writes the
-        header for each
-
-        Parameters
-        ----------
-
-            partime_file : string
-                name of file to  which the total travel times and lengths will be written for each particle
-
-            frac_id_file : string
-                name of file to which detailed information of each particle's travel will be written
-
-        Returns
-        -------
             None
-    """
-
-    try:
-        with open(partime_file, "w") as f1:
-            f1.write(
-                "# Total Advective time (s), Total diffusion time (s), Total travel time (Adv.+Diff) (s),total pathline distance (m)\n"
-            )
-    except:
-        error = "ERROR: Unable to open supplied partime_file file {}\n".format(
-            partime_file)
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    try:
-        with open(frac_id_file, "w") as f2:
-            f2.write("# List of fractures that a particle visits\n")
-            #f2.write(
-            #    "# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)\n"
-            #)
-    except:
-        error = "ERROR: Unable to open supplied frac_id_file file {}\n".format(
-            frac_id_file)
-        sys.stderr.write(error)
-        sys.exit(1)
-
-
-def dump_particle_info(particles, partime_file, frac_id_file):
-    """ If running graph transport in parallel, this function dumps out all the
-        particle information is a single pass rather then opening and closing the
-        files for every particle
-
-
-        Parameters
-        ----------
-            particles : list
-                list of particle objects 
-
-            partime_file : string
-                name of file to  which the total travel times and lengths will be written for each particle
-
-            frac_id_file : string
-                name of file to which detailed information of each particle's travel will be written
-
-        Returns
-        -------
-            pfailcount : int 
-                Number of particles that do not exit the domain
-
         """
 
-    prepare_output_files(partime_file, frac_id_file)
+        if G.nodes[self.curr_node]['outletflag']:
+            self.exit_flag = True
 
-    f1 = open(partime_file, "a")
-    f2 = open(frac_id_file, "a")
+        elif nbrs_dict[self.curr_node]['child'] is None:
+            self.exit_flag = True
 
-    pfailcount = 0
-
-    for particle in particles:
-        if particle.flag:
-            # f1.write("{:3.3E} {:3.3E} {:3.3E} {:3.3E} \n".format(
-            #     particle.time, particle.tdrw_time,
-            #     particle.tdrw_time - particle.time, particle.dist))
-            f1.write(f"{particle.time:.12e},{particle.tdrw_time - particle.time:.12e},{particle.tdrw_time:.12e},{particle.dist:.12e}\n")
-
-            data1 = [
-                key for key in particle.frac_seq
-                if isinstance(key, dict) is False
-            ]
-            n = len(data1)
-
-            for i in range(n):
-                f2.write("{:d}  ".format(data1[i]))
-            f2.write("\n")
-            # f2.write("{:d}".format(n))
-            # for i in range(0, 4 * n):
-            #     if i < n:
-            #         f2.write("{3:d}  ".format(data1[i]))
-            #     elif n - 1 < i < 2 * n:
-            #         f2.write("{:3.2E}  ".format(
-            #             self.frac_seq[data1[i - n]]['time']))
-            #     elif 2 * n - 1 < i < 3 * n:
-            #         f2.write("{:3.2E}  ".format(
-            #             self.frac_seq[data1[i - 2 * n]]['tdrw_time']))
-            #     else:
-            #         f2.write("{:3.2E}  ".format(
-            #             self.frac_seq[data1[i - 3 * n]]['dist']))
-            # f2.write("\n")
         else:
-            pfailcount += 1
+            ## complete mixing to select outflowing node
+            self.next_node = np.random.choice(
+                nbrs_dict[self.curr_node]['child'],
+                p=nbrs_dict[self.curr_node]['prob'])
 
-    f1.close()
-    f2.close()
-    return pfailcount
+            self.frac = G.edges[self.curr_node, self.next_node]['frac']
+            self.frac_seq.append(self.frac)
+            self.delta_t = G.edges[self.curr_node, self.next_node]['time']
+            self.delat_l = G.edges[self.curr_node, self.next_node]['length']
 
-def dump_control_planes(particles, control_planes):
-    """ write control plane travel time information to files 
+    def matrix_diffusion(self, G):
 
-        Parameters
-        ------------
-            particles : list
-                list of particle objects 
+        b = np.sqrt(12.0 * G.edges[self.curr_node, self.next_node]['perm'])
+        a_nondim = self.matrix_porosity * np.sqrt(self.matrix_diffusivity) / b
+        xi = np.random.uniform(size=1, low=0, high=1)[0]
+        self.delta_t_md = ((a_nondim * self.delta_t /
+                            scipy.special.erfcinv(xi))**2)
 
-            control_planes : list
-                list of control plane values
-            
-        Returns
-        ------------
-            None
-    """
+    def cross_control_plane(self, G):
 
-    print('--> Writting advective travel times at control planes to control_planes_adv.dat')
-    with open('control_planes_adv.dat', "w") as fp:
-        fp.write(f"cp,")        
-        for cp in control_planes[:-2]:
-            fp.write(f"{cp},")
-        fp.write(f"{control_planes[-2]}\n")
-        for particle in particles:
-            fp.write(f"{particle.particle_number},")
-            for tau in particle.cp_adv_time[:-2]:
-                fp.write(f"{tau:0.12e},")
-            fp.write(f"{particle.cp_adv_time[-2]:0.12e}\n")
+        if G.nodes[self.next_node][self.direction] > self.control_planes[
+                self.cp_index]:
+            ## get information for interpolation to get the time at point of crossing.
+            x0 = self.control_planes[self.cp_index]
+            t1 = self.advect_time
+            t2 = self.advect_time + self.delta_t
+            x1 = G.nodes[self.curr_node][self.direction]
+            x2 = G.nodes[self.next_node][self.direction]
+            tau = interpolate_time(x0, t1, t2, x1, x2)
+            # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
+            self.cp_adv_time.append(tau)
+            if self.tdrw_flag:
+                t1 = self.total_time
+                t2 = self.total_time + self.delta_t_md + self.delta_t
+                tau = interpolate_time(x0, t1, t2, x1, x2)
+                self.cp_tdrw_time.append(tau)
+            else:
+                self.cp_tdrw_time.append(tau)
 
-    print('--> Writting total travel times at control planes to control_planes_total.dat')
-    with open('control_planes_total.dat', "w") as fp:
-        fp.write(f"cp,")        
-        for cp in control_planes[:-1]:
-            fp.write(f"{cp},")
-        fp.write(f"{control_planes[-1]}\n")
-        for particle in particles:
-            fp.write(f"{particle.particle_number},")
-            for tau in particle.cp_tdrw_time[:-2]:
-                fp.write(f"{tau:0.12e},")
-            fp.write(f"{particle.cp_tdrw_time[-2]:0.12e}\n")
-            
+            self.cp_index += 1
+            # if we're crossed all the control planes, turn off cp flag for this particle
+            if self.cp_index >= len(self.control_planes):
+                self.cp_flag = False
+
+    def update(self):
+        self.advect_time += self.delta_t
+        self.matrix_diffusion_time += self.delta_t_md
+        self.total_time += self.delta_t + self.delta_t_md
+        self.length += self.delat_l
+        self.frac_seq.append(self.frac)
+        self.curr_node = self.next_node
+
+    def track(self, G, nbrs_dict):
+        while not self.exit_flag:
+            self.advect(G, nbrs_dict)
+
+            if self.exit_flag:
+                self.update()
+                break
+
+            if self.tdrw_flag:
+                self.matrix_diffusion(G)
+
+            if self.cp_flag:
+                self.cross_control_plane(G)
+
+            self.update()
+
+
 def track_particle(data):
     """ Tracks a single particle through the graph
 
@@ -411,38 +182,27 @@ def track_particle(data):
 
         Parameters
         ----------
-                
-            G : NetworkX graph 
-                obtained from graph_flow
-
-            nbrs_dict : dict
-                see function  create_neighbor_list
-
-            tdrw_flag : Bool
-                if False, matrix_porosity, matrix_diffusivity are ignored
-
-            matrix_porosity: float
-                default is 0.02
-
-            matrix_diffusivity: float
-                default is 1e-11 m^2/s
+            data : dict
+                Dictionary of parameters the includes particle_number, initial_position, tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes, direction, G, and nbrs_dict.  
 
         Returns
         -------
             particle : object
-                particle trajectory information 
+                Particle will full trajectory
 
         """
-    particle = Particle(data["particle_number"])
-    particle.set_start_time_dist(0, 0)
-    particle.track(data["G"], data["nbrs_dict"], data["initial_position"], 
-                   data["tdrw_flag"], data["matrix_porosity"],
-                   data["matrix_diffusivity"], data["control_planes"], 
-                   data["direction"])
+    particle = Particle(data["particle_number"], data["initial_position"],
+                        data["tdrw_flag"], data["matrix_porosity"],
+                        data["matrix_diffusivity"], data["cp_flag"],
+                        data["control_planes"], data["direction"])
+
+    particle.track(data["G"], data["nbrs_dict"])
+    # Current position is initial positions assigned in get_initial_positions
 
     return particle
 
-def get_initial_posititions(G,initial_positions,nparticles):
+
+def get_initial_posititions(G, initial_positions, nparticles):
     """ Distributes initial particle positions 
 
         Parameters
@@ -464,16 +224,19 @@ def get_initial_posititions(G,initial_positions,nparticles):
 
         """
 
-
     inlet_nodes = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
     cnt = len(inlet_nodes)
     print(f"--> There are {cnt} inlet nodes")
+    if cnt == 0:
+        error = "Error. There are no nodes in the inlet.\nExiting"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     # Uniform Distribution for particles
     if initial_positions == "uniform":
         print("--> Using uniform initial positions.")
         ip = np.zeros(nparticles).astype(int)
-        n = int(np.ceil(nparticles/cnt))
+        n = int(np.ceil(nparticles / cnt))
         print(f"--> {n} particles will be placed at every inflow node.\n")
         ## this could be cleaned up using clever indexing
         inflow_idx = 0
@@ -489,11 +252,11 @@ def get_initial_posititions(G,initial_positions,nparticles):
     elif initial_positions == "flux":
         print("--> Using flux-weighted initial positions.\n")
         flux = np.zeros(cnt)
-        for i,u in enumerate(inlet_nodes):
+        for i, u in enumerate(inlet_nodes):
             for v in G.successors(u):
-                flux[i] += G.edges[u,v]['flux']
+                flux[i] += G.edges[u, v]['flux']
         flux /= flux.sum()
-        flux_cnts = [np.ceil(nparticles*i) for i in flux]
+        flux_cnts = [np.ceil(nparticles * i) for i in flux]
         nparticles = int(sum(flux_cnts))
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
@@ -508,12 +271,12 @@ def get_initial_posititions(G,initial_positions,nparticles):
                 inflow_cnt = 0
 
     # Throw error if unknown initial position is provided
-    else: 
-        error = f"Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
+    else:
+        error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
         sys.stderr.write(error)
         sys.exit(1)
 
-    return ip,nparticles
+    return ip, nparticles
 
 
 def create_neighbor_list(G):
@@ -559,7 +322,8 @@ def create_neighbor_list(G):
             nbrs_dict[u]['prob'] = None
 
     return nbrs_dict
-    
+
+
 def run_graph_transport(self,
                         G,
                         nparticles,
@@ -569,8 +333,8 @@ def run_graph_transport(self,
                         tdrw_flag=False,
                         matrix_porosity=None,
                         matrix_diffusivity=None,
-                        control_planes = None,
-                        direction = None):
+                        control_planes=None,
+                        direction=None):
     """ Run  particle tracking on the given NetworkX graph
 
     Parameters
@@ -623,7 +387,7 @@ def run_graph_transport(self,
             error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
             sys.stderr.write(error)
             sys.exit(1)
-        elif matrix_porosity < 0 or matrix_porosity > 1: 
+        elif matrix_porosity < 0 or matrix_porosity > 1:
             error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
             sys.stderr.write(error)
             sys.exit(1)
@@ -631,7 +395,9 @@ def run_graph_transport(self,
             error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
             sys.stderr.write(error)
             sys.exit(1)
-        print(f"--> Running particle transport with TDRW. Matrix porosity {matrix_porosity} and Matrix Diffusivity {matrix_diffusivity} m^2/s")
+        print(
+            f"--> Running particle transport with TDRW. Matrix porosity {matrix_porosity} and Matrix Diffusivity {matrix_diffusivity} m^2/s"
+        )
 
     control_plane_flag = False
     if control_planes != None:
@@ -639,10 +405,9 @@ def run_graph_transport(self,
             error = f"Error. provided controls planes are not a list\n"
             sys.stderr.write(error)
             sys.exit(1)
-        else: 
+        else:
             # add None to indicate the end of the control plane list
-            control_planes.append(None)
-            control_planes_flag = True
+            control_plane_flag = True
 
         if direction is None:
             error = f"Error. Primary direction not provided. Required for control planes\n"
@@ -657,11 +422,11 @@ def run_graph_transport(self,
     nbrs_dict = create_neighbor_list(G)
 
     print("--> Getting initial Conditions")
-    ip,nparticles = get_initial_posititions(G, initial_positions, nparticles)
+    ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
 
     print(f"--> Starting particle tracking for {nparticles} particles")
     pfailcount = 0
-    
+
     if self.ncpu > 1:
         print(f"--> Using {self.ncpu} processors")
         ## Prepare input data
@@ -669,19 +434,22 @@ def run_graph_transport(self,
         for i in range(nparticles):
             data = {}
             data["G"] = G
-            data["particle_number"] = i
             data["nbrs_dict"] = nbrs_dict
+            data["particle_number"] = i
             data["tdrw_flag"] = tdrw_flag
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             data["initial_position"] = ip[i]
+            data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
             inputs.append(data)
 
-        # Run 
+        # Run
         tic = timeit.default_timer()
-        pool = mp.Pool(self.ncpu)
+
+        pool = mp.Pool(min(self.ncpu, nparticles))
+
         particles = pool.map(track_particle, inputs)
         pool.close()
         pool.join()
@@ -691,36 +459,39 @@ def run_graph_transport(self,
         print(f"--> Tracking Complete. Time Required {elapsed:.2f} seconds\n")
 
         print(f"--> Writing Data to files: {partime_file} and {frac_id_file}")
-        dump_particle_info(particles, partime_file, frac_id_file)
+        io.dump_particle_info(particles, partime_file, frac_id_file)
         print("--> Writing Data Complete\n")
-        if control_planes_flag:
-            dump_control_planes(particles, control_planes)
+        if control_plane_flag:
+            io.dump_control_planes(particles, control_planes)
 
     else:
 
-        prepare_output_files(partime_file, frac_id_file)
+        io.prepare_output_files(partime_file, frac_id_file)
         tic = timeit.default_timer()
+        particles = []
         for i in range(nparticles):
             if i % 1000 == 0:
                 print("--> Starting particle %d out of %d" % (i, nparticles))
-            particle_i = Particle()
-            particle_i.set_start_time_dist(0, 0)
-            particle_i.track(G, nbrs_dict, ip[i], tdrw_flag,
-                             matrix_porosity, matrix_diffusivity, 
-                             control_planes, direction)
-
-            if particle_i.flag:
-                particle_i.write_file(partime_file, frac_id_file)
-            else:
-                pfailcount += 1
+            particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
+                                matrix_diffusivity, control_plane_flag,
+                                control_planes, direction)
+            particle.track(G, nbrs_dict)
+            particles.append(particle)
         elapsed = timeit.default_timer() - tic
+
         print(f"--> Tracking Complete. Time Required {elapsed:.2f} seconds")
+
+        io.dump_particle_info(particles, partime_file, frac_id_file)
+        print("--> Writing Data Complete\n")
+        if control_plane_flag:
+            io.dump_control_planes(particles, control_planes)
 
     if pfailcount == 0:
         print("--> All particles exited")
         print("--> Graph Particle Tracking Completed Successfully.")
     else:
-        print(f"--> Out of {nparticles} particles, {pfailcount} particles did not exit")
+        print(
+            f"--> Out of {nparticles} particles, {pfailcount} particles did not exit"
+        )
 
-
-    return 0 
+    return 0
