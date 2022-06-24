@@ -117,6 +117,17 @@ class Particle():
             self.delat_l = G.edges[self.curr_node, self.next_node]['length']
 
     def matrix_diffusion(self, G):
+        """ Matrix diffusion part of particle transport
+
+        Parameters
+        ----------
+            G : NetworkX graph
+                graph obtained from graph_flow
+
+        Returns
+        -------
+            None
+        """
 
         b = np.sqrt(12.0 * G.edges[self.curr_node, self.next_node]['perm'])
         a_nondim = self.matrix_porosity * np.sqrt(self.matrix_diffusivity) / b
@@ -125,6 +136,17 @@ class Particle():
                             scipy.special.erfcinv(xi))**2)
 
     def cross_control_plane(self, G):
+        """ Check if a particle crossed the control plane
+
+        Parameters
+        ----------
+            G : NetworkX graph
+                graph obtained from graph_flow
+
+        Returns
+        -------
+            None
+        """
 
         if G.nodes[self.next_node][self.direction] > self.control_planes[
                 self.cp_index]:
@@ -151,6 +173,16 @@ class Particle():
                 self.cp_flag = False
 
     def update(self):
+        """ Update particles trajectory information
+
+        Parameters
+        ----------
+            particle object
+
+        Returns
+        -------
+            None
+        """
         self.advect_time += self.delta_t
         self.matrix_diffusion_time += self.delta_t_md
         self.total_time += self.delta_t + self.delta_t_md
@@ -159,6 +191,17 @@ class Particle():
         self.curr_node = self.next_node
 
     def track(self, G, nbrs_dict):
+        """ Track particle. Breaks up advection and matrix diffusion
+
+        Parameters
+        ----------
+            G : NetworkX graph
+                graph obtained from graph_flow
+
+        Returns
+        -------
+            None
+        """
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
 
