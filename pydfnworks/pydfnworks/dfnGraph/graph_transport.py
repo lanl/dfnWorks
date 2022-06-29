@@ -9,14 +9,13 @@ import sys
 # from re import I, X
 import networkx as nx
 import numpy as np
-import scipy.special
+
 import multiprocessing as mp
 import timeit
 
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow
 import pydfnworks.dfnGraph.particle_io as io
-
 
 def interpolate_time(x0, t1, t2, x1, x2):
     """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
@@ -58,6 +57,9 @@ class Particle():
         * flag : True if particle exited system, else False
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
+
+    from pydfnworks.dfnGraph.graph_tdrw import unlimited_matrix_diffusion 
+ 
     def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
                  matrix_diffusivity, cp_flag, control_planes, direction):
         self.particle_number = particle_number
@@ -115,25 +117,6 @@ class Particle():
             self.frac_seq.append(self.frac)
             self.delta_t = G.edges[self.curr_node, self.next_node]['time']
             self.delat_l = G.edges[self.curr_node, self.next_node]['length']
-
-    def matrix_diffusion(self, G):
-        """ Matrix diffusion part of particle transport
-
-        Parameters
-        ----------
-            G : NetworkX graph
-                graph obtained from graph_flow
-
-        Returns
-        -------
-            None
-        """
-
-        b = np.sqrt(12.0 * G.edges[self.curr_node, self.next_node]['perm'])
-        a_nondim = self.matrix_porosity * np.sqrt(self.matrix_diffusivity) / b
-        xi = np.random.uniform(size=1, low=0, high=1)[0]
-        self.delta_t_md = ((a_nondim * self.delta_t /
-                            scipy.special.erfcinv(xi))**2)
 
     def cross_control_plane(self, G):
         """ Check if a particle crossed the control plane
@@ -210,7 +193,7 @@ class Particle():
                 break
 
             if self.tdrw_flag:
-                self.matrix_diffusion(G)
+                self.unlimited_matrix_diffusion(G)
 
             if self.cp_flag:
                 self.cross_control_plane(G)
