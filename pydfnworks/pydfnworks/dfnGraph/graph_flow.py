@@ -72,6 +72,7 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
             inflow, outflow, intersection_file="intersection_list.dat")
 
         Gtilde = G.copy()
+        # need to add aperture
         d2g.add_perm(Gtilde)
         d2g.add_area(Gtilde)
         d2g.add_weight(Gtilde)
@@ -113,17 +114,17 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
     return Gtilde
 
 
-def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
+def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
     """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
 
     Parameters
     ----------
         G : NetworkX graph
 
-        Pin : double
+        pressure_in : double
             Value of pressure (in Pa) at inlet
         
-        Pout : double
+        pressure_out : double
             Value of pressure (in Pa) at outlet
         
         fluid_viscosity : double
@@ -151,11 +152,11 @@ def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
     b = np.zeros(G.number_of_nodes())
 
     for v in Inlet:
-        b[v] = Pin
+        b[v] = pressure_in
         A[v, :] = 0
         D[v, v] = 1.0
     for v in Outlet:
-        b[v] = Pout
+        b[v] = pressure_out
         A[v, :] = 0
         D[v, v] = 1.0
     L = D - A  # automatically converts to csr when returning L
@@ -185,13 +186,15 @@ def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
             ## Create new edge in DiGraph
             H.add_edge(upstream, downstream)
             # Transfer edge attributes
-            for att in ['perm', 'iperm', 'length', 'weight', 'area', 'frac']:
+            for att in ['perm', 'iperm', 'length', 'weight', 'area', 'frac', 'b']:
                 H.edges[upstream, downstream][att] = G.edges[upstream,
                                                              downstream][att]
 
             H.edges[upstream, downstream]['flux'] = (
                 H.edges[upstream, downstream]['perm'] / fluid_viscosity) * (
                     delta_p / H.edges[upstream, downstream]['length'])
+
+            H.edges[upstream, downstream]['vol_flow_rate'] = H.edges[upstream, downstream]['flux'] * H.edges[upstream, downstream]['area'] 
 
             H.edges[upstream,
                     downstream]['velocity'] = H.edges[upstream,
@@ -205,11 +208,24 @@ def solve_flow_on_graph(G, Pin, Pout, fluid_viscosity, phi):
     return H
 
 
+# def compute_dQ(self,G):
+#     """ Computes the value dQ from the graph flow G
+
+#     """
+#     dQ = np.zeros(self.num_frac)
+#     for u in G.nodes():
+#         neighbors = nx.neighbors(G[u])
+#         for v in neighbors:
+#             if G[u]
+
+
+
+
 def run_graph_flow(self,
                    inflow,
                    outflow,
-                   Pin,
-                   Pout,
+                   pressure_in,
+                   pressure_out,
                    fluid_viscosity=8.9e-4,
                    phi=1,
                    G=None):
@@ -227,10 +243,10 @@ def run_graph_flow(self,
         outflow: string
             name of file containing list of DFN fractures on outflow boundary
 
-        Pin : double
+        pressure_in : double
             Value of pressure (in Pa) at inlet
         
-        Pout : double
+        pressure_out : double
             Value of pressure (in Pa) at outlet
 
         fluid_viscosity : double
@@ -251,5 +267,5 @@ def run_graph_flow(self,
     Information on individual functions in found therein
     """
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
-    Gtilde = solve_flow_on_graph(Gtilde, Pin, Pout, fluid_viscosity, phi)
+    Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out, fluid_viscosity, phi)
     return Gtilde

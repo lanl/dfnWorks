@@ -16,6 +16,7 @@ import timeit
 # pydfnworks modules
 import pydfnworks.dfnGraph.graph_flow
 import pydfnworks.dfnGraph.particle_io as io
+from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 
 def interpolate_time(x0, t1, t2, x1, x2):
     """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
@@ -140,6 +141,11 @@ class Particle():
             x1 = G.nodes[self.curr_node][self.direction]
             x2 = G.nodes[self.next_node][self.direction]
             tau = interpolate_time(x0, t1, t2, x1, x2)
+            if tau < 0:
+                error = "Error. There are no nodes in the inlet.\nExiting"
+                print(x0,t1,t2,x1,x2,tau)
+                sys.stderr.write(error)
+                sys.exit(1)
             # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
             self.cp_adv_time.append(tau)
             if self.tdrw_flag:
@@ -422,7 +428,7 @@ def run_graph_transport(self,
             sys.stderr.write(error)
             sys.exit(1)
         print(
-            f"--> Running particle transport with TDRW. Matrix porosity {matrix_porosity} and Matrix Diffusivity {matrix_diffusivity} m^2/s"
+            f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
         )
 
     control_plane_flag = False
@@ -452,6 +458,12 @@ def run_graph_transport(self,
 
     print(f"--> Starting particle tracking for {nparticles} particles")
     pfailcount = 0
+
+    frac_spacing = 1
+    print(f"--> frac spacing {frac_spacing}")
+    set_up_limited_matrix_diffusion(G, frac_spacing, matrix_porosity, matrix_diffusivity)
+    exit()
+
 
     if self.ncpu > 1:
         print(f"--> Using {self.ncpu} processors")
