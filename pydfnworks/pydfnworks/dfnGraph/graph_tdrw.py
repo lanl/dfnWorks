@@ -204,8 +204,8 @@ def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
                              b, segment_length, velocity, num_segments):
 
     a = (matrix_porosity * np.sqrt(matrix_diffusivity)) / b
-    segment_time = segment_length / velocity
 
+    segment_time = segment_length / velocity
     prob_min = min(trans_prob['cdf'])
     prob_max = max(trans_prob['cdf'])
     t_diff = 0
@@ -330,6 +330,21 @@ def set_up_limited_matrix_diffusion(G,
     return trans_prob
 
 
+# def check_unlimited_conditions(frac_length, velocity, matrix_diffusivity, matrix_porosity, b, fracture_spacing):
+#     """
+#     Pretty sure this is wrorng...
+#     """
+
+#     peclet_number = ( frac_length* velocity ) / matrix_diffusivity
+#     xi = np.random.uniform(size=1, low=0, high=1)[0]
+#     limited_conditions = (matrix_porosity * frac_length)/(np.sqrt(2) * xi * 0.5*b * fracture_spacing)
+
+#     if peclet_number > limited_conditions:
+#         return True
+#     else:
+#         return False
+
+
 def limited_matrix_diffusion(self, G):
 
     #print("--> running limited matrix diffusion")
@@ -337,6 +352,12 @@ def limited_matrix_diffusion(self, G):
     b = G.edges[self.curr_node, self.next_node]['b']
     velocity = G.edges[self.curr_node, self.next_node]['velocity']
     # print(frac_length, b, velocity, self.fracture_spacing, self.matrix_diffusivity, self.matrix_porosity)
+
+    # if check_unlimited_conditions(frac_length, velocity, self.matrix_diffusivity, self. matrix_porosity, b, self.fracture_spacing):
+    #     # print("--> unlimited conditions")
+    #     self.unlimited_matrix_diffusion(G)
+    # else:
+    # print("--> limited conditions")
     segment_length, num_segments = get_fracture_segments(
         self.transfer_time, frac_length, b, velocity, self.fracture_spacing,
         self.matrix_diffusivity, self.matrix_porosity)
