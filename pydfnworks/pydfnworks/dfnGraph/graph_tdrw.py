@@ -5,7 +5,14 @@ from scipy import special
 import mpmath as mp
 
 
-def get_fracture_segments(fracture_length, b, velocity, fracture_spacing, mdiff, phi, plim=0.01):
+def get_fracture_segments(transfer_time,
+                          fracture_length,
+                          b,
+                          velocity,
+                          fracture_spacing,
+                          matrix_diffusivity,
+                          matrix_porosity,
+                          plim=0.01):
     """
 
     This function calculates the maximum segment length that can be used in the TDRW model, following the protocol proposed by Roubinet et al., 2010.
@@ -23,20 +30,15 @@ def get_fracture_segments(fracture_length, b, velocity, fracture_spacing, mdiff,
 
     """
 
-    transfer_time = fracture_spacing**2 / (2 * mdiff)  # mean transfer time
-    print(f"transfer_time; {transfer_time} ")
-    segment_length = ((b * np.sqrt(transfer_time)) / (phi * np.sqrt(mdiff) )) * special.erfcinv(1.0 - plim) * velocity
-
-    print(f"maximum segment length {segment_length}")
+    segment_length = ((b * np.sqrt(transfer_time)) /
+                      (matrix_porosity * np.sqrt(matrix_diffusivity))
+                      ) * special.erfcinv(1.0 - plim) * velocity
     if segment_length >= fracture_length:
         return fracture_length, 1
     else:
-        num_segments = int(np.ceil(fracture_length/segment_length))
-        # Get the first decimal place in our max_length solution
-        # decimal = np.ceil(np.log10(np.ceil(1 / max_length)))
-        # factor = 10**decimal
-        # segment_length = np.floor(max_length * factor) / factor
-        return segment_length, num_segments 
+        num_segments = int(np.ceil(fracture_length / segment_length))
+        return segment_length, num_segments
+
 
 def t_diff_unlimited(a, tf, xi):
     '''
@@ -64,7 +66,8 @@ def t_diff_unlimited(a, tf, xi):
     return ((a * tf) / special.erfcinv(xi))**2
 
 
-def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity, num_pts):
+def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
+                               num_pts):
     '''
     This function calculates the probability that a particle changes fractures, given the time needed to reach
     penetration depth (tstar). It can return the transfer probability for a single tstar (when num_pts == 1) or
@@ -86,7 +89,7 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity, n
 
     ## Parameters for Roubinet function for the transfer probability function described
     ## in Roubinet et al. WRR 2010. Equation number 5.
-    l1 = frac_spacing/2
+    l1 = frac_spacing / 2
     l2 = -l1
     delta_l = l1 - l2
 
@@ -99,7 +102,8 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity, n
         prob_cdf[i] = mp.invertlaplace(laplace_trans_prob_function,
                                        t,
                                        method='talbot',
-                                       dps = 16, degree = 36)
+                                       dps=16,
+                                       degree=36)
 
         if prob_cdf[i] >= 0.5:
             break
@@ -153,13 +157,16 @@ def transfer_probabilities(b_min,
     #     print(f"ub too high {t_diff_ub} changing to 1e30")
     #     t_diff_ub = 1e30
 
-    print(f"Initial bounds. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}")
+    print(
+        f"--> Initial bounds for diffusion times. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}"
+    )
 
     # Compute the transition probabilities across the whole range of times.
-    times, trans_cdf = transition_probability_cdf(t_diff_lb, t_diff_ub, frac_spacing, matrix_diffusivity,
-                                                  num_pts)
+    times, trans_cdf = transition_probability_cdf(t_diff_lb, t_diff_ub,
+                                                  frac_spacing,
+                                                  matrix_diffusivity, num_pts)
 
-    # Restricts the 
+    # Restricts the
     # We end up with a lot of values we don't need, close to 0 probability.
     # walk through the CDF and find the time corresponding to the
     # first probability greater than epsilon
@@ -177,11 +184,14 @@ def transfer_probabilities(b_min,
             t_diff_ub = times[i]
             break
 
-    print(f"Final bounds. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}")
+    print(
+        f"--> Final bounds for diffusion times. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}"
+    )
 
     # Recompute the transition probabilities across the restricted range of times.
-    times, trans_cdf = transition_probability_cdf(t_diff_lb, t_diff_ub, frac_spacing, matrix_diffusivity,
-                                                  num_pts)
+    times, trans_cdf = transition_probability_cdf(t_diff_lb, t_diff_ub,
+                                                  frac_spacing,
+                                                  matrix_diffusivity, num_pts)
 
     #convert to as dictionary
     trans_prob = {"times": times, "cdf": trans_cdf}
@@ -189,51 +199,42 @@ def transfer_probabilities(b_min,
     # print(trans_cdf)
     return trans_prob
 
-def single_particle(trans_prob, fracture_params):
 
-    global quiet
-    prob_min = min( trans_prob['cdf'])
-    prob_max = max( trans_prob['cdf']) 
+def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
+                             b, segment_length, velocity, num_segments):
+
+    a = (matrix_porosity * np.sqrt(matrix_diffusivity)) / b
+    segment_time = segment_length / velocity
+
+    prob_min = min(trans_prob['cdf'])
+    prob_max = max(trans_prob['cdf'])
     t_diff = 0
-    for i in range(fracture_params["num_segments"]):
-        xi = np.random.uniform(low = 0, high = 1)
-        t_diff_seg = t_diff_unlimited(fracture_params['a'], fracture_params["segment_time"], xi) 
-
-        # this is where things are going wrong.
-        if not quiet: print('unlimited diffussion time ', t_diff_seg)
+    for i in range(num_segments):
+        xi = np.random.uniform(low=0, high=1)
+        t_diff_seg = t_diff_unlimited(a, segment_time, xi)
 
         if t_diff_seg < trans_prob['times'][0]:
-            if not quiet: print("too low diffusion time")
-            if not quiet: print("Transition does not occur")
             limited_probability = 0
 
-        elif t_diff_seg > trans_prob['times'][-1]: 
-            if not quiet: print("too high diffusion time")
-            if not quiet: print("Transition occurs")
+        elif t_diff_seg > trans_prob['times'][-1]:
             limited_probability = 1
 
-        else: 
-            limited_probability = 2*np.interp(t_diff_seg/2, trans_prob['times'], trans_prob['cdf'])
+        else:
+            limited_probability = 2 * np.interp(
+                t_diff_seg / 2, trans_prob['times'], trans_prob['cdf'])
 
         if limited_probability > 0:
-            if not quiet: print("--> Checking for transition")
-            if not quiet: print(f"Transition probability {limited_probability}")
-            # Draw a random number from U[0,1] for each particle. 
+            # Draw a random number from U[0,1] for each particle.
             # Particles transfer to a new fracture if this random number
             # is less than the transfer probability
-            xi = np.random.uniform(low = 0, high = 1)
+            xi = np.random.uniform(low=0, high=1)
             if xi < limited_probability:
-                xi = np.random.uniform(low = prob_min, high = prob_max)
-                t_diff_seg  = np.interp(xi, trans_prob['cdf'], trans_prob['times'])
-                if not quiet: print("--> Transition occurs")
-                # print("--> Transition occurs")
-            else:
-                if not quiet: print("--> Transition did not occur")
+                xi = np.random.uniform(low=prob_min, high=prob_max)
+                t_diff_seg = np.interp(xi, trans_prob['cdf'],
+                                       trans_prob['times'])
 
         t_diff += t_diff_seg
-    total_time = t_diff + fracture_params['advect_time']
-    return t_diff, total_time 
-
+    return t_diff
 
 
 def get_aperture_and_time_limits(G):
@@ -262,22 +263,19 @@ def get_aperture_and_time_limits(G):
 
 
     """
-
-
-
     # get b_min, b_max, t_min, t_max
     print("--> Getting b and t limits")
     b_min = None
     b_max = None
     t_min = None
     t_max = None
-    for u,v,d in G.edges(data = True):
+    for u, v, d in G.edges(data=True):
         # print(u,v,d)
         if u != 's' and u != 't' and v != 's' and v != 't':
             if b_min is None:
                 b_min = d['b']
             elif d['b'] < b_min:
-                b_min = d['b']   
+                b_min = d['b']
 
             if b_max is None:
                 b_max = d['b']
@@ -287,7 +285,7 @@ def get_aperture_and_time_limits(G):
             if t_min is None:
                 t_min = d['time']
             elif d['time'] < t_min:
-                t_min = d['time']   
+                t_min = d['time']
 
             if t_max is None:
                 t_max = d['time']
@@ -295,13 +293,18 @@ def get_aperture_and_time_limits(G):
                 t_max = d['time']
             # if d['time'] > 1e16:
             #     print(u,v,d)
-    
-    print(f"--> b-min: {b_min}, b-max: {b_max}")
-    print(f"--> t-min: {t_min}, t-max: {t_max}")
-    return b_min, b_max, t_min, t_max 
+
+    print(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
+    print(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
+    return b_min, b_max, t_min, t_max
 
 
-def set_up_limited_matrix_diffusion(G, frac_spacing, matrix_porosity, matrix_diffusivity, eps = 1e-16, num_pts = 100):
+def set_up_limited_matrix_diffusion(G,
+                                    frac_spacing,
+                                    matrix_porosity,
+                                    matrix_diffusivity,
+                                    eps=1e-16,
+                                    num_pts=100):
     """ Sets up transition probabilities for limited block size matrix diffusion
     
     Parameters
@@ -320,30 +323,32 @@ def set_up_limited_matrix_diffusion(G, frac_spacing, matrix_porosity, matrix_dif
 
     """
 
-    b_min, b_max, tf_min, tf_max  = get_aperture_and_time_limits(G)
-    trans_prob = transfer_probabilities(b_min,
-                           b_max,
-                           tf_min,
-                           tf_max,
-                           matrix_porosity,
-                           matrix_diffusivity,
-                           frac_spacing,
-                           eps,
-                           num_pts)
+    b_min, b_max, tf_min, tf_max = get_aperture_and_time_limits(G)
+    trans_prob = transfer_probabilities(b_min, b_max, tf_min, tf_max,
+                                        matrix_porosity, matrix_diffusivity,
+                                        frac_spacing, eps, num_pts)
     return trans_prob
 
+
 def limited_matrix_diffusion(self, G):
-    print("--> running limited matrix diffusion")
-    frac_length = G.edges[self.curr_node, self.next_node]['length'] 
-    b = G.edges[self.curr_node, self.next_node]['b']  
+
+    #print("--> running limited matrix diffusion")
+    frac_length = G.edges[self.curr_node, self.next_node]['length']
+    b = G.edges[self.curr_node, self.next_node]['b']
     velocity = G.edges[self.curr_node, self.next_node]['velocity']
+    # print(frac_length, b, velocity, self.fracture_spacing, self.matrix_diffusivity, self.matrix_porosity)
+    segment_length, num_segments = get_fracture_segments(
+        self.transfer_time, frac_length, b, velocity, self.fracture_spacing,
+        self.matrix_diffusivity, self.matrix_porosity)
+    # print(f"fracture length {frac_length}")
+    # print(f"segment length {segment_length}")
+    # print(f"num segments {num_segments}")
+    self.delta_t_md = segment_matrix_diffusion(self.trans_prob,
+                                               self.matrix_porosity,
+                                               self.matrix_diffusivity, b,
+                                               segment_length, velocity,
+                                               num_segments)
 
-    print(frac_length, b, velocity, self.fracture_spacing, self.matrix_diffusivity, self.matrix_porosity)
-
-    segment_length, num_segments = get_fracture_segments(frac_length, b, velocity, self.fracture_spacing, self.matrix_diffusivity, self.matrix_porosity)
-    print(f"fracture length {frac_length}")
-    print(f"segment length {segment_length}")
-    print(f"num segments {num_segments}")
 
 def unlimited_matrix_diffusion(self, G):
     """ Matrix diffusion part of particle transport
@@ -358,10 +363,7 @@ def unlimited_matrix_diffusion(self, G):
         None
     """
 
-    b =  G.edges[self.curr_node, self.next_node]['b']
+    b = G.edges[self.curr_node, self.next_node]['b']
     a_nondim = self.matrix_porosity * np.sqrt(self.matrix_diffusivity) / b
     xi = np.random.uniform(size=1, low=0, high=1)[0]
-    self.delta_t_md = ((a_nondim * self.delta_t /
-                        special.erfcinv(xi))**2)
-
-
+    self.delta_t_md = ((a_nondim * self.delta_t / special.erfcinv(xi))**2)

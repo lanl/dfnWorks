@@ -186,7 +186,9 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
             ## Create new edge in DiGraph
             H.add_edge(upstream, downstream)
             # Transfer edge attributes
-            for att in ['perm', 'iperm', 'length', 'weight', 'area', 'frac', 'b']:
+            for att in [
+                    'perm', 'iperm', 'length', 'weight', 'area', 'frac', 'b'
+            ]:
                 H.edges[upstream, downstream][att] = G.edges[upstream,
                                                              downstream][att]
 
@@ -194,7 +196,9 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
                 H.edges[upstream, downstream]['perm'] / fluid_viscosity) * (
                     delta_p / H.edges[upstream, downstream]['length'])
 
-            H.edges[upstream, downstream]['vol_flow_rate'] = H.edges[upstream, downstream]['flux'] * H.edges[upstream, downstream]['area'] 
+            H.edges[upstream, downstream]['vol_flow_rate'] = H.edges[
+                upstream, downstream]['flux'] * H.edges[upstream,
+                                                        downstream]['area']
 
             H.edges[upstream,
                     downstream]['velocity'] = H.edges[upstream,
@@ -217,8 +221,6 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 #         neighbors = nx.neighbors(G[u])
 #         for v in neighbors:
 #             if G[u]
-
-
 
 
 def run_graph_flow(self,
@@ -267,5 +269,6 @@ def run_graph_flow(self,
     Information on individual functions in found therein
     """
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
-    Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out, fluid_viscosity, phi)
+    Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
+                                 fluid_viscosity, phi)
     return Gtilde
