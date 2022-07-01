@@ -271,7 +271,47 @@ def transfer_probabilities(b_min,
 
 
 def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
-                             b, segment_length, velocity, num_segments):
+                             b, velocity, segment_length, num_segments):
+    """ Computes the time delay for a particle due to matrix diffusion on a given edge in the graph. The edge might already be broken into multiple segments depending on the parameters of the simulation. 
+
+    Parameters
+    --------------
+        trans_prob : dictionary 
+            Dictionary elements
+            times : np.array
+                Array of diffusion times 
+            prob_cdf : np.array
+                Array of cummulative probabilities. They only go to 0.5
+
+        matrix_porosity: float
+            Matrix Porosity 
+
+        matrix_diffusivity : float
+            Matrix Diffusivity value  [m^2/s]
+
+        b : float
+            Aperture of the current edge segment in the graph [m]
+
+        velocity : float
+            particle velocity along the edge segment in the graph [m/s]
+
+        segment_length : float
+            Length of the segment of the edge to compute the matrix diffusion time
+
+        num_segments : int
+            Number of segments of length segment_length on the original edge/fracture. We ake the ceiling of the value.  
+
+
+    Returns
+    --------------
+        t_diff : float
+            Total time delay due to retention via matrix diffusion
+    
+    Notes
+    -------------
+        None
+
+    """
 
     a = (matrix_porosity * np.sqrt(matrix_diffusivity)) / b
 
@@ -280,15 +320,22 @@ def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
     prob_max = max(trans_prob['cdf'])
     t_diff = 0
     for i in range(num_segments):
+        # sample a diffusion time from the unlimited scenario
         xi = np.random.uniform(low=0, high=1)
         t_diff_seg = t_diff_unlimited(a, segment_time, xi)
 
+        # compare that time with limited times
+        # if it's less than the minimum time, there is 0 probability for
+        # transfer and we accept that time
         if t_diff_seg < trans_prob['times'][0]:
             limited_probability = 0
 
+        # if it's greater than the maximum time, there is probability 1 for
+        # transfer and we resample
         elif t_diff_seg > trans_prob['times'][-1]:
             limited_probability = 1
 
+        # otherwise, we get a new probability using the CDF based on the sampled time.
         else:
             limited_probability = 2 * np.interp(
                 t_diff_seg / 2, trans_prob['times'], trans_prob['cdf'])
@@ -296,7 +343,8 @@ def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
         if limited_probability > 0:
             # Draw a random number from U[0,1] for each particle.
             # Particles transfer to a new fracture if this random number
-            # is less than the transfer probability
+            # is less than the transfer probability.
+            # this is the inverse CDF method part of the algorithm.
             xi = np.random.uniform(low=0, high=1)
             if xi < limited_probability:
                 xi = np.random.uniform(low=prob_min, high=prob_max)
@@ -314,7 +362,6 @@ def get_aperture_and_time_limits(G):
     ---------------------
         G : networkX graph  
             Graph provided by graph_flow modules
-
 
     Returns
     -------------
@@ -340,31 +387,25 @@ def get_aperture_and_time_limits(G):
     t_min = None
     t_max = None
     for u, v, d in G.edges(data=True):
-        # print(u,v,d)
-        if u != 's' and u != 't' and v != 's' and v != 't':
-            if b_min is None:
-                b_min = d['b']
-            elif d['b'] < b_min:
-                b_min = d['b']
+        if b_min is None:
+            b_min = d['b']
+        elif d['b'] < b_min:
+            b_min = d['b']
 
-            if b_max is None:
-                b_max = d['b']
-            elif d['b'] > b_max:
-                b_max = d['b']
+        if b_max is None:
+            b_max = d['b']
+        elif d['b'] > b_max:
+            b_max = d['b']
 
-            if t_min is None:
-                t_min = d['time']
-            elif d['time'] < t_min:
-                t_min = d['time']
+        if t_min is None:
+            t_min = d['time']
+        elif d['time'] < t_min:
+            t_min = d['time']
 
-            if t_max is None:
-                t_max = d['time']
-            elif d['time'] > t_max:
-                t_max = d['time']
-            # if d['time'] > 1e16:
-            #     print(u,v,d)
-        else:
-            print(u,v,d)
+        if t_max is None:
+            t_max = d['time']
+        elif d['time'] > t_max:
+            t_max = d['time']
 
     print(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
     print(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
@@ -381,17 +422,37 @@ def set_up_limited_matrix_diffusion(G,
     
     Parameters
     ---------------------
+        G : networkX graph  
+            Graph provided by graph_flow modules
 
+        fracture_length : float
+            Length of the current edge segment in the graph [m]
 
+        matrix_porosity: float
+            Matrix Porosity 
+
+        matrix_diffusivity : float
+            Matrix Diffusivity value  [m^2/s]
+
+        eps : float 
+            Default - 1e-16
+
+        num_pts : int 
+            Number of points in the logspace array between t_min and t_max
+ 
 
     Returns
     -------------
-
+        trans_prob : dictionary 
+            Dictionary elements
+            times : np.array
+                Array of diffusion times 
+            prob_cdf : np.array
+                Array of cummulative probabilities. They only go to 0.5
 
     Notes
     --------------------
-
-
+        None
 
     """
 
@@ -402,49 +463,8 @@ def set_up_limited_matrix_diffusion(G,
     return trans_prob
 
 
-# def check_unlimited_conditions(frac_length, velocity, matrix_diffusivity, matrix_porosity, b, fracture_spacing):
-#     """
-#     Pretty sure this is wrorng...
-#     """
-
-#     peclet_number = ( frac_length* velocity ) / matrix_diffusivity
-#     xi = np.random.uniform(size=1, low=0, high=1)[0]
-#     limited_conditions = (matrix_porosity * frac_length)/(np.sqrt(2) * xi * 0.5*b * fracture_spacing)
-
-#     if peclet_number > limited_conditions:
-#         return True
-#     else:
-#         return False
-
-
 def limited_matrix_diffusion(self, G):
-
-    #print("--> running limited matrix diffusion")
-    frac_length = G.edges[self.curr_node, self.next_node]['length']
-    b = G.edges[self.curr_node, self.next_node]['b']
-    velocity = G.edges[self.curr_node, self.next_node]['velocity']
-    # print(frac_length, b, velocity, self.fracture_spacing, self.matrix_diffusivity, self.matrix_porosity)
-
-    # if check_unlimited_conditions(frac_length, velocity, self.matrix_diffusivity, self. matrix_porosity, b, self.fracture_spacing):
-    #     # print("--> unlimited conditions")
-    #     self.unlimited_matrix_diffusion(G)
-    # else:
-    # print("--> limited conditions")
-    segment_length, num_segments = get_fracture_segments(
-        self.transfer_time, frac_length, b, velocity, self.matrix_diffusivity,
-        self.matrix_porosity)
-    # print(f"fracture length {frac_length}")
-    # print(f"segment length {segment_length}")
-    # print(f"num segments {num_segments}")
-    self.delta_t_md = segment_matrix_diffusion(self.trans_prob,
-                                               self.matrix_porosity,
-                                               self.matrix_diffusivity, b,
-                                               segment_length, velocity,
-                                               num_segments)
-
-
-def unlimited_matrix_diffusion(self, G):
-    """ Matrix diffusion part of particle transport
+    """ Matrix diffusion with limited block size
 
     Parameters
     ----------
@@ -454,6 +474,43 @@ def unlimited_matrix_diffusion(self, G):
     Returns
     -------
         None
+
+    Notes
+    -----------
+        All parameters are attached to the particle class 
+    """
+
+    frac_length = G.edges[self.curr_node, self.next_node]['length']
+    b = G.edges[self.curr_node, self.next_node]['b']
+    velocity = G.edges[self.curr_node, self.next_node]['velocity']
+
+    segment_length, num_segments = get_fracture_segments(
+        self.transfer_time, frac_length, b, velocity, self.matrix_diffusivity,
+        self.matrix_porosity)
+
+    self.delta_t_md = segment_matrix_diffusion(self.trans_prob,
+                                               self.matrix_porosity,
+                                               self.matrix_diffusivity, b,
+                                               velocity, segment_length,
+                                               num_segments)
+
+
+def unlimited_matrix_diffusion(self, G):
+    """ Matrix diffusion with unlimited block size
+
+    Parameters
+    ----------
+        G : NetworkX graph
+            graph obtained from graph_flow
+
+    Returns
+    ----------
+        None
+
+    Notes
+    -----------
+        All parameters are attached to the particle class 
+
     """
 
     b = G.edges[self.curr_node, self.next_node]['b']
