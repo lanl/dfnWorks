@@ -1,4 +1,6 @@
-from pydfnworks import * 
+from pydfnworks import *
+
+
 def legal():
     """Print the legal LANL statement for dfnWorks.
 
