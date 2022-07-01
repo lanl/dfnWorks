@@ -171,6 +171,51 @@ def create_neighbor_list(G):
     return nbrs_dict
 
 
+def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
+    if matrix_porosity is None:
+        error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+    elif matrix_porosity < 0 or matrix_porosity > 1:
+        error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+    if matrix_diffusivity is None:
+        error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+    print(
+        f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
+    )
+    if fracture_spacing is not None:
+        if fracture_spacing <= 0:
+            error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+
+def check_control_planes(control_planes, direction):
+    control_plane_flag = False
+    if not type(control_planes) is list:
+        error = f"Error. provided controls planes are not a list\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+    else:
+        # add None to indicate the end of the control plane list
+        control_plane_flag = True
+
+    if direction is None:
+        error = f"Error. Primary direction not provided. Required for control planes\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+    elif direction not in ['x', 'y', 'z']:
+        error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    return control_plane_flag
+
+
 def run_graph_transport(self,
                         G,
                         nparticles,
@@ -231,43 +276,15 @@ def run_graph_transport(self,
     print("\n--> Running Graph Particle Tracking")
     # Check parameters for TDRW
     if tdrw_flag:
-        if matrix_porosity is None:
-            error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        elif matrix_porosity < 0 or matrix_porosity > 1:
-            error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        if matrix_diffusivity is None:
-            error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        print(
-            f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
-        )
+        check_tdrw_params(matrix_porosity, matrix_diffusivity,
+                          fracture_spacing)
 
-    print("\n\n\ncontrol planes")
-    print(control_planes)
     if control_planes is None:
         control_plane_flag = False
     else:
-        if not type(control_planes) is list:
-            error = f"Error. provided controls planes are not a list\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        else:
-            # add None to indicate the end of the control plane list
-            control_plane_flag = True
+        control_plane_flag = check_control_planes(
+            control_planes=control_planes, direction=direction)
 
-        if direction is None:
-            error = f"Error. Primary direction not provided. Required for control planes\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-        elif direction not in ['x', 'y', 'z']:
-            error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
-            sys.stderr.write(error)
-            sys.exit(1)
     print(f"--> Control Plane Flag {control_plane_flag}")
 
     print("--> Creating downstream neighbor list")
@@ -281,11 +298,12 @@ def run_graph_transport(self,
 
     if fracture_spacing is not None:
         print(f"--> Using limited matrix block size for TDRW")
-        print(f"--> Fracture spacing {fracture_spacing}")
+        print(f"--> Fracture spacing {fracture_spacing:0.2e}")
         trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
                                                      matrix_porosity,
                                                      matrix_diffusivity)
         # This doesn't change for the system.
+        # Transfer time diffusing between fracture blocks
         transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
 
     else:
@@ -299,7 +317,7 @@ def run_graph_transport(self,
         particles = []
         for i in range(nparticles):
             if i % 1000 == 0:
-                print("--> Starting particle %d out of %d" % (i, nparticles))
+                print(f"--> Starting particle {i} out of {nparticles}")
             particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
                                 matrix_diffusivity, fracture_spacing,
                                 trans_prob, transfer_time, control_plane_flag,
@@ -346,7 +364,7 @@ def run_graph_transport(self,
         pool.terminate()
 
         elapsed = timeit.default_timer() - tic
-        print(f"--> Tracking Complete. Time Required {elapsed:.2f} seconds\n")
+        print(f"--> Tracking Complete. Time Required {elapsed:0.2f} seconds\n")
 
         print(f"--> Writing Data to files: {partime_file} and {frac_id_file}")
         io.dump_particle_info(particles, partime_file, frac_id_file)

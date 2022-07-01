@@ -1,5 +1,3 @@
-from re import I
-from threading import TIMEOUT_MAX
 import numpy as np
 from scipy import special
 import mpmath as mp
@@ -9,7 +7,6 @@ def get_fracture_segments(transfer_time,
                           fracture_length,
                           b,
                           velocity,
-                          fracture_spacing,
                           matrix_diffusivity,
                           matrix_porosity,
                           plim=0.01):
@@ -21,10 +18,12 @@ def get_fracture_segments(transfer_time,
 
     Parameters
     ---------------------
+        transfer_time : float 
 
     Returns
     ---------------------
-
+        segment_length : float
+            Length of the fracture 
     Notes
     ---------------------
 
@@ -108,7 +107,6 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
         if prob_cdf[i] >= 0.5:
             break
 
-    # print(times, prob_cdf)
     # # CLEAN UP the solution.
     # # Sometime small negative values will appear due to numerical instabilities. Remove these.
     ind = np.asarray(np.where(prob_cdf >= 0)).flatten()
@@ -135,8 +133,7 @@ def transfer_probabilities(b_min,
                            num_pts=100):
     """ Returns the CDF of transfer probabilities and assocaited times. 
     Lower and upper bounds are first estimated using the physical parameters of the system.
-    The bounds are then tighted based on the returned probabilities wherein we find a range with 
-    probabilities greater than eps, and  
+    The bounds are then tighted based on the returned probabilities wherein we find a range with probabilities greater than eps, and  
     """
     # estimate lower bound
     # get the minimum factor
@@ -359,8 +356,8 @@ def limited_matrix_diffusion(self, G):
     # else:
     # print("--> limited conditions")
     segment_length, num_segments = get_fracture_segments(
-        self.transfer_time, frac_length, b, velocity, self.fracture_spacing,
-        self.matrix_diffusivity, self.matrix_porosity)
+        self.transfer_time, frac_length, b, velocity, self.matrix_diffusivity,
+        self.matrix_porosity)
     # print(f"fracture length {frac_length}")
     # print(f"segment length {segment_length}")
     # print(f"num segments {num_segments}")
