@@ -190,8 +190,8 @@ def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
     if fracture_spacing is not None:
         if fracture_spacing <= 0:
             error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
-        sys.stderr.write(error)
-        sys.exit(1)
+            sys.stderr.write(error)
+            sys.exit(1)
 
 
 def check_control_planes(control_planes, direction):
