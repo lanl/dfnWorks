@@ -11,37 +11,61 @@ def get_fracture_segments(transfer_time,
                           matrix_porosity,
                           plim=0.01):
     """
-
     This function calculates the maximum segment length that can be used in the TDRW model, following the protocol proposed by Roubinet et al., 2010.
     
-    Note that Roubinet said that a plim value of 0.1 was acceptable. However, we are better able to match the results of Sudicky across parameter values when plim = 0.01. 
 
     Parameters
     ---------------------
         transfer_time : float 
+            Time is takes for a particle to diffusive through the matrix across the fracture spacing. transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity) 
+
+        fracture_length : float
+            Length of the current edge segment in the graph [m]
+
+        b : float
+            Aperture of the current edge segment in the graph [m]
+
+        velocity : float
+            particle velocity along the edge segment in the graph [m/s]
+
+        matrix_diffusivity: float
+            Matrix Diffusivity [m^2/s]
+
+        matrix_porosity: float
+            Matrix Porosity 
+
+        plim : float
+            Parameter used to break up the fracture
 
     Returns
     ---------------------
         segment_length : float
-            Length of the fracture 
+            Length of the segment of the edge to compute the matrix diffusion time
+        num_segments : int
+            Number of segments of length segment_length on the original edge/fracture. We ake the ceiling of the value.  
+
     Notes
     ---------------------
+        Roubinet use a plim value of 0.1. However, we are better able to match the results of Sudicky & Frind with a parameter values when plim = 0.01. 
 
     """
 
+    # Compute the maximum segment length
     segment_length = ((b * np.sqrt(transfer_time)) /
                       (matrix_porosity * np.sqrt(matrix_diffusivity))
                       ) * special.erfcinv(1.0 - plim) * velocity
+    # if that's bigger than the edge size, just return the edge length as a single segment
     if segment_length >= fracture_length:
         return fracture_length, 1
     else:
+        # otherwise, get the number of segments of length segment_length on the edge
         num_segments = int(np.ceil(fracture_length / segment_length))
         return segment_length, num_segments
 
 
 def t_diff_unlimited(a, tf, xi):
-    '''
-    This function returns randomly drawn diffusion times, assuming an unlimited matrix.
+    """
+    This function returns one  diffusion time sample for a and tf assuming an unlimited matrix block size.  This is used throughout the limited block size sampling technique. 
     
     Parameters
     -------------------
@@ -61,26 +85,42 @@ def t_diff_unlimited(a, tf, xi):
     -------------
         For a random sample, sample xi from U[0,1). 
         
-    '''
+    """
+
     return ((a * tf) / special.erfcinv(xi))**2
 
 
 def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
                                num_pts):
-    '''
-    This function calculates the probability that a particle changes fractures, given the time needed to reach
-    penetration depth (tstar). It can return the transfer probability for a single tstar (when num_pts == 1) or
-    for a collection.
-    
-    When calculating transfer probabilities for a collection of points, we break up times using two vectors, t1 and
-    t2. t1 ensures that we get proper point definition over our primary range of interest so that we can accurately
-    produce our transfer probability distribution. The vector t2 contains extra points that are used in case the values
-    in t1 were not sufficiently high to plateau.
-    
-    Negative probabilities can sometimes appear due to numerical instabilities in our laplace inverse transform.
+    """
+    This function calculates the cummulative probability density that a particle changes fractures, given the time needed to reach a penetration depth and an associated time with each probabilty.
 
-    We remove these negative values. Moreover, we ensure that our final distribution is monotonically 
-    '''
+    Parameters
+    ---------------
+        t_min : float
+            Minumum value of diffusion time [s]
+        t_max : float
+            Maximum value of diffusion time [s]
+        frac_spacing : float
+            Spacing between fractures [m]
+        matrix_diffusivity : float
+            Matrix Diffusivity value  [m^2/s]
+        num_pts : int 
+            Number of points in the logspace array between t_min and t_max
+
+    Returns
+    --------------
+        times : np.array
+            Array of diffusion times 
+        prob_cdf : np.array
+            Array of cummulative probabilities. They only go to 0.5
+
+
+    Notes
+    ------------
+        Negative probabilities can sometimes appear due to numerical instabilities in our laplace inverse transform. These are removed in the section below marked CLEAN UP. We also ensure that our final distribution is monotonically increasing 
+
+    """
     print("--> Building transition probability cdf")
 
     times = np.logspace(np.log10(t_min), np.log10(t_max), num=num_pts)
@@ -131,9 +171,42 @@ def transfer_probabilities(b_min,
                            frac_spacing,
                            eps=1e-16,
                            num_pts=100):
-    """ Returns the CDF of transfer probabilities and assocaited times. 
-    Lower and upper bounds are first estimated using the physical parameters of the system.
-    The bounds are then tighted based on the returned probabilities wherein we find a range with probabilities greater than eps, and  
+    """ Returns the CDF of transfer probabilities and assocaited times.  Lower and upper bounds are first estimated using the physical parameters of the system. The bounds are then tighted based on the returned probabilities wherein we find a range with probabilities greater than eps and 0.5
+
+    Parameters
+    ------------
+        b_min : float
+            Minimum aperture in the network
+        b_max : float
+            Maximum aperture in the network
+        tf_min : float 
+            Minimum advective travel time in the network
+        tf_max : float 
+            Maximum advective travel time in the network
+        matrix_porosity: float
+            Matrix Porosity 
+        matrix_diffusivity : float
+            Matrix Diffusivity value  [m^2/s]
+        frac_spacing : float
+            Spacing between fractures [m]
+        eps : float 
+            Default - 1e-16
+        num_pts : int 
+            Number of points in the logspace array between t_min and t_max
+ 
+    Returns 
+    ------------
+        trans_prob : dictionary 
+            Dictionary elements
+            times : np.array
+                Array of diffusion times 
+            prob_cdf : np.array
+                Array of cummulative probabilities. They only go to 0.5
+
+    Notes
+    ------------
+        The initial bounds are huge, don't worry. They get tighted up just fine.  
+
     """
     # estimate lower bound
     # get the minimum factor
