@@ -363,6 +363,8 @@ def get_aperture_and_time_limits(G):
                 t_max = d['time']
             # if d['time'] > 1e16:
             #     print(u,v,d)
+        else:
+            print(u,v,d)
 
     print(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
     print(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
