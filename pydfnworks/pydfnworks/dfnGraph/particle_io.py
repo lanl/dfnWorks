@@ -1,53 +1,11 @@
 import sys
 
 
-def prepare_output_files(partime_file, frac_id_file):
-    """ opens the output files partime_file and frac_id_file and writes the
-        header for each
-
-        Parameters
-        ----------
-
-            partime_file : string
-                name of file to  which the total travel times and lengths will be written for each particle
-
-            frac_id_file : string
-                name of file to which detailed information of each particle's travel will be written
-
-        Returns
-        -------
-            None
-    """
-
-    try:
-        with open(partime_file, "w") as fp_partime:
-            fp_partime.write(
-                "# Total Advective time (s), Total diffusion time (s), Total travel time (Adv.+Diff) (s),total pathline distance (m)\n"
-            )
-    except:
-        error = f"Error: Unable to open supplied partime_file file {partime_file}\n"
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    try:
-        with open(frac_id_file, "w") as fp_frac_id:
-            fp_frac_id.write("# List of fractures that a particle visits\n")
-            #f2.write(
-            #    "# Line has (n+n+n+n) entries, consisting of all frac_ids (from 0), advective times (s), advective+diffusion times (s), advection dist covered (m)\n"
-            #)
-    except:
-        error = f": Unable to open supplied frac_id_file file {frac_id_file}\n".format(
-            frac_id_file)
-        sys.stderr.write(error)
-        sys.exit(1)
-
-
 def dump_particle_info(particles, partime_file, frac_id_file):
     """ If running graph transport in parallel, this function dumps out all the
         particle information is a single pass rather then opening and closing the
         files for every particle
-
-
+        
         Parameters
         ----------
             particles : list
@@ -61,32 +19,35 @@ def dump_particle_info(particles, partime_file, frac_id_file):
 
         Returns
         -------
-            pfailcount : int 
+            stuck_particles : int 
                 Number of particles that do not exit the domain
 
-        """
+    """
 
-    prepare_output_files(partime_file, frac_id_file)
+    print(f"--> Writing Data to files: {partime_file}")
+    with open(partime_file, "w") as fp_partime:
+        # Write Header
+        fp_partime.write(
+            "# Total Advective time (s), Total diffusion time (s), Total travel time (Adv. + Diff.) (s), Total pathline distance (m), Beta [s/m] \n"
+        )
+        stuck_particles = 0
+        for particle in particles:
+            if particle.exit_flag:
+                fp_partime.write(
+                    f"{particle.advect_time:0.12e},{particle.matrix_diffusion_time:0.12e},{particle.total_time:0.12e},{particle.length:0.12e},{particle.beta:0.12e}\n"
+                )
+            else:
+                stuck_particles += 1
 
-    fp_partime = open(partime_file, "a")
-    fp_frac_id = open(frac_id_file, "a")
-
-    pfailcount = 0
-
-    for particle in particles:
-        if particle.exit_flag:
-            fp_partime.write(
-                f"{particle.advect_time:.12e},{particle.matrix_diffusion_time:.12e},{particle.total_time:.12e},{particle.length:.12e}\n"
-            )
-            for d in particle.frac_seq:
-                fp_frac_id.write(f"{d:d},")
-            fp_frac_id.write("\n")
-        else:
-            pfailcount += 1
-
-    fp_partime.close()
-    fp_frac_id.close()
-    return pfailcount
+    if frac_id_file is not None:
+        print(f"--> Writing fractures visted to file: {frac_id_file}")
+        with open(frac_id_file, "w") as fp_frac_id:
+            for particle in particles:
+                for d in particle.frac_seq[:-1]:
+                    fp_frac_id.write(f"{d:d},")
+                fp_frac_id.write(f"{particle.frac_seq[-1]:d}\n")
+    print("--> Writing Data Complete")
+    return stuck_particles
 
 
 def dump_control_planes(particles, control_planes):

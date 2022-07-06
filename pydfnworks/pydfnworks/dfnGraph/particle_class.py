@@ -30,6 +30,8 @@ class Particle():
         self.total_time = 0
         self.length = 0
         self.delta_l = 0
+        self.beta = 0
+        self.delta_beta = 0
         self.tdrw_flag = tdrw_flag
         self.matrix_porosity = matrix_porosity
         self.matrix_diffusivity = matrix_diffusivity
@@ -100,6 +102,7 @@ class Particle():
             self.frac_seq.append(self.frac)
             self.delta_t = G.edges[self.curr_node, self.next_node]['time']
             self.delat_l = G.edges[self.curr_node, self.next_node]['length']
+            self.delta_beta = (2.0 * G.edges[self.curr_node, self.next_node]['length'])/(G.edges[self.curr_node, self.next_node]['b']* G.edges[self.curr_node, self.next_node]['velocity'])
 
     def cross_control_plane(self, G):
         """ Check if a particle crossed the control plane
@@ -158,8 +161,17 @@ class Particle():
         self.matrix_diffusion_time += self.delta_t_md
         self.total_time += self.delta_t + self.delta_t_md
         self.length += self.delat_l
+        self.beta += self.delta_beta
         self.frac_seq.append(self.frac)
         self.curr_node = self.next_node
+
+
+    def cleanup_frac_seq(self):
+        frac_seq_set = set()
+        frac_seq_add = frac_seq_set.add
+        frac_seq = [x for x in self.frac_seq if not (x in frac_seq_set or frac_seq_add(x))]
+        self.frac_seq = frac_seq
+
 
     def track(self, G, nbrs_dict):
         """ Track particle. Breaks up advection and matrix diffusion
@@ -178,6 +190,7 @@ class Particle():
             self.advect(G, nbrs_dict)
             if self.exit_flag:
                 # self.update()
+                self.cleanup_frac_seq()
                 break
 
             if self.tdrw_flag:

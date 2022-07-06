@@ -218,7 +218,7 @@ def run_graph_transport(self,
                         G,
                         nparticles,
                         partime_file,
-                        frac_id_file,
+                        frac_id_file=None,
                         initial_positions="uniform",
                         tdrw_flag=False,
                         matrix_porosity=None,
@@ -265,7 +265,7 @@ def run_graph_transport(self,
 
     Returns
     -------
-        O if completed correctly 
+        None
 
     Notes
     -----
@@ -295,8 +295,6 @@ def run_graph_transport(self,
     ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
 
     print(f"--> Starting particle tracking for {nparticles} particles")
-    pfailcount = 0
-
     if fracture_spacing is not None:
         print(f"--> Using limited matrix block size for TDRW")
         print(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
@@ -311,7 +309,6 @@ def run_graph_transport(self,
         trans_prob = None
         transfer_time = None
     ## main loop
-
     if self.ncpu == 1:
         io.prepare_output_files(partime_file, frac_id_file)
         tic = timeit.default_timer()
@@ -325,12 +322,13 @@ def run_graph_transport(self,
                                 control_planes, direction)
             particle.track(G, nbrs_dict)
             particles.append(particle)
+
         elapsed = timeit.default_timer() - tic
-
-        print(f"--> Tracking Complete. Time Required {elapsed:.2f} seconds")
-
-        io.dump_particle_info(particles, partime_file, frac_id_file)
-        print("--> Writing Data Complete\n")
+        print(
+            f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
+        )
+        stuck_particles = io.dump_particle_info(particles, partime_file,
+                                                frac_id_file)
         if control_plane_flag:
             io.dump_control_planes(particles, control_planes)
 
@@ -365,20 +363,19 @@ def run_graph_transport(self,
         pool.terminate()
 
         elapsed = timeit.default_timer() - tic
-        print(f"--> Tracking Complete. Time Required {elapsed:0.2f} seconds\n")
+        print(
+            f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
+        )
 
-        print(f"--> Writing Data to files: {partime_file} and {frac_id_file}")
-        io.dump_particle_info(particles, partime_file, frac_id_file)
-        print("--> Writing Data Complete")
+        stuck_particles = io.dump_particle_info(particles, partime_file,
+                                                frac_id_file)
         if control_plane_flag:
             io.dump_control_planes(particles, control_planes)
 
-    if pfailcount == 0:
+    if stuck_particles == 0:
         print("--> All particles exited the network")
         print("--> Graph Particle Tracking Completed Successfully.")
     else:
         print(
-            f"--> Out of {nparticles} particles, {pfailcount} particles did not exit"
+            f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit"
         )
-
-    return 0
