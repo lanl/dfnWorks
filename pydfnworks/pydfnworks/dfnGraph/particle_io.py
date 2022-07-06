@@ -78,9 +78,7 @@ def dump_particle_info(particles, partime_file, frac_id_file):
             fp_partime.write(
                 f"{particle.advect_time:.12e},{particle.matrix_diffusion_time:.12e},{particle.total_time:.12e},{particle.length:.12e}\n"
             )
-            frac_seq = sorted(set(particle.frac_seq),
-                              key=particle.frac_seq.index)
-            for d in frac_seq:
+            for d in particle.frac_seq:
                 fp_frac_id.write(f"{d:d},")
             fp_frac_id.write("\n")
         else:

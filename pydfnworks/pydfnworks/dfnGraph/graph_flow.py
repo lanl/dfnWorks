@@ -5,6 +5,8 @@ import scipy.sparse
 
 # pydfnworks modules
 from pydfnworks.dfnGraph import dfn2graph as d2g
+from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+
 
 def get_laplacian_sparse_mat(G,
                              nodelist=None,
@@ -138,6 +140,8 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
             Gtilde is updated with vertex pressures, edge fluxes and travel times
     """
 
+    print("--> Starting Graph flow")
+
     Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
     Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
 
@@ -160,9 +164,9 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
         D[v, v] = 1.0
     L = D - A  # automatically converts to csr when returning L
 
-    print("Solving sparse system")
+    print("--> Solving sparse system")
     pressure = scipy.sparse.linalg.spsolve(L, b)
-    print("Updating graph edges with flow solution")
+    print("--> Updating graph edges with flow solution")
 
     for v in nx.nodes(G):
         G.nodes[v]['pressure'] = pressure[v]
@@ -199,6 +203,8 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
                 upstream, downstream]['flux'] * H.edges[upstream,
                                                         downstream]['area']
 
+            # H.edges[downstream, upstream]['vol_flow_rate'] =  -1*H.edges[upstream, downstream]['vol_flow_rate']
+
             H.edges[upstream,
                     downstream]['velocity'] = H.edges[upstream,
                                                       downstream]['flux'] / phi
@@ -209,49 +215,56 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
     print("--> Graph flow complete")
     return H
 
-def compute_dQ(G):
+
+def compute_dQ(self, G):
     """ Computes the value dQ from the graph flow G
 
     """
-    num_frac = 4
-    Qf = np.zeros(num_frac)
+    print(
+        "--> Computing fracture intensity (p32) and flow channeling density indicator (dQ)"
+    )
 
-    for i in range(1, num_frac + 1):
+    fracture_surface_area = 2 * np.genfromtxt("surface_area_Final.dat",
+                                              skip_header=1)
+    _, _, _, _, domain = mh.parse_params_file(quiet=True)
+    domain_volume = domain['x'] * domain['y'] * domain['z']
+
+    num_frac = len(fracture_surface_area)
+    Qf = np.zeros(num_frac)
+    ## walk through fractures
+    for curr_frac in range(1, num_frac + 1):
+        # print(f"\nstarting on fracture {curr_frac}")
+        # Gather nodes on current fracture
         current_nodes = []
-        for u,d in G.nodes(data = True):
+        for u, d in G.nodes(data=True):
             for f in d["frac"]:
-                if f == i:
+                if f == curr_frac:
                     current_nodes.append(u)
-        print(current_nodes)
+        # cycle through nodes on the fracture and get the outgoing / incoming
+        # volumetric flow rates
         for u in current_nodes:
             neighbors = G.neighbors(u)
             for v in neighbors:
                 if v not in current_nodes:
-                    print(u,v,G[u][v])
-                    print(v,G[u][v]['vol_flow_rate'])
-                    Qf[i-1] += abs(G[u][v]['vol_flow_rate'])
+                    # outgoing
+                    Qf[curr_frac - 1] += abs(G[u][v]['vol_flow_rate'])
+                    for f in G.nodes[v]['frac']:
+                        if f != curr_frac and f != 's' and f != 't':
+                            # incoming onto the other fracture.
+                            Qf[f - 1] += abs(G[u][v]['vol_flow_rate'])
+        # cut by 1/2 to remove up double counting
         Qf *= 0.5
-    print(Qf)
 
-    num_frac = 4
-    Qf = np.zeros(num_frac)
-
-    for i in range(1, num_frac + 1):
-        current_nodes = []
-        for u,d in G.nodes(data = True):
-            for f in d["frac"]:
-                if f == i:
-                    current_nodes.append(u)
-        print(current_nodes)
-        for u in current_nodes:
-            neighbors = G.neighbors(u)
-            for v in neighbors:
-                if v not in current_nodes:
-                    print(u,v,G[u][v])
-                    print(v,G[u][v]['vol_flow_rate'])
-                    Qf[i-1] += abs(G[u][v]['vol_flow_rate'])
-        Qf *= 0.5
-    print(Qf)
+    p32 = fracture_surface_area.sum() / domain_volume
+    top = sum(fracture_surface_area * Qf)**2
+    bottom = sum(fracture_surface_area * Qf**2)
+    dQ = (1.0 / domain_volume) * (top / bottom)
+    print(f"--> P32: {p32:0.2e} [1/m]")
+    print(f"--> dQ: {dQ:0.2e} [1/m]")
+    print(f"--> Geometric equivalent spacing {1/p32:0.2e} m")
+    print(f"--> Hydrological equivalent spacing {1/dQ:0.2e} m")
+    print("--> Complete \n")
+    return p32, dQ
 
 
 def run_graph_flow(self,
@@ -302,6 +315,5 @@ def run_graph_flow(self,
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
-    # compute_dQ(Gtilde)
 
     return Gtilde

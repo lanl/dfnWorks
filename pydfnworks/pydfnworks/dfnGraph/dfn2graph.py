@@ -186,8 +186,8 @@ def create_intersection_graph(inflow,
     Aperture and Perm on edges can be added using add_app and add_perm functions
     """
 
-    print("Creating Graph Based on DFN")
-    print("Intersections being mapped to nodes and fractures to edges")
+    print("--> Creating Graph Based on DFN")
+    print("--> Intersections being mapped to nodes and fractures to edges")
     inflow_index = boundary_index(inflow)
     outflow_index = boundary_index(outflow)
 
@@ -267,7 +267,7 @@ def create_intersection_graph(inflow,
             [-2]))) > 0:
             G.add_edge(i, 't', frac='t', length=0.0)
     add_perm(G, fracture_info)
-    print("Graph Construction Complete")
+    print("--> Graph Construction Complete\n")
     return G
 
 

@@ -189,4 +189,3 @@ class Particle():
             if self.cp_flag:
                 self.cross_control_plane(G)
             self.update()
-

@@ -184,9 +184,7 @@ def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
         error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
         sys.stderr.write(error)
         sys.exit(1)
-    print(
-        f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
-    )
+
     if fracture_spacing is not None:
         if fracture_spacing <= 0:
             error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
@@ -278,6 +276,9 @@ def run_graph_transport(self,
     if tdrw_flag:
         check_tdrw_params(matrix_porosity, matrix_diffusivity,
                           fracture_spacing)
+        print(
+            f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
+        )
 
     if control_planes is None:
         control_plane_flag = False
@@ -298,7 +299,7 @@ def run_graph_transport(self,
 
     if fracture_spacing is not None:
         print(f"--> Using limited matrix block size for TDRW")
-        print(f"--> Fracture spacing {fracture_spacing:0.2e}")
+        print(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
         trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
                                                      matrix_porosity,
                                                      matrix_diffusivity)
