@@ -211,6 +211,8 @@ def check_control_planes(control_planes, direction):
         sys.stderr.write(error)
         sys.exit(1)
 
+    print(f"--> Control Planes: {control_planes}")
+    print(f"--> Direction: {direction}")
     return control_plane_flag
 
 
