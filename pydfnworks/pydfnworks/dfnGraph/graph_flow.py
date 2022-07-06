@@ -202,7 +202,6 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
             H.edges[upstream,
                     downstream]['velocity'] = H.edges[upstream,
                                                       downstream]['flux'] / phi
-
             H.edges[upstream,
                     downstream]['time'] = H.edges[upstream, downstream][
                         'length'] / (H.edges[upstream, downstream]['velocity'])
@@ -233,6 +232,27 @@ def compute_dQ(G):
                     Qf[i-1] += abs(G[u][v]['vol_flow_rate'])
         Qf *= 0.5
     print(Qf)
+
+    num_frac = 4
+    Qf = np.zeros(num_frac)
+
+    for i in range(1, num_frac + 1):
+        current_nodes = []
+        for u,d in G.nodes(data = True):
+            for f in d["frac"]:
+                if f == i:
+                    current_nodes.append(u)
+        print(current_nodes)
+        for u in current_nodes:
+            neighbors = G.neighbors(u)
+            for v in neighbors:
+                if v not in current_nodes:
+                    print(u,v,G[u][v])
+                    print(v,G[u][v]['vol_flow_rate'])
+                    Qf[i-1] += abs(G[u][v]['vol_flow_rate'])
+        Qf *= 0.5
+    print(Qf)
+
 
 def run_graph_flow(self,
                    inflow,
@@ -282,6 +302,6 @@ def run_graph_flow(self,
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
-    compute_dQ(Gtilde)
+    # compute_dQ(Gtilde)
 
     return Gtilde

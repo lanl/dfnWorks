@@ -176,9 +176,8 @@ class Particle():
 
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
-
             if self.exit_flag:
-                self.update()
+                # self.update()
                 break
 
             if self.tdrw_flag:
@@ -189,5 +188,5 @@ class Particle():
 
             if self.cp_flag:
                 self.cross_control_plane(G)
-
             self.update()
+
