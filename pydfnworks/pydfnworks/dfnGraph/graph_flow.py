@@ -136,8 +136,13 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 
     Returns
     -------
-        Gtilde : NetworkX graph 
-            Gtilde is updated with vertex pressures, edge fluxes and travel times
+        H : Acyclic Directed NetworkX graph 
+            H is updated with vertex pressures, edge fluxes and travel times. The only edges that exists are those with postive flow rates. 
+
+    Notes
+    ----------
+        None
+
     """
 
     print("--> Starting Graph flow")
@@ -217,7 +222,25 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 
 
 def compute_dQ(self, G):
-    """ Computes the value dQ from the graph flow G
+    """ Computes the DFN fracture intensity (p32) and flow channeling density indicator from the graph flow solution on G
+
+    Parameters
+    -----------------
+        self : object
+            DFN Class
+
+        G : networkX graph 
+            Output of run_graph_flow
+
+    Returns
+    ---------------
+        p32 : float
+            Fracture intensity
+        dQ : float flow channeling density indicator 
+
+    Notes
+    ------------
+        For definitions of p32 and dQ along with a discussion see " Hyman, Jeffrey D. "Flow channeling in fracture networks: characterizing the effect of density on preferential flow path formation." Water Resources Research 56.9 (2020): e2020WR027986. "
 
     """
     print(
@@ -246,13 +269,13 @@ def compute_dQ(self, G):
             neighbors = G.neighbors(u)
             for v in neighbors:
                 if v not in current_nodes:
-                    # outgoing
+                    # outgoing vol flow rate
                     Qf[curr_frac - 1] += abs(G[u][v]['vol_flow_rate'])
                     for f in G.nodes[v]['frac']:
                         if f != curr_frac and f != 's' and f != 't':
-                            # incoming onto the other fracture.
+                            # incoming vol flow rate
                             Qf[f - 1] += abs(G[u][v]['vol_flow_rate'])
-        # cut by 1/2 to remove up double counting
+        # Divide by 1/2 to remove up double counting
         Qf *= 0.5
 
     p32 = fracture_surface_area.sum() / domain_volume
@@ -261,8 +284,8 @@ def compute_dQ(self, G):
     dQ = (1.0 / domain_volume) * (top / bottom)
     print(f"--> P32: {p32:0.2e} [1/m]")
     print(f"--> dQ: {dQ:0.2e} [1/m]")
-    print(f"--> Geometric equivalent spacing {1/p32:0.2e} m")
-    print(f"--> Hydrological equivalent spacing {1/dQ:0.2e} m")
+    print(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
+    print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     print("--> Complete \n")
     return p32, dQ
 
@@ -275,13 +298,12 @@ def run_graph_flow(self,
                    fluid_viscosity=8.9e-4,
                    phi=1,
                    G=None):
-    """ Run the graph flow portion of the workflow
+    """ Solve for pressure driven steady state flow on a graph representation of the DFN. 
 
     Parameters
     ----------
         self : object
             DFN Class
-
 
         inflow : string
             name of file containing list of DFN fractures on inflow boundary
@@ -290,27 +312,24 @@ def run_graph_flow(self,
             name of file containing list of DFN fractures on outflow boundary
 
         pressure_in : double
-            Value of pressure (in Pa) at inlet
+            Value of pressure at inlet [Pa]
         
         pressure_out : double
-            Value of pressure (in Pa) at outlet
+            Value of pressure at outlet [Pa]
 
         fluid_viscosity : double
-            optional, in Pa-s, default is for water
+            optional,  default is for water. [Pa*s]
             
         phi : double
-            Porosity, default is 1
+            Fracture porosity, default is 1 [-]
 
         G : Input Graph 
 
     Returns
     -------
         Gtilde : NetworkX graph 
-            Grtilde is updated with vertex pressures, edge fluxes and travel times
+            Gtilde is a directed acyclic graph with vertex pressures, fluxes, velocities, volumetric flow rates, and travel times
 
-    Notes
-    -----
-    Information on individual functions in found therein
     """
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
