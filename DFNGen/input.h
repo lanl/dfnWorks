@@ -19,6 +19,7 @@ extern bool keepIsolatedFractures;
 extern bool printRejectReasons;
 extern bool outputFinalRadiiPerFamily;
 extern bool outputAcceptedRadiiPerFamily;
+extern bool ecpmOutput;
 extern int orientationOption;
 extern bool *ebetaDistribution;
 extern bool *rbetaDistribution;

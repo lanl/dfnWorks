@@ -188,7 +188,12 @@ def load_parameters():
             'value': None,
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-
+        'ecpmOutput': {
+            'type': bool,
+            'list': False,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         # Fracture Families
         'famProb': {
             'type': float,
@@ -707,7 +712,7 @@ def load_parameters():
     mandatory = {
         'stopCondition', 'domainSize', 'numOfLayers', 'numOfRegions',
         'outputAllRadii', 'outputFinalRadiiPerFamily',
-        'outputAcceptedRadiiPerFamily', 'tripleIntersections',
+        'outputAcceptedRadiiPerFamily', 'ecpmOutput', 'tripleIntersections',
         'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
         'domainSizeIncrease', 'keepOnlyLargestCluster',
         'keepIsolatedFractures', 'ignoreBoundaryFaces', 'rejectsPerFracture',
