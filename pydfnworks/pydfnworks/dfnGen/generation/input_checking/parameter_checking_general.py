@@ -268,7 +268,7 @@ def check_no_dep_flags(params):
     """ Check for dependency flags. Not sure this does anything."""
     no_dependancy_flags = [
         'outputAllRadii', 'outputFinalRadiiPerFamily',
-        'outputAcceptedRadiiPerFamily', 'tripleIntersections',
+        'outputAcceptedRadiiPerFamily', 'ecpmOutput', 'tripleIntersections',
         'printRejectReasons', 'visualizationMode', 'keepOnlyLargestCluster',
         'keepIsolatedFractures', 'insertUserRectanglesFirst',
         'forceLargeFractures', 'orientationOption'
