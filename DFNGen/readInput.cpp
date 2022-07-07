@@ -86,6 +86,12 @@ bool outputFinalRadiiPerFamily;
            fracture removal.*/
 bool outputAcceptedRadiiPerFamily;
 
+/*! Only output select files for ECPM upscaling
+        0: Output all files
+        1: Only output files required for ECPM upscaling.
+        polygon.dat, radii_final.dat */
+bool ecpmOutput;
+
 /*! Beta is the rotation around the polygon's normal vector
         0 - Uniform distribution [0, 2PI)
         1 - Constant angle (specefied below by 'ebeta')*/
@@ -656,6 +662,8 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> outputFinalRadiiPerFamily;
     searchVar(inputFile, "outputAcceptedRadiiPerFamily:");
     inputFile >> outputAcceptedRadiiPerFamily;
+    searchVar(inputFile, "ecpmOutput:");
+    inputFile >> ecpmOutput;
     searchVar(inputFile, "seed:");
     inputFile >> seed;
     searchVar(inputFile, "domainSizeIncrease:");
@@ -1123,7 +1131,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(uEllFile, "userOrientationOption:");
         uEllFile >> userEllOrientationOption;
         std::cout << "userOrientationOption" << " " <<  userEllOrientationOption << std::endl;
-
+        
         if (userEllOrientationOption == 0) {
             searchVar(uEllFile, "Normal:");
             uenormal = new double[3 * nUserEll];
