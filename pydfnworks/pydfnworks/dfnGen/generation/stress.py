@@ -1,52 +1,93 @@
-"""
-Function to compute new DFN apertures w/ stress
-"""
-import numpy as np
+
 import math as m
-import os
-import sys
+import numpy as np
 
+# from pydfnworks
+from pydfnworks.dfnGen.generation.hydraulic_properties import convert
 
-# Function input is 3x3 tensor
-def compute_new_apertures(sigma_mat):
-    """ Takes stress tensor as input (defined in dfn run file) and calculates
-    new apertures based on Bandis equations.
+def stress_based_apertures(self,
+                           sigma_mat,
+                           friction_angle=24.9,
+                           dilation_angle=5,
+                           critical_shear_displacement=0.003,
+                           shear_modulus=34.1e9,
+                           min_b=1e-10,
+                           shear_stiffness=434e9):
+    """ Takes stress tensor as input (defined in dfn run file) and calculates new apertures based on Bandis equations. New aperture and permeability values are written to files.
+
 
     Parameters
-    __________
+    ----------------------
         sigma_mat : array
             3 x 3 stress tensor (units in Pa)
+        friction_angle : float
+            Friction angle (Degrees)
+        dilation_angle : float
+            Dilation angle (Degrees)
+        critical_shear_displacement : float
+            Critical shear displacement
+        shear_modulus : float 
+            Shear modulus (Pa)
+        min_b : float
+             Minimum aperture (m)
+        shear_stiffness : float 
+            Shear stiffness (Pa/m)
 
     Returns
-    _______
-        aperture.dat : file
-            New apertures
-        perm.dat : file
-            New permeabilities based on cubic law from new apertures
+    ----------------------
+        None
 
     Notes
-    _____
-        None
-    
+    ----------------------
+
+        For details of implementation see 
+        
+        "Sweeney, Matthew Ryan, and J. D. Hyman. "Stress effects on flow and transport in three‐dimensional fracture networks." Journal of Geophysical Research: Solid Earth 125.8 (2020): e2020JB019754."
+
+        and 
+
+        Baghbanan, Alireza, and Lanru Jing. "Stress effects on permeability in a fractured rock mass with correlated fracture length and aperture." International journal of rock mechanics and mining sciences 45.8 (2008): 1320-1334.
+
+        and
+
+        Zhao, Zhihong, et al. "Impact of stress on solute transport in a fracture network: A comparison study." Journal of Rock Mechanics and Geotechnical Engineering 5.2 (2013): 110-123.
+
     """
-    print("--> Starting")
-    ## BEGINNING OF USER DEFINED PARAMETERS
-    phi = 25.0  # Friction angle
-    psi = 5  # Dilation angle
-    u_cs = 0.003  # Critical shear displacement
-    eta = 0.92  # Geometric coefficient
-    G = 10.e9  # Shear modulus
-    min_ap = 1e-6  # Minimum aperture
-    kfrac = 10.e9  # Fracture stiffness (Pa/m)
-    ## END OF USER DEFINED PARAMETERS
-    # Input data:
-    aperture = np.genfromtxt('aperture.dat', skip_header=1)[:, -1]
+    print("--> Computing aperture based on stress tensor")
+    print("\n--> Stress Tensor (Pa):\n")
+    print(
+        f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+    )
+    print(
+        f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+    )
+    print(
+        f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+    )
+    print()
+
+    # write stress to file.
+    with open("stress.dat", "w") as fstress:
+            fstress.write(
+                f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+            )
+            fstress.write(
+                f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+            )
+            fstress.write(
+                f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+            )
+
+
+    # read fracture data:
+    initial_aperture = np.genfromtxt(self.aper_file, skip_header=1)[:, -1]
     normals = np.genfromtxt('normal_vectors.dat', skip_header=0)
     radii_frac = np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
-    print(np.mean(aperture))
-    new_ap = np.zeros(len(aperture))
+    num_frac = len(initial_aperture)
+    b = np.zeros(num_frac)
 
-    for i in range(len(aperture)):
+    # Cycle through fractures and compute new aperture base on stress field and user defined parameters
+    for i in range(num_frac):
         # Magnitude of normal stress
         sigma_mag = sigma_mat[0][0]*(normals[i][0])**2 + \
                     sigma_mat[1][1]*(normals[i][1])**2 + \
@@ -54,71 +95,55 @@ def compute_new_apertures(sigma_mat):
                     2*(sigma_mat[0][1]*normals[i][0]*normals[i][1] + \
                     sigma_mat[1][2]*normals[i][1]*normals[i][2] + \
                     sigma_mat[0][2]*normals[i][0]*normals[i][2])
+
         T_1 = sigma_mat[0][0]*normals[i][0] + \
               sigma_mat[0][1]*normals[i][1] + \
               sigma_mat[0][2]*normals[i][2]
+
         T_2 = sigma_mat[1][0]*normals[i][0] + \
               sigma_mat[1][1]*normals[i][1] + \
               sigma_mat[1][2]*normals[i][2]
+
         T_3 = sigma_mat[2][0]*normals[i][0] + \
               sigma_mat[2][1]*normals[i][1] + \
               sigma_mat[2][2]*normals[i][2]
+              
         stress_sqr = (T_1)**2 + (T_2)**2 + (T_3)**2
         # Magnitude of shear stress
-        tau = np.sqrt(max(0, stress_sqr - (sigma_mag)**2))
+        shear_stress = np.sqrt(max(0, stress_sqr - (sigma_mag)**2))
         # Critical normal stress (see Zhao et al. 2013 JRMGE)
-        sigma_nc = (0.487 * aperture[i] * 1e6 + 2.51) * 1e6
+        sigma_nc = (0.487 * initial_aperture[i] * 1e6 + 2.51) * 1e6
         # Normal displacement
-        u_n = (9 * sigma_mag * aperture[i]) / (sigma_nc + 10 * sigma_mag)
+        normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (sigma_nc +
+                                                       10 * sigma_mag)
         # Shear dilation
-        tau_critical = -sigma_mag * m.tan(m.radians(phi))
-        l = radii_frac[i]  # Fracture half length?
-        krock = eta * G / l
-        ks1 = kfrac + krock
-        ks2 = krock
-        if tau > tau_critical:
-            u_s = (tau - tau_critical * (1 - ks2 / ks1)) / (ks2)
+        shear_stress_critical = -sigma_mag * m.tan(m.radians(friction_angle))
+        # Fracture half length
+        l = radii_frac[i]
+        
+        # rock stiffness
+        rock_stiffness = 0.92 * shear_modulus / l
+        ks1 = shear_stiffness + rock_stiffness
+        ks2 = rock_stiffness
+        # 
+        if shear_stress > shear_stress_critical:
+            dilation_tmp = (shear_stress - shear_stress_critical * (1 - ks2 / ks1)) / (ks2)
         else:
-            u_s = 0
-        u_d = min(u_s, u_cs) * m.tan(m.radians(psi))
-        new_ap[i] = aperture[i] - u_n + u_d
-        #print(i,normals[i][:],aperture[i],new_ap[i])
-    diff = (new_ap - aperture)**2
-    print("--> L2 change in apertures : %0.2e" % (np.sqrt(diff.sum())))
-    return new_ap
+            dilation_tmp = 0
 
+        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(m.radians(dilation_angle))
 
-def dump_new_aperture_and_perm(new_ap):
-    print("--> Dumping out new apertures and perms")
-    os.remove('aperture.dat')
-    faperture = open("aperture.dat", 'w')
-    faperture.write('aperture\n')
-    for i in range(len(new_ap)):
-        faperture.write('-%d 0 0 %0.5e\n' % (i + 7, new_ap[i]))
-    faperture.close()
+        # take the max of the computed and provided minimum aperture.
+        b[i] = max(min_b, initial_aperture[i] - normal_displacement + dilation)
 
-    # Perm is based on the cubic law
-    new_perm = new_ap**2 / 12
+    diff = abs(b - initial_aperture)
+    diff2 = diff**2
+    print(f"--> L2 change in apertures {np.sqrt(diff.sum()):0.2e}")
+    print(f"--> Maximum change in apertures {max(diff):0.2e}")
 
-    os.remove('perm.dat')
-    fperm = open("perm.dat", 'w')
-    fperm.write('permeability\n')
-    for i in range(len(new_ap)):
-        fperm.write('-%d 0 0 %0.5e %0.5e %0.5e\n' %
-                    (i + 7, new_perm[i], new_perm[i], new_perm[i]))
-    fperm.close()
-    print("--> Complete")
+    k = convert(b, 'aperture', 'permeability')
+    T = convert(b, 'aperture', 'transmissivity')
 
+    self.dump_hydraulic_values(b, k, T, prefix='stress')
 
-print("Computing new apertures based on provided stress tensor")
-s1 = float(sys.argv[1])
-s2 = float(sys.argv[2])
-s3 = float(sys.argv[3])
-print("s1: %0.2e s2: %0.2e s3 %0.2e" % (s1, s2, s3))
-with open("stress.dat", "w") as fp:
-    fp.write("s1: %0.2e\ns2: %0.2e\ns3 %0.2e" % (s1, s2, s3))
-
-x = [[s1, 0, 0], [0, s2, 0], [0, 0, s3]]
-
-new_ap = compute_new_apertures(x)
-dump_new_aperture_and_perm(new_ap)
+    print("--> Computing aperture based on stress field complete ")
