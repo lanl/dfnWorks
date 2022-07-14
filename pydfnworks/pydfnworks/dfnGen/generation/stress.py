@@ -144,6 +144,7 @@ def stress_based_apertures(self,
     k = convert(b, 'aperture', 'permeability')
     T = convert(b, 'aperture', 'transmissivity')
 
-    self.dump_hydraulic_values(b, k, T, prefix='stress')
+    #self.dump_hydraulic_values(b, k, T, prefix='stress')
+    self.dump_hydraulic_values(b, k, T)
 
     print("--> Computing aperture based on stress field complete ")
