@@ -140,8 +140,8 @@ def create_neighbor_list(G):
 
     Notes
     -----
-    dict[n]['child'] is a list of vertices downstream to vertex n
-    dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+        dict[n]['child'] is a list of vertices downstream to vertex n
+        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
     """
 
     nbrs_dict = {}
@@ -156,14 +156,11 @@ def create_neighbor_list(G):
         nbrs_dict[u] = {}
 
         for v in G.successors(u):
-
             node_list.append(v)
-            prob_list.append(G.edges[u, v]['flux'])
-
+            prob_list.append(G.edges[u, v]['vol_flow_rate'])
         if node_list:
             nbrs_dict[u]['child'] = node_list
-            nbrs_dict[u]['prob'] = np.array(prob_list,
-                                            dtype=float) / sum(prob_list)
+            nbrs_dict[u]['prob'] = np.asarray(prob_list) / sum(prob_list)
         else:
             nbrs_dict[u]['child'] = None
             nbrs_dict[u]['prob'] = None
@@ -172,6 +169,25 @@ def create_neighbor_list(G):
 
 
 def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
+    """ Check that the provided tdrw values are physiscal
+
+
+    Parameters
+    ----------
+        G: NetworkX graph 
+            Directed Graph obtained from output of graph_flow
+
+    Returns
+    -------
+        dict : nested dictionary.
+
+    Notes
+    -----
+        dict[n]['child'] is a list of vertices downstream to vertex n
+        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+    
+    """
+
     if matrix_porosity is None:
         error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
         sys.stderr.write(error)
@@ -222,6 +238,7 @@ def run_graph_transport(self,
                         partime_file,
                         frac_id_file=None,
                         initial_positions="uniform",
+                        dump_traj=False,
                         tdrw_flag=False,
                         matrix_porosity=None,
                         matrix_diffusivity=None,
@@ -250,6 +267,9 @@ def run_graph_transport(self,
         frac_id_file : string
             name of file to which detailed information of each particle's travel will be written
         
+        dump_flag: bool
+            on/off to write full trajectory information to file
+
         tdrw_flag : Bool
             if False, matrix_porosity and matrix_diffusivity are ignored
 
@@ -259,6 +279,9 @@ def run_graph_transport(self,
         matrix_diffusivity: float
             Matrix Diffusivity used in TDRW (SI units m^2/s)
 
+        fracture_spaceing : float
+            finite block size for limited matrix diffusion
+
         control_planes : list of floats
             list of control plane locations to dump travel times. Only in primary direction of flow. 
 
@@ -267,7 +290,8 @@ def run_graph_transport(self,
 
     Returns
     -------
-        None
+        particles : list
+            list of particles objects
 
     Notes
     -----
@@ -297,6 +321,10 @@ def run_graph_transport(self,
     ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
 
     print(f"--> Starting particle tracking for {nparticles} particles")
+
+    if dump_traj:
+        print(f"--> Writing trajectory information to file")
+
     if fracture_spacing is not None:
         print(f"--> Using limited matrix block size for TDRW")
         print(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
@@ -306,7 +334,6 @@ def run_graph_transport(self,
         # This doesn't change for the system.
         # Transfer time diffusing between fracture blocks
         transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
-
     else:
         trans_prob = None
         transfer_time = None
@@ -333,6 +360,9 @@ def run_graph_transport(self,
                                                 frac_id_file)
         if control_plane_flag:
             io.dump_control_planes(particles, control_planes)
+
+        if dump_traj:
+            io.dump_trajectories(particles, 1)
 
     if self.ncpu > 1:
         print(f"--> Using {self.ncpu} processors")
@@ -374,6 +404,9 @@ def run_graph_transport(self,
         if control_plane_flag:
             io.dump_control_planes(particles, control_planes)
 
+        if dump_traj:
+            io.dump_trajectories(particles, min(self.ncpu, nparticles))
+
     if stuck_particles == 0:
         print("--> All particles exited the network")
         print("--> Graph Particle Tracking Completed Successfully.")
@@ -381,3 +414,5 @@ def run_graph_transport(self,
         print(
             f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit"
         )
+
+    return particles

@@ -22,6 +22,8 @@ class Particle():
         self.particle_number = particle_number
         self.ip = ip
         self.curr_node = ip
+        self.curr_velocity = 0
+        self.curr_coords = list
         self.next_node = None
         self.advect_time = 0
         self.delta_t = 0
@@ -46,6 +48,11 @@ class Particle():
         self.frac_seq = []
         self.cp_adv_time = []
         self.cp_tdrw_time = []
+        self.velocity = []
+        self.lengths = []
+        self.times = []
+        self.coords = []
+        self.fracs = []
 
     def interpolate_time(self, x0, t1, t2, x1, x2):
         """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
@@ -106,6 +113,11 @@ class Particle():
                 2.0 * G.edges[self.curr_node, self.next_node]['length']) / (
                     G.edges[self.curr_node, self.next_node]['b'] *
                     G.edges[self.curr_node, self.next_node]['velocity'])
+            self.curr_velocity = G.edges[self.curr_node,
+                                         self.next_node]['velocity']
+            self.curr_coords = (G.nodes[self.curr_node]['x'],
+                                G.nodes[self.curr_node]['y'],
+                                G.nodes[self.curr_node]['z'])
 
     def cross_control_plane(self, G):
         """ Check if a particle crossed the control plane
@@ -167,6 +179,12 @@ class Particle():
         self.beta += self.delta_beta
         self.frac_seq.append(self.frac)
         self.curr_node = self.next_node
+
+        self.velocity.append(self.curr_velocity)
+        self.lengths.append(self.delat_l)
+        self.times.append(self.delta_t)
+        self.coords.append(self.curr_coords)
+        self.fracs.append(self.frac)
 
     def cleanup_frac_seq(self):
         frac_seq_set = set()

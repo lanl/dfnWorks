@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import sys
 import scipy.sparse
+import h5py
 
 # pydfnworks modules
 from pydfnworks.dfnGraph import dfn2graph as d2g
@@ -190,7 +191,7 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 
         delta_p = G.nodes[upstream]['pressure'] - G.nodes[downstream][
             'pressure']
-        if delta_p > 0:
+        if delta_p > 1e-16:
             ## Create new edge in DiGraph
             H.add_edge(upstream, downstream)
             # Transfer edge attributes
@@ -290,6 +291,35 @@ def compute_dQ(self, G):
     return p32, dQ
 
 
+def dump_graph_flow_values(G):
+
+    num_edges = G.number_of_edges()
+    velocity = np.zeros(num_edges)
+    lengths = np.zeros_like(velocity)
+    vol_flow_rate = np.zeros_like(velocity)
+    area = np.zeros_like(velocity)
+    aperture = np.zeros_like(velocity)
+    volume = np.zeros_like(velocity)
+
+    for i, val in enumerate(G.edges(data=True)):
+        u, v, d = val
+        velocity[i] = d['velocity']
+        lengths[i] = d['length']
+        vol_flow_rate[i] = d['vol_flow_rate']
+        area[i] = d['area']
+        aperture[i] = d['b']
+        volume[i] = area[i] * aperture[i]
+
+    with h5py.File(f"graph_flow.hdf5", "w") as f5file:
+        h5dset = f5file.create_dataset('velocity', data=velocity)
+        h5dset = f5file.create_dataset('length', data=lengths)
+        h5dset = f5file.create_dataset('vol_flow_rate', data=vol_flow_rate)
+        h5dset = f5file.create_dataset('area', data=area)
+        h5dset = f5file.create_dataset('aperture', data=aperture)
+        h5dset = f5file.create_dataset('volume', data=volume)
+    f5file.close()
+
+
 def run_graph_flow(self,
                    inflow,
                    outflow,
@@ -335,4 +365,5 @@ def run_graph_flow(self,
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
 
+    dump_graph_flow_values(Gtilde)
     return Gtilde

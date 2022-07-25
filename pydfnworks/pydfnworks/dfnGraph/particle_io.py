@@ -1,4 +1,136 @@
+import os
 import sys
+import h5py
+import timeit
+import multiprocessing as mp
+import numpy as np
+
+
+def dump_trajectory(particle):
+    """ Write particle trajectory to h5 file named trajectories/trajectory_{particle.particle_number+1} 
+    
+    Parameters
+    ---------------
+        particle : object
+            particle object from graph_transport
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    ----------------
+        The directory 'trajectories' must exist in current path
+    
+    """
+
+    if os.path.isdir('trajectories'):
+        with h5py.File(
+                f"trajectories/trajectory-{particle.particle_number+1}.hdf5",
+                "w") as f5file:
+            dataset_name = 'velocity'
+            data = np.asarray(particle.velocity)
+            h5dset = f5file.create_dataset(dataset_name, data=data)
+
+            dataset_name = 'times'
+            data = np.asarray(particle.velocity)
+            h5dset = f5file.create_dataset(dataset_name, data=data)
+
+            dataset_name = 'length'
+            data = np.asarray(particle.lengths)
+            h5dset = f5file.create_dataset(dataset_name, data=data)
+
+            dataset_name = 'fractures'
+            data = np.asarray(particle.frac_seq)
+            h5dset = f5file.create_dataset(dataset_name, data=data)
+
+            dataset_name = 'coords'
+            data = np.asarray(particle.coords)
+            h5dset = f5file.create_dataset(dataset_name, data=data)
+        f5file.close()
+
+    else:
+        error = "Error. Output directorty 'trajectories' not in current path.\nExiting"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+
+def dump_trajectories(particles, num_cpu, single_file=True):
+    """ Write particle trajectories to h5 files 
+
+    Parameters
+    ---------------
+        particle : list
+            list of particle objects from graph_transport
+        num_cpu : int
+            number of processors requested for io
+        single_file : boolean
+            If true, all particles are written into a single h5 file. If false, each particle gets an individual file. 
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    ----------------
+        None
+    """
+    if single_file:
+        print(
+            "--> Writting particle trajectories into file 'trajectories.hdf5'")
+        with h5py.File(f"trajectories.hdf5", "a") as f5file:
+            for particle in particles:
+                traj_subgroup = f5file.create_group(
+                    f'particle_{particle.particle_number+1}')
+
+                dataset_name = 'velocity'
+                data = np.asarray(particle.velocity)
+                h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                      data=data,
+                                                      dtype='float64')
+
+                dataset_name = 'times'
+                data = np.asarray(particle.velocity)
+                h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                      data=data,
+                                                      dtype='float64')
+
+                dataset_name = 'length'
+                data = np.asarray(particle.lengths)
+                h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                      data=data,
+                                                      dtype='float64')
+
+                dataset_name = 'fractures'
+                data = np.asarray(particle.frac_seq)
+                h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                      data=data,
+                                                      dtype='float64')
+
+                dataset_name = 'coords'
+                data = np.asarray(particle.coords)
+                h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                      data=data,
+                                                      dtype='float64')
+        f5file.close()
+
+    else:
+        print(
+            "--> Writting individual particle trajectories into directory 'trajectories'"
+        )
+
+        if not os.path.isdir('trajectories'):
+            os.mkdir('trajectories')
+        tic = timeit.default_timer()
+        pool = mp.Pool(num_cpu)
+        particles = pool.map(dump_trajectory, particles)
+        pool.close()
+        pool.join()
+        pool.terminate()
+        elapsed = timeit.default_timer() - tic
+        print(
+            f"--> Writting Particle Trajectory information Complete. Time Required {elapsed:0.2e} seconds"
+        )
 
 
 def dump_particle_info(particles, partime_file, frac_id_file):
