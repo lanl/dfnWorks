@@ -170,7 +170,7 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
         D[v, v] = 1.0
     L = D - A  # automatically converts to csr when returning L
 
-    print("--> Solving sparse system")
+    print("--> Solving Linear System for pressure at nodes")
     pressure = scipy.sparse.linalg.spsolve(L, b)
     print("--> Updating graph edges with flow solution")
 
@@ -255,33 +255,36 @@ def compute_dQ(self, G):
 
     num_frac = len(fracture_surface_area)
     Qf = np.zeros(num_frac)
+    ## convert to undirected
+    H = G.to_undirected()
     ## walk through fractures
     for curr_frac in range(1, num_frac + 1):
         # print(f"\nstarting on fracture {curr_frac}")
         # Gather nodes on current fracture
         current_nodes = []
-        for u, d in G.nodes(data=True):
+        for u, d in H.nodes(data=True):
             for f in d["frac"]:
                 if f == curr_frac:
                     current_nodes.append(u)
         # cycle through nodes on the fracture and get the outgoing / incoming
         # volumetric flow rates
         for u in current_nodes:
-            neighbors = G.neighbors(u)
+            neighbors = H.neighbors(u)
             for v in neighbors:
                 if v not in current_nodes:
                     # outgoing vol flow rate
-                    Qf[curr_frac - 1] += abs(G[u][v]['vol_flow_rate'])
-                    for f in G.nodes[v]['frac']:
+                    Qf[curr_frac - 1] += abs(H[u][v]['vol_flow_rate'])
+                    for f in H.nodes[v]['frac']:
                         if f != curr_frac and f != 's' and f != 't':
                             # incoming vol flow rate
-                            Qf[f - 1] += abs(G[u][v]['vol_flow_rate'])
+                            Qf[f - 1] += abs(H[u][v]['vol_flow_rate'])
         # Divide by 1/2 to remove up double counting
-        Qf *= 0.5
-
+    Qf *= 0.5
+    print(Qf)
     p32 = fracture_surface_area.sum() / domain_volume
     top = sum(fracture_surface_area * Qf)**2
     bottom = sum(fracture_surface_area * Qf**2)
+    print(top, bottom)
     dQ = (1.0 / domain_volume) * (top / bottom)
     print(f"--> P32: {p32:0.2e} [1/m]")
     print(f"--> dQ: {dQ:0.2e} [1/m]")
@@ -289,7 +292,6 @@ def compute_dQ(self, G):
     print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     print("--> Complete \n")
     return p32, dQ
-
 
 def dump_graph_flow_values(G):
 
