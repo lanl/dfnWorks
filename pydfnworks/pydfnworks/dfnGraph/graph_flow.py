@@ -276,8 +276,8 @@ def compute_dQ(self, G):
                         if f != curr_frac and f != 's' and f != 't':
                             # incoming vol flow rate
                             Qf[f - 1] += abs(G[u][v]['vol_flow_rate'])
-        # Divide by 1/2 to remove up double counting
-        Qf *= 0.5
+    # Divide by 1/2 to remove up double counting
+    Qf *= 0.5
 
     p32 = fracture_surface_area.sum() / domain_volume
     top = sum(fracture_surface_area * Qf)**2
@@ -285,6 +285,7 @@ def compute_dQ(self, G):
     dQ = (1.0 / domain_volume) * (top / bottom)
     print(f"--> P32: {p32:0.2e} [1/m]")
     print(f"--> dQ: {dQ:0.2e} [1/m]")
+    print(f"--> Active surrface percentage {100*dQ/p32:0.2f}")
     print(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
     print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     print("--> Complete \n")
