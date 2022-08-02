@@ -153,7 +153,7 @@ class Particle():
             self.cp_adv_time.append(tau)
             if self.tdrw_flag:
                 t1 = self.total_time
-                t2 = self.stotal_time + self.delta_t_md + self.delta_t
+                t2 = self.total_time + self.delta_t_md + self.delta_t
                 tau = self.interpolate_time(x0, t1, t2, x1, x2)
                 self.cp_tdrw_time.append(tau)
             else:
