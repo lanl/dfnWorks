@@ -293,6 +293,7 @@ def compute_dQ(self, G):
     print("--> Complete \n")
     return p32, dQ
 
+
 def dump_graph_flow_values(G):
 
     num_edges = G.number_of_edges()

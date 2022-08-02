@@ -132,7 +132,7 @@ class Particle():
             None
         """
 
-        if G.nodes[self.next_node][self.direction] > self.control_planes[
+        while G.nodes[self.next_node][self.direction] > self.control_planes[
                 self.cp_index]:
             ## get information for interpolation to get the time at point of crossing.
             x0 = self.control_planes[self.cp_index]
@@ -141,16 +141,19 @@ class Particle():
             x1 = G.nodes[self.curr_node][self.direction]
             x2 = G.nodes[self.next_node][self.direction]
             tau = self.interpolate_time(x0, t1, t2, x1, x2)
+            # print(f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}")
             if tau < 0:
-                error = "Error. Interpolated negative travel time.\nExiting"
-                print(x0, t1, t2, x1, x2, tau)
+                error = ("Error. Interpolated negative travel time.\nExiting")
+                print(
+                    f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}"
+                )
                 sys.stderr.write(error)
                 sys.exit(1)
             # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
             self.cp_adv_time.append(tau)
             if self.tdrw_flag:
                 t1 = self.total_time
-                t2 = self.total_time + self.delta_t_md + self.delta_t
+                t2 = self.stotal_time + self.delta_t_md + self.delta_t
                 tau = self.interpolate_time(x0, t1, t2, x1, x2)
                 self.cp_tdrw_time.append(tau)
             else:
@@ -160,6 +163,7 @@ class Particle():
             # if we're crossed all the control planes, turn off cp flag for this particle
             if self.cp_index >= len(self.control_planes):
                 self.cp_flag = False
+                break
 
     def update(self):
         """ Update particles trajectory information

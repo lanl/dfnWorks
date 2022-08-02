@@ -339,7 +339,6 @@ def run_graph_transport(self,
         transfer_time = None
     ## main loop
     if self.ncpu == 1:
-        io.prepare_output_files(partime_file, frac_id_file)
         tic = timeit.default_timer()
         particles = []
         for i in range(nparticles):
