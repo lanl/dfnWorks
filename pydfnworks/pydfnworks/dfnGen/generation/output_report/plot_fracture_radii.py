@@ -125,8 +125,8 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
             # axs[0, 0].set_yticklabels(labels, fontsize=14)
 
             y_ticks = axs[0, 0].get_yticks().astype(int)
-            axs[0, 0].xaxis.set_ticks(y_ticks)
-            axs[0, 0].set_xticklabels(y_ticks, fontsize=14)
+            axs[0, 0].yaxis.set_ticks(y_ticks)
+            axs[0, 0].set_yticklabels(y_ticks, fontsize=14)
 
             # Histogram of final values
             axs[0, 1].hist(radii_accepted,
