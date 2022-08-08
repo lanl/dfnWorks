@@ -1,8 +1,6 @@
-"""
-Function to compute new DFN apertures w/ stress
-"""
-import numpy as np
+
 import math as m
+import numpy as np
 
 # from pydfnworks
 from pydfnworks.dfnGen.generation.hydraulic_properties import convert
@@ -17,7 +15,6 @@ def stress_based_apertures(self,
                            shear_stiffness=434e9):
     """ Takes stress tensor as input (defined in dfn run file) and calculates new apertures based on Bandis equations. New aperture and permeability values are written to files.
 
-    Default values are based on ...
 
     Parameters
     ----------------------
@@ -120,7 +117,7 @@ def stress_based_apertures(self,
         normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (sigma_nc +
                                                        10 * sigma_mag)
         # Shear dilation
-        shear_stress_critical = -sigma_mag * m.tan(friction_angle)
+        shear_stress_critical = -sigma_mag * m.tan(m.radians(friction_angle))
         # Fracture half length
         l = radii_frac[i]
         
@@ -134,7 +131,7 @@ def stress_based_apertures(self,
         else:
             dilation_tmp = 0
 
-        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(m.degrees(dilation_angle))
+        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(m.radians(dilation_angle))
 
         # take the max of the computed and provided minimum aperture.
         b[i] = max(min_b, initial_aperture[i] - normal_displacement + dilation)
@@ -147,6 +144,7 @@ def stress_based_apertures(self,
     k = convert(b, 'aperture', 'permeability')
     T = convert(b, 'aperture', 'transmissivity')
 
-    self.dump_hydraulic_values(b, k, T, prefix='stress')
+    #self.dump_hydraulic_values(b, k, T, prefix='stress')
+    self.dump_hydraulic_values(b, k, T)
 
     print("--> Computing aperture based on stress field complete ")

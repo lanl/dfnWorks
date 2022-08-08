@@ -80,4 +80,5 @@ install_requires=["numpy",
           "datetime",
           "networkx>=2.4",
           "mplstereonet",
+          "datetime",
           "matplotlib>3.0"]

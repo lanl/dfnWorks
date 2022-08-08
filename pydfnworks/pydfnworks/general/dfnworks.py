@@ -139,26 +139,24 @@ class DFNWORKS(Frozen):
         self.freeze = False
         #options = create_dfn.commandline_options()
 
+#     def __del__(self):
+#         print("=" * 80)
+#         print(f"--> {self.local_jobname} completed/exited at {now}")
+#         elapsed = time() - self.start_time
+#         time_sec = elapsed
+#         time_min = elapsed / 60
+#         time_hrs = elapsed / 3600
 
-#    def __del__(self):
-#        print("=" * 80)
-#        now = datetime.now()
-#        print(f"--> {self.local_jobname} completed/exited at {now}")
-#        elapsed = time() - self.start_time
-#        time_sec = elapsed
-#        time_min = elapsed / 60
-#        time_hrs = elapsed / 3600
-#
-#        print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
-#        output = '''
-#\t\t\t*********************************************
-#\t\t\t*   Thank you for using dfnWorks            *
-#\t\t\t*   Learn more at https://dfnworks.lanl.gov *
-#\t\t\t*   Contact us at dfnworks@lanl.gov         *
-#\t\t\t*********************************************
-#
-#'''
-#        print(output)
+#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         output = '''
+# \t\t\t*********************************************
+# \t\t\t*   Thank you for using dfnWorks            *
+# \t\t\t*   Learn more at https://dfnworks.lanl.gov *
+# \t\t\t*   Contact us at dfnworks@lanl.gov         *
+# \t\t\t*********************************************
+
+# '''
+#         print(output)
 
 
 def commandline_options():
