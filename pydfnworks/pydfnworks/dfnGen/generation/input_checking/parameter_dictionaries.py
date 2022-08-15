@@ -19,7 +19,7 @@ def load_parameters():
         'stopCondition': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': 0,
             'description': "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
         'nPoly': {
@@ -32,14 +32,14 @@ def load_parameters():
             'type': float,
             'list': True,
             'list_length': 3,
-            'value': None,
+            'value': [1,2,3],
             'description': "Type <list of 3 floats>, e.g., {x,y,z}\nSpatial dimensions of the domain centered at the origin in meters."
         },
         'domainSizeIncrease': {
             'type': float,
             'list': True,
             'list_length': 3,
-            'value': None,
+            'value': [.1,.2,.3],
             'description': "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
         'boundaryFaces': {
@@ -59,13 +59,13 @@ def load_parameters():
         'insertUserRectanglesFirst': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': 1,
             'description': "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
         'keepOnlyLargestCluster': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': 0,
             'description': "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
         },
         'keepIsolatedFractures': {
@@ -77,13 +77,13 @@ def load_parameters():
         'ignoreBoundaryFaces': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': 1,
             'description': "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
         },
         'numOfLayers': {
             'type': int,
             'list': False,
-            'value': None,
+            'value': 2,
             'description': "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
         },
         'layers': {
@@ -95,7 +95,7 @@ def load_parameters():
         'numOfRegions': {
             'type': int,
             'list': False,
-            'value':None,
+            'value':0,
             'description': "Type < int>\nDefines the number of cuboid regions in the domain. If numOfRegions is 0, then there are no regions. Fracture families are assigned to regions using either the eRegion or rRegion options.\n" 
         },
         'regions': {
@@ -107,17 +107,19 @@ def load_parameters():
         'h': {
             'type': float,
             'list': False,
-            'value': "Type: Positive <double>\nMinimum feature size accepted into the network.\n"
+            'value': None, 
+            'description':"Type: Positive <double>\nMinimum feature size accepted into the network.\n"
         },
         'seed': {
             'type': int,
             'list': False,
-            'value': "Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
+            'value':12, 
+            'description':"Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
         },
         'tripleIntersections': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': 0,
             'description':"Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
         },
         'forceLargeFractures': {
@@ -129,7 +131,7 @@ def load_parameters():
         'orientationOption': {
             'type': int,
             'list': False,
-            'value': None,
+            'value': 4,
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'disableFram': {
@@ -194,7 +196,7 @@ def load_parameters():
             'type': float,
             'list': True,
             'list_length': None,
-            'value': None,
+            'value': [.2,.3,.5],
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         # ellipses
