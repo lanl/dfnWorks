@@ -13,7 +13,7 @@ from datetime import datetime
 from time import time
 
 from pydfnworks.general.dfntools import *
-
+from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
 class DFNWORKS(Frozen):
     '''
@@ -59,7 +59,6 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
-
     from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells
 
     # dfnFlow
@@ -104,7 +103,9 @@ class DFNWORKS(Frozen):
                  aper_cell_file='',
                  dfnTrans_version='',
                  num_frac='',
-                 h=''):
+                 h='',
+                 params='',
+                 mandatory_params=''):
 
         self.jobname = jobname
         self.ncpu = ncpu
@@ -135,6 +136,8 @@ class DFNWORKS(Frozen):
         self.flow_solver = flow_solver
 
         self.h = ""
+
+        self.params, self.mandatory_params = load_parameters()
 
         self.dfnTrans_version = 1.0
         self.freeze = False
@@ -252,7 +255,6 @@ def create_dfn():
 
     define_paths()
     legal()
-
     options = commandline_options()
     print("Command Line Inputs:")
     print(options)

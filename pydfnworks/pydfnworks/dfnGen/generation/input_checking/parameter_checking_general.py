@@ -16,7 +16,7 @@ def check_stop_condition(params):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
     if not params['stopCondition']['value']:
         check_n_poly(params['nPoly']['value'])

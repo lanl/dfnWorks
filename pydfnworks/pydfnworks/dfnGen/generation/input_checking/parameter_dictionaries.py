@@ -20,14 +20,10 @@ def load_parameters():
     params = {
         # general
         'stopCondition': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
+            'type': bool,
+            'list': False,
+            'value': 0,
+            'description': "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
         'nPoly': {
             'type':
@@ -40,40 +36,18 @@ def load_parameters():
             "Type <int>\n Used when stopCondition is set to 0. This value is the total number of fractures you would like to have in the domain you defined. DFNGen will complete once you have nPoly number of fractures"
         },
         'domainSize': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            3,
-            'value':
-            None,
-            'description':
-            "Type <list of 3 floats>, e.g., {x,y,z}\nSpatial dimensions of the domain centered at the origin in meters."
+            'type': float,
+            'list': True,
+            'list_length': 3,
+            'value': [None,None,None],
+            'description': "Type <list of 3 floats>, e.g., {x,y,z}\nSpatial dimensions of the domain centered at the origin in meters."
         },
         'domainSizeIncrease': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            3,
-            'value':
-            None,
-            'description':
-            "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
-        },
-        'polygonBoundaryFlag': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': "See pydfnworks docs"
-        },
-        'polygonBoundaryFile': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': "File Containing polygon boundaries"
+            'type': float,
+            'list': True,
+            'list_length': 3,
+            'value': [None,None,None],
+            'description': "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
         'boundaryFaces': {
             'type':
@@ -95,24 +69,16 @@ def load_parameters():
             Only called if ignoreBoundaryFaces is equal to 0"""
         },
         'insertUserRectanglesFirst': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
+            'type': bool,
+            'list': False,
+            'value': True,
+            'description': "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
         'keepOnlyLargestCluster': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
+            'type': bool,
+            'list': False,
+            'value': True,
+            'description': "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
         },
         'keepIsolatedFractures': {
             'type':
@@ -125,24 +91,16 @@ def load_parameters():
             "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
         },
         'ignoreBoundaryFaces': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
         },
         'numOfLayers': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
+            'type': int,
+            'list': False,
+            'value': 0,
+            'description': "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
         },
         'layers': {
             'type':
@@ -155,14 +113,10 @@ def load_parameters():
             "Type: Set of numOfLayers arrays with two elements. {zMin, zMax}\nDefines the lower and upper limits for each layer. The first layer listed is layer 1, the second is layer 2, etc. Every stochastic families *must* be assigned to a layer. If the family is assigned to layer 0, then the family in generated through the entire domain.\n"
         },
         'numOfRegions': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type < int>\nDefines the number of cuboid regions in the domain. If numOfRegions is 0, then there are no regions. Fracture families are assigned to regions using either the eRegion or rRegion options.\n"
+            'type': int,
+            'list': False,
+            'value':0,
+            'description': "Type < int>\nDefines the number of cuboid regions in the domain. If numOfRegions is 0, then there are no regions. Fracture families are assigned to regions using either the eRegion or rRegion options.\n" 
         },
         'regions': {
             'type':
@@ -175,30 +129,22 @@ def load_parameters():
             "Type: Set of numOfRegions arrays with six elements. {minX, maxX, minY, maxY, minZ, maxZ}. Defines the bounding box of each region. The first region listed is region 1, the region is region 2, etc. Stochastic families *must* be assigned to theses regions. If the family is assigned to region 0, then the family in generated through the entire domain."
         },
         'h': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            "Type: Positive <double>\nMinimum feature size accepted into the network.\n"
+            'type': float,
+            'list': False,
+            'value': None, 
+            'description':"Type: Positive <double>\nMinimum feature size accepted into the network.\n"
         },
         'seed': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            "Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
+            'type': int,
+            'list': False,
+            'value': 1,
+            'description': "Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
         },
         'tripleIntersections': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            "Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description':"Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
         },
         'forceLargeFractures': {
             'type':
@@ -211,14 +157,10 @@ def load_parameters():
             "Type <boolean>\nInsert the largest fracture from each family into the domain prior to sampling sequential from family based on their respective probabilities.\n0: Do not force the largest fractures\n1: Force the largest fractures\n"
         },
         'orientationOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': int,
+            'list': False,
+            'value': 0,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'disableFram': {
             'type':

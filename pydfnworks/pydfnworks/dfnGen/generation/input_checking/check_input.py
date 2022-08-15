@@ -44,6 +44,7 @@ def check_input(self):
             sys.stderr.write(error)
             sys.exit(1)
     else:
+        B
         error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
         sys.stderr.write(error)
         sys.exit(1)
@@ -52,7 +53,9 @@ def check_input(self):
     output_file = input_file[:-4] + '_clean.dat'
     print(f"--> Reading input file: {input_file}")
     print(f"--> Clean output file name: {output_file}")
-    params = parse_input(input_file)
+    params = self.params # parse_input(input_file)
+    ##### TODO add family function call here
+    print(parse_input(input_file))
     verify_params(params)
     dump_params(params, output_file)
     print("\nChecking Input File Complete")
