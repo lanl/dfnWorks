@@ -21,7 +21,7 @@ def load_parameters(self):
             'list':
             False,
             'value':
-            0,
+            1,
             'description':
             "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
@@ -53,7 +53,7 @@ def load_parameters(self):
             True,
             'list_length':
             3,
-            'value': [.1, .2, .3],
+            'value': [0, 0, 0],
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
@@ -77,16 +77,24 @@ def load_parameters(self):
             Only called if ignoreBoundaryFaces is equal to 0"""
         },
         'insertUserRectanglesFirst': {
-            'type': bool,
-            'list': False,
-            'value': True,
-            'description': "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
         'keepOnlyLargestCluster': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            True,
+            'description':
+            "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
         },
         'keepIsolatedFractures': {
             'type': bool,
@@ -95,10 +103,14 @@ def load_parameters(self):
             'description': "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
         },
         'ignoreBoundaryFaces': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
         },
         'numOfLayers': {
             'type': int,
@@ -161,34 +173,54 @@ def load_parameters(self):
             'description':"Type <boolean>\nInsert the largest fracture from each family into the domain prior to sampling sequential from family based on their respective probabilities.\n0: Do not force the largest fractures\n1: Force the largest fractures\n"
         },
         'orientationOption': {
-            'type': int,
-            'list': False,
-            'value': 0,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'disableFram': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'radiiListIncrease': {
-            'type': float,
-            'list': False,
-            'value': 0.1,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            False,
+            'value':
+            0.1,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'removeFracturesLessThan': {
-            'type': float,
-            'list': False,
-            'value': 0,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rejectsPerFracture': {
-            'type': int,
-            'list': False,
-            'value': 10,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            10,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
 
         # output
@@ -247,7 +279,7 @@ def load_parameters(self):
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -574,10 +606,14 @@ def load_parameters(self):
 
         # Rectangles
         'nFamRect': {
-            'type': int,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rAngleOption': {
             'type': int,

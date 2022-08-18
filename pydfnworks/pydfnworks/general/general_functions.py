@@ -12,10 +12,13 @@ def print_parameters(self):
     print(f"--> Number of Processors Requested: {self.ncpu}")
     if self.dfnGen_file:
         print(f"--> dfnGen filename : {self.dfnGen_file}")
+        print(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
     if self.dfnFlow_file:
         print(f"--> dfnFlow filename : {self.dfnFlow_file}")
+        print(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
     if self.dfnTrans_file:
         print(f"--> dfnTrans filename : {self.dfnTrans_file}")
+        print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
     print("=" * 80 + "\n")
 
 
