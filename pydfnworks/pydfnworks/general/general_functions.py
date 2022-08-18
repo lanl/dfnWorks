@@ -4,6 +4,21 @@ from datetime import datetime
 from time import time
 
 
+def print_parameters(self):
+    print("=" * 80 + "\n")
+    print(f"--> Jobname: {self.jobname}")
+    print(f"--> Local Jobname: {self.local_jobname}")
+
+    print(f"--> Number of Processors Requested: {self.ncpu}")
+    if self.dfnGen_file:
+        print(f"--> dfnGen filename : {self.dfnGen_file}")
+    if self.dfnFlow_file:
+        print(f"--> dfnFlow filename : {self.dfnFlow_file}")
+    if self.dfnTrans_file:
+        print(f"--> dfnTrans filename : {self.dfnTrans_file}")
+    print("=" * 80 + "\n")
+
+
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file 
 

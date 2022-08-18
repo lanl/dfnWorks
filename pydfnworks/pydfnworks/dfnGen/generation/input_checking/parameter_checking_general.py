@@ -63,14 +63,17 @@ def check_p32_targets(params):
     # Check P32 inputs for ellipses
     if params['nFamEll']['value'] > 0:
         hf.check_none('e_p32Targets', params['e_p32Targets']['value'])
-        hf.check_length('e_p32Targets', params['e_p32Targets']['value'],params['nFamEll']['value'])
-        hf.check_values('e_p32Targets',params['e_p32Targets']['value'],0)
+        hf.check_length('e_p32Targets', params['e_p32Targets']['value'],
+                        params['nFamEll']['value'])
+        hf.check_values('e_p32Targets', params['e_p32Targets']['value'], 0)
 
     # Check P32 inputs for rectangles
     if params['nFamRect']['value'] > 0:
         hf.check_none('r_p32Targets', params['r_p32Targets']['value'])
-        hf.check_length('r_p32Targets', params['r_p32Targets']['value'],params['nFamRect']['value'])
-        hf.check_values('r_p32Targets',params['r_p32Targets']['value'],0)
+        hf.check_length('r_p32Targets', params['r_p32Targets']['value'],
+                        params['nFamRect']['value'])
+        hf.check_values('r_p32Targets', params['r_p32Targets']['value'], 0)
+
 
 def check_domain(params):
     """ Check that domain properties. 
@@ -103,8 +106,7 @@ def check_domain(params):
                 f"\"domainSize\" entry {i+1} has value {val}. Value must be positive"
             )
 
-    if len(params['domainSizeIncrease']
-           ['value']) != 3:
+    if len(params['domainSizeIncrease']['value']) != 3:
         hf.print_error(
             f"\"domainSizeIncrease\" has defined {len(params['domainSizeIncrease']['value'])} value(s) but there must be 3 non-zero values to represent x, y, and z dimensions"
         )
@@ -135,12 +137,14 @@ def check_domain(params):
                         f"\"boundaryFaces\" entry {i+1} has value {val}. Must be 0 or 1."
                     )
         else:
-            hf.print_warning("--> Ignoring boundary faces. Keeping all clusters.")
+            hf.print_warning(
+                "--> Ignoring boundary faces. Keeping all clusters.")
     except:
         print("Error while checking 'boundaryFaces' parameters.")
         print(f"Values provided: {params['boundaryFaces']['value']}\n")
         print(params['boundaryFaces']['description'])
         hf.print_error("")
+
 
 def check_rejects_per_fracture(rejectsPerFracture):
     """ Check that the value of the rejectsPerFracture is a positive integer. If a value of 0 is provided, it's changed to 1. 
