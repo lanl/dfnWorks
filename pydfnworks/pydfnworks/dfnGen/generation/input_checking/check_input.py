@@ -33,31 +33,33 @@ def check_input(self):
     print()
     print('=' * 80)
     print("Checking Input File\n")
-    ## Copy input file
-    if os.path.isfile(self.dfnGen_file):
-        try:
-            print(f"--> Copying input file: {self.dfnGen_file}")
-            shutil.copy(self.dfnGen_file, self.jobname)
-            print("--> Copying input file successful")
-        except:
-            error = f"Unable to copy dfnGen input file to working directory \n{self.dfnGen_file}\n Exiting"
+    ## Needs to be a logic fork here for using input file
+    from_file = False
+    if from_file:
+        # Copy input file
+        if os.path.isfile(self.dfnGen_file):
+            try:
+                print(f"--> Copying input file: {self.dfnGen_file}")
+                shutil.copy(self.dfnGen_file, self.jobname)
+                print("--> Copying input file successful")
+            except:
+                error = f"Unable to copy dfnGen input file to working directory \n{self.dfnGen_file}\n Exiting"
+                sys.stderr.write(error)
+                sys.exit(1)
+        else:
+            error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
             sys.stderr.write(error)
             sys.exit(1)
+        input_file = self.local_dfnGen_file
+        output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
+        print(f"--> Reading input file: {input_file}")
+        self.params = parse_input(input_file)
     else:
-        B
-        error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
 
-    input_file = self.local_dfnGen_file
-    output_file = input_file[:-4] + '_clean.dat'
-    print(f"--> Reading input file: {input_file}")
     print(f"--> Clean output file name: {output_file}")
-    params = self.params  # parse_input(input_file)
-    ##### TODO add family function call here
-    print(parse_input(input_file))
-    verify_params(params)
-    dump_params(params, output_file)
+    verify_params(self.params)
+    dump_params(self.params, output_file)
     print("\nChecking Input File Complete")
     print('=' * 80)
     print()
