@@ -7,7 +7,7 @@ import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.dfnGen.generation.input_checking.parsing import parse_input
 from pydfnworks.dfnGen.generation.input_checking.verifications import verify_params
 from pydfnworks.dfnGen.generation.input_checking.write_input_file import dump_params
-
+from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families
 
 def check_input(self):
     """ Checks input file for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
@@ -56,7 +56,7 @@ def check_input(self):
         self.params = parse_input(input_file)
     else:
         output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
-
+        self.params = write_fracture_families(self) 
     print(f"--> Clean output file name: {output_file}")
     verify_params(self.params)
     dump_params(self.params, output_file)

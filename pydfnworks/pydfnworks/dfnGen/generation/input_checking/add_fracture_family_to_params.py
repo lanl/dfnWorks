@@ -1,5 +1,27 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 
+def write_fracture_families(DFN):
+    """Reorder fracture families in DFN, and then write them to 
+    the DFN parameter dictionary
+
+    Parameters
+    ------------
+        DFN: the descete fracture network object
+    
+    Returns
+    --------
+    DFN object with populated fracture family fields
+
+    Notes
+    ------
+    None
+    """
+    
+    reorder_fracture_families(DFN)
+    
+    for i in range(len(DFN.fracture_families)):
+        add_fracture_family_to_params(DFN.params, DFN.fracture_families[i])
+
 
 def add_fracture_family_to_params(params, fracture_family):
     """Add values from fracture family dictionary
@@ -38,21 +60,21 @@ def add_fracture_family_to_params(params, fracture_family):
         fracture_family, params, fracture_type_prefix)
 
     if distribution_type == 'tpl':
-        write_value_to_params(params, 'min', fracture_family, 'radius_min',
+        write_value_to_params(params, 'min', fracture_family, 'min_radius',
                               fracture_type_prefix)
-        write_value_to_params(params, 'max', fracture_family, 'radius_max',
+        write_value_to_params(params, 'max', fracture_family, 'max_radius',
                               fracture_type_prefix)
 
     if distribution_type == 'log_normal':
-        write_value_to_params(params, 'LogMin', fracture_family, 'radius_min',
+        write_value_to_params(params, 'LogMin', fracture_family, 'min_radius',
                               fracture_type_prefix)
-        write_value_to_params(params, 'LogMax', fracture_family, 'radius_max',
+        write_value_to_params(params, 'LogMax', fracture_family, 'max_radius',
                               fracture_type_prefix)
 
     if distribution_type == 'exp':
-        write_value_to_params(params, 'ExpMin', fracture_family, 'radius_min',
+        write_value_to_params(params, 'ExpMin', fracture_family, 'min_radius',
                               fracture_type_prefix)
-        write_value_to_params(params, 'ExpMax', fracture_family, 'radius_max',
+        write_value_to_params(params, 'ExpMax', fracture_family, 'max_radius',
                               fracture_type_prefix)
 
     write_value_to_params(params, 'Layer', fracture_family, 'layer',
@@ -196,12 +218,40 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
     fisher_params = fracture_family['fisher']['value']
 
     for key in fisher_params.keys():
-        write_value_to_params(params,
-                              key,
-                              fisher_params,
-                              key,
-                              fracture_type_prefix,
-                              value_flag=True)
+        if key == 'theta' or key == 'phi':
+            if params['orientationOption']['value'] == 0:
+                write_value_to_params(params,
+                                    key,
+                                    fisher_params,
+                                    key,
+                                    fracture_type_prefix,
+                                    value_flag=True)
+
+        if key == 'trend' or key == 'plunge':
+            if params['orientationOption']['value'] == 1:
+                write_value_to_params(params, 
+                                    key, 
+                                    fisher_params, 
+                                    key, 
+                                    fracture_type_prefix, 
+                                    value_flag=True)
+
+        if key == 'strike' or key == 'dip':
+            if params['orientationOption']['value'] == 2:
+                write_value_to_params(params, 
+                                    key, 
+                                    fisher_params, 
+                                    key, 
+                                    fracture_type_prefix, 
+                                    value_flag=True)
+
+        if key == 'kappa':
+            write_value_to_params(params, 
+                                key, 
+                                fisher_params, 
+                                key, 
+                                fracture_type_prefix, 
+                                value_flag=True)
 
     return params, distribution_type
 
@@ -242,9 +292,10 @@ def write_value_to_params(params,
     else:
         value = value_dict[value_dict_key]
 
-    ### if value is not present raise error
+    ### if value is not present an exception can be raised
     if value == None:
-        hf.print_error(value_dict_key + ' not specified')
+        pass
+        # hf.print_error(value_dict_key + ' not specified')
 
     else:
         if params[fracture_type_prefix + param_key]['value'] == None:
@@ -252,3 +303,75 @@ def write_value_to_params(params,
 
         else:
             params[fracture_type_prefix + param_key]['value'].append(value)
+
+
+def reorder_fracture_families(DFN):
+    
+    """Reorder the fracture families to pass to backend code
+    
+    Parameters
+    --------------
+        DFN: the DFN object
+    Returns
+    --------
+        DFN : DFN with reordered fracture attributes
+            
+    Notes
+    ---------
+        Prints the original and final order from user input to what is passed 
+        to the backend. 
+    """    
+    
+    number_of_families = len(DFN.fracture_families)
+    
+    original_order = []
+
+    ellipse_list = []
+    
+    ellipse_index = []
+    
+    rect_list = []
+    
+    rect_index = []
+    
+    for i in range(number_of_families):
+        
+        original_order.append(i)
+        
+        current_fracture_family = DFN.fracture_families[i]
+        
+        if current_fracture_family['type']['value']['ellipse'] == True and current_fracture_family[
+                'type']['value']['rect'] == False:
+            
+            ellipse_list.append(current_fracture_family)
+            
+            ellipse_index.append(i)
+    
+        elif current_fracture_family['type']['value'][
+                'ellipse'] == False and current_fracture_family['type']['value'][
+                    'rect'] == True:
+
+            rect_list.append(current_fracture_family)
+            
+            rect_index.append(i)            
+            
+    
+        else:
+            hf.print_error('Fracture family type is not specified')
+    
+    
+    ellipse_index.extend(rect_index)
+    final_order = ellipse_index
+
+    ellipse_list.extend(rect_list)
+    final_list = ellipse_list
+    
+    DFN.fracture_families = final_list
+    
+    if original_order == final_order:
+        print("Fracture Family order was not changed")
+    
+    else:
+        print("Fracture Families have been reordered")
+        print("Original order = ", original_order)
+        print("Final order = ", final_order)

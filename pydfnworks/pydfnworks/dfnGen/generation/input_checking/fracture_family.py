@@ -193,7 +193,7 @@ def add_fracture_family(self,
 
     family = fracture_family_dictionary()
     if shape == "rect":
-        family['type']['value']['rect'] = False
+        family['type']['value']['rect'] = True
         family['number_of_points']['value'] = 4
     elif shape == "ell":
         family['type']['value']['ellipse'] = True
@@ -231,7 +231,7 @@ def add_fracture_family(self,
     ## Radius Distribution
     if distribution == "tpl":
         family['distribution']['value']['tpl'] = True
-        if alpha:
+        if alpha != None:
             family['tpl']['value']['alpha'] = alpha
         else:
             # Aidan. Copy this for the other distributions so the parameters are required.
@@ -240,17 +240,35 @@ def add_fracture_family(self,
             sys.exit(1)
     elif distribution == "log_normal":
         family['distribution']['value']['log_normal'] = True
-        if log_mean:
+        if log_mean != None:
             family['log_normal']['value']['mean'] = log_mean
-        family['log_normal']['value']['std'] = log_std
+        else:
+            error = f"Error. A value for log_mean must be provided if family is log_normal distribution. Exiting. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        if log_std != None:
+            family['log_normal']['value']['std'] = log_std
+        else:
+            error = f"Error. A value for log_std must be provided if family is log_normal distribution. Exiting. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
 
     elif distribution == "exp":
         family['distribution']['value']['exp'] = True
-        family['exp']['value']['mean'] = exp_mean
-
+        if exp_mean != None:
+            family['exp']['value']['mean'] = exp_mean
+        else:
+            error = f"Error. A value for exp_mean must be provided if family is exp distribution. Exiting. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
     elif distribution == "constant":
         family['distribution']['value']['constant'] = True
-        family['constant']['value'] = constant
+        if constant != None:
+            family['constant']['value'] = constant
+        else:
+            error = f"Error. A value for constant must be provided if family is constant distribution. Exiting. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
     else:
         error = f"Error. Unknown Fracture Distribution {distribution}. Acceptable values are 'tpl', 'exp', 'log_normal',  & 'constant'. Exiting.\n"
         sys.stderr.write(error)
