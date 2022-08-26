@@ -1,1 +1,1 @@
-python run_octree.py -name DUMMY/dfnworks/examples/octree/octree_example -input octree_run_file.txt -ncpu 4
+python run_octree.py -name /home/astansberry/dfnworks/examples/octree/octree_example -input octree_run_file.txt -ncpu 4

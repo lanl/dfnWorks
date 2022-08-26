@@ -9,7 +9,7 @@ from pydfnworks.dfnGen.generation.input_checking.verifications import verify_par
 from pydfnworks.dfnGen.generation.input_checking.write_input_file import dump_params
 from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families
 
-def check_input(self):
+def check_input(self, from_file = False):
     """ Checks input file for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
 
      Input Format Requirements:  
@@ -34,7 +34,7 @@ def check_input(self):
     print('=' * 80)
     print("Checking Input File\n")
     ## Needs to be a logic fork here for using input file
-    from_file = False
+    from_file = from_file #added call to function creat_dfn to set flag, default is false
     if from_file:
         # Copy input file
         if os.path.isfile(self.dfnGen_file):
@@ -54,9 +54,10 @@ def check_input(self):
         output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
         print(f"--> Reading input file: {input_file}")
         self.params = parse_input(input_file)
+
     else:
         output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
-        self.params = write_fracture_families(self) 
+        self.params = self.write_fracture_families() 
     print(f"--> Clean output file name: {output_file}")
     verify_params(self.params)
     dump_params(self.params, output_file)

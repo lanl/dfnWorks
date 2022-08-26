@@ -1,12 +1,12 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 
-def write_fracture_families(DFN):
+def write_fracture_families(self):
     """Reorder fracture families in DFN, and then write them to 
     the DFN parameter dictionary
 
     Parameters
     ------------
-        DFN: the descete fracture network object
+        DFN(self): the descete fracture network object
     
     Returns
     --------
@@ -17,11 +17,12 @@ def write_fracture_families(DFN):
     None
     """
     
-    reorder_fracture_families(DFN)
-    
-    for i in range(len(DFN.fracture_families)):
-        add_fracture_family_to_params(DFN.params, DFN.fracture_families[i])
+    self.reorder_fracture_families()
 
+    for i in range(len(self.fracture_families)):
+        add_fracture_family_to_params(self.params, self.fracture_families[i])
+
+    return self.params
 
 def add_fracture_family_to_params(params, fracture_family):
     """Add values from fracture family dictionary
@@ -60,22 +61,32 @@ def add_fracture_family_to_params(params, fracture_family):
         fracture_family, params, fracture_type_prefix)
 
     if distribution_type == 'tpl':
+        write_value_to_params(params, 'distr', fracture_family, 'distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'distr']['value'][-1] = 2
         write_value_to_params(params, 'min', fracture_family, 'min_radius',
                               fracture_type_prefix)
         write_value_to_params(params, 'max', fracture_family, 'max_radius',
                               fracture_type_prefix)
 
     if distribution_type == 'log_normal':
+        write_value_to_params(params, 'distr', fracture_family, 'distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'distr']['value'][-1] = 1
         write_value_to_params(params, 'LogMin', fracture_family, 'min_radius',
                               fracture_type_prefix)
         write_value_to_params(params, 'LogMax', fracture_family, 'max_radius',
                               fracture_type_prefix)
 
     if distribution_type == 'exp':
+        write_value_to_params(params, 'distr', fracture_family, 'distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'distr']['value'][-1] = 3
         write_value_to_params(params, 'ExpMin', fracture_family, 'min_radius',
                               fracture_type_prefix)
         write_value_to_params(params, 'ExpMax', fracture_family, 'max_radius',
                               fracture_type_prefix)
+
+    if distribution_type == 'constant':
+        write_value_to_params(params, 'distr', fracture_family, 'distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'distr']['value'][-1] = 4
 
     write_value_to_params(params, 'Layer', fracture_family, 'layer',
                           fracture_type_prefix)
@@ -305,13 +316,13 @@ def write_value_to_params(params,
             params[fracture_type_prefix + param_key]['value'].append(value)
 
 
-def reorder_fracture_families(DFN):
+def reorder_fracture_families(self):
     
     """Reorder the fracture families to pass to backend code
     
     Parameters
     --------------
-        DFN: the DFN object
+        DFN(self): the DFN object
     Returns
     --------
         DFN : DFN with reordered fracture attributes
@@ -322,7 +333,7 @@ def reorder_fracture_families(DFN):
         to the backend. 
     """    
     
-    number_of_families = len(DFN.fracture_families)
+    number_of_families = len(self.fracture_families)
     
     original_order = []
 
@@ -338,7 +349,7 @@ def reorder_fracture_families(DFN):
         
         original_order.append(i)
         
-        current_fracture_family = DFN.fracture_families[i]
+        current_fracture_family = self.fracture_families[i]
         
         if current_fracture_family['type']['value']['ellipse'] == True and current_fracture_family[
                 'type']['value']['rect'] == False:
@@ -366,7 +377,7 @@ def reorder_fracture_families(DFN):
     ellipse_list.extend(rect_list)
     final_list = ellipse_list
     
-    DFN.fracture_families = final_list
+    self.fracture_families = final_list
     
     if original_order == final_order:
         print("Fracture Family order was not changed")

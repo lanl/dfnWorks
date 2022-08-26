@@ -13,8 +13,9 @@ from datetime import datetime
 from time import time
 from tkinter import W
 
-from pydfnworks.general.dfntools import *
+from pydfnworks.general.dfntools import * 
 
+from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
 class DFNWORKS(Frozen):
     '''
@@ -96,8 +97,9 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
-    from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
+    #from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
+    from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
@@ -176,7 +178,7 @@ class DFNWORKS(Frozen):
         self.path = path
         self.prune_file = prune_file
 
-        self.load_parameters()
+        self.params, self.mandatory_params = load_parameters()
         self.start_time = time()
         self.print_parameters()
 

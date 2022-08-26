@@ -1,4 +1,4 @@
-def load_parameters(self):
+def load_parameters():
     """ Load dictionary of DFNGen parameters onto object
 
     Parameters
@@ -13,7 +13,7 @@ def load_parameters(self):
         None
     """
 
-    self.params = {
+    params = {
         # general
         'stopCondition': {
             'type':
@@ -920,7 +920,7 @@ def load_parameters(self):
         },
     }
 
-    self.mandatory = {
+    mandatory = {
         'stopCondition', 'domainSize', 'numOfLayers', 'numOfRegions',
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'tripleIntersections',
@@ -932,4 +932,7 @@ def load_parameters(self):
         'userRecByCoord', 'userPolygonByCoord', 'aperture', 'permOption',
         'forceLargeFractures', 'orientationOption', 'radiiListIncrease',
         'removeFracturesLessThan'
-    }
+    
+        }
+
+    return params, mandatory

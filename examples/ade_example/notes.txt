@@ -1,1 +1,1 @@
-python run_ade.py -name DUMMY/dfnworks/examples/ade_example/ade_example -input ade_run_file.txt -ncpu 8
+python run_ade.py -name /home/astansberry/dfnworks/examples/ade_example/ade_example -input ade_run_file.txt -ncpu 8
