@@ -206,14 +206,14 @@ def add_fracture_family(self,
     family['layer']['value'] = layer
     family['region']['value'] = region
 
-    if p32:
-        family['p32']['value'] = p32
-    elif probability:
-        family['probability']['value'] = p32
-    else:
-        error = f"A value for p32 or probability must be provided. Exiting.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+    #if p32:
+    family['p32']['value'] = p32
+    #elif probability:
+    family['probability']['value'] = probability
+    #else:
+    #    error = f"A value for p32 or probability must be provided. Exiting.\n"
+    #    sys.stderr.write(error)
+    #    sys.exit(1)
 
     family['aspect']['value'] = aspect
 

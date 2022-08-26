@@ -423,7 +423,7 @@ rconst: {4,4}  // Constant radius, defined per rectangular family
 userEllipsesOnOff: 1    //0 - User Ellipses off
                         //1 - User Ellipses on
 
-UserEll_Input_File_Path:  DUMMY/dfnworks/examples/4_user_ell_uniform/define_4_user_ellipses.dat 
+UserEll_Input_File_Path:  /home/astansberry/dfnworks/examples/4_user_ell_uniform/define_4_user_ellipses.dat 
 
 /*===========================================================================*/
 /*===========================================================================*/

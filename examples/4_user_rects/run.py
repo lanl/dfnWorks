@@ -10,6 +10,6 @@ from pydfnworks import *
 
 DFN = create_dfn()
 # General Work Flow
-DFN.dfn_gen()
+DFN.dfn_gen(from_file = True)
 DFN.dfn_flow()
 DFN.dfn_trans()

@@ -1,1 +1,1 @@
-python run.py -name DUMMY/dfnworks/examples/tdrw/tdrw_example -input tdrw_run_file.txt -ncpu 8
+python run.py -name /home/astansberry/dfnworks/examples/tdrw/tdrw_example -input tdrw_run_file.txt -ncpu 8

@@ -1,1 +1,1 @@
-python run.py -name DUMMY/dfnworks/examples/faults/faults_example -input fault_run_file.txt  
+python run.py -name /home/astansberry/dfnworks/examples/faults/faults_example -input fault_run_file.txt  
