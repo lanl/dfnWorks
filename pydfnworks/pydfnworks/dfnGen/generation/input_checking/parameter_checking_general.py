@@ -255,19 +255,14 @@ def check_family_prob(params):
             hf.print_error(
                 f"\"famProb\" must have {(params['nFamEll']['value'] + params['nFamRect']['value'])} (nFamEll + nFamRect) non-zero elements, one for each family of ellipses and rectangles. {len(params['famProb']['value'])} probabiliies have been defined."
             )
-
-        total = sum(params['famProb']['value'])
+        values = params['famProb']['value']
+        total = sum(values)
         if total != 1:
-            rescaled = [
-                float("{:.6}".format(x / total))
-                for x in params['famProb']['value']
-            ]
             hf.print_warning(
                 "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
-            params['famProb']['value'] = [x / total for x in rescaled]
+            params['famProb']['value'] = [x / total for x in values]
             print(f"--> New Values: {params['famProb']['value']}")
-
 
 def check_no_dep_flags(params):
     """ Check for dependency flags. Not sure this does anything."""

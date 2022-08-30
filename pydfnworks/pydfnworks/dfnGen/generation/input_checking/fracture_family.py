@@ -208,7 +208,7 @@ def add_fracture_family(self,
 
     if p32:
         family['p32']['value'] = p32
-        family['probability']['value'] = p32 #setting to p32 so prob is propotional to p32 
+        family['probability']['value'] = p32 
     elif probability:
         family['probability']['value'] = probability
     else:
