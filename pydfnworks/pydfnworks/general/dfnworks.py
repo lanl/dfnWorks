@@ -13,7 +13,11 @@ from datetime import datetime
 from time import time
 from tkinter import W
 
+
+# general functions
 from pydfnworks.general.dfntools import * 
+from pydfnworks.general.paths import define_paths
+from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
@@ -48,6 +52,7 @@ class DFNWORKS(Frozen):
     dfnGen_file = str
     local_dfnGen_file = str
     # Name of flow solver, PFLOTRAN / FEHM
+    # Default is PFLOTRAN
     flow_solver = "PFLOTRAN"
     # name of dfnFlow file (PFLTORAN or FEHM)
     dfnFlow_file = str
@@ -62,7 +67,7 @@ class DFNWORKS(Frozen):
     # pruning filename
     prune_file = str
 
-    # mesh names (should be changed to *_filename, someday.)
+    # mesh names (should be changed to *_filename, someday.
     inp_file = str
     uge_file = str
     vtk_file = str
@@ -83,9 +88,6 @@ class DFNWORKS(Frozen):
     mandatory_params = dict
     fracture_families = []
 
-    # general functions
-    from pydfnworks.general.paths import define_paths
-    from pydfnworks.general.legal import legal
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters
 
@@ -179,11 +181,16 @@ class DFNWORKS(Frozen):
         self.prune_file = prune_file
 
         self.params, self.mandatory_params = load_parameters()
+
+        ## check is define_paths has been run yet
+        if not 'dfnworks_path' in os.environ:
+            define_paths()
+            legal()
+
         self.start_time = time()
         self.print_parameters()
-
+        
         print("\n--> Creating DFN Object: Complete")
-
 
 #     def __del__(self):
 #         print("=" * 80)
