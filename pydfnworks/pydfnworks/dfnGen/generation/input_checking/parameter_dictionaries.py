@@ -102,7 +102,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
         },
@@ -973,7 +973,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -993,7 +993,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1014,7 +1014,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1034,7 +1034,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1055,7 +1055,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1076,7 +1076,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            3,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1118,7 +1118,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            1e-4,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1151,7 +1151,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
