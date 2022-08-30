@@ -183,7 +183,7 @@ class DFNWORKS(Frozen):
         self.params, self.mandatory_params = load_parameters()
 
         ## check is define_paths has been run yet
-        if not 'dfnworks_path' in os.environ:
+        if not 'dfnworks_PATH' in os.environ:
             define_paths()
             legal()
 
