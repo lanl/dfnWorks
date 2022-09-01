@@ -57,7 +57,8 @@ def check_input(self, from_file = False):
 
     else:
         output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
-        self.params = self.write_fracture_families() 
+        self.params = self.write_fracture_families()
+        self.write_user_fractures_to_file()
     print(f"--> Clean output file name: {output_file}")
     verify_params(self.params)
     dump_params(self.params, output_file)
