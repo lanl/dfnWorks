@@ -87,6 +87,8 @@ class DFNWORKS(Frozen):
     params = dict
     mandatory_params = dict
     fracture_families = []
+    user_ell_params = []
+    user_rect_params = []
 
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters
@@ -102,6 +104,7 @@ class DFNWORKS(Frozen):
     #from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
+    from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_dictionary import add_user_fract, write_user_fractures_to_file
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
