@@ -6,7 +6,6 @@
 #"""
 
 from pydfnworks import * 
-
 import os
 
 jobname = os.getcwd() + "/output"
