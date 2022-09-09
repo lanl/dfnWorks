@@ -326,7 +326,7 @@ def write_perms_and_correct_volumes_areas(self):
     f.write("%s\n" % mat_file)
     f.write("%s\n" % uge_file)
     f.write("%s" % (uge_file[:-4] + '_vol_area.uge\n'))
-    if self.aper_cell_file:
+    if self.cell_based_aperture:
         f.write("%s\n" % self.aper_cell_file)
         f.write("1\n")
     else:
@@ -388,7 +388,7 @@ def write_perms_and_correct_volumes_areas(self):
         print("--> Done writing permeability to h5 file")
         del perm_list
 
-    if self.perm_cell_file:
+    if self.cell_based_aperture:
         filename = 'dfn_properties.h5'
         h5file = h5py.File(filename, mode='w')
 

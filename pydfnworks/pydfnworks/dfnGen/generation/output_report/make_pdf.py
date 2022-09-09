@@ -9,8 +9,8 @@
 from fpdf import FPDF
 
 
-dfnworks_image_black = "/home/astansberry/dfnworks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "/home/astansberry/dfnworks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+dfnworks_image_black = "/home/astansberry/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
+lanl_image = "/home/astansberry/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
 
 
 class PDF(FPDF):
