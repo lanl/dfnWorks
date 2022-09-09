@@ -10,16 +10,9 @@ import os
 
 jobname = os.getcwd() + "/output"
 DFN = DFNWORKS(jobname)
-<<<<<<< HEAD
 
 DFN.params['domainSize']['value'] = [10,10,10]
 DFN.params['h']['value'] = .1
-=======
-DFN_2 = DFNWORKS(jobname)
-DFN.params['domainSize']['value'] = [10,10,10]
-DFN.params["h"]["value"] = 0.1
-exit(1)
->>>>>>> 0708a103771fb4b3613feebf40808a6cccb2b31f
 
 DFN.add_fracture_family(shape = "ell", distribution = "tpl", kappa = 10.0,
         probability = .5, aspect = 2, 
@@ -37,7 +30,6 @@ DFN.make_working_directory(delete = True)
 
 DFN.check_input()
 
-<<<<<<< HEAD
 
 for key in DFN.params.keys():
     print(key, DFN.params[key]['value'])
@@ -49,10 +41,4 @@ DFN.output_report()
 DFN.mesh_network(coarse_factor=10)
 
 DFN.dfn_flow()
-=======
-DFN.create_network()
-# DFN.output_report()
-# DFN.mesh_network(coarse_factor=10)
-# DFN.dfn_flow()
->>>>>>> 0708a103771fb4b3613feebf40808a6cccb2b31f
 # DFN.dfn_trans()
