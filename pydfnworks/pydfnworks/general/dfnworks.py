@@ -104,7 +104,7 @@ class DFNWORKS(Frozen):
     #from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
-    from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_dictionary import add_user_fract, write_user_fractures_to_file
+    from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions import add_user_fract, write_user_fractures_to_file
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
@@ -146,6 +146,7 @@ class DFNWORKS(Frozen):
                  uge_file="full_mesh.uge",
                  stor_file=None,
                  vtk_file=None,
+                 mesh_type='dfn',
                  cell_based_aperture=False):
 
         print("\n--> Creating DFN Object: Starting")
@@ -174,6 +175,7 @@ class DFNWORKS(Frozen):
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
 
         self.vtk_file = vtk_file
+        self.mesh_type = mesh_type
         self.inp_file = inp_file
         self.uge_file = uge_file
         self.stor_file = stor_file
