@@ -3,7 +3,6 @@ import numpy as np
 import shutil
 
 from pydfnworks import *
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
 
 def tag_well_in_mesh(self, wells):
@@ -93,7 +92,7 @@ def tag_well_in_mesh(self, wells):
             print(f"--> Well creation for {well['name']} complete\n\n")
 
 
-def convert_well_to_polyline_avs(well, h=None):
+def convert_well_to_polyline_avs(well, h = None):
     """  Identifies converts well coordinates into a polyline avs file. Distance between 
     point on the polyline are h/2 apart. Polyline is written into "well_{well['name']}_line.inp"
 
@@ -128,10 +127,7 @@ def convert_well_to_polyline_avs(well, h=None):
 
     """
     print("--> Interpolating well coordinates into a polyline")
-    # If h is not provided, get it from params.txt
-    if h == None:
-        from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
-        _, h, _, _, _ = parse_params_file(quiet=True)
+
 
     # read in well coordinates
     pts = np.genfromtxt(f"{well['filename']}")

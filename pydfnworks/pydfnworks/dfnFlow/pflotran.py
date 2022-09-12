@@ -217,10 +217,6 @@ def zone2ex(self,
         fzone.close()
         print('--> Finished with zone file')
 
-        if self.h == "":
-            from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
-            _, self.h, _, _, _ = parse_params_file(quiet=True)
-
         Boundary_cell_area = np.zeros(num_nodes, 'float')
         for i in range(num_nodes):
             Boundary_cell_area[
