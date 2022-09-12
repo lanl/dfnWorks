@@ -10,71 +10,71 @@ import glob
 from numpy import genfromtxt, sort, zeros
 import subprocess
 
-def parse_params_file(quiet=False):
-    """ Reads params.txt file from DFNGen and parses information
+# def parse_params_file(quiet=False):
+#     """ Reads params.txt file from DFNGen and parses information
 
-    Parameters
-    ---------
-        quiet : bool
-            If True details are not printed to screen, if False they area 
+#     Parameters
+#     ---------
+#         quiet : bool
+#             If True details are not printed to screen, if False they area 
 
-    Returns
-    -------
-        num_poly: int
-            Number of Polygons
-        h: float 
-            Meshing length scale h
-        dudded_points: int 
-            Expected number of dudded points in Filter (LaGriT)
-        visual_mode : bool
-            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-        domain: dict
-             x,y,z domain sizes 
+#     Returns
+#     -------
+#         num_poly: int
+#             Number of Polygons
+#         h: float 
+#             Meshing length scale h
+#         dudded_points: int 
+#             Expected number of dudded points in Filter (LaGriT)
+#         visual_mode : bool
+#             If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
+#         domain: dict
+#              x,y,z domain sizes 
     
-    Notes
-    -----
-        None
-    """
-    if not quiet:
-        print("\n--> Parsing  params.txt")
-    fparams = open('params.txt', 'r')
-    # Line 1 is the number of polygons
-    num_poly = int(fparams.readline())
-    #Line 2 is the h scale
-    h = float(fparams.readline())
-    # Line 3 is the visualization mode: '1' is True, '0' is False.
-    visual_mode = int(fparams.readline())
-    # line 4 dudded points
-    dudded_points = int(fparams.readline())
+#     Notes
+#     -----
+#         None
+#     """
+#     if not quiet:
+#         print("\n--> Parsing  params.txt")
+#     fparams = open('params.txt', 'r')
+#     # Line 1 is the number of polygons
+#     num_poly = int(fparams.readline())
+#     #Line 2 is the h scale
+#     h = float(fparams.readline())
+#     # Line 3 is the visualization mode: '1' is True, '0' is False.
+#     visual_mode = int(fparams.readline())
+#     # line 4 dudded points
+#     dudded_points = int(fparams.readline())
 
-    # Dict domain contains the length of the domain in x,y, and z
-    domain = {'x': 0, 'y': 0, 'z': 0}
-    #Line 5 is the x domain length
-    domain['x'] = (float(fparams.readline()))
+#     # Dict domain contains the length of the domain in x,y, and z
+#     domain = {'x': 0, 'y': 0, 'z': 0}
+#     #Line 5 is the x domain length
+#     domain['x'] = (float(fparams.readline()))
 
-    #Line 5 is the x domain length
-    domain['y'] = (float(fparams.readline()))
+#     #Line 5 is the x domain length
+#     domain['y'] = (float(fparams.readline()))
 
-    #Line 5 is the x domain length
-    domain['z'] = (float(fparams.readline()))
-    fparams.close()
+#     #Line 5 is the x domain length
+#     domain['z'] = (float(fparams.readline()))
+#     fparams.close()
 
-    if not quiet:
-        print("--> Number of Polygons: %d" % num_poly)
-        print("--> H_SCALE %f" % h)
-        if visual_mode > 0:
-            visual_mode = True
-            print("--> Visual mode is on")
-        else:
-            visual_mode = False
-            print("--> Visual mode is off")
-        print(f"--> Expected Number of dudded points: {dudded_points}")
-        print(f"--> X Domain Size {domain['x']} m")
-        print(f"--> Y Domain Size {domain['y']} m")
-        print(f"--> Z Domain Size {domain['z']} m")
-        print("--> Parsing params.txt complete\n")
+#     if not quiet:
+#         print("--> Number of Polygons: %d" % num_poly)
+#         print("--> H_SCALE %f" % h)
+#         if visual_mode > 0:
+#             visual_mode = True
+#             print("--> Visual mode is on")
+#         else:
+#             visual_mode = False
+#             print("--> Visual mode is off")
+#         print(f"--> Expected Number of dudded points: {dudded_points}")
+#         print(f"--> X Domain Size {domain['x']} m")
+#         print(f"--> Y Domain Size {domain['y']} m")
+#         print(f"--> Z Domain Size {domain['z']} m")
+#         print("--> Parsing params.txt complete\n")
 
-    return (num_poly, h, visual_mode, dudded_points, domain)
+#     return (num_poly, h, visual_mode, dudded_points, domain)
 
 
 def check_dudded_points(dudded, hard=False):

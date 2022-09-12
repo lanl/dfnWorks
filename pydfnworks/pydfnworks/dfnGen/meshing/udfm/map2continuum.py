@@ -15,6 +15,7 @@ import time
 import multiprocessing as mp
 import pickle
 
+
 def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     """ This function generates an octree-refined continuum mesh using the
     reduced_mesh.inp as input.  To generate the reduced_mesh.inp, one must 
@@ -54,35 +55,18 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
         sys.stderr.write(error)
         sys.exit(1)
 
-    # Read in normal vectors and points from dfnWorks output
-    normal_vectors = np.genfromtxt(path + 'normal_vectors.dat', delimiter=' ')
-
-    with open(path + 'translations.dat') as old, open('points.dat',
-                                                      'w') as new:
-        old.readline()
-        for line in old:
-            if not 'R' in line:
-                new.write(line)
-    points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
-
-    try:
-        os.symlink(path + 'params.txt', 'params.txt')
-    except:
-        pass
-    num_poly, h, _, _, domain = mh.parse_params_file()
-
     # Extent of domain
-    x0 = 0 - (domain['x'] / 2.0)
-    x1 = 0 + (domain['x'] / 2.0)
-    y0 = 0 - (domain['y'] / 2.0)
-    y1 = 0 + (domain['y'] / 2.0)
-    z0 = 0 - (domain['z'] / 2.0)
-    z1 = 0 + (domain['z'] / 2.0)
+    x0 = 0 - (self.domain['x'] / 2.0)
+    x1 = 0 + (self.domain['x'] / 2.0)
+    y0 = 0 - (self.domain['y'] / 2.0)
+    y1 = 0 + (self.domain['y'] / 2.0)
+    z0 = 0 - (self.domain['z'] / 2.0)
+    z1 = 0 + (self.domain['z'] / 2.0)
 
     # Number of cell elements in each direction at coarse level
-    nx = domain['x'] / l + 1
-    ny = domain['y'] / l + 1
-    nz = domain['z'] / l + 1
+    nx = self.domain['x'] / l + 1
+    ny = self.domain['y'] / l + 1
+    nz = self.domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
         error = "ERROR: Number of elements > 1e8. Exiting"
@@ -92,25 +76,28 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     print("\nCreating *.lgi files for octree mesh\n")
     try:
         os.mkdir(dir_name)
-        os.mkdir(dir_name+os.sep+"lagrit_scripts")
-        os.mkdir(dir_name+os.sep+"lagrit_logs")
+        os.mkdir(dir_name + os.sep + "lagrit_scripts")
+        os.mkdir(dir_name + os.sep + "lagrit_logs")
     except OSError:
         shutil.rmtree(dir_name)
         os.mkdir(dir_name)
-        os.mkdir(dir_name+os.sep+"lagrit_scripts")
-        os.mkdir(dir_name+os.sep+"lagrit_logs")
+        os.mkdir(dir_name + os.sep + "lagrit_scripts")
+        os.mkdir(dir_name + os.sep + "lagrit_logs")
 
-    lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points)
-    lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h)
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
+                  self.centers)
+    lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz,
+                      self.h)
     lagrit_build(dir_name)
     lagrit_intersect(dir_name)
     lagrit_hex_to_tet(dir_name)
     lagrit_remove(dir_name)
-    lagrit_run(self, num_poly, path, dir_name)
-    lagrit_strip(num_poly)
-    driver_parallel(self, num_poly)
-    build_dict(self, num_poly, delete_files = True)
+    lagrit_run(self, self.num_frac, path, dir_name)
+    lagrit_strip(self.num_frac)
+    driver_parallel(self, self.num_frac)
+    build_dict(self, self.num_frac, delete_files=True)
     dir_cleanup()
+
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     """ This function creates the main lagrit driver script, which calls all 
@@ -236,13 +223,13 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     cmo / delete / FRACTURE{0}
     finish
     """.format(j, num_poly + 1, xp, yp, zp, xn, yn, zn)
-        f_name = f'{dir_name}/driver_frac{j}.lgi'                
+        f_name = f'{dir_name}/driver_frac{j}.lgi'
         f = open(f_name, 'w')
         f.write(floop)
         f.flush()
-        f.close()        
+        f.close()
         j = j - 1
-        
+
     f_name = f'{dir_name}/driver_octree_start.lgi'
     f = open(f_name, 'w')
     fin = ("""# 
@@ -385,6 +372,7 @@ finish
     f.flush()
     f.close()
     print("Creating driver_octree_start.lgi file: Complete\n")
+
 
 def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
     """ This function creates the parameters_octree_dfn.mlgi lagrit script.
@@ -726,6 +714,7 @@ def lagrit_run(self, num_poly, path, dir_name):
 
     driver_interpolate_parallel(self, num_poly)
 
+
 def lagrit_strip(num_poly):
     """ This function strips and replaces the headers of the files, which is 
     needed to assign the fracture areas to a mesh object.
@@ -750,6 +739,8 @@ def lagrit_strip(num_poly):
             for k, l in enumerate(infile):
                 pass
             node_dict.setdefault(i, []).append(k - 4)
+
+
 #    print(node_dict)
 
     for i in range(1, num_poly + 1):
@@ -772,6 +763,7 @@ def lagrit_strip(num_poly):
             outfile.close()
         infile.close()
         os.remove(f"ex_area{i}.table")
+
 
 def driver_interpolate_parallel(self, num_poly):
     """ This function drives the parallelization of the area sums upscaling.
@@ -817,6 +809,7 @@ def driver_interpolate_parallel(self, num_poly):
         print(tasks_that_are_done.get())
 
     return True
+
 
 def driver_parallel(self, num_poly):
     """ This function drives the parallelization of the area sums upscaling.
@@ -909,13 +902,17 @@ def upscale_parallel(f_id):
     f.flush()
     f.close()
 
-    mh.run_lagrit_script(f"driver{f_id}.lgi",f"lagrit_logs/driver{f_id}",)
+    mh.run_lagrit_script(
+        f"driver{f_id}.lgi",
+        f"lagrit_logs/driver{f_id}",
+    )
     # Delete files
     os.remove(f"ex_xyz{f_id}_2.inp")
     os.remove(f"ex_area{f_id}_2.table")
     os.remove(f"frac{f_id}.inp")
     shutil.copy(f"driver{f_id}.lgi", "lagrit_scripts")
     os.remove(f"driver{f_id}.lgi")
+
 
 def worker(tasks_to_accomplish, tasks_that_are_done):
     """ Worker function for python parallel. See multiprocessing module 
@@ -940,6 +937,7 @@ def worker(tasks_to_accomplish, tasks_that_are_done):
         pass
     return True
 
+
 def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
     """ Worker function for python parallel. See multiprocessing module 
     documentation for details.
@@ -963,18 +961,22 @@ def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
         pass
     return True
 
+
 def interpolate_parallel(f_id):
-    mh.run_lagrit_script(f"driver_frac{f_id}.lgi",f"lagrit_logs/driver_frac{f_id}")
+    mh.run_lagrit_script(f"driver_frac{f_id}.lgi",
+                         f"lagrit_logs/driver_frac{f_id}")
     shutil.copy(f"driver_frac{f_id}.lgi", "lagrit_scripts")
     os.remove(f"driver_frac{f_id}.lgi")
-    
+
+
 def build_dict(self, num_poly, delete_files):
     f_dict = {}
     for i in range(1, num_poly + 1):
-        imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:,0]
-        area_sums = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:,1]
+        imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 0]
+        area_sums = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 1]
         for j in range(len(imts)):
-            if int(float(imts[j])) != (num_poly + 1) and float(area_sums[j]) > 0:
+            if int(float(imts[j])) != (num_poly + 1) and float(
+                    area_sums[j]) > 0:
                 f_dict.setdefault(j + 1, []).append((i, float(area_sums[j])))
         if delete_files:
             os.remove(f"area_sum{i}.table")
@@ -982,18 +984,22 @@ def build_dict(self, num_poly, delete_files):
     pickle.dump(f_dict, p_out, pickle.HIGHEST_PROTOCOL)
     p_out.close()
 
+
 def dir_cleanup():
     os.rename("build_octree.mlgi", "lagrit_scripts/build_octree.mlgi")
-    os.rename("driver_octree_start.lgi", "lagrit_scripts/driver_octree_start.lgi")
-    os.rename("driver_octree_start.lgi.log", "lagrit_logs/driver_octree_start.lgi.log")
-    os.rename("driver_octree_start.lgi.out", "lagrit_logs/driver_octree_start.lgi.out")
+    os.rename("driver_octree_start.lgi",
+              "lagrit_scripts/driver_octree_start.lgi")
+    os.rename("driver_octree_start.lgi.log",
+              "lagrit_logs/driver_octree_start.lgi.log")
+    os.rename("driver_octree_start.lgi.out",
+              "lagrit_logs/driver_octree_start.lgi.out")
     os.rename("hex_to_tet.mlgi", "lagrit_scripts/hex_to_tet.mlgi")
-    os.rename("parameters_octree_dfn.mlgi", "lagrit_scripts/parameters_octree_dfn.mlgi")
+    os.rename("parameters_octree_dfn.mlgi",
+              "lagrit_scripts/parameters_octree_dfn.mlgi")
     os.rename("remove_cells.mlgi", "lagrit_scripts/remove_cells.mlgi")
     os.rename("intersect_refine.mlgi", "lagrit_scripts/intersect_refine.mlgi")
-    os.rename("intersect_refine_np1.mlgi", "lagrit_scripts/intersect_refine_np1.mlgi")
+    os.rename("intersect_refine_np1.mlgi",
+              "lagrit_scripts/intersect_refine_np1.mlgi")
     os.remove("mohex2.inp")
     os.remove("MOTET.inp")
     os.remove("MOTET_np1.inp")
-    
-    
