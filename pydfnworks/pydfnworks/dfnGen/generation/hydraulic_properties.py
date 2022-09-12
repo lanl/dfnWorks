@@ -23,7 +23,7 @@ def get_units(variable):
     elif variable == "transmissivity":
         units = "m^2/s"
     else:
-        error = "ERROR!!! The variable of choice '{0}' is not known in the function get_units()\nAcceptable names are aperture, permeability, and transmissivity\nExiting.".format(
+        error = "Error. The variable of choice '{0}' is not known in the function get_units()\nAcceptable names are aperture, permeability, and transmissivity\nExiting.".format(
             variable)
         sys.stderr.write(error)
         sys.exit(1)
@@ -200,7 +200,7 @@ def log_normal(params, variable, number_of_fractures):
         perm = convert(T, variable, "permeability")
 
     else:
-        error = "ERROR!!! The variable of choice '{0}'' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
+        error = "Error. The variable of choice '{0}'' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
             variable)
         sys.stderr.write(error)
         sys.exit(1)
@@ -239,14 +239,14 @@ def correlated(params, variable, radii):
         .format(variable))
     units = get_units(variable)
     if variable == "aperture":
-        print("b ={1}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+        print("b ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
+                                             params["beta"], units))
     if variable == "permeability":
-        print("k ={1}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+        print("k ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
+                                             params["beta"], units))
     if variable == "transmissivity":
-        print("T ={1}*r^{2} {3}".format(variable, params["alpha"],
-                                        params["beta"], units))
+        print("T ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
+                                             params["beta"], units))
 
     if variable == "aperture":
         b = params["alpha"] * radii**params["beta"]
@@ -391,7 +391,58 @@ def constant(params, variable, number_of_fractures):
     return b, perm, T
 
 
-def dump_hydraulic_values(self, b, perm, T, prefix=None):
+def dump_aperture(self, filename, format=None):
+    if format is None:
+        np.savetxt(filename, self.aperture)
+    elif format == "fehm":
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('aperture\n')
+            for i, b in enumerate(self.aperture):
+                fp.write(f'-{i+7:d} 0 0 {b:0.5e}\n')
+
+
+def dump_perm(self, filename, format=None):
+
+    if format is None:
+        np.savetxt(filename, self.perm)
+    elif format == "fehm":
+        # write perm file
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('permeability\n')
+            for i, k in enumerate(self.perm):
+                fp.write(f'-{i+7:d} 0 0 {k:0.5e} {k:0.5e} {k:0.5e}\n')
+            fp.write("\n")
+
+
+def dump_transmissivity(self, filename, format=None):
+    if format is None:
+        np.savetxt(filename, self.transmissivity)
+    elif format == "fehm":
+        print(f"--> Writing {filename}")
+        with open(filename, 'w+') as fp:
+            fp.write('aperture\n')
+            for i, trans in enumerate(self.transmissivity):
+                fp.write(f'-{i:d} 0 0 {trans:0.5e}\n')
+
+
+def dump_fracture_info(self, filename):
+
+    ## revise fracture_info.dat
+    print(f"--> Writing {filename}")
+    connections = np.genfromtxt("fracture_info.dat",
+                                skip_header=1)[:, 0].astype(int)
+    with open(filename, "w+") as fp:
+        fp.write("num_connections perm aperture\n")
+        for i in range(self.num_frac):
+            fp.write(
+                f"{connections[i]:d} {self.perm[i]:0.8e} {self.aperture[i]:0.8e}\n"
+            )
+    print("--> Complete")
+
+
+def dump_hydraulic_values(self, prefix=None):
     """ Writes variable information to files.  
     
     Parameters
@@ -413,7 +464,6 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
     ----------
     """
     print("--> Dumping values to files")
-    n = len(b)
     # Write out new aperture.dat
     if prefix is not None:
         aper_filename = prefix + '_aperture.dat'
@@ -426,49 +476,85 @@ def dump_hydraulic_values(self, b, perm, T, prefix=None):
         trans_filename = "transmissivity.dat"
         frac_info_filename = "fracture_info.dat"
 
-    # write aperture file
-    print("--> Writing {0}".format(aper_filename))
-    with open(aper_filename, 'w+') as fp:
-        fp.write('aperture\n')
-        for i in range(n):
-            fp.write('-{0:d} 0 0 {1:0.5e}\n'.format(i + 7, b[i]))
+    self.dump_aperture(aper_filename)
+    self.dump_perm(perm_filename)
+    self.dump_transmissivity(trans_filename)
+    self.dump_fracture_info(frac_info_filename)
 
-    # write perm file
-    print("--> Writing {0}".format(perm_filename))
-    with open(perm_filename, 'w+') as fp:
-        fp.write('permeability\n')
-        for i in range(n):
-            fp.write('-{0:d} 0 0 {1:0.5e} {1:0.5e} {1:0.5e}\n'.format(
-                i + 7, perm[i]))
 
-    print(f"--> Writing {trans_filename}")
-    with open(trans_filename, 'w+') as fp:
-        fp.write('transmissivty\n')
-        for i in range(n):
-            fp.write('-{0:d} {1:0.5e}\n'.format(i + 7, T[i]))
+def set_fracture_hydraulic_values(self, variable, fracture_list, value_list):
+    """ Assigns hydraulic properties to a list of provided fractures. 
 
-    ## revise fracture_info.dat
-    print(f"--> Writing {frac_info_filename}")
-    connections = np.genfromtxt("fracture_info.dat",skip_header = 1)[:,0].astype(int)
-    with open(frac_info_filename, "w+") as fp:
-        fp.write("num_connections perm aperture\n")
-        for i in range(n):
-            fp.write(f"{connections[i]:d} {perm[i]:0.8e} {b[i]:0.8e}\n")
+    Paramters
+    -----------------
+        self : object 
+            DFN Class
+        variable : string
+            base variable in relationship. Options are: aperture, permeability, transmissivity
+        fractture_list : list
+            List of fractures index whose variables are being assigned. *Note* Fractures are indexed starting at 1.
+        value_list : list  
+            values to be assigned. 
 
-    print("--> Complete")
+    Returns 
+    -------------
+        None
+
+    Notes
+    ----------------
+        None
+    """
+
+    if len(fracture_list) != len(value_list):
+        error = f"Error. Length of fracture list is not equal to the length of the value list provided.\nExiting.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    ## convert to numpy array
+    value_list = np.array(value_list)
+    fracture_list = np.array(fracture_list)
+
+    print(value_list)
+    print(fracture_list)
+    if variable == 'aperture':
+        b = value_list
+        perm = convert(b, variable, "permeability")
+        transmissivity = convert(b, variable, "transmissivity")
+
+    elif variable == 'permeability':
+        perm = value_list
+        b = convert(perm, variable, "aperture")
+        transmissivity = convert(perm, variable, "transmissivity")
+
+    elif variable == 'transmissivity':
+        transmissivity = value_list
+        b = convert(transmissivity, variable, "aperture")
+        perm = convert(transmissivity, variable, "permeability")
+
+    else:
+        error = f"Error. The variable of choice '{variable}' is not known\nAcceptable names are aperture, permeability, transmissivity\nExiting.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    self.aperture[fracture_list - 1] = b
+    self.perm[fracture_list - 1] = perm
+    self.transmissivity[fracture_list - 1] = transmissivity
+
 
 def generate_hydraulic_values(self,
                               variable,
                               relationship,
                               params,
-                              radii_filename="radii_Final.dat",
                               family_id=None):
     """ Generates hydraulic property values. 
 
     Parameters
     -----------
         self : object 
-            DFN Class 
+            DFN Class
+        variable : string
+            base variable in relationship. Options are: aperture, permeability, transmissivity
+
         relationship : string
             name of functional relationship for apertures. 
             options are log-normal, correlated, semi-correlated, and
@@ -480,26 +566,20 @@ def generate_hydraulic_values(self,
 
     Returns
     ----------
-        b : array
-            aperture values
-        perm : array
-            permeability values
-        T : array
-            transmissivity values
-        idx : array of bool
-            true / false of fracture families requested. If family_id = None, all entires are true. 
-            Only family members entires of b, perm, and T will be non-zero
+        None
 
     Notes
     ----------
     See Hyman et al. 2016 "Fracture size and transmissivity correlations: Implications for transport simulations in sparse
     three-dimensional discrete fracture networks following a truncated power law distribution of fracture size" Water Resources Research for more details 
+
+    Changes in hydraulic properties are added to DFN object
     """
 
     # Check if the variable choice is defined
     variables = ["aperture", "permeability", "transmissivity"]
     if variable not in variables:
-        error = "ERROR!!! The variable of choice '{0}'' is not known\nAcceptable names are {1}, {2}, {3}\nExiting.\n".format(
+        error = "Error. The variable of choice '{0}'' is not known\nAcceptable names are {1}, {2}, {3}\nExiting.\n".format(
             variable, variables[0], variables[1], variables[2])
         sys.stderr.write(error)
         sys.exit(1)
@@ -511,24 +591,20 @@ def generate_hydraulic_values(self,
     # check if the function is defined
     functions = ["log-normal", "semi-correlated", "constant", "correlated"]
     if relationship not in functions:
-        error = "ERROR!!! The provided relationship '{0}' is unknown\nAcceptable relationship are {1}, {2}, {3}, {4}\nExiting.\n".format(
-            relationship, functions[0], functions[1], functions[2],
-            functions[3])
+        error = f"Error! The provided relationship '{relationship}' is unknown\nAcceptable relationship are log-normal, semi-correlated, constant, or correlated\nExiting.\n"
         sys.stderr.write(error)
         sys.exit(1)
-    # else:
-    #     print(
-    #         "Creating aperture, permeability, and transmissivity using the {0} function."
-    #         .format(relationship))
 
-    # Load Fracture information
-    radii, families, number_of_fractures = load_fractures(radii_filename,
-                                                          quiet=False)
+    ## use max value of radius
+    radii = self.radii[:, 2]
+    families = self.families
+    number_of_fractures = self.num_frac
+
     if family_id is not None:
         print(f"--> Working on Fracture Family {family_id}")
         idx = np.where(families == family_id)
         if len(idx[0]) == 0:
-            error = f"ERROR!!! No fractures in the network are in the requested family. {family_id}.\nUser Rectangles = -1\nUser Ellipses = 0.\nStochastic Families > 0.\nExiting\n"
+            error = f"Error. No fractures in the network are in the requested family. {family_id}.\nUser Rectangles = -1\nUser Ellipses = 0.\nStochastic Families > 0.\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -536,72 +612,52 @@ def generate_hydraulic_values(self,
         keys = ["mu", "sigma"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = log_normal(params, variable, number_of_fractures)
+        b, perm, transmissivity = log_normal(params, variable,
+                                             number_of_fractures)
 
     if relationship == "correlated":
         keys = ["alpha", "beta"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = correlated(params, variable, radii)
+        b, perm, transmissivity = correlated(params, variable, radii)
 
     if relationship == "semi-correlated":
         keys = ["alpha", "beta", "sigma"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = semi_correlated(params, variable, radii,
-                                     number_of_fractures)
+        b, perm, transmissivity = semi_correlated(params, variable, radii,
+                                                  number_of_fractures)
 
     if relationship == "constant":
         keys = ["mu"]
         for key in keys:
             if not check_key(params, key):
-                error = "ERROR!!! The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
+                error = "Error. The required key '{0}' was not found in the params dictionary\nExiting\n\n".format(
                     key)
                 sys.stderr.write(error)
                 sys.exit(1)
-        b, perm, T = constant(params, variable, number_of_fractures)
+        b, perm, transmissivity = constant(params, variable,
+                                           number_of_fractures)
 
     if family_id == None:
-        return b, perm, T
+        self.aperture = b
+        self.perm = perm
+        self.transmissivity = transmissivity
     else:
         # Sent entries that are not in the requested family to None
-        idx = np.where(families != family_id)
-        b[idx] = 0
-        T[idx] = 0
-        perm[idx] = 0
-        return b, perm, T
-
-
-# if __name__ == '__main__':
-
-#     variable = "transmissivity"
-
-#     function = "correlated"
-#     params = {"alpha":6.7*10**-9,"beta":1.4}
-#     _,_,T1 = generate_hydraulic_values(variable,function,params,radii_filename="/Users/jhyman/Desktop/radii_Final.dat",family_id=1)
-
-#     function = "semi-correlated"
-#     params = {"alpha":6.3*10**-9,"beta":0.5,"sigma":1.0}
-#     _,_,T2 = generate_hydraulic_values(variable,function,params,radii_filename="/Users/jhyman/Desktop/radii_Final.dat",family_id=2)
-
-#     #combine values
-#     T = T1 + T2
-#     print(T)
-
-#     # convert to other variables
-#     perm = convert(T,"transmissivity","permeability")
-#     b = convert(T,"transmissivity","aperture")
-#     # write to file
-#     #dump_values("testing",b,perm,T)
+        idx = np.where(families == family_id)
+        self.aperture[idx] = b[idx]
+        self.perm[idx] = perm[idx]
+        self.transmissivity[idx] = transmissivity[idx]
