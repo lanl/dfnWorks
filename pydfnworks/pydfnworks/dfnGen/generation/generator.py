@@ -1,12 +1,12 @@
 import os
 import sys
+import numpy as np
 import shutil
 from time import time
 import subprocess
-from pydfnworks.dfnGen.meshing.mesh_dfn_helper import parse_params_file
 
 
-def dfn_gen(self, output=True, visual_mode=None, from_file = False):
+def dfn_gen(self, output=True):
     ''' Wrapper script the runs the dfnGen workflow:    
         1) make_working_directory: Create a directory with name of job
         2) check_input: Check input parameters and create a clean version of the input file
@@ -22,8 +22,7 @@ def dfn_gen(self, output=True, visual_mode=None, from_file = False):
             If True, output pdf will be created. If False, no pdf is made 
         visual_mode : None
             If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode
-        from_file : bool
-            If True, network will be generated from an input file, otherwise, newer implementation from python script will be used
+
     Returns
     -------
         None
@@ -33,35 +32,19 @@ def dfn_gen(self, output=True, visual_mode=None, from_file = False):
         Details of each portion of the routine are in those sections
 
     '''
-    tic_gen = time()
     # Create Working directory
-    tic = time()
     self.make_working_directory()
-    self.dump_time('Function: make_working_directory', time() - tic)
-
     # Check input file
-    tic = time()
-    self.check_input(from_file)
-    self.dump_time('Function: check_input', time() - tic)
-
+    self.check_input()
     # Create network
-    tic = time()
     self.create_network()
-    self.dump_time('Function: create_network', time() - tic)
-
     if output:
-        tic = time()
         self.output_report()
-        self.dump_time('output_report', time() - tic)
-
     # Mesh Network
-    tic = time()
-    self.mesh_network(visual_mode=visual_mode)
-    self.dump_time('Function: mesh_network', time() - tic)
+    self.mesh_network()
     print('=' * 80)
     print('dfnGen Complete')
     print('=' * 80)
-    self.dump_time('Process: dfnGen', time() - tic_gen)
 
 
 def make_working_directory(self, delete=False):
@@ -157,9 +140,137 @@ def create_network(self):
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        num_poly, h, _, _, _ = parse_params_file(quiet=True)
-        self.num_frac = num_poly
-        self.h = h
+        self.gather_dfn_gen_output()
         print('-' * 80)
         print("Generation Succeeded")
         print('-' * 80)
+
+
+def parse_params_file(self, quiet=False):
+    """ Reads params.txt file from DFNGen and parses information
+
+    Parameters
+    ---------
+        quiet : bool
+            If True details are not printed to screen, if False they area 
+
+    Returns
+    -------
+        num_poly: int
+            Number of Polygons
+        h: float 
+            Meshing length scale h
+        dudded_points: int 
+            Expected number of dudded points in Filter (LaGriT)
+        visual_mode : bool
+            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
+        domain: dict
+             x,y,z domain sizes 
+    
+    Notes
+    -----
+        None
+    """
+    if not quiet:
+        print("\n--> Parsing  params.txt")
+    fparams = open('params.txt', 'r')
+    # Line 1 is the number of polygons
+    self.num_frac = int(fparams.readline())
+    #Line 2 is the h scale
+    self.h = float(fparams.readline())
+    # Line 3 is the visualization mode: '1' is True, '0' is False.
+    self.visual_mode = int(fparams.readline())
+    # line 4 dudded points
+    self.dudded_points = int(fparams.readline())
+
+    # Dict domain contains the length of the domain in x,y, and z
+    self.domain = {'x': 0, 'y': 0, 'z': 0}
+    #Line 5 is the x domain length
+    self.domain['x'] = (float(fparams.readline()))
+
+    #Line 5 is the x domain length
+    self.domain['y'] = (float(fparams.readline()))
+
+    #Line 5 is the x domain length
+    self.domain['z'] = (float(fparams.readline()))
+    fparams.close()
+
+    if not quiet:
+        print("--> Number of Fractures: %d" % self.num_frac)
+        print("--> H_SCALE %f" % self.h)
+        if self.visual_mode > 0:
+            self.visual_mode = True
+            print("--> Visual mode is on")
+        else:
+            self.visual_mode = False
+            print("--> Visual mode is off")
+        print(f"--> Expected Number of dudded points: {self.dudded_points}")
+        print(f"--> X Domain Size {self.domain['x']} m")
+        print(f"--> Y Domain Size {self.domain['y']} m")
+        print(f"--> Z Domain Size {self.domain['z']} m")
+        print("--> Parsing params.txt complete\n")
+
+
+def gather_dfn_gen_output(self):
+    """ Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated 
+
+    Parameters
+    -----------
+        None
+
+    Returns
+    --------
+        fractuers : list
+            List of fracture dictionaries with information.
+    Notes
+    ------
+        Both fractures in the final network and those removed due to being isolated are included in the list. 
+
+    """
+    print("--> Parsing dfnWorks output and adding to object")
+    self.parse_params_file(quiet=False)
+
+    ## load radii
+    data = np.genfromtxt('radii_Final.dat', skip_header=2)
+    ## populate radius array
+    self.radii = np.zeros((self.num_frac, 3))
+    # First Column is x, second is y, 3rd is max
+    self.radii[:, :2] = data[:, :2]
+    for i in range(self.num_frac):
+        self.radii[i, 2] = max(self.radii[i, 0], self.radii[i, 1])
+
+    # gather fracture families
+    self.families = data[:, 2].astype(int)
+
+    ## load surface area
+    self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header=1)
+    ## load normal vectors
+    self.normal_vectors = np.genfromtxt('normal_vectors.dat')
+    # Get fracture centers
+    centers = []
+    with open('translations.dat', "r") as fp:
+        fp.readline()  # header
+        for i, line in enumerate(fp.readlines()):
+            if "R" not in line:
+                line = line.split()
+                centers.append(
+                    [float(line[0]),
+                     float(line[0]),
+                     float(line[2])])
+    self.centers = np.array(centers)
+
+    # Grab Polygon information
+    self.poly_info = np.genfromtxt('poly_info.dat')
+
+    ## create holder arrays for b, k, and T
+    self.aperture = np.zeros(self.num_frac)
+    self.perm = np.zeros(self.num_frac)
+    self.transmissivity = np.zeros(self.num_frac)
+
+    # gather indexes for fracture families
+    self.family = []
+    ## get number of families
+    self.num_families = int(max(self.families))
+    for i in range(1, self.num_families + 1):
+        idx = np.where(self.families == i)
+        self.family.append(idx)
