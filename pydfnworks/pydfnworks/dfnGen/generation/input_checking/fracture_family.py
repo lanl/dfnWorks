@@ -150,16 +150,42 @@ def fracture_family_dictionary():
             'value': None,
             'description': 'Maximum radius created by distribution'
         },
-    }
+        'hydraulic_properties':{
+                'variable': {
+                    'type': str,
+                    'value': None,
+                    'description': ' Acceptable values are aperture, permeability, and transmissivity'
+                    },
+                'function': {
+                    'type': str,
+                    'value': None,
+                    'description': 'Acceptable values or correlated, semi-correlated, constant, and log-normal'
+                    },
+                'params': {
+                    'type': dict,
+                    'value': None,
+                    'description': 'if correlated {"alpha":float, "beta":float},\nif semi-correlated {"alpha":float, "beta":float, "sigma":float},\nif constant {"mu":float},\nif log-normal {"mu":float,"sigma":float}'
+                    }
+                }
+        
+        }
     return family
 
 
 def print_family_information(self, family_number):
-    family = self.fracture_families[family_number - 1]
-    print(f"--> Family information for family # {family_number}")
-    for key in family.keys():
-        print(f"{key} : {family[key]['value']}")
-    print()
+    if len(self.fracture_families) > 0:
+        family = self.fracture_families[family_number - 1]
+        print(f"--> Family information for family # {family_number}")
+        for key in family.keys():
+            if key == 'hydraulic_properties':
+                for sub_key in family[key].keys():
+                    print(f"{key} : {sub_key} : {family[key][sub_key]['value']}")
+            else:
+                print(f"{key} : {family[key]['value']}")
+        print()
+    else:
+        print("No Defined Fracture Families")
+        print()
 
 
 def add_fracture_family(self,
@@ -187,8 +213,11 @@ def add_fracture_family(self,
                         exp_mean=None,
                         constant=None,
                         min_radius=None,
-                        max_radius=None):
-
+                        max_radius=None,
+                        hy_variable=None,
+                        hy_function=None,
+                        hy_params=None):
+    
     print("--> Adding new facture family")
 
     family = fracture_family_dictionary()
@@ -288,6 +317,12 @@ def add_fracture_family(self,
         family['number']['value'] = family_number
     else:
         family_number = len(self.fracture_families) + 1
+
+    family['hydraulic_properties']['variable']['value'] = hy_variable
+    family['hydraulic_properties']['function']['value'] = hy_function
+    family['hydraulic_properties']['params']['value'] = hy_params
+    ##Do we need exceptions? it will be checked in dfnflow
+
 
     self.fracture_families.append(family)
     self.print_family_information(family_number)

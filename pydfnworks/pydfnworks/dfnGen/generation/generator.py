@@ -141,6 +141,7 @@ def create_network(self):
         sys.exit(1)
     else:
         self.gather_dfn_gen_output()
+        self.assign_hydraulic_properties()
         print('-' * 80)
         print("Generation Succeeded")
         print('-' * 80)
@@ -220,7 +221,7 @@ def gather_dfn_gen_output(self):
 
     Returns
     --------
-        fractuers : list
+        fractures : list
             List of fracture dictionaries with information.
     Notes
     ------
@@ -274,3 +275,35 @@ def gather_dfn_gen_output(self):
     for i in range(1, self.num_families + 1):
         idx = np.where(self.families == i)
         self.family.append(idx)
+
+
+
+def assign_hydraulic_properties(self):
+    '''Assigns hydraulic properties for each familiy    
+    
+    Parameters
+    -----------
+    None
+
+    Returns
+    --------
+    None
+    
+    Notes
+    ------
+    '''
+
+    hy_value_flag = False
+
+    for i in range(self.params['nFracFam']['value']):
+
+        hy_variable = self.fracture_families[i]['hydraulic_properties']['variable']['value']
+        hy_function = self.fracture_families[i]['hydraulic_properties']['function']['value']
+        hy_params = self.fracture_families[i]['hydraulic_properties']['params']['value']
+
+        if hy_variable is not None:
+            hy_value_flag = True
+            self.generate_hydraulic_values(hy_variable, hy_function, hy_params, family_id=i+1)
+            
+    if hy_value_flag == True:                                                                                 
+        self.dump_hydraulic_values()

@@ -18,10 +18,11 @@ def write_fracture_families(self):
     """
     
     self.reorder_fracture_families()
-
-    for i in range(len(self.fracture_families)):
+    self.params['nFracFam']['value'] = len(self.fracture_families)
+    
+    for i in range(self.params['nFracFam']['value']):
         add_fracture_family_to_params(self.params, self.fracture_families[i])
-
+            
     return self.params
 
 def add_fracture_family_to_params(params, fracture_family):
