@@ -26,7 +26,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     """
 
     print(f"--> Making {variable} by node file")
-    values = genfromtxt(variable_file, skip_header=1)[:, -1]
+    values = genfromtxt(variable_file, skip_header=0, usecols = (-1))
     if not os.path.isfile(matid_file):
         error = f"ERROR!!! Cannot locate the file '{matid_file}'\nExiting\n"
         sys.stderr.write(error)

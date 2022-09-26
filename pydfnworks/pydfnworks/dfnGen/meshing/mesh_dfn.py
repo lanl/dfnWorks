@@ -134,7 +134,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     print('=' * 80)
 
     failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, self.visual_mode,
-                                             h)
+                                             self.h)
     if failure:
         mh.cleanup_dir()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"

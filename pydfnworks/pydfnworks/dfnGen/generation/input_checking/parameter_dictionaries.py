@@ -266,12 +266,28 @@ def load_parameters():
         },
         # Fracture Families
         'famProb': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'nFracFam': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            },
+        
         # ellipses
         'nFamEll': {
             'type':
@@ -289,7 +305,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            1,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -616,10 +632,14 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rAngleOption': {
-            'type': int,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            1,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rLayer': {
             'type': int,

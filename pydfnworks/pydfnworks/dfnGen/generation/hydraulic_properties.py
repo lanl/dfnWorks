@@ -575,7 +575,6 @@ def generate_hydraulic_values(self,
 
     Changes in hydraulic properties are added to DFN object
     """
-
     # Check if the variable choice is defined
     variables = ["aperture", "permeability", "transmissivity"]
     if variable not in variables:
@@ -599,7 +598,7 @@ def generate_hydraulic_values(self,
     radii = self.radii[:, 2]
     families = self.families
     number_of_fractures = self.num_frac
-
+    
     if family_id is not None:
         print(f"--> Working on Fracture Family {family_id}")
         idx = np.where(families == family_id)
@@ -639,7 +638,6 @@ def generate_hydraulic_values(self,
                 sys.exit(1)
         b, perm, transmissivity = semi_correlated(params, variable, radii,
                                                   number_of_fractures)
-
     if relationship == "constant":
         keys = ["mu"]
         for key in keys:
@@ -650,7 +648,6 @@ def generate_hydraulic_values(self,
                 sys.exit(1)
         b, perm, transmissivity = constant(params, variable,
                                            number_of_fractures)
-
     if family_id == None:
         self.aperture = b
         self.perm = perm
@@ -661,3 +658,4 @@ def generate_hydraulic_values(self,
         self.aperture[idx] = b[idx]
         self.perm[idx] = perm[idx]
         self.transmissivity[idx] = transmissivity[idx]
+
