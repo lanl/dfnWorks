@@ -676,8 +676,10 @@ void ParticleTrack ()
                                 printf("overload\n");
                                 FLAG_OUT = 0;
                                 t_end = t;
+
+                                if (!tfile)
+                                    free(tempdata);
                                 break;
-                                free(tempdata);
                             }
                             
                             tempdata = (struct tempout*)realloc(tempdata, sizeof(struct tempout) * capacity);
