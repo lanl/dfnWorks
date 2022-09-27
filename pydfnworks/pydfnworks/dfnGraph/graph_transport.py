@@ -12,8 +12,8 @@ import numpy as np
 import multiprocessing as mp
 import timeit
 
+
 # pydfnworks graph modules modules
-import pydfnworks.dfnGraph.graph_flow
 import pydfnworks.dfnGraph.particle_io as io
 from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
@@ -35,12 +35,12 @@ def track_particle(data):
                 Particle will full trajectory
 
     """
-    # particle = Particle(data["particle_number"], data["initial_position"],
-    #                     data["tdrw_flag"], data["matrix_porosity"],
-    #                     data["matrix_diffusivity"], data["fracture_spacing"],
-    #                     data["trans_prob"], data["transfer_time"],
-    #                     data["cp_flag"], data["control_planes"],
-    #                     data["direction"])
+    particle = Particle(data["particle_number"], data["initial_position"],
+                        data["tdrw_flag"], data["matrix_porosity"],
+                        data["matrix_diffusivity"], data["fracture_spacing"],
+                        data["trans_prob"], data["transfer_time"],
+                        data["cp_flag"], data["control_planes"],
+                        data["direction"])
 
     # get current process information
     p = mp.current_process()
@@ -49,11 +49,10 @@ def track_particle(data):
 
     print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
 
-    # particle.track(data["G"], data["nbrs_dict"])
+    particle.track(data["G"], data["nbrs_dict"])
     # Current position is initial positions assigned in get_initial_positions
 
-    return 0 
-
+    return particle
 
 def get_initial_posititions(G, initial_positions, nparticles):
     """ Distributes initial particle positions 
@@ -398,8 +397,9 @@ def run_graph_transport(self,
         # Run
         tic = timeit.default_timer()
         pool = mp.Pool(min(self.ncpu, nparticles))
-        for data in inputs:
-            pool.apply_async(track_particle, args=(data,), callback=gather_output)
+        particles = pool.map(track_particle, inputs)
+        #for data in inputs:
+        #    pool.apply_async(track_particle, args=(data,), callback=gather_output)
         pool.close()
         pool.join()
         pool.terminate()
