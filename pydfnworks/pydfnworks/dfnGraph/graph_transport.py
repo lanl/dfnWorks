@@ -388,7 +388,7 @@ def run_graph_transport(self,
         # Run
         tic = timeit.default_timer()
         pool = mp.Pool(min(self.ncpu, nparticles))
-        particles = pool.map(track_particle, inputs)
+        particles = pool.map(track_particle, inputs, chunksize = 1)
         pool.close()
         pool.join()
         pool.terminate()
