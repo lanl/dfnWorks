@@ -43,6 +43,13 @@ def track_particle(data):
                         data["cp_flag"], data["control_planes"],
                         data["direction"])
 
+        # get current process information
+    p = mp.current_process()
+    _, cpu_id = p.name.split("-")
+    cpu_id = int(cpu_id)
+
+    print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+
     particle.track(data["G"], data["nbrs_dict"])
     # Current position is initial positions assigned in get_initial_positions
 
