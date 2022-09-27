@@ -24,26 +24,31 @@ def add_perm(G, fracture_info="fracture_info.dat"):
 """
 
     perm = np.genfromtxt(fracture_info, skip_header=1)[:, 1]
+    aperture = np.sqrt(12*perm)
+
     if G.graph['representation'] == "fracture":
-        nodes = list(nx.nodes(G))
-        for n in nodes:
+        for n in nx.nodes(G):
             if n != 's' and n != 't':
                 G.nodes[n]['perm'] = perm[n - 1]
+                G.nodes[n]['b'] = aperture[n - 1]
                 G.nodes[n]['iperm'] = 1.0 / perm[n - 1]
             else:
                 G.nodes[n]['perm'] = 1.0
+                G.nodes[n]['b'] = 1.0 
                 G.nodes[n]['iperm'] = 1.0
 
     elif G.graph['representation'] == "intersection":
-        edges = list(nx.edges(G))
-        for u, v in edges:
-            x = G[u][v]['frac']
-            if x != 's' and x != 't':
-                G[u][v]['perm'] = perm[x - 1]
-                G[u][v]['iperm'] = 1.0 / perm[x - 1]
+        for u, v in nx.edges(G):
+            frac = G[u][v]['frac']
+            if frac != 's' and frac != 't':
+                G[u][v]['perm'] = perm[frac - 1]
+                G[u][v]['b'] = aperture[frac - 1]
+                G[u][v]['iperm'] = 1.0 / perm[frac - 1]
             else:
                 G[u][v]['perm'] = 1.0
+                G[u][v]['b'] = 1.0 
                 G[u][v]['iperm'] = 1.0
+
     elif G.graph['representation'] == "bipartite":
         # add fracture info
         with open(fracture_info) as f:
@@ -53,7 +58,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
                 c, perm, aperture = line.split(' ')
                 G.nodes[fracture]['perm'] = float(perm)
                 G.nodes[fracture]['iperm'] = 1.0 / float(perm)
-                G.nodes[fracture]['aperture'] = float(aperture)
+                G.nodes[fracture]['b'] = float(aperture)
 
 
 def add_area(G, fracture_info="fracture_info.dat"):
