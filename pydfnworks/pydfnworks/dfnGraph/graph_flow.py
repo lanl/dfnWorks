@@ -5,7 +5,8 @@ import scipy.sparse
 import h5py
 
 # pydfnworks modules
-from pydfnworks.dfnGraph import dfn2graph as d2g
+from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph 
+from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight 
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
 
@@ -70,20 +71,20 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
     """
 
     if G == None:
-        G = d2g.create_intersection_graph(
+        G = create_intersection_graph(
             inflow, outflow, intersection_file="intersection_list.dat")
 
         Gtilde = G.copy()
         # need to add aperture
-        d2g.add_perm(Gtilde)
-        d2g.add_area(Gtilde)
-        d2g.add_weight(Gtilde)
+        add_perm(Gtilde)
+        add_area(Gtilde)
+        add_weight(Gtilde)
 
     else:
         Gtilde = G
-        d2g.add_perm(Gtilde)
-        d2g.add_area(Gtilde)
-        d2g.add_weight(Gtilde)
+        add_perm(Gtilde)
+        add_area(Gtilde)
+        add_weight(Gtilde)
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag'] = False
