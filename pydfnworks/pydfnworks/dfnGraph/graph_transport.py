@@ -19,7 +19,7 @@ from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
 
-def track_particle(data):
+def track_particle(data, G, nbrs_dict):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -49,7 +49,6 @@ def track_particle(data):
                         data["direction"])
 
     # # get current process information
-    global G, nbrs_dict
     particle.track(G, nbrs_dict)
     return particle
 
@@ -319,7 +318,6 @@ def run_graph_transport(self,
     print(f"--> Control Plane Flag {control_plane_flag}")
 
     print("--> Creating downstream neighbor list")
-    global nbrs_dict 
     nbrs_dict = create_neighbor_list(G)
 
     print("--> Getting initial Conditions")
@@ -396,7 +394,7 @@ def run_graph_transport(self,
             data["control_planes"] = control_planes
             data["direction"] = direction
             # inputs.append(data)
-            pool.apply_async(track_particle, args=(data,), callback=gather_output)
+            pool.apply_async(track_particle, args=(data,G,nbrs_dict), callback=gather_output)
 
         # pool = mp.Pool(min(self.ncpu, nparticles))
         # particles = pool.map(track_particle, inputs)
