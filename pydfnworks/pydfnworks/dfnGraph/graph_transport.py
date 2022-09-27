@@ -19,7 +19,8 @@ from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
 
-def track_particle(data):
+
+def track_particle(data, verbose = False):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -37,10 +38,12 @@ def track_particle(data):
                 Particle will full trajectory
 
     """
-    p = mp.current_process()
-    _, cpu_id = p.name.split("-")
-    cpu_id = int(cpu_id)
-    print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+    if verbose:
+        p = mp.current_process()
+        _, cpu_id = p.name.split("-")
+        cpu_id = int(cpu_id)
+        print(f"--> Particle {data['particle_number']} is starting on worker {cpu_id}")
+
     particle = Particle(data["particle_number"], data["initial_position"],
                         data["tdrw_flag"], data["matrix_porosity"],
                         data["matrix_diffusivity"], data["fracture_spacing"],
@@ -49,8 +52,11 @@ def track_particle(data):
                         data["direction"])
 
     # # get current process information
-    global G, nbrs_dict
-    particle.track(G, nbrs_dict)
+    global nbrs_dict
+    global G_global
+    particle.track(G_global, nbrs_dict)
+    if verbose:
+        print(f"--> Particle {data['particle_number']} is complete on worker {cpu_id}")
     return particle
 
 def get_initial_posititions(G, initial_positions, nparticles):
@@ -301,6 +307,10 @@ def run_graph_transport(self,
     -----
     Information on individual functions is found therein
     """
+    global G_global 
+    G_global = nx.Graph()
+    G_global = G.copy()
+
     print("\n--> Running Graph Particle Tracking")
     # Check parameters for TDRW
     if tdrw_flag:
