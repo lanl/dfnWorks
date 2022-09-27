@@ -19,7 +19,7 @@ from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
 
-def track_particle(i):
+def track_particle(data):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -27,7 +27,9 @@ def track_particle(i):
         Parameters
         ----------
             data : dict
-                Dictionary of parameters the includes particle_number, initial_position, tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes, direction, G, and nbrs_dict.  
+                Dictionary of parameters the includes particle_number, initial_position, 
+                tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes,
+                 direction, G, and nbrs_dict.  
 
         Returns
         -------
@@ -38,24 +40,20 @@ def track_particle(i):
     p = mp.current_process()
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
-    print(f"--> Particle {i}  is starting on worker {cpu_id}")
-    return i
-    # particle = Particle(data["particle_number"], data["initial_position"],
-    #                     data["tdrw_flag"], data["matrix_porosity"],
-    #                     data["matrix_diffusivity"], data["fracture_spacing"],
-    #                     data["trans_prob"], data["transfer_time"],
-    #                     data["cp_flag"], data["control_planes"],
-    #                     data["direction"])
+    particle = Particle(data["particle_number"], data["initial_position"],
+                        data["tdrw_flag"], data["matrix_porosity"],
+                        data["matrix_diffusivity"], data["fracture_spacing"],
+                        data["trans_prob"], data["transfer_time"],
+                        data["cp_flag"], data["control_planes"],
+                        data["direction"])
 
     # # get current process information
 
 
-    # print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
-
-    # particle.track(data["G"], data["nbrs_dict"])
-    # # Current position is initial positions assigned in get_initial_positions
-
-    # return particle
+    print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+    global G, nbrs_dict
+    particle.track(G, nbrs_dict)
+    return particle
 
 def get_initial_posititions(G, initial_positions, nparticles):
     """ Distributes initial particle positions 
@@ -323,6 +321,7 @@ def run_graph_transport(self,
     print(f"--> Control Plane Flag {control_plane_flag}")
 
     print("--> Creating downstream neighbor list")
+    global nbrs_dict 
     nbrs_dict = create_neighbor_list(G)
 
     print("--> Getting initial Conditions")
@@ -382,12 +381,14 @@ def run_graph_transport(self,
         particles = []
         def gather_output(output):
             particles.append(output)
-        
+
+        global H
+        H = G
 
         for i in range(nparticles):
             data = {}
-            data["G"] = G
-            data["nbrs_dict"] = nbrs_dict
+            # data["G"] = G
+            # data["nbrs_dict"] = nbrs_dict
             data["particle_number"] = i
             data["initial_position"] = ip[i]
             data["tdrw_flag"] = tdrw_flag
@@ -404,7 +405,6 @@ def run_graph_transport(self,
 
             print(f"running {i}")
 
-        # Run
 
         # pool = mp.Pool(min(self.ncpu, nparticles))
         # particles = pool.map(track_particle, inputs)
