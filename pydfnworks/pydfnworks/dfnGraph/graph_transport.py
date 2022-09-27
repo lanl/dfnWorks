@@ -35,7 +35,6 @@ def track_particle(data):
                 Particle will full trajectory
 
     """
-
     particle = Particle(data["particle_number"], data["initial_position"],
                         data["tdrw_flag"], data["matrix_porosity"],
                         data["matrix_diffusivity"], data["fracture_spacing"],
@@ -43,7 +42,7 @@ def track_particle(data):
                         data["cp_flag"], data["control_planes"],
                         data["direction"])
 
-        # get current process information
+    # get current process information
     p = mp.current_process()
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
@@ -392,12 +391,23 @@ def run_graph_transport(self,
             data["direction"] = direction
             inputs.append(data)
 
+        particles = []
+        def gather_output(output):
+            particles.append(output)
+
         # Run
         tic = timeit.default_timer()
         pool = mp.Pool(min(self.ncpu, nparticles))
-        particles = pool.map(track_particle, inputs, chunksize = 1)
+        for data in inputs:
+            pool.apply_async(track_particle, args=(data,), callback=gather_output)
         pool.close()
         pool.join()
+
+        print(particles)
+
+        # particles = pool.map(track_particle, inputs, chunksize = 1)
+        # pool.close()
+        # pool.join()
         pool.terminate()
 
         elapsed = timeit.default_timer() - tic
