@@ -373,6 +373,14 @@ def run_graph_transport(self,
         ## Prepare input data
         inputs = []
 
+        tic = timeit.default_timer()
+        pool = mp.Pool(min(self.ncpu, nparticles))
+
+        particles = []
+        def gather_output(output):
+            particles.append(output)
+        
+
         for i in range(nparticles):
             data = {}
             data["G"] = G
@@ -388,16 +396,15 @@ def run_graph_transport(self,
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
-            inputs.append(data)
+            # inputs.append(data)
+            pool.apply_async(track_particle, args=(data,), callback=gather_output)
 
-        particles = []
-        def gather_output(output):
-            particles.append(output)
+            print(f"running {i}")
 
         # Run
-        tic = timeit.default_timer()
-        pool = mp.Pool(min(self.ncpu, nparticles))
-        particles = pool.map(track_particle, inputs)
+
+        # pool = mp.Pool(min(self.ncpu, nparticles))
+        # particles = pool.map(track_particle, inputs)
         #for data in inputs:
         #    pool.apply_async(track_particle, args=(data,), callback=gather_output)
         pool.close()
