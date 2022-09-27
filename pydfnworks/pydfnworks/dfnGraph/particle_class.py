@@ -211,7 +211,7 @@ class Particle():
         -------
             None
         """
-
+        np.random.seed(self.particle_number)
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
