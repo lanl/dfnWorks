@@ -19,7 +19,7 @@ from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
 
-def track_particle(data):
+def track_particle(i):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -35,24 +35,27 @@ def track_particle(data):
                 Particle will full trajectory
 
     """
-    particle = Particle(data["particle_number"], data["initial_position"],
-                        data["tdrw_flag"], data["matrix_porosity"],
-                        data["matrix_diffusivity"], data["fracture_spacing"],
-                        data["trans_prob"], data["transfer_time"],
-                        data["cp_flag"], data["control_planes"],
-                        data["direction"])
-
-    # get current process information
     p = mp.current_process()
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
+    print(f"--> Particle {i}  is starting on worker {cpu_id}")
+    return i
+    # particle = Particle(data["particle_number"], data["initial_position"],
+    #                     data["tdrw_flag"], data["matrix_porosity"],
+    #                     data["matrix_diffusivity"], data["fracture_spacing"],
+    #                     data["trans_prob"], data["transfer_time"],
+    #                     data["cp_flag"], data["control_planes"],
+    #                     data["direction"])
 
-    print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+    # # get current process information
 
-    particle.track(data["G"], data["nbrs_dict"])
-    # Current position is initial positions assigned in get_initial_positions
 
-    return particle
+    # print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+
+    # particle.track(data["G"], data["nbrs_dict"])
+    # # Current position is initial positions assigned in get_initial_positions
+
+    # return particle
 
 def get_initial_posititions(G, initial_positions, nparticles):
     """ Distributes initial particle positions 
