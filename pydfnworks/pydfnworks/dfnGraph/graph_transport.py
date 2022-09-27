@@ -35,12 +35,12 @@ def track_particle(data):
                 Particle will full trajectory
 
     """
-    particle = Particle(data["particle_number"], data["initial_position"],
-                        data["tdrw_flag"], data["matrix_porosity"],
-                        data["matrix_diffusivity"], data["fracture_spacing"],
-                        data["trans_prob"], data["transfer_time"],
-                        data["cp_flag"], data["control_planes"],
-                        data["direction"])
+    # particle = Particle(data["particle_number"], data["initial_position"],
+    #                     data["tdrw_flag"], data["matrix_porosity"],
+    #                     data["matrix_diffusivity"], data["fracture_spacing"],
+    #                     data["trans_prob"], data["transfer_time"],
+    #                     data["cp_flag"], data["control_planes"],
+    #                     data["direction"])
 
     # get current process information
     p = mp.current_process()
@@ -49,10 +49,10 @@ def track_particle(data):
 
     print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
 
-    particle.track(data["G"], data["nbrs_dict"])
+    # particle.track(data["G"], data["nbrs_dict"])
     # Current position is initial positions assigned in get_initial_positions
 
-    return particle
+    return 0 
 
 
 def get_initial_posititions(G, initial_positions, nparticles):
@@ -402,12 +402,6 @@ def run_graph_transport(self,
             pool.apply_async(track_particle, args=(data,), callback=gather_output)
         pool.close()
         pool.join()
-
-        print(particles)
-
-        # particles = pool.map(track_particle, inputs, chunksize = 1)
-        # pool.close()
-        # pool.join()
         pool.terminate()
 
         elapsed = timeit.default_timer() - tic
