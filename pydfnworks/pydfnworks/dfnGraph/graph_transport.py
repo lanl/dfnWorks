@@ -19,7 +19,7 @@ from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
 
-def track_particle(data, G, nbrs_dict):
+def track_particle(data):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -37,10 +37,10 @@ def track_particle(data, G, nbrs_dict):
                 Particle will full trajectory
 
     """
-    #p = mp.current_process()
-    #_, cpu_id = p.name.split("-")
-    #cpu_id = int(cpu_id)
-    #print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
+    p = mp.current_process()
+    _, cpu_id = p.name.split("-")
+    cpu_id = int(cpu_id)
+    print(f"--> Particle {data['particle_number']}  is starting on worker {cpu_id}")
     particle = Particle(data["particle_number"], data["initial_position"],
                         data["tdrw_flag"], data["matrix_porosity"],
                         data["matrix_diffusivity"], data["fracture_spacing"],
@@ -49,6 +49,7 @@ def track_particle(data, G, nbrs_dict):
                         data["direction"])
 
     # # get current process information
+    global G, nbrs_dict
     particle.track(G, nbrs_dict)
     return particle
 
@@ -318,6 +319,7 @@ def run_graph_transport(self,
     print(f"--> Control Plane Flag {control_plane_flag}")
 
     print("--> Creating downstream neighbor list")
+    global nbrs_dict 
     nbrs_dict = create_neighbor_list(G)
 
     print("--> Getting initial Conditions")
@@ -394,7 +396,7 @@ def run_graph_transport(self,
             data["control_planes"] = control_planes
             data["direction"] = direction
             # inputs.append(data)
-            pool.apply_async(track_particle, args=(data,G,nbrs_dict), callback=gather_output)
+            pool.apply_async(track_particle, args=(data,), callback=gather_output)
 
         # pool = mp.Pool(min(self.ncpu, nparticles))
         # particles = pool.map(track_particle, inputs)
