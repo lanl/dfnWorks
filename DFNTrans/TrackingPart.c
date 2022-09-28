@@ -527,6 +527,9 @@ void ParticleTrack ()
         
         if (ins == 0) {
             printf("Initial cell is not found for particle %d %f %f in fract %d. \n", np + 1, particle[np].position[0], particle[np].position[1], particle[np].fracture);
+
+            fclose (wpt);
+            fclose (wpt_att);
         } else {
             // set up initial values for Lagrangian variables
             lagvariable.tau = 0.0;
@@ -676,8 +679,10 @@ void ParticleTrack ()
                                 printf("overload\n");
                                 FLAG_OUT = 0;
                                 t_end = t;
+
+                                if (!tfile)
+                                    free(tempdata);
                                 break;
-                                free(tempdata);
                             }
                             
                             tempdata = (struct tempout*)realloc(tempdata, sizeof(struct tempout) * capacity);
@@ -1053,6 +1058,9 @@ void ParticleTrack ()
                     sprintf(buffer, "rm%c-f%c%s%c%s  ", wspace, wspace, filename1, wspace, filename2);
                     system (buffer);
                 }
+            }else{
+                fclose(wpt);
+                fclose(wpt_att);
             }
         } //end if ins!=0 (the initial cell was found)
         
