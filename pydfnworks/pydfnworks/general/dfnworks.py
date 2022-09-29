@@ -151,8 +151,10 @@ class DFNWORKS(Frozen):
                  flow_solver="PFLOTRAN",
                  inp_file="full_mesh.inp",
                  uge_file="full_mesh.uge",
+                 mat_file='materialid.dat',
                  stor_file=None,
                  vtk_file=None,
+                 num_nodes=None,
                  mesh_type='dfn',
                  cell_based_aperture=False):
 
@@ -180,14 +182,16 @@ class DFNWORKS(Frozen):
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
-
+        
+        self.num_nodes = num_nodes
         self.vtk_file = vtk_file
         self.mesh_type = mesh_type
         self.inp_file = inp_file
         self.uge_file = uge_file
+        self.mat_file = mat_file
         self.stor_file = stor_file
         self.flow_solver = flow_solver
-
+        
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
