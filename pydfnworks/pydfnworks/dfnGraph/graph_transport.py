@@ -5,20 +5,16 @@
 
 """
 
+import timeit
 import sys
 import networkx as nx
 import numpy as np
-
 import multiprocessing as mp
-import timeit
-
 
 # pydfnworks graph modules modules
 import pydfnworks.dfnGraph.particle_io as io
 from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
-
-
 
 def track_particle(data, verbose = False):
     """ Tracks a single particle through the graph
