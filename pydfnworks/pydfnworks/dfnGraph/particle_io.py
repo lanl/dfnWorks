@@ -160,7 +160,7 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     with open(partime_file, "w") as fp_partime:
         # Write Header
         fp_partime.write(
-            "# Total Advective time (s), Total diffusion time (s), Total travel time (Adv. + Diff.) (s), Total pathline distance (m), Beta [s/m] \n"
+            "Advective time (s),Matrix Diffusion time (s),Total travel time (s),Pathline length (m),Beta [s/m]\n"
         )
         stuck_particles = 0
         for particle in particles:
