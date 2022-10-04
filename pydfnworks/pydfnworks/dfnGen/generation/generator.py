@@ -279,7 +279,7 @@ def gather_dfn_gen_output(self):
 
 
 def assign_hydraulic_properties(self):
-    '''Assigns hydraulic properties for each familiy    
+    '''Assigns hydraulic properties for each familiy and user defined fractures    
     
     Parameters
     -----------
@@ -293,7 +293,8 @@ def assign_hydraulic_properties(self):
     ------
     '''
 
-    hy_value_flag = False
+    
+    ### Assign variables for fracture families
 
     for i in range(self.params['nFracFam']['value']):
 
@@ -302,8 +303,63 @@ def assign_hydraulic_properties(self):
         hy_params = self.fracture_families[i]['hydraulic_properties']['params']['value']
 
         if hy_variable is not None:
-            hy_value_flag = True
             self.generate_hydraulic_values(hy_variable, hy_function, hy_params, family_id=i+1)
             
-    if hy_value_flag == True:                                                                                 
-        self.dump_hydraulic_values()
+    ### Assign variables for user defined fractures
+    ##Logic here, loop through user defined fractures
+    ## first check flag to insert 
+    fracture_num = 1
+
+    if self.params['insertUserRectanglesFirst']['value'] == 0:
+        print('--> Inserting User Ellipse Hydraulic Params First')
+        for i in range(len(self.user_ell_params)):
+            print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_ell_params[i]['hy_prop_type']
+            value = self.user_ell_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+        for i in range(len(self.user_rect_params)):
+            print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_rect_params[i]['hy_prop_type']
+            value = self.user_rect_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+        for i in range(len(self.user_poly_params)):
+            print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_poly_params[i]['hy_prop_type']
+            value = self.user_poly_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+    else:
+        print('--> Inserting User Rectangles Hydraulic Params First')
+        for i in range(len(self.user_rect_params)):
+            print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_rect_params[i]['hy_prop_type']
+            value = self.user_rect_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+        for i in range(len(self.user_ell_params)):
+            print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_ell_params[i]['hy_prop_type']
+            value = self.user_ell_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+        for i in range(len(self.user_poly_params)):
+            print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+            hy_prop_type = self.user_poly_params[i]['hy_prop_type']
+            value = self.user_poly_params[i][hy_prop_type]
+            print(f'{hy_prop_type} = {value}')
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            fracture_num += 1
+
+    self.dump_hydraulic_values()

@@ -22,7 +22,10 @@ def add_user_fract(self,
                   normal_vector = None,
                   trend_plunge = None,
                   dip_strike = None,
-                  number_of_vertices = None
+                  number_of_vertices = None,
+                  permeability = None,
+                  transmissivity = None,
+                  aperture = None
                   ):
     
     """Specifies user defined fracture parameters for the DFN.
@@ -54,9 +57,13 @@ def add_user_fract(self,
         Please be aware, the user fracture files can only be automatically written for
         ellipses and rectangles not specified by coordinate
     """
-    
+
+    hy_prop_type = determine_hy_prop_type(aperture, transmissivity, permeability)
+
     
     if shape == 'rect':
+        
+        rect_param_dict = {}
         
         if by_coord == True:
 
@@ -75,8 +82,6 @@ def add_user_fract(self,
                 self.params['userRectanglesOnOff']['value'] = 1
                 self.params['UserRect_Input_File_Path']['value'] = file_name
                 
-                rect_param_dict = {}
-                
                 rect_param_dict['file_name'] = file_name
                 rect_param_dict['Radii:'] = radii
                 rect_param_dict['Aspect_Ratio:'] = aspect_ratio
@@ -89,9 +94,16 @@ def add_user_fract(self,
                 rect_param_dict['Dip_Strike:'] = dip_strike
                 rect_param_dict['Number_of_Vertices:'] = number_of_vertices
                 
-                self.user_rect_params.append(rect_param_dict)
+        rect_param_dict['aperture'] = aperture
+        rect_param_dict['transmissivity'] = transmissivity
+        rect_param_dict['permeability'] = permeability
+        rect_param_dict['hy_prop_type'] = hy_prop_type
+
+        self.user_rect_params.append(rect_param_dict)
 
     elif shape == 'ell':
+
+        ell_param_dict = {}
         
         if by_coord == True:
 
@@ -99,7 +111,7 @@ def add_user_fract(self,
             self.params['EllByCoord_Input_File_Path']['value'] = file_name
             
         else:
-            
+
             if from_file == True:
             
                 self.params['userEllipsesOnOff']['value'] = 1
@@ -109,8 +121,6 @@ def add_user_fract(self,
                 
                 self.params['userEllipsesOnOff']['value'] = 1
                 self.params['UserEll_Input_File_Path']['value'] = file_name
-                
-                ell_param_dict = {}
                 
                 ell_param_dict['file_name'] = file_name
                 ell_param_dict['Radii:'] = radii
@@ -124,14 +134,28 @@ def add_user_fract(self,
                 ell_param_dict['Dip_Strike:'] = dip_strike
                 ell_param_dict['Number_of_Vertices:'] = number_of_vertices
                 
-                self.user_ell_params.append(ell_param_dict)
+        ell_param_dict['aperture'] = aperture
+        ell_param_dict['transmissivity'] = transmissivity
+        ell_param_dict['permeability'] = permeability
+        ell_param_dict['hy_prop_type'] = hy_prop_type
+
+        self.user_ell_params.append(ell_param_dict)
                 
     elif shape == 'poly':
      
-     # user polygon
-         self.params['userPolygonByCoord']['value'] = 1
-         self.params['PolygonByCoord_Input_File_Path']['value'] = file_name
-        
+        # user polygon
+        self.params['userPolygonByCoord']['value'] = 1
+        self.params['PolygonByCoord_Input_File_Path']['value'] = file_name
+       
+        poly_param_dict = {}
+
+        poly_param_dict['aperture'] = aperture
+        poly_param_dict['transmissivity'] = transmissivity
+        poly_param_dict['permeability'] = permeability
+        poly_param_dict['hy_prop_type'] = hy_prop_type
+
+        self.user_poly_params.append(poly_param_dict)
+
     else:
         error = "user fracture shape is not specified correctly, options are 'rect', 'ell', or 'poly'\n"
         sys.stderr.write(error)
@@ -307,4 +331,49 @@ def write_user_fractures_to_file(self):
             
     
     
+def determine_hy_prop_type(aperture, transmissivity, permeability):
+
+    """Determines the type of user defined hydraulic property based on user inupt
+
+        Parameters
+        -------------
+        aperture : None or Float
+        transmissivity : None or Float
+        permeability : None or Float
+
+        Returns
+        ---------
+        The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown
+                                                                                           Notes
+        -------"""
     
+
+    #Determine Hydraulic Property type
+
+    hy_prop_type = None
+
+    if aperture!= None:
+        hy_prop_type = 'aperture'
+    
+    if transmissivity!= None:
+        if hy_prop_type!=None:
+            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        else:
+            hy_prop_type = 'transmissivity'
+
+    if permeability!= None:
+        if hy_prop_type!=None:
+            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            sys.stderr.write(error)
+            sys.exit(1)
+        else:
+            hy_prop_type = 'permeability'
+
+    if hy_prop_type == None:
+        error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    return hy_prop_type
