@@ -182,7 +182,7 @@ def dump_particle_info(particles, partime_file, frac_id_file):
     return stuck_particles
 
 
-def dump_control_planes(particles, control_planes):
+def dump_control_planes(particles, control_planes, format = 'hdf5'):
     """ write control plane travel time information to files 
 
         Parameters
@@ -198,30 +198,58 @@ def dump_control_planes(particles, control_planes):
             None
     """
 
-    print(
-        '--> Writting advective travel times at control planes to control_planes_adv.dat'
-    )
-    with open('control_planes_adv.dat', "w") as fp:
-        fp.write(f"cp,")
-        for cp in control_planes[:-1]:
-            fp.write(f"{cp},")
-        fp.write(f"{control_planes[-1]}\n")
-        for particle in particles:
-            fp.write(f"{particle.particle_number},")
-            for tau in particle.cp_adv_time[:-1]:
-                fp.write(f"{tau:0.12e},")
-            fp.write(f"{particle.cp_adv_time[-1]:0.12e}\n")
 
-    print(
-        '--> Writting total travel times at control planes to control_planes_total.dat'
-    )
-    with open('control_planes_total.dat', "w") as fp:
-        fp.write(f"cp,")
-        for cp in control_planes[:-1]:
-            fp.write(f"{cp},")
-        fp.write(f"{control_planes[-1]}\n")
-        for particle in particles:
-            fp.write(f"{particle.particle_number},")
-            for tau in particle.cp_tdrw_time[:-1]:
-                fp.write(f"{tau:0.12e},")
-            fp.write(f"{particle.cp_tdrw_time[-1]:0.12e}\n")
+    num_cp = len(control_planes)
+    num_particles = len(particles)
+    adv_times = np.zeros((num_cp,num_particles))
+    total_times = np.zeros((num_cp,num_particles))
+    for i,particle in enumerate(particles):
+        adv_times[:,i] = particle.cp_adv_time
+        total_times[:,i] = particle.cp_tdrw_time
+
+    if format == "ascii":
+        print(
+            '--> Writting advective travel times at control planes to control_planes_adv.dat'
+        )
+        header = control_planes[0] 
+        for cp in control_planes[1:-1]:
+            header += f"{cp},"
+        header += f"{control_planes[-1]}"
+        np.savetxt("control_planes_adv.dat", adv_times, delimeter=",", header = header)
+        np.savetxt("control_planes_adv.dat", total_times, delimeter=",", header = header)
+
+    elif format == "hdf5":
+        with h5py.File("control_planes.hdf5", "w") as f5file:
+            dataset_name = 'control_planes'
+            h5dset = f5file.create_dataset(dataset_name, data=control_planes)
+            for it in range(num_cp):
+                cp_subgroup = f5file.create_group(
+                    f'cp_{it}')
+                dataset_name = 'adv_times'
+                adv_cp = adv_times[it,:]
+
+                h5dset = cp_subgroup.create_dataset(dataset_name,
+                    data=adv_cp,
+                    dtype='float64')
+
+                dataset_name = 'total_times'
+                total_cp = total_times[it,:]
+
+                h5dset = cp_subgroup.create_dataset(dataset_name,
+                    data=total_cp,
+                    dtype='float64')
+
+            # for particle in particles:
+            #     particle_subgroup = f5file.create_group(
+            #         f'particle_{particle.particle_number+1}')
+
+            #     dataset_name = 'adv_time'
+            #     h5dset = particle_subgroup.create_dataset(dataset_name,
+            #                                           data=particle.cp_adv_time,
+            #                                           dtype='float64')
+
+            #     dataset_name = 'total_time'
+            #     h5dset = particle_subgroup.create_dataset(dataset_name,
+            #                                           data=particle.cp_total_time,
+            #                                           dtype='float64')
+        f5file.close()
