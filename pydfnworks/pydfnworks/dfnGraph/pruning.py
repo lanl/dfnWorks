@@ -8,7 +8,12 @@ from networkx.algorithms.flow.preflowpush import *
 from itertools import islice
 
 
-def current_flow_threshold(self, G, source = "s", target = "t", weight = None, thrs = 0.0):
+def current_flow_threshold(self,
+                           G,
+                           source="s",
+                           target="t",
+                           weight=None,
+                           thrs=0.0):
     """ Runs current flow (Potential drop between source and target) on the Graph G, and returns a subgraph such that the current on the edges is greater than the threshold value (thrs).
     
     Parameters
@@ -34,16 +39,22 @@ def current_flow_threshold(self, G, source = "s", target = "t", weight = None, t
         Graph attributes (node and edge) are not retained on the subgraph H. 
     """
 
-
-
-    print(f'--> Running Current Flow with weight : {weight} and threshold {thrs}')
-    cf = nx.edge_current_flow_betweenness_centrality_subset(G,sources=[source],targets=[target],weight=weight)
+    print(
+        f'--> Running Current Flow with weight : {weight} and threshold {thrs}'
+    )
+    cf = nx.edge_current_flow_betweenness_centrality_subset(G,
+                                                            sources=[source],
+                                                            targets=[target],
+                                                            weight=weight)
     print("Current Flow Complete")
-    currentflow_edges = [(u,v) for (u,v),d in cf.items() if d > thrs]
+    currentflow_edges = [(u, v) for (u, v), d in cf.items() if d > thrs]
     H = nx.Graph(currentflow_edges, representation=G.graph["representation"])
-    print(f"--> Of the {G.number_of_nodes()} in the original graph,  {H.number_of_nodes()} are in the thresholded network")
+    print(
+        f"--> Of the {G.number_of_nodes()} in the original graph,  {H.number_of_nodes()} are in the thresholded network"
+    )
     print("--> Running Current Flow Complete")
     return H
+
 
 def k_shortest_paths(G, k, source, target, weight):
     """Returns the k shortest paths in a graph 
@@ -176,5 +187,3 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None', k=''):
             break
     print("--> Complete")
     return Hprime
-
-

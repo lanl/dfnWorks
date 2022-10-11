@@ -5,13 +5,14 @@ import sys
 
 from networkx.readwrite import json_graph
 import matplotlib
+
 matplotlib.use('Agg')
 
 import matplotlib.pylab as plt
 
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
-from pydfnworks.dfnGraph.fracture_graph import create_fracture_graph 
-from pydfnworks.dfnGraph.bipartite_graph import create_bipartite_graph 
+from pydfnworks.dfnGraph.fracture_graph import create_fracture_graph
+from pydfnworks.dfnGraph.bipartite_graph import create_bipartite_graph
 
 
 def create_graph(self, graph_type, inflow, outflow):
@@ -45,7 +46,9 @@ def create_graph(self, graph_type, inflow, outflow):
     elif graph_type == "bipartite":
         G = create_bipartite_graph(inflow, outflow)
     else:
-        print(f"Error. Unknown graph type.\nType provided: {graph_type}.\nAccetable names: fracture, intersection, bipartite.\nReturning empty graph.")
+        print(
+            f"Error. Unknown graph type.\nType provided: {graph_type}.\nAccetable names: fracture, intersection, bipartite.\nReturning empty graph."
+        )
         return nx.Graph()
     return G
 
@@ -86,7 +89,6 @@ def boundary_index(bc_name):
         error = f"Error. Unknown boundary condition: {bc_name} \nExiting\n"
         sys.stderr.write(error)
         sys.exit(1)
-
 
 
 def add_fracture_source(self, G, source):
@@ -407,4 +409,3 @@ def load_json_graph(self, name):
     G = json_graph.node_link_graph(json.load(fp))
     print("Complete")
     return G
-

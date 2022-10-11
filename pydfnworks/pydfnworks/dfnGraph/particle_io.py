@@ -4,6 +4,8 @@ import h5py
 import timeit
 import multiprocessing as mp
 import numpy as np
+import pandas as pd
+import pickle
 
 
 def dump_trajectory(particle):
@@ -133,7 +135,36 @@ def dump_trajectories(particles, num_cpu, single_file=True):
         )
 
 
-def dump_particle_info(particles, partime_file, frac_id_file):
+def gather_particle_info(particles):
+    """ Gather particle information into numpy arrays.
+    
+    
+    """
+    # Gather data
+    stuck_particle_cnt = 0
+    for particle in particles:
+        if not particle.exit_flag:
+            stuck_particle_cnt += 1
+
+    particle_exit_cnt = len(particles) - stuck_particle_cnt
+
+    adv_times = np.zeros(particle_exit_cnt)
+    md_times = np.zeros_like(adv_times)
+    total_times = np.zeros_like(adv_times)
+    length = np.zeros_like(adv_times)
+    beta = np.zeros_like(adv_times)
+
+    for i, particle in enumerate(particles):
+        adv_times[i] = particle.advect_time
+        md_times[i] = particle.matrix_diffusion_time
+        total_times[i] = particle.total_time
+        length[i] = particle.length
+        beta[i] = particle.beta
+
+    return adv_times, md_times, total_times, length, beta, stuck_particle_cnt
+
+
+def dump_particle_info(particles, partime_file, frac_id_file, format):
     """ If running graph transport in parallel, this function dumps out all the
         particle information is a single pass rather then opening and closing the
         files for every particle
@@ -148,6 +179,9 @@ def dump_particle_info(particles, partime_file, frac_id_file):
 
             frac_id_file : string
                 name of file to which detailed information of each particle's travel will be written
+            
+            format : string
+                file format for output. Options are hdf5 (default) and ascii. 
 
         Returns
         -------
@@ -155,34 +189,91 @@ def dump_particle_info(particles, partime_file, frac_id_file):
                 Number of particles that do not exit the domain
 
     """
+    print("")
+    adv_times, md_times, total_times, length, beta, stuck_cnt = gather_particle_info(
+        particles)
 
-    print(f"--> Writing Data to files: {partime_file}")
-    with open(partime_file, "w") as fp_partime:
+    if format == 'ascii':
+        filename = f"{partime_file}.dat"
+        print(f"--> Writing Data to files: {filename}")
         # Write Header
-        fp_partime.write(
-            "Advective time (s),Matrix Diffusion time (s),Total travel time (s),Pathline length (m),Beta [s/m]\n"
-        )
-        stuck_particles = 0
-        for particle in particles:
-            if particle.exit_flag:
-                fp_partime.write(
-                    f"{particle.advect_time:0.12e},{particle.matrix_diffusion_time:0.12e},{particle.total_time:0.12e},{particle.length:0.12e},{particle.beta:0.12e}\n"
-                )
-            else:
-                stuck_particles += 1
+        header = "Advective time [s],Matrix Diffusion time [s],Total travel time [s],Pathline length [m],Beta (s/m)"
+        np.savetxt(filename,
+                   np.c_[adv_times, md_times, total_times, length, beta],
+                   delimiter=",",
+                   header=header)
 
-    if frac_id_file is not None:
-        print(f"--> Writing fractures visted to file: {frac_id_file}")
-        with open(frac_id_file, "w") as fp_frac_id:
-            for particle in particles:
-                for d in particle.frac_seq[:-1]:
-                    fp_frac_id.write(f"{d:d},")
-                fp_frac_id.write(f"{particle.frac_seq[-1]:d}\n")
-    print("--> Writing Data Complete")
-    return stuck_particles
+        if frac_id_file:
+            filename = f"{frac_id_file}.dat"
+            print(f"--> Writing fractures visted to file: {filename}")
+            with open(filename, "w") as fp_frac_id:
+                for particle in particles:
+                    for d in particle.frac_seq[:-1]:
+                        fp_frac_id.write(f"{d:d},")
+                    fp_frac_id.write(f"{particle.frac_seq[-1]:d}\n")
+
+    elif format == 'hdf5':
+        filename = f"{partime_file}.hdf5"
+        print(f"--> Writing particle data to file: {filename}")
+        with h5py.File(filename, "w") as f5file:
+            dataset_name = 'Advective time [s]'
+            h5dset = f5file.create_dataset(dataset_name, data=adv_times)
+
+            dataset_name = "Matrix Diffusion time [s]"
+            h5dset = f5file.create_dataset(dataset_name, data=md_times)
+
+            dataset_name = "Total travel time [s]"
+            h5dset = f5file.create_dataset(dataset_name, data=total_times)
+
+            dataset_name = "Pathline length [m]"
+            h5dset = f5file.create_dataset(dataset_name, data=length)
+
+            dataset_name = "Beta [s/m]"
+            h5dset = f5file.create_dataset(dataset_name, data=beta)
+
+        if frac_id_file:
+            filename = f"{frac_id_file}.hdf5"
+            print(f"--> Writing fractures visted to file: {filename}")
+            with h5py.File(filename, "a") as f5file:
+                for particle in particles:
+                    traj_subgroup = f5file.create_group(
+                        f'particle-{particle.particle_number+1}')
+
+                    dataset_name = 'fractures'
+                    data = np.asarray(particle.frac_seq)
+                    h5dset = traj_subgroup.create_dataset(dataset_name,
+                                                          data=data,
+                                                          dtype='float64')
+    elif format == "pickle":
+        filename = f"{partime_file}.p"
+        print(f"--> Writing Data to files: {filename}")
+        data_dict = {
+            'Advective time [s]': adv_times,
+            'Matrix Diffusion time [s]': md_times,
+            'Total travel time [s]': total_times,
+            'Pathline length [m]': length,
+            'Beta (s/m)': beta
+        }
+        pickle.dump(data_dict, open(filename, "wb"))
+
+    elif format == "pandas":
+        filename = f"{partime_file}_pandas.p"
+        print(f"--> Writing Data to files: {filename}")
+        data_dict = {
+            'Advective time [s]': adv_times,
+            'Matrix Diffusion time [s]': md_times,
+            'Total travel time [s]': total_times,
+            'Pathline length [m]': length,
+            'Beta (s/m)': beta
+        }
+        df = pd.from_dict(data_dict)
+        df.to_pickle(filename)
+
+    print("--> Writing Data Complete\n")
+    return stuck_cnt
 
 
-def dump_control_planes(particles, control_planes, format = 'hdf5'):
+def dump_control_planes(particles, control_planes, filename, format):
     """ write control plane travel time information to files 
 
         Parameters
@@ -192,64 +283,66 @@ def dump_control_planes(particles, control_planes, format = 'hdf5'):
 
             control_planes : list
                 list of control plane values
+
+            filename : str
+                Base name for file.
+
+            format : str
+                File format. Options are hdf5 (Default) and ascii
             
         Returns
         ------------
             None
-    """
 
+        Notes
+        -------------
+            None
+            
+    """
 
     num_cp = len(control_planes)
     num_particles = len(particles)
-    adv_times = np.zeros((num_cp,num_particles))
-    total_times = np.zeros((num_cp,num_particles))
-    for i,particle in enumerate(particles):
-        adv_times[:,i] = particle.cp_adv_time
-        total_times[:,i] = particle.cp_tdrw_time
+    adv_times = np.zeros((num_cp, num_particles))
+    total_times = np.zeros((num_cp, num_particles))
+    for i, particle in enumerate(particles):
+        adv_times[:, i] = particle.cp_adv_time
+        total_times[:, i] = particle.cp_tdrw_time
 
     if format == "ascii":
         print(
-            '--> Writting advective travel times at control planes to control_planes_adv.dat'
+            f'--> Writting travel times at control planes to {filename}_adv.dat & {filename}_total.dat'
         )
-        header = control_planes[0] 
+        header = f"{control_planes[0]},"
         for cp in control_planes[1:-1]:
             header += f"{cp},"
         header += f"{control_planes[-1]}"
-        np.savetxt("control_planes_adv.dat", adv_times, delimeter=",", header = header)
-        np.savetxt("control_planes_adv.dat", total_times, delimeter=",", header = header)
+        np.savetxt(f"{filename}_adv.dat",
+                   adv_times,
+                   delimiter=",",
+                   header=header)
+        np.savetxt(f"{filename}_total.dat",
+                   total_times,
+                   delimiter=",",
+                   header=header)
 
     elif format == "hdf5":
-        with h5py.File("control_planes.hdf5", "w") as f5file:
+        print(f'--> Writting travel times at control planes to {filename}.h5')
+        with h5py.File(f"{filename}.hdf5", "w") as f5file:
             dataset_name = 'control_planes'
             h5dset = f5file.create_dataset(dataset_name, data=control_planes)
             for it in range(num_cp):
-                cp_subgroup = f5file.create_group(
-                    f'cp_{it}')
+                cp_subgroup = f5file.create_group(f'cp_{it}')
                 dataset_name = 'adv_times'
-                adv_cp = adv_times[it,:]
+                adv_cp = adv_times[it, :]
 
                 h5dset = cp_subgroup.create_dataset(dataset_name,
-                    data=adv_cp,
-                    dtype='float64')
+                                                    data=adv_cp,
+                                                    dtype='float64')
 
                 dataset_name = 'total_times'
-                total_cp = total_times[it,:]
-
+                total_cp = total_times[it, :]
                 h5dset = cp_subgroup.create_dataset(dataset_name,
-                    data=total_cp,
-                    dtype='float64')
+                                                    data=total_cp,
+                                                    dtype='float64')
 
-            # for particle in particles:
-            #     particle_subgroup = f5file.create_group(
-            #         f'particle_{particle.particle_number+1}')
-
-            #     dataset_name = 'adv_time'
-            #     h5dset = particle_subgroup.create_dataset(dataset_name,
-            #                                           data=particle.cp_adv_time,
-            #                                           dtype='float64')
-
-            #     dataset_name = 'total_time'
-            #     h5dset = particle_subgroup.create_dataset(dataset_name,
-            #                                           data=particle.cp_total_time,
-            #                                           dtype='float64')
         f5file.close()

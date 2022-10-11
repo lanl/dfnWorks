@@ -102,4 +102,3 @@ def create_bipartite_graph(inflow,
     print("--> Complete")
 
     return B
-

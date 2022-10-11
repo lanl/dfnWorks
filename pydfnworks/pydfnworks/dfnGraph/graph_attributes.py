@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 import sys
 
+
 def add_perm(G, fracture_info="fracture_info.dat"):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
@@ -24,7 +25,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
 """
 
     perm = np.genfromtxt(fracture_info, skip_header=1)[:, 1]
-    aperture = np.sqrt(12*perm)
+    aperture = np.sqrt(12 * perm)
 
     if G.graph['representation'] == "fracture":
         for n in nx.nodes(G):
@@ -34,7 +35,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
                 G.nodes[n]['iperm'] = 1.0 / perm[n - 1]
             else:
                 G.nodes[n]['perm'] = 1.0
-                G.nodes[n]['b'] = 1.0 
+                G.nodes[n]['b'] = 1.0
                 G.nodes[n]['iperm'] = 1.0
 
     elif G.graph['representation'] == "intersection":
@@ -46,7 +47,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
                 G[u][v]['iperm'] = 1.0 / perm[frac - 1]
             else:
                 G[u][v]['perm'] = 1.0
-                G[u][v]['b'] = 1.0 
+                G[u][v]['b'] = 1.0
                 G[u][v]['iperm'] = 1.0
 
     elif G.graph['representation'] == "bipartite":
@@ -107,4 +108,3 @@ def add_weight(G):
             G.edges[u, v]['weight'] = G.edges[u, v]['perm'] * G.edges[
                 u, v]['area'] / G.edges[u, v]['length']
     return
-

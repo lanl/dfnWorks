@@ -16,7 +16,8 @@ import pydfnworks.dfnGraph.particle_io as io
 from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 
-def track_particle(data, verbose = False):
+
+def track_particle(data, verbose=False):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -38,7 +39,9 @@ def track_particle(data, verbose = False):
         p = mp.current_process()
         _, cpu_id = p.name.split("-")
         cpu_id = int(cpu_id)
-        print(f"--> Particle {data['particle_number']} is starting on worker {cpu_id}")
+        print(
+            f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
+        )
 
     particle = Particle(data["particle_number"], data["initial_position"],
                         data["tdrw_flag"], data["matrix_porosity"],
@@ -52,8 +55,11 @@ def track_particle(data, verbose = False):
     global G_global
     particle.track(G_global, nbrs_dict)
     if verbose:
-        print(f"--> Particle {data['particle_number']} is complete on worker {cpu_id}")
+        print(
+            f"--> Particle {data['particle_number']} is complete on worker {cpu_id}"
+        )
     return particle
+
 
 def get_initial_posititions(G, initial_positions, nparticles):
     """ Distributes initial particle positions 
@@ -243,6 +249,7 @@ def run_graph_transport(self,
                         nparticles,
                         partime_file,
                         frac_id_file=None,
+                        format='hdf5',
                         initial_positions="uniform",
                         dump_traj=False,
                         tdrw_flag=False,
@@ -250,7 +257,8 @@ def run_graph_transport(self,
                         matrix_diffusivity=None,
                         fracture_spacing=None,
                         control_planes=None,
-                        direction=None):
+                        direction=None,
+                        cp_filename='control_planes'):
     """ Run  particle tracking on the given NetworkX graph
 
     Parameters
@@ -303,9 +311,18 @@ def run_graph_transport(self,
     -----
     Information on individual functions is found therein
     """
-    global G_global 
+    ## the flow graph needs to be a global variable so all processors can access it
+    ## without making a copy of it.
+    global G_global
     G_global = nx.Graph()
     G_global = G.copy()
+
+    if not format in ['ascii', 'hdf5']:
+        error = (
+            f"--> Error. Unknown file format provided in run_graph_transport.\n\n--> Provided value is {format}.\n--> Options: 'ascii' or 'hdf5'.\n\nExitting\n\n"
+        )
+        sys.stderr.write(error)
+        sys.exit(1)
 
     print("\n--> Running Graph Particle Tracking")
     # Check parameters for TDRW
@@ -321,11 +338,10 @@ def run_graph_transport(self,
     else:
         control_plane_flag = check_control_planes(
             control_planes=control_planes, direction=direction)
-
     print(f"--> Control Plane Flag {control_plane_flag}")
 
     print("--> Creating downstream neighbor list")
-    global nbrs_dict 
+    global nbrs_dict
     nbrs_dict = create_neighbor_list(G)
 
     print("--> Getting initial Conditions")
@@ -367,9 +383,10 @@ def run_graph_transport(self,
             f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
         )
         stuck_particles = io.dump_particle_info(particles, partime_file,
-                                                frac_id_file)
+                                                frac_id_file, format)
         if control_plane_flag:
-            io.dump_control_planes(particles, control_planes)
+            io.dump_control_planes(particles, control_planes, cp_filename,
+                                   format)
 
         if dump_traj:
             io.dump_trajectories(particles, 1)
@@ -383,6 +400,7 @@ def run_graph_transport(self,
         pool = mp.Pool(min(self.ncpu, nparticles))
 
         particles = []
+
         def gather_output(output):
             particles.append(output)
 
@@ -402,7 +420,9 @@ def run_graph_transport(self,
             data["control_planes"] = control_planes
             data["direction"] = direction
             # inputs.append(data)
-            pool.apply_async(track_particle, args=(data,), callback=gather_output)
+            pool.apply_async(track_particle,
+                             args=(data, ),
+                             callback=gather_output)
 
         # pool = mp.Pool(min(self.ncpu, nparticles))
         # particles = pool.map(track_particle, inputs)
@@ -418,9 +438,10 @@ def run_graph_transport(self,
         )
 
         stuck_particles = io.dump_particle_info(particles, partime_file,
-                                                frac_id_file)
+                                                frac_id_file, format)
         if control_plane_flag:
-            io.dump_control_planes(particles, control_planes)
+            io.dump_control_planes(particles, control_planes, cp_filename,
+                                   format)
 
         if dump_traj:
             io.dump_trajectories(particles, min(self.ncpu, nparticles))
@@ -432,5 +453,9 @@ def run_graph_transport(self,
         print(
             f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit"
         )
+
+    # Clean up and delete the global versions
+    del G_global
+    del nbrs_dict
 
     return particles

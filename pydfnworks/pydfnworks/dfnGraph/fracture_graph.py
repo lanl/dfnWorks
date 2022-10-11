@@ -3,6 +3,7 @@ import numpy as np
 
 from pydfnworks.dfnGraph.graph_attributes import add_perm
 
+
 def create_fracture_graph(inflow,
                           outflow,
                           topology_file="connectivity.dat",
@@ -64,4 +65,3 @@ def create_fracture_graph(inflow,
     add_perm(G, fracture_info)
     print("--> Graph loaded")
     return G
-
