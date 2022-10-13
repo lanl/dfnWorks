@@ -1,0 +1,48 @@
+nUserEll: 2 
+ 
+Radii: 
+100 
+100 
+
+Aspect_Ratio: 
+1 
+1 
+
+Beta: 
+0 
+0 
+
+Translation: 
+[0, 0, 25] 
+[0, 25, 0] 
+
+userOrientationOption: 1 
+ 
+AngleOption: 
+1 
+1 
+
+Trend_Plunge: 
+[45, 35] 
+[111, 57] 
+
+Number_of_Vertices: 
+8 
+8 
+
+aperture 
+None 
+None 
+
+transmissivity 
+None 
+None 
+
+permeability 
+1e-12 
+1e-13 
+
+hy_prop_type 
+permeability 
+permeability 
+

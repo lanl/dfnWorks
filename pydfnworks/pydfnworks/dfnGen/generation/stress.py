@@ -80,7 +80,7 @@ def stress_based_apertures(self,
 
 
     # read fracture data:
-    initial_aperture = np.genfromtxt(self.aper_file, skip_header=1)[:, -1]
+    initial_aperture = self.aperture #np.genfromtxt(self.aper_file, skip_header=1)[:, -1]
     normals = np.genfromtxt('normal_vectors.dat', skip_header=0)
     radii_frac = np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
     num_frac = len(initial_aperture)
@@ -141,8 +141,10 @@ def stress_based_apertures(self,
     print(f"--> L2 change in apertures {np.sqrt(diff.sum()):0.2e}")
     print(f"--> Maximum change in apertures {max(diff):0.2e}")
 
-    k = convert(b, 'aperture', 'permeability')
-    T = convert(b, 'aperture', 'transmissivity')
-    self.dump_hydraulic_values(b, k, T, prefix='stress')
-    self.dump_hydraulic_values(b, k, T)
+    self.perm = convert(b, 'aperture', 'permeability')
+    self.transmissivity = convert(b, 'aperture', 'transmissivity')
+    self.aperture = b
+
+    self.dump_hydraulic_values()
+
     print("--> Computing aperture based on stress field complete ")

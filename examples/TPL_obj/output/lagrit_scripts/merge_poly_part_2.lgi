@@ -1,0 +1,41 @@
+
+# Change to read LaGriT
+read / lagrit /  mesh_4.lg / mo_4 / binary
+cmo / move / mo_4 / mo_final 
+define / MO_NAME_FRAC / mo_4
+
+cmo / addatt / MO_NAME_FRAC / volume / evol_one
+math / sum / MO_NAME_FRAC / evol_sum / 1 0 0 / MO_NAME_FRAC / evol_one 
+
+addmesh / merge / cmo_tmp / cmo_tmp / mo_4
+cmo / delete / mo_4
+
+# Change to read LaGriT
+read / lagrit /  mesh_5.lg / mo_5 / binary
+cmo / move / mo_5 / mo_final 
+define / MO_NAME_FRAC / mo_5
+
+cmo / addatt / MO_NAME_FRAC / volume / evol_one
+math / sum / MO_NAME_FRAC / evol_sum / 1 0 0 / MO_NAME_FRAC / evol_one 
+
+addmesh / merge / cmo_tmp / cmo_tmp / mo_5
+cmo / delete / mo_5
+
+# Change to read LaGriT
+read / lagrit /  mesh_6.lg / mo_6 / binary
+cmo / move / mo_6 / mo_final 
+define / MO_NAME_FRAC / mo_6
+
+cmo / addatt / MO_NAME_FRAC / volume / evol_one
+math / sum / MO_NAME_FRAC / evol_sum / 1 0 0 / MO_NAME_FRAC / evol_one 
+
+addmesh / merge / cmo_tmp / cmo_tmp / mo_6
+cmo / delete / mo_6
+#Writing out merged fractures
+
+mo / addatt/ cmo_tmp / volume / evol_all
+math / sum / cmo_tmp / evol_sum / 1 0 0 / cmo_tmp / evol_all  
+cmo select cmo_tmp
+dump lagrit part2.lg cmo_tmp
+finish 
+ 

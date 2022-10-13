@@ -1,1 +1,0 @@
-python run_regions.py -name /home/astansberry/dfnworks/examples/regions/regions_example -input regions_run_file.txt -ncpu 16 

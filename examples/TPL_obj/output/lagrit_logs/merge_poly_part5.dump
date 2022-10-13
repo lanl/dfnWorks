@@ -1,0 +1,197 @@
+ 
+ 
+*               * * * * * * * * * * * * * * * * * * * * * * * *                 
+*               *                                             *                 
+*               *    Program:  LaGriT V3.320   Linux          *                 
+*               *    date_compile: 2020/10/08 Static          *                 
+*               *    Run Time: 2022/Sep 21  17:25:41          *                 
+*               *    Manual:   http://lagrit.lanl.gov         *                 
+*               *                                             *                 
+*               * * * * * * * * * * * * * * * * * * * * * * * *                 
+ 
+                               -----oOo-----                                    
+             LaGriT V3 LA-CC-15-069  https://github.com/lanl/LaGriT             
+  Copyright 2016. Triad National Security, LLC.  All rights reserved. This      
+  program was produced under U.S. Government contract 89233218CNA000001         
+  for Los Alamos National Laboratory (LANL), which is operated by Triad         
+  National Security, LLC for the U.S. Department of Energy/National Nuclear     
+  Security Administration.  All rights in the program are reserved by Triad     
+  National Security, LLC, and the U.S. Department of Energy/National Nuclear    
+  Security Administration. The Government is granted for itself and others      
+  acting on its behalf a nonexclusive, paid-up, irrevocable worldwide license   
+  in this material to reproduce, prepare derivative works, distribute copies    
+  to the public, perform publicly and display publicly, and to permit others to 
+  do so. This software is open source and available under the BSD-3 License.    
+                               -----oOo-----                                    
+ 
+ 
+Output log file: lagrit_logs/merge_poly_part5.out                               
+Command log file: lagrit_logs/merge_poly_part5.log                              
+ 
+ Enter a command
+                                                                                
+# Change to read LaGriT                                                         
+ Enter a command
+read/lagrit/mesh_13.lg/mo_13/binary                                             
+cmo/addatt/mo_final/dfield/VDOUBLE/scalar/nnodes/linear/permanent/agltn         
+finish                                                                          
+cmo/addatt/mo_final/a_b/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/b_a/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/transauto/VDOUBLE/scalar/vector/user/permanent/x            
+finish                                                                          
+cmo/addatt/mo_final/xnorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/ynorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/znorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/family_id/VINT/scalar/nelements/linear/temporary/agltn      
+finish                                                                          
+ Enter a command
+cmo/move/mo_13/mo_final                                                         
+ Enter a command
+define/MO_NAME_FRAC/mo_13                                                       
+ Enter a command
+                                                                                
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+ADDATT/area: creating new attribute: evol_one                                   
+ Enter a command
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+sink attribute being created:   cmo = mo_13  att = evol_sum                     
+cmo/addatt/mo_13/evol_sum/REAL/scalar/scalar/constant/permanent/                
+finish                                                                          
+      1134 values summed from attribute evol_one                                
+evol_one sum =   0.106480303103E+02                                             
+cmo select mo_13                                                                
+finish                                                                          
+ Enter a command
+                                                                                
+addmesh/merge/cmo_tmp/cmo_tmp/mo_13                                             
+cmo/copy/cmo_tmp/mo_13                                                          
+finish                                                                          
+ Enter a command
+cmo/delete/mo_13                                                                
+     Released Mesh Object: mo_13                                                
+ Enter a command
+                                                                                
+# Change to read LaGriT                                                         
+ Enter a command
+read/lagrit/mesh_14.lg/mo_14/binary                                             
+cmo/addatt/mo_final/dfield/VDOUBLE/scalar/nnodes/linear/permanent/agltn         
+finish                                                                          
+cmo/addatt/mo_final/a_b/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/b_a/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/transauto/VDOUBLE/scalar/vector/user/permanent/x            
+finish                                                                          
+cmo/addatt/mo_final/xnorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/ynorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/znorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/family_id/VINT/scalar/nelements/linear/temporary/agltn      
+finish                                                                          
+ Enter a command
+cmo/move/mo_14/mo_final                                                         
+ Enter a command
+define/MO_NAME_FRAC/mo_14                                                       
+ Enter a command
+                                                                                
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+ADDATT/area: creating new attribute: evol_one                                   
+ Enter a command
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+sink attribute being created:   cmo = mo_14  att = evol_sum                     
+cmo/addatt/mo_14/evol_sum/REAL/scalar/scalar/constant/permanent/                
+finish                                                                          
+      1978 values summed from attribute evol_one                                
+evol_one sum =   0.153359270366E+02                                             
+cmo select mo_14                                                                
+finish                                                                          
+ Enter a command
+                                                                                
+addmesh/merge/cmo_tmp/cmo_tmp/mo_14                                             
+cmo/move/-tmp_source_internal-/cmo_tmp                                          
+finish                                                                          
+cmo/delete/-tmp_source_internal-/                                               
+     Released Mesh Object: -tmp_source_internal-                                
+finish                                                                          
+ Enter a command
+cmo/delete/mo_14                                                                
+     Released Mesh Object: mo_14                                                
+ Enter a command
+                                                                                
+# Change to read LaGriT                                                         
+ Enter a command
+read/lagrit/mesh_15.lg/mo_15/binary                                             
+cmo/addatt/mo_final/dfield/VDOUBLE/scalar/nnodes/linear/permanent/agltn         
+finish                                                                          
+cmo/addatt/mo_final/a_b/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/b_a/VINT/scalar/nnodes/linear/permanent/gxaf                
+finish                                                                          
+cmo/addatt/mo_final/transauto/VDOUBLE/scalar/vector/user/permanent/x            
+finish                                                                          
+cmo/addatt/mo_final/xnorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/ynorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/znorm/VDOUBLE/scalar/nelements/linear/temporary/agltn       
+finish                                                                          
+cmo/addatt/mo_final/family_id/VINT/scalar/nelements/linear/temporary/agltn      
+finish                                                                          
+ Enter a command
+cmo/move/mo_15/mo_final                                                         
+ Enter a command
+define/MO_NAME_FRAC/mo_15                                                       
+ Enter a command
+                                                                                
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+ADDATT/area: creating new attribute: evol_one                                   
+ Enter a command
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+sink attribute being created:   cmo = mo_15  att = evol_sum                     
+cmo/addatt/mo_15/evol_sum/REAL/scalar/scalar/constant/permanent/                
+finish                                                                          
+      2297 values summed from attribute evol_one                                
+evol_one sum =   0.163986073663E+02                                             
+cmo select mo_15                                                                
+finish                                                                          
+ Enter a command
+                                                                                
+addmesh/merge/cmo_tmp/cmo_tmp/mo_15                                             
+cmo/move/-tmp_source_internal-/cmo_tmp                                          
+finish                                                                          
+cmo/delete/-tmp_source_internal-/                                               
+     Released Mesh Object: -tmp_source_internal-                                
+finish                                                                          
+ Enter a command
+cmo/delete/mo_15                                                                
+     Released Mesh Object: mo_15                                                
+ Enter a command
+#Writing out merged fractures                                                   
+ Enter a command
+                                                                                
+mo/addatt/cmo_tmp/volume/evol_all                                               
+ 
+WARNING: Invalid LaGriT generator command: mo                                   
+ 
+error in command : mo/addatt/cmo_tmp/volume/evol_all                            
+ Enter a command
+math/sum/cmo_tmp/evol_sum/1 0 0/cmo_tmp/evol_all                                
+attribute does not exist:   cmo = cmo_tmp  att = evol_all                       
+ 
+FATAL ERROR: SUM unable to begin.                                               
+ 
+error in command : math/sum/cmo_tmp/evol_sum/1 0 0/cmo_tmp/evol_all             
+ Enter a command
+cmo select cmo_tmp                                                              
+ Enter a command
+dump lagrit part5.lg cmo_tmp                                                    
+ Enter a command
+finish                                                                          
+LaGriT successfully completed                                                   

@@ -1,3 +1,0 @@
-dfnGen /home/astansberry/dfnworks/examples/tdrw/gen_uniform_rects.dat
-dfnFlow /home/astansberry/dfnworks/examples/tdrw/dfn_explicit.in
-dfnTrans /home/astansberry/dfnworks/examples/tdrw/PTDFN_control_tdrw.dat

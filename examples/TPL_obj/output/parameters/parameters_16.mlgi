@@ -1,0 +1,24 @@
+define / ID / 16
+define / OUTFILE_GMV / mesh_16.gmv
+define / OUTFILE_AVS / mesh_16.inp
+define / OUTFILE_LG / mesh_16.lg
+define / POLY_FILE / poly_16.inp
+define / QUAD_FILE / tmp_quad_16.inp
+define / EXCAVATE_FILE / tmp_excavate_16.inp
+define / PRE_FINAL_FILE / tmp_pre_final_16.inp
+define / PRE_FINAL_MASSAGE / tmp_pre_final_massage_16.gmv
+define / H_SCALE / 1.000000e-01 
+define / H_EPS / 1.000000e-08 
+define / H_SCALE2 / 1.500000e-01 
+define / H_EXTRUDE / 5.000000e-02 
+define / H_TRANS / -0.001615 
+define / H_PRIME / 4.000000e-02 
+define / THETA  / 105.248804947559 
+define / X1 /  109.535816947444 
+define / Y1 / -10.094791015964 
+define / Z1 / -0.000000000000 
+define / X2 / -109.535816947444 
+define / Y2 / 10.094791015964 
+define / Z2 / 0.000000000000 
+define / FAMILY / 2 
+finish 

@@ -577,7 +577,7 @@ def find_well_intersection_points(self, wells):
     print("--> Checking for reduced_mesh.inp")
     if not os.path.isfile("reduced_mesh.inp"):
         print("--> reduced_mesh.inp not found. Creating it now.")
-        self.mesh_network(visual_mode=True)
+        self.mesh_network()
     else:
         print("--> reduced_mesh.inp found. Moving on.")
 

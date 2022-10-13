@@ -1,3 +1,0 @@
-dfnGen /home/astansberry/dfnworks/examples/reservoir_example/gen_file_reservoir_example.dat
-dfnFlow  /home/astansberry/dfnworks/examples/reservoir_example/reservoir_example_PFLOTRAN.in
-dfnTrans  /home/astansberry/dfnworks/examples/reservoir_example/PTDFN_control_reservoir_example.dat

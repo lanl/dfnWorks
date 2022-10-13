@@ -1,0 +1,128 @@
+
+========================================================
+            Network Generation Complete
+========================================================
+Version of DFNGen: 2.2
+Time Stamp: Wed Sep 21 17:25:29 2022
+
+Family 1 target P32 = 0.5, Final P32 = 0.504286
+Family 2 target P32 = 0.5, Final P32 = 0.508295
+
+________________________________________________________
+
+Statistics Before Isolated Fractures Removed:
+
+Fractures: 30
+Truncated: 26
+
+Total Surface Area:     1012.58 m^2
+Total Fractures Volume: 0.050629 m^3
+Total Fracture Density   (P30): 0.03
+Total Fracture Intensity (P32): 1.01258
+Total Fracture Porosity  (P33): 5.0629e-05
+
+Family: 1
+    Accepted: 15
+    Rejected: 0
+    Layer: Whole Domain 
+    Region: Whole Domain 
+    Surface Area: 504.286 m^2
+    Volume: 0.0252143 m^3
+    Fracture Intensity (P32): 0.504286
+
+Family: 2
+    Accepted: 15
+    Rejected: 1
+    Layer: Whole Domain 
+    Region: Whole Domain 
+    Surface Area: 508.295 m^2
+    Volume: 0.0254147 m^3
+    Fracture Intensity (P32): 0.508295
+
+
+________________________________________________________
+
+Statistics After Isolated Fractures Removed:
+Final Number of Fractures: 19
+Isolated Fractures Removed: 11
+Fractures before isolated fractures removed:: 30
+
+Total Surface Area:     826.957 m^2
+Total Fractures Volume: 0.0413478 m^3
+Total Fracture Density   (P30): 0.019
+Total Fracture Intensity (P32): 0.826957
+Total Fracture Porosity  (P33): 4.13478e-05
+
+Family: 1
+    Fractures After Isolated Fracture Removal: 9
+    Isolated Fractures Removed: 6
+    Accepted: 15
+    Rejected: 0
+    Layer: Whole Domain 
+    Region: Whole Domain 
+    Surface Area: 379.523 m^2
+    Volume: 0.0189761 m^3
+    Fracture Intensity (P32): 0.379523
+
+Family: 2
+    Fractures After Isolated Fracture Removal: 10
+    Isolated Fractures Removed: 5
+    Accepted: 15
+    Rejected: 1
+    Layer: Whole Domain 
+    Region: Whole Domain 
+    Surface Area: 447.434 m^2
+    Volume: 0.0223717 m^3
+    Fracture Intensity (P32): 0.447434
+
+
+________________________________________________________
+
+
+30 Fractures Accepted (Before Isolated Fracture Removal)
+19 Final Fractures (After Isolated Fracture Removal)
+
+Total Fractures Rejected: 1
+Total Fractures Re-translated: 55
+
+Number of Triple Intersection Points (Before Isolated Fracture Removal): 0
+
+Intersection Statistics:
+    Number of Intersections: 19 
+    Intersections Shortened: 4 
+    Original Intersection (Before Intersection Shrinking) Length: 53.0607 m
+    Intersection Length Discarded: 0.798146 m
+    Final Intersection Length: 52.2626 m
+
+Rejection Statistics: 
+    2 Short Intersections 
+    0 Close to Node
+    46 Close to Edge
+    0 Vertice Close to Edge
+    0 Outside of Domain
+    8 Triple intersection Rejections
+    0 Intersections Close to Other Intersections
+
+
+________________________________________________________
+
+Fracture Estimation statistics:
+NOTE: If estimation and actual are very different, 
+expected family distributions might not be accurate. 
+If this is the case, try increasing or decreasing 
+the 'radiiListIncrease' option in the input file.
+
+Ellipse Family 1
+Estimated: 17
+Actual:    15
+
+Ellipse Family 2
+Estimated: 21
+Actual:    16
+
+
+________________________________________________________
+
+Seed: 1
+
+Lagrit Should Remove 1072 Nodes (2144/2 - 0)
