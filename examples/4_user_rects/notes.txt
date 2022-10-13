@@ -1,1 +1,0 @@
-python run.py -name /home/astansberry/dfnWorks/examples/4_user_rects/example -input 4_user_defined_rectangles_run_file.txt  

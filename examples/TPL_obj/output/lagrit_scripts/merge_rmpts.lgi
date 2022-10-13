@@ -1,0 +1,130 @@
+
+read / lagrit / part1.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part2.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part3.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part4.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part5.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part6.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+read / lagrit / part7.lg / junk / binary
+addmesh / merge / mo_all / mo_all / cmo_tmp 
+cmo / delete / cmo_tmp 
+    
+# Appending the meshes complete 
+# LaGriT Code to remove duplicates and output the mesh
+cmo / select / mo_all 
+#recon 1
+define / EPS / 1.000000e-06 
+define / EPS_FILTER / 1.000000e-04 
+pset / pinter / attribute / dfield / 1,0,0 / lt / EPS 
+#cmo / addatt / mo_all / inter / vint / scalar / nnodes 
+#cmo / setatt / mo_all / inter / 1 0 0 / 0 
+#cmo / setatt / mo_all / inter / pset, get, pinter / 1 
+
+filterkd / pset get pinter / EPS_FILTER / nocheck
+pset / pinter / delete
+
+rmpoint / compress 
+# SORT can affect a_b attribute
+sort / mo_all / index / ascending / ikey / imt xic yic zic 
+reorder / mo_all / ikey 
+cmo / DELATT / mo_all / ikey
+ 
+resetpts / itp 
+boundary_components 
+#dump / full_mesh.gmv / mo_all
+dump / full_mesh.inp / mo_all
+dump / lagrit / full_mesh.lg / mo_all
+
+dump / pflotran / full_mesh / mo_all / nofilter_zero
+dump / stor / full_mesh / mo_all / ascii
+     
+# Dump out Material ID Dat file
+cmo / modatt / mo_all / isn / ioflag / l
+cmo / modatt / mo_all / x_four / ioflag / l
+cmo / modatt / mo_all / fac_n / ioflag / l
+cmo / modatt / mo_all / dfield / ioflag / l
+cmo / modatt / mo_all / rf_field / ioflag / l
+cmo / modatt / mo_all / a_b / ioflag / l
+cmo / modatt / mo_all / b_a / ioflag / l
+cmo / modatt / mo_all / xnorm / ioflag / l
+cmo / modatt / mo_all / ynorm / ioflag / l
+cmo / modatt / mo_all / znorm / ioflag / l
+cmo / modatt / mo_all / evol_one / ioflag / l
+cmo / modatt / mo_all / evol_all / ioflag / l
+cmo / modatt / mo_all / numbnd / ioflag / l
+cmo / modatt / mo_all / id_numb / ioflag / l
+cmo / modatt / mo_all / evol_all / ioflag / l
+cmo / modatt / mo_all / itp / ioflag / l
+cmo / modatt / mo_all / icr / ioflag / l
+cmo / modatt / mo_all / meshid / ioflag / l
+cmo / modatt / mo_all / id_n_1 / ioflag / l
+cmo / modatt / mo_all / id_n_2 / ioflag / l
+cmo / modatt / mo_all / pt_gtg / ioflag / l
+# Dump out Material ID Dat file
+dump / avs2 / materialid.dat / mo_all / 0 0 2 0
+
+cmo / modatt / mo_all / imt1 / ioflag / l
+#cmo / modatt / mo_all / family_id / ioflag / l
+cmo / modatt / mo_all / evol_onen / ioflag / l
+# Dump mesh with no attributes for viz
+dump / full_mesh_viz.inp / mo_all
+
+# Dump out zone files
+define / XMAX / 4.999900e+00 
+define / XMIN / -4.999900e+00 
+define / YMAX / 4.999900e+00 
+define / YMIN / -4.999900e+00 
+define / ZMAX / 4.999900e+00 
+define / ZMIN / -4.999900e+00 
+
+define / ZONE / 1
+define / FOUT / boundary_top
+pset / top / attribute / zic / 1,0,0/ gt / ZMAX
+pset / top / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / boundary_bottom
+pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
+pset / bottom / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / boundary_left_w
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / left_w / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / boundary_front_n
+pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
+pset / front_n / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / boundary_right_e
+pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
+pset / right_e / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / boundary_back_s
+pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
+pset / back_s / zone / FOUT/ ascii / ZONE
+
+
+quality 
+finish

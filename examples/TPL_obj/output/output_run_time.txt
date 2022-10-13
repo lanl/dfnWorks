@@ -1,0 +1,6 @@
+Runs times for output
+Function: lagrit2pflotran : 2.04 seconds
+Function: pflotran : 0.19 seconds
+Function: parse_pflotran_vtk : 1.94 seconds
+Function: pflotran_cleanup : 0.18 seconds
+Process: dfnFlow : 4.38 seconds

@@ -1,0 +1,26 @@
+read/lagrit/mesh_16.lg/mo_16/binary                                             
+cmo/move/mo_16/mo_final                                                         
+define/MO_NAME_FRAC/mo_16                                                       
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+addmesh/merge/cmo_tmp/cmo_tmp/mo_16                                             
+cmo/delete/mo_16                                                                
+read/lagrit/mesh_17.lg/mo_17/binary                                             
+cmo/move/mo_17/mo_final                                                         
+define/MO_NAME_FRAC/mo_17                                                       
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+addmesh/merge/cmo_tmp/cmo_tmp/mo_17                                             
+cmo/delete/mo_17                                                                
+read/lagrit/mesh_18.lg/mo_18/binary                                             
+cmo/move/mo_18/mo_final                                                         
+define/MO_NAME_FRAC/mo_18                                                       
+cmo/addatt/MO_NAME_FRAC/volume/evol_one                                         
+math/sum/MO_NAME_FRAC/evol_sum/1 0 0/MO_NAME_FRAC/evol_one                      
+addmesh/merge/cmo_tmp/cmo_tmp/mo_18                                             
+cmo/delete/mo_18                                                                
+mo/addatt/cmo_tmp/volume/evol_all                                               
+math/sum/cmo_tmp/evol_sum/1 0 0/cmo_tmp/evol_all                                
+cmo select cmo_tmp                                                              
+dump lagrit part6.lg cmo_tmp                                                    
+finish                                                                          

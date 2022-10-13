@@ -1,0 +1,70 @@
+nUserEll: 4 
+ 
+Radii: 
+0.5 
+0.5 
+0.4 
+0.4 
+
+Aspect_Ratio: 
+1 
+1 
+1 
+1 
+
+Beta: 
+0 
+0 
+0 
+0 
+
+Translation: 
+[-0.2, 0, 0] 
+[0, 0, 0] 
+[0.2, 0, 0.2] 
+[0.2, 0, -0.2] 
+
+userOrientationOption: 0 
+ 
+AngleOption: 
+1 
+1 
+1 
+1 
+
+Normal: 
+[0, 0, 1] 
+[1, 0, 0] 
+[0, 0, 1] 
+[0, 0, 1] 
+
+Number_of_Vertices: 
+8 
+8 
+8 
+8 
+
+aperture 
+1e-05 
+1e-05 
+1e-05 
+1e-05 
+
+transmissivity 
+None 
+None 
+None 
+None 
+
+permeability 
+None 
+None 
+None 
+None 
+
+hy_prop_type 
+aperture 
+aperture 
+aperture 
+aperture 
+
