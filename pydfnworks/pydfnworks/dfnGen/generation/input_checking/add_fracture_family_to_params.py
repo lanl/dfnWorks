@@ -25,7 +25,8 @@ def write_fracture_families(self):
             
     return self.params
 
-def add_fracture_family_to_params(params, fracture_family):
+def add_fracture_family_to_params(params, 
+                                  fracture_family):
     """Add values from fracture family dictionary
     to the parameter dictionary
     
@@ -149,7 +150,9 @@ def determine_type(fracture_family):
     return fracture_type_prefix
 
 
-def add_distribution_params(fracture_family, params, fracture_type_prefix):
+def add_distribution_params(fracture_family, 
+                            params, 
+                            fracture_type_prefix):
     """Add distribution values from fracture family dictionary
     to the parameter dictionary
     
@@ -283,9 +286,9 @@ def write_value_to_params(params,
         
         param_key: the key for the parameter value to be written
         
-        fracture_family: fracture family dictionary for a family
+        value_dict : fracture family dictionary for a family
         
-        fracture_family_key: the key for the parameter that will be transferred 
+        value_dict_key: the key for the parameter that will be transferred 
         from the fracture family dictionary
 
         fracture_type_prefix: specifies the type of fractures 'r' for rectangular or 'e' for elliptical

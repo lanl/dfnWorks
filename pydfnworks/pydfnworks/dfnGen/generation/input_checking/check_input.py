@@ -28,7 +28,9 @@ def check_input(self, from_file = False):
 
     Notes
     -----
-        There are warnings and errors raised in this function. Warning will let you continue while errors will stop the run. Continue past warnings are your own risk.     
+        There are warnings and errors raised in this function. Warning will let you continue while errors will stop the run. Continue past warnings are your own risk. 
+
+        From File feature is no longer maintained. Functions should be removed in the near future.
     """
     print()
     print('=' * 80)

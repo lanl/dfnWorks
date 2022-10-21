@@ -38,9 +38,11 @@ def add_user_fract(self,
         
         file_name: The name of the user defined fracture file
         
-        from_coords: flag to specify if user defined fracture is given with coordinates
+        by_coords: flag to specify if user defined fracture is given with coordinates
         
-        additional params are for specifying the user defined fracture. See
+        additional params are for specifying the user defined fracture. 
+        
+        See
         
         https://dfnworks.lanl.gov/dfngen.html#user-defined-fracture-generation-parameters
         
@@ -163,7 +165,20 @@ def add_user_fract(self,
 
 
 def write_user_fractures_to_file(self):
-        
+        """Writes the user defined fracutres to a file if file is not already specified
+
+        Parameters
+        ------------
+        self : DFN object
+
+        Returns
+        ---------
+        user defined fracture file
+
+        Notes
+        -------"""
+
+
     n_rects = len(self.user_rect_params) 
     n_ells = len(self.user_ell_params)
     
