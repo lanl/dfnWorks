@@ -283,7 +283,7 @@ def assign_hydraulic_properties(self):
     
     Parameters
     -----------
-    None
+    self : DFN object
 
     Returns
     --------

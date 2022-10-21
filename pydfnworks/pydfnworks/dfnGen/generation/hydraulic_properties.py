@@ -561,6 +561,11 @@ def generate_hydraulic_values(self,
             constant
         params : dictionary
             dictionary of parameters for functional relationship
+                if correlated --> {"alpha":value, "beta:value}
+                if semi-correlated --> {"alpha":value, "beta":value, "sigma":value}
+                if constant --> {"mu":value}
+                if log-normal --> {"mu":value, "sigma":value}
+
         family_id : int
             family id of fractures
 
