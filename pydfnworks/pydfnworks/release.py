@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "22 June 2022"
+date = "31 October 2022"
 
-version = "2.6.2"
+version = "2.7"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
