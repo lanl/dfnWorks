@@ -54,6 +54,7 @@ if __name__ == "__main__":
         python_requires='>=3.5',
         test_suite='nose.collector',
         tests_require=['nose>=1.3.7'],
-        zip_safe=False
-        #data_files=[os.getcwd() + '/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png', os.getcwd() + '/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png']
+        zip_safe=False,
+        include_package_data=True,
+        package_data={'': ['dfnGen/generation/output_report/figures/*png']}
     )
