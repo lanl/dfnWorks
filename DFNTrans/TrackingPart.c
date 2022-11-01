@@ -1059,7 +1059,9 @@ void ParticleTrack ()
                     system (buffer);
                 }
             }else{
+              if (wpt != NULL)
                 fclose(wpt);
+              if (wpt_att != NULL)
                 fclose(wpt_att);
             }
         } //end if ins!=0 (the initial cell was found)
