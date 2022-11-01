@@ -9,7 +9,7 @@
 import re
 import sys
 
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+# from pydfnworks.dfnGen.generation.generator import parse_params_file
 from pydfnworks.dfnGen.generation.output_report.helper import load_colors
 
 
@@ -336,7 +336,8 @@ def get_fracture_information():
     return fractures
 
 
-def combine_family_and_fracture_information(families, fractures):
+def combine_family_and_fracture_information(families, fractures, num_fractures,
+                                            domain):
     """ Combines information from the fracture families and individual fractures, e.g., list of indicies . Creates the parameter dictionary. 
 
     Parameters
@@ -362,7 +363,8 @@ def combine_family_and_fracture_information(families, fractures):
     """
 
     colors = load_colors()
-    num_fractures, _, _, _, domain = mh.parse_params_file(quiet=True)
+    # num_fractures, _, _, _, domain = parse_params_file(quiet=True)
+
     num_families = len(families)
 
     for ifam, family in enumerate(families):

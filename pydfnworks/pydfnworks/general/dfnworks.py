@@ -1,5 +1,5 @@
-__author__ = "Jeffrey Hyman and Satish Karra"
-__version__ = "2.6"
+__author__ = "Jeffrey Hyman, Satish Karra"
+__version__ = "2.7"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
@@ -11,15 +11,15 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
-from tkinter import W
-
+import numpy as np
 
 # general functions
-from pydfnworks.general.dfntools import * 
+from pydfnworks.general.dfntools import *
 from pydfnworks.general.paths import define_paths
 from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
+
 
 class DFNWORKS(Frozen):
     '''
@@ -82,7 +82,6 @@ class DFNWORKS(Frozen):
     aper_file = 'aperture.dat'
     perm_file = 'perm.dat'
 
-    
     num_frac = int
     h = float
     visual_mode = bool
@@ -96,7 +95,9 @@ class DFNWORKS(Frozen):
     user_rect_params = []
     user_poly_params = []
 
-
+    # mesh information
+    num_nodes = int
+    material_ids = float
 
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters
@@ -105,7 +106,7 @@ class DFNWORKS(Frozen):
     import pydfnworks.dfnGen
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties 
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
@@ -115,7 +116,7 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions import add_user_fract, write_user_fractures_to_file
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
+    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
@@ -126,7 +127,7 @@ class DFNWORKS(Frozen):
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
@@ -183,7 +184,7 @@ class DFNWORKS(Frozen):
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
-        
+
         self.num_nodes = num_nodes
         self.vtk_file = vtk_file
         self.mesh_type = mesh_type
@@ -192,7 +193,7 @@ class DFNWORKS(Frozen):
         self.mat_file = mat_file
         self.stor_file = stor_file
         self.flow_solver = flow_solver
-        
+
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
@@ -206,8 +207,9 @@ class DFNWORKS(Frozen):
 
         self.start_time = time()
         self.print_parameters()
-        
+
         print("\n--> Creating DFN Object: Complete")
+
 
 #     def __del__(self):
 #         print("=" * 80)
