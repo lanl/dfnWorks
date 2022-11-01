@@ -406,8 +406,6 @@ def run_graph_transport(self,
 
         for i in range(nparticles):
             data = {}
-            # data["G"] = G
-            # data["nbrs_dict"] = nbrs_dict
             data["particle_number"] = i
             data["initial_position"] = ip[i]
             data["tdrw_flag"] = tdrw_flag
@@ -419,15 +417,10 @@ def run_graph_transport(self,
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
-            # inputs.append(data)
             pool.apply_async(track_particle,
                              args=(data, ),
                              callback=gather_output)
 
-        # pool = mp.Pool(min(self.ncpu, nparticles))
-        # particles = pool.map(track_particle, inputs)
-        #for data in inputs:
-        #    pool.apply_async(track_particle, args=(data,), callback=gather_output)
         pool.close()
         pool.join()
         pool.terminate()
