@@ -21,7 +21,7 @@ from pydfnworks.general.legal import legal
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
 
-class DFNWORKS(Frozen):
+class DFNWORKS():
     '''
     Class for DFN Generation and meshing
     
@@ -105,7 +105,7 @@ class DFNWORKS(Frozen):
     # dfnGen functions
     import pydfnworks.dfnGen
 
-    from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
+    from pydfnworks.dfnGen.generation.input_checking.check_input import check_input, print_domain_parameters
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
