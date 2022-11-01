@@ -277,37 +277,43 @@ def gather_dfn_gen_output(self):
         self.family.append(idx)
 
 
-
 def assign_hydraulic_properties(self):
     '''Assigns hydraulic properties for each familiy and user defined fractures    
     
     Parameters
     -----------
-    self : DFN object
+        self : DFN object
 
     Returns
     --------
-    None
+        None
     
     Notes
     ------
+        None
     '''
 
-    
+    print("--> Assign hydraulic properties: Starting ")
     ### Assign variables for fracture families
-
+    print("--> Assign hydraulic properties to fracture families : Starting ")
     for i in range(self.params['nFracFam']['value']):
-
-        hy_variable = self.fracture_families[i]['hydraulic_properties']['variable']['value']
-        hy_function = self.fracture_families[i]['hydraulic_properties']['function']['value']
-        hy_params = self.fracture_families[i]['hydraulic_properties']['params']['value']
+        hy_variable = self.fracture_families[i]['hydraulic_properties'][
+            'variable']['value']
+        hy_function = self.fracture_families[i]['hydraulic_properties'][
+            'function']['value']
+        hy_params = self.fracture_families[i]['hydraulic_properties'][
+            'params']['value']
 
         if hy_variable is not None:
-            self.generate_hydraulic_values(hy_variable, hy_function, hy_params, family_id=i+1)
-            
+            self.generate_hydraulic_values(hy_variable,
+                                           hy_function,
+                                           hy_params,
+                                           family_id=i + 1)
+    print("--> Assign hydraulic properties to fracture families : Complete ")
+
     ### Assign variables for user defined fractures
     ##Logic here, loop through user defined fractures
-    ## first check flag to insert 
+    ## first check flag to insert
     fracture_num = 1
 
     if self.params['insertUserRectanglesFirst']['value'] == 0:
@@ -317,7 +323,8 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_ell_params[i]['hy_prop_type']
             value = self.user_ell_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
         for i in range(len(self.user_rect_params)):
@@ -325,7 +332,8 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_rect_params[i]['hy_prop_type']
             value = self.user_rect_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
         for i in range(len(self.user_poly_params)):
@@ -333,7 +341,8 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_poly_params[i]['hy_prop_type']
             value = self.user_poly_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
     else:
@@ -343,7 +352,8 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_rect_params[i]['hy_prop_type']
             value = self.user_rect_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
         for i in range(len(self.user_ell_params)):
@@ -351,7 +361,8 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_ell_params[i]['hy_prop_type']
             value = self.user_ell_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
         for i in range(len(self.user_poly_params)):
@@ -359,7 +370,9 @@ def assign_hydraulic_properties(self):
             hy_prop_type = self.user_poly_params[i]['hy_prop_type']
             value = self.user_poly_params[i][hy_prop_type]
             print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num], [value])
+            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+                                               [value])
             fracture_num += 1
 
     self.dump_hydraulic_values()
+    print("--> Assign hydraulic properties: Complete ")

@@ -92,7 +92,8 @@ did not provide file of fractures to keep.\nExiting program.\n"
         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
         print(fracture_list)
         if not self.visual_mode:
-            lagrit.edit_intersection_files(self.num_frac, fracture_list, self.path)
+            lagrit.edit_intersection_files(self.num_frac, fracture_list,
+                                           self.path)
         self.num_frac = len(fracture_list)
 
     else:
@@ -133,17 +134,17 @@ did not provide file of fractures to keep.\nExiting program.\n"
 
     print('=' * 80)
 
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu, self.visual_mode,
-                                             self.h)
+    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu,
+                                             self.visual_mode, self.h)
     if failure:
         mh.cleanup_dir()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, self.num_frac, fracture_list, self.h,
-                                            self.visual_mode, self.domain,
-                                            self.flow_solver)
+    n_jobs = lagrit.create_merge_poly_files(ncpu, self.num_frac, fracture_list,
+                                            self.h, self.visual_mode,
+                                            self.domain, self.flow_solver)
 
     run_mesh.merge_the_meshes(self.num_frac, ncpu, n_jobs, self.visual_mode)
 
@@ -163,7 +164,7 @@ did not provide file of fractures to keep.\nExiting program.\n"
     if prune:
         mh.clean_up_files_after_prune(self)
 
-    mh.output_meshing_report(self.local_jobname, self.visual_mode)
+    self.gather_mesh_information()
     print('=' * 80)
     print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)

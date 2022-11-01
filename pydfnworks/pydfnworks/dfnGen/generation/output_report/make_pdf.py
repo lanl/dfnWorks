@@ -7,10 +7,10 @@
 """
 
 from fpdf import FPDF
+import os
 
-
-dfnworks_image_black = "/home/astansberry/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "/home/astansberry/dfnWorks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+# dfnworks_image_black = "/Users/jhyman/src/dfnworks-aidan/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
+lanl_image = "/Users/jhyman/src/dfnworks-aidan/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
 
 
 class PDF(FPDF):
@@ -18,6 +18,12 @@ class PDF(FPDF):
 
     def header(self):
         # Logo
+        absolute_path = os.path.dirname(os.path.abspath(__file__))
+        relative_path = "/figures/dfnWorks.all.black.png"
+        dfnworks_image_black = os.path.join(absolute_path, relative_path)
+        print(absolute_path)
+        print(relative_path)
+        dfnworks_image_black = absolute_path + relative_path
         self.image(dfnworks_image_black, x=5, y=8, w=50)
         self.set_font('Times', 'B', 18)
         self.text(x=100, y=10, txt=f'dfnGen Output Report: {name}')
@@ -204,6 +210,7 @@ def create_family_text(family):
         text += f'Final P32: {family["Post-Iso Fracture Intensity (P32)"]}\n'
     return text
 
+
 def add_family_page(params, family, i, pdf):
     """ Add page about fracture family. 
 
@@ -309,6 +316,8 @@ def make_pdf(params, families, fractures):
     """
 
     print("\n--> Combing Images and Making PDF")
+    # print(absolute_path)
+    # print("here")
     # name needs to be a global so it's in the header of each page in the PDF
     global name
     name = params["jobname"]

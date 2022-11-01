@@ -8,9 +8,11 @@
 
 import os
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pylab as plt
 from matplotlib import rc
+
 rc('text', usetex=True)
 
 import pydfnworks.dfnGen.generation.generator
@@ -51,9 +53,7 @@ def setup_output_directory(params):
             os.mkdir(f"{params['output_dir']}/family_{i}")
 
 
-def output_report(self,
-                  verbose=True,
-                  output_dir="dfnGen_output_report"):
+def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
     """ Creates a PDF output report for the network created by DFNGen. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into "output_dir/family_{id}/". Information about the whole network are also created and written into "output_dir/network/"
 
   Parameters
@@ -87,7 +87,7 @@ def output_report(self,
     fractures = get_fracture_information()
     # Combine information of the families and fractures, e.g., which fracture are in each family, and create a dictionary with parameters used throughout the output report
     families, fractures, params = combine_family_and_fracture_information(
-        families, fractures)
+        families, fractures, self.num_frac, self.domain)
     params, families = parse_dfn_output(params, families)
 
     params["verbose"] = verbose

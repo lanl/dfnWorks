@@ -66,6 +66,10 @@ def dfn_flow(self, dump_vtk=True):
         self.dump_time('Function: lagrit2pflotran', time() - tic)
 
         tic = time()
+        self.dump_h5_files()
+        self.dump_time('Function: dump_h5files', time() - tic)
+
+        tic = time()
         self.pflotran()
         self.dump_time('Function: pflotran', time() - tic)
 

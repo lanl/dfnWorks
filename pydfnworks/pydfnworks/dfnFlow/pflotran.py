@@ -59,11 +59,7 @@ def lagrit2pflotran(self):
     print("\n\n")
 
 
-def zone2ex(self,
-            uge_file='',
-            zone_file='',
-            face='',
-            boundary_cell_area=1.e-1):
+def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     """
     Convert zone files from LaGriT into ex format for LaGriT
     
@@ -71,8 +67,6 @@ def zone2ex(self,
     -----------
         self : object
             DFN Class
-        uge_file : string
-            Name of uge file
         zone_file : string
             Name of zone file
         Face : Face of the plane corresponding to the zone file
@@ -93,7 +87,7 @@ def zone2ex(self,
     print('--> Converting zone files to ex')
 
     if self.uge_file == '':
-        error = 'ERROR: Please provide uge filename!\n'
+        error = 'Error: uge filename not assigned to object yet\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -151,10 +145,9 @@ def zone2ex(self,
         Node_array = fzone.read()
         Node_array = Node_array.split()
         num_nodes = int(Node_array[4])
-        Node_array = np.array(Node_array[5:-1], dtype = 'int')
+        Node_array = np.array(Node_array[5:-1], dtype='int')
         fzone.close()
         print('--> Finished with zone file')
-
 
         Boundary_cell_area = np.zeros(num_nodes, 'float')
         for i in range(num_nodes):
@@ -252,7 +245,6 @@ def write_perms_and_correct_volumes_areas(self):
         sys.exit(1)
 
     t = time()
-    self.num_nodes = max(self.perm.shape)
     # Make input file for C UGE converter
     with open("convert_uge_params.txt", "w") as fp:
         fp.write(f"{self.inp_file}\n")
@@ -279,6 +271,9 @@ def write_perms_and_correct_volumes_areas(self):
     print(
         f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n')
 
+
+def dump_h5_files(self):
+
     filename = 'dfn_properties.h5'
     print(f'--> Writing HDF5 File {filename}')
     h5file = h5py.File(filename, mode='w')
@@ -289,13 +284,14 @@ def write_perms_and_correct_volumes_areas(self):
     iarray = np.arange(1, self.num_nodes + 1)
     dataset_name = 'Cell Ids'
     h5dset = h5file.create_dataset(dataset_name, data=iarray)
-
-    print('--> Allocating permeability array')
+    print(self.perm)
+    print('--> Creating permeability array')
     print('--> Note: this script assumes isotropic permeability')
-    perm = self.perm
+    for i in range(self.num_nodes):
+        self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
+    print('--> Writting Permeability')
     dataset_name = 'Permeability'
-    h5dset = h5file.create_dataset(dataset_name, data=perm)
-
+    h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)
     h5file.close()
     print("--> Done writing permeability to h5 file")
 
@@ -340,6 +336,7 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
 
     mpirun = os.environ['PETSC_DIR'] + '/' + os.environ[
         'PETSC_ARCH'] + '/bin/mpirun'
+
     if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
         # PETSc did not install MPI. Hopefully, the user has their own MPI.
         mpirun = 'mpirun'
@@ -347,7 +344,7 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     cmd = mpirun + ' -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
 
-    print("Running: %s" % cmd)
+    print(f"--> Running: {cmd}")
     subprocess.call(cmd, shell=True)
 
     if restart:
@@ -410,7 +407,7 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
 
         cmd = 'cat ' + filename + '-darcyvel-%03d-rank*.dat > darcyvel_%03d.dat' % (
             index, index)
-        print("Running >> %s" % cmd)
+        print(f"--> Running >> {cmd}")
         subprocess.call(cmd, shell=True)
 
         #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
