@@ -216,7 +216,7 @@ def write_perms_and_correct_volumes_areas(self):
 
     Notes
     ----------
-    Calls executable correct_uge
+        Calls executable correct_uge
     """
     if self.flow_solver != "PFLOTRAN":
         error = "ERROR! Wrong flow solver requested\n"
@@ -273,26 +273,38 @@ def write_perms_and_correct_volumes_areas(self):
 
 
 def dump_h5_files(self):
+    """ Write permeability values to cell ids and permeability values to dfn_properties.h5 file for pflotran. 
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ----------
+        Hydraulic properties need to attached to the class prior to running this function. Use DFN.assign_hydraulic_properties() to do so. 
+    """
 
     filename = 'dfn_properties.h5'
-    print(f'--> Writing HDF5 File {filename}')
-    h5file = h5py.File(filename, mode='w')
-
-    print('--> Beginning writing to HDF5 file')
-    print('--> Allocating cell index array')
-    print('--> Writing cell indices')
-    iarray = np.arange(1, self.num_nodes + 1)
-    dataset_name = 'Cell Ids'
-    h5dset = h5file.create_dataset(dataset_name, data=iarray)
-    print(self.perm)
-    print('--> Creating permeability array')
-    print('--> Note: this script assumes isotropic permeability')
-    for i in range(self.num_nodes):
-        self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
-    print('--> Writting Permeability')
-    dataset_name = 'Permeability'
-    h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)
-    h5file.close()
+    print(f'--> Opening HDF5 File {filename}')
+    with h5py.File(filename, mode='w') as h5file:
+        print('--> Beginning writing to HDF5 file')
+        print('--> Allocating cell index array')
+        print('--> Writing cell indices')
+        iarray = np.arange(1, self.num_nodes + 1)
+        dataset_name = 'Cell Ids'
+        h5dset = h5file.create_dataset(dataset_name, data=iarray)
+        print('--> Creating permeability array')
+        print('--> Note: This script assumes isotropic permeability')
+        for i in range(self.num_nodes):
+            self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
+        print('--> Writting Permeability')
+        dataset_name = 'Permeability'
+        h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)
     print("--> Done writing permeability to h5 file")
 
 
