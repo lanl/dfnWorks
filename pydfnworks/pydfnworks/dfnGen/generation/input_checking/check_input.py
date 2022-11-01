@@ -9,6 +9,37 @@ from pydfnworks.dfnGen.generation.input_checking.verifications import verify_par
 from pydfnworks.dfnGen.generation.input_checking.write_input_file import dump_params
 from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families
 
+
+def print_domain_parameters(self, print_all = False):
+    """ Prints domain parameters to screen
+    Parameters
+    ------------
+        self : DFN Class Object
+        print_all : bool
+            If True, all parameters will be printed to screen, even those without a value. If False (default), only those with a value will be printed to screen.  
+
+    Returns
+    ---------
+        None
+
+    """
+    print()
+    print('=' * 80)
+    print("--> dfnGen input parameters")
+    print('=' * 80)
+    print()
+    print("{:40s}{:}".format("Name", "Value"))
+    print("{:40s}{:}".format("----------------------------", "---------------"))
+    #print('-' * 60) 
+    for key in self.params.keys():
+        value = self.params[key]['value']
+        if print_all:
+            print(f"{key:40s}{value}")
+        else:
+            if value:
+                print(f"Name: {key:40s}Value: {value}")
+    print('=' * 80)
+
 def check_input(self, from_file = False):
     """ Checks input file for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
 
@@ -20,7 +51,7 @@ def check_input(self, from_file = False):
     
     Parameters
     ------------
-        self : DFN Class Objects
+        self : DFN Class Object
 
     Returns
     ---------
