@@ -9,21 +9,21 @@
 from fpdf import FPDF
 import os
 
-# dfnworks_image_black = "/Users/jhyman/src/dfnworks-aidan/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "/Users/jhyman/src/dfnworks-aidan/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+# paths for icons.
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+relative_path = "/figures/dfnWorks.all.black.png"
+dfnworks_image_black = absolute_path + relative_path
+
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+relative_path = "/figures/lanl-logo-footer.png"
+lanl_image = absolute_path + relative_path
 
 
 class PDF(FPDF):
     global name
 
     def header(self):
-        # Logo
-        absolute_path = os.path.dirname(os.path.abspath(__file__))
-        relative_path = "/figures/dfnWorks.all.black.png"
-        dfnworks_image_black = os.path.join(absolute_path, relative_path)
-        print(absolute_path)
-        print(relative_path)
-        dfnworks_image_black = absolute_path + relative_path
+        # Add Logos
         self.image(dfnworks_image_black, x=5, y=8, w=50)
         self.set_font('Times', 'B', 18)
         self.text(x=100, y=10, txt=f'dfnGen Output Report: {name}')
