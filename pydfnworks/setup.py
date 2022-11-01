@@ -25,9 +25,8 @@ if sys.argv[-1] == 'setup.py':
     print()
 
 if sys.version_info[:2] < (3, 6):
-    error = """pydfnworks 2.4+ requires Python 3.6 or later (%d.%d detected).
-""" % sys.version_info[:2]
-    sys.stderr.write(error + "\n")
+    error = f"pydfnworks 2.4+ requires Python 3.6 or later ({sys.version_info[:2]} detected) %\n"
+    sys.stderr.write(error)
     sys.exit(1)
 
 from pydfnworks import release
