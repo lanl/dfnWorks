@@ -2,7 +2,7 @@ import os
 import sys
 from datetime import datetime
 from time import time
-
+import logging
 
 def print_parameters(self):
     print("=" * 80 + "\n")
@@ -99,3 +99,23 @@ def print_run_time(self):
     #        tmp = int(percent[i-1])/10
     #        print(name[i-1]+"\t"+"*"tmp)
     print("\n")
+
+def print_log(statement):
+    
+    '''print and log statments to a file 
+
+    Parameters
+    ---------
+    statement : the print/log statement
+
+    Returns
+    --------
+    None
+
+    Notes
+    -------
+    print statments in pydfnworks should generally be replaced with this pring_log function
+    '''
+    logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
+    print(statement)
+    logging.info(statement)

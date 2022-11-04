@@ -19,7 +19,7 @@ from pydfnworks.general.paths import define_paths
 from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
-
+from pydfnworks.general.general_functions import print_log
 
 class DFNWORKS():
     '''
@@ -46,6 +46,7 @@ class DFNWORKS():
     ## Class variable
     # Path to working directory (Default is <current working directory>/output)
     jobname = os.getcwd() + os.sep + "output"
+    
     # Name of working directory (just the last piece of jobname)
     local_jobname = "output"
     # name of dfnGen file
@@ -164,7 +165,7 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  logging = False):
 
-        print("\n--> Creating DFN Object: Starting")
+        print_log("\n--> Creating DFN Object: Starting")
 
         if jobname:
             self.jobname = jobname
@@ -218,18 +219,18 @@ class DFNWORKS():
         self.start_time = time()
         self.print_parameters()
 
-        print("\n--> Creating DFN Object: Complete")
+        print_log("\n--> Creating DFN Object: Complete")
 
 
 #     def __del__(self):
-#         print("=" * 80)
-#         print(f"--> {self.local_jobname} completed/exited at {now}")
+#         print_log("=" * 80)
+#         print_log(f"--> {self.local_jobname} completed/exited at {now}")
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
 #         time_min = elapsed / 60
 #         time_hrs = elapsed / 3600
 
-#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         print_log(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
 #         output = '''
 # \t\t\t*********************************************
 # \t\t\t*   Thank you for using dfnWorks            *
@@ -238,7 +239,7 @@ class DFNWORKS():
 # \t\t\t*********************************************
 
 # '''
-#         print(output)
+#         print_log(output)
 
 
 def commandline_options():
@@ -330,8 +331,8 @@ def create_dfn():
     '''
 
     options = commandline_options()
-    print("Command Line Inputs:")
-    print(options)
+    print_log("Command Line Inputs:")
+    print_log(options)
 
     now = datetime.now()
 
@@ -340,12 +341,12 @@ def create_dfn():
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        print("--> Reading Input from " + options.input_file)
+        print_log("--> Reading Input from " + options.input_file)
 
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    print(f"--> Reading run files from {options.input_file}")
+    print_log(f"--> Reading run files from {options.input_file}")
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -353,13 +354,13 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
-                    print('--> dfnGen input file: ', dfnGen_file)
+                    print_log('--> dfnGen input file: ', dfnGen_file)
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
-                    print('--> dfnFlow input file: ', dfnFlow_file)
+                    print_log('--> dfnFlow input file: ', dfnFlow_file)
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
-                    print('--> dfnTrans input file: ', dfnTrans_file)
+                    print_log('--> dfnTrans input file: ', dfnTrans_file)
             except:
                 error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error)
