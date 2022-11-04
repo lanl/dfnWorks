@@ -974,7 +974,7 @@ def get_segments(well_line_file):
     return pts, elems, fracture_list
 
 
-def get_normal(fracture_id):
+def get_normal(self, fracture_id):
     """ Returns Normal vector of a fracture
 
     Parameters    
@@ -992,7 +992,7 @@ def get_normal(fracture_id):
         None
     """
 
-    normals = np.genfromtxt("normal_vectors.dat")
+    normals = self.normal_vectors #np.genfromtxt("normal_vectors.dat")
     return normals[fracture_id - 1, :]
 
 

@@ -80,9 +80,9 @@ def stress_based_apertures(self,
 
 
     # read fracture data:
-    initial_aperture = self.aperture #np.genfromtxt(self.aper_file, skip_header=1)[:, -1]
-    normals = np.genfromtxt('normal_vectors.dat', skip_header=0)
-    radii_frac = np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
+    initial_aperture = self.aperture
+    normals = self.normal_vectors 
+    radii_frac = self.radii[:,0] #og in case of bugs np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
     num_frac = len(initial_aperture)
     b = np.zeros(num_frac)
 
