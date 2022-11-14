@@ -20,7 +20,6 @@ from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
-
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
@@ -46,6 +45,7 @@ class DFNWORKS():
     ## Class variable
     # Path to working directory (Default is <current working directory>/output)
     jobname = os.getcwd() + os.sep + "output"
+    
     # Name of working directory (just the last piece of jobname)
     local_jobname = "output"
     # name of dfnGen file
@@ -103,7 +103,7 @@ class DFNWORKS():
     material_ids = float
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -125,7 +125,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
-    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells
+    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, get_normal
 
     # dfnFlow
     import pydfnworks.dfnFlow
@@ -163,7 +163,7 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  logging = False):
 
-        print("\n--> Creating DFN Object: Starting")
+        self.print_log("\n--> Creating DFN Object: Starting")
 
         if jobname:
             self.jobname = jobname
@@ -217,18 +217,18 @@ class DFNWORKS():
         self.start_time = time()
         self.print_parameters()
 
-        print("\n--> Creating DFN Object: Complete")
+        self.print_log("\n--> Creating DFN Object: Complete")
 
 
 #     def __del__(self):
-#         print("=" * 80)
-#         print(f"--> {self.local_jobname} completed/exited at {now}")
+#         self.print_log("=" * 80)
+#         self.print_log(f"--> {self.local_jobname} completed/exited at {now}")
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
 #         time_min = elapsed / 60
 #         time_hrs = elapsed / 3600
 
-#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         self.print_log(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
 #         output = '''
 # \t\t\t*********************************************
 # \t\t\t*   Thank you for using dfnWorks            *
@@ -237,7 +237,7 @@ class DFNWORKS():
 # \t\t\t*********************************************
 
 # '''
-#         print(output)
+#         self.print_log(output)
 
 
 def commandline_options():
@@ -327,10 +327,11 @@ def create_dfn():
     -----
     None
     '''
+    from pydfnworks.general.general_functions import local_print_log
 
     options = commandline_options()
-    print("Command Line Inputs:")
-    print(options)
+    local_print_log("Command Line Inputs:")
+    local_print_log(options)
 
     now = datetime.now()
 
@@ -339,12 +340,12 @@ def create_dfn():
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        print("--> Reading Input from " + options.input_file)
+        local_print_log("--> Reading Input from " + options.input_file)
 
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    print(f"--> Reading run files from {options.input_file}")
+    local_print_log(f"--> Reading run files from {options.input_file}")
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -352,13 +353,13 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
-                    print('--> dfnGen input file: ', dfnGen_file)
+                    local_print_log('--> dfnGen input file: ', dfnGen_file)
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
-                    print('--> dfnFlow input file: ', dfnFlow_file)
+                    local_print_log('--> dfnFlow input file: ', dfnFlow_file)
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
-                    print('--> dfnTrans input file: ', dfnTrans_file)
+                    local_print_log('--> dfnTrans input file: ', dfnTrans_file)
             except:
                 error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error)

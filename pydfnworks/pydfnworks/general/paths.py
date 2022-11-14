@@ -3,6 +3,7 @@ import os
 import sys
 import subprocess
 import json
+from pydfnworks.general.general_functions import local_print_log
 
 DFNPARAMS = '~/.dfnworksrc'
 DFNPARAMS = os.path.expanduser(DFNPARAMS)
@@ -60,12 +61,12 @@ def compile_dfn_exe(path):
         This function is only called if an executable is not found. 
 """
 
-    print(f"Compiling {path}")
+    local_print_log(f"Compiling {path}")
     cwd = os.getcwd()
     os.chdir(path)
     subprocess.call("make", shell=True)
     os.chdir(cwd)
-    print("Complete")
+    local_print_log("Complete")
 
 
 def define_paths():

@@ -239,7 +239,7 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing poly_info.dat file")
-    poly_info = np.genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
+    poly_info = self.poly_info[keep_list - 1, :] #np.genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
     try:
         os.unlink('poly_info.dat')
     except:
@@ -254,8 +254,7 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing perm.dat file")
-    perm = np.genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1,
-                                                                -1]
+    perm = self.perm #np.genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
     f = open('perm.dat', 'w+')
     f.write('permeability\n')
     for i in range(num_frac):
@@ -264,8 +263,7 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing aperture.dat file")
-    aperture = np.genfromtxt(self.path + 'aperture.dat',
-                             skip_header=1)[keep_list - 1, -1]
+    aperture = self.aperture #np.genfromtxt(self.path + 'aperture.dat', skip_header=1)[keep_list - 1, -1]
     f = open('aperture.dat', 'w+')
     f.write('aperture\n')
     for i in range(num_frac):
@@ -283,8 +281,7 @@ def clean_up_files_after_prune(self):
     fout.write(line)
     fin.close()
     # write radii from remaining fractures
-    radii = np.genfromtxt(self.path + 'radii_Final.dat',
-                          skip_header=2)[keep_list - 1, :]
+    radii = self.radii[keep_list - 1, :] #np.genfromtxt(self.path + 'radii_Final.dat', skip_header=2)[keep_list - 1, :]
     for i in range(num_frac):
         fout.write('%f %f %d\n' % (radii[i, 0], radii[i, 1], radii[i, 2]))
     fout.close()
@@ -294,8 +291,7 @@ def clean_up_files_after_prune(self):
     fin = open(self.path + 'normal_vectors.dat')
     fout = open('normal_vectors.dat', 'w')
     # copy header
-    normal_vect = np.genfromtxt(self.path + 'normal_vectors.dat')[keep_list -
-                                                                  1, :]
+    normal_vect = self.normal_vectors[keep_list - 1, :] #np.genfromtxt(self.path + 'normal_vectors.dat')[keep_list - 1, :]
     for i in range(num_frac):
         fout.write('%f %f %f\n' %
                    (normal_vect[i, 0], normal_vect[i, 1], normal_vect[i, 2]))
