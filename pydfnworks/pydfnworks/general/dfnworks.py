@@ -64,6 +64,9 @@ class DFNWORKS():
     # linking ultility
     path = str
 
+    # logging function 
+    logging = False
+
     # pruning filename
     prune_file = str
 
@@ -157,7 +160,8 @@ class DFNWORKS():
                  vtk_file=None,
                  num_nodes=None,
                  mesh_type='dfn',
-                 cell_based_aperture=False):
+                 cell_based_aperture=False,
+                 logging = False):
 
         print("\n--> Creating DFN Object: Starting")
 
@@ -203,6 +207,12 @@ class DFNWORKS():
         if not 'dfnworks_PATH' in os.environ:
             define_paths()
             legal()
+
+        # if logging:
+        #     print("--> Writting output to log file.")
+        #     import logging
+        #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
+        #             format="%(asctime)s %(message)s")
 
         self.start_time = time()
         self.print_parameters()
