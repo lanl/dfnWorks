@@ -5,21 +5,21 @@ from time import time
 import logging
 
 def print_parameters(self):
-    self.print_log("=" * 80 + "\n")
-    self.print_log(f"--> Jobname: {self.jobname}")
-    self.print_log(f"--> Local Jobname: {self.local_jobname}")
+    print("=" * 80 + "\n")
+    print(f"--> Jobname: {self.jobname}")
+    print(f"--> Local Jobname: {self.local_jobname}")
 
-    self.print_log(f"--> Number of Processors Requested: {self.ncpu}")
+    print(f"--> Number of Processors Requested: {self.ncpu}")
     if self.dfnGen_file:
-        self.print_log(f"--> dfnGen filename : {self.dfnGen_file}")
-        self.print_log(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
+        print(f"--> dfnGen filename : {self.dfnGen_file}")
+        print(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
     if self.dfnFlow_file:
-        self.print_log(f"--> dfnFlow filename : {self.dfnFlow_file}")
-        self.print_log(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
+        print(f"--> dfnFlow filename : {self.dfnFlow_file}")
+        print(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
     if self.dfnTrans_file:
-        self.print_log(f"--> dfnTrans filename : {self.dfnTrans_file}")
-        self.print_log(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
-    self.print_log("=" * 80 + "\n")
+        print(f"--> dfnTrans filename : {self.dfnTrans_file}")
+        print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
+    print("=" * 80 + "\n")
 
 
 def dump_time(self, function_name, time):
@@ -80,7 +80,7 @@ def print_run_time(self):
     if unit == 'minutes':
         total *= 60.0
 
-    self.print_log('Runs times for ', f[0])
+    print('Runs times for ', f[0])
     percent = []
     name = []
     for i in range(1, len(f)):
@@ -91,14 +91,14 @@ def print_run_time(self):
             time *= 60.0
         percent.append(100.0 * (time / total))
         name.append(f[i].split(':')[1])
-        self.print_log(f[i], '\t--> Percent if total %0.2f \n' % percent[i - 1])
+        print(f[i], '\t--> Percent if total %0.2f \n' % percent[i - 1])
 
-    #self.print_log("Primary Function Percentages")
+    #print("Primary Function Percentages")
     #for i in range(1,len(f) - 1):
     #    if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
     #        tmp = int(percent[i-1])/10
-    #        self.print_log(name[i-1]+"\t"+"*"tmp)
-    self.print_log("\n")
+    #        print(name[i-1]+"\t"+"*"tmp)
+    print("\n")
 
 def print_log(self, statement):
     
