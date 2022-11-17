@@ -41,7 +41,7 @@ DFN.add_fracture_family(shape="ell",
                         max_radius=5.0, 
                         hy_variable='permeability',
                         hy_function='constant',
-                        hy_params={"mu":1e-12})
+                        hy_params={"mu":2e-12})
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -71,7 +71,7 @@ DFN.check_input()
 # define_paths()
 DFN.create_network()
 # DFN.output_report()
-DFN.mesh_network(coarse_factor=10)
+#DFN.mesh_network(coarse_factor=10)
 
 pressure_in = 2*10**6
 pressure_out = 10**6
