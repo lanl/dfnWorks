@@ -109,12 +109,12 @@ Domain (m)\n\
     text += f'Entire Network:\n'
     text += f'    P30: {params["Pre-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32 : {params["Pre-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    text += f'P33: {params["Pre-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
+    # text += f'P33: {params["Pre-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     text += f'Connected Network:\n'
     text += f'    P30: {params["Post-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32: {params["Post-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    text += f'P33: {params["Post-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
+    # text += f'P33: {params["Post-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     return text
 
