@@ -38,9 +38,12 @@ def parse_dfn_output(params, families):
     """
 
     bulk_params = [
-        "Total Surface Area", "Total Fractures Volume",
-        "Total Fracture Density   (P30)", "Total Fracture Intensity (P32)",
-        "Total Fracture Porosity  (P33)", "Total Fractures Rejected"
+        "Total Surface Area",
+        "Total Fractures Volume",
+        "Total Fracture Density   (P30)",
+        "Total Fracture Intensity (P32)",
+        #"Total Fracture Porosity  (P33)",
+        "Total Fractures Rejected"
     ]
 
     final_params = [
