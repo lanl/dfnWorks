@@ -11,11 +11,11 @@ def write_fracture_families(self):
     
     Returns
     --------
-    DFN object with populated fracture family fields
+        DFN object with populated fracture family fields
 
     Notes
     ------
-    None
+        None
     """
 
     self.reorder_fracture_families()
@@ -136,7 +136,7 @@ def determine_type(fracture_family):
         
     Notes
     -------
-        None at the moment
+        None
     """
 
     if fracture_family['type']['value']['ellipse'] == True and fracture_family[
@@ -173,7 +173,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
         
     Notes
     -------
-        None at the moment
+        None
     """
 
     #Figure out what distribution represents the fracture family
@@ -303,7 +303,7 @@ def write_value_to_params(params,
         
     Notes
     -------
-        None at the moment
+        None 
     """
     if value_flag == False:
         value = value_dict[value_dict_key]['value']
@@ -329,9 +329,10 @@ def reorder_fracture_families(self):
     Parameters
     --------------
         DFN(self): the DFN object
+
     Returns
     --------
-        DFN : DFN with reordered fracture attributes
+        None
             
     Notes
     ---------
