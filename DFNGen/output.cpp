@@ -31,8 +31,8 @@
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, struct Stats &pstats, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies) {
     std::string output = outputFolder;
     // Define Output Files:
-    std::string permOutputFile = output + "/perm.dat";
-    std::string aperture = output + "/aperture.dat";
+    // std::string permOutputFile = output + "/perm.dat";
+    // std::string aperture = output + "/aperture.dat";
     std::string intersectionFolder = output + "/intersections";
     std::string radiiFolder = output + "/radii/";
     // Adjust Fracture numbering
@@ -48,9 +48,9 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     // Write params.txt
     writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
     // Write aperture file
-    writeApertureFile(finalFractures, acceptedPoly, output);
+    // writeApertureFile(finalFractures, acceptedPoly, output);
     // Write permability file
-    writePermFile(finalFractures, acceptedPoly, output);
+    // writePermFile(finalFractures, acceptedPoly, output);
     // Write radii file
     writeRadiiFile(finalFractures, acceptedPoly, output);
     // Write rejection stats file
@@ -601,42 +601,42 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
     Arg 1: std::vector array of indices of fractures left after isolated fracture removal
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
-void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::string file = output + "/aperture.dat";
-    std::ofstream ap;
-    ap.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
-    checkIfOpen(ap, file);
-    std::cout << "Writing aperture.dat\n";
-    ap << "aperture.dat" << "\n";
-    int size = finalFractures.size();
+// void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+//     std::string file = output + "/aperture.dat";
+//     std::ofstream ap;
+//     ap.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
+//     checkIfOpen(ap, file);
+//     std::cout << "Writing aperture.dat\n";
+//     ap << "aperture.dat" << "\n";
+//     int size = finalFractures.size();
     
-    for (int i = 0; i < size; i++) {
-        ap << -(7 + i) << " 0 0 " << std::setprecision(10) << acceptedPoly[finalFractures[i]].aperture << "\n";
-    }
+//     for (int i = 0; i < size; i++) {
+//         ap << -(7 + i) << " 0 0 " << std::setprecision(10) << acceptedPoly[finalFractures[i]].aperture << "\n";
+//     }
     
-    ap.close();
-}
+//     ap.close();
+// }
 
 /* writePermFile() ****************************************************************************/
 /*! Writes perm.dat (Permeability Data)
     Arg 1: std::vector array of indices of fractures left after isolated fracture removal
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
-void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::string file = output + "/perm.dat";
-    std::ofstream perm;
-    perm.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
-    checkIfOpen(perm, file);
-    std::cout << "Writing perm.dat\n";
-    perm << "permeability" << "\n";
-    int size = finalFractures.size();
+// void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+//     std::string file = output + "/perm.dat";
+//     std::ofstream perm;
+//     perm.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
+//     checkIfOpen(perm, file);
+//     std::cout << "Writing perm.dat\n";
+//     perm << "permeability" << "\n";
+//     int size = finalFractures.size();
     
-    for (int i = 0; i < size; i++) {
-        perm << -(7 + i) << " 0 0 " <<  std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << "\n";
-    }
+//     for (int i = 0; i < size; i++) {
+//         perm << -(7 + i) << " 0 0 " <<  std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << "\n";
+//     }
     
-    perm.close();
-}
+//     perm.close();
+// }
 
 
 /* writeRadiiFile() ***************************************************************************/
@@ -1414,7 +1414,8 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
             }
         }
         
-        fractFile << num_conn << " " << std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].aperture << "\n";
+        // fractFile << num_conn << " " << std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].aperture << "\n";
+        fractFile << num_conn << " " << 0 << " " << 0 << "\n";
     }
     
     // Done with fracture and intersections

@@ -325,43 +325,45 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
 #define _CONSTSCALAR 1.1e7
 //#define _CONSTSCALAR 48.3868
 
-void assignAperture(struct Poly &newPoly, std::mt19937_64 &generator) {
-    // Most aperture variables are currently declared globaly
-    switch (aperture) {
-    case 1: { // Lognormal
-        std::lognormal_distribution<double> logDistribution(meanAperture, stdAperture);
-        newPoly.aperture = logDistribution(generator);
-        break;
-    }
+
+// void assignAperture(struct Poly &newPoly, std::mt19937_64 &generator) {
+//     // Most aperture variables are currently declared globaly
+//     switch (aperture) {
+//     case 1: { // Lognormal
+//         std::lognormal_distribution<double> logDistribution(meanAperture, stdAperture);
+//         newPoly.aperture = logDistribution(generator);
+//         break;
+//     }
     
-    case 2: {
-        /*  Transmissivity is calculated as transmissivity = F*R^k,
-            where F is a first element in aperturefromTransmissivity,
-            k is a second element and R is a mean radius of a polygon.
-            Aperture is calculated according to cubic law as
-            b=(transmissivity*12)^1/3  */
-        float radiAvg = (newPoly.xradius + newPoly.yradius) * .5;
-        double F = apertureFromTransmissivity[0];
-        double k = apertureFromTransmissivity[1];
-        double transmissivity = F * std::pow(radiAvg, k);
-        newPoly.aperture = std::cbrt((transmissivity * 12 / _CONSTSCALAR)); //cube root
-        break;
-    }
+//     case 2: {
+//         /*  Transmissivity is calculated as transmissivity = F*R^k,
+//             where F is a first element in aperturefromTransmissivity,
+//             k is a second element and R is a mean radius of a polygon.
+//             Aperture is calculated according to cubic law as
+//             b=(transmissivity*12)^1/3  */
+//         float radiAvg = (newPoly.xradius + newPoly.yradius) * .5;
+//         double F = apertureFromTransmissivity[0];
+//         double k = apertureFromTransmissivity[1];
+//         double transmissivity = F * std::pow(radiAvg, k);
+//         newPoly.aperture = std::cbrt((transmissivity * 12 / _CONSTSCALAR)); //cube root
+//         break;
+//     }
     
-    case 3: {
-        newPoly.aperture = constantAperture;
-        break;
-    }
+//     case 3: {
+//         newPoly.aperture = constantAperture;
+//         break;
+//     }
     
-    case 4: {
-        double radiAvg = (newPoly.xradius + newPoly.yradius) * .5;
-        double apertureMeanF = lengthCorrelatedAperture[0];
-        double b = lengthCorrelatedAperture[1];
-        newPoly.aperture = apertureMeanF * std::pow(radiAvg, b);
-        break;
-    }
-    }
-}
+//     case 4: {
+//         double radiAvg = (newPoly.xradius + newPoly.yradius) * .5;
+//         double apertureMeanF = lengthCorrelatedAperture[0];
+//         double b = lengthCorrelatedAperture[1];
+//         newPoly.aperture = apertureMeanF * std::pow(radiAvg, b);
+//         break;
+//     }
+//     }
+// }
+
 
 /**************************************************************************/
 /**************** permiability  assignment function ***********************/
@@ -372,14 +374,14 @@ void assignAperture(struct Poly &newPoly, std::mt19937_64 &generator) {
            given by k=(b^2)/12, where b is an aperture and k is permeability
        1 - Constant permeabilty for all fractures
     Arg 1: Polygon/fracture to assign permiability to  */
-void assignPermeability(struct Poly &newPoly) {
-    // Aperture option is declared globaly
-    if (permOption == 0) { // Perm as function of aperture
-        newPoly.permeability = (newPoly.aperture * newPoly.aperture) / 12;
-    } else { // Permoption is equal to 1
-        newPoly.permeability = constantPermeability;
-    }
-}
+// void assignPermeability(struct Poly &newPoly) {
+//     // Aperture option is declared globaly
+//     if (permOption == 0) { // Perm as function of aperture
+//         newPoly.permeability = (newPoly.aperture * newPoly.aperture) / 12;
+//     } else { // Permoption is equal to 1
+//         newPoly.permeability = constantPermeability;
+//     }
+// }
 
 /**************  Initialize Rectangular Vertices  *****************/
 /*! Initializes vertices for rectangular poly using radius (1/2 x length)

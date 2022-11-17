@@ -94,6 +94,8 @@ extern double *userRectCoordVertices;
 extern double *userEllCoordVertices;
 extern unsigned int nEllByCoord;
 extern unsigned int nEllNodes;
+
+/*
 extern int aperture;
 extern float meanAperture;
 extern float stdAperture;
@@ -102,6 +104,8 @@ extern double constantAperture;
 extern double lengthCorrelatedAperture[2];
 extern bool permOption;
 extern double constantPermeability;
+*/
+
 extern float *econst;
 extern float *rconst;
 extern float *layers;

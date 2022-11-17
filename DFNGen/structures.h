@@ -63,7 +63,7 @@ struct Poly {
     
     /*! Aperture for the polygon/fracture. The aperture is set after DFN generation has
         completed (see assignAperture()).*/
-    double aperture;
+    // double aperture;
     
     /*! Double array for which hold the polygon's vertices. Vertices are stored in a 1-D array.
         e.g For n number of vertices, array will be: {x1, y1, z1, x2, y2, z2, ... , xn, yn, zn} */
@@ -71,7 +71,7 @@ struct Poly {
     
     /*! Permiability for the polygon/fracture. Permeability is set after DFN generation has
         completed (see assignPermeability()). */
-    double permeability;
+    // double permeability;
     
     /*! The faces array contains flags (true/false) which denote which sides, if any, the polygon is touching.
         True (not zero) - Polygon is touching a domain boundary.
