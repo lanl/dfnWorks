@@ -263,6 +263,7 @@ def check_family_prob(params):
             params['famProb']['value'] = [x / total for x in values]
             print(f"--> New Values: {params['famProb']['value']}")
 
+
 def check_no_dep_flags(params):
     """ Check for dependency flags. Not sure this does anything."""
     no_dependancy_flags = [
@@ -282,85 +283,83 @@ def check_no_dep_flags(params):
 #     if disableFram['value']:
 #         hf.print_warning("FRAM (feature rejection algorithm for meshing) is disabled.")
 
+# def check_aperture(params):
+#     """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family..
 
-def check_aperture(params):
-    """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family.. 
+#     Parameters
+#     -------------
+#         params : dict
+#             parameter dictionary
+#     Returns
+#     ---------
+#         None
 
-    Parameters
-    -------------
-        params : dict
-            parameter dictionary
-    Returns
-    ---------
-        None
+#     Notes
+#     ---------
+#         Exits program is inconsistencies are found.
+#     """
 
-    Notes
-    ---------
-        Exits program is inconsistencies are found.
-    """
+#     if params['aperture']['value'] == 1:
+#         hf.check_none('meanAperture', params['meanAperture']['value'])
+#         hf.check_values('meanAperture', params['meanAperture']['value'])
+#         hf.check_none('stdAperture', params['stdAperture']['value'])
+#         hf.check_values('stdAperture', params['stdAperture']['value'], 0)
 
-    if params['aperture']['value'] == 1:
-        hf.check_none('meanAperture', params['meanAperture']['value'])
-        hf.check_values('meanAperture', params['meanAperture']['value'])
-        hf.check_none('stdAperture', params['stdAperture']['value'])
-        hf.check_values('stdAperture', params['stdAperture']['value'], 0)
+#     elif params['aperture']['value'] == 2:
+#         hf.check_none('apertureFromTransmissivity',
+#                       params['apertureFromTransmissivity']['value'])
+#         hf.check_length('apertureFromTransmissivity',
+#                         params['apertureFromTransmissivity']['value'], 2)
+#         if params['apertureFromTransmissivity']['value'][0] == 0:
+#             hf.print_error(
+#                 "\"apertureFromTransmissivity\"'s first value cannot be 0.")
+#         if params['apertureFromTransmissivity']['value'][1] == 0:
+#             hf.print_warning(
+#                 "\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperture."
+#             )
 
-    elif params['aperture']['value'] == 2:
-        hf.check_none('apertureFromTransmissivity',
-                      params['apertureFromTransmissivity']['value'])
-        hf.check_length('apertureFromTransmissivity',
-                        params['apertureFromTransmissivity']['value'], 2)
-        if params['apertureFromTransmissivity']['value'][0] == 0:
-            hf.print_error(
-                "\"apertureFromTransmissivity\"'s first value cannot be 0.")
-        if params['apertureFromTransmissivity']['value'][1] == 0:
-            hf.print_warning(
-                "\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperture."
-            )
+#     elif params['aperture']['value'] == 3:
+#         hf.check_none('constantAperture', params['constantAperture']['value'])
+#         hf.check_values('constantAperture',
+#                         params['constantAperture']['value'], 0)
 
-    elif params['aperture']['value'] == 3:
-        hf.check_none('constantAperture', params['constantAperture']['value'])
-        hf.check_values('constantAperture',
-                        params['constantAperture']['value'], 0)
+#     elif params['aperture']['value'] == 4:
+#         hf.check_none('lengthCorrelatedAperture',
+#                       params['lengthCorrelatedAperture']['value'])
+#         hf.check_length('lengthCorrelatedAperture',
+#                         params['lengthCorrelatedAperture']['value'], 2)
+#         if params['lengthCorrelatedAperture']['value'][0] == 0:
+#             hf.print_error(
+#                 "\"lengthCorrelatedAperture\"'s first value cannot be 0.")
+#         if params['lengthCorrelatedAperture']['value'][1] == 0:
+#             hf.print_warning(
+#                 "\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperture."
+#             )
+#     else:
+#         hf.print_error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
+#               "3 (constant), or 4 (length correlated).")
 
-    elif params['aperture']['value'] == 4:
-        hf.check_none('lengthCorrelatedAperture',
-                      params['lengthCorrelatedAperture']['value'])
-        hf.check_length('lengthCorrelatedAperture',
-                        params['lengthCorrelatedAperture']['value'], 2)
-        if params['lengthCorrelatedAperture']['value'][0] == 0:
-            hf.print_error(
-                "\"lengthCorrelatedAperture\"'s first value cannot be 0.")
-        if params['lengthCorrelatedAperture']['value'][1] == 0:
-            hf.print_warning(
-                "\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperture."
-            )
-    else:
-        hf.print_error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
-              "3 (constant), or 4 (length correlated).")
+# def check_permeability(params):
+#     """Verify the float used for permeability, if permOption is set to 1
 
+#     Parameters
+#     -------------
+#         params : dict
+#             parameter dictionary
+#     Returns
+#     ---------
+#         None
 
-def check_permeability(params):
-    """Verify the float used for permeability, if permOption is set to 1
+#     Notes
+#     ---------
+#         Exits program is inconsistencies are found.
+#     """
 
-    Parameters
-    -------------
-        params : dict
-            parameter dictionary
-    Returns
-    ---------
-        None
-
-    Notes
-    ---------
-        Exits program is inconsistencies are found.
-    """
-
-    if params['permOption']['value'] == 1:
-        hf.check_none('constantPermeability',
-                      params['constantPermeability']['value'])
-        hf.check_values('constantPermeability',
-                        params['constantPermeability']['value'], 0)
+#     if params['permOption']['value'] == 1:
+#         hf.check_none('constantPermeability',
+#                       params['constantPermeability']['value'])
+#         hf.check_values('constantPermeability',
+#                         params['constantPermeability']['value'], 0)
 
 
 def check_layers_general(params):
@@ -522,8 +521,8 @@ def check_general(params):
     check_no_dep_flags(params)
     check_rejects_per_fracture(params['rejectsPerFracture'])
     check_seed(params['seed'])
-    check_aperture(params)
-    check_permeability(params)
+    # check_aperture(params)
+    # check_permeability(params)
 
     if params['numOfLayers']['value'] > 0:
         check_layers_general(params)

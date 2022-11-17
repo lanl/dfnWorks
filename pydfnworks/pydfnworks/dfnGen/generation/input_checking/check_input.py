@@ -10,7 +10,7 @@ from pydfnworks.dfnGen.generation.input_checking.write_input_file import dump_pa
 from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families
 
 
-def print_domain_parameters(self, print_all = False):
+def print_domain_parameters(self, print_all=False):
     """ Prints domain parameters to screen
     Parameters
     ------------
@@ -29,8 +29,9 @@ def print_domain_parameters(self, print_all = False):
     print('=' * 80)
     print()
     print("{:40s}{:}".format("Name", "Value"))
-    print("{:40s}{:}".format("----------------------------", "---------------"))
-    #print('-' * 60) 
+    print("{:40s}{:}".format("----------------------------",
+                             "---------------"))
+    #print('-' * 60)
     for key in self.params.keys():
         value = self.params[key]['value']
         if print_all:
@@ -40,7 +41,8 @@ def print_domain_parameters(self, print_all = False):
                 print(f"Name: {key:40s}Value: {value}")
     print('=' * 80)
 
-def check_input(self, from_file = False):
+
+def check_input(self, from_file=False):
     """ Checks input file for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
 
      Input Format Requirements:  
@@ -67,7 +69,7 @@ def check_input(self, from_file = False):
     print('=' * 80)
     print("Checking Input File\n")
     ## Needs to be a logic fork here for using input file
-    from_file = from_file #added call to function creat_dfn to set flag, default is false
+    from_file = from_file  #added call to function creat_dfn to set flag, default is false
     if from_file:
         # Copy input file
         if os.path.isfile(self.dfnGen_file):

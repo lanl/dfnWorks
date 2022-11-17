@@ -321,8 +321,8 @@ def load_parameters():
             0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-            },
-        
+        },
+
         # ellipses
         'nFamEll': {
             'type':
@@ -1080,92 +1080,92 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        # aperture
-        'aperture': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            3,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'lengthCorrelatedAperture': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            2,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'meanAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'stdAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'constantAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            1e-4,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'apertureFromTransmissivity': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            2,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        # perm
-        'permOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'constantPermeability': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
+        # # aperture
+        # 'aperture': {
+        #     'type':
+        #     int,
+        #     'list':
+        #     False,
+        #     'value':
+        #     3,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'lengthCorrelatedAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     True,
+        #     'list_length':
+        #     2,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'meanAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'stdAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'constantAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     1e-4,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'apertureFromTransmissivity': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     True,
+        #     'list_length':
+        #     2,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # # perm
+        # 'permOption': {
+        #     'type':
+        #     int,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'constantPermeability': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     0,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
         'minimum_fracture_size': {
             'type':
             float,
@@ -1190,7 +1190,6 @@ def load_parameters():
         'userRecByCoord', 'userPolygonByCoord', 'aperture', 'permOption',
         'forceLargeFractures', 'orientationOption', 'radiiListIncrease',
         'removeFracturesLessThan'
-    
-        }
+    }
 
     return params, mandatory
