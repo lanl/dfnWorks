@@ -47,6 +47,8 @@ DFN.add_fracture_family(shape="ell",
 DFN.make_working_directory(delete = True)
 DFN.check_input()
 DFN.create_network()
+exit()
+
 # DFN.output_report()
 DFN.mesh_network(min_dist = 1, max_dist = 5, slope = 0.9)
 # DFN.assign_hydraulic_properties()
