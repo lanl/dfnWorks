@@ -90,8 +90,8 @@ def upscale(self, mat_perm, mat_por, path='../'):
             # Get porosity:
             for j in range(len(f_dict[i])):
                 # Calculate total volume of fractures in cv cell i
-                frac_vol[i -
-                         1] += self.aperture[f_dict[i][j][0] - 1] * f_dict[i][j][1]
+                frac_vol[i - 1] += self.aperture[f_dict[i][j][0] -
+                                                 1] * f_dict[i][j][1]
             por_var[i - 1] = frac_vol[i - 1] / cv_vol[i - 1]
             if por_var[i - 1] == 0:
                 por_var[i - 1] = mat_por

@@ -26,7 +26,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     """
 
     print(f"--> Making {variable} by node file")
-    values = genfromtxt(variable_file, skip_header=0, usecols = (-1))
+    values = genfromtxt(variable_file, skip_header=0, usecols=(-1))
     if not os.path.isfile(matid_file):
         error = f"ERROR!!! Cannot locate the file '{matid_file}'\nExiting\n"
         sys.stderr.write(error)
@@ -123,12 +123,13 @@ def add_variable_to_mesh(self,
         sys.stderr.write(error)
         sys.exit(1)
 
-    # if an output mesh file is not provided, set target mesh to be the source mesh. 
+    # if an output mesh file is not provided, set target mesh to be the source mesh.
     if mesh_file_out is None:
         mesh_file_out = mesh_file_in
 
-
-    print(f"--> Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}")
+    print(
+        f"--> Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}"
+    )
 
     if node_based:
         print(f"--> Expecting node-based values")
@@ -142,4 +143,6 @@ def add_variable_to_mesh(self,
 
     run_lagrit_script(lagrit_file)
 
-    print(f"--> Complete: Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}")
+    print(
+        f"--> Complete: Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}"
+    )
