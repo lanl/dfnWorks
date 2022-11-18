@@ -57,17 +57,24 @@ def load_parameters():
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
+        'polygonBoundaryFlag': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': "See pydfnworks docs"
+        },
+        'polygonBoundaryFile': {
+            'type': str,
+            'list': False,
+            'value': None,
+            'description': "File Containing polygon boundaries"
+        },
         'boundaryFaces': {
-            'type':
-            int,
-            'list':
-            True,
-            'list_length':
-            6,
-            'value':
-            None,
-            'description':
-            """Type <list of 6 booleans>\nDFN will only keep clusters with connections to domain boundaries which are set to 1:
+            'type': int,
+            'list': True,
+            'list_length': 6,
+            'value': [1,1,0,0,0,0],
+            'description': """Type <list of 6 booleans>\nDFN will only keep clusters with connections to domain boundaries which are set to 1:
             boundaryFaces[0] = +X domain boundary
             boundaryFaces[1] = -X domain boundary
             boundaryFaces[2] = +Y domain boundary
@@ -87,14 +94,10 @@ def load_parameters():
             "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
         'keepOnlyLargestCluster': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            False,
-            'description':
-            "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
+            'type': bool,
+            'list': False,
+            'value': True,
+            'description': "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
         },
         'keepIsolatedFractures': {
             'type':
@@ -298,7 +301,16 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-
+        'ecpmOutput': {
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         # Fracture Families
         'famProb': {
             'type':
@@ -609,72 +621,45 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMean': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMin': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMax': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'econst': {
-            'type':
-            float,
-            'list':
-            True,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
 
         # Rectangles
         'nFamRect': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': int,
+            'list': False,
+            'value': 0,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rAngleOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            1,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': int,
+            'list': False,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rLayer': {
             'type':
@@ -979,14 +964,10 @@ def load_parameters():
 
         # user defined rects
         'userRectanglesOnOff': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'UserRect_Input_File_Path': {
             'type':
@@ -999,14 +980,10 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'userRecByCoord': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'RectByCoord_Input_File_Path': {
             'type':
@@ -1040,14 +1017,10 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'userEllipsesOnOff': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'UserEll_Input_File_Path': {
             'type':
@@ -1061,14 +1034,10 @@ def load_parameters():
         },
         # user polygon
         'userPolygonByCoord': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'PolygonByCoord_Input_File_Path': {
             'type':

@@ -63,7 +63,7 @@ def has_curlys(line, key):
     if '{' in line and '}' in line:
         return True
     elif '{' in line or '}' in line:
-        error(f"Line defining \"{key}\" contains a single curly brace.")
+        print_error(f"Line defining \"{key}\" contains a single curly brace.")
     return False
 
 
@@ -161,6 +161,9 @@ def check_min_frac_size(params, value):
         params['minimum_fracture_size']['value'] = value
 
 
-def check_path(filepath):
-    if not os.path.isfile(filepath):
-        print_error(f"{filepath} is not valid. Please check input file")
+def check_path(filename, filepath):
+    if filepath:
+        if not os.path.isfile(filepath):
+            print_error(f"{filepath} path is for {filename} not valid. Please check input file")
+    else:
+        print_error(f"{filename} was not provided.")

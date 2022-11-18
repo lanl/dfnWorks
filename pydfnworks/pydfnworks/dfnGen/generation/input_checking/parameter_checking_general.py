@@ -1,5 +1,6 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from shutil import copy
+from numpy import zeros
 
 
 def check_stop_condition(params):
@@ -268,7 +269,7 @@ def check_no_dep_flags(params):
     """ Check for dependency flags. Not sure this does anything."""
     no_dependancy_flags = [
         'outputAllRadii', 'outputFinalRadiiPerFamily',
-        'outputAcceptedRadiiPerFamily', 'tripleIntersections',
+        'outputAcceptedRadiiPerFamily', 'ecpmOutput', 'tripleIntersections',
         'printRejectReasons', 'visualizationMode', 'keepOnlyLargestCluster',
         'keepIsolatedFractures', 'insertUserRectanglesFirst',
         'forceLargeFractures', 'orientationOption'
@@ -495,6 +496,67 @@ def check_regions_general(params):
             )
 
 
+def check_polygon_boundary_general(params):
+    """ Check the number of points in the polygon boundary matches the requested number. Checks polygon vertices are within the domain.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Exits program is inconsistencies are found.
+    """
+
+    half_x_domain = params['domainSize']['value'][0] / 2.0
+    half_y_domain = params['domainSize']['value'][1] / 2.0
+
+    ## Check path for
+    hf.check_path('polygonBoundaryFile', params['polygonBoundaryFile']['value'])
+    copy(params['polygonBoundaryFile']['value'], "./")
+
+    ## Read in domain polygon file
+    with open(params['polygonBoundaryFile']['value'], 'r') as fvertices:
+        num_vertices = int(fvertices.readline())
+        vertices = zeros((num_vertices, 2))
+        for i, line in enumerate(fvertices.readlines()):
+            line = line.split()
+            if len(line) != 2:
+                hf.print_error(
+                    f"\"vertices\" has defined #{i} to have 2 element(s) but each region must have 2 elements, which define its x and y coordinates"
+                )
+            if i < num_vertices:
+                vertices[i][0] = float(line[0])
+                vertices[i][1] = float(line[1])
+            else:
+                hf.print_error(
+                    f"Too many points in the file {params['polygonBoundaryFile']['value']}.  Expecting {num_vertices}"
+                )
+
+        if i < num_vertices - 1:
+            hf.print_error(
+                f"Too few points in the file {params['polygonBoundaryFile']['value']}. Expecting {num_vertices}"
+            )
+
+    for i, vertex in enumerate(vertices):
+        x, y = vertex
+        if x < -half_x_domain or x > half_x_domain:
+            hf.print_error(
+                f"'vertices' has defined point #{i+1} with x value outside the domain.\nValue provided: {x}. Domain boundary: {half_x_domain}.\n The domain's x-size is half of 1st value in 'domainSize' (x-dimension) in both positive and negative directions."
+            )
+
+        if y < -half_y_domain or y > half_y_domain:
+            hf.print_error(
+                f"'vertices' has defined point #{i+1} with y value outside the domain.\nValue provided: {y}. Domain boundary: {half_y_domain}.\n The domain's y-size is half of 2nd value in 'domainSize' (y-dimension) in both positive and negative directions."
+            )
+    # delete vertices
+    del vertices
+
+
 def check_user_defined(params):
 
     user_files = [("userEllipsesOnOff", "UserEll_Input_File_Path"),
@@ -504,7 +566,6 @@ def check_user_defined(params):
                   ("userPolygonByCoord", "PolygonByCoord_Input_File_Path")]
 
     for flag, path in user_files:
-
         # User Ellipse
         hf.check_none(flag, params[flag]['value'])
         if params[flag]['value']:
@@ -528,3 +589,5 @@ def check_general(params):
         check_layers_general(params)
     if params['numOfRegions']['value'] > 0:
         check_regions_general(params)
+    if params['polygonBoundaryFlag']['value']:
+        check_polygon_boundary_general(params)

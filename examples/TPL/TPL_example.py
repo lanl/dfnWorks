@@ -44,6 +44,10 @@ DFN.add_fracture_family(shape="ell",
                             "beta": 0.5
                         })
 
+DFN.print_domain_parameters()
+exit()
+
+
 DFN.make_working_directory(delete = True)
 DFN.check_input()
 DFN.create_network()

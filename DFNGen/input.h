@@ -2,6 +2,8 @@
 #define _input_h_
 #include <string>
 #include <fstream>
+#include <vector>
+#include "structures.h"
 // Variable prototypes for user input variables
 
 extern short stopCondition;
@@ -19,6 +21,10 @@ extern bool keepIsolatedFractures;
 extern bool printRejectReasons;
 extern bool outputFinalRadiiPerFamily;
 extern bool outputAcceptedRadiiPerFamily;
+extern bool ecpmOutput;
+extern bool polygonBoundaryFlag;
+extern int numOfDomainVertices;
+extern std::vector<Point> domainVertices;
 extern int orientationOption;
 extern bool *ebetaDistribution;
 extern bool *rbetaDistribution;
@@ -124,6 +130,7 @@ extern float *e_p32Targets;
 extern float *r_p32Targets;
 extern float removeFracturesLessThan;
 extern std::string polygonFile;
+extern std::vector<Point> vertices;
 
 #endif
 
