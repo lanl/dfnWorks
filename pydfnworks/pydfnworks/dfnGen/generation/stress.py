@@ -1,9 +1,9 @@
-
 import math as m
 import numpy as np
 
 # from pydfnworks
 from pydfnworks.dfnGen.generation.hydraulic_properties import convert
+
 
 def stress_based_apertures(self,
                            sigma_mat,
@@ -68,21 +68,21 @@ def stress_based_apertures(self,
 
     # write stress to file.
     with open("stress.dat", "w") as fstress:
-            fstress.write(
-                f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
-            )
-            fstress.write(
-                f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
-            )
-            fstress.write(
-                f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
-            )
-
+        fstress.write(
+            f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+        )
 
     # read fracture data:
     initial_aperture = self.aperture
-    normals = self.normal_vectors 
-    radii_frac = self.radii[:,0] #og in case of bugs np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
+    normals = self.normal_vectors
+    radii_frac = self.radii[:,
+                            0]  #og in case of bugs np.genfromtxt('radii_Final.dat', skip_header=2)[:, 0]
     num_frac = len(initial_aperture)
     b = np.zeros(num_frac)
 
@@ -107,31 +107,33 @@ def stress_based_apertures(self,
         T_3 = sigma_mat[2][0]*normals[i][0] + \
               sigma_mat[2][1]*normals[i][1] + \
               sigma_mat[2][2]*normals[i][2]
-              
+
         stress_sqr = (T_1)**2 + (T_2)**2 + (T_3)**2
         # Magnitude of shear stress
         shear_stress = np.sqrt(max(0, stress_sqr - (sigma_mag)**2))
         # Critical normal stress (see Zhao et al. 2013 JRMGE)
         sigma_nc = (0.487 * initial_aperture[i] * 1e6 + 2.51) * 1e6
         # Normal displacement
-        normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (sigma_nc +
-                                                       10 * sigma_mag)
+        normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (
+            sigma_nc + 10 * sigma_mag)
         # Shear dilation
         shear_stress_critical = -sigma_mag * m.tan(m.radians(friction_angle))
         # Fracture half length
         l = radii_frac[i]
-        
+
         # rock stiffness
         rock_stiffness = 0.92 * shear_modulus / l
         ks1 = shear_stiffness + rock_stiffness
         ks2 = rock_stiffness
-        # 
+        #
         if shear_stress > shear_stress_critical:
-            dilation_tmp = (shear_stress - shear_stress_critical * (1 - ks2 / ks1)) / (ks2)
+            dilation_tmp = (shear_stress - shear_stress_critical *
+                            (1 - ks2 / ks1)) / (ks2)
         else:
             dilation_tmp = 0
 
-        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(m.radians(dilation_angle))
+        dilation = min(dilation_tmp, critical_shear_displacement) * m.tan(
+            m.radians(dilation_angle))
 
         # take the max of the computed and provided minimum aperture.
         b[i] = max(min_b, initial_aperture[i] - normal_displacement + dilation)

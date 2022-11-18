@@ -206,7 +206,8 @@ def print_family_information(self, family_number):
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():
                     print(
-                        f"Name: {key} : {sub_key} : {family[key][sub_key]['value']}")
+                        f"Name: {key} : {sub_key} : {family[key][sub_key]['value']}"
+                    )
             else:
                 print(f"Name: {key:40s}Value: {family[key]['value']}")
         print()
