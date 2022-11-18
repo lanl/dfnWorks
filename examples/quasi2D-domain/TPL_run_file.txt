@@ -1,3 +1,0 @@
-dfnGen /Users/hymanjd/src/dfnworks-jdhdev/examples/quasi2D-domain/gen_quasi2D.dat
-dfnFlow /Users/hymanjd/src/dfnworks-jdhdev/examples/quasi2D-domain/dfn_explicit.in
-dfnTrans /Users/hymanjd/src/dfnworks-jdhdev/examples/quasi2D-domain/PTDFN_control.dat

@@ -516,11 +516,11 @@ def check_polygon_boundary_general(params):
     half_y_domain = params['domainSize']['value'][1] / 2.0
 
     ## Check path for
-    hf.check_path(params['polygonBoundaryFile']['value'])
+    hf.check_path('polygonBoundaryFile', params['polygonBoundaryFile']['value'])
     copy(params['polygonBoundaryFile']['value'], "./")
 
     ## Read in domain polygon file
-    with open(params['quasi2DdomainFile']['value'], 'r') as fvertices:
+    with open(params['polygonBoundaryFile']['value'], 'r') as fvertices:
         num_vertices = int(fvertices.readline())
         vertices = zeros((num_vertices, 2))
         for i, line in enumerate(fvertices.readlines()):
@@ -534,12 +534,12 @@ def check_polygon_boundary_general(params):
                 vertices[i][1] = float(line[1])
             else:
                 hf.print_error(
-                    f"Too many points in the file {params['quasi2DdomainFile']['value']}.  Expecting {num_vertices}"
+                    f"Too many points in the file {params['polygonBoundaryFile']['value']}.  Expecting {num_vertices}"
                 )
 
         if i < num_vertices - 1:
             hf.print_error(
-                f"Too few points in the file {params['quasi2DdomainFile']['value']}. Expecting {num_vertices}"
+                f"Too few points in the file {params['polygonBoundaryFile']['value']}. Expecting {num_vertices}"
             )
 
     for i, vertex in enumerate(vertices):

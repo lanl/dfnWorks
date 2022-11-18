@@ -45,12 +45,12 @@ def fracture_family_dictionary():
         },
         'layer': {
             'type': int,
-            'value': None,
+            'value': 0,
             'description': 'Assign family to a layer in the domain'
         },
         'region': {
             'type': int,
-            'value': None,
+            'value': 0,
             'description': 'Assign family to a region in the domain'
         },
         'p32': {
@@ -60,7 +60,7 @@ def fracture_family_dictionary():
         },
         'aspect': {
             'type': float,
-            'value': None,
+            'value': 1,
             'description': 'Aspect ratio of the fractures'
         },
         'number_of_points': {
@@ -75,7 +75,7 @@ def fracture_family_dictionary():
             'type':
             bool,
             'value':
-            None,
+            False,
             'description':
             'Prescribe a rotation around each fractures normal vector, with the fracture centered on the x-y plane at the origin\nFalse:Uniform distribution on [0,2pi)\nTrue:Constant rotation specified by beta'
         },
@@ -206,9 +206,9 @@ def print_family_information(self, family_number):
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():
                     print(
-                        f"{key} : {sub_key} : {family[key][sub_key]['value']}")
+                        f"Name: {key} : {sub_key} : {family[key][sub_key]['value']}")
             else:
-                print(f"{key} : {family[key]['value']}")
+                print(f"Name: {key:40s}Value: {family[key]['value']}")
         print()
     else:
         print("No Defined Fracture Families")

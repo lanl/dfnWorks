@@ -57,6 +57,18 @@ def load_parameters():
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
+        'polygonBoundaryFlag': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': "See pydfnworks docs"
+        },
+        'polygonBoundaryFile': {
+            'type': str,
+            'list': False,
+            'value': None,
+            'description': "File Containing polygon boundaries"
+        },
         'boundaryFaces': {
             'type': int,
             'list': True,
@@ -640,7 +652,7 @@ def load_parameters():
         'nFamRect': {
             'type': int,
             'list': False,
-            'value': None,
+            'value': 0,
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rAngleOption': {
@@ -954,7 +966,7 @@ def load_parameters():
         'userRectanglesOnOff': {
             'type': bool,
             'list': False,
-            'value': None,
+            'value': False,
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'UserRect_Input_File_Path': {
