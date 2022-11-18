@@ -457,7 +457,6 @@ int main (int argc, char **argv) {
     //     // NOTE: must assign aperture before permeability
     //     assignPermeability(acceptedPoly[i]);
     // }
-    
     // Copy end of DFN generation stats to file, as well as print to screen
     std::ofstream file;
     std::string fileName = output + "/DFN_output.txt";

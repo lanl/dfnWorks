@@ -334,7 +334,7 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
 //         newPoly.aperture = logDistribution(generator);
 //         break;
 //     }
-    
+
 //     case 2: {
 //         /*  Transmissivity is calculated as transmissivity = F*R^k,
 //             where F is a first element in aperturefromTransmissivity,
@@ -348,12 +348,12 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
 //         newPoly.aperture = std::cbrt((transmissivity * 12 / _CONSTSCALAR)); //cube root
 //         break;
 //     }
-    
+
 //     case 3: {
 //         newPoly.aperture = constantAperture;
 //         break;
 //     }
-    
+
 //     case 4: {
 //         double radiAvg = (newPoly.xradius + newPoly.yradius) * .5;
 //         double apertureMeanF = lengthCorrelatedAperture[0];
