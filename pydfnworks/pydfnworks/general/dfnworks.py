@@ -14,6 +14,7 @@ from time import time
 
 from pydfnworks.general.dfntools import *
 
+
 class DFNWORKS(Frozen):
     '''
     Class for DFN Generation and meshing
@@ -40,7 +41,7 @@ class DFNWORKS(Frozen):
     #from pydfnworks.general.legal import legal
 
     from pydfnworks.general.paths import define_paths
-    from pydfnworks.general.general_functions import dump_time, print_run_time 
+    from pydfnworks.general.general_functions import dump_time, print_run_time
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -48,9 +49,8 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
-    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values 
-    from pydfnworks.dfnGen.generation.stress import stress_based_apertures 
-
+    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values
+    from pydfnworks.dfnGen.generation.stress import stress_based_apertures
 
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python
@@ -62,10 +62,9 @@ class DFNWORKS(Frozen):
 
     from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells
 
-
     # dfnFlow
     import pydfnworks.dfnFlow
-    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver 
+    from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
@@ -75,11 +74,12 @@ class DFNWORKS(Frozen):
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
 
     # dfnGraph
+    # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, k_shortest_paths_backbone, dump_json_graph, load_json_graph, plot_graph, greedy_edge_disjoint, dump_fractures, add_fracture_source, add_fracture_target, current_flow_threshold
-    from pydfnworks.dfnGraph.graph_flow import run_graph_flow
+    from pydfnworks.dfnGraph.dfn2graph import create_graph, dump_json_graph, load_json_graph, plot_graph, dump_fractures, add_fracture_source, add_fracture_target
+    from pydfnworks.dfnGraph.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
+    from pydfnworks.dfnGraph.graph_flow import run_graph_flow, compute_dQ
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
-
     def __init__(self,
                  jobname='',
                  ncpu='',
@@ -140,25 +140,25 @@ class DFNWORKS(Frozen):
         self.freeze = False
         #options = create_dfn.commandline_options()
 
-#    def __del__(self):
-#        print("=" * 80)
-#        now = datetime.now()
-#        print(f"--> {self.local_jobname} completed/exited at {now}")
-#        elapsed = time() - self.start_time
-#        time_sec = elapsed
-#        time_min = elapsed / 60
-#        time_hrs = elapsed / 3600
-#
-#        print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
-#        output = '''
-#\t\t\t*********************************************
-#\t\t\t*   Thank you for using dfnWorks            *
-#\t\t\t*   Learn more at https://dfnworks.lanl.gov *
-#\t\t\t*   Contact us at dfnworks@lanl.gov         *
-#\t\t\t*********************************************
-#
-#'''
-#        print(output)
+#     def __del__(self):
+#         print("=" * 80)
+#         print(f"--> {self.local_jobname} completed/exited at {now}")
+#         elapsed = time() - self.start_time
+#         time_sec = elapsed
+#         time_min = elapsed / 60
+#         time_hrs = elapsed / 3600
+
+#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         output = '''
+# \t\t\t*********************************************
+# \t\t\t*   Thank you for using dfnWorks            *
+# \t\t\t*   Learn more at https://dfnworks.lanl.gov *
+# \t\t\t*   Contact us at dfnworks@lanl.gov         *
+# \t\t\t*********************************************
+
+# '''
+#         print(output)
+
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
@@ -277,7 +277,7 @@ def create_dfn():
         print("--> Reading Input from " + options.input_file)
 
     with open(options.input_file, "r") as f:
-        for i,line in enumerate(f.readlines()):
+        for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
             line = line.split()
             try:
@@ -323,4 +323,3 @@ def create_dfn():
     print("\n--> Creating DFN class: Complete")
     print("=" * 80 + "\n")
     return DFN
-
