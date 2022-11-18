@@ -1,0 +1,1 @@
+python driver.py -name /Users/hymanjd/src/dfnworks-jdhdev/examples/quasi2D-domain/quasi2D_example -input TPL_run_file.txt -ncpu 8 

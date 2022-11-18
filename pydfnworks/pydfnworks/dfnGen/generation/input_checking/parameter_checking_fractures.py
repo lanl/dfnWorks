@@ -185,8 +185,7 @@ def check_orientations(params, prefix):
             )
         keys = [prefix + name for name in ["dip", "strike"]]
     else:
-        hf.print_error(
-        f"Unknown orientation option. Value must be 0,1, or 2.") 
+        hf.print_error(f"Unknown orientation option. Value must be 0,1, or 2.")
 
     for key in keys:
         hf.check_none(key, params[key]['value'])

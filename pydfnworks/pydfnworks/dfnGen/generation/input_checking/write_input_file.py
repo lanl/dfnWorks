@@ -15,10 +15,9 @@ def dump_params(params, output_file):
         if params[key]['value'] is not None:
             if key == 'layers':
                 writer.write(key + ': \n')
-                for i, layer in enumerate(params['layers']['value']):
-
+                for layer in params['layers']['value']:
                     curl = "{"
-                    for val in params['layers']['value'][i]:
+                    for val in layer:
                         curl += f"{val},"
                     curl = curl[:-1]
                     curl += "}"
@@ -26,9 +25,19 @@ def dump_params(params, output_file):
 
             elif key == 'regions':
                 writer.write(key + ': \n')
-                for i, layer in enumerate(params['regions']['value']):
+                for region in params['regions']['value']:
                     curl = "{"
-                    for val in params['regions']['value'][i]:
+                    for val in region:
+                        curl += f"{val},"
+                    curl = curl[:-1]
+                    curl += "}"
+                    writer.write(curl + '\n')
+
+            elif key == 'vertices':
+                writer.write(key + ': \n')
+                for vertex in params['vertices']['value']:
+                    curl = "{"
+                    for val in vertex:
                         curl += f"{val},"
                     curl = curl[:-1]
                     curl += "}"
