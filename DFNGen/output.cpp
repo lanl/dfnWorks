@@ -138,12 +138,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
         writePolys(finalFractures, acceptedPoly, output);
         // write Params file
         writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
-        // Write aperture file
-        writeApertureFile(finalFractures, acceptedPoly, output);
-        // Write permability file
-        writePermFile(finalFractures, acceptedPoly, output);
-        // Write radii file
-        writeRadiiFile(finalFractures, acceptedPoly, output);
+        // Write all accepted radii
+        writeFinalPolyRadii(finalFractures, acceptedPoly, output);
     }
 } // End writeOutput()
 

@@ -19,6 +19,7 @@
 #include "fractureEstimating.h"
 #include "debugFunctions.h"
 #include "removeFractures.h"
+#include "polygonBoundary.h"
 
 // Used for automated python testing
 #include "testing.h"
@@ -32,12 +33,14 @@
 #include <termios.h>
 #include "hotkey.h"
 
-
 // DO NOT CHANGE VAR NAME
 struct termios orig_termios; //used for custom console and hotkey
 
 // Global eps
 double eps;
+
+using std::cout;
+using std::endl;
 
 // SEE STRUCTURES.H FOR ALL STRUCTURE DEFINITIONS
 int main (int argc, char **argv) {
@@ -276,7 +279,6 @@ int main (int argc, char **argv) {
             int rejectCounter = 0;
             
             while (rejectCode != 0) { // Loop used to reinsert same poly with different translation
-            
                 // HOT KEY: check for keyboard input
                 if (kbhit()) {
                     key = getch();
@@ -302,15 +304,16 @@ int main (int argc, char **argv) {
                 
                 // Create/assign bounding box
                 createBoundingBox(newPoly);
+                
                 // Find line of intersection and FRAM check
                 // rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
                 // Find line of intersection and FRAM check
                 if (disableFram == false) {
-                     rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
+                    rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
+                } else {
+                    rejectCode = 0;
                 }
-                else{
-                     rejectCode = 0;
-                }
+                
 #ifdef TESTING
                 
                 if (rejectCode != 0) {
@@ -594,6 +597,15 @@ int main (int argc, char **argv) {
         file      << "Removed " << size - acceptedPoly.size() << " fractures with radius less than " << removeFracturesLessThan << "\n\n";
     }
     
+    if (polygonBoundaryFlag) {
+        cout << "\nExtracting fractures from a polygon boundary domain" << endl;
+        file << "\nExtracting fractures from a polygon boundary domain" << endl;
+        int size = acceptedPoly.size();
+        polygonBoundary(acceptedPoly, intPts, triplePoints, pstats);
+        std::cout << "Removed " << size - acceptedPoly.size() << " fractures outside subdomain \n\n";
+        file      << "Removed " << size - acceptedPoly.size() << " fractures outside subdomain \n\n";
+    }
+    
     /*  Remove any isolated fractures and return
         a list of polygon indices matching the users
         boundaryFaces option. If input option
@@ -603,7 +615,7 @@ int main (int argc, char **argv) {
         DFN will keep all fractures with intersections.
     */
     std::vector<unsigned int> finalFractures =  getCluster(pstats);
-    // Sort fracture indecies to retain order by acceptance
+    // Sort fracture indices to retain order by acceptance
     std::sort (finalFractures.begin(), finalFractures.end());
     // Error check for no boundary connection
     bool printConnectivityError = 0;
