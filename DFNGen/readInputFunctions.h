@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include "structures.h"
+#include "input.h"
 
 //Note, Template functions (type t) are coded inside .h files
 
@@ -14,7 +15,8 @@ void searchVar(std::ifstream &stream, std::string search);
 void checkIfOpen(std::ifstream &stream, std::string fileName);
 void checkIfOpen(std::ofstream &stream, std::string fileName);
 void getCords(std::ifstream & stream, double *outAry, int nPoly, int nVertices);
-
+std::vector<std::string> splitOnWhiteSpace(std::string line);
+void readDomainVertices(std::string filename);
 
 /*****************************************************************/
 /*! Gets multiple arrays from input/ Assumes arrays are format: {x,y,z}

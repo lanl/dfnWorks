@@ -516,7 +516,6 @@ struct Shape {
     Shape(); // Constructor
 };
 
-
 void printPolyData(struct Poly &Poly);
 void printStats(struct stats *obj);
 

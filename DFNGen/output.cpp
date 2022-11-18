@@ -37,93 +37,109 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string radiiFolder = output + "/radii/";
     // Adjust Fracture numbering
     adjustIntFractIDs(finalFractures, acceptedPoly, intPts);
-    // Write out graph information
-    writeGraphData(finalFractures, acceptedPoly, intPts);
-    // Write polygon.dat file
-    writePolys(finalFractures, acceptedPoly, output);
-    // Write intersection files (must be first file written, rotates polys to x-y plane)
-    writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
-    // Write polys.inp
-    writePolysInp(finalFractures, acceptedPoly, output);
-    // Write params.txt
-    writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
-    // Write aperture file
-    writeApertureFile(finalFractures, acceptedPoly, output);
-    // Write permability file
-    writePermFile(finalFractures, acceptedPoly, output);
-    // Write radii file
-    writeRadiiFile(finalFractures, acceptedPoly, output);
-    // Write rejection stats file
-    writeRejectionStats(pstats, output);
-    // Write families to output Files
-    writeShapeFams(shapeFamilies, output);
-    // Write fracture translations file
-    writeFractureTranslations(finalFractures, acceptedPoly, output);
-    // Write fracture connectivity (edge graph) file
-    writeConnectivity(finalFractures, acceptedPoly, intPts, output);
-    // Write rotation data
-    writeRotationData(acceptedPoly, finalFractures, shapeFamilies, output);
-    // Write normal vectors
-    writeNormalVectors(acceptedPoly, finalFractures, shapeFamilies, output);
-    // Write rejects per fracture insertion attempt data
-    writeRejectsPerAttempt(pstats, output);
-    // Write all accepted radii
-    writeFinalPolyRadii(finalFractures, acceptedPoly, output);
-    // Write all accepted Surface Area
-    writeFinalPolyArea(finalFractures, acceptedPoly, output);
-    // Write out which fractures touch which boundaries
-    writeBoundaryFiles(finalFractures, acceptedPoly);
     
-    if (outputAcceptedRadiiPerFamily) {
-        std::cout << "Writing Accepted Radii Files Per Family\n";
-        // Creates radii files per family, before isolated fracture removal.
-        int size = shapeFamilies.size();
+    // Standard output
+    if (!ecpmOutput) {
+        std::cout << "Writting all output files" << std::endl;
+        // Write out graph information
+        writeGraphData(finalFractures, acceptedPoly, intPts);
+        // Write polygon.dat file
+        writePolys(finalFractures, acceptedPoly, output);
+        // Write intersection files (must be first file written, rotates polys to x-y plane)
+        writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
+        // Write polys.inp
+        writePolysInp(finalFractures, acceptedPoly, output);
+        // Write params.txt
+        writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
+        // Write aperture file
+        writeApertureFile(finalFractures, acceptedPoly, output);
+        // Write permability file
+        writePermFile(finalFractures, acceptedPoly, output);
+        // Write radii file
+        writeRadiiFile(finalFractures, acceptedPoly, output);
+        // Write rejection stats file
+        writeRejectionStats(pstats, output);
+        // Write families to output Files
+        writeShapeFams(shapeFamilies, output);
+        // Write fracture translations file
+        writeFractureTranslations(finalFractures, acceptedPoly, output);
+        // Write fracture connectivity (edge graph) file
+        writeConnectivity(finalFractures, acceptedPoly, intPts, output);
+        // Write rotation data
+        writeRotationData(acceptedPoly, finalFractures, shapeFamilies, output);
+        // Write normal vectors
+        writeNormalVectors(acceptedPoly, finalFractures, shapeFamilies, output);
+        // Write rejects per fracture insertion attempt data
+        writeRejectsPerAttempt(pstats, output);
+        // Write all accepted radii
+        writeFinalPolyRadii(finalFractures, acceptedPoly, output);
+        // Write all accepted Surface Area
+        writeFinalPolyArea(finalFractures, acceptedPoly, output);
+        // Write out which fractures touch which boundaries
+        writeBoundaryFiles(finalFractures, acceptedPoly);
         
-        for (int i = 0; i < size; i++) {
-            writeAllAcceptedRadii_OfFamily(i, acceptedPoly, radiiFolder);
+        if (outputAcceptedRadiiPerFamily) {
+            std::cout << "Writing Accepted Radii Files Per Family\n";
+            // Creates radii files per family, before isolated fracture removal.
+            int size = shapeFamilies.size();
+            
+            for (int i = 0; i < size; i++) {
+                writeAllAcceptedRadii_OfFamily(i, acceptedPoly, radiiFolder);
+            }
+            
+            if (userRectanglesOnOff) {
+                // Fractures are marked -2 for user rects
+                writeAllAcceptedRadii_OfFamily(-2, acceptedPoly, radiiFolder);
+            }
+            
+            if (userEllipsesOnOff) {
+                // Fractures are marked -1 for user ellipses
+                writeAllAcceptedRadii_OfFamily(-1, acceptedPoly, radiiFolder);
+            }
+            
+            if (userPolygonByCoord) {
+                // Fractures are marked -3 for user user polygons
+                writeAllAcceptedRadii_OfFamily(-3, acceptedPoly, radiiFolder);
+            }
         }
         
-        if (userRectanglesOnOff) {
-            // Fractures are marked -2 for user rects
-            writeAllAcceptedRadii_OfFamily(-2, acceptedPoly, radiiFolder);
+        if (outputFinalRadiiPerFamily) {
+            std::cout << "Writing Final Radii Files Per Family\n";
+            int size = shapeFamilies.size();
+            
+            for (int i = 0; i < size; i++) {
+                writeFinalRadii_OfFamily(finalFractures, i, acceptedPoly, radiiFolder);
+            }
+            
+            if (userRectanglesOnOff) {
+                writeFinalRadii_OfFamily(finalFractures, -1, acceptedPoly, radiiFolder);
+            }
+            
+            if (userEllipsesOnOff) {
+                writeFinalRadii_OfFamily(finalFractures, -2, acceptedPoly, radiiFolder);
+            }
+            
+            if (userPolygonByCoord) {
+                writeFinalRadii_OfFamily(finalFractures, -3, acceptedPoly, radiiFolder);
+            }
         }
         
-        if (userEllipsesOnOff) {
-            // Fractures are marked -1 for user ellipses
-            writeAllAcceptedRadii_OfFamily(-1, acceptedPoly, radiiFolder);
-        }
-        
-        if (userPolygonByCoord) {
-            // Fractures are marked -3 for user user polygons
-            writeAllAcceptedRadii_OfFamily(-3, acceptedPoly, radiiFolder);
+        // If triple intersections are on, write triple intersection points file
+        if (tripleIntersections) {
+            std::cout << "Writing Triple Intersection Points File\n";
+            writeTriplePts(triplePoints, finalFractures, acceptedPoly, intPts, output);
         }
     }
     
-    if (outputFinalRadiiPerFamily) {
-        std::cout << "Writing Final Radii Files Per Family\n";
-        int size = shapeFamilies.size();
-        
-        for (int i = 0; i < size; i++) {
-            writeFinalRadii_OfFamily(finalFractures, i, acceptedPoly, radiiFolder);
-        }
-        
-        if (userRectanglesOnOff) {
-            writeFinalRadii_OfFamily(finalFractures, -1, acceptedPoly, radiiFolder);
-        }
-        
-        if (userEllipsesOnOff) {
-            writeFinalRadii_OfFamily(finalFractures, -2, acceptedPoly, radiiFolder);
-        }
-        
-        if (userPolygonByCoord) {
-            writeFinalRadii_OfFamily(finalFractures, -3, acceptedPoly, radiiFolder);
-        }
-    }
-    
-    // If triple intersections are on, write triple intersection points file
-    if (tripleIntersections) {
-        std::cout << "Writing Triple Intersection Points File\n";
-        writeTriplePts(triplePoints, finalFractures, acceptedPoly, intPts, output);
+    // only output files needed for ECPM upscaling
+    if (ecpmOutput) {
+        std::cout << "Writting output files for ECPM" << std::endl;
+        // Write polygon.dat file
+        writePolys(finalFractures, acceptedPoly, output);
+        // write Params file
+        writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
+        // Write all accepted radii
+        writeFinalPolyRadii(finalFractures, acceptedPoly, output);
     }
 } // End writeOutput()
 
@@ -943,13 +959,15 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     using namespace std;
     
     //TODO: add stub code in families.dat for userDefined fractures, IF there are user defined fractures
-
+    
     if (userEllipsesOnOff) {
         file << "UserDefined Ellipse Family: 0\n\n";
     }
+    
     if (userRectanglesOnOff) {
         file << "UserDefined Rectangle Family: -1\n\n";
-    }    
+    }
+    
     if (userPolygonByCoord) {
         file << "UserDefined Polygon Family: -2\n\n";
     }

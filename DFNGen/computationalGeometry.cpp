@@ -958,7 +958,8 @@ int intersectionChecking(struct Poly &newPoly, std::vector<Poly> &acceptedPoly, 
                     // assign the group of the other intersecting fracture
                     if (newPoly.groupNum == 0) {
                         newPoly.groupNum = acceptedPoly[ii].groupNum;
-                    } else if (newPoly.groupNum != acceptedPoly[ii].groupNum) { // Poly bridged two different groupsa
+                    } else if (newPoly.groupNum != acceptedPoly[ii].groupNum) {
+                        // Poly bridged two different groupsa
                         encounteredGroups.push_back(acceptedPoly[ii].groupNum);
                     }
                 } else { // 'newPoly' rejected

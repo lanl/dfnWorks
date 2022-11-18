@@ -1,10 +1,9 @@
-CXX = g++
-
+ CXX = /opt/homebrew/Cellar/gcc/11.3.0_2/bin/g++-11
 CXXFLAGS  = -std=c++11 -O3 -lm -Wall -g
 
-
-DFNGen: DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o  readInput.o readInputFunctions.o output.o insertUserRects.o insertUserRectsByCoord.o insertUserEllByCoord.o insertUserEll.o insertUserPolygonByCoord.o insertShape.o structures.o computationalGeometry.o fractureEstimating.o generatingPoints.o domain.o mathFunctions.o vectorFunctions.o generatingPoints.o removeFractures.o  clusterGroups.o
-	$(CXX) $(CXXFLAGS) -o DFNGen DFNmain.o debugFunctions.o distributions.o expDist.o fractureEstimating.o  hotkey.o readInput.o readInputFunctions.o output.o insertUserRects.o insertUserRectsByCoord.o insertUserEllByCoord.o  insertUserEll.o insertUserPolygonByCoord.o insertShape.o structures.o computationalGeometry.o  domain.o mathFunctions.o vectorFunctions.o generatingPoints.o removeFractures.o clusterGroups.o
+DFNGen: DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o  readInput.o readInputFunctions.o output.o insertUserRects.o insertUserRectsByCoord.o insertUserEllByCoord.o insertUserEll.o insertUserPolygonByCoord.o insertShape.o structures.o computationalGeometry.o fractureEstimating.o generatingPoints.o domain.o mathFunctions.o polygonBoundary.o vectorFunctions.o generatingPoints.o removeFractures.o  clusterGroups.o
+	
+	$(CXX) $(CXXFLAGS) -o DFNGen DFNmain.o debugFunctions.o distributions.o expDist.o fractureEstimating.o  hotkey.o readInput.o readInputFunctions.o output.o insertUserRects.o insertUserRectsByCoord.o insertUserEllByCoord.o  insertUserEll.o insertUserPolygonByCoord.o insertShape.o structures.o computationalGeometry.o  domain.o mathFunctions.o vectorFunctions.o generatingPoints.o removeFractures.o clusterGroups.o polygonBoundary.o
 
 
 DFNmain.o:  DFNmain.cpp  input.h 
@@ -53,6 +52,8 @@ debugFunctions.o: debugFunctions.cpp debugFunctions.h
 
 removeFractures.o: removeFractures.cpp removeFractures.h
 
+polygonBoundary.o: polygonBoundary.cpp polygonBoundary.h 
+
 clean:
-	rm -f DFNGen DFNmain.o debugFunctions.o  distributions.o expDist.o fractureEstimating.o hotkey.o structures.o insertUserEll.o insertUserPolygonByCoord.o insertUserRects.o insertUserRectsByCoord.o computationalGeometry.o output.o readInput.o readInputFunctions.o mathFunctions.o vectorFunctions.o generatingPoints.o domain.o clusterGroups.o insertShape.o removeFractures.o insertUserEllByCoord.o
+	rm -f DFNGen DFNmain.o debugFunctions.o  distributions.o expDist.o fractureEstimating.o hotkey.o structures.o insertUserEll.o insertUserPolygonByCoord.o insertUserRects.o insertUserRectsByCoord.o computationalGeometry.o output.o readInput.o readInputFunctions.o mathFunctions.o vectorFunctions.o generatingPoints.o domain.o clusterGroups.o insertShape.o removeFractures.o insertUserEllByCoord.o polygonBoundary.o
 
