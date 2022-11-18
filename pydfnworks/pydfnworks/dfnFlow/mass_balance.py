@@ -14,7 +14,6 @@ import glob
 __author__ = 'Satish Karra'
 __email__ = 'satkarra@lanl.gov'
 
-
 # def parse_pflotran_input(pflotran_input_file):
 #     ''' Walk through PFLOTRAN input file and find inflow boundary, inflow and outflow pressure, and direction of flow
 
@@ -144,9 +143,7 @@ def check_inputs(boundary_file, direction, inflow_pressure, outflow_pressure):
             return False
 
     elif direction == 'z':
-        if not boundary_file in [
-                'pboundary_top.ex', 'pboundary_bottom.ex'
-        ]:
+        if not boundary_file in ['pboundary_top.ex', 'pboundary_bottom.ex']:
             print(
                 f"--> ERROR! Direction {direction} is not consistent with boundary file {boundary_file}. Cannot compute effective permeability."
             )
