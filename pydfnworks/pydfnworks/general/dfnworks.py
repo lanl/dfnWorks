@@ -162,8 +162,16 @@ class DFNWORKS():
                  num_nodes=None,
                  mesh_type='dfn',
                  cell_based_aperture=False):
+        
+        try:
+            os.remove('dfnWorks.log') #Remove the old log file
+            print("Creating New Log File (dfnWorks.log)")
+            print("")
+        except:
+            print("Creating New Log File (dfnWorks.log)")
+            print("")
 
-        self.print_log("\n--> Creating DFN Object: Starting")
+        print("\n--> Creating DFN Object: Starting")
 
         if jobname:
             self.jobname = jobname

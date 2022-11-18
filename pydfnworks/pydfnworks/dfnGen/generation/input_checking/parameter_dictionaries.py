@@ -58,16 +58,11 @@ def load_parameters():
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
         'boundaryFaces': {
-            'type':
-            int,
-            'list':
-            True,
-            'list_length':
-            6,
-            'value':
-            None,
-            'description':
-            """Type <list of 6 booleans>\nDFN will only keep clusters with connections to domain boundaries which are set to 1:
+            'type': int,
+            'list': True,
+            'list_length': 6,
+            'value': [1,1,0,0,0,0],
+            'description': """Type <list of 6 booleans>\nDFN will only keep clusters with connections to domain boundaries which are set to 1:
             boundaryFaces[0] = +X domain boundary
             boundaryFaces[1] = -X domain boundary
             boundaryFaces[2] = +Y domain boundary
@@ -82,25 +77,25 @@ def load_parameters():
             'list':
             False,
             'value':
-            False,
+            True,
             'description':
             "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
         'keepOnlyLargestCluster': {
+            'type': bool,
+            'list': False,
+            'value': True,
+            'description': "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
+        },
+        'keepIsolatedFractures': {
             'type':
             bool,
             'list':
             False,
             'value':
-            True,
+            False,
             'description':
-            "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
-        },
-        'keepIsolatedFractures': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
+            "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
         },
         'ignoreBoundaryFaces': {
             'type':
@@ -108,15 +103,19 @@ def load_parameters():
             'list':
             False,
             'value':
-            False,
+            True,
             'description':
             "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
         },
         'numOfLayers': {
-            'type': int,
-            'list': False,
-            'value': 0,
-            'description': "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
         },
         'layers': {
             'type':
@@ -139,10 +138,14 @@ def load_parameters():
             "Type < int>\nDefines the number of cuboid regions in the domain. If numOfRegions is 0, then there are no regions. Fracture families are assigned to regions using either the eRegion or rRegion options.\n"
         },
         'regions': {
-            'type': float,
-            'list': True,
-            'value': 0,
-            'description':"Type: Set of numOfRegions arrays with six elements. {minX, maxX, minY, maxY, minZ, maxZ}. Defines the bounding box of each region. The first region listed is region 1, the region is region 2, etc. Stochastic families *must* be assigned to theses regions. If the family is assigned to region 0, then the family in generated through the entire domain."
+            'type':
+            float,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            "Type: Set of numOfRegions arrays with six elements. {minX, maxX, minY, maxY, minZ, maxZ}. Defines the bounding box of each region. The first region listed is region 1, the region is region 2, etc. Stochastic families *must* be assigned to theses regions. If the family is assigned to region 0, then the family in generated through the entire domain."
         },
         'h': {
             'type':
@@ -155,22 +158,34 @@ def load_parameters():
             "Type: Positive <double>\nMinimum feature size accepted into the network.\n"
         },
         'seed': {
-            'type': int,
-            'list': False,
-            'value':1, 
-            'description':"Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            1,
+            'description':
+            "Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
         },
         'tripleIntersections': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description':"Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            "Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
         },
         'forceLargeFractures': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description':"Type <boolean>\nInsert the largest fracture from each family into the domain prior to sampling sequential from family based on their respective probabilities.\n0: Do not force the largest fractures\n1: Force the largest fractures\n"
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            "Type <boolean>\nInsert the largest fracture from each family into the domain prior to sampling sequential from family based on their respective probabilities.\n0: Do not force the largest fractures\n1: Force the largest fractures\n"
         },
         'orientationOption': {
             'type':
@@ -225,34 +240,54 @@ def load_parameters():
 
         # output
         'printRejectReasons': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'outputAllRadii': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'outputFinalRadiiPerFamily': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'visualizationMode': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'outputAcceptedRadiiPerFamily': {
-            'type': bool,
-            'list': False,
-            'value': False,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'ecpmOutput': {
             'type':
@@ -574,261 +609,363 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMean': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMin': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMax': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'list_length': None,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'econst': {
-            'type':
-            float,
-            'list':
-            True,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': float,
+            'list': True,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
 
         # Rectangles
         'nFamRect': {
+            'type': int,
+            'list': False,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rAngleOption': {
+            'type': int,
+            'list': False,
+            'value': None,
+            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rLayer': {
             'type':
             int,
             'list':
-            False,
+            True,
+            'list_length':
+            None,
             'value':
             None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'rAngleOption': {
+        'rRegion': {
             'type':
             int,
             'list':
-            False,
+            True,
+            'list_length':
+            None,
             'value':
-            1,
+            None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'rLayer': {
-            'type': int,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'rRegion': {
-            'type': int,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
         'rdistr': {
-            'type': int,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rbetaDistribution': {
-            'type': int,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rbeta': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'r_p32Targets': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'raspect': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rtheta': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rphi': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rtrend': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rplunge': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rdip': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rstrike': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rkappa': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rLogMean': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rsd': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rLogMin': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rLogMax': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'ralpha': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rmin': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rmax': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rExpMean': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rExpMin': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rExpMax': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rconst': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
 
         # user defined rects
         'userRectanglesOnOff': {
             'type': bool,
             'list': False,
-            'value': False,
+            'value': None,
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'UserRect_Input_File_Path': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            str,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'userRecByCoord': {
             'type': bool,
@@ -837,23 +974,35 @@ def load_parameters():
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'RectByCoord_Input_File_Path': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            str,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         # user defined ells
         'userEllByCoord': {
-            'type': bool,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'EllByCoord_Input_File_Path': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            str,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'userEllipsesOnOff': {
             'type': bool,
@@ -862,10 +1011,14 @@ def load_parameters():
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'UserEll_Input_File_Path': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            str,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         # user polygon
         'userPolygonByCoord': {
@@ -875,10 +1028,14 @@ def load_parameters():
             'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'PolygonByCoord_Input_File_Path': {
-            'type': str,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            str,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         # # aperture
         # 'aperture': {
@@ -967,10 +1124,14 @@ def load_parameters():
         #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         # },
         'minimum_fracture_size': {
-            'type': float,
-            'list': False,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            False,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
     }
 
