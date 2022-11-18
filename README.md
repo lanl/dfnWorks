@@ -9,7 +9,7 @@ machine. To setup dfnWorks using Docker instead, see the next section.
 
 ### Clone the dnfWorks repository
 
-    $ git clone https://github.com/lanl/dfnWorks.git
+    $ git clone git@github.com:lanl/dfnWorks.git
 
 ### Fix paths in test directory 
 
