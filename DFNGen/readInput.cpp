@@ -1536,7 +1536,6 @@ void printInputVars() {
     // } else if (aperture == 4) {
     //     printAry(lengthCorrelatedAperture, "lengthCorrelatedAperture", 2);
     // }
-    
     // if (permOption == 0) {
     //     std::cout << "Permeability: Function of aperture\n";
     // } else {

@@ -516,7 +516,8 @@ def check_polygon_boundary_general(params):
     half_y_domain = params['domainSize']['value'][1] / 2.0
 
     ## Check path for
-    hf.check_path('polygonBoundaryFile', params['polygonBoundaryFile']['value'])
+    hf.check_path('polygonBoundaryFile',
+                  params['polygonBoundaryFile']['value'])
     copy(params['polygonBoundaryFile']['value'], "./")
 
     ## Read in domain polygon file

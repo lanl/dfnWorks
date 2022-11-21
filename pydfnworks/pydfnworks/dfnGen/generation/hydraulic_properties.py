@@ -603,7 +603,7 @@ def generate_hydraulic_values(self,
     radii = self.radii[:, 2]
     families = self.families
     number_of_fractures = self.num_frac
-    
+
     if family_id is not None:
         print(f"--> Working on Fracture Family {family_id}")
         idx = np.where(families == family_id)
@@ -663,4 +663,3 @@ def generate_hydraulic_values(self,
         self.aperture[idx] = b[idx]
         self.perm[idx] = perm[idx]
         self.transmissivity[idx] = transmissivity[idx]
-

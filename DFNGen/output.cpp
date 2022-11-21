@@ -609,11 +609,11 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
 //     std::cout << "Writing aperture.dat\n";
 //     ap << "aperture.dat" << "\n";
 //     int size = finalFractures.size();
-    
+
 //     for (int i = 0; i < size; i++) {
 //         ap << -(7 + i) << " 0 0 " << std::setprecision(10) << acceptedPoly[finalFractures[i]].aperture << "\n";
 //     }
-    
+
 //     ap.close();
 // }
 
@@ -630,11 +630,11 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
 //     std::cout << "Writing perm.dat\n";
 //     perm << "permeability" << "\n";
 //     int size = finalFractures.size();
-    
+
 //     for (int i = 0; i < size; i++) {
 //         perm << -(7 + i) << " 0 0 " <<  std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << "\n";
 //     }
-    
+
 //     perm.close();
 // }
 
