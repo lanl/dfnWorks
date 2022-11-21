@@ -4,6 +4,12 @@ import difflib
 from datetime import datetime
 import os
 
+# df = pd.DataFrame(data = {"example" : dirs})
+# df.insert(1, 'complete', [False] * len(dirs))
+# df.insert(2, 'date', values)
+# df.insert(3, 'tester', values)
+# df.to_pickle('examples.p')
+
 example_name = sys.argv[1]
 
 df = pd.read_pickle('examples.p')
