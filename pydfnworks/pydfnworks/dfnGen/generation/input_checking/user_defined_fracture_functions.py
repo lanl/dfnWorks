@@ -7,19 +7,71 @@ Created on Mon Aug 29 09:17:14 2022
 
 import sys
 import os
+from numpy import pi
 
+from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
+
+
+def check_angle_option(angle_option, array):
+    for val in array:
+        if angle_option == "radian":
+            if val > 2 * pi:
+                print_warning(
+                    "Value greater than 2 PI, angle option of radians has been selected"
+                )
+        elif angle_option == "degree":
+            if val > 360:
+                print_warning(
+                    "Value greater than 2 PI, angle option of radians has been selected"
+                )
+
+
+def print_user_fracture_information(self, shape, frac_number='all'):
+
+    print(f"\n--> User Fracture information")
+    if shape == 'rect':
+        if frac_number == 'all':
+            fracture_dictionaries = self.user_rect_params
+        else:
+            fracture_dictionary = self.user_rect_params[frac_number]
+
+    elif shape == 'ell':
+        if frac_number == 'all':
+            fracture_dictionaries = self.user_ell_params
+        else:
+            fracture_dictionary = self.user_ell_params[frac_number]
+
+    elif shape == 'poly':
+        fracture_dictionary = self.user_poly_params
+
+    if frac_number == 'all':
+        for i, fracture_dictionary in enumerate(fracture_dictionaries):
+            print(f"* Fracture Number {i+1} *")
+            print("{:40s}{:}".format("Name", "Value"))
+            print("{:40s}{:}".format("----------------------------",
+                                     "---------------"))
+            for key in fracture_dictionary.keys():
+                print(f"{key:40s} {fracture_dictionary[key]}")
+            print("\n")
+    else:
+        print(f"* Fracture Number {frac_number} *")
+        print("{:40s}{:}".format("Name", "Value"))
+        print("{:40s}{:}".format("----------------------------",
+                                 "---------------"))
+        for key in fracture_dictionary.keys():
+            print(f"{key:40s} {fracture_dictionary[key]}")
 
 def add_user_fract(self,
                    shape,
+                   radii,
+                   translation,
+                   file_name,
+                   aspect_ratio=1,
                    from_file=False,
-                   file_name=None,
                    by_coord=False,
-                   radii=None,
-                   aspect_ratio=None,
-                   beta=None,
-                   translation=None,
-                   orientation_option=None,
-                   angle_option=None,
+                   beta=0,
+                   angle_option='degree',
+                   orientation_option='normal',
                    normal_vector=None,
                    trend_plunge=None,
                    dip_strike=None,
@@ -27,140 +79,215 @@ def add_user_fract(self,
                    permeability=None,
                    transmissivity=None,
                    aperture=None):
-    """Specifies user defined fracture parameters for the DFN.
+    """
+    Specifies user defined fracture parameters for the DFN.
     
     Parameters
     -------------
-        shape: The desired shape of the fracture options are 'rect', 'ell', and 'poly' 
+        shape: string
+            The desired shape of the fracture options are 'rect', 'ell', and 'poly' - Required
         
-        from_file: Flag to specfy whether the file is already defined
+        radii : float
+            1/2 size of the fracture in meters - Required
+
+        translation : list of floats [3]
+            Fracture center
+
+        file_name: string
+            The name of the user defined fracture file
         
-        file_name: The name of the user defined fracture file
+        from_file: bool
+            Flag to specfy whether the file is already defined
         
         by_coords: flag to specify if user defined fracture is given with coordinates
         
         additional params are for specifying the user defined fracture. 
         
+
+        
+    Returns 
+    ---------
+        None - fracture dictionaries are attached to the DFN object
+        
+    Notes
+    -------
+        Please be aware, the user fracture files can only be automatically written for
+        ellipses and rectangles not specified by coordinate.
+
         See
         
         https://dfnworks.lanl.gov/dfngen.html#user-defined-fracture-generation-parameters
         
         for additional information
-        
-    Returns 
-    ---------
-        The populated dfn parameter dictionary
-        
-        if from file is false a .dat file with user defined fracture information
-        
-    Notes
-    -------
-        Please be aware, the user fracture files can only be automatically written for
-        ellipses and rectangles not specified by coordinate
+
     """
+    # External file required if reading in fractures by xyz coordinates.
+    if by_coord:
+        from_file == True
 
-    hy_prop_type = determine_hy_prop_type(aperture, transmissivity,
-                                          permeability)
+    # if reading in fractures from a file
+    if from_file:
+        fracture_dictionary = {}
+        hy_prop_type = determine_hy_prop_type(aperture, transmissivity,
+                                              permeability)
+        fracture_dictionary['aperture'] = aperture
+        fracture_dictionary['transmissivity'] = transmissivity
+        fracture_dictionary['permeability'] = permeability
+        fracture_dictionary['hy_prop_type'] = hy_prop_type
 
-    if shape == 'rect':
-
-        rect_param_dict = {}
-
-        if by_coord == True:
-
-            self.params['userRecByCoord']['value'] = 1
+        if shape == 'rect':
             self.params['RectByCoord_Input_File_Path']['value'] = file_name
-
-        else:
-
-            if from_file == True:
-
-                self.params['userRectanglesOnOff']['value'] = 1
-                self.params['UserRect_Input_File_Path']['value'] = file_name
-
+            if by_coord:
+                self.params['userRectByCoord']['value'] = True
             else:
+                self.params['userRectanglesOnOff']['value'] = True
+            self.user_rect_params.append(fracture_dictionary)
 
-                self.params['userRectanglesOnOff']['value'] = 1
-                self.params['UserRect_Input_File_Path']['value'] = file_name
-
-                rect_param_dict['file_name'] = file_name
-                rect_param_dict['Radii:'] = radii
-                rect_param_dict['Aspect_Ratio:'] = aspect_ratio
-                rect_param_dict['Beta:'] = beta
-                rect_param_dict['Translation:'] = translation
-                rect_param_dict['userOrientationOption:'] = orientation_option
-                rect_param_dict['AngleOption:'] = angle_option
-                rect_param_dict['Normal:'] = normal_vector
-                rect_param_dict['Trend_Plunge:'] = trend_plunge
-                rect_param_dict['Dip_Strike:'] = dip_strike
-                rect_param_dict['Number_of_Vertices:'] = number_of_vertices
-
-        rect_param_dict['aperture'] = aperture
-        rect_param_dict['transmissivity'] = transmissivity
-        rect_param_dict['permeability'] = permeability
-        rect_param_dict['hy_prop_type'] = hy_prop_type
-
-        self.user_rect_params.append(rect_param_dict)
-
-    elif shape == 'ell':
-
-        ell_param_dict = {}
-
-        if by_coord == True:
-
-            self.params['userEllByCoord']['value'] = 1
+        elif shape == 'ell':
             self.params['EllByCoord_Input_File_Path']['value'] = file_name
-
-        else:
-
-            if from_file == True:
-
-                self.params['userEllipsesOnOff']['value'] = 1
-                self.params['UserEll_Input_File_Path']['value'] = file_name
-
+            if by_coord:
+                self.params['userEllByCoord']['value'] = True
             else:
-
-                self.params['userEllipsesOnOff']['value'] = 1
-                self.params['UserEll_Input_File_Path']['value'] = file_name
-
-                ell_param_dict['file_name'] = file_name
-                ell_param_dict['Radii:'] = radii
-                ell_param_dict['Aspect_Ratio:'] = aspect_ratio
-                ell_param_dict['Beta:'] = beta
-                ell_param_dict['Translation:'] = translation
-                ell_param_dict['userOrientationOption:'] = orientation_option
-                ell_param_dict['AngleOption:'] = angle_option
-                ell_param_dict['Normal:'] = normal_vector
-                ell_param_dict['Trend_Plunge:'] = trend_plunge
-                ell_param_dict['Dip_Strike:'] = dip_strike
-                ell_param_dict['Number_of_Vertices:'] = number_of_vertices
-
-        ell_param_dict['aperture'] = aperture
-        ell_param_dict['transmissivity'] = transmissivity
-        ell_param_dict['permeability'] = permeability
-        ell_param_dict['hy_prop_type'] = hy_prop_type
-
-        self.user_ell_params.append(ell_param_dict)
-
-    elif shape == 'poly':
-
-        # user polygon
-        self.params['userPolygonByCoord']['value'] = 1
-        self.params['PolygonByCoord_Input_File_Path']['value'] = file_name
-
-        poly_param_dict = {}
-
-        poly_param_dict['aperture'] = aperture
-        poly_param_dict['transmissivity'] = transmissivity
-        poly_param_dict['permeability'] = permeability
-        poly_param_dict['hy_prop_type'] = hy_prop_type
-
-        self.user_poly_params.append(poly_param_dict)
-
+                self.params['userEllipsesOnOff']['value'] = True
+            self.user_ell_params.append(fracture_dictionary)
+        elif shape == 'poly':
+            # user polygon
+            self.params['userPolygonByCoord']['value'] = True
+            self.params['PolygonByCoord_Input_File_Path']['value'] = file_name
+            self.user_poly_params.append(fracture_dictionary)
+        print_error(
+            "Error.user fracture shape is not specified correctly, options are 'rect', 'ell', or 'poly'\n"
+        )
     else:
-        error = "user fracture shape is not specified correctly, options are 'rect', 'ell', or 'poly'\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+
+        # if specifying details in the python driver file.
+        fracture_dictionary = {}
+
+        # Check input parameters
+        fracture_dictionary['file_name'] = file_name
+        # Check radius is positive.
+        if radii > 0:
+            fracture_dictionary['Radii:'] = radii
+        else:
+            print_error(
+                f"Error. Fracture radius must be positive. Value provided {radii}. Exiting."
+            )
+
+        # Check Aspect Ratio is positive
+        if aspect_ratio > 0:
+            fracture_dictionary['Aspect_Ratio:'] = aspect_ratio
+        else:
+            print_error(
+                f"Error. Aspect Ratio must be positive. Value provided {aspect_ratio}. Exiting."
+            )
+
+        ## check beta Rotation in non-negative.
+        if beta >= 0:
+            fracture_dictionary['Beta:'] = beta
+        else:
+            print_error(
+                f"Error. Beta rotation must be non-negative (>0). Value provided {beta}. Exiting."
+            )
+
+        # Check Angle options
+        angle_options = ['radian', 'degree']
+        if angle_option in angle_options:
+            fracture_dictionary['AngleOption:'] = angle_option
+        else:
+            print_error(
+                f"Error. Unknown angle_option value provided: {angle_option}. Acceptable values are 'radian', 'degree'.\nExiting."
+            )
+
+        if len(translation) == 3:
+            fracture_dictionary['Translation:'] = translation
+        else:
+            print_error(
+                f"Error. Fracture Translation (center) must have 3 elements, only {len(translation)} provided.\nValue provided: {translation}. Exiting"
+            )
+
+        ## Check orienations and consistency
+        if orientation_option == 'normal':
+            fracture_dictionary['userOrientationOption:'] = 0
+            if normal_vector:
+                fracture_dictionary['Normal:'] = normal_vector
+            else:
+                print_error(
+                    "Error. Requested user fracture orienation 0, but normal vector was not provided. exiting."
+                )
+            if len(normal_vector) != 3:
+                print_error(
+                    f"Error. Normal vector must have 3 elements, only {len(normal_vector)} provided.\nNormal: {normal_vector}. Exiting"
+                )
+
+        elif orientation_option == 'trend_plunge':
+            fracture_dictionary['userOrientationOption:'] = 1
+            if trend_plunge:
+                fracture_dictionary['trend_plunge:'] = trend_plunge
+            else:
+                print_error(
+                    "Error. Requested user fracture orienation trend_plunge, but trend_plunge was not provided. exiting."
+                )
+
+            if len(trend_plunge) != 2:
+                print_error(
+                    f"Error. Trend/Plunge must have 2 elements, only {len(trend_plunge)} provided.\trend_plunge: {trend_plunge}. Exiting"
+                )
+
+            # Check is angles make sense given radians or degrees
+            print("--> Checking trend_plunge angles")
+            check_angle_option(angle_option, trend_plunge)
+
+        elif orientation_option == 'dip_strike':
+            fracture_dictionary['userOrientationOption:'] = 2
+            if dip_strike:
+                fracture_dictionary['dip_strike:'] = dip_strike
+            else:
+                print_error(
+                    "Error. Requested user fracture orienation dip_strike, but dip_strike was not provided. exiting."
+                )
+            if len(trend_plunge) != 2:
+                print_error(
+                    f"Error. Dip/Strike must have 2 elements, only {len(dip_strike)} provided.\trend_plunge: {dip_strike}. Exiting"
+                )
+        else:
+            print_error(
+                f"Error. Unknown orientation_option provided. Value: {orientation_option}. Options are 'normal', 'trend_plunge', and 'dip_strike'. Exiting"
+            )
+
+            # Check is angles make sense given radians or degrees
+            print("--> Checking dip_strike angles")
+            check_angle_option(angle_option, dip_strike)
+
+        # hydraulic properties
+        hy_prop_type = determine_hy_prop_type(aperture, transmissivity,
+                                              permeability)
+        fracture_dictionary['aperture'] = aperture
+        fracture_dictionary['transmissivity'] = transmissivity
+        fracture_dictionary['permeability'] = permeability
+        fracture_dictionary['hy_prop_type'] = hy_prop_type
+
+        ## Logic for i/o
+        if shape == 'rect':
+            self.params['userRectanglesOnOff']['value'] = True
+            self.params['UserRect_Input_File_Path']['value'] = file_name
+            self.user_rect_params.append(fracture_dictionary)
+            frac_number = len(self.user_rect_params) 
+            self.print_user_fracture_information('rect', frac_number - 1)
+
+        elif shape == 'ell':
+            if number_of_vertices > 2:
+                fracture_dictionary['Number_of_Vertices:'] = number_of_vertices
+            else:
+                print_error(
+                    f"Error. number_of_vertices must be greater than 2. VAlue provided: {number_of_vertices}. Exiting."
+                )
+
+            self.params['userEllipsesOnOff']['value'] = True
+            self.params['UserEll_Input_File_Path']['value'] = file_name
+
+            self.user_ell_params.append(number_of_vertices)
+            frac_number = len(self.user_ell_params) 
+            self.print_user_fracture_information('ell', frac_number - 1)
 
 
 def write_user_fractures_to_file(self):
@@ -350,13 +477,13 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
 
         Parameters
         -------------
-        aperture : None or Float
-        transmissivity : None or Float
-        permeability : None or Float
+            aperture : None or Float
+            transmissivity : None or Float
+            permeability : None or Float
 
         Returns
         ---------
-        The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown
+            The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown
                                                                                            Notes
         -------"""
 

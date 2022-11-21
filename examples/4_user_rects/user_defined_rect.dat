@@ -18,6 +18,12 @@ Beta:
 0 
 0 
 
+AngleOption: 
+degree 
+degree 
+degree 
+degree 
+
 Translation: 
 [-0.4, 0, 0] 
 [0, 0, 0] 
@@ -26,23 +32,11 @@ Translation:
 
 userOrientationOption: 0 
  
-AngleOption: 
-1 
-1 
-1 
-1 
-
 Normal: 
 [0, 0, 1] 
 [1, 0, 0] 
 [0, 0, 1] 
 [0, 0, 1] 
-
-Number_of_Vertices: 
-8 
-8 
-8 
-8 
 
 aperture 
 None 

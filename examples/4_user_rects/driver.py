@@ -21,57 +21,36 @@ DFN = DFNWORKS(jobname,
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
 DFN.params['h']['value'] = 0.050
 
-# This is kind of clunky. There's a lot of repitition. How can we clean this up?
 DFN.add_user_fract(shape='rect',
                    file_name=f'{src_path}/user_defined_rect.dat',
-                   by_coord=False,
                    radii=0.6,
-                   aspect_ratio=1,
-                   beta=0,
                    translation=[-0.4, 0, 0],
-                   orientation_option=0,
-                   angle_option=1,
                    normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
 
 DFN.add_user_fract(shape='rect',
-                   from_file=False,
                    file_name=f'{src_path}/user_defined_rect.dat',
-                   by_coord=False,
                    radii=1.0,
                    aspect_ratio=.65,
-                   beta=0,
                    translation=[0, 0, 0],
-                   orientation_option=0,
-                   angle_option=1,
                    normal_vector=[1, 0, 0],
-                   permeability=1.0e-12)
+                   permeability=3.0e-12)
 
 DFN.add_user_fract(shape='rect',
-                   from_file=False,
                    file_name=f'{src_path}/user_defined_rect.dat',
-                   by_coord=False,
                    radii=.6,
-                   aspect_ratio=1,
-                   beta=0,
                    translation=[0.4, 0, 0.2],
-                   orientation_option=0,
-                   angle_option=1,
                    normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
 
 DFN.add_user_fract(shape='rect',
-                   from_file=False,
                    file_name=f'{src_path}/user_defined_rect.dat',
-                   by_coord=False,
                    radii=.6,
-                   aspect_ratio=1,
-                   beta=0,
                    translation=[0.4, 0, -0.2],
-                   orientation_option=0,
-                   angle_option=1,
                    normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
+
+exit()
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()

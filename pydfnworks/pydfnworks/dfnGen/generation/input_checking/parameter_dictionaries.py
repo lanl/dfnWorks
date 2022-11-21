@@ -629,39 +629,62 @@ def load_parameters():
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMean': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMin': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'eExpMax': {
-            'type': float,
-            'list': True,
-            'list_length': None,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'econst': {
-            'type': float,
-            'list': True,
-            'value': None,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            float,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
 
         # Rectangles
         'nFamRect': {
-            'type': int,
-            'list': False,
-            'value': 0,
-            'description': 'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rAngleOption': {
             'type':
