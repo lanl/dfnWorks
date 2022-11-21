@@ -7,12 +7,16 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
   /
 END
 SUBSURFACE
 
 DFN
+
 
 #=========================== discretization ===================================
 GRID
@@ -60,6 +64,7 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
