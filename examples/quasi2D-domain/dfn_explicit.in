@@ -7,6 +7,9 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
   /
 END
@@ -60,6 +63,7 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -87,11 +91,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_left_w.ex
+  FILE pboundary_front_n.ex
 END
 
 REGION outflow
-  FILE pboundary_right_e.ex
+  FILE pboundary_back_s.ex
 END
 
 #=========================== flow conditions ==================================

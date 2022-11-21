@@ -1,29 +1,29 @@
 #"""
-#   :synopsis: run file for TPL example 
+#   :synopsis: run file for TPL example
 #   :version: 1.0
 #   :maintainer: Jeffrey Hyman
 #.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 #"""
 
-from pydfnworks import * 
+from pydfnworks import *
 import os
 
-jobname = os.getcwd() + "/output"
-pflotran_file = os.getcwd() + "/dfn_explicit.in"
-dfntrans = os.getcwd() + "/PTDFN_control.in"
+src_path = os.getcwd()
+jobname = f"{src_path}/output"
+pflotran_file = f"{src_path}/dfn_explicit.in"
+dfntrans = f"{src_path}/PTDFN_control.in"
 
-DFN = DFNWORKS(jobname,dfnFlow_file = pflotran_file,
-               ncpu=8)
+DFN = DFNWORKS(jobname, dfnFlow_file=pflotran_file, ncpu=8)
 
 DFN.params['domainSize']['value'] = [100, 200, 50]
-DFN.params['domainSizeIncrease']['value'] = [10,10,10]
+DFN.params['domainSizeIncrease']['value'] = [10, 10, 10]
 DFN.params['h']['value'] = 0.5
 DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['ignoreBoundaryFaces']['value'] = True
-DFN.params['seed']['value'] = 0
+DFN.params['seed']['value'] = 1
 
 DFN.params['polygonBoundaryFlag']['value'] = True
-DFN.params['polygonBoundaryFile']['value'] = os.getcwd() + os.sep + "vertices.dat"
+DFN.params['polygonBoundaryFile']['value'] = f"{src_path}/vertices.dat"
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -37,7 +37,7 @@ DFN.add_fracture_family(shape="ell",
                         beta_distribution=1,
                         beta=45.0,
                         p32=0.55,
-                        number_of_points = 16,
+                        number_of_points=16,
                         hy_variable='aperture',
                         hy_function='correlated',
                         hy_params={
@@ -46,8 +46,8 @@ DFN.add_fracture_family(shape="ell",
                         })
 
 DFN.print_domain_parameters()
-DFN.make_working_directory(delete = True)
+DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
-DFN.mesh_network(min_dist = 0.1, max_dist = 100, slope = 0.9)
+DFN.mesh_network(min_dist=0.1, max_dist=100, slope=0.9)
 DFN.dfn_flow()
