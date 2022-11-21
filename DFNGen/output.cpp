@@ -30,10 +30,13 @@
     Arg 7: std::vector Shape - Family structure array  of all stocastic families defined by user input */
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, struct Stats &pstats, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies) {
     std::string output = outputFolder;
+    std::string dfnGenExtension = "/dfnGen_output";
+    output.append(dfnGenExtension);
+    std::cout << output << '\n';  
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";
     // std::string aperture = output + "/aperture.dat";
-    std::string intersectionFolder = output + "/intersections";
+    std::string intersectionFolder = output + "/../intersections";
     std::string radiiFolder = output + "/radii/";
     // Adjust Fracture numbering
     adjustIntFractIDs(finalFractures, acceptedPoly, intPts);
@@ -548,7 +551,7 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
     int polyCount = finalFractures.size();
     
     for (int j = 0; j < polyCount; j++) {
-        std::string polyOutputFile = output + "/polys/poly_" + std::to_string(j + 1) + ".inp";
+        std::string polyOutputFile = output + "/../polys/poly_" + std::to_string(j + 1) + ".inp";
         polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
         // Write header
         polyOutput << acceptedPoly[finalFractures[j]].numberOfNodes << " "
@@ -581,7 +584,7 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
     Arg 4: Path to output folder */
 void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<Shape> &shapeFamilies, Stats &pstats, std::vector<Point> &triplePoints, std::string &output) {
     std::ofstream params;
-    std::string paramsOutputFile = output + "/params.txt";
+    std::string paramsOutputFile = output + "/../params.txt";
     params.open(paramsOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(params, paramsOutputFile);
     std::cout << "Writing " << paramsOutputFile << "\n";
@@ -1272,7 +1275,7 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     //adjustIntFractIDs(finalFractures,acceptedPoly, intPts);
     // Make new intersection file in intersections folder
     std::ofstream intFile;
-    std::string file = "intersection_list.dat";
+    std::string file = "dfnGen_output/intersection_list.dat";
     intFile.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(intFile, file);
     intFile << "f1 f2 x y z length\n";
@@ -1460,27 +1463,27 @@ void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double 
 void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly) {
     std::cout << "Writing Boundary Files\n";
     std::ofstream leftFile;
-    std::string leftFileName = "left.dat";
+    std::string leftFileName = "dfnGen_output/left.dat";
     leftFile.open(leftFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(leftFile, leftFileName);
     std::ofstream rightFile;
-    std::string rightFileName = "right.dat";
+    std::string rightFileName = "dfnGen_output/right.dat";
     rightFile.open(rightFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(rightFile, rightFileName);
     std::ofstream frontFile;
-    std::string frontFileName = "front.dat";
+    std::string frontFileName = "dfnGen_output/front.dat";
     frontFile.open(frontFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(frontFile, frontFileName);
     std::ofstream backFile;
-    std::string backFileName = "back.dat";
+    std::string backFileName = "dfnGen_output/back.dat";
     backFile.open(backFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(backFile, backFileName);
     std::ofstream topFile;
-    std::string topFileName = "top.dat";
+    std::string topFileName = "dfnGen_output/top.dat";
     topFile.open(topFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(topFile, topFileName);
     std::ofstream bottomFile;
-    std::string bottomFileName = "bottom.dat";
+    std::string bottomFileName = "dfnGen_output/bottom.dat";
     bottomFile.open(bottomFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(bottomFile, bottomFileName);
     

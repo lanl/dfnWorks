@@ -101,7 +101,8 @@ def make_working_directory(self, delete=False):
                 sys.stderr.write(error)
                 sys.exit(1)
 
-    os.mkdir(self.jobname + '/radii')
+    os.mkdir(self.jobname + '/dfnGen_output')
+    os.mkdir(self.jobname + '/dfnGen_output/radii')
     os.mkdir(self.jobname + '/intersections')
     os.mkdir(self.jobname + '/polys')
     os.chdir(self.jobname)
