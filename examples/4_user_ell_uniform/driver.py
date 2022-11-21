@@ -24,15 +24,14 @@ DFN.params['h']['value'] = 0.025
 DFN.params['tripleIntersections']['value'] = True
 
 DFN.add_user_fract(shape='ell',
-                   file_name=f'{src_path}/user_defined_ell.dat',
-                   radii=.5,
+                   filename=f'{src_path}/user_defined_cats.dat',
+                   radii=0.5,
                    translation=[-0.2, 0, 0],
                    normal_vector=[0, 0, 1],
                    number_of_vertices=8,
                    aperture=1.0e-5)
 
 DFN.add_user_fract(shape='ell',
-                   file_name=f'{src_path}/user_defined_ell.dat',
                    radii=.5,
                    translation=[0, 0, 0],
                    normal_vector=[1, 0, 0],
@@ -40,7 +39,6 @@ DFN.add_user_fract(shape='ell',
                    aperture=1.0e-5)
 
 DFN.add_user_fract(shape='ell',
-                   file_name=f'{src_path}/user_defined_ell.dat',
                    radii=.4,
                    aspect_ratio=1,
                    translation=[0.2, 0, 0.2],
@@ -49,7 +47,6 @@ DFN.add_user_fract(shape='ell',
                    aperture=1.0e-5)
 
 DFN.add_user_fract(shape='ell',
-                   file_name=f'{src_path}/user_defined_ell.dat',
                    radii=.4,
                    aspect_ratio=1,
                    translation=[0.2, 0, -0.2],
