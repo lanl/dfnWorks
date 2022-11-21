@@ -150,6 +150,7 @@ def add_user_fract(self,
             else:
                 self.params['userEllipsesOnOff']['value'] = True
             self.user_ell_params.append(fracture_dictionary)
+
         elif shape == 'poly':
             # user polygon
             self.params['userPolygonByCoord']['value'] = True
@@ -162,7 +163,7 @@ def add_user_fract(self,
 
         # if specifying details in the python driver file.
         fracture_dictionary = {}
-
+        fracture_dictionary['shape'] = shape
         # Check input parameters
         fracture_dictionary['file_name'] = file_name
         # Check radius is positive.
@@ -285,10 +286,9 @@ def add_user_fract(self,
             self.params['userEllipsesOnOff']['value'] = True
             self.params['UserEll_Input_File_Path']['value'] = file_name
 
-            self.user_ell_params.append(number_of_vertices)
-            frac_number = len(self.user_ell_params) 
+            self.user_ell_params.append(fracture_dictionary)
+            frac_number = len(self.user_ell_params)
             self.print_user_fracture_information('ell', frac_number - 1)
-
 
 def write_user_fractures_to_file(self):
     """Writes the user defined fracutres to a file if file is not already specified
