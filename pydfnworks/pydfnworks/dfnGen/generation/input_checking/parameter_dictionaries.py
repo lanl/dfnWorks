@@ -123,9 +123,9 @@ def load_parameters():
             'list':
             False,
             'value':
-            True,
+            False,
             'description':
-            "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
+            "Type <boolean>\nPossible Values:\nFalse: Use the boundaryFaces option.\nTrue: Keep all clusters in the domain."
         },
         'numOfLayers': {
             'type':
