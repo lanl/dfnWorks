@@ -399,24 +399,17 @@ def write_user_fractures_to_file(self):
 
     if n_ells > 0:
         print(
-            f"--> Writting user defined ellispes to file {self.user_ell_params[0]['filename']}"
+            f"--> Writting user defined ellispes to file {self.params['UserEll_Input_File_Path']['value']}"
         )
-        with open(self.user_ell_params[0]['filename'], 'w+') as ell_file:
-
+        with open(self.params['UserEll_Input_File_Path']['value'], 'w+') as ell_file:
             ell_file.write(f'nUserEll: {n_ells} \n \n')
-
             orientation_option = self.user_ell_params[0][
                 'userOrientationOption:']
-
             for key in self.user_ell_params[0].keys():
-
                 if key == 'userOrientationOption:':
-
                     value = self.user_ell_params[0][key]
                     ell_file.write(f'{key} {value} \n \n')
-
                 elif key == 'Normal:':
-
                     if orientation_option == 0:
                         ell_file.write(f'{key} \n')
                         for j in range(n_ells):
@@ -482,9 +475,9 @@ def write_user_fractures_to_file(self):
     if n_rects > 0:
 
         print(
-            f"--> Writting user defined rectangles to file {self.user_rect_params[0]['filename']}"
+            f"--> Writting user defined rectangles to file {self.params['UserRect_Input_File_Path']['value']}"
         )
-        with open(self.user_rect_params[0]['filename'], 'w+') as rect_file:
+        with open(self.params['UserRect_Input_File_Path']['value'], 'w+') as rect_file:
 
             rect_file.write(f'nUserRect: {n_rects} \n \n')
 

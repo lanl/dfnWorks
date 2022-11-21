@@ -22,35 +22,29 @@ DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
 DFN.params['h']['value'] = 0.050
 
 DFN.add_user_fract(shape='rect',
-                   file_name=f'{src_path}/user_defined_rect.dat',
                    radii=0.6,
                    translation=[-0.4, 0, 0],
                    normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
 
 DFN.add_user_fract(shape='rect',
-                   file_name=f'{src_path}/user_defined_rect.dat',
                    radii=1.0,
                    aspect_ratio=.65,
                    translation=[0, 0, 0],
                    normal_vector=[1, 0, 0],
-                   permeability=3.0e-12)
-
-DFN.add_user_fract(shape='rect',
-                   file_name=f'{src_path}/user_defined_rect.dat',
-                   radii=.6,
-                   translation=[0.4, 0, 0.2],
-                   normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
 
 DFN.add_user_fract(shape='rect',
-                   file_name=f'{src_path}/user_defined_rect.dat',
+                   radii=.6,
+                   translation=[0.4, 0, 0.2],
+                   normal_vector=[0, 0, 1],
+                   permeability=2.0e-12)
+
+DFN.add_user_fract(shape='rect',
                    radii=.6,
                    translation=[0.4, 0, -0.2],
                    normal_vector=[0, 0, 1],
                    permeability=1.0e-12)
-
-exit()
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()
