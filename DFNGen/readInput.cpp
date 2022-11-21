@@ -722,9 +722,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         }
         
         std::cout << "\n";
-    } else {
-        cout << "Not Expecting Quasi-2D domain" << endl;
-    }
+    } 
     
     if (nFamEll > 0 || nFamRect > 0) {
         searchVar(inputFile, "famProb:");

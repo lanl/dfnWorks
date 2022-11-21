@@ -35,10 +35,10 @@ def print_domain_parameters(self, print_all=False):
     for key in self.params.keys():
         value = self.params[key]['value']
         if print_all:
-            print(f"{key:40s}{value}")
+            print(f"{key:34s}{value}")
         else:
             if value:
-                print(f"Name: {key:40s}Value: {value}")
+                print(f"Name: {key:34s}Value: {value}")
     print('=' * 80)
 
 

@@ -1,4 +1,4 @@
-#"""
+
 #   :synopsis: Driver run file for TPL example
 #   :version: 2.0
 #   :maintainer: Jeffrey Hyman
@@ -8,9 +8,10 @@
 from pydfnworks import *
 import os
 
-jobname = os.getcwd() + "/output"
-dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
-dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
+src_path = os.getcwd()
+jobname =  f"{src_path}/output"
+dfnFlow_file = f"{src_path}/dfn_explicit.in"
+dfnTrans_file = f"{src_path}/PTDFN_control.dat"
 
 DFN = DFNWORKS(jobname,
                dfnFlow_file=dfnFlow_file,
@@ -23,25 +24,14 @@ DFN.params['tripleIntersections']['value'] = True
 DFN.params['stopCondition']['value'] = 0 #define stopCondition and nPoly for user polygons to avoid exception
 DFN.params['nPoly']['value'] = 3
 
-DFN.add_user_fract(shape="poly",
-                    from_file = True,
-                    file_name = '../polygons.dat',
-                    by_coord = True,
-                    permeability = 1e-12)
-
-
-DFN.print_family_information(1)
-
+DFN.add_user_fract_from_file(shape="poly",
+                   filename = f'{src_path}/polygons.dat',
+                   permeability = 1e-12)
+# build network
 DFN.make_working_directory(delete=True)
-
+DFN.print_domain_parameters()
 DFN.check_input()
-
-for key in DFN.params.keys():
-    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
 DFN.mesh_network(coarse_factor=10)
 
 DFN.dfn_flow()

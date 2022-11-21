@@ -570,7 +570,7 @@ def check_user_defined(params):
         # User Ellipse
         hf.check_none(flag, params[flag]['value'])
         if params[flag]['value']:
-            hf.check_path(flag, params[path]['value'])
+            hf.check_path(path, params[path]['value'])
             copy(params[path]['value'], "./")
 
 

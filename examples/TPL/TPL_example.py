@@ -24,6 +24,7 @@ DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['ignoreBoundaryFaces']['value'] = False
 DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
 DFN.params['seed']['value'] = 1
+DFN.params['tripleIntersections']['value'] = True 
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -45,14 +46,12 @@ DFN.add_fracture_family(shape="ell",
                         })
 
 DFN.print_domain_parameters()
-exit()
 
 
 DFN.make_working_directory(delete = True)
 DFN.check_input()
 DFN.create_network()
-DFN.output_report()
-DFN.mesh_network(min_dist = 1, max_dist = 5, slope = 0.9)
-# DFN.assign_hydraulic_properties()
-DFN.dfn_flow()
-DFN.dfn_trans()
+# DFN.output_report()
+DFN.mesh_network(min_dist = 1, max_dist = 5, slope = 0.4)
+# DFN.dfn_flow()
+# DFN.dfn_trans()
