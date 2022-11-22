@@ -37,27 +37,25 @@ def lagrit2pflotran(self):
 
     print('=' * 80)
     print("Starting conversion of files for PFLOTRAN ")
-    print('=' * 80)
 
     if self.inp_file == '':
-        error = 'ERROR: Please provide inp filename!\n'
+        error = 'Error: inp filename not attached to object\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     # Check if UGE file was created by LaGriT, if it does not exists, exit
     self.uge_file = self.inp_file[:-4] + '.uge'
     if not os.path.isfile(self.uge_file):
-        error = 'ERROR!!! Cannot find .uge file\nExiting\n'
+        error = 'Error. Cannot file uge file\nExiting\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     self.write_perms_and_correct_volumes_areas()
     self.zone2ex(zone_file='all')
-    print('=' * 80)
+    self.dump_h5_files()
     print("Conversion of files for PFLOTRAN complete")
     print('=' * 80)
     print("\n\n")
-
 
 def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     """
@@ -83,7 +81,7 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     ----------
     the boundary_cell_area should be a function of h, the mesh resolution
     """
-
+    print('*' * 80)
     print('--> Converting zone files to ex')
 
     if self.uge_file == '':
@@ -93,27 +91,25 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
 
     # Opening uge file
     print('\n--> Opening uge file')
-    fuge = open(self.uge_file, 'r')
-
-    # Reading cell ids, cells centers and cell volumes
-    line = fuge.readline()
-    line = line.split()
-    NumCells = int(line[1])
-
-    Cell_id = np.zeros(NumCells, 'int')
-    Cell_coord = np.zeros((NumCells, 3), 'float')
-    Cell_vol = np.zeros(NumCells, 'float')
-
-    for cells in range(NumCells):
+    with open(self.uge_file, 'r') as fuge:
+        # Reading cell ids, cells centers and cell volumes
         line = fuge.readline()
         line = line.split()
-        Cell_id[cells] = int(line.pop(0))
-        line = [float(id) for id in line]
-        Cell_vol[cells] = line.pop(3)
-        Cell_coord[cells] = line
-    fuge.close()
+        num_cells = int(line[1])
 
-    print('--> Finished with uge file\n')
+        cell_id = np.zeros(num_cells, 'int')
+        cell_coord = np.zeros((num_cells, 3), 'float')
+        cell_vol = np.zeros(num_cells, 'float')
+
+        for cells in range(num_cells):
+            line = fuge.readline()
+            line = line.split()
+            cell_id[cells] = int(line.pop(0))
+            line = [float(id) for id in line]
+            cell_vol[cells] = line.pop(3)
+            cell_coord[cells] = line
+
+    print('--> Finished processing uge file\n')
 
     # loop through zone files
     if zone_file == 'all':
@@ -138,25 +134,23 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         ex_file = zone_file.strip('zone') + 'ex'
 
         # Opening the input file
-
         print('--> Opening zone file: ', zone_file)
-        fzone = open(zone_file, 'r')
-        print('--> Reading boundary node ids')
-        Node_array = fzone.read()
-        Node_array = Node_array.split()
-        num_nodes = int(Node_array[4])
-        Node_array = np.array(Node_array[5:-1], dtype='int')
-        fzone.close()
-        print('--> Finished with zone file')
+        with open(zone_file, 'r') as fzone:
+            print('--> Reading boundary node ids')
+            node_array = fzone.read()
+            node_array = node_array.split()
+            num_nodes = int(node_array[4])
+            node_array = np.array(node_array[5:-1], dtype='int')
+        print('--> Finished reading zone file')
 
-        Boundary_cell_area = np.zeros(num_nodes, 'float')
+        Boundary_cell_area_array = np.zeros(num_nodes, 'float')
         for i in range(num_nodes):
-            Boundary_cell_area[
+            Boundary_cell_area_array[
                 i] = boundary_cell_area  # Fix the area to a large number
 
         print('--> Finished calculating boundary connections')
         boundary_cell_coord = [
-            Cell_coord[Cell_id[i - 1] - 1] for i in Node_array
+            cell_coord[cell_id[i - 1] - 1] for i in node_array
         ]
         epsilon = self.h * 10**-3
 
@@ -190,17 +184,19 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
             sys.exit(1)
         ## Write out ex files
         with open(ex_file, 'w') as f:
-            f.write('CONNECTIONS\t%i\n' % Node_array.size)
+            f.write('CONNECTIONS\t%i\n' % node_array.size)
             for idx, cell in enumerate(boundary_cell_coord):
                 f.write(
-                    f"{Node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area[idx]:.12e}\n"
+                    f"{node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area_array[idx]:.12e}\n"
                 )
 
         print(
             f'--> Finished writing ex file {ex_file} corresponding to the zone file: {zone_file} \n'
         )
-    print('--> Converting zone files to ex complete')
 
+    print('--> Converting zone files to ex complete')
+    print('*' * 80)
+    print()
 
 def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
@@ -218,6 +214,8 @@ def write_perms_and_correct_volumes_areas(self):
     ----------
         Calls executable correct_uge
     """
+    print('*' * 80)
+    print("--> Correcting UGE file: Starting")
     if self.flow_solver != "PFLOTRAN":
         error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
@@ -262,6 +260,7 @@ def write_perms_and_correct_volumes_areas(self):
     self.dump_aperture(self.aper_file, format='fehm')
     ## execute convert uge C code
     cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
+    print(f"\n>> {cmd}\n")
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
         error = 'ERROR: UGE conversion failed\nExiting Program\n'
@@ -270,6 +269,10 @@ def write_perms_and_correct_volumes_areas(self):
     elapsed = time() - t
     print(
         f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n')
+
+    print("--> Correcting UGE file: Complete")
+    print('*' * 80)
+    print()
 
 
 def dump_h5_files(self):
@@ -288,11 +291,11 @@ def dump_h5_files(self):
     ----------
         Hydraulic properties need to attached to the class prior to running this function. Use DFN.assign_hydraulic_properties() to do so. 
     """
-
+    print('*' * 80)
+    print("--> Dumping h5 file")
     filename = 'dfn_properties.h5'
     print(f'--> Opening HDF5 File {filename}')
     with h5py.File(filename, mode='w') as h5file:
-        print('--> Beginning writing to HDF5 file')
         print('--> Allocating cell index array')
         print('--> Writing cell indices')
         iarray = np.arange(1, self.num_nodes + 1)
@@ -305,8 +308,10 @@ def dump_h5_files(self):
         print('--> Writting Permeability')
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)
-    print("--> Done writing permeability to h5 file")
 
+    print("--> Done writting h5 file")
+    print('*' * 80)
+    print()
 
 def pflotran(self, transient=False, restart=False, restart_file=''):
     """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
