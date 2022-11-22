@@ -14,6 +14,7 @@ dfnFlow_file = src_path+ '/dfn_explicit_multi_material.in'
 
 DFN = DFNWORKS(jobname,
                dfnFlow_file=dfnFlow_file,
+               flow_solver = "PFLOTRAN",
                ncpu=8)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
@@ -50,10 +51,6 @@ DFN.check_input()
 # define_paths()
 DFN.create_network()
 DFN.mesh_network()
-
-DFN.set_flow_solver("PFLOTRAN")
-DFN.inp_file = "octree_dfn.inp"
-DFN.uge_file = 'full_mesh.uge'
 
 DFN.map_to_continuum(l=0.1,orl=3)
 DFN.upscale(mat_perm=1e-15,mat_por=0.01)
