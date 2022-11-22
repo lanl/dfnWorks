@@ -571,7 +571,8 @@ def check_user_defined(params):
         hf.check_none(flag, params[flag]['value'])
         if params[flag]['value']:
             hf.check_path(path, params[path]['value'])
-            copy(params[path]['value'], "./")
+            #print(params[path]['value'])
+            #copy(params[path]['value'], "./") #leaving here in case it happens to be useful later, but currently seems redundant
 
 
 def check_general(params):

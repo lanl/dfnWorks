@@ -163,7 +163,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
 
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
-    data = genfromtxt('poly_info.dat')
+    data = genfromtxt('dfnGen_output/poly_info.dat')
 
     for index, i in enumerate(fracture_list):
         # using i - 1 do to python indexing from 0

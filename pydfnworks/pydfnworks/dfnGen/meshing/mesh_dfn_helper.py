@@ -243,10 +243,10 @@ def clean_up_files_after_prune(self):
         keep_list -
         1, :]  #np.genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
     try:
-        os.unlink('poly_info.dat')
+        os.unlink('dfnGen_output/poly_info.dat')
     except:
         pass
-    f = open('poly_info.dat', 'w')
+    f = open('dfnGen_output/poly_info.dat', 'w')
     for i in range(num_frac):
         f.write('%d %d %f %f %f %d %f %f %d\n' %
                 (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],

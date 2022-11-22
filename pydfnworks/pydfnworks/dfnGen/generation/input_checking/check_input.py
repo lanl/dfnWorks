@@ -86,12 +86,12 @@ def check_input(self, from_file=False):
             sys.stderr.write(error)
             sys.exit(1)
         input_file = self.local_dfnGen_file
-        output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
+        output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         print(f"--> Reading input file: {input_file}")
         self.params = parse_input(input_file)
 
     else:
-        output_file = self.local_dfnGen_file[:-4] + '_clean.dat'
+        output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         self.params = self.write_fracture_families()
         self.write_user_fractures_to_file()
     print(f"--> Clean output file name: {output_file}")

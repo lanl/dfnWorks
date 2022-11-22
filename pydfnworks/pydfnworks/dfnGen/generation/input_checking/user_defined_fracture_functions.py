@@ -247,7 +247,7 @@ def add_user_fract(self,
     if filename:
         fracture_dictionary['filename'] = filename
     else:
-        filename = f"{os.getcwd()}/user_defined_{shape}.dat"
+        filename = self.jobname + f"/dfnGen_output/user_defined_{shape}.dat"
         fracture_dictionary['filename'] = filename
 
     # Check radius is positive.
@@ -398,7 +398,7 @@ def write_user_fractures_to_file(self):
 
     if n_ells > 0:
         print(
-            f"--> Writting user defined ellispes to file {self.params['UserEll_Input_File_Path']['value']}"
+            f"--> Writing user defined ellispes to file {self.params['UserEll_Input_File_Path']['value']}"
         )
         with open(self.params['UserEll_Input_File_Path']['value'], 'w+') as ell_file:
             ell_file.write(f'nUserEll: {n_ells} \n \n')
@@ -474,7 +474,7 @@ def write_user_fractures_to_file(self):
     if n_rects > 0:
 
         print(
-            f"--> Writting user defined rectangles to file {self.params['UserRect_Input_File_Path']['value']}"
+            f"--> Writing user defined rectangles to file {self.params['UserRect_Input_File_Path']['value']}"
         )
         with open(self.params['UserRect_Input_File_Path']['value'], 'w+') as rect_file:
 

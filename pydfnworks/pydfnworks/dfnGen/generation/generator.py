@@ -130,7 +130,7 @@ def create_network(self):
     print('--> Running DFNGEN')
     # copy input file into job folder
     cmd = os.environ[
-        'DFNGEN_EXE'] + ' ' + self.local_dfnGen_file[:
+        'DFNGEN_EXE'] + ' ' + 'dfnGen_output/' + self.local_dfnGen_file[:
                                                      -4] + '_clean.dat' + ' ' + self.jobname
 
     print("Running %s" % cmd)
@@ -233,7 +233,7 @@ def gather_dfn_gen_output(self):
     self.parse_params_file(quiet=False)
 
     ## load radii
-    data = np.genfromtxt('radii_Final.dat', skip_header=2)
+    data = np.genfromtxt('dfnGen_output/radii_Final.dat', skip_header=2)
     ## populate radius array
     self.radii = np.zeros((self.num_frac, 3))
     # First Column is x, second is y, 3rd is max
@@ -245,12 +245,12 @@ def gather_dfn_gen_output(self):
     self.families = data[:, 2].astype(int)
 
     ## load surface area
-    self.surface_area = np.genfromtxt('surface_area_Final.dat', skip_header=1)
+    self.surface_area = np.genfromtxt('dfnGen_output/surface_area_Final.dat', skip_header=1)
     ## load normal vectors
-    self.normal_vectors = np.genfromtxt('normal_vectors.dat')
+    self.normal_vectors = np.genfromtxt('dfnGen_output/normal_vectors.dat')
     # Get fracture centers
     centers = []
-    with open('translations.dat', "r") as fp:
+    with open('dfnGen_output/translations.dat', "r") as fp:
         fp.readline()  # header
         for i, line in enumerate(fp.readlines()):
             if "R" not in line:
@@ -262,7 +262,7 @@ def gather_dfn_gen_output(self):
     self.centers = np.array(centers)
 
     # Grab Polygon information
-    self.poly_info = np.genfromtxt('poly_info.dat')
+    self.poly_info = np.genfromtxt('dfnGen_output/poly_info.dat')
 
     ## create holder arrays for b, k, and T
     self.aperture = np.zeros(self.num_frac)
