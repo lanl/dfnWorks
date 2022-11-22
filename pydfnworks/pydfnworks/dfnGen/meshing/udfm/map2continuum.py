@@ -97,7 +97,8 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     driver_parallel(self, self.num_frac)
     build_dict(self, self.num_frac, delete_files=True)
     dir_cleanup()
-
+    ## set object variable name
+    self.inp_file = "octree_dfn.inp" 
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
     """ This function creates the main lagrit driver script, which calls all 
