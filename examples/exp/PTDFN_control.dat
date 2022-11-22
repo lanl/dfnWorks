@@ -76,7 +76,7 @@ streamline_routing: no
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 
      equidistant from each other ****/
-init_nf: no 
+init_nf: yes 
 init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
@@ -102,7 +102,7 @@ init_random: no
 in_randpart: 100    
 
 /*****  particles positions according to in-flow flux weight *********/
-init_fluxw: yes //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
+init_fluxw: no 
 init_totalnumber: 10000
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
