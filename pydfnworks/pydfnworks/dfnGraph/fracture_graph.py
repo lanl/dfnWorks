@@ -31,7 +31,7 @@ def create_fracture_graph(inflow,
     Notes
     -----
     """
-    topology_file = "dfnGen_flow/connectivity.dat"
+    topology_file = "dfnGen_output/connectivity.dat"
     print("--> Loading Graph based on topology in dfnGen_flow/connectivity.dat")
     G = nx.Graph(representation="fracture")
     with open(topology_file, "r") as infile:
