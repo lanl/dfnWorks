@@ -11,6 +11,7 @@ from numpy import pi
 
 from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
 
+
 def check_angle_option(angle_option, array):
     for val in array:
         if angle_option == "radian":
@@ -307,7 +308,7 @@ def add_user_fract(self,
     elif orientation_option == 'trend_plunge':
         fracture_dictionary['userOrientationOption:'] = 1
         if trend_plunge:
-            fracture_dictionary['trend_plunge:'] = trend_plunge
+            fracture_dictionary['Trend_Plunge:'] = trend_plunge
         else:
             print_error(
                 "Error. Requested user fracture orienation trend_plunge, but trend_plunge was not provided. exiting."
@@ -325,12 +326,12 @@ def add_user_fract(self,
     elif orientation_option == 'dip_strike':
         fracture_dictionary['userOrientationOption:'] = 2
         if dip_strike:
-            fracture_dictionary['dip_strike:'] = dip_strike
+            fracture_dictionary['Dip_Strike:'] = dip_strike
         else:
             print_error(
                 "Error. Requested user fracture orienation dip_strike, but dip_strike was not provided. exiting."
             )
-        if len(trend_plunge) != 2:
+        if len(dip_strike) != 2:
             print_error(
                 f"Error. Dip/Strike must have 2 elements, only {len(dip_strike)} provided.\trend_plunge: {dip_strike}. Exiting"
             )
@@ -400,7 +401,8 @@ def write_user_fractures_to_file(self):
         print(
             f"--> Writing user defined ellispes to file {self.params['UserEll_Input_File_Path']['value']}"
         )
-        with open(self.params['UserEll_Input_File_Path']['value'], 'w+') as ell_file:
+        with open(self.params['UserEll_Input_File_Path']['value'],
+                  'w+') as ell_file:
             ell_file.write(f'nUserEll: {n_ells} \n \n')
             orientation_option = self.user_ell_params[0][
                 'userOrientationOption:']
@@ -476,7 +478,8 @@ def write_user_fractures_to_file(self):
         print(
             f"--> Writing user defined rectangles to file {self.params['UserRect_Input_File_Path']['value']}"
         )
-        with open(self.params['UserRect_Input_File_Path']['value'], 'w+') as rect_file:
+        with open(self.params['UserRect_Input_File_Path']['value'],
+                  'w+') as rect_file:
 
             rect_file.write(f'nUserRect: {n_rects} \n \n')
 

@@ -45,6 +45,7 @@ using std::endl;
 // SEE STRUCTURES.H FOR ALL STRUCTURE DEFINITIONS
 int main (int argc, char **argv) {
     std::cout << "\n";
+    cout << "Starting DFNGen" << endl;
     
     // Error check on cmd line input:
     // 1st argument = input file path
@@ -308,11 +309,11 @@ int main (int argc, char **argv) {
                 // Find line of intersection and FRAM check
                 // rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
                 // Find line of intersection and FRAM check
-                if (disableFram == false) {
-                    rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
-                } else {
-                    rejectCode = 0;
-                }
+                //if (disableFram == false) {
+                rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
+                //} else {
+                //    rejectCode = 0;
+                //}
                 
 #ifdef TESTING
                 
@@ -881,6 +882,8 @@ int main (int argc, char **argv) {
          << " Nodes (" << pstats.intersectionNodeCount << "/2 - "
          << pstats.tripleNodeCount << ")\n";
     file.close();
+    cout << "DFNGen - Complete" << endl;
+
     return 0;
 }
 

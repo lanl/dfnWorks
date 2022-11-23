@@ -8,75 +8,73 @@
 from pydfnworks import *
 import os
 
-jobname = os.getcwd() + "/output"
-dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
-dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
+src_path = os.getcwd()
+jobname =  f"{src_path}/output"
 
 DFN = DFNWORKS(jobname,
-               dfnFlow_file=dfnFlow_file,
-               dfnTrans_file=dfnTrans_file,
                ncpu=8)
 
-DFN.params['domainSize']['value'] = [15, 15, 15]
-DFN.params['h']['value'] = 0.1
-DFN.params['stopCondition']['value'] = 0
-DFN.params['nPoly']['value'] = 500
-DFN.params['domainSizeIncrease']['value'] = [.5,.5,.5]
-DFN.params['keepOnlyLargestCluster']['value'] = True
-DFN.params['ignoreBoundaryFaces']['value'] = False
+DFN.params['domainSize']['value'] = [400, 50, 50]
+DFN.params['h']['value'] = 1
+DFN.params['domainSizeIncrease']['value'] = [5,5,5]
+DFN.params['ignoreBoundaryFaces']['value'] = True 
 DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
 DFN.params['keepOnlyLargestCluster']['value'] = True
+DFN.params['disableFram']['value'] = True
+DFN.params['eAngleOption']['value'] = 1
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
-                        kappa=0.1,
-                        probability=.5,
+                        kappa=10,
+                        p32=0.25,
                         aspect=1,
-                        beta_distribution=0,
-                        beta=0.0,
                         theta=0.0,
                         phi=0.0,
-                        alpha=2.6,
-                        min_radius=1.0,
-                        max_radius=5.0, 
+                        alpha=1.8,
+                        min_radius=10.0,
+                        max_radius=20.0, 
                         hy_variable='permeability',
                         hy_function='constant',
                         hy_params={"mu":2e-12})
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
-                        kappa=0.1,
-                        probability=.5,
+                        kappa=10,
+                        p32=0.25,
                         aspect=1,
-                        beta_distribution=0,
-                        beta=0.0,
                         theta=0.0,
-                        phi=0.0,
-                        alpha=2.6,
-                        min_radius=1.0,
-                        max_radius=5.0,
+                        phi=270.0,
+                        alpha=1.8,
+                        min_radius=10.0,
+                        max_radius=20.0, 
                         hy_variable='permeability',
                         hy_function='constant',
-                        hy_params={"mu":1e-12})
+                        hy_params={"mu":2e-12})
 
-DFN.print_family_information(1)
+DFN.add_fracture_family(shape="ell",
+                        distribution="tpl",
+                        kappa=10,
+                        p32=0.25,
+                        aspect=1,
+                        theta=45.0,
+                        phi=0.0,
+                        alpha=1.8,
+                        min_radius=10.0,
+                        max_radius=20.0, 
+                        hy_variable='permeability',
+                        hy_function='constant',
+                        hy_params={"mu":3e-12})
+
 
 DFN.make_working_directory(delete=True)
-
 DFN.check_input()
-
-#for key in DFN.params.keys():
-#    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-#DFN.mesh_network(coarse_factor=10)
+DFN.output_report()
+DFN.mesh_network()
 
 pressure_in = 2*10**6
 pressure_out = 10**6
 G = DFN.run_graph_flow("left","right",pressure_in,pressure_out)
-
 number_of_particles = 10**4
 
 DFN.run_graph_transport(G,number_of_particles,"graph_partime.dat","graph_frac_sequence.dat")

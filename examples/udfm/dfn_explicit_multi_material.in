@@ -7,11 +7,10 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
-  /
-  CHECKPOINT
-    FORMAT HDF5
-    TIMES s 100000.0d0
   /
 END
 SUBSURFACE
@@ -38,17 +37,22 @@ DATASET Porosity
 END
 
 #=========================== material properties ==============================
-MATERIAL_PROPERTY soil1
+MATERIAL_PROPERTY fracture
   ID 1
-#  POROSITY 1.0
   POROSITY DATASET Porosity
   TORTUOSITY 0.5d0
   CHARACTERISTIC_CURVES default
-#  PERMEABILITY
-#    PERM_ISO 8.333333333333335d-12
-#  PERMEABILITY
-#    ANISOTROPIC
-#    DATASET perm
+  PERMEABILITY
+    DATASET Permeability
+  /
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY matrix
+  ID 2
+  POROSITY DATASET Porosity
+  TORTUOSITY 0.5d0
+  CHARACTERISTIC_CURVES default
   PERMEABILITY
     DATASET Permeability
   /
@@ -73,6 +77,7 @@ OUTPUT
 #  PERIODIC TIME 0.00002d0 second
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -98,7 +103,7 @@ REGION All
     -5.d20 -5.d20 -5.d20
     5.d20 5.d20 5.d20
   /
-END 
+END
 
 REGION inflow
   FILE pboundary_left_w.ex
@@ -151,8 +156,7 @@ END
 
 #=========================== stratigraphy couplers ============================
 STRATA
-  REGION All 
-  MATERIAL soil1
+  FILE materials.h5
 END
 
 END_SUBSURFACE

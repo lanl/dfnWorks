@@ -12,23 +12,19 @@ Beta:
 0 
 0 
 
+AngleOption: 
+degree 
+degree 
+
 Translation: 
 [0, 0, 25] 
 [0, 25, 0] 
 
 userOrientationOption: 1 
  
-AngleOption: 
-1 
-1 
-
 Trend_Plunge: 
 [45, 35] 
 [111, 57] 
-
-Number_of_Vertices: 
-8 
-8 
 
 aperture 
 None 
@@ -45,4 +41,8 @@ permeability
 hy_prop_type 
 permeability 
 permeability 
+
+Number_of_Vertices: 
+8 
+8 
 

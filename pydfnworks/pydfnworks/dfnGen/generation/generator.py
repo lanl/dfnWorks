@@ -128,25 +128,24 @@ def create_network(self):
     After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. 
     '''
     print('--> Running DFNGEN')
-    # copy input file into job folder
+    os.chdir(self.jobname)
     cmd = os.environ[
         'DFNGEN_EXE'] + ' ' + 'dfnGen_output/' + self.local_dfnGen_file[:
                                                      -4] + '_clean.dat' + ' ' + self.jobname
 
-    print("Running %s" % cmd)
+    print(f"Running:\n>>{cmd}")
     subprocess.call(cmd, shell=True)
 
-    if os.path.isfile("params.txt") is False:
-        error = "ERROR! Generation Failed\nExiting Program.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
-    else:
+    if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
         self.assign_hydraulic_properties()
         print('-' * 80)
         print("Generation Succeeded")
         print('-' * 80)
-
+    else:
+        error = f"Error. Unable to find 'params.txt' in current directory {os.getcwd}.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
 
 def parse_params_file(self, quiet=False):
     """ Reads params.txt file from DFNGen and parses information
