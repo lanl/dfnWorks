@@ -252,7 +252,7 @@ def check_dfn_trans_run_files(self):
             sys.stderr.write(error)
             sys.exit(1)
         elif not os.path.isfile(params[key]):
-            error = "ERROR!!!!!\nRequired file %s is not the current directory.\nPlease check required files\nExiting Program\n" % params[
+            error = "ERROR!!!!!\nRequired file %s is not in the current directory.\nPlease check required files\nExiting Program\n" % params[
                 key]
             sys.stderr.write(error)
             sys.exit(1)

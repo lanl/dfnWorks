@@ -262,7 +262,7 @@ def gather_dfn_gen_output(self):
     self.centers = np.array(centers)
 
     # Grab Polygon information
-    self.poly_info = np.genfromtxt('dfnGen_output/poly_info.dat')
+    self.poly_info = np.genfromtxt('poly_info.dat')
 
     ## create holder arrays for b, k, and T
     self.aperture = np.zeros(self.num_frac)
@@ -276,6 +276,48 @@ def gather_dfn_gen_output(self):
     for i in range(1, self.num_families + 1):
         idx = np.where(self.families == i)
         self.family.append(idx)
+
+    # get fracture_info
+    self.fracture_info = np.genfromtxt('fracture_info.dat', skip_header = 1)
+    
+    # get intersection_list
+    self.intersection_list = np.genfromtxt('dfnGen_output/intersection_list.dat', skip_header = 1)
+    
+    # get boundary_files
+    self.back = read_boundaries('dfnGen_output/back.dat')
+    self.front = read_boundaries('dfnGen_output/front.dat')
+    self.left = read_boundaries('dfnGen_output/left.dat')
+    self.right = read_boundaries('dfnGen_output/right.dat')
+    self.top = read_boundaries('dfnGen_output/top.dat')
+    self.bottom = read_boundaries('dfnGen/bottom.dat')
+
+def read_boundaries(file_path):
+    '''Reads in boundary files, and corrects format is file is empty of length 1
+    Parameters
+    -----------
+        file_path : the path to boundary file
+
+    Returns
+    --------
+        array of values (or empty array if file is empty
+    
+    Notes
+    ------
+    None
+    '''
+
+    try:
+        data = np.genfromtxt(file_path)
+    except IOError:
+        data = np.array([])
+
+
+    try:
+        array_length = len(data)
+    except:
+        data = np.array([data])
+
+    return data
 
 
 def assign_hydraulic_properties(self):

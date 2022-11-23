@@ -243,7 +243,7 @@ def clean_up_files_after_prune(self):
         keep_list -
         1, :]  #np.genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
     try:
-        os.unlink('dfnGen_output/poly_info.dat')
+        os.unlink('poly_info.dat')
     except:
         pass
     f = open('dfnGen_output/poly_info.dat', 'w')

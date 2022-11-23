@@ -31,7 +31,7 @@
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, struct Stats &pstats, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies) {
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
-    output.append(dfnGenExtension);
+    output += dfnGenExtension;
     std::cout << output << '\n';  
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";
@@ -1151,7 +1151,7 @@ void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Po
     Arg 4: Path to output folder */
 void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output) {
     std::ofstream file;
-    std::string fileOutputFile = output + "/poly_info.dat";
+    std::string fileOutputFile = output + "/../poly_info.dat";
     file.open(fileOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileOutputFile);
     std::cout << "Writing Rotation Data File (poly_info.dat)\n";
