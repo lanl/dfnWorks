@@ -5,9 +5,7 @@ from pydfnworks.dfnGraph.graph_attributes import add_perm
 
 
 def create_fracture_graph(inflow,
-                          outflow,
-                          topology_file="connectivity.dat",
-                          fracture_info="fracture_info.dat"):
+                          outflow):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -33,7 +31,8 @@ def create_fracture_graph(inflow,
     Notes
     -----
     """
-    print("--> Loading Graph based on topology in " + topology_file)
+    topology_file = "dfnGen_flow/connectivity.dat"
+    print("--> Loading Graph based on topology in dfnGen_flow/connectivity.dat")
     G = nx.Graph(representation="fracture")
     with open(topology_file, "r") as infile:
         for i, line in enumerate(infile):
@@ -43,8 +42,8 @@ def create_fracture_graph(inflow,
     ## Create Source and Target and add edges
     inflow_filename = inflow + ".dat"
     outflow_filename = outflow + ".dat"
-    inflow = np.genfromtxt(inflow_filename).astype(int)
-    outflow = np.genfromtxt(outflow_filename).astype(int)
+    inflow = np.genfromtxt("dfnGen_output/"+inflow_filename).astype(int)
+    outflow = np.genfromtxt("dfnGen_output/"+outflow_filename).astype(int)
 
     try:
         if len(inflow) > 1:
@@ -62,6 +61,6 @@ def create_fracture_graph(inflow,
     G.add_node('t')
     G.add_edges_from(zip(['s'] * (len(inflow)), inflow))
     G.add_edges_from(zip(outflow, ['t'] * (len(outflow))))
-    add_perm(G, fracture_info)
+    add_perm(G)
     print("--> Graph loaded")
     return G

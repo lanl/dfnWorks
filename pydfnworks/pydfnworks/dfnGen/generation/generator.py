@@ -277,7 +277,7 @@ def gather_dfn_gen_output(self):
         self.family.append(idx)
 
     # get fracture_info
-    self.fracture_info = np.genfromtxt('fracture_info.dat', skip_header = 1)
+    self.fracture_info = np.genfromtxt('dfnGen_output/fracture_info.dat', skip_header = 1)
     
     # get intersection_list
     self.intersection_list = np.genfromtxt('dfnGen_output/intersection_list.dat', skip_header = 1)
@@ -357,7 +357,6 @@ def assign_hydraulic_properties(self):
     ##Logic here, loop through user defined fractures
     ## first check flag to insert
     fracture_num = 1
-
     if self.params['insertUserRectanglesFirst']['value'] == 0:
         print('--> Inserting User Ellipse Hydraulic Params First')
         for i in range(len(self.user_ell_params)):
@@ -416,5 +415,5 @@ def assign_hydraulic_properties(self):
                                                [value])
             fracture_num += 1
 
-    self.dump_hydraulic_values()
+    # self.dump_hydraulic_values()
     print("--> Assign hydraulic properties: Complete ")

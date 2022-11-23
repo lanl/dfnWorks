@@ -149,7 +149,7 @@ def get_family_information():
         "Beta Distribution (Rotation Around Normal Vector)"
     ]
     families = []
-    with open('families.dat', "r") as fp:
+    with open('dfnGen_output/families.dat', "r") as fp:
         family = {}
         for line in fp.readlines():
             if len(line.split()) > 0:
@@ -281,7 +281,7 @@ def get_fracture_information():
     fractures = []
     accepted_fractures = 0
     # walk through radii file and start parsing fracture information
-    with open('radii.dat', "r") as fp:
+    with open('dfnGen_output/radii.dat', "r") as fp:
         fp.readline()  # header
         for i, line in enumerate(fp.readlines()):
             fracture = create_fracture_dictionary()
@@ -304,7 +304,7 @@ def get_fracture_information():
             fractures.append(fracture)
 
     # Walk through translation file
-    with open('translations.dat', "r") as fp:
+    with open('dfnGen_output/translations.dat', "r") as fp:
         fp.readline()  # header
         for i, line in enumerate(fp.readlines()):
             line = line.split()
@@ -317,7 +317,7 @@ def get_fracture_information():
                 sys.exit(1)
 
     # Walk through normal vector file
-    with open("normal_vectors.dat", "r") as fp:
+    with open("dfnGen_output/normal_vectors.dat", "r") as fp:
         for i in range(len(fractures)):
             if not fractures[i]["removed"]:
                 line = fp.readline().split()
@@ -326,7 +326,7 @@ def get_fracture_information():
                 fractures[i]["normal"][2] = float(line[2])
 
     # Walk through surface_area_file and keep the surface areas in the final network
-    with open("surface_area_Final.dat", "r") as fp:
+    with open("dfnGen_output/surface_area_Final.dat", "r") as fp:
         fp.readline()  # header
         for i in range(len(fractures)):
             if not fractures[i]["removed"]:

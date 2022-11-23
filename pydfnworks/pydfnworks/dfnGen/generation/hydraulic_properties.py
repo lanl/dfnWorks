@@ -431,7 +431,7 @@ def dump_fracture_info(self, filename):
 
     ## revise fracture_info.dat
     print(f"--> Writing {filename}")
-    connections = np.genfromtxt("fracture_info.dat",
+    connections = np.genfromtxt("dfnGen_output/fracture_info.dat",
                                 skip_header=1)[:, 0].astype(int)
     with open(filename, "w+") as fp:
         fp.write("num_connections perm aperture\n")
@@ -474,7 +474,7 @@ def dump_hydraulic_values(self, prefix=None):
         aper_filename = "aperture.dat"
         perm_filename = "perm.dat"
         trans_filename = "transmissivity.dat"
-        frac_info_filename = "fracture_info.dat"
+        frac_info_filename = "dfnGen_output/fracture_info.dat"
 
     self.dump_aperture(aper_filename)
     self.dump_perm(perm_filename)
@@ -514,8 +514,8 @@ def set_fracture_hydraulic_values(self, variable, fracture_list, value_list):
     value_list = np.array(value_list)
     fracture_list = np.array(fracture_list)
 
-    print(value_list)
-    print(fracture_list)
+    # print(value_list)
+    # print(fracture_list)
     if variable == 'aperture':
         b = value_list
         perm = convert(b, variable, "permeability")
