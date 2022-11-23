@@ -21,6 +21,9 @@ def print_parameters(self):
         print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
     print("=" * 80 + "\n")
 
+def go_home(self):
+    os.chdir(self.jobname)
+    print(f"--> Current directory is {os.getcwd()}")
 
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file 

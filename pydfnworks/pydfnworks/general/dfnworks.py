@@ -103,7 +103,7 @@ class DFNWORKS():
     material_ids = float
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home
 
     # dfnGen functions
     import pydfnworks.dfnGen
