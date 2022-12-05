@@ -225,9 +225,9 @@ def check_orientations(params, prefix):
                     )
             # check degrees
             else:
-                if val < 0 or val > 365:
+                if val < 0 or val > 360:
                     hf.print_error(
-                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,365). "
+                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
     #check kappa
     key = prefix + 'kappa'
@@ -282,9 +282,9 @@ def check_beta_distribution(params, prefix):
                     )
             # check degrees
             else:
-                if val < 0 or val > 365:
+                if val < 0 or val > 360:
                     hf.print_error(
-                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,365). "
+                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
 
 
