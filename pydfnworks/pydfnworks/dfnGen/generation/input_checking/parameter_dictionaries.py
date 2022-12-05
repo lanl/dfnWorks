@@ -213,7 +213,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            0,
+            None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -354,13 +354,13 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'eAngleOption': {
+        'angleOption': {
             'type':
-            int,
+            str,
             'list':
             False,
             'value':
-            1,
+            'degree',
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -683,16 +683,6 @@ def load_parameters():
             False,
             'value':
             0,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'rAngleOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },

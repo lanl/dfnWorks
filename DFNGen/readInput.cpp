@@ -754,7 +754,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "enumPoints:");
         enumPoints = new unsigned int[nFamEll];
         getInputAry(inputFile, enumPoints, nFamEll);
-        searchVar(inputFile, "eAngleOption:");
+        searchVar(inputFile, "angleOption:"); // eAngleOption
         inputFile >> eAngleOption;
         
         if (orientationOption == 0) {
@@ -943,7 +943,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "raspect:");
         raspect = new float[nFamRect];
         getInputAry(inputFile, raspect, nFamRect);
-        searchVar(inputFile, "rAngleOption:");
+        searchVar(inputFile, "angleOption:");//rAngleOption
         inputFile >> rAngleOption;
         
         if (orientationOption == 0) {

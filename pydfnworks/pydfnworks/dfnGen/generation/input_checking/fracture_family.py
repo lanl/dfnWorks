@@ -278,13 +278,13 @@ def add_fracture_family(self,
         
         phi : use if orientationOption = 0 (default). default = None
         
-        strike : use if orientationOption = 1. default = None
+        trend : use if orientationOption = 1. default = None
         
-        dip : use if orientationOption = 1. default = None
+        plunge : use if orientationOption = 1. default = None
         
-        trend : use if orientationOption = 2. default = None
+        dip : use if orientationOption = 2. default = None
         
-        plunge : use if orientationOption = 2. default = None
+        strike : use if orientationOption = 2. default = None
         
         alpha : parameter for 'tpl'. default = None
         
@@ -360,13 +360,43 @@ def add_fracture_family(self,
     family['fisher']['value']['plunge'] = plunge
     family['fisher']['value']['kappa'] = kappa
 
+    ## Set and check orientation option
+    # note orientationOption = 0 --> theta/phi
+    # orientationOption = 1 --> trend/plunge
+    # orientationOption = 2 --> stirke/dip
+    if theta != None and phi != None:
+        if self.params['orientationOption']['value'] == None:
+            print('Setting orientationOption = 0 (theta/phi)')
+            self.params['orientationOption']['value'] = 0
+        if self.params['orientationOption']['value'] != 0:
+            error = f"0Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
+    
+    if trend != None and plunge != None: 
+        if self.params['orientationOption']['value'] == None:
+            print('Setting orientationOption = 1 (trend/plunge)')
+            self.params['orientationOption']['value'] = 1
+        if self.params['orientationOption']['value'] != 1:
+            error = f"1Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
+
+    if strike != None and dip != None:
+        if self.params['orientationOption']['value'] == None:
+            print('Setting orientationOption = 2 (strike/dip)')
+            self.params['orientationOption']['value'] = 2
+        if self.params['orientationOption']['value'] != 2:
+            error = f"2Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            sys.stderr.write(error)
+            sys.exit(1)
+
     ## Radius Distribution
     if distribution == "tpl":
         family['distribution']['value']['tpl'] = True
         if alpha != None:
             family['tpl']['value']['alpha'] = alpha
         else:
-            # Aidan. Copy this for the other distributions so the parameters are required.
             error = f"Error. A value for alpha must be provided if family is tpl distribution. Exiting.\n"
             sys.stderr.write(error)
             sys.exit(1)
