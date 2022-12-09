@@ -1,4 +1,4 @@
-def failure():
+def failure(self):
 
     doh = ''' 
                    _ ,___,-'",-=-.
@@ -30,7 +30,7 @@ def failure():
     return doh
 
 
-def success():
+def success(self):
 
     oh_yeah = '''
                   ___

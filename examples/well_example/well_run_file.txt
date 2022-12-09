@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks/examples/well_example/gen_well_network.dat
-dfnFlow DUMMY/dfnworks/examples/well_example/dfn_flow_rate.in
-dfnTrans DUMMY/dfnworks/examples/well_example/PTDFN_control.dat

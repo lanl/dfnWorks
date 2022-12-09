@@ -1,16 +1,12 @@
-import string
-
-
 def load_parameters():
-    """ load dictionary of DFNGen parameters
+    """ Load dictionary of DFNGen parameters onto object
 
     Parameters
     --------------
         None
     Returns
-    --------
-        params : dictionary
-            input parameter dictionary
+    --------------
+        None
 
     Notes
     ---------
@@ -25,7 +21,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            1,
             'description':
             "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
@@ -46,8 +42,7 @@ def load_parameters():
             True,
             'list_length':
             3,
-            'value':
-            None,
+            'value': [None, None, None],
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nSpatial dimensions of the domain centered at the origin in meters."
         },
@@ -58,8 +53,7 @@ def load_parameters():
             True,
             'list_length':
             3,
-            'value':
-            None,
+            'value': [0, 0, 0],
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
@@ -82,8 +76,7 @@ def load_parameters():
             True,
             'list_length':
             6,
-            'value':
-            None,
+            'value': [1, 1, 0, 0, 0, 0],
             'description':
             """Type <list of 6 booleans>\nDFN will only keep clusters with connections to domain boundaries which are set to 1:
             boundaryFaces[0] = +X domain boundary
@@ -100,7 +93,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            True,
             'description':
             "Type <boolean>\nPossible Values\n0: User defined ellipses will be inserted first\n1: User defined rectangles will be inserted first"
         },
@@ -110,7 +103,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            True,
             'description':
             "Type <boolean>\nPossible Values:\n 0: Keep any clusters which connects the specified boundary faces in boundaryFaces option below\n1: Keep only the largest cluster which connects the specified boundary faces in boundaryFaces option below"
         },
@@ -120,7 +113,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             "Type <boolean>\nPossible Values:\n0: Remove all isolated fracture. i.e., those with 0 intersections.\n 1: Keep all fractures in the domain, even those with 0 intersections."
         },
@@ -130,9 +123,9 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
-            "Type <boolean>\nPossible Values:\n0: Use the boundaryFaces option.\n1: Keep all clusters in the domain."
+            "Type <boolean>\nPossible Values:\nFalse: Use the boundaryFaces option.\nTrue: Keep all clusters in the domain."
         },
         'numOfLayers': {
             'type':
@@ -140,7 +133,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             "Type <int>\nNumber of layers in the domain. If set equal to 0, there are no layers. Fracture families are assigned to layers using either the eLayer or rLayer options.\n"
         },
@@ -160,7 +153,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             "Type < int>\nDefines the number of cuboid regions in the domain. If numOfRegions is 0, then there are no regions. Fracture families are assigned to regions using either the eRegion or rRegion options.\n"
         },
@@ -180,6 +173,8 @@ def load_parameters():
             'list':
             False,
             'value':
+            None,
+            'description':
             "Type: Positive <double>\nMinimum feature size accepted into the network.\n"
         },
         'seed': {
@@ -188,6 +183,8 @@ def load_parameters():
             'list':
             False,
             'value':
+            1,
+            'description':
             "Type: Non-negative <int> Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility."
         },
         'tripleIntersections': {
@@ -196,7 +193,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             "Type <boolean>\nSelection of whether triple intersection are accepted into the network.\n0: Reject all triple intersections\n1: Accept triple intersections that meet FRAM criteria.\n"
         },
@@ -206,7 +203,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             "Type <boolean>\nInsert the largest fracture from each family into the domain prior to sampling sequential from family based on their respective probabilities.\n0: Do not force the largest fractures\n1: Force the largest fractures\n"
         },
@@ -216,7 +213,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -226,7 +223,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -236,7 +233,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0.1,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -246,7 +243,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -256,7 +253,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            10,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -268,7 +265,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -278,7 +275,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -288,7 +285,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -298,7 +295,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -308,7 +305,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -335,6 +332,17 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'nFracFam': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+
         # ellipses
         'nFamEll': {
             'type':
@@ -342,17 +350,17 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'eAngleOption': {
+        'angleOption': {
             'type':
-            int,
+            str,
             'list':
             False,
             'value':
-            None,
+            'degree',
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -674,17 +682,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'rAngleOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -996,7 +994,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1016,7 +1014,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1037,7 +1035,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1057,7 +1055,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1078,7 +1076,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            False,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
@@ -1092,92 +1090,92 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        # aperture
-        'aperture': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'lengthCorrelatedAperture': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            2,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'meanAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'stdAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'constantAperture': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'apertureFromTransmissivity': {
-            'type':
-            float,
-            'list':
-            True,
-            'list_length':
-            2,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        # perm
-        'permOption': {
-            'type':
-            int,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-        'constantPermeability': {
-            'type':
-            float,
-            'list':
-            False,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
+        # # aperture
+        # 'aperture': {
+        #     'type':
+        #     int,
+        #     'list':
+        #     False,
+        #     'value':
+        #     3,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'lengthCorrelatedAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     True,
+        #     'list_length':
+        #     2,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'meanAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'stdAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'constantAperture': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     1e-4,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'apertureFromTransmissivity': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     True,
+        #     'list_length':
+        #     2,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # # perm
+        # 'permOption': {
+        #     'type':
+        #     int,
+        #     'list':
+        #     False,
+        #     'value':
+        #     None,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
+        # 'constantPermeability': {
+        #     'type':
+        #     float,
+        #     'list':
+        #     False,
+        #     'value':
+        #     0,
+        #     'description':
+        #     'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        # },
         'minimum_fracture_size': {
             'type':
             float,

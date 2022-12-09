@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks/examples/exp/gen_exponential_dist.dat
-dfnFlow DUMMY/dfnworks/examples/exp/dfn_explicit.in
-dfnTrans DUMMY/dfnworks/examples/exp/PTDFN_control.dat

@@ -72,7 +72,7 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
 
     if G == None:
         G = create_intersection_graph(
-            inflow, outflow, intersection_file="intersection_list.dat")
+            inflow, outflow)
 
         Gtilde = G.copy()
         # need to add aperture
@@ -365,6 +365,9 @@ def run_graph_flow(self,
             Gtilde is a directed acyclic graph with vertex pressures, fluxes, velocities, volumetric flow rates, and travel times
 
     """
+    if G == None:
+        G = self.create_graph("intersection", inflow, outflow)
+
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)

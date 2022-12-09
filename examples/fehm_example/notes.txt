@@ -1,1 +1,0 @@
-python run_fehm.py -name DUMMY/dfnworks/examples/fehm_example/fehm_example -input fehm_run_file.txt -ncpu 16

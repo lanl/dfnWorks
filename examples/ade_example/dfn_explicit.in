@@ -86,6 +86,7 @@ OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
+  ACKNOWLEDGE_VTK_FLAW
   MASS_FLOWRATE
   MASS_BALANCE
   VARIABLES
@@ -168,7 +169,7 @@ FLOW_CONDITION inflow
   TYPE
     PRESSURE dirichlet
   /
-  PRESSURE 2.d6
+  PRESSURE 1.1d6
 END
 
 #=========================== condition couplers ===============================

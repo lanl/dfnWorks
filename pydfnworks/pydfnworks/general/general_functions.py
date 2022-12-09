@@ -2,7 +2,28 @@ import os
 import sys
 from datetime import datetime
 from time import time
+import logging
 
+def print_parameters(self):
+    print("=" * 80 + "\n")
+    print(f"--> Jobname: {self.jobname}")
+    print(f"--> Local Jobname: {self.local_jobname}")
+
+    print(f"--> Number of Processors Requested: {self.ncpu}")
+    if self.dfnGen_file:
+        print(f"--> dfnGen filename : {self.dfnGen_file}")
+        print(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
+    if self.dfnFlow_file:
+        print(f"--> dfnFlow filename : {self.dfnFlow_file}")
+        print(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
+    if self.dfnTrans_file:
+        print(f"--> dfnTrans filename : {self.dfnTrans_file}")
+        print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
+    print("=" * 80 + "\n")
+
+def go_home(self):
+    os.chdir(self.jobname)
+    print(f"--> Current directory is {os.getcwd()}")
 
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file 
@@ -81,3 +102,43 @@ def print_run_time(self):
     #        tmp = int(percent[i-1])/10
     #        print(name[i-1]+"\t"+"*"tmp)
     print("\n")
+
+def print_log(self, statement):
+    
+    '''print and log statments to a file 
+
+    Parameters
+    ---------
+    statement : the print/log statement
+
+    Returns
+    --------
+    None
+
+    Notes
+    -------
+    print statments in pydfnworks should generally be replaced with this print_log function. Use self.print_log if function is on DFN object
+    '''
+    logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
+    print(statement)
+    logging.info(statement)
+
+def local_print_log(statement):
+
+    '''print and log statments to a file
+
+    Parameters
+    ---------
+    statement : the print/log statement
+
+    Returns
+    --------
+    None
+
+    Notes
+    -------
+    print statments in pydfnworks should generally be replaced with this print_log function. Use local_print_log if function is not in refernce to DFN object
+    '''
+    logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
+    print(statement)
+    logging.info(statement)

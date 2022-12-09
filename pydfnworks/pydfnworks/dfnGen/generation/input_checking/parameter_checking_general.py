@@ -16,7 +16,7 @@ def check_stop_condition(params):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
     if not params['stopCondition']['value']:
         check_n_poly(params['nPoly']['value'])
@@ -255,17 +255,13 @@ def check_family_prob(params):
             hf.print_error(
                 f"\"famProb\" must have {(params['nFamEll']['value'] + params['nFamRect']['value'])} (nFamEll + nFamRect) non-zero elements, one for each family of ellipses and rectangles. {len(params['famProb']['value'])} probabiliies have been defined."
             )
-
-        total = sum(params['famProb']['value'])
+        values = params['famProb']['value']
+        total = sum(values)
         if total != 1:
-            rescaled = [
-                float("{:.6}".format(x / total))
-                for x in params['famProb']['value']
-            ]
             hf.print_warning(
                 "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
-            params['famProb']['value'] = [x / total for x in rescaled]
+            params['famProb']['value'] = [x / total for x in values]
             print(f"--> New Values: {params['famProb']['value']}")
 
 
@@ -288,85 +284,83 @@ def check_no_dep_flags(params):
 #     if disableFram['value']:
 #         hf.print_warning("FRAM (feature rejection algorithm for meshing) is disabled.")
 
+# def check_aperture(params):
+#     """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family..
 
-def check_aperture(params):
-    """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family.. 
+#     Parameters
+#     -------------
+#         params : dict
+#             parameter dictionary
+#     Returns
+#     ---------
+#         None
 
-    Parameters
-    -------------
-        params : dict
-            parameter dictionary
-    Returns
-    ---------
-        None
+#     Notes
+#     ---------
+#         Exits program is inconsistencies are found.
+#     """
 
-    Notes
-    ---------
-        Exits program is inconsistencies are found.
-    """
+#     if params['aperture']['value'] == 1:
+#         hf.check_none('meanAperture', params['meanAperture']['value'])
+#         hf.check_values('meanAperture', params['meanAperture']['value'])
+#         hf.check_none('stdAperture', params['stdAperture']['value'])
+#         hf.check_values('stdAperture', params['stdAperture']['value'], 0)
 
-    if params['aperture']['value'] == 1:
-        hf.check_none('meanAperture', params['meanAperture']['value'])
-        hf.check_values('meanAperture', params['meanAperture']['value'])
-        hf.check_none('stdAperture', params['stdAperture']['value'])
-        hf.check_values('stdAperture', params['stdAperture']['value'], 0)
+#     elif params['aperture']['value'] == 2:
+#         hf.check_none('apertureFromTransmissivity',
+#                       params['apertureFromTransmissivity']['value'])
+#         hf.check_length('apertureFromTransmissivity',
+#                         params['apertureFromTransmissivity']['value'], 2)
+#         if params['apertureFromTransmissivity']['value'][0] == 0:
+#             hf.print_error(
+#                 "\"apertureFromTransmissivity\"'s first value cannot be 0.")
+#         if params['apertureFromTransmissivity']['value'][1] == 0:
+#             hf.print_warning(
+#                 "\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperture."
+#             )
 
-    elif params['aperture']['value'] == 2:
-        hf.check_none('apertureFromTransmissivity',
-                      params['apertureFromTransmissivity']['value'])
-        hf.check_length('apertureFromTransmissivity',
-                        params['apertureFromTransmissivity']['value'], 2)
-        if params['apertureFromTransmissivity']['value'][0] == 0:
-            hf.print_error(
-                "\"apertureFromTransmissivity\"'s first value cannot be 0.")
-        if params['apertureFromTransmissivity']['value'][1] == 0:
-            hf.print_warning(
-                "\"apertureFromTransmissivity\"'s second value is 0, which will result in a constant aperture."
-            )
+#     elif params['aperture']['value'] == 3:
+#         hf.check_none('constantAperture', params['constantAperture']['value'])
+#         hf.check_values('constantAperture',
+#                         params['constantAperture']['value'], 0)
 
-    elif params['aperture']['value'] == 3:
-        hf.check_none('constantAperture', params['constantAperture']['value'])
-        hf.check_values('constantAperture',
-                        params['constantAperture']['value'], 0)
+#     elif params['aperture']['value'] == 4:
+#         hf.check_none('lengthCorrelatedAperture',
+#                       params['lengthCorrelatedAperture']['value'])
+#         hf.check_length('lengthCorrelatedAperture',
+#                         params['lengthCorrelatedAperture']['value'], 2)
+#         if params['lengthCorrelatedAperture']['value'][0] == 0:
+#             hf.print_error(
+#                 "\"lengthCorrelatedAperture\"'s first value cannot be 0.")
+#         if params['lengthCorrelatedAperture']['value'][1] == 0:
+#             hf.print_warning(
+#                 "\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperture."
+#             )
+#     else:
+#         hf.print_error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
+#               "3 (constant), or 4 (length correlated).")
 
-    elif params['aperture']['value'] == 4:
-        hf.check_none('lengthCorrelatedAperture',
-                      params['lengthCorrelatedAperture']['value'])
-        hf.check_length('lengthCorrelatedAperture',
-                        params['lengthCorrelatedAperture']['value'], 2)
-        if params['lengthCorrelatedAperture']['value'][0] == 0:
-            hf.print_error(
-                "\"lengthCorrelatedAperture\"'s first value cannot be 0.")
-        if params['lengthCorrelatedAperture']['value'][1] == 0:
-            hf.print_warning(
-                "\"lengthCorrelatedAperture\"'s second value is 0, which will result in a constant aperture."
-            )
-    else:
-        hf.print_error("\"aperture\" must only be option 1 (log-normal), 2 (from transmissivity), "\
-              "3 (constant), or 4 (length correlated).")
+# def check_permeability(params):
+#     """Verify the float used for permeability, if permOption is set to 1
 
+#     Parameters
+#     -------------
+#         params : dict
+#             parameter dictionary
+#     Returns
+#     ---------
+#         None
 
-def check_permeability(params):
-    """Verify the float used for permeability, if permOption is set to 1
+#     Notes
+#     ---------
+#         Exits program is inconsistencies are found.
+#     """
 
-    Parameters
-    -------------
-        params : dict
-            parameter dictionary
-    Returns
-    ---------
-        None
-
-    Notes
-    ---------
-        Exits program is inconsistencies are found.
-    """
-
-    if params['permOption']['value'] == 1:
-        hf.check_none('constantPermeability',
-                      params['constantPermeability']['value'])
-        hf.check_values('constantPermeability',
-                        params['constantPermeability']['value'], 0)
+#     if params['permOption']['value'] == 1:
+#         hf.check_none('constantPermeability',
+#                       params['constantPermeability']['value'])
+#         hf.check_values('constantPermeability',
+#                         params['constantPermeability']['value'], 0)
 
 
 def check_layers_general(params):
@@ -522,11 +516,12 @@ def check_polygon_boundary_general(params):
     half_y_domain = params['domainSize']['value'][1] / 2.0
 
     ## Check path for
-    hf.check_path(params['polygonBoundaryFile']['value'])
+    hf.check_path('polygonBoundaryFile',
+                  params['polygonBoundaryFile']['value'])
     copy(params['polygonBoundaryFile']['value'], "./")
 
     ## Read in domain polygon file
-    with open(params['quasi2DdomainFile']['value'], 'r') as fvertices:
+    with open(params['polygonBoundaryFile']['value'], 'r') as fvertices:
         num_vertices = int(fvertices.readline())
         vertices = zeros((num_vertices, 2))
         for i, line in enumerate(fvertices.readlines()):
@@ -540,12 +535,12 @@ def check_polygon_boundary_general(params):
                 vertices[i][1] = float(line[1])
             else:
                 hf.print_error(
-                    f"Too many points in the file {params['quasi2DdomainFile']['value']}.  Expecting {num_vertices}"
+                    f"Too many points in the file {params['polygonBoundaryFile']['value']}.  Expecting {num_vertices}"
                 )
 
         if i < num_vertices - 1:
             hf.print_error(
-                f"Too few points in the file {params['quasi2DdomainFile']['value']}. Expecting {num_vertices}"
+                f"Too few points in the file {params['polygonBoundaryFile']['value']}. Expecting {num_vertices}"
             )
 
     for i, vertex in enumerate(vertices):
@@ -575,8 +570,9 @@ def check_user_defined(params):
         # User Ellipse
         hf.check_none(flag, params[flag]['value'])
         if params[flag]['value']:
-            hf.check_path(params[path]['value'])
-            copy(params[path]['value'], "./")
+            hf.check_path(path, params[path]['value'])
+            #print(params[path]['value'])
+            #copy(params[path]['value'], "./") #leaving here in case it happens to be useful later, but currently seems redundant
 
 
 def check_general(params):
@@ -588,8 +584,8 @@ def check_general(params):
     check_no_dep_flags(params)
     check_rejects_per_fracture(params['rejectsPerFracture'])
     check_seed(params['seed'])
-    check_aperture(params)
-    check_permeability(params)
+    # check_aperture(params)
+    # check_permeability(params)
 
     if params['numOfLayers']['value'] > 0:
         check_layers_general(params)

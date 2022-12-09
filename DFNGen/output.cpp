@@ -30,116 +30,103 @@
     Arg 7: std::vector Shape - Family structure array  of all stocastic families defined by user input */
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, struct Stats &pstats, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies) {
     std::string output = outputFolder;
+    std::string dfnGenExtension = "/dfnGen_output";
+    output += dfnGenExtension;
+    std::cout << output << '\n';  
     // Define Output Files:
-    std::string permOutputFile = output + "/perm.dat";
-    std::string aperture = output + "/aperture.dat";
-    std::string intersectionFolder = output + "/intersections";
+    // std::string permOutputFile = output + "/perm.dat";
+    // std::string aperture = output + "/aperture.dat";
+    std::string intersectionFolder = output + "/../intersections";
     std::string radiiFolder = output + "/radii/";
     // Adjust Fracture numbering
     adjustIntFractIDs(finalFractures, acceptedPoly, intPts);
+    // Write out graph information
+    writeGraphData(finalFractures, acceptedPoly, intPts);
+    // Write polygon.dat file
+    writePolys(finalFractures, acceptedPoly, output);
+    // Write intersection files (must be first file written, rotates polys to x-y plane)
+    writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
+    // Write polys.inp
+    writePolysInp(finalFractures, acceptedPoly, output);
+    // Write params.txt
+    writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
+    // Write aperture file
+    // writeApertureFile(finalFractures, acceptedPoly, output);
+    // Write permability file
+    // writePermFile(finalFractures, acceptedPoly, output);
+    // Write radii file
+    writeRadiiFile(finalFractures, acceptedPoly, output);
+    // Write rejection stats file
+    writeRejectionStats(pstats, output);
+    // Write families to output Files
+    writeShapeFams(shapeFamilies, output);
+    // Write fracture translations file
+    writeFractureTranslations(finalFractures, acceptedPoly, output);
+    // Write fracture connectivity (edge graph) file
+    writeConnectivity(finalFractures, acceptedPoly, intPts, output);
+    // Write rotation data
+    writeRotationData(acceptedPoly, finalFractures, shapeFamilies, output);
+    // Write normal vectors
+    writeNormalVectors(acceptedPoly, finalFractures, shapeFamilies, output);
+    // Write rejects per fracture insertion attempt data
+    writeRejectsPerAttempt(pstats, output);
+    // Write all accepted radii
+    writeFinalPolyRadii(finalFractures, acceptedPoly, output);
+    // Write all accepted Surface Area
+    writeFinalPolyArea(finalFractures, acceptedPoly, output);
+    // Write out which fractures touch which boundaries
+    writeBoundaryFiles(finalFractures, acceptedPoly);
     
-    // Standard output
-    if (!ecpmOutput) {
-        std::cout << "Writting all output files" << std::endl;
-        // Write out graph information
-        writeGraphData(finalFractures, acceptedPoly, intPts);
-        // Write polygon.dat file
-        writePolys(finalFractures, acceptedPoly, output);
-        // Write intersection files (must be first file written, rotates polys to x-y plane)
-        writeIntersectionFiles(finalFractures, acceptedPoly, intPts, triplePoints, intersectionFolder, pstats);
-        // Write polys.inp
-        writePolysInp(finalFractures, acceptedPoly, output);
-        // Write params.txt
-        writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
-        // Write aperture file
-        writeApertureFile(finalFractures, acceptedPoly, output);
-        // Write permability file
-        writePermFile(finalFractures, acceptedPoly, output);
-        // Write radii file
-        writeRadiiFile(finalFractures, acceptedPoly, output);
-        // Write rejection stats file
-        writeRejectionStats(pstats, output);
-        // Write families to output Files
-        writeShapeFams(shapeFamilies, output);
-        // Write fracture translations file
-        writeFractureTranslations(finalFractures, acceptedPoly, output);
-        // Write fracture connectivity (edge graph) file
-        writeConnectivity(finalFractures, acceptedPoly, intPts, output);
-        // Write rotation data
-        writeRotationData(acceptedPoly, finalFractures, shapeFamilies, output);
-        // Write normal vectors
-        writeNormalVectors(acceptedPoly, finalFractures, shapeFamilies, output);
-        // Write rejects per fracture insertion attempt data
-        writeRejectsPerAttempt(pstats, output);
-        // Write all accepted radii
-        writeFinalPolyRadii(finalFractures, acceptedPoly, output);
-        // Write all accepted Surface Area
-        writeFinalPolyArea(finalFractures, acceptedPoly, output);
-        // Write out which fractures touch which boundaries
-        writeBoundaryFiles(finalFractures, acceptedPoly);
+    if (outputAcceptedRadiiPerFamily) {
+        std::cout << "Writing Accepted Radii Files Per Family\n";
+        // Creates radii files per family, before isolated fracture removal.
+        int size = shapeFamilies.size();
         
-        if (outputAcceptedRadiiPerFamily) {
-            std::cout << "Writing Accepted Radii Files Per Family\n";
-            // Creates radii files per family, before isolated fracture removal.
-            int size = shapeFamilies.size();
-            
-            for (int i = 0; i < size; i++) {
-                writeAllAcceptedRadii_OfFamily(i, acceptedPoly, radiiFolder);
-            }
-            
-            if (userRectanglesOnOff) {
-                // Fractures are marked -2 for user rects
-                writeAllAcceptedRadii_OfFamily(-2, acceptedPoly, radiiFolder);
-            }
-            
-            if (userEllipsesOnOff) {
-                // Fractures are marked -1 for user ellipses
-                writeAllAcceptedRadii_OfFamily(-1, acceptedPoly, radiiFolder);
-            }
-            
-            if (userPolygonByCoord) {
-                // Fractures are marked -3 for user user polygons
-                writeAllAcceptedRadii_OfFamily(-3, acceptedPoly, radiiFolder);
-            }
+        for (int i = 0; i < size; i++) {
+            writeAllAcceptedRadii_OfFamily(i, acceptedPoly, radiiFolder);
         }
         
-        if (outputFinalRadiiPerFamily) {
-            std::cout << "Writing Final Radii Files Per Family\n";
-            int size = shapeFamilies.size();
-            
-            for (int i = 0; i < size; i++) {
-                writeFinalRadii_OfFamily(finalFractures, i, acceptedPoly, radiiFolder);
-            }
-            
-            if (userRectanglesOnOff) {
-                writeFinalRadii_OfFamily(finalFractures, -1, acceptedPoly, radiiFolder);
-            }
-            
-            if (userEllipsesOnOff) {
-                writeFinalRadii_OfFamily(finalFractures, -2, acceptedPoly, radiiFolder);
-            }
-            
-            if (userPolygonByCoord) {
-                writeFinalRadii_OfFamily(finalFractures, -3, acceptedPoly, radiiFolder);
-            }
+        if (userRectanglesOnOff) {
+            // Fractures are marked -2 for user rects
+            writeAllAcceptedRadii_OfFamily(-2, acceptedPoly, radiiFolder);
         }
         
-        // If triple intersections are on, write triple intersection points file
-        if (tripleIntersections) {
-            std::cout << "Writing Triple Intersection Points File\n";
-            writeTriplePts(triplePoints, finalFractures, acceptedPoly, intPts, output);
+        if (userEllipsesOnOff) {
+            // Fractures are marked -1 for user ellipses
+            writeAllAcceptedRadii_OfFamily(-1, acceptedPoly, radiiFolder);
+        }
+        
+        if (userPolygonByCoord) {
+            // Fractures are marked -3 for user user polygons
+            writeAllAcceptedRadii_OfFamily(-3, acceptedPoly, radiiFolder);
         }
     }
     
-    // only output files needed for ECPM upscaling
-    if (ecpmOutput) {
-        std::cout << "Writting output files for ECPM" << std::endl;
-        // Write polygon.dat file
-        writePolys(finalFractures, acceptedPoly, output);
-        // write Params file
-        writeParamsFile(finalFractures, acceptedPoly, shapeFamilies, pstats, triplePoints, output);
-        // Write all accepted radii
-        writeFinalPolyRadii(finalFractures, acceptedPoly, output);
+    if (outputFinalRadiiPerFamily) {
+        std::cout << "Writing Final Radii Files Per Family\n";
+        int size = shapeFamilies.size();
+        
+        for (int i = 0; i < size; i++) {
+            writeFinalRadii_OfFamily(finalFractures, i, acceptedPoly, radiiFolder);
+        }
+        
+        if (userRectanglesOnOff) {
+            writeFinalRadii_OfFamily(finalFractures, -1, acceptedPoly, radiiFolder);
+        }
+        
+        if (userEllipsesOnOff) {
+            writeFinalRadii_OfFamily(finalFractures, -2, acceptedPoly, radiiFolder);
+        }
+        
+        if (userPolygonByCoord) {
+            writeFinalRadii_OfFamily(finalFractures, -3, acceptedPoly, radiiFolder);
+        }
+    }
+    
+    // If triple intersections are on, write triple intersection points file
+    if (tripleIntersections) {
+        std::cout << "Writing Triple Intersection Points File\n";
+        writeTriplePts(triplePoints, finalFractures, acceptedPoly, intPts, output);
     }
 } // End writeOutput()
 
@@ -564,7 +551,7 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
     int polyCount = finalFractures.size();
     
     for (int j = 0; j < polyCount; j++) {
-        std::string polyOutputFile = output + "/polys/poly_" + std::to_string(j + 1) + ".inp";
+        std::string polyOutputFile = output + "/../polys/poly_" + std::to_string(j + 1) + ".inp";
         polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
         // Write header
         polyOutput << acceptedPoly[finalFractures[j]].numberOfNodes << " "
@@ -597,7 +584,7 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
     Arg 4: Path to output folder */
 void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<Shape> &shapeFamilies, Stats &pstats, std::vector<Point> &triplePoints, std::string &output) {
     std::ofstream params;
-    std::string paramsOutputFile = output + "/params.txt";
+    std::string paramsOutputFile = output + "/../params.txt";
     params.open(paramsOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(params, paramsOutputFile);
     std::cout << "Writing " << paramsOutputFile << "\n";
@@ -617,42 +604,42 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
     Arg 1: std::vector array of indices of fractures left after isolated fracture removal
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
-void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::string file = output + "/aperture.dat";
-    std::ofstream ap;
-    ap.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
-    checkIfOpen(ap, file);
-    std::cout << "Writing aperture.dat\n";
-    ap << "aperture.dat" << "\n";
-    int size = finalFractures.size();
-    
-    for (int i = 0; i < size; i++) {
-        ap << -(7 + i) << " 0 0 " << std::setprecision(10) << acceptedPoly[finalFractures[i]].aperture << "\n";
-    }
-    
-    ap.close();
-}
+// void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+//     std::string file = output + "/aperture.dat";
+//     std::ofstream ap;
+//     ap.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
+//     checkIfOpen(ap, file);
+//     std::cout << "Writing aperture.dat\n";
+//     ap << "aperture.dat" << "\n";
+//     int size = finalFractures.size();
+
+//     for (int i = 0; i < size; i++) {
+//         ap << -(7 + i) << " 0 0 " << std::setprecision(10) << acceptedPoly[finalFractures[i]].aperture << "\n";
+//     }
+
+//     ap.close();
+// }
 
 /* writePermFile() ****************************************************************************/
 /*! Writes perm.dat (Permeability Data)
     Arg 1: std::vector array of indices of fractures left after isolated fracture removal
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
-void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::string file = output + "/perm.dat";
-    std::ofstream perm;
-    perm.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
-    checkIfOpen(perm, file);
-    std::cout << "Writing perm.dat\n";
-    perm << "permeability" << "\n";
-    int size = finalFractures.size();
-    
-    for (int i = 0; i < size; i++) {
-        perm << -(7 + i) << " 0 0 " <<  std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << "\n";
-    }
-    
-    perm.close();
-}
+// void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
+//     std::string file = output + "/perm.dat";
+//     std::ofstream perm;
+//     perm.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
+//     checkIfOpen(perm, file);
+//     std::cout << "Writing perm.dat\n";
+//     perm << "permeability" << "\n";
+//     int size = finalFractures.size();
+
+//     for (int i = 0; i < size; i++) {
+//         perm << -(7 + i) << " 0 0 " <<  std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].permeability << "\n";
+//     }
+
+//     perm.close();
+// }
 
 
 /* writeRadiiFile() ***************************************************************************/
@@ -1164,7 +1151,7 @@ void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Po
     Arg 4: Path to output folder */
 void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output) {
     std::ofstream file;
-    std::string fileOutputFile = output + "/poly_info.dat";
+    std::string fileOutputFile = output + "/../poly_info.dat";
     file.open(fileOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileOutputFile);
     std::cout << "Writing Rotation Data File (poly_info.dat)\n";
@@ -1288,13 +1275,13 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     //adjustIntFractIDs(finalFractures,acceptedPoly, intPts);
     // Make new intersection file in intersections folder
     std::ofstream intFile;
-    std::string file = "intersection_list.dat";
+    std::string file = "dfnGen_output/intersection_list.dat";
     intFile.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(intFile, file);
     intFile << "f1 f2 x y z length\n";
     // Make new intersection file in intersections folder
     std::ofstream fractFile;
-    std::string file2 = "fracture_info.dat";
+    std::string file2 = "dfnGen_output/fracture_info.dat";
     fractFile.open(file2.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(fractFile, file2);
     fractFile << "num_connections perm aperture\n";
@@ -1432,7 +1419,8 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
             }
         }
         
-        fractFile << num_conn << " " << std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].aperture << "\n";
+        // fractFile << num_conn << " " << std::setprecision(10) << acceptedPoly[finalFractures[i]].permeability << " " << acceptedPoly[finalFractures[i]].aperture << "\n";
+        fractFile << num_conn << " " << 0 << " " << 0 << "\n";
     }
     
     // Done with fracture and intersections
@@ -1475,27 +1463,27 @@ void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double 
 void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly) {
     std::cout << "Writing Boundary Files\n";
     std::ofstream leftFile;
-    std::string leftFileName = "left.dat";
+    std::string leftFileName = "dfnGen_output/left.dat";
     leftFile.open(leftFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(leftFile, leftFileName);
     std::ofstream rightFile;
-    std::string rightFileName = "right.dat";
+    std::string rightFileName = "dfnGen_output/right.dat";
     rightFile.open(rightFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(rightFile, rightFileName);
     std::ofstream frontFile;
-    std::string frontFileName = "front.dat";
+    std::string frontFileName = "dfnGen_output/front.dat";
     frontFile.open(frontFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(frontFile, frontFileName);
     std::ofstream backFile;
-    std::string backFileName = "back.dat";
+    std::string backFileName = "dfnGen_output/back.dat";
     backFile.open(backFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(backFile, backFileName);
     std::ofstream topFile;
-    std::string topFileName = "top.dat";
+    std::string topFileName = "dfnGen_output/top.dat";
     topFile.open(topFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(topFile, topFileName);
     std::ofstream bottomFile;
-    std::string bottomFileName = "bottom.dat";
+    std::string bottomFileName = "dfnGen_output/bottom.dat";
     bottomFile.open(bottomFileName.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(bottomFile, bottomFileName);
     
