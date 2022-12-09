@@ -1281,7 +1281,7 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     intFile << "f1 f2 x y z length\n";
     // Make new intersection file in intersections folder
     std::ofstream fractFile;
-    std::string file2 = "fracture_info.dat";
+    std::string file2 = "dfnGen_output/fracture_info.dat";
     fractFile.open(file2.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(fractFile, file2);
     fractFile << "num_connections perm aperture\n";

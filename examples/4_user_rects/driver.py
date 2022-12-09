@@ -52,7 +52,6 @@ DFN.print_domain_parameters()
 
 # define_paths()
 DFN.create_network()
-# DFN.output_report()
 DFN.mesh_network()
 
 DFN.dfn_flow()

@@ -7,21 +7,16 @@
 
 from pydfnworks import *
 import os
-
+import networkx as nx 
 jobname = os.getcwd() + "/output"
-dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
-dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
 
 DFN = DFNWORKS(jobname,
-               dfnFlow_file=dfnFlow_file,
-               dfnTrans_file=dfnTrans_file,
                ncpu=8)
 
 DFN.params['domainSize']['value'] = [25, 25, 25]
 DFN.params['h']['value'] = 0.1
 DFN.params['domainSizeIncrease']['value'] = [.5,.5,.5]
 DFN.params['keepOnlyLargestCluster']['value'] = True
-DFN.params['ignoreBoundaryFaces']['value'] = False
 DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
 
 
@@ -57,19 +52,9 @@ DFN.add_fracture_family(shape="ell",
                         hy_function='constant',
                         hy_params={"mu":1e-6})
 
-DFN.print_family_information(1)
-
 DFN.make_working_directory(delete=True)
-
 DFN.check_input()
-
-for key in DFN.params.keys():
-    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-DFN.mesh_network()
 
 # Create a graph based on the DFN
 G = DFN.create_graph("fracture", "left", "right")

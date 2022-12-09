@@ -213,7 +213,7 @@ def load_parameters():
             'list':
             False,
             'value':
-            None,
+            0,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
