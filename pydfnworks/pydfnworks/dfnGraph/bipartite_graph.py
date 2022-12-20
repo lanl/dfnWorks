@@ -7,8 +7,8 @@ from pydfnworks.dfnGraph.intersection_graph import boundary_index
 
 def create_bipartite_graph(inflow,
                            outflow,
-                           intersection_list='intersection_list.dat',
-                           fracture_info='fracture_info.dat'):
+                           intersection_list='dfnGen_output/intersection_list.dat',
+                           fracture_info='dfnGen_output/fracture_info.dat'):
     """Creates a bipartite graph of the DFN.
     Nodes are in two sets, fractures and intersections, with edges connecting them.
 

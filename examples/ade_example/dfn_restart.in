@@ -85,6 +85,7 @@ OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
+  ACKNOWLEDGE_VTK_FLAW
   MASS_FLOWRATE
   MASS_BALANCE
   VARIABLES
@@ -131,7 +132,7 @@ TRANSPORT_CONDITION inject
   TYPE dirichlet_zero_gradient
     CONSTRAINT_LIST
     0.d0 inlet
-    0.005d0 initial 
+    0.1d0 initial 
   /
 END
 

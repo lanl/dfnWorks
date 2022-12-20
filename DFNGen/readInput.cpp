@@ -405,7 +405,7 @@ bool userPolygonByCoord;
 /*! False - Permeability of each fracture is a function of fracture aperture,
             given by k=(b^2)/12, where b is an aperture and k is permeability
     True  - Constant permeabilty for all fractures*/
-bool permOption;
+// bool permOption;
 
 /*! Caution: Can create very large files.
     Outputs all fractures which were generated during
@@ -473,11 +473,11 @@ std::string polygonFile;
 
 /*! Log-normal aperture option.
     Mean of underlying normal distribution. */
-float meanAperture;
+// float meanAperture;
 
 /*! Log-normal aperture option.
     Standard deviation of underlying normal distribution. */
-float stdAperture;
+// float stdAperture;
 
 /*! 1 - Log-normal distribution
     2 - Aperture from transmissivity, first transmissivity is defined,
@@ -485,26 +485,26 @@ float stdAperture;
     3 - Constant aperture (same aperture for all fractures)
     4 - Length Correlated Aperture
         Apertures are defined as a function of fracture size.*/
-int aperture;
+//int aperture;
 
 /*! Transmissivity is calculated as transmissivity = F*R^k,
     where F is a first element in aperturefromTransmissivity,
     k is a second element and R is a mean radius of a polygon.
     Aperture is calculated according to cubic law as
     b = (transmissivity*12)^(1/3)*/
-float apertureFromTransmissivity[2];
+// float apertureFromTransmissivity[2];
 
 /*! Sets all fracture apertures to constantAperture.*/
-double constantAperture;
+// double constantAperture;
 
 /*! Length Correlated Aperture Option:
     Aperture is calculated by: b=F*R^k,
     where F is a first element in lengthCorrelatedAperture,
     k is a second element and R is a mean radius of a polygon.*/
-double lengthCorrelatedAperture[2];
+// double lengthCorrelatedAperture[2];
 
 /*! Permeability for all fractures*/
-double constantPermeability;
+// double constantPermeability;
 
 /*! If a fracture is rejected, it will be re-translated
     to a new position this number of times.
@@ -722,9 +722,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         }
         
         std::cout << "\n";
-    } else {
-        cout << "Not Expecting Quasi-2D domain" << endl;
-    }
+    } 
     
     if (nFamEll > 0 || nFamRect > 0) {
         searchVar(inputFile, "famProb:");
@@ -756,7 +754,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "enumPoints:");
         enumPoints = new unsigned int[nFamEll];
         getInputAry(inputFile, enumPoints, nFamEll);
-        searchVar(inputFile, "eAngleOption:");
+        searchVar(inputFile, "angleOption:"); // eAngleOption
         inputFile >> eAngleOption;
         
         if (orientationOption == 0) {
@@ -945,7 +943,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "raspect:");
         raspect = new float[nFamRect];
         getInputAry(inputFile, raspect, nFamRect);
-        searchVar(inputFile, "rAngleOption:");
+        searchVar(inputFile, "angleOption:");//rAngleOption
         inputFile >> rAngleOption;
         
         if (orientationOption == 0) {
@@ -1354,35 +1352,35 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         uCoordFile.close();
     }
     
-    searchVar(inputFile, "aperture:");
-    inputFile >> aperture;
+    // searchVar(inputFile, "aperture:");
+    // inputFile >> aperture;
     
-    if (aperture == 1) {
-        searchVar(inputFile, "meanAperture:");
-        inputFile >> meanAperture;
-        searchVar(inputFile, "stdAperture:");
-        inputFile >> stdAperture;
-    } else if (aperture == 2) {
-        searchVar(inputFile, "apertureFromTransmissivity:");
-        getInputAry(inputFile, apertureFromTransmissivity, 2);
-    } else if (aperture == 3) {
-        searchVar(inputFile, "constantAperture:");
-        inputFile >> constantAperture;
-    } else if (aperture == 4) {
-        searchVar(inputFile, "lengthCorrelatedAperture:");
-        getInputAry(inputFile, lengthCorrelatedAperture, 2);
-    } else {
-        std::cerr << "\nERROR: Aperture option not recognised\n";
-        exit(1);
-    }
+    // if (aperture == 1) {
+    //     searchVar(inputFile, "meanAperture:");
+    //     inputFile >> meanAperture;
+    //     searchVar(inputFile, "stdAperture:");
+    //     inputFile >> stdAperture;
+    // } else if (aperture == 2) {
+    //     searchVar(inputFile, "apertureFromTransmissivity:");
+    //     getInputAry(inputFile, apertureFromTransmissivity, 2);
+    // } else if (aperture == 3) {
+    //     searchVar(inputFile, "constantAperture:");
+    //     inputFile >> constantAperture;
+    // } else if (aperture == 4) {
+    //     searchVar(inputFile, "lengthCorrelatedAperture:");
+    //     getInputAry(inputFile, lengthCorrelatedAperture, 2);
+    // } else {
+    //     std::cerr << "\nERROR: Aperture option not recognised\n";
+    //     exit(1);
+    // }
     
-    searchVar(inputFile, "permOption:");
-    inputFile >> permOption;
+    // searchVar(inputFile, "permOption:");
+    // inputFile >> permOption;
     
-    if (permOption != 0) {
-        searchVar(inputFile, "constantPermeability:");
-        inputFile >> constantPermeability;
-    }
+    // if (permOption != 0) {
+    //     searchVar(inputFile, "constantPermeability:");
+    //     inputFile >> constantPermeability;
+    // }
     
     // Error check on stopping parameter
     if (nFamEll + nFamRect == 0 && stopCondition != 0) { // If no stochastic shapes, use nPoly option with npoly = number of user polygons
@@ -1525,24 +1523,22 @@ void printInputVars() {
         printRectCoords(userRectCoordVertices, "userRectCoordVertices", nRectByCoord);
     }
     
-    std::cout << "aperture option: " << aperture << std::endl;
-    
-    if (aperture == 1) {
-        std::cout << "meanAperture = " << meanAperture << std::endl;
-        std::cout << "stdAperture = " << stdAperture << std::endl;
-    } else if (aperture == 2) {
-        printAry(apertureFromTransmissivity, "apertureFromTransmissivity", 2);
-    } else if (aperture == 3) {
-        std::cout <<  "constantAperture = " << constantAperture << std::endl;
-    } else if (aperture == 4) {
-        printAry(lengthCorrelatedAperture, "lengthCorrelatedAperture", 2);
-    }
-    
-    if (permOption == 0) {
-        std::cout << "Permeability: Function of aperture\n";
-    } else {
-        std::cout << "ConstantPermeability = " << constantPermeability << std::endl;
-    }
+    // std::cout << "aperture option: " << aperture << std::endl;
+    // if (aperture == 1) {
+    //     std::cout << "meanAperture = " << meanAperture << std::endl;
+    //     std::cout << "stdAperture = " << stdAperture << std::endl;
+    // } else if (aperture == 2) {
+    //     printAry(apertureFromTransmissivity, "apertureFromTransmissivity", 2);
+    // } else if (aperture == 3) {
+    //     std::cout <<  "constantAperture = " << constantAperture << std::endl;
+    // } else if (aperture == 4) {
+    //     printAry(lengthCorrelatedAperture, "lengthCorrelatedAperture", 2);
+    // }
+    // if (permOption == 0) {
+    //     std::cout << "Permeability: Function of aperture\n";
+    // } else {
+    //     std::cout << "ConstantPermeability = " << constantPermeability << std::endl;
+    // }
 }
 
 

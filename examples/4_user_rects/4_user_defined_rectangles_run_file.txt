@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks/examples/4_user_rects/gen_4_user_rectangles.dat
-dfnFlow DUMMY/dfnworks/examples/4_user_rects/dfn_explicit.in
-dfnTrans DUMMY/dfnworks/examples/4_user_rects/PTDFN_control.dat

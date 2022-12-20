@@ -87,7 +87,7 @@ def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
     fractures = get_fracture_information()
     # Combine information of the families and fractures, e.g., which fracture are in each family, and create a dictionary with parameters used throughout the output report
     families, fractures, params = combine_family_and_fracture_information(
-        families, fractures)
+        families, fractures, self.num_frac, self.domain)
     params, families = parse_dfn_output(params, families)
 
     params["verbose"] = verbose

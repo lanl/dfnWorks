@@ -28,7 +28,7 @@ RejectionReasons::RejectionReasons() {
 Poly::Poly() {
     groupNum = 0;
     area = 0;
-    aperture = 0;
+    // aperture = 0;
     familyNum = 0;
     xradius = yradius = 0;
     faces[0] = 0;
@@ -37,7 +37,7 @@ Poly::Poly() {
     faces[3] = 0;
     faces[4] = 0;
     faces[5] = 0;
-    permeability = 0;
+    // permeability = 0;
     XYPlane = 0;
     truncated = 0;
 }

@@ -7,17 +7,23 @@
 """
 
 from fpdf import FPDF
+import os
 
+# paths for icons.
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+relative_path = "/figures/dfnWorks.all.black.png"
+dfnworks_image_black = absolute_path + relative_path
 
-dfnworks_image_black = "DUMMY/dfnworks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/dfnWorks.all.black.png"
-lanl_image = "DUMMY/dfnworks/pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/lanl-logo-footer.png"
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+relative_path = "/figures/lanl-logo-footer.png"
+lanl_image = absolute_path + relative_path
 
 
 class PDF(FPDF):
     global name
 
     def header(self):
-        # Logo
+        # Add Logos
         self.image(dfnworks_image_black, x=5, y=8, w=50)
         self.set_font('Times', 'B', 18)
         self.text(x=100, y=10, txt=f'dfnGen Output Report: {name}')
@@ -103,12 +109,12 @@ Domain (m)\n\
     text += f'Entire Network:\n'
     text += f'    P30: {params["Pre-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32 : {params["Pre-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    text += f'P33: {params["Pre-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
+    # text += f'P33: {params["Pre-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     text += f'Connected Network:\n'
     text += f'    P30: {params["Post-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32: {params["Post-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    text += f'P33: {params["Post-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
+    # text += f'P33: {params["Post-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     return text
 
@@ -203,6 +209,7 @@ def create_family_text(family):
     else:
         text += f'Final P32: {family["Post-Iso Fracture Intensity (P32)"]}\n'
     return text
+
 
 def add_family_page(params, family, i, pdf):
     """ Add page about fracture family. 
@@ -309,6 +316,8 @@ def make_pdf(params, families, fractures):
     """
 
     print("\n--> Combing Images and Making PDF")
+    # print(absolute_path)
+    # print("here")
     # name needs to be a global so it's in the header of each page in the PDF
     global name
     name = params["jobname"]

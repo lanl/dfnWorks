@@ -32,7 +32,7 @@ def plot_fram_information(params):
         print("--> Plotting FRAM information")
 
     rejections = {}
-    with open('rejections.dat', "r") as fp:
+    with open('dfnGen_output/rejections.dat', "r") as fp:
         for line in fp.readlines():
             parsed_line = line.split(": ")
             variable = parsed_line[0]

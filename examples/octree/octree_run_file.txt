@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks/examples/octree/gen_4_user_rectangles.dat
-dfnFlow DUMMY/dfnworks/examples/octree/dfn_explicit.in
-dfnTrans /None/none

@@ -1,1 +1,0 @@
-python run.py -name DUMMY/dfnworks/examples/lognormal/lognormal_example -input lognormal_dist_run_file.txt -ncpu 8
