@@ -13,6 +13,36 @@ Processing generator input
 .. automodule:: pydfnworks.dfnGen.generation.input_checking
     :members: check_input
 
+Processing generator input
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.generation.input_checking
+    :members: add_fracture_family
+
+Example:
+
+.. code-block:: python
+
+    DFN.add_fracture_family(shape="ell",
+                        distribution="tpl",
+                        alpha=1.8,
+                        min_radius=1.0,
+                        max_radius=5.0,
+                        kappa=1.0,
+                        theta=0.0,
+                        phi=0.0,
+                        aspect=2,
+                        beta_distribution=1,
+                        beta=45.0,
+                        p32=1.1,
+                        hy_variable='aperture',
+                        hy_function='correlated',
+                        hy_params={
+                            "alpha": 10**-5,
+                            "beta": 0.5
+                        })
+
+
+
 Running the generator
 ^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.generator
