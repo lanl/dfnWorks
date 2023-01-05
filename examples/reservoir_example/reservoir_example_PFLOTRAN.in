@@ -126,26 +126,26 @@ END
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial
   TYPE
-     PRESSURE dirichlet	
+     LIQUID_PRESSURE dirichlet	
   /
   DATUM 0.d0 0.d0 0.d0
-  PRESSURE 17.d6
+  LIQUID_PRESSURE 17.d6
 END
 
 
 FLOW_CONDITION well
  TYPE
-    PRESSURE dirichlet
+    LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 17.d6
+  LIQUID_PRESSURE 17.d6
 END
 
 
 FLOW_CONDITION high
   TYPE
-    PRESSURE dirichlet
+    LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 21.d6
+  LIQUID_PRESSURE 21.d6
 END
  
 #=========================== condition couplers ===============================

@@ -117,24 +117,24 @@ END
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial
   TYPE
-     PRESSURE dirichlet 
+     LIQUID_PRESSURE dirichlet 
   /
-  PRESSURE 1.01325d6
+  LIQUID_PRESSURE 1.01325d6
 END
 
 
 FLOW_CONDITION outflow 
   TYPE 
-     PRESSURE dirichlet
+     LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 1.d6
+  LIQUID_PRESSURE 1.d6
 END
 
 FLOW_CONDITION inflow
   TYPE
-    PRESSURE dirichlet
+    LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 1.1d6
+  LIQUID_PRESSURE 1.1d6
 END
 
 #=========================== condition couplers ===============================

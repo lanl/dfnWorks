@@ -118,6 +118,9 @@ def create_dfn_flow_links(self, path='../'):
         1. Typically, the path is DFN.path, which is set by the command line argument -path
         2. Currently only supported for PFLOTRAN
     """
+
+    #path = self.jobname + '/../'
+
     files = [
         'full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat', 'full_mesh.stor', 'full_mesh_material.zone',
@@ -130,4 +133,4 @@ def create_dfn_flow_links(self, path='../'):
         try:
             os.symlink(path + f, f)
         except:
-            print("--> Error Creating link for %s" % f)
+            print("--> Error creating link for %s" % f)

@@ -98,9 +98,9 @@ END
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial
   TYPE
-     PRESSURE dirichlet 
+     LIQUID_PRESSURE dirichlet 
   /
-  PRESSURE 1.01325d5
+  LIQUID_PRESSURE 1.01325d5
 END
 
 FLOW_CONDITION injection
@@ -129,9 +129,9 @@ END
 
 FLOW_CONDITION pinned
   TYPE
-    PRESSURE dirichlet
+    LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 1.01325d5
+  LIQUID_PRESSURE 1.01325d5
 END
 
 #=========================== condition couplers ===============================
