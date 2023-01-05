@@ -198,7 +198,7 @@ def parse_params_file(self, quiet=False):
 
     if not quiet:
         print("--> Number of Fractures: %d" % self.num_frac)
-        print("--> H_SCALE %f" % self.h)
+        print(f"--> h: {self.h:0.2e} m")
         if self.visual_mode > 0:
             self.visual_mode = True
             print("--> Visual mode is on")

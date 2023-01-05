@@ -1,5 +1,5 @@
-# Jan 13, 2014
-# Nataliia Makedonska, Satish Karra, LANL
+# Nov 24, 2022 
+# Matthew Sweeney <msweeney2796@lanl.gov> LANL
 #================================================
 
 SIMULATION
@@ -7,6 +7,9 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
   /
 END
@@ -60,8 +63,8 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
-  FORMAT VTK
   ACKNOWLEDGE_VTK_FLAW
+  FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
   VARIABLES
