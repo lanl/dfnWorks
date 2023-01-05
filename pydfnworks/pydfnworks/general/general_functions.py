@@ -139,6 +139,7 @@ def local_print_log(statement):
     -------
     print statments in pydfnworks should generally be replaced with this print_log function. Use local_print_log if function is not in refernce to DFN object
     '''
+
     logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
     print(statement)
     logging.info(statement)
