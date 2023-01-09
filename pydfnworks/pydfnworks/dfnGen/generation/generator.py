@@ -263,6 +263,10 @@ def gather_dfn_gen_output(self):
     # Grab Polygon information
     self.poly_info = np.genfromtxt('poly_info.dat')
 
+    # write polygon information to class
+    if self.store_polygon_data == True:
+        self.grab_polygon_data()
+
     ## create holder arrays for b, k, and T
     self.aperture = np.zeros(self.num_frac)
     self.perm = np.zeros(self.num_frac)
@@ -417,3 +421,39 @@ def assign_hydraulic_properties(self):
 
     # self.dump_hydraulic_values()
     print("--> Assign hydraulic properties: Complete ")
+
+def grab_polygon_data(self):
+    '''If flag self.store_polygon_data is set to True, the information stored in polygon.dat is written to a dictionary self.polygons. 
+    To access the points that define an individual polygon, call self.polygons[f'poly{i}'] where i is a number between 1 and the number of defined polygons. This returns an array of coordinates in the format np.array([x1,y1,z1],[x2,y2,z2],...[xn,yn,zn])
+
+    Parameters
+    -----------
+    self : DFN object
+
+    Returns
+    --------
+    None
+
+    Notes
+    ------
+    None'''
+
+    self.polygons = {}
+
+    polygon_data = np.genfromtxt('dfnGen_output/polygons.dat', dtype = str, delimiter = 'dummy', skip_header = 1) #weird format, so read data in as strings
+
+    for i in range(len(polygon_data)):
+        poly_dat = polygon_data[i] #read in data for one polygon
+        poly_dat = poly_dat.replace('}', '') #get rid of weird characters
+        poly_dat = poly_dat.replace('{', '')
+        poly_dat = poly_dat.replace(',', '')
+        poly_dat = poly_dat.split() #convert string to list, and then array
+        poly_dat = np.array(poly_dat)
+        poly_dat = poly_dat.astype(float)
+        poly = []
+        for j in range(int(poly_dat[0])): #loop through and reformat individual coordinates
+            poly.append(poly_dat[3*j+1:3*j+4])
+        poly = np.array(poly)
+        self.polygons[f'poly{i+1}'] = poly #store in dictionary
+    print('Data from polygons.dat stored on class in self.polygons')
+

@@ -97,7 +97,10 @@ class DFNWORKS():
     user_ell_params = []
     user_rect_params = []
     user_poly_params = []
-
+    
+    store_polygon_data = False
+    polygons = dict
+    
     # mesh information
     num_nodes = int
     material_ids = float
@@ -109,7 +112,7 @@ class DFNWORKS():
     import pydfnworks.dfnGen
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input, print_domain_parameters
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
