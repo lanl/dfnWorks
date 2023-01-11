@@ -38,8 +38,8 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
 void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<Shape> &shapeFamilies, Stats &pstats, std::vector<Point> &triplePoints, std::string &output);
-void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
-void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
+// void writeApertureFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
+// void writePermFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeFinalPolyArea(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeAllAcceptedRadii(std::vector<Poly> &acceptedPoly, std::string &output);

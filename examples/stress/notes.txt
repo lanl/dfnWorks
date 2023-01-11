@@ -1,1 +1,0 @@
-python run_stress.py -name DUMMY/dfnworks/stress/stress_example -input stress_run_file.txt -ncpu 16 

@@ -1,3 +1,0 @@
-dfnGen DUMMY/dfnworks/examples/user_polygons/gen_user_polygons.dat
-dfnFlow DUMMY/dfnworks/examples/user_polygons/dfn_explicit.in
-dfnTrans DUMMY/dfnworks/examples/user_polygons/PTDFN_control.dat

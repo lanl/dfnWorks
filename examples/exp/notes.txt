@@ -1,1 +1,0 @@
-python run.py -name DUMMY/dfnworks/examples/exp/exp_example -input exponential_dist_run_file.txt -ncpu 16 

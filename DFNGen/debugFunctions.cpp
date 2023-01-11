@@ -93,14 +93,13 @@ void printPolyData(struct Poly &poly) {
               << poly.faces[2] << "," << poly.faces[3] << ","
               << poly.faces[4] << "," << poly.faces[5] << "}\n";
     std::cout << "area = " << poly.area << std::endl;
-    std::cout << "aperture = " << poly.aperture << std::endl;
+    // std::cout << "aperture = " << poly.aperture << std::endl;
     std::cout << "xradius = " << poly.xradius << std::endl;
     std::cout << "yradius = " << poly.yradius << std::endl;
     std::cout << "aspectRatio = " << poly.aspectRatio << std::endl;
-    std::cout << "aperture = " << poly.aperture << std::endl;
     std::cout << "normal = {" << poly.normal[0] << "," << poly.normal[1] << "," << poly.normal[2] << "}\n";
     std::cout << "translation = {" << poly.translation[0] << "," << poly.translation[1] << "," << poly.translation[2] << "}\n";
-    std::cout << "permeability = " << poly.permeability << "\n";
+    // std::cout << "permeability = " << poly.permeability << "\n";
     std::cout << "boundingBox:\nxMin = " << poly.boundingBox[0] << " xMax = " << poly.boundingBox[1] << "\n";
     std::cout << "yMin = " << poly.boundingBox[2] << " yMax = " << poly.boundingBox[3] << std::endl;
     std::cout << "zMin = " << poly.boundingBox[4] << " zMax = " << poly.boundingBox[5] << std::endl;
