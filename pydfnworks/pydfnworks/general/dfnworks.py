@@ -20,6 +20,7 @@ from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
+
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
@@ -103,7 +104,7 @@ class DFNWORKS():
     material_ids = float
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
 
     # dfnGen functions
     import pydfnworks.dfnGen
