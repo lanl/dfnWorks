@@ -1,4 +1,4 @@
-def failure():
+def failure(self):
 
     doh = ''' 
                    _ ,___,-'",-=-.
@@ -27,10 +27,13 @@ def failure():
       /                 |             -'
 
     '''
+    
+    print(doh)
+
     return doh
 
 
-def success():
+def success(self):
 
     oh_yeah = '''
                   ___
@@ -53,4 +56,7 @@ def success():
            ,--'~'\   /'~'--,
           (_______) (_______)dwb
     '''
+    
+    print(oh_yeah)
+    
     return oh_yeah

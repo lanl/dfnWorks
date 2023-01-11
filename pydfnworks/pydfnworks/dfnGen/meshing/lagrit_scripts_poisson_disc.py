@@ -57,12 +57,12 @@ def edit_intersection_files(num_poly, fracture_list, path):
 
     os.chdir('intersections')
 
-    ## DEBUGGING ## 
+    ## DEBUGGING ##
     # clean up directory
     #fl_list = glob.glob("*prune.inp")
     #for fl in fl_list:
     #   os.remove(fl)
-    ## DEBUGGING ## 
+    ## DEBUGGING ##
 
     print("--> Editing Intersection Files")
     ## Note this could be easily changed to run in parallel if needed. Just use cf

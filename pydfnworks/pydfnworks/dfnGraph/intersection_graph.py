@@ -5,7 +5,7 @@ import json
 import sys
 from itertools import combinations
 
-from pydfnworks.dfnGraph.graph_attributes import add_perm
+from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area
 
 
 def boundary_index(bc_name):
@@ -18,7 +18,7 @@ def boundary_index(bc_name):
 
     Returns
     -------
-        bc_index : int
+        bc_index : in
             integer indexing of cube faces
 
     Notes
@@ -45,11 +45,9 @@ def boundary_index(bc_name):
         sys.stderr.write(error)
         sys.exit(1)
 
-
 def create_intersection_graph(inflow,
                               outflow,
-                              intersection_file="intersection_list.dat",
-                              fracture_info="fracture_info.dat"):
+                              intersection_file="dfnGen_output/intersection_list.dat"):
     """ Create a graph based on topology of network.
     Edges are represented as nodes and if two intersections
     are on the same fracture, there is an edge between them in the graph. 
@@ -183,6 +181,7 @@ def create_intersection_graph(inflow,
             G.add_edge(u, v, frac=frac, length=distance)
 
     print("--> Adding edges to Graph: Complete")
-    add_perm(G, fracture_info)
+    add_perm(G)
+    add_area(G)
     print("--> Intersection Graph Construction Complete")
     return G

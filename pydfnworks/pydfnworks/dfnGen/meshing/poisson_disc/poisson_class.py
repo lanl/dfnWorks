@@ -1,7 +1,7 @@
 # contains global variables
 class Poisson_Variables():
-    def __init__(self, fracture_id, path_to_polygon, path_to_intersections, H, R, A, F,
-                 concurrent_samples, occupancy_factor, well_flag):
+    def __init__(self, fracture_id, path_to_polygon, path_to_intersections, H,
+                 R, A, F, concurrent_samples, occupancy_factor, well_flag):
         import numpy as np
         """ Takes in input-parameters and contains all variables derived from
             those, that are used by multiple functions.

@@ -140,6 +140,32 @@ def check_regions_and_layers_fracture(params, prefix):
                 f"The {shape} family #{i+1} is defined in both regions and layers. Only one can be specified and the other must be set to 0."
             )
 
+def convert_angleOption_value(params):
+    """ Changes angleOption value from 'radians' to 0 or 'degrees' to 1
+    This change is required for dfnGen
+
+    Parameters
+    ------------
+        params : dict
+            parameter dictionary
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -------
+    """
+    angle_option = params['angleOption']['value']
+    if angle_option == 'radian':
+        params['angleOption']['value'] = 0
+        print("Converting angleOption value from radian to 0 for dfnGen input")
+    elif angle_option == 'degree':
+        params['angleOption']['value'] = 1
+        print("Converting angleOption value from degree to 1 for dfnGen input")
+    else:
+        hf.print_error(f"Error. Unknown DFN.params['angleOption']['value']. provided: {angle_option}. Acceptable values are 'radian', 'degree'.\nExiting.")
+
 
 def check_orientations(params, prefix):
     """ Checks orientation options. If using trend/plunge, degrees must be used. If using spherical, radians are okay as well. Checks that values are within acceptable ranges. 
@@ -162,7 +188,7 @@ def check_orientations(params, prefix):
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
         'nFamRect']['value']
-    angle_option_key = prefix + 'AngleOption'
+    angle_option_key = 'angleOption'
 
     if params["orientationOption"]["value"] == 0:
         #print("--> Using Spherical Coordinates")
@@ -171,17 +197,17 @@ def check_orientations(params, prefix):
     elif params["orientationOption"]["value"] == 1:
         #print("--> Using Trend and Plunge")
         # 0 is radians, 1 is degrees
-        if params[angle_option_key]['value'] == 0:
+        if params[angle_option_key]['value'] == 'radian':
             hf.print_error(
-                f"Using Trend and Plunge but {prefix + 'AngleOption'} is set to use radians. Trend and plunge must use degrees. Set {prefix + 'AngleOption'} = 1. "
+                f"Using Trend and Plunge but {'angleOption'} is set to use radians. Trend and plunge must use degree. Set {'angleOption'} = 'degree'. "
             )
         keys = [prefix + name for name in ["trend", "plunge"]]
 
     elif params["orientationOption"]["value"] == 2:
         # using dip / strike
-        if params[angle_option_key]['value'] == 0:
+        if params[angle_option_key]['value'] == 'radian':
             hf.print_error(
-                f"Using Dip and Strike but {prefix + 'AngleOption'} is set to use radians. Trend and plunge must use degrees. Set {prefix + 'AngleOption'} = 1. "
+                f"Using Dip and Strike but {'angleOption'} is set to use radian. Trend and plunge must use degree. Set {'angleOption'} = 'degree'. "
             )
         keys = [prefix + name for name in ["dip", "strike"]]
     else:
@@ -199,9 +225,9 @@ def check_orientations(params, prefix):
                     )
             # check degrees
             else:
-                if val < 0 or val > 365:
+                if val < 0 or val > 360:
                     hf.print_error(
-                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,365). "
+                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
     #check kappa
     key = prefix + 'kappa'
@@ -234,7 +260,7 @@ def check_beta_distribution(params, prefix):
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
         'nFamRect']['value']
-    angle_option_key = prefix + 'AngleOption'
+    angle_option_key = 'angleOption'
 
     #check kappa
     key = prefix + 'betaDistribution'
@@ -256,9 +282,9 @@ def check_beta_distribution(params, prefix):
                     )
             # check degrees
             else:
-                if val < 0 or val > 365:
+                if val < 0 or val > 360:
                     hf.print_error(
-                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,365). "
+                        f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
 
 

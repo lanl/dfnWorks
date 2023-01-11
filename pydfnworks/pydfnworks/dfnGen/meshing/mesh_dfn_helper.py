@@ -7,74 +7,75 @@
 import os
 import sys
 import glob
-from numpy import genfromtxt, sort, zeros
+import numpy as np
 import subprocess
+import pyvtk as pv
 
-def parse_params_file(quiet=False):
-    """ Reads params.txt file from DFNGen and parses information
+# def parse_params_file(quiet=False):
+#     """ Reads params.txt file from DFNGen and parses information
 
-    Parameters
-    ---------
-        quiet : bool
-            If True details are not printed to screen, if False they area 
+#     Parameters
+#     ---------
+#         quiet : bool
+#             If True details are not printed to screen, if False they area
 
-    Returns
-    -------
-        num_poly: int
-            Number of Polygons
-        h: float 
-            Meshing length scale h
-        dudded_points: int 
-            Expected number of dudded points in Filter (LaGriT)
-        visual_mode : bool
-            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-        domain: dict
-             x,y,z domain sizes 
-    
-    Notes
-    -----
-        None
-    """
-    if not quiet:
-        print("\n--> Parsing  params.txt")
-    fparams = open('params.txt', 'r')
-    # Line 1 is the number of polygons
-    num_poly = int(fparams.readline())
-    #Line 2 is the h scale
-    h = float(fparams.readline())
-    # Line 3 is the visualization mode: '1' is True, '0' is False.
-    visual_mode = int(fparams.readline())
-    # line 4 dudded points
-    dudded_points = int(fparams.readline())
+#     Returns
+#     -------
+#         num_poly: int
+#             Number of Polygons
+#         h: float
+#             Meshing length scale h
+#         dudded_points: int
+#             Expected number of dudded points in Filter (LaGriT)
+#         visual_mode : bool
+#             If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created
+#         domain: dict
+#              x,y,z domain sizes
 
-    # Dict domain contains the length of the domain in x,y, and z
-    domain = {'x': 0, 'y': 0, 'z': 0}
-    #Line 5 is the x domain length
-    domain['x'] = (float(fparams.readline()))
+#     Notes
+#     -----
+#         None
+#     """
+#     if not quiet:
+#         print("\n--> Parsing  params.txt")
+#     fparams = open('params.txt', 'r')
+#     # Line 1 is the number of polygons
+#     num_poly = int(fparams.readline())
+#     #Line 2 is the h scale
+#     h = float(fparams.readline())
+#     # Line 3 is the visualization mode: '1' is True, '0' is False.
+#     visual_mode = int(fparams.readline())
+#     # line 4 dudded points
+#     dudded_points = int(fparams.readline())
 
-    #Line 5 is the x domain length
-    domain['y'] = (float(fparams.readline()))
+#     # Dict domain contains the length of the domain in x,y, and z
+#     domain = {'x': 0, 'y': 0, 'z': 0}
+#     #Line 5 is the x domain length
+#     domain['x'] = (float(fparams.readline()))
 
-    #Line 5 is the x domain length
-    domain['z'] = (float(fparams.readline()))
-    fparams.close()
+#     #Line 5 is the x domain length
+#     domain['y'] = (float(fparams.readline()))
 
-    if not quiet:
-        print("--> Number of Polygons: %d" % num_poly)
-        print("--> H_SCALE %f" % h)
-        if visual_mode > 0:
-            visual_mode = True
-            print("--> Visual mode is on")
-        else:
-            visual_mode = False
-            print("--> Visual mode is off")
-        print(f"--> Expected Number of dudded points: {dudded_points}")
-        print(f"--> X Domain Size {domain['x']} m")
-        print(f"--> Y Domain Size {domain['y']} m")
-        print(f"--> Z Domain Size {domain['z']} m")
-        print("--> Parsing params.txt complete\n")
+#     #Line 5 is the x domain length
+#     domain['z'] = (float(fparams.readline()))
+#     fparams.close()
 
-    return (num_poly, h, visual_mode, dudded_points, domain)
+#     if not quiet:
+#         print("--> Number of Polygons: %d" % num_poly)
+#         print("--> H_SCALE %f" % h)
+#         if visual_mode > 0:
+#             visual_mode = True
+#             print("--> Visual mode is on")
+#         else:
+#             visual_mode = False
+#             print("--> Visual mode is off")
+#         print(f"--> Expected Number of dudded points: {dudded_points}")
+#         print(f"--> X Domain Size {domain['x']} m")
+#         print(f"--> Y Domain Size {domain['y']} m")
+#         print(f"--> Z Domain Size {domain['z']} m")
+#         print("--> Parsing params.txt complete\n")
+
+#     return (num_poly, h, visual_mode, dudded_points, domain)
 
 
 def check_dudded_points(dudded, hard=False):
@@ -158,7 +159,7 @@ def cleanup_dir():
             os.remove(fl)
 
 
-def output_meshing_report(local_jobname, visual_mode):
+def gather_mesh_information(self):
     """ Prints information about the final mesh to file
     
     Parameters
@@ -177,47 +178,27 @@ def output_meshing_report(local_jobname, visual_mode):
         None 
 """
 
-    f = open(local_jobname + '_mesh_information.txt', 'w')
-    f.write('The final mesh of DFN consists of: \n')
-    if not visual_mode:
+    if self.visual_mode:
+        with open('reduced_mesh.inp', 'r') as finp:
+            header = finp.readline()
+            header = header.split()
+            self.num_nodes = int(header[0])
         print(
-            "--> Output files for flow calculations are written in : full_mesh.*"
+            f"--> The reduced mesh in full_mesh.inp has {self.num_nodes} nodes and {int(header[1])} triangular elements"
         )
-
-        finp = open('full_mesh.inp', 'r')
-        g = finp.readline()
-        g = g.split()
-        NumElems = int(g.pop(1))
-        NumIntNodes = int(g.pop(0))
-        f.write(str(NumElems) + ' triangular elements; \n')
-        f.write(str(NumIntNodes) + '  nodes / control volume cells; \n')
-        finp.close()
-
-        fstor = open('full_mesh.stor', 'r')
-        fstor.readline()
-        fstor.readline()
-        gs = fstor.readline()
-        gs = gs.split()
-        NumCoeff = int(gs.pop(0))
-        f.write(
-            str(NumCoeff) +
-            ' geometrical coefficients / control volume faces. \n')
-        fstor.close()
     else:
+        with open('full_mesh.inp', 'r') as finp:
+            header = finp.readline()
+            header = header.split()
+            self.num_nodes = int(header[0])
         print(
-            "--> Output files for visualization are written in : reduced_mesh.inp"
+            f"--> The primary mesh in full_mesh.inp has {self.num_nodes} nodes and {int(header[1])} triangular elements"
         )
-        print("--> Warning!!! Mesh is not suitable for flow and transport.")
-
-        finp = open('reduced_mesh.inp', 'r')
-        g = finp.readline()
-        g = g.split()
-        NumElems = int(g.pop(1))
-        NumIntNodes = int(g.pop(0))
-        f.write(str(NumElems) + ' triangular elements; \n')
-        f.write(str(NumIntNodes) + '  nodes / control volume cells. \n')
-        finp.close()
-    f.close()
+        ## get material -ids
+        self.material_ids = np.genfromtxt('materialid.dat',
+                                          skip_header=3).astype(int)
+        self.aperture_cell = np.zeros(self.num_nodes)
+        self.perm_cell = np.zeros(self.num_nodes)
 
 
 def clean_up_files_after_prune(self):
@@ -233,12 +214,12 @@ def clean_up_files_after_prune(self):
 
     Notes
     -----
-    This function should always be run after pruning if flow solution is going to be run
+        This function should always be run after pruning if flow solution is going to be run. 
  
     '''
 
     print("--> Editing DFN file based on fractures in %s" % self.prune_file)
-    keep_list = sort(genfromtxt(self.prune_file).astype(int))
+    keep_list = np.sort(np.genfromtxt(self.prune_file).astype(int))
     num_frac = len(keep_list)
 
     print("--> Editing params.txt file")
@@ -258,12 +239,14 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing poly_info.dat file")
-    poly_info = genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
+    poly_info = self.poly_info[
+        keep_list -
+        1, :]  #np.genfromtxt(self.path + 'poly_info.dat')[keep_list - 1, :]
     try:
         os.unlink('poly_info.dat')
     except:
         pass
-    f = open('poly_info.dat', 'w')
+    f = open('dfnGen_output/poly_info.dat', 'w')
     for i in range(num_frac):
         f.write('%d %d %f %f %f %d %f %f %d\n' %
                 (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
@@ -273,7 +256,7 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing perm.dat file")
-    perm = genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
+    perm = self.perm  #np.genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
     f = open('perm.dat', 'w+')
     f.write('permeability\n')
     for i in range(num_frac):
@@ -282,8 +265,7 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing aperture.dat file")
-    aperture = genfromtxt(self.path + 'aperture.dat',
-                          skip_header=1)[keep_list - 1, -1]
+    aperture = self.aperture  #np.genfromtxt(self.path + 'aperture.dat', skip_header=1)[keep_list - 1, -1]
     f = open('aperture.dat', 'w+')
     f.write('aperture\n')
     for i in range(num_frac):
@@ -301,8 +283,9 @@ def clean_up_files_after_prune(self):
     fout.write(line)
     fin.close()
     # write radii from remaining fractures
-    radii = genfromtxt(self.path + 'radii_Final.dat',
-                       skip_header=2)[keep_list - 1, :]
+    radii = self.radii[
+        keep_list -
+        1, :]  #np.genfromtxt(self.path + 'radii_Final.dat', skip_header=2)[keep_list - 1, :]
     for i in range(num_frac):
         fout.write('%f %f %d\n' % (radii[i, 0], radii[i, 1], radii[i, 2]))
     fout.close()
@@ -312,8 +295,9 @@ def clean_up_files_after_prune(self):
     fin = open(self.path + 'normal_vectors.dat')
     fout = open('normal_vectors.dat', 'w')
     # copy header
-    normal_vect = genfromtxt(self.path + 'normal_vectors.dat')[keep_list -
-                                                               1, :]
+    normal_vect = self.normal_vectors[
+        keep_list -
+        1, :]  #np.genfromtxt(self.path + 'normal_vectors.dat')[keep_list - 1, :]
     for i in range(num_frac):
         fout.write('%f %f %f\n' %
                    (normal_vect[i, 0], normal_vect[i, 1], normal_vect[i, 2]))
@@ -331,8 +315,7 @@ def clean_up_files_after_prune(self):
         tmp = line.split(' ')
         if tmp[-1] != 'R':
             points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
-    from numpy import asarray
-    points = asarray(points)
+    points = np.asarray(points)
     points = points[keep_list - 1, :]
     for i in range(num_frac):
         fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
@@ -342,7 +325,7 @@ def clean_up_files_after_prune(self):
     print("--> Editing Fracture Files Complete")
 
 
-def create_mesh_links(self,path):
+def create_mesh_links(self, path):
     ''' Makes symlinks for files in path required for meshing
     
     Parameters
@@ -443,7 +426,7 @@ def inp2vtk_python(self):
     --------
         For a mesh base.inp, this dumps a VTK file named base.vtk
     """
-    import pyvtk as pv
+
     if self.flow_solver != "PFLOTRAN":
         error = "ERROR! Wrong flow solver requested\n"
         sys.stderr.write(error)
@@ -471,7 +454,7 @@ def inp2vtk_python(self):
         num_nodes = int(line.strip(' ').split()[0])
         num_elems = int(line.strip(' ').split()[1])
 
-        coord = zeros((num_nodes, 3), 'float')
+        coord = np.zeros((num_nodes, 3), 'float')
         elem_list_tri = []
         elem_list_tetra = []
 

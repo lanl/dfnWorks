@@ -1,4 +1,5 @@
- CXX = g++ 
+
+CXX = g++ 
 CXXFLAGS  = -std=c++11 -O3 -lm -Wall -g
 
 DFNGen: DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o  readInput.o readInputFunctions.o output.o insertUserRects.o insertUserRectsByCoord.o insertUserEllByCoord.o insertUserEll.o insertUserPolygonByCoord.o insertShape.o structures.o computationalGeometry.o fractureEstimating.o generatingPoints.o domain.o mathFunctions.o polygonBoundary.o vectorFunctions.o generatingPoints.o removeFractures.o  clusterGroups.o

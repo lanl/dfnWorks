@@ -602,12 +602,13 @@ def neighboring_cells(c, center_cell, exclusion_radius):
     max_cell_distance = ceil(exclusion_radius * c.neighbor_cell_size_inv)
     # furthest number of cells a cell still containing a conflicting node
     # could be away in x or y-direction
-    subgrid = c.neighbor_grid[max(center_cell[0] - max_cell_distance, 0
-                                  ):min(center_cell[0] + max_cell_distance +
-                                        1, c.no_horizontal_neighbor_cells + 1),
-                              max(center_cell[1] - max_cell_distance, 0
-                                  ):min(center_cell[1] + max_cell_distance +
-                                        1, c.no_vertical_neighbor_cells + 1)]
+    subgrid = c.neighbor_grid[
+        max(center_cell[0] -
+            max_cell_distance, 0):min(center_cell[0] + max_cell_distance +
+                                      1, c.no_horizontal_neighbor_cells + 1),
+        max(center_cell[1] -
+            max_cell_distance, 0):min(center_cell[1] + max_cell_distance +
+                                      1, c.no_vertical_neighbor_cells + 1)]
     # slice neighboring cells out of grid
     #sub=subgrid#.toarray()
     closeby_nodes = subgrid[nonzero(subgrid)]
@@ -714,18 +715,20 @@ def read_intersections(c, path_to_intersections):
     end_pts = []
     #short edges require smaller closer nodes to guarantee good triangles
     for i in range(c.no_of_vertices):
-        if distance_sq(c.vertices[i],c.vertices[(i+1)%c.no_of_vertices]) < c.max_exclusion_radius**2:
+        if distance_sq(c.vertices[i], c.vertices[
+            (i + 1) % c.no_of_vertices]) < c.max_exclusion_radius**2:
             if c.A != 0:
-                edge = c.vertices[i]-c.vertices[(i+1)%c.no_of_vertices]
+                edge = c.vertices[i] - c.vertices[(i + 1) % c.no_of_vertices]
                 edge_length = sqrt(norm_sq(edge))
-                orthogonal = array([-edge[0],edge[1]])/edge_length
-                shift = (edge_length-c.H*c.F)/c.A
+                orthogonal = array([-edge[0], edge[1]]) / edge_length
+                shift = (edge_length - c.H * c.F) / c.A
             else:
-                orthogonal = array[0,0]
+                orthogonal = array[0, 0]
                 shift = 0
-            end_pts.append(c.vertices[i]+shift*orthogonal)
-            end_pts.append(c.vertices[(i+1)%c.no_of_vertices]+shift*orthogonal)
-            
+            end_pts.append(c.vertices[i] + shift * orthogonal)
+            end_pts.append(c.vertices[(i + 1) % c.no_of_vertices] +
+                           shift * orthogonal)
+
     with open(path_to_intersections) as inputfile:
         lines = inputfile.readlines()
     if len(lines) != 0:
@@ -763,12 +766,13 @@ def read_intersections(c, path_to_intersections):
     del lines
     return end_pts
 
+
 def read_well_points(c):
 
     pts = []
 
-    with open("well_points.dat","r") as fwell:
-        fwell.readline() # ignore header (fracture_id, x, y, z)
+    with open("well_points.dat", "r") as fwell:
+        fwell.readline()  # ignore header (fracture_id, x, y, z)
         for line in fwell.readlines():
             if c.fracture_id == int(line.split()[0]):
                 pt = zeros(2)
@@ -780,6 +784,7 @@ def read_well_points(c):
                 pts.append(pt)
                 del pt
     return pts
+
 
 ######################################################################
 #@profile
@@ -1016,14 +1021,14 @@ def intersect_mark_start_cells(c, center_cell, intersect_number):
 
     for j in range(0, 9):  # loop through 3x3 grid around center cell
         try:
-            c.intersect_cells[center_cell[0] - 1 +
-                              floor(j / 3), center_cell[1] - 1 +
+            c.intersect_cells[center_cell[0] - 1 + floor(j / 3),
+                              center_cell[1] - 1 +
                               (j % 3)].append(intersect_number)
             # if key already contains a list append current intersection number
             # else exception is raised and a list is created for that key.
         except BaseException:
-            c.intersect_cells[center_cell[0] - 1 +
-                              floor(j / 3), center_cell[1] - 1 +
+            c.intersect_cells[center_cell[0] - 1 + floor(j / 3),
+                              center_cell[1] - 1 +
                               (j % 3)] = [intersect_number]
 
 
@@ -1118,16 +1123,15 @@ def intersect_mark_next_cells(c, direction, center_cell, intersect_number):
             # label the 3 cells left/right of the the 3x3 grid around current
             # cell
             try:
-                c.intersect_cells[center_cell[0] +
-                                  2 * x_shift, center_cell[1] - 1 +
+                c.intersect_cells[center_cell[0] + 2 * x_shift,
+                                  center_cell[1] - 1 +
                                   j].append(intersect_number)
                 # if the key for any of those cells already contains a list the
                 # current intersection number is added otherwise an exception is
                 # raised an a list is created for that key instead
             except BaseException:
-                c.intersect_cells[center_cell[0] +
-                                  2 * x_shift, center_cell[1] - 1 +
-                                  j] = [intersect_number]
+                c.intersect_cells[center_cell[0] + 2 * x_shift,
+                                  center_cell[1] - 1 + j] = [intersect_number]
     new_center_cell = center_cell + array([x_shift, y_shift])
     return new_center_cell
 
@@ -1351,12 +1355,13 @@ def occupancy_mark(c, node):
     occupied_radius = ceil(node[2] * c.occupancy_grid_side_length_inv)
     # furthest number of cells that could still contain a node conflicting
     # with a node in center cell.
-    X, Y = ogrid[max(center_cell[0] - occupied_radius, 0
-                     ):min(center_cell[0] + occupied_radius +
-                           1, c.no_horizontal_occupancy_cells + 1),
-                 max(center_cell[1] - occupied_radius, 0
-                     ):min(center_cell[1] + occupied_radius +
-                           1, c.no_vertical_occupancy_cells + 1)]
+    X, Y = ogrid[
+        max(center_cell[0] -
+            occupied_radius, 0):min(center_cell[0] + occupied_radius +
+                                    1, c.no_horizontal_occupancy_cells + 1),
+        max(center_cell[1] -
+            occupied_radius, 0):min(center_cell[1] + occupied_radius +
+                                    1, c.no_vertical_occupancy_cells + 1)]
     distance_from_center = ((X - center_cell[0])**2 + (Y - center_cell[1])**2)
     occupied_by_node = (distance_from_center <= (occupied_radius + 1)**2)
     # create a circular mask of ones of cells occupied by center node.

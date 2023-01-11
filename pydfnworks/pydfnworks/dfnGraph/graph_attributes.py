@@ -3,7 +3,7 @@ import networkx as nx
 import sys
 
 
-def add_perm(G, fracture_info="fracture_info.dat"):
+def add_perm(G):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 
     is intersection, then permeability is an edge attribute
@@ -24,7 +24,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
 
 """
 
-    perm = np.genfromtxt(fracture_info, skip_header=1)[:, 1]
+    perm = np.genfromtxt("dfnGen_output/fracture_info.dat", skip_header=1)[:, 1]
     aperture = np.sqrt(12 * perm)
 
     if G.graph['representation'] == "fracture":
@@ -52,7 +52,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
 
     elif G.graph['representation'] == "bipartite":
         # add fracture info
-        with open(fracture_info) as f:
+        with open("dfnGen_output/fracture_info.dat") as f:
             f.readline()
             data = f.read().strip()
             for fracture, line in enumerate(data.split('\n'), 1):
@@ -62,7 +62,7 @@ def add_perm(G, fracture_info="fracture_info.dat"):
                 G.nodes[fracture]['b'] = float(aperture)
 
 
-def add_area(G, fracture_info="fracture_info.dat"):
+def add_area(G):
     ''' Read Fracture aperture from fracture_info.dat and 
     load on the edges in the graph. Graph must be intersection to node
     representation
@@ -79,7 +79,7 @@ def add_area(G, fracture_info="fracture_info.dat"):
         None
 '''
 
-    aperture = np.genfromtxt(fracture_info, skip_header=1)[:, 2]
+    aperture = np.genfromtxt("dfnGen_output/fracture_info.dat", skip_header=1)[:, 2]
     edges = list(nx.edges(G))
     for u, v in edges:
         x = G.edges[u, v]['frac']
