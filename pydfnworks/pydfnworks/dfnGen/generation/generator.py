@@ -209,6 +209,15 @@ def parse_params_file(self, quiet=False):
         print(f"--> X Domain Size {self.domain['x']} m")
         print(f"--> Y Domain Size {self.domain['y']} m")
         print(f"--> Z Domain Size {self.domain['z']} m")
+        self.x_min = -0.5*self.domain['x']
+        self.x_max = 0.5*self.domain['x']
+
+        self.y_min = -0.5*self.domain['y']
+        self.y_max = 0.5*self.domain['y']
+        
+        self.z_max = 0.5*self.domain['z']
+        self.z_min = -0.5*self.domain['z']
+
         print("--> Parsing params.txt complete\n")
 
 
@@ -428,16 +437,18 @@ def grab_polygon_data(self):
 
     Parameters
     -----------
-    self : DFN object
+        self : DFN object
 
     Returns
     --------
-    None
+        None
 
     Notes
     ------
-    None'''
+        None
+        '''
 
+    print("--> Loading Polygon information onto DFN object")
     self.polygons = {}
 
     polygon_data = np.genfromtxt('dfnGen_output/polygons.dat', dtype = str, delimiter = 'dummy', skip_header = 1) #weird format, so read data in as strings
@@ -454,6 +465,6 @@ def grab_polygon_data(self):
         for j in range(int(poly_dat[0])): #loop through and reformat individual coordinates
             poly.append(poly_dat[3*j+1:3*j+4])
         poly = np.array(poly)
-        self.polygons[f'poly{i+1}'] = poly #store in dictionary
+        self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
     print('Data from polygons.dat stored on class in self.polygons')
 
