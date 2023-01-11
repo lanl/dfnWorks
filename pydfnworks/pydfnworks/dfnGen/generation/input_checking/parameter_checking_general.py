@@ -518,7 +518,7 @@ def check_polygon_boundary_general(params):
     ## Check path for
     hf.check_path('polygonBoundaryFile',
                   params['polygonBoundaryFile']['value'])
-    copy(params['polygonBoundaryFile']['value'], "./")
+    copy(params['polygonBoundaryFile']['value'], params.jobname)
 
     ## Read in domain polygon file
     with open(params['polygonBoundaryFile']['value'], 'r') as fvertices:
@@ -572,7 +572,6 @@ def check_user_defined(params):
         if params[flag]['value']:
             hf.check_path(path, params[path]['value'])
             #print(params[path]['value'])
-            #copy(params[path]['value'], "./") #leaving here in case it happens to be useful later, but currently seems redundant
 
 
 def check_general(params):
