@@ -16,8 +16,8 @@ def dfn_gen(self, output=True):
 
     Parameters
     ----------
-        self : object
-            DFN Class object
+        self :
+            DFN object
         output : bool
             If True, output pdf will be created. If False, no pdf is made 
         visual_mode : None
@@ -52,8 +52,11 @@ def make_working_directory(self, delete=False):
 
     Parameters
     ----------
-        self : object
-            DFN Class object
+        self :
+            DFN object
+
+        delete : bool
+            If True, deletes the existing working directory. Default = False
 
     Returns
     -------
@@ -116,8 +119,8 @@ def create_network(self):
 
     Parameters
     ----------
-        self : object
-            DFN Class 
+        self :
+            DFN object 
 
     Returns
     -------

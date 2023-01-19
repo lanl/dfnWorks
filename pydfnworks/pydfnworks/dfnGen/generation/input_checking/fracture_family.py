@@ -186,13 +186,15 @@ def print_family_information(self, family_number):
 
         Parameters
         --------------
-        self : DFN object
+        self : 
+            DFN object
 
-        family_number : the id of the fracture family information to be returned
+        family_number : int 
+            The id of the fracture family information to be returned.
         
         Returns
         --------
-        prints fracture family parameters
+        Prints fracture family parameters.
 
         Notes
         ---------
@@ -245,66 +247,95 @@ def add_fracture_family(self,
                         hy_variable=None,
                         hy_function=None,
                         hy_params=None):
-    """Generates a fracture family
+    """Generates a fracture family with specified attributes
 
         Parameters
         --------------
-        self : DFN object
+        self : 
+            DFN object
         
-        shape : 'rect' or 'ell' deines the fracture family shape 
+        shape : string 
+            The options are 'rect' or 'ell' Defines the fracture family shape. 
         
-        distribution : 'tpl', 'log_normal', 'exp', or 'constant' defines the sample distribution for the fracture radius
+        distribution : string
+            The options are 'tpl', 'log_normal', 'exp', or 'constant' Defines the sample distribution for the fracture radius.
         
-        kappa : concentration param of the von Mises-Fisher distribution
+        kappa : float
+            Concentration parameter of the von Mises-Fisher distribution
         
-        family_number : fracutre family id. default = None
+        family_number : int 
+            Fracutre family id. default = None
         
-        probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 
+        probability : float
+            Probability of a fracture belonging to this family. default = None. Use if stopCondition = 0 
         
-        p32 : fracture intensity for the family. default = None. use if stopCondition = 1
-        layer : assigns fracture family to a layer in the domain. default = 0
+        p32 : float
+            Fracture intensity for the family. default = None. use if stopCondition = 1
+        layer : int 
+            Assigns fracture family to a layer in the domain. default = 0
         
-        region : assigns fracture family to a region in the domain. default = 0
+        region : int
+            Assigns fracture family to a region in the domain. default = 0
         
-        number_of_points : specifies the number of vertices defining th eboundary of each fracture. default = 8
+        number_of_points : int 
+            Specifies the number of vertices defining the boundary of each fracture. default = 8
         
-        aspect : the aspect ratio of the fractures. default = 1
+        aspect : float
+            The aspect ratio of the fractures. default = 1
         
-        beta_distribution : 0 (uniform distribtuion [0,2pi) or 1 (constant rotation specfied by ebeta) rotation of each fractures normal vector. default 0
+        beta_distribution : int
+            0 (uniform distribtuion [0,2pi)) or 1 (constant rotation specfied by beta) Defines the rotation of each fractures normal vector. default = 0
         
-        beta : angle fo constant rotation. use if beta_distribution = 1. default = 0
+        beta : float 
+            Angle of constant rotation. Used if beta_distribution = 1. default = 0
         
-        theta : use if orientationOption = 0 (default). default = None
+        theta : float 
+            Use if orientationOption = 0 (default). With phi defines the mean orientation of a fracture family. default = None
         
-        phi : use if orientationOption = 0 (default). default = None
+        phi : float
+            Use if orientationOption = 0 (default). default = None
         
-        trend : use if orientationOption = 1. default = None
+        trend : float 
+            Use if orientationOption = 1. With plunge defines the mean orientation of a fracture family. default = None
         
-        plunge : use if orientationOption = 1. default = None
+        plunge : float
+            Use if orientationOption = 1. default = None
         
-        dip : use if orientationOption = 2. default = None
+        dip : float 
+            Use if orientationOption = 2. With strike defines the mean orientation of a fracture family. default = None
         
-        strike : use if orientationOption = 2. default = None
+        strike : float 
+            Use if orientationOption = 2. default = None
         
-        alpha : parameter for 'tpl'. default = None
+        alpha : float 
+            Parameter for 'tpl' distribution. default = None
         
-        log_mean : parameter for 'log_normal'. default = None
+        log_mean : float
+            Parameter for 'log_normal' distribution. default = None
         
-        log_std : parameter for 'log_normal'. default = None
+        log_std : float 
+            Parameter for 'log_normal' distribution. default = None
         
-        exp_mean : parameter for 'exp'. default = None
+        exp_mean : float 
+            Parameter for 'exp' distribution. default = None
         
-        constant : parameter for 'constant'. default = None
+        constant : float 
+            Parameter for 'constant' distribution. default = None
         
-        min_radius : minimum fracture radius for 'tpl' 'log_normal' or 'exp'. default = None
+        min_radius : float 
+            Minimum fracture radius for 'tpl' 'log_normal' or 'exp' distributions. default = None
         
-        max_radius : maximum fracture radius for 'tpl' 'log_normal' or 'exp'. default = None
+        max_radius : float 
+            Maximum fracture radius for 'tpl' 'log_normal' or 'exp' distributions. default = None
         
-        hy_variable : hydraulic variable to assign values to. options are 'aperture', 'permeability', 'transmissivity', 
+        hy_variable : string 
+            Options are 'aperture', 'permeability', or 'transmissivity'. Sets thehydraulic variable to assign values to.  
         
-        hy_function : relationship between hydraulic variable and fracture radius. options are 'correlated', 'semi-correlated', 'constant', 'log-normal'
+        hy_function : string
+            Options are 'correlated', 'semi-correlated', or 'constant', 'log-normal'. Sets the relationship between the hydraulic variable and the fracture radius.
         
-        hy_params : parameters for the hydraulic function. see next lines for syntax and options
+        hy_params : dict 
+            Sets the parameters for the hydraulic function. The options are as follows:
             if 'correlated' --> {"alpha":value, "beta:value}
             if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value}
             if 'constant' --> {"mu":value}
@@ -312,7 +343,7 @@ def add_fracture_family(self,
         
         Returns
         --------
-        populated fracture family dictionary for specified family
+        Populated fracture family dictionary for specified fracture family 
 
         Notes
         ---------

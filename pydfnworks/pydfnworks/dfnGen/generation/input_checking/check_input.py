@@ -12,9 +12,12 @@ from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params i
 
 def print_domain_parameters(self, print_all=False):
     """ Prints domain parameters to screen
+    
     Parameters
     ------------
-        self : DFN Class Object
+        self : 
+            DFN Object
+        
         print_all : bool
             If True, all parameters will be printed to screen, even those without a value. If False (default), only those with a value will be printed to screen.  
 
@@ -43,17 +46,12 @@ def print_domain_parameters(self, print_all=False):
 
 
 def check_input(self, from_file=False):
-    """ Checks input file for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
-
-     Input Format Requirements:  
-        * Each parameter must be defined on its own line (separate by newline)
-        * A parameter (key) MUST be separated from its value by a colon ':' (ie. --> key: value)
-        * Values may also be placed on lines after the 'key'
-        * Comment Format:  On a line containing  // or / ``*``, nothing after ``*`` / or // will be processed  but text before a comment will be processed 
-    
+    """ Checks input for DFNGen to make sure all necessary parameters are defined. Then writes out a "clean" version of the input file
+   
     Parameters
     ------------
-        self : DFN Class Object
+        self : 
+            DFN Object
 
     Returns
     ---------
@@ -63,7 +61,7 @@ def check_input(self, from_file=False):
     -----
         There are warnings and errors raised in this function. Warning will let you continue while errors will stop the run. Continue past warnings are your own risk. 
 
-        From File feature is no longer maintained. Functions should be removed in the near future.
+        From File feature is no longer maintained.
     """
     print()
     print('=' * 80)

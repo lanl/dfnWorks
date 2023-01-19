@@ -490,11 +490,13 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
 
     Parameters
     -----------
-    ----------
+
         lagrit_file : string
             Name of LaGriT script to run
+        
         output_file : string
             Name of file to dump LaGriT output
+        
         quiet : bool
             If false, information will be printed to screen.
 

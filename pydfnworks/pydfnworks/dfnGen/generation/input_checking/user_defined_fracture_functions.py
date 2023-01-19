@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 29 09:17:14 2022
-
-@author: 369984
-"""
-
 import sys
 import os
 from numpy import pi
@@ -29,7 +22,7 @@ def check_angle_option(angle_option, array):
 def print_user_fracture_information(self, shape, frac_number=None):
     """ Prints information about a user defined fracture to screen
 
-    Paramters
+    Parameters
     ----------------
         self : DFN object
 
@@ -90,25 +83,25 @@ def add_user_fract_from_file(self,
                              permeability=None):
     """ Sets up paths for fractures defined in user input file
 
-    Paramters
+    Parameters
     ----------------
         filename : string
             path to source file
 
         shape: string
-            The shape of the fracture options are 'rect', 'ell', and 'poly' - Required
+            Options are 'rect', 'ell', and 'poly' - Required. The shape of the fracture.
 
         by_coord : boolean
-            True / False of file format for coordinate or general input
+            True / False  File format for coordinate (True) or general input(False).
 
         permeability : float
-            Permeability of the fracture 
+            Permeability of the fracture. 
 
         transmissivity : float
-            Fracture Tramsmissivity
+            Fracture Tramsmissivity.
 
         aperture : float
-            Hydraulic aperture of the fracture
+            Hydraulic aperture of the fracture.
 
     Returns
     ---------------
@@ -176,39 +169,39 @@ def add_user_fract(self,
                    transmissivity=None,
                    aperture=None):
     """
-    Specifies user defined fracture parameters for the DFN.
+    Specifies parameters for a user defined fracture in the DFN.
     
     Parameters
     -------------
         shape: string
-            The desired shape of the fracture options are 'rect', 'ell', and 'poly' - Required
+            The options are 'rect', 'ell', and 'poly' - Required. Defines the shape of the fracture
         
         radii : float
             1/2 size of the fracture in meters - Required
 
         translation : list of floats [3]
-            Fracture center
+            Defines the coordinates of the fracture center.
 
         filename: string
             The name of the user defined fracture file. Default is user_defined_{shape}.dat
         
         aspect_ratio : float
-            Fracture aspect ratio
+            Fracture aspect ratio.
 
         beta : float
-            Rotation angle around center of the fracture
+            Rotation angle around center of the fracture.
 
         angle_option : string
-            Angle option 'degree' or 'radian'. Default is degree
+            Options are 'degree' or 'radian'. Default is degree
 
         orientation_option : string
-            Choice of fracture orienation  'normal', 'trend_plunge', 'dip_strike'
+            Options are 'normal', 'trend_plunge', 'dip_strike'. Choice of fracture orientation.
 
         normal_vector : list [3]
-            normal vector of the fracture
+            Normal vector of the fracture.
 
         trend_plunge : list [2]
-            trend and plunge of the fracture 
+            Trend and plunge of the fracture. 
 
         dip_strike : list [2]
             dip and strike of the fracture
@@ -217,13 +210,13 @@ def add_user_fract(self,
             Number of vertices on the fracture boundary. 
 
         permeability : float
-            Permeability of the fracture 
+            Permeability of the fracture. 
 
         transmissivity : float
-            Fracture Tramsmissivity
+            Fracture Tramsmissivity.
 
         aperture : float
-            Hydraulic aperture of the fracture
+            Hydraulic aperture of the fracture.
         
     Returns 
     ---------

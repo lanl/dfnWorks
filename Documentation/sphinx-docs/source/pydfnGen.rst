@@ -8,13 +8,8 @@ DFN Class functions used in network generation and meshing
 dfnGen
 -------
 
-Processing generator input
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.generation.input_checking
-    :members: check_input
-
-Processing generator input
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adding in Fracture Families
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.input_checking
     :members: add_fracture_family
 
@@ -42,19 +37,70 @@ Example:
                         })
 
 
+Adding in User Fractures
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Running the generator
+.. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
+    :members: add_user_fract
+
+
+
+Example:
+
+.. code-block:: python
+
+    DFN.add_user_fract(shape='ell',
+                   radii=.4,
+                   aspect_ratio=1,
+                   translation=[0.2, 0, 0.2],
+                   normal_vector=[0, 0, 1],
+                   number_of_vertices=8,
+                   aperture=1.0e-5)
+
+Adding in User Fractures From a File
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   
+.. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
+    :members: add_user_fract_from_file
+
+Example:
+
+.. code-block:: python
+
+    DFN.add_user_fract_from_file(shape="poly",
+                   filename = f'{src_path}/polygons.dat',
+                   permeability = 1e-12)
+
+
+Print Parameter Information
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Note: Some of these functions are automatically called when processing the input.
+
+.. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
+    :members: print_user_fracture_information
+
+.. automodule:: pydfnworks.dfnGen.generation.input_checking
+    :members: print_domain_parameters, print_family_information
+
+Processing Generator Input
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: pydfnworks.dfnGen.generation.input_checking
+    :members: check_input
+    
+Running the Generator
 ^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.generator
-    :members: dfn_gen, make_working_directory, create_network
+    :members: dfn_gen, make_working_directory, create_network, grab_polygon_data
 
-Analysis of generated DFN 
+Analysis of Generated DFN 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.output_report.gen_output
     :members: output_report
 
-Modification of hydraulic properties of the DFN 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Additional Information on the Modification of Hydraulic Properties of the DFN 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Hydraulic properties can be assigned to fractures based on four different models. One can assign hydraulic aperture :math:`b`, permeability, :math:`k`, or transmissivity :math:`T`. Below we present the functions for hydraulic aperture, but the equations for other values are the same.
 
@@ -89,8 +135,12 @@ The fourth model represents an assumption that in addition to no relationship be
 
 The keyword for this model is constant.
 
-.. automodule:: pydfnworks.dfnGen.generation.hydraulic_properties
-    :members: generate_hydraulic_values
+Notes:
+
+See Hyman et al. 2016 “Fracture size and transmissivity correlations: Implications for transport simulations in sparse three-dimensional discrete fracture networks following a truncated power law distribution of fracture size” Water Resources Research for more details
+
+Changes in hydraulic properties are assigned when defining a fracture family or user defined fracture. User defined fractures currently only support constant hydraulic properties.
+
 
 Modification of hydraulic properties of the DFN based on background stress field
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -131,4 +181,4 @@ Creating an upscaled mesh of the DFN
 .. automodule:: pydfnworks.dfnGen.meshing.udfm.false_connections
     :members: check_false_connections
 
-    
+

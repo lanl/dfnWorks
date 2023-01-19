@@ -26,7 +26,6 @@ sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/'))
 import pydfnworks
 latex_additional_files = ['dfnworks_logo.png']
 
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -39,7 +38,9 @@ latex_additional_files = ['dfnworks_logo.png']
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',
     'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode']
+    'sphinx.ext.viewcode',
+    'sphinx.ext.imgmath']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
