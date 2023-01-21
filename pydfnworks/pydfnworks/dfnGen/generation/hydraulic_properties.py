@@ -392,6 +392,7 @@ def constant(params, variable, number_of_fractures):
 
 
 def dump_aperture(self, filename, format=None):
+
     if format is None:
         np.savetxt(filename, self.aperture)
     elif format == "fehm":
@@ -417,6 +418,7 @@ def dump_perm(self, filename, format=None):
 
 
 def dump_transmissivity(self, filename, format=None):
+
     if format is None:
         np.savetxt(filename, self.transmissivity)
     elif format == "fehm":
@@ -442,7 +444,7 @@ def dump_fracture_info(self, filename):
     print("--> Complete")
 
 
-def dump_hydraulic_values(self, prefix=None):
+def dump_hydraulic_values(self, prefix=None, format = None,):
     """ Writes variable information to files.  
     
     Parameters
@@ -464,21 +466,25 @@ def dump_hydraulic_values(self, prefix=None):
     ----------
     """
     print("--> Dumping values to files")
+    if not prefix:
+        print(f"--> Using prefix {prefix}")
+    if not format:
+        print(f"--> Using format : {format}")
     # Write out new aperture.dat
     if prefix is not None:
         aper_filename = prefix + '_aperture.dat'
         perm_filename = prefix + '_perm.dat'
         trans_filename = prefix + '_transmissivity.dat'
-        frac_info_filename = prefix + '_fracture_info.dat'
+        frac_info_filename = "dfnGen_output/" + prefix + '_fracture_info.dat'
     else:
         aper_filename = "aperture.dat"
         perm_filename = "perm.dat"
         trans_filename = "transmissivity.dat"
         frac_info_filename = "dfnGen_output/fracture_info.dat"
 
-    self.dump_aperture(aper_filename)
-    self.dump_perm(perm_filename)
-    self.dump_transmissivity(trans_filename)
+    self.dump_aperture(aper_filename, format)
+    self.dump_perm(perm_filename, format)
+    self.dump_transmissivity(trans_filename, format)
     self.dump_fracture_info(frac_info_filename)
 
 
