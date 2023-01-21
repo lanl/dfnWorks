@@ -59,6 +59,7 @@ END
 #=========================== output options ===================================
 OUTPUT
 #  FORMAT TECPLOT BLOCK
+  ACKNOWLEDGE_VTK_FLAW
   PRINT_PRIMAL_GRID
   FORMAT VTK
   MASS_FLOWRATE
@@ -72,8 +73,8 @@ END
 #=========================== times ============================================
 TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 s
-  FINAL_TIME 1.d2 d
-  MAXIMUM_TIMESTEP_SIZE 1.d1 d
+  FINAL_TIME 1000.d2 d
+  MAXIMUM_TIMESTEP_SIZE 10.d5 d
 END
 
 # REFERENCE_PRESSURE 1500000.
@@ -142,4 +143,5 @@ STRATA
 END
 
 END_SUBSURFACE
+
 
