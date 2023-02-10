@@ -34,9 +34,9 @@ Type: string
 
 Example:
 
-.. code-block:: c
+.. code-block:: python
 
-    UserEll_Input_File_Path: /dfnWorks/examples/user_polygons/polygons.dat     
+    DFN.params['UserEll_Input_File_Path']['value'] = '/dfnWorks/examples/user_polygons/polygons.dat'     
 
 
     

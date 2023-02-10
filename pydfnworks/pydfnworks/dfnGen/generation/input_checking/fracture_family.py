@@ -290,22 +290,22 @@ def add_fracture_family(self,
             Angle of constant rotation. Used if beta_distribution = 1. default = 0
         
         theta : float 
-            Use if orientationOption = 0 (default). With phi defines the mean orientation of a fracture family. default = None
+            If used automatically sets orientationOption = 0 (default). With phi defines the mean orientation of a fracture family. default = None
         
         phi : float
-            Use if orientationOption = 0 (default). default = None
+            If used automatically sets orientationOption = 0 (default). default = None
         
         trend : float 
-            Use if orientationOption = 1. With plunge defines the mean orientation of a fracture family. default = None
+            If used automatically sets orientationOption = 1. With plunge defines the mean orientation of a fracture family. default = None
         
         plunge : float
-            Use if orientationOption = 1. default = None
+            If used automatically sets orientationOption = 1. default = None
         
         dip : float 
-            Use if orientationOption = 2. With strike defines the mean orientation of a fracture family. default = None
+            If used automatically sets orientationOption = 2. With strike defines the mean orientation of a fracture family. default = None
         
         strike : float 
-            Use if orientationOption = 2. default = None
+            If used automatically sets orientationOption = 2. default = None
         
         alpha : float 
             Parameter for 'tpl' distribution. default = None

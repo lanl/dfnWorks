@@ -8,7 +8,7 @@ DFN Class functions used in network generation and meshing
 dfnGen
 -------
 
-Adding in Fracture Families
+Adding Fracture Families
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.input_checking
     :members: add_fracture_family
@@ -37,7 +37,7 @@ Example:
                         })
 
 
-Adding in User Fractures
+Adding User Fractures
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
@@ -57,7 +57,7 @@ Example:
                    number_of_vertices=8,
                    aperture=1.0e-5)
 
-Adding in User Fractures From a File
+Adding User Fractures From a File
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                    
 .. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions

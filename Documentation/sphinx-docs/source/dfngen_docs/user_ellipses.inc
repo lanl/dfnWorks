@@ -18,15 +18,15 @@ Type: boolean (0/1)
 
 UserEll_Input_File_Path
 ------------------------
-Description: Filepath for general user defined ellipses
+Description: Filepath for general user defined ellipses. 
 
 Type: string
 
 Example:
 
-.. code-block:: c
+.. code-block:: python
 
-    UserEll_Input_File_Path: /dfnWorks/examples/4_user_ell_uniform/define_4_user_ellipses.dat     
+    DFN.params['UserEll_Input_Filepath']['value'] = '/dfnWorks/examples/4_user_ell_uniform/define_4_user_ellipses.dat'     
 
 ----
 
@@ -108,8 +108,8 @@ Example:
 ----
 
 
-AngleOption
-^^^^^^^^^^^^^^^^
+AngleOption (User Defined Fracture)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Description: Selection of Radius / Degrees
 
 Type: boolean
@@ -230,7 +230,7 @@ Example:
     {45, 90} // Fracture 1 has a trend of 45 and plunge of 90
     {0, 37} // Fracture 2 has a trend of 0 and plunge of 37
 
-.. warning:: :ref:`AngleOption` must be set to degrees
+.. warning:: :ref:`AngleOption (User Defined Fracture)` must be set to degrees
 
     
 ----
@@ -250,7 +250,7 @@ Example:
     {45, 90} // Fracture 1 has a dip of 45 and strike of 90
     {0, 37} // Fracture 2 has a dip of 0 and strike of 37
 
-.. warning:: :ref:`AngleOption` must be set to degrees
+.. warning:: :ref:`AngleOption (User Defined Fracture)` must be set to degrees
 
 
     
@@ -375,9 +375,9 @@ Type: string
 
 Example:
 
-.. code-block:: c
+.. code-block:: python
 
-    EllByCoord_Input_File_Path: /dfnWorks/example/4_user_ell/ellCoords.dat
+    DFN.params['EllByCoord_Input_File_Path']['value'] = '/dfnWorks/example/4_user_ell/ellCoords.dat'
 
 
     

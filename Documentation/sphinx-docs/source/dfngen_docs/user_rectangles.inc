@@ -26,9 +26,9 @@ Type: string
 
 Example:
 
-.. code-block:: c
+.. code-block:: python
 
-    UserRect_Input_File_Path: /dfnWorks/examples/4_user_rects/define_4_user_rects.dat     
+    DFN.params['UserRect_Input_File_Path']['value'] = '/dfnWorks/examples/4_user_rects/define_4_user_rects.dat'     
 
 
     
@@ -61,7 +61,7 @@ Additional parameters have the same definitions as for user defined ellipses:
 
 * :ref:`Radii`
 * :ref:`Aspect_Ratio`
-* :ref:`AngleOption`
+* :ref:`AngleOption (User Defined Fracture)`
 * :ref:`Beta`
 * :ref:`Translation`
 * :ref:`userOrientationOption`
@@ -179,9 +179,9 @@ Type: string
 
 Example:
 
-.. code-block:: c
+.. code-block:: python
 
-    RectByCoord_Input_File_Path: /dfnWorks/example/4_user_rect/rectCoords.dat
+    DFN.params['RectByCoord_Input_File_Path']['value'] = '/dfnWorks/example/4_user_rect/rectCoords.dat'
 
 
     
