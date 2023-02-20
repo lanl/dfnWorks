@@ -8,7 +8,8 @@
 from pydfnworks import *
 import os
 import networkx as nx 
-jobname = os.getcwd() + "/output"
+jobname = os.getcwd() + "/output_prune"
+path = os.getcwd()
 
 DFN = DFNWORKS(jobname,
                ncpu=8)
@@ -61,8 +62,10 @@ G = DFN.create_graph("fracture", "left", "right")
 # Plot the graph based on the DFN
 DFN.plot_graph(G,output_name="full_dfn")
 # Isolate the 2-Core of the graph
-H = nx.k_core(G,2)
+H = DFN.k_shortest_paths_backbone(G,1, 's', 't')
+
+# H = nx.k_core(G,2)
 # Dump out fractures in the 2-Core
-DFN.dump_fractures(H,"2_core.dat")
+DFN.dump_fractures(H,"backbone.dat")
 # plot the 2 core of the graph
 DFN.plot_graph(H,output_name="dfn_2_core")
