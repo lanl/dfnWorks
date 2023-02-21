@@ -246,36 +246,38 @@ def clean_up_files_after_prune(self):
         os.unlink('poly_info.dat')
     except:
         pass
-    f = open('dfnGen_output/poly_info.dat', 'w')
-    for i in range(num_frac):
-        f.write('%d %d %f %f %f %d %f %f %d\n' %
-                (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
-                 poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
-                 poly_info[i, 7], poly_info[i, 8]))
-    f.close()
+
+    with open('poly_info.dat', 'w') as fp:
+        for i in range(num_frac):
+            fp.write('%d %d %f %f %f %d %f %f %d\n' %
+                    (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
+                    poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
+                    poly_info[i, 7], poly_info[i, 8]))
+    self.poly_info = poly_info
+
     print("--> Complete")
 
-    print("--> Editing perm.dat file")
-    perm = self.perm  #np.genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
-    f = open('perm.dat', 'w+')
-    f.write('permeability\n')
-    for i in range(num_frac):
-        f.write('-%d 0 0 %e %e %e\n' % (7 + i, perm[i], perm[i], perm[i]))
-    f.close()
-    print("--> Complete")
+    # print("--> Editing perm.dat file")
+    # perm = self.perm  #np.genfromtxt(self.path + 'perm.dat', skip_header=1)[keep_list - 1, -1]
+    # f = open('perm.dat', 'w+')
+    # f.write('permeability\n')
+    # for i in range(num_frac):
+    #     f.write('-%d 0 0 %e %e %e\n' % (7 + i, perm[i], perm[i], perm[i]))
+    # f.close()
+    # print("--> Complete")
 
-    print("--> Editing aperture.dat file")
-    aperture = self.aperture  #np.genfromtxt(self.path + 'aperture.dat', skip_header=1)[keep_list - 1, -1]
-    f = open('aperture.dat', 'w+')
-    f.write('aperture\n')
-    for i in range(num_frac):
-        f.write('-%d 0 0 %e \n' % (7 + i, aperture[i]))
-    f.close()
-    print("--> Complete")
+    # print("--> Editing aperture.dat file")
+    # aperture = self.aperture  #np.genfromtxt(self.path + 'aperture.dat', skip_header=1)[keep_list - 1, -1]
+    # f = open('aperture.dat', 'w+')
+    # f.write('aperture\n')
+    # for i in range(num_frac):
+    #     f.write('-%d 0 0 %e \n' % (7 + i, aperture[i]))
+    # f.close()
+    # print("--> Complete")
 
     print("--> Editing radii_Final.dat file")
-    fin = open(self.path + 'radii_Final.dat')
-    fout = open('radii_Final.dat', 'w')
+    fin = open(self.path + 'dfnGen_output/radii_Final.dat')
+    fout = open('dfnGen_output/radii_Final.dat', 'w')
     # copy header
     line = fin.readline()
     fout.write(line)
@@ -292,8 +294,8 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing normal_vectors.dat file")
-    fin = open(self.path + 'normal_vectors.dat')
-    fout = open('normal_vectors.dat', 'w')
+    fin = open(self.path + 'dfnGen_output/normal_vectors.dat')
+    fout = open('dfnGen_output/normal_vectors.dat', 'w')
     # copy header
     normal_vect = self.normal_vectors[
         keep_list -
@@ -305,8 +307,8 @@ def clean_up_files_after_prune(self):
     print("--> Complete")
 
     print("--> Editing translations.dat file")
-    fin = open(self.path + 'translations.dat')
-    fout = open('translations.dat', 'w')
+    fin = open(self.path + 'dfnGen_output/translations.dat')
+    fout = open('dfnGen_output/translations.dat', 'w')
     # copy header
     line = fin.readline()
     fout.write(line)
@@ -320,7 +322,51 @@ def clean_up_files_after_prune(self):
     for i in range(num_frac):
         fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
     fout.close()
+
     print("--> Complete")
+
+    print("--> Editing translations.dat file")
+    with open(self.path + 'dfnGen_output/translations.dat', 'r') as fin:
+        with open('dfnGen_output/translations.dat', 'w') as fout:
+            # copy header
+            line = fin.readline()
+            fout.write(line)
+            points = []
+            for line in fin.readlines():
+                tmp = line.split(' ')
+                if tmp[-1] != 'R':
+                    points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
+            points = np.asarray(points)
+            points = points[keep_list - 1, :]
+            for i in range(num_frac):
+                fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
+
+
+    fout = open('dfnGen_output/surface_area_Final.dat', 'w')
+    fout.write('Fracture Surface Area After Isolated Fracture and Cluster Removal')
+    # copy header
+    surface_area = self.surface_area[
+        keep_list -
+        1] 
+    for i in range(num_frac):
+        fout.write(f'{surface_area[i]}\n')
+    fout.close()
+    print("--> Complete")
+
+    print("--> Editing polygons.dat file")
+    with open(self.path + 'dfnGen_output/polygons.dat', 'r') as fin:
+        header = fin.readline()
+        data = fin.read().strip()
+        with open('dfnGen_output/polygons.dat', 'w') as fout:
+            # new header
+            fout.write(f'nPolygons: {self.num_frac}')
+            for fracture, line in enumerate(data.split('\n')):
+                if fracture - 1 in keep_list:
+                    fout.write(line + "\n")
+
+    self.families = self.families[keep_list - 1]
+    self.perm = self.perm[keep_list - 1]
+    self.aperture = self.aperture[keep_list - 1]
 
     print("--> Editing Fracture Files Complete")
 
@@ -345,23 +391,21 @@ def create_mesh_links(self, path):
     '''
     import os.path
     from shutil import rmtree
-    print("--> Creating links for meshing from %s" % path)
+    print(f"--> Creating links for meshing from {path}")
     files = [
-        'params.txt', 'poly_info.dat', 'connectivity.dat', 'left.dat',
-        'right.dat', 'front.dat', 'back.dat', 'top.dat', 'bottom.dat', 'polys',
-        'intersections', 'aperture.dat', 'perm.dat'
+        'params.txt', 'poly_info.dat', 'polys','intersections', 'dfnGen_output/connectivity.dat', 'dfnGen_output/left.dat','dfnGen_output/right.dat', 'dfnGen_output/front.dat', 'dfnGen_output/back.dat', 'dfnGen_output/top.dat', 'dfnGen_output/fracture_info.dat', 'dfnGen_output/intersection_list.dat','dfnGen_output/bottom.dat', 
     ]
-    for f in files:
-        if os.path.isfile(f) or os.path.isdir(f):
-            print("Removing %s" % f)
+    for filename in files:
+        if os.path.isfile(filename) or os.path.isdir(filename):
+            print(f"Removing {filename}")
             try:
-                rmtree(f)
+                rmtree(filename)
             except:
-                print("Unable to remove %s" % f)
+                print(f"Unable to remove {filename}")
         try:
-            os.symlink(path + f, f)
+            os.symlink(path + filename, filename)
         except:
-            print("Unable to make link for %s" % f)
+            print(f"Unable to make link for {filename}")
             pass
     print("--> Complete")
 
