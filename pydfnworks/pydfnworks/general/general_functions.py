@@ -175,9 +175,8 @@ def to_pickle(self,filename = None):
         else:
             print("Unknown Response. {response}.\nNot writting file.")
     else:
-        pickle.dump( self, open( pickle_filename, "wb" ) )
+        pickle.dump(self, open( pickle_filename, "wb" ) )
         print(f'--> Pickling DFN object to {pickle_filename} : Complete')
-
 
 def from_pickle(self, filename):
     """ Loads the DFN object from a pickle format
@@ -194,10 +193,12 @@ def from_pickle(self, filename):
 
     Notes
     ------------
-        You need to load an empty DFN = DFNWORKS() first, then run this function. 
+        Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle 
-    DFN = pickle.load( open( filename, "rb" ) )
-    return DFN 
+    tmp = pickle.load( open( filename, "rb" ) ) 
+    self.__dict__ = tmp.__dict__.copy()
+
+
 
     
