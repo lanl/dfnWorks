@@ -173,23 +173,31 @@ class DFNWORKS():
                  num_nodes=None,
                  mesh_type='dfn',
                  cell_based_aperture=False,
-                 store_polygon_data=True):
+                 store_polygon_data=True,
+                 pickle_file = None):
         
-        try:
-            os.remove('dfnWorks.log') #Remove the old log file
-            print("Creating New Log File (dfnWorks.log)")
-            print("")
-        except:
-            print("Creating New Log File (dfnWorks.log)")
-            print("")
+        ## check is define_paths has been run yet
+        if not 'dfnworks_PATH' in os.environ:
+                define_paths()
+                legal()
 
+        # try:
+        #     os.remove('dfnWorks.log') #Remove the old log file
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
+        # except:
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
         print("\n--> Creating DFN Object: Starting")
+        self.ncpu = ncpu
+    
+        if pickle_file:
+            print(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.from_pickle(pickle_file)
 
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-
-        self.ncpu = ncpu
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -225,10 +233,7 @@ class DFNWORKS():
 
         self.params, self.mandatory_params = load_parameters()
 
-        ## check is define_paths has been run yet
-        if not 'dfnworks_PATH' in os.environ:
-            define_paths()
-            legal()
+
 
         # if logging:
         #     print("--> Writting output to log file.")
@@ -236,9 +241,9 @@ class DFNWORKS():
         #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
         #             format="%(asctime)s %(message)s")
 
+
         self.start_time = time()
         self.print_parameters()
-
         print("\n--> Creating DFN Object: Complete")
 
 
