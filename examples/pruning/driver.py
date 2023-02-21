@@ -8,6 +8,7 @@
 from pydfnworks import *
 import os
 import networkx as nx 
+home = os.getcwd() 
 jobname = os.getcwd() + "/output_prune"
 dfnflow_file = os.getcwd() + "/dfn_explicit.in"
 
@@ -62,12 +63,40 @@ G = DFN.create_graph("fracture", "left", "right")
 DFN.plot_graph(G,output_name="full_dfn")
 # Isolate the 2-Core of the graph
 H = DFN.k_shortest_paths_backbone(G,1, 's', 't')
-
-# H = nx.k_core(G,2)
-# Dump out fractures in the 2-Core
 DFN.dump_fractures(H,"backbone.dat")
+DFN.plot_graph(H,output_name="backbone")
+
+
+H = nx.k_core(G,2)
+# Dump out fractures in the 2-Core
+DFN.dump_fractures(H,"2-core.dat")
 # plot the 2 core of the graph
 DFN.plot_graph(H,output_name="dfn_2_core")
 DFN.to_pickle()
+
+## Create a second DFN object for the backbone 
+os.chdir(home)
+jobname = os.getcwd() + "/output_backbone/"
+src_path = os.getcwd() + '/output_prune/' 
+BACKBONE = DFNWORKS( jobname = jobname, 
+                    pickle_file = src_path + 'output_prune.pkl')
+BACKBONE.prune_file = src_path + "/backbone.dat"
+BACKBONE.path = src_path 
+BACKBONE.make_working_directory(delete = True)
+BACKBONE.mesh_network(prune=True)
+BACKBONE.dfn_flow()
+
+
+os.chdir(home)
+jobname = os.getcwd() + "/output_2-core/"
+src_path = os.getcwd() + '/output_prune/' 
+CORE = DFNWORKS( jobname = jobname, 
+                    pickle_file = src_path + 'output_prune.pkl')
+CORE.prune_file = src_path + "/2-core.dat"
+CORE.path = src_path 
+CORE.make_working_directory(delete = True)
+CORE.mesh_network(prune=True)
+CORE.dfn_flow()
+
 
 
