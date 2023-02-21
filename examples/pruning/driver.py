@@ -9,9 +9,9 @@ from pydfnworks import *
 import os
 import networkx as nx 
 jobname = os.getcwd() + "/output_prune"
-path = os.getcwd()
+dfnflow_file = os.getcwd() + "/dfn_explicit.in"
 
-DFN = DFNWORKS(jobname,
+DFN = DFNWORKS(jobname,dfnFlow_file = dfnflow_file,
                ncpu=8)
 
 DFN.params['domainSize']['value'] = [25, 25, 25]
@@ -19,7 +19,6 @@ DFN.params['h']['value'] = 0.1
 DFN.params['domainSizeIncrease']['value'] = [.5,.5,.5]
 DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
-
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -69,3 +68,6 @@ H = DFN.k_shortest_paths_backbone(G,1, 's', 't')
 DFN.dump_fractures(H,"backbone.dat")
 # plot the 2 core of the graph
 DFN.plot_graph(H,output_name="dfn_2_core")
+DFN.to_pickle()
+
+

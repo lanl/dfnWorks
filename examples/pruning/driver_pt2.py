@@ -1,30 +1,15 @@
-#"""
-#   :synopsis: Driver run file for TPL example
-#   :version: 2.0
-#   :maintainer: Jeffrey Hyman
-#.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-#"""
-
 from pydfnworks import *
-import os
+import os 
 
-jobname = os.getcwd() + "/output"
+jobname = os.getcwd() + "/output_backbone/"
+src_path = os.getcwd() + '/output_prune/' 
+BACKBONE = DFNWORKS( jobname = jobname, 
+                    pickle_file = src_path + 'output_prune.pkl')
+BACKBONE.prune_file = src_path + "/backbone.dat"
+BACKBONE.path = src_path 
+BACKBONE.make_working_directory()
+BACKBONE.mesh_network(prune=True)
+# ## need to fix families -> aperture and perm. 
+BACKBONE.dfn_flow()
 
-DFN = DFNWORKS(jobname,
-               ncpu=8)
-
-DFN.params['domainSize']['value'] = [25, 25, 25]
-DFN.params['h']['value'] = 0.1
-DFN.params['domainSizeIncrease']['value'] = [.5,.5,.5]
-DFN.params['keepOnlyLargestCluster']['value'] = True
-DFN.params['ignoreBoundaryFaces']['value'] = False
-DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
-
-
-DFN.make_working_directory(delete=True)
-DFN.mesh_network(prune=True)
-
-# run flow and transport on the 2-Core DFN
-DFN.dfn_flow()
-DFN.dfn_trans()
-
+print(BACKBONE.perm)
