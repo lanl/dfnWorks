@@ -43,74 +43,6 @@ class DFNWORKS():
         * freeze: indicates whether the class attributes can be modified
         * h : FRAM length scale 
     '''
-    ## Class variable
-    # Path to working directory (Default is <current working directory>/output)
-    jobname = os.getcwd() + os.sep + "output"
-    
-    # Name of working directory (just the last piece of jobname)
-    local_jobname = "output"
-    # name of dfnGen file
-    dfnGen_file = str
-    local_dfnGen_file = str
-    # Name of flow solver, PFLOTRAN / FEHM
-    # Default is PFLOTRAN
-    flow_solver = "PFLOTRAN"
-    # name of dfnFlow file (PFLTORAN or FEHM)
-    dfnFlow_file = str
-    local_dfnFlow_file = str
-    # name of dfnTrans file
-    dfnTrans_file = str
-    local_dfnTrans_file = str
-
-    # linking ultility
-    path = str
-
-    # logging function 
-    logging = False
-
-    # pruning filename
-    prune_file = str
-
-    # mesh names (should be changed to *_filename, someday.
-    inp_file = str
-    uge_file = str
-    vtk_file = str
-    stor_file = str
-    # Number of processors (Default is 4)
-    ncpu = 4
-
-    # Aperture information.
-    cell_based_aperture = bool
-    aper_cell_file = 'aper_node.dat'
-    perm_cell_file = 'perm_node.dat'
-    aper_file = 'aperture.dat'
-    perm_file = 'perm.dat'
-
-    num_frac = int
-    h = float
-    visual_mode = bool
-    dudded_points = int
-    domain = {'x': 0, 'y': 0, 'z': 0}
-    x_min = float
-    x_max = float 
-    y_min = float
-    y_max = float 
-    z_min = float
-    z_max = float 
-
-    params = dict
-    mandatory_params = dict
-    fracture_families = []
-    user_ell_params = []
-    user_rect_params = []
-    user_poly_params = []
-    
-    store_polygon_data = bool 
-    polygons = dict
-    
-    # mesh information
-    num_nodes = int
-    material_ids = float
 
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
@@ -189,6 +121,10 @@ class DFNWORKS():
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
 
+        else:
+            self.jobname = os.getcwd() + os.sep + "output"
+            self.local_jobname = "output"
+
         self.ncpu = ncpu
 
         if dfnGen_file:
@@ -207,6 +143,36 @@ class DFNWORKS():
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
+
+
+        self.ncpu = ncpu
+
+        self.aper_cell_file = 'aper_node.dat'
+        self.perm_cell_file = 'perm_node.dat'
+        self.aper_file = 'aperture.dat'
+        self.perm_file = 'perm.dat'
+
+        self.num_frac = int
+        self.h = float
+        self.visual_mode = bool
+        self.dudded_points = int
+        self.domain = {'x': 0, 'y': 0, 'z': 0}
+        self.x_min = float
+        self.x_max = float
+        self.y_min = float
+        self.y_max = float
+        self.z_min = float
+        self.z_max = float
+
+        self.fracture_families = []
+        self.user_ell_params = []
+        self.user_rect_params = []
+        self.user_poly_params = []
+
+        self.polygons = dict
+
+        self.material_ids = float
+
 
         self.num_nodes = num_nodes
         self.vtk_file = vtk_file
