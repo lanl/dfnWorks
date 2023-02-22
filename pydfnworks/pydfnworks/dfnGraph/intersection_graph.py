@@ -1,4 +1,3 @@
-from tkinter import W
 import networkx as nx
 import numpy as np
 import json
