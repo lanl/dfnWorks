@@ -1,4 +1,4 @@
-CC=gcc-11
+CC=gcc
 
 CFLAGS =  -lm -Wall -g -O3
 
