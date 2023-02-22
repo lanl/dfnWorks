@@ -12,6 +12,7 @@ Adding Fracture Families
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.input_checking
     :members: add_fracture_family
+    :noindex:
 
 Example:
 
@@ -42,8 +43,7 @@ Adding User Fractures
 
 .. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
     :members: add_user_fract
-
-
+    :noindex:
 
 Example:
 
@@ -62,6 +62,7 @@ Adding User Fractures From a File
                    
 .. automodule:: pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions
     :members: add_user_fract_from_file
+    :noindex:
 
 Example:
 
@@ -88,7 +89,8 @@ Processing Generator Input
 
 .. automodule:: pydfnworks.dfnGen.generation.input_checking
     :members: check_input
-    
+    :noindex:
+     
 Running the Generator
 ^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.generation.generator

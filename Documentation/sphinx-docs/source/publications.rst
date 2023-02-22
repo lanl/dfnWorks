@@ -102,7 +102,7 @@ The following are publications that use *dfnWorks*:
 
 #. `\S. Srinivasan, D. O’Malley, J. D. Hyman, s. Karra, H. S. Viswanathan, and G. Srinivasan Transient flow modeling in fractured media using graphs. (2020) Physical Review E.  <https://journals.aps.org/pre/accepted/c6078R6bFb11881299011174b59f5a96a29a879a7#abstract>`_.
 
-#. `\Liangchao Zou and Vladimir Cvetkovic. Inference of Transmissivity in Crystalline Rock Using Flow Logs Under Steady‐State Pumping: Impact of Multiscale Heterogeneity. Water Resources Research (2020) <https://doi.org/10.1029/2020WR027254>`_.
+#. `\Liangchao Zou and Vladimir Cvetkovic. Inference of Transmissivity in Crystalline Rock Using Flow Logs Under Steady‐State Pumping: Impact of Multiscale Heterogeneity. Water Resources Research (2020) <https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2020WR027254>`_.
 
 #. `\P. K. Kang, J. D. Hyman, W. S. Han, & M. Dentz, Anomalous Transport in Three‐Dimensional Discrete Fracture Networks: Interplay between Aperture Heterogeneity and Injection Modes. Water Resources Research (2020) <https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2020WR027378>`_.
 
@@ -115,7 +115,7 @@ The following are publications that use *dfnWorks*:
 
 #. `J. D. Hyman, M. R. Sweeney, L. P. Frash, J. W. Carey, and H. S. Viswanathan. Scale‐Bridging in Three‐Dimensional Fracture Networks: Characterizing the Effects of Variable Fracture Apertures on Network‐Scale Flow Channelization. Geophysical Research Letters (2021) <https://doi.org/10.1029/2021GL094400>`_.
 
-#. `Liangchao Zou and Vladimir Cvetkovic. Evaluation of Flow‐Log Data From Crystalline Rocks With Steady‐State Pumping and Ambient Flow. Geophysical Research Letters (2021) < https://doi.org/10.1029/2021GL092741>`_.
+#. `Liangchao Zou and Vladimir Cvetkovic. Evaluation of Flow‐Log Data From Crystalline Rocks With Steady‐State Pumping and Ambient Flow. Geophysical Research Letters (2021) <https://doi.org/10.1029/2021GL092741>`_.
 
 #. `H. Ushijima-Mwesigwa, J. D. Hyman, A. Hagberg, I. Safro, S. Karra, C. W. Gable, M. R. Sweeney, and G. Srinivasan. Multilevel graph partitioning for three-dimensional discrete fracture network flow simulations. Mathematical Geosciences (2021) <https://link.springer.com/article/10.1007/s11004-021-09944-y>`_.
 

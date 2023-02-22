@@ -1,29 +1,18 @@
 .. _output-chapter:
 
-Output files
+Run Files
 =============
 
-dfnWorks outputs about a hundred different output files. This section describes the contents and purpose of each file.
+This section describes the contents and purpose of each file used in dfnWorks and their locations. 
 
-
-dfnGen 
---------
-
-**aperture.dat:**
-
-.. _aperture.dat:
+dfnGen - output
+------------------------
 
 **connectivity.dat:**
 
 .. _connectivity.dat:
 
 Fracture connection list. Each row corresponds to a single fracture. The integers in that row are the fractures that fracture intersects with. These are the non-zero elements of the adjacency matrix. 
-
-**convert_uge_params.txt:**
-
-.. _convert_uge_params.txt:
-
-Input file do conver_uge executable. 
 
 **DFN_output.txt:**
 
@@ -55,7 +44,6 @@ Abbreviated input file for DFN generator.
 
 Normal vector of each fracture in the network. 
 
-
 **params.txt:**
 
 .. _params.txt:
@@ -73,13 +61,6 @@ Fracture information output by DFNGen. Format: Fracture Number, Family number, r
 .. _user_rects.dat:
 
 User defined rectangle file. 
-
-
-**radii:**
-
-.. _radii:
-
-Subdirectory containing fracture radii information. 
 
 **radii.dat:**
 
@@ -100,7 +81,6 @@ Concatentated file of final radii in the DFN.
 .. _rejections.dat:
 
 Summary of rejection reasons. 
-
 
 **rejectsPerAttempt.dat:**
 
@@ -135,8 +115,8 @@ Warning file output by DFNGen.
 
 List of intersections between fractures. Format is fracture1 fracture2 x y z length. Negative numbers correspond to intersections with boundaries.
 
-LaGrit 
----------
+LaGrit - Output
+------------------
 
 **bound_zones.lgi:**
 
@@ -228,8 +208,8 @@ FEHM stor file. Information about cell volume and area.
 Function used by LaGriT for meshing. Defines coarsening gradient. 
 
 
-PFLOTRAN 
-----------
+PFLOTRAN - output 
+--------------------
 
 Fracture based aperture value for the DFN. Used to rescale volumes in full_mesh_vol_area.uge. 
 
@@ -338,69 +318,69 @@ Boundary file for right of the domain used by PFLOTRAN.
 
 Boundary file for top of the domain used by PFLOTRAN. 
 
-dfnTrans 
--------------
+.. dfnTrans  
+.. -------------
 
-**allboundaries.zone:**
+.. **allboundaries.zone:**
 
-.. _allboundaries.zone:
+.. .. _allboundaries.zone:
 
-Concatenated file of all zone files. 
+.. Concatenated file of all zone files. 
 
-**darcyvel.dat:**
+.. **darcyvel.dat:**
 
-.. _darcyvel.dat:
+.. .. _darcyvel.dat:
 
-Concatenated file of darcy velocities output by PFLOTRAN. 
+.. Concatenated file of darcy velocities output by PFLOTRAN. 
 
-**dfnTrans_output_dir:**
+.. **dfnTrans_output_dir:**
 
-.. _dfnTrans_output_dir:
+.. .. _dfnTrans_output_dir:
 
-Outpur directory from DFNTrans. Particle travel times, trajectories, and reconstructed Velocities are in this directory. 
+.. Outpur directory from DFNTrans. Particle travel times, trajectories, and reconstructed Velocities are in this directory. 
 
-**PTDFN_control.dat:**
+.. **PTDFN_control.dat:**
 
-.. _PTDFN_control.dat:
+.. .. _PTDFN_control.dat:
 
-Input file for DFNTrans. 
+.. Input file for DFNTrans. 
 
-**pboundary_back_n.zone:**
+.. **pboundary_back_n.zone:**
 
-.. _pboundary_back_s.zone:
+.. .. _pboundary_back_s.zone:
 
-Boundary zone file for the back of the domain. Normal vector (0,1,0) +- pi/2 
+.. Boundary zone file for the back of the domain. Normal vector (0,1,0) +- pi/2 
 
-**pboundary_bottom.zone:**
+.. **pboundary_bottom.zone:**
 
-.. _pboundary_bottom.zone:
+.. .. _pboundary_bottom.zone:
 
-Boundary zone file for the bottom of the domain. Normal vector (0,0,-1) +- pi/2 
+.. Boundary zone file for the bottom of the domain. Normal vector (0,0,-1) +- pi/2 
 
-**pboundary_front_s.zone:**
+.. **pboundary_front_s.zone:**
 
-.. _pboundary_front_n.zone:
+.. .. _pboundary_front_n.zone:
 
-Boundary zone file for the front of the domain. Normal vector (0,-1,0) +- pi/2 
-
-
-**pboundary_left_w.zone:**
-
-.. _pboundary_left_w.zone:
-
-Boundary zone file for the left side of the domain. Normal vector (-1,0,0) +- pi/2 
+.. Boundary zone file for the front of the domain. Normal vector (0,-1,0) +- pi/2 
 
 
-**pboundary_right_e.zone:**
+.. **pboundary_left_w.zone:**
 
-.. _pboundary_right_e.zone:
+.. .. _pboundary_left_w.zone:
+
+.. Boundary zone file for the left side of the domain. Normal vector (-1,0,0) +- pi/2 
 
 
-Boundary zone file for the bottom of the domain. Normal  vector (1,0,0) +- pi/2 
+.. **pboundary_right_e.zone:**
 
-**pboundary_top.zone:**
+.. .. _pboundary_right_e.zone:
 
-.. _pboundary_top.zone:
 
-Boundary zone file for the top of the domain. Normal vector (0,0,1) +- pi/2 
+.. Boundary zone file for the bottom of the domain. Normal  vector (1,0,0) +- pi/2 
+
+.. **pboundary_top.zone:**
+
+.. .. _pboundary_top.zone:
+
+.. Boundary zone file for the top of the domain. Normal vector (0,0,1) +- pi/2 
 

@@ -60,7 +60,18 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 Versions
 -------------------
-v2.
+
+v2.7
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Python based assignment of domain parameters, fracture families, user defined fractures
+- Interactive object interface
+- Updated for PFLOTRAN 4.0 compatability 
+- Additional bug fixes
+- Increased detail of warning and errors
+
+
+v2.6
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Hydraulic aperture of fracture based on background stress field
@@ -93,7 +104,7 @@ v2.3
 - Added PDF printing abilities
  
 
-v2.3
+v2.2
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 - pydfnWorks updated for python3
@@ -138,22 +149,23 @@ Contributors
 LANL
 ^^^^^^^
 - Jeffrey D. Hyman
-- Satish Karra
+- Matt Sweeney
 - Nataliia Makedonska
 - Carl Gable
 - Hari Viswanathan
-- Matt Sweeney
-- Shriram Srinivasan 
 - Aric Hagberg
-- Yu Chen
+- Shriram Srinivasan 
+- Aidan Stansberry 
 
 External
 ^^^^^^^^^^^^^^
+- Satish Karra (PNNL)
+- Scott Painter (ORNL)
 - Quan Bui (now at LLNL)
 - Jeremy Harrod (now at Spectra Logic)
-- Scott Painter (now at ORNL)
 - Thomas Sherman (University of Notre Dame)
 - Johannes Krotz  (Oregon State University)
+- Yu Chen 
 
 
 Copyright Information
