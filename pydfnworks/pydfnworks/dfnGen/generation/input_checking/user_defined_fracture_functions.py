@@ -4,7 +4,6 @@ from numpy import pi
 
 from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
 
-
 def check_angle_option(angle_option, array):
     for val in array:
         if angle_option == "radian":
