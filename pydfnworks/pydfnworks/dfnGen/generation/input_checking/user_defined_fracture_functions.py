@@ -28,7 +28,7 @@ def check_angle_option(angle_option, array):
 def print_user_fracture_information(self, shape, frac_number=None):
     """ Prints information about a user defined fracture to screen
 
-    Paramters
+    Parameters
     ----------------
         self : DFN object
 
@@ -89,7 +89,7 @@ def add_user_fract_from_file(self,
                              permeability=None):
     """ Sets up paths for fractures defined in user input file
 
-    Paramters
+    Parameters
     ----------------
         filename : string
             path to source file
