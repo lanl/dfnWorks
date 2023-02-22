@@ -19,7 +19,7 @@ ENV HTTP_PROXY=
 
 COPY . .
 
-# RUN ["pip3","install","matplotlib"]
+RUN ["pip3","install","mpmath"]
 # RUN ["pip3","install","fpdf"]
 # RUN ["pip3","install","rich"]
 # RUN ["pip3","install","seaborn"]
@@ -28,7 +28,7 @@ COPY . .
 
 
 WORKDIR $APP_PATH/pydfnworks/
-RUN ["python3","setup.py","install"]
+RUN ["python","setup.py","install"]
 WORKDIR $APP_PATH
 
 WORKDIR $APP_PATH/C_stor_correct
