@@ -13,11 +13,12 @@ MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
-ENV https_proxy=
-ENV http_proxy=
-ENV HTTPS_PROXY=
-ENV HTTP_PROXY=
+#ENV https_proxy=http://proxyout.lanl.gov:8080
+#ENV http_proxy=http_proxy=http://proxyout.lanl.gov:8080
+#ENV HTTPS_PROXY=http_proxy=http://proxyout.lanl.gov:8080
+#ENV HTTP_PROXY=http_proxy=http://proxyout.lanl.gov:8080
 
+RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 # 2. Add pre-required packages
 RUN ["apt-get","update","-y"]
 ENV DEBIAN_FRONTEND=noninteractive
