@@ -38,22 +38,24 @@ def edit_intersection_files(num_poly, fracture_list, path):
     """
     # Make list of connectivity.dat
     connectivity = []
-    fp = open("connectivity.dat", "r")
-    for i in range(num_poly):
-        tmp = []
-        line = fp.readline()
-        line = line.split()
-        for frac in line:
-            tmp.append(int(frac))
-        connectivity.append(tmp)
-    fp.close()
+    with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
+        for i in range(num_poly):
+            tmp = []
+            line = fp.readline()
+            line = line.split()
+            for frac in line:
+                tmp.append(int(frac))
+            connectivity.append(tmp)
 
     fractures_to_remove = list(
         set(range(1, num_poly + 1)) - set(fracture_list))
+    
     cwd = os.getcwd()
-    if os.path.exists('intersections'):
+    if os.path.isdir('intersections'):
         os.unlink('intersections')
         os.mkdir('intersections')
+    else:
+        os.mkdir('intersections') 
 
     os.chdir('intersections')
 
