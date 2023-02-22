@@ -186,6 +186,7 @@ class DFNWORKS():
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
+        self.logging = False
 
         self.store_polygon_data = store_polygon_data
 
