@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 29 09:17:14 2022
-
-@author: 369984
-"""
-
 import sys
 import os
 from numpy import pi
