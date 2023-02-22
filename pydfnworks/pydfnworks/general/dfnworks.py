@@ -20,6 +20,8 @@ from pydfnworks.general.legal import legal
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
+from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
+
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
@@ -79,7 +81,7 @@ class DFNWORKS():
     ncpu = 4
 
     # Aperture information.
-    cell_based_aperture = False
+    cell_based_aperture = bool
     aper_cell_file = 'aper_node.dat'
     perm_cell_file = 'perm_node.dat'
     aper_file = 'aperture.dat'
@@ -90,6 +92,12 @@ class DFNWORKS():
     visual_mode = bool
     dudded_points = int
     domain = {'x': 0, 'y': 0, 'z': 0}
+    x_min = float
+    x_max = float 
+    y_min = float
+    y_max = float 
+    z_min = float
+    z_max = float 
 
     params = dict
     mandatory_params = dict
@@ -97,19 +105,23 @@ class DFNWORKS():
     user_ell_params = []
     user_rect_params = []
     user_poly_params = []
-
+    
+    store_polygon_data = bool 
+    polygons = dict
+    
     # mesh information
     num_nodes = int
     material_ids = float
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home
+
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
 
     # dfnGen functions
     import pydfnworks.dfnGen
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input, print_domain_parameters
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
@@ -123,6 +135,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
+    from pydfnworks.dfnGen.meshing.udfm.map2continuum_helper import in_domain, gather_points
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
     from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, get_normal
@@ -161,23 +174,32 @@ class DFNWORKS():
                  vtk_file=None,
                  num_nodes=None,
                  mesh_type='dfn',
-                 cell_based_aperture=False):
+                 cell_based_aperture=False,
+                 store_polygon_data=True,
+                 pickle_file = None):
         
-        try:
-            os.remove('dfnWorks.log') #Remove the old log file
-            print("Creating New Log File (dfnWorks.log)")
-            print("")
-        except:
-            print("Creating New Log File (dfnWorks.log)")
-            print("")
+        ## check is define_paths has been run yet
+        if not 'dfnworks_PATH' in os.environ:
+                define_paths()
+                legal()
 
+        # try:
+        #     os.remove('dfnWorks.log') #Remove the old log file
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
+        # except:
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
         print("\n--> Creating DFN Object: Starting")
+        self.ncpu = ncpu
+    
+        if pickle_file:
+            print(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.from_pickle(pickle_file)
 
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-
-        self.ncpu = ncpu
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -209,12 +231,11 @@ class DFNWORKS():
         self.path = path
         self.prune_file = prune_file
 
+        self.store_polygon_data = store_polygon_data
+
         self.params, self.mandatory_params = load_parameters()
 
-        ## check is define_paths has been run yet
-        if not 'dfnworks_PATH' in os.environ:
-            define_paths()
-            legal()
+
 
         # if logging:
         #     print("--> Writting output to log file.")
@@ -222,9 +243,9 @@ class DFNWORKS():
         #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
         #             format="%(asctime)s %(message)s")
 
+
         self.start_time = time()
         self.print_parameters()
-
         print("\n--> Creating DFN Object: Complete")
 
 

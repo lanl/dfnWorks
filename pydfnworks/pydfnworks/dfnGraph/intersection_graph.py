@@ -1,11 +1,10 @@
-from tkinter import W
 import networkx as nx
 import numpy as np
 import json
 import sys
 from itertools import combinations
 
-from pydfnworks.dfnGraph.graph_attributes import add_perm
+from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area
 
 
 def boundary_index(bc_name):
@@ -18,7 +17,7 @@ def boundary_index(bc_name):
 
     Returns
     -------
-        bc_index : int
+        bc_index : in
             integer indexing of cube faces
 
     Notes
@@ -182,5 +181,6 @@ def create_intersection_graph(inflow,
 
     print("--> Adding edges to Graph: Complete")
     add_perm(G)
+    add_area(G)
     print("--> Intersection Graph Construction Complete")
     return G

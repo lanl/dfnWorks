@@ -76,7 +76,7 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d0 d 
+  INITIAL_TIMESTEP_SIZE  1.d-1 d
   FINAL_TIME 1.d2 d
   MAXIMUM_TIMESTEP_SIZE 10.d0 d
 END
@@ -102,24 +102,24 @@ END
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial
   TYPE
-     PRESSURE dirichlet 
+     LIQUID_PRESSURE dirichlet 
   /
-  PRESSURE 1.01325d6
+  LIQUID_PRESSURE 1.01325d6
 END
 
 
 FLOW_CONDITION outflow 
   TYPE 
-     PRESSURE dirichlet
+     LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 1.d6
+  LIQUID_PRESSURE 1.d6
 END
 
 FLOW_CONDITION inflow
   TYPE
-    PRESSURE dirichlet
+    LIQUID_PRESSURE dirichlet
   /
-  PRESSURE 2.d6
+  LIQUID_PRESSURE 2.d6
 END
 
 #=========================== condition couplers ===============================

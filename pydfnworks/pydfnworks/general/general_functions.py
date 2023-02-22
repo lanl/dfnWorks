@@ -139,6 +139,66 @@ def local_print_log(statement):
     -------
     print statments in pydfnworks should generally be replaced with this print_log function. Use local_print_log if function is not in refernce to DFN object
     '''
+
     logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
     print(statement)
     logging.info(statement)
+
+def to_pickle(self,filename = None):
+    """ Saves the DFN object into a pickle format
+
+    Parameters
+    --------------
+
+    Returns
+    ------------
+        None
+
+    Notes
+    ------------
+        None
+    """
+    import pickle
+    if filename:
+        pickle_filename = f'{filename}.pkl'
+    else:
+        pickle_filename = f'{self.local_jobname}.pkl'
+    print(f'--> Pickling DFN object to {pickle_filename}')
+    if os.path.isfile(pickle_filename):
+        response = input(f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: ")
+        if response == 'yes' or response == 'y':
+            print('--> Overwritting file')
+            pickle.dump( self, open( pickle_filename, "wb" ) )
+            print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+        elif response == 'no' or 'n':
+            print("--> Not writting file.") 
+        else:
+            print("Unknown Response. {response}.\nNot writting file.")
+    else:
+        pickle.dump(self, open( pickle_filename, "wb" ) )
+        print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+
+def from_pickle(self, filename):
+    """ Loads the DFN object from a pickle format
+
+    Parameters
+    --------------
+        self : DFN Object
+        filename : string
+            name of pickle DFN object 
+
+    Returns
+    ------------
+        DFN object 
+
+    Notes
+    ------------
+        Best if used with DFNWORKS(pickle_file = <filename>)
+    """
+    import pickle 
+    tmp = pickle.load( open( filename, "rb" ) ) 
+    self.__dict__ = tmp.__dict__.copy()
+
+
+
+    

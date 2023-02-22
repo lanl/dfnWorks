@@ -1,4 +1,4 @@
-#"""
+"""
 #   :synopsis: Driver run file for TPL example
 #   :version: 2.0
 #   :maintainer: Jeffrey Hyman
@@ -95,12 +95,13 @@ s1 = 5e6
 s2 = 1e6
 s3 = 1e6
 sigma_mat = x = [[s1, 0, 0], [0, s2, 0], [0, 0, s3]]
-
+DFN.dump_hydraulic_values()
 DFN.add_variable_to_mesh("init_aper", "aperture.dat", "full_mesh.inp",
                                          "stress.inp")
 # modify apertures basedon the stress field
 DFN.stress_based_apertures(sigma_mat)
 # add final apertures to mesh
+DFN.dump_hydraulic_values()
 DFN.add_variable_to_mesh("stress_aper", "aperture.dat", "stress.inp")
 
 # assign new names of aperture files

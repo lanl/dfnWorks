@@ -84,8 +84,14 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
         os.mkdir(dir_name + os.sep + "lagrit_scripts")
         os.mkdir(dir_name + os.sep + "lagrit_logs")
 
-    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
-                  self.centers)
+
+    ## gather points on polygons
+    points = self.gather_points()
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self. normal_vectors,points)
+
+    #lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
+    #              self.centers)
+
     lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz,
                       self.h)
     lagrit_build(dir_name)

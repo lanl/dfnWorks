@@ -53,13 +53,10 @@ Go up into the pydfnworks sub-directory:
     
     $ cd dfnWorks/pydfnworks/
 
-Complie The pydfnWorks Package:
+Compile The pydfnWorks Package & Install on Your Local Machine:
     
     $ python setup.py bdist_wheel
-
-Install on Your Local Machine:
-    
-    $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
+    $ python -m pip install dist/pydfnworks-<CURRENT VERSION NUMBER>-py3-none-any.whl
 
 **Note that the python version in dist/ needs to be consistent with the current release**
 
@@ -78,7 +75,7 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 
 pydfnworks uses Python 3. We recommend using 
 the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``networkx``, ``fpdf``, and ``re``.
+pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``mplstereonet``, ``fpdf``, and ``re``.
 
 
 ### LaGriT
