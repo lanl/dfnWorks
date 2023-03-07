@@ -227,6 +227,16 @@ def load_parameters():
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'framOn': {
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            False,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'radiiListIncrease': {
             'type':
             float,
