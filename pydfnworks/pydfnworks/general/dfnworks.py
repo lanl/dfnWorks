@@ -45,7 +45,7 @@ class DFNWORKS():
     '''
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -107,12 +107,12 @@ class DFNWORKS():
                  mesh_type='dfn',
                  cell_based_aperture=False,
                  store_polygon_data=True,
-                 pickle_file = None):
-        
+                 pickle_file=None):
+
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-                define_paths()
-                legal()
+            define_paths()
+            legal()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
@@ -122,7 +122,7 @@ class DFNWORKS():
         #     print("Creating New Log File (dfnWorks.log)")
         #     print("")
         print("\n--> Creating DFN Object: Starting")
-        
+
         if pickle_file:
             print(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
@@ -154,9 +154,8 @@ class DFNWORKS():
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
         else:
-            self.dfnTrans_file = None 
+            self.dfnTrans_file = None
             self.local_dfnTrans_file = None
-
 
         self.ncpu = ncpu
 
@@ -203,7 +202,6 @@ class DFNWORKS():
         #     import logging
         #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
         #             format="%(asctime)s %(message)s")
-
 
         self.start_time = time()
         self.print_parameters()
