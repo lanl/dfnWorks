@@ -88,6 +88,7 @@ class DFNWORKS():
     from pydfnworks.dfnGraph.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow, compute_dQ
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
+
     def __init__(self,
                  jobname=None,
                  ncpu=4,
@@ -130,7 +131,6 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-
         else:
             self.jobname = os.getcwd() + os.sep + "output"
             self.local_jobname = "output"
@@ -147,10 +147,16 @@ class DFNWORKS():
         if dfnFlow_file:
             self.dfnFlow_file = dfnFlow_file
             self.local_dfnFlow_file = ntpath.basename(self.dfnFlow_file)
+        else:
+            self.dfnFlow_file = None
+            self.local_dfnFlow_file = None
 
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
+        else:
+            self.dfnTrans_file = None 
+            self.local_dfnTrans_file = None
 
 
         self.ncpu = ncpu
@@ -165,12 +171,6 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
-        self.x_min = float
-        self.x_max = float
-        self.y_min = float
-        self.y_max = float
-        self.z_min = float
-        self.z_max = float
 
         self.fracture_families = []
         self.user_ell_params = []
@@ -181,10 +181,9 @@ class DFNWORKS():
 
         self.material_ids = float
 
-
         self.num_nodes = num_nodes
         self.vtk_file = vtk_file
-        self.mesh_type = mesh_type
+        #self.mesh_type = mesh_type
         self.inp_file = inp_file
         self.uge_file = uge_file
         self.mat_file = mat_file
@@ -199,8 +198,6 @@ class DFNWORKS():
         self.store_polygon_data = store_polygon_data
 
         self.params, self.mandatory_params = load_parameters()
-
-
 
         # if logging:
         #     print("--> Writting output to log file.")
