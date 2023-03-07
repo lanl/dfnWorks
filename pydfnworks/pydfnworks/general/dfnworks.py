@@ -13,14 +13,6 @@ from datetime import datetime
 from time import time
 import numpy as np
 
-# general functions
-from pydfnworks.general.dfntools import *
-from pydfnworks.general.paths import define_paths
-from pydfnworks.general.legal import legal
-
-from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
-
-
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
@@ -44,6 +36,9 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
+    from pydfnworks.general.paths import define_paths
+    from pydfnworks.general.legal import legal
+
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
 
@@ -55,7 +50,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
-    #from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
+    from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
     from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions import add_user_fract, add_user_fract_from_file, write_user_fractures_to_file, print_user_fracture_information
@@ -110,8 +105,8 @@ class DFNWORKS():
         
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-                define_paths()
-                legal()
+                self.define_paths()
+                self.legal()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
@@ -147,11 +142,17 @@ class DFNWORKS():
         if dfnFlow_file:
             self.dfnFlow_file = dfnFlow_file
             self.local_dfnFlow_file = ntpath.basename(self.dfnFlow_file)
+        
+        else:
+            self.dfnFlow_file = dfnFlow_file
+
 
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
-
+        
+        else:
+            self.dfnTrans_file = dfnTrans_file
 
         self.ncpu = ncpu
 
@@ -198,7 +199,7 @@ class DFNWORKS():
 
         self.store_polygon_data = store_polygon_data
 
-        self.params, self.mandatory_params = load_parameters()
+        self.params, self.mandatory_params = self.load_parameters()
 
 
 
