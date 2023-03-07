@@ -40,7 +40,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -83,6 +83,7 @@ class DFNWORKS():
     from pydfnworks.dfnGraph.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
     from pydfnworks.dfnGraph.graph_flow import run_graph_flow, compute_dQ
     from pydfnworks.dfnGraph.graph_transport import run_graph_transport
+
     def __init__(self,
                  jobname=None,
                  ncpu=4,
@@ -101,10 +102,11 @@ class DFNWORKS():
                  mesh_type='dfn',
                  cell_based_aperture=False,
                  store_polygon_data=True,
-                 pickle_file = None):
-        
+                 pickle_file=None):
+
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
+
                 self.define_paths()
                 self.legal()
 
@@ -116,8 +118,7 @@ class DFNWORKS():
         #     print("Creating New Log File (dfnWorks.log)")
         #     print("")
         print("\n--> Creating DFN Object: Starting")
-        self.ncpu = ncpu
-    
+
         if pickle_file:
             print(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
@@ -125,7 +126,6 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-
         else:
             self.jobname = os.getcwd() + os.sep + "output"
             self.local_jobname = "output"
@@ -142,17 +142,18 @@ class DFNWORKS():
         if dfnFlow_file:
             self.dfnFlow_file = dfnFlow_file
             self.local_dfnFlow_file = ntpath.basename(self.dfnFlow_file)
-        
-        else:
-            self.dfnFlow_file = dfnFlow_file
 
+        else:
+            self.dfnFlow_file = None
+            self.local_dfnFlow_file = None
 
         if dfnTrans_file:
             self.dfnTrans_file = dfnTrans_file
             self.local_dfnTrans_file = ntpath.basename(self.dfnTrans_file)
-        
+
         else:
-            self.dfnTrans_file = dfnTrans_file
+            self.dfnTrans_file = None
+            self.local_dfnTrans_file = None
 
         self.ncpu = ncpu
 
@@ -166,12 +167,6 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
-        self.x_min = float
-        self.x_max = float
-        self.y_min = float
-        self.y_max = float
-        self.z_min = float
-        self.z_max = float
 
         self.fracture_families = []
         self.user_ell_params = []
@@ -182,10 +177,9 @@ class DFNWORKS():
 
         self.material_ids = float
 
-
         self.num_nodes = num_nodes
         self.vtk_file = vtk_file
-        self.mesh_type = mesh_type
+        #self.mesh_type = mesh_type
         self.inp_file = inp_file
         self.uge_file = uge_file
         self.mat_file = mat_file
@@ -201,14 +195,11 @@ class DFNWORKS():
 
         self.params, self.mandatory_params = self.load_parameters()
 
-
-
         # if logging:
         #     print("--> Writting output to log file.")
         #     import logging
         #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
         #             format="%(asctime)s %(message)s")
-
 
         self.start_time = time()
         self.print_parameters()
