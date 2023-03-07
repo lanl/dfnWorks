@@ -122,8 +122,7 @@ class DFNWORKS():
         #     print("Creating New Log File (dfnWorks.log)")
         #     print("")
         print("\n--> Creating DFN Object: Starting")
-        self.ncpu = ncpu
-    
+        
         if pickle_file:
             print(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
