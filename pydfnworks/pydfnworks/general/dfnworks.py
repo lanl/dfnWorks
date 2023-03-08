@@ -3,7 +3,7 @@ __version__ = "2.7"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
-DFN object class. 
+DFN class. 
 """
 
 import os
@@ -11,7 +11,6 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
-import numpy as np
 
 class DFNWORKS():
     '''
