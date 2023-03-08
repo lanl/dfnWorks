@@ -12,6 +12,7 @@ import ntpath
 from datetime import datetime
 from time import time
 
+
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
@@ -106,8 +107,8 @@ class DFNWORKS():
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
 
-                self.define_paths()
-                self.legal()
+            self.define_paths()
+            self.legal()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
