@@ -95,7 +95,6 @@ def define_paths():
             'PETSC_DIR': None,
             'PETSC_ARCH': None,
             'PFLOTRAN_EXE': None,
-            'PYTHON_EXE': None,
             'LAGRIT_EXE': None,
             'FEHM_EXE': None
         }
@@ -137,10 +136,6 @@ def define_paths():
         valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
     else:
         print("Warning. No FEHM path provided.")
-
-    # # Python executable
-    # os.environ['PYTHON_EXE'] = env_paths['PYTHON_EXE']
-    # valid('PYTHON_EXE', os.environ['PYTHON_EXE'], "executable")
 
     # LaGriT executable
     if env_paths['LAGRIT_EXE']: 
