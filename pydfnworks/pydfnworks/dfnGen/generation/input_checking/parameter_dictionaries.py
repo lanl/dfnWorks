@@ -223,19 +223,15 @@ def load_parameters():
             'list':
             False,
             'value':
-            False,
+            None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'framOn': {
-            'type':
-            bool,
-            'list':
-            False,
-            'value':
-            False,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+            'type': bool,
+            'list': False,
+            'value': None,
+            'description': 'Toggle for FRAM on/off. '
         },
         'radiiListIncrease': {
             'type':

@@ -21,8 +21,9 @@ def write_fracture_families(self):
     self.reorder_fracture_families()
     self.params['nFracFam']['value'] = len(self.fracture_families)
 
-    if self.params['nFracFam']['value'] == 0: 
-        self.params['orientationOption']['value'] = 0 #set to 0 if there are only user defined fractures to avoid error
+    if self.params['nFracFam']['value'] == 0:
+        self.params['orientationOption'][
+            'value'] = 0  #set to 0 if there are only user defined fractures to avoid error
 
     for i in range(self.params['nFracFam']['value']):
         add_fracture_family_to_params(self.params, self.fracture_families[i])
