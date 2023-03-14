@@ -157,7 +157,6 @@ def check_h(params):
     """
 
     hf.check_none('h', params['h']['value'])
-
     if params['h']['value'] == 0:
         hf.print_error("Value of \"h\" cannot be 0")
 
@@ -170,26 +169,41 @@ def check_h(params):
     eps = 10**-5
     min_h = domain_cross_dist * eps
 
-    if params['h']['value'] < min_h:
-        hf.print_error(
-            f"Value of \"h\" is less than minimum for this domain size. Value provide: {params['h']['value']}. Minimum Value: {min_h}"
-        )
-
-    if params["minimum_fracture_size"]["value"] is not None:
-        # Check against Minimum radius
-        if params['h']['value'] > params["minimum_fracture_size"]["value"] / 10:
+    ## if fram is on, ensure that it is a reasonable value
+    if params['framOn']['value']:
+        if params['h']['value'] < min_h:
             hf.print_error(
-                f"Provided value  of \"h\" ({params['h']['value']}) is greater 1/10th the minimum fracture size ({params['minimum_fracture_size']['value']}). The generated mesh will be very coarse and there will likely be a high rate of fracture rejection."
+                f"Value of \"h\" is less than minimum for this domain size. Value provide: {params['h']['value']}. Minimum Value: {min_h}"
             )
 
-        if params['h'][
-                'value'] < params["minimum_fracture_size"]["value"] / 1000:
+        if params["minimum_fracture_size"]["value"] is not None:
+            # Check against Minimum radius
+            if params['h'][
+                    'value'] > params["minimum_fracture_size"]["value"] / 10:
+                hf.print_error(
+                    f"Provided value  of \"h\" ({params['h']['value']:0.2e}) is greater 1/10th the minimum fracture size ({params['minimum_fracture_size']['value']:0.2e}). The generated mesh will be very coarse and there will likely be a high rate of fracture rejection."
+                )
+
+            if params['h'][
+                    'value'] < params["minimum_fracture_size"]["value"] / 1000:
+                hf.print_warning(
+                    f"Provided value  of  \"h\" ({params['h']['value']}) is smaller than 1/1000th than minimum fracture size ({params['minimum_fracture_size']['value']}). The generated mesh will be extremely fine and will likely be huge and costly to create. Computation will take a long time."
+                )
+
+    ## If FRAM is off, we just need to make sure the value won't crash the geneator
+    else:
+        if params['h']['value'] < min_h:
             hf.print_warning(
-                f"Provided value  of  \"h\" ({params['h']['value']}) is smaller than 1/1000th than minimum fracture size ({params['minimum_fracture_size']['value']}). The generated mesh will be extremely fine and will likely be huge and costly to create. Computation will take a long time."
+                f"Value of \"h\" is less than minimum for this domain size. Value provide: {params['h']['value']}. Minimum Value: {min_h}. Resetting to 10*minimum value"
             )
+            params['h']['value'] = 10 * min_h
 
-    if params["nFamRect"]['value'] > 0:
-        check_shape(params, 'r')
-
-    if params["nFamEll"]['value'] > 0:
-        check_shape(params, 'e')
+        if params["minimum_fracture_size"]["value"] is not None:
+            # Check against Minimum radius
+            if params['h'][
+                    'value'] > params["minimum_fracture_size"]["value"] / 10:
+                hf.print_warning(
+                    f"Provided value  of \"h\" ({params['h']['value']}) is greater 1/10th the minimum fracture size ({params['minimum_fracture_size']['value']}). Resetting to 1/10 min fracture size"
+                )
+                params['h'][
+                    'value'] = params["minimum_fracture_size"]["value"] / 10

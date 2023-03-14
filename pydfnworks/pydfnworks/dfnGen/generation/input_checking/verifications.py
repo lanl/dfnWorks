@@ -4,7 +4,7 @@
 
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_general import check_general, check_user_defined
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_fractures import check_fracture_params, cross_check, convert_angleOption_value
-from pydfnworks.dfnGen.generation.input_checking.parameter_checking_h import check_h
+from pydfnworks.dfnGen.generation.input_checking.parameter_checking_h import check_h, check_shape
 
 
 def verify_params(params):
@@ -40,5 +40,11 @@ def verify_params(params):
     convert_angleOption_value(params)
     check_user_defined(params)
     # Check h (Requires information from fracture checking)
-    #if params['disableFram'] == 0:
     check_h(params)
+
+    if params['framOn']['value']:
+        if params["nFamRect"]['value'] > 0:
+            check_shape(params, 'r')
+
+        if params["nFamEll"]['value'] > 0:
+            check_shape(params, 'e')
