@@ -23,6 +23,8 @@ DFN.params['h']['value'] = 0.25
 DFN.params['tripleIntersections']['value'] = True
 DFN.params['stopCondition']['value'] = 0 #define stopCondition and nPoly for user polygons to avoid exception
 DFN.params['nPoly']['value'] = 3
+DFN.params['ignoreBoundaryFaces']['value'] = True
+
 
 DFN.add_user_fract_from_file(shape="poly",
                    filename = f'{src_path}/polygons.dat',

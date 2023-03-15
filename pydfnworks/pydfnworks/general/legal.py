@@ -1,5 +1,7 @@
 from pydfnworks import *
-def legal():
+
+
+def legal(self):
     """Print the legal LANL statement for dfnWorks.
 
     Parameters
