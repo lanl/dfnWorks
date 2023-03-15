@@ -68,7 +68,7 @@ def compile_dfn_exe(path):
     print("Complete")
 
 
-def define_paths():
+def define_paths(self):
     """Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
     Parameters
     ----------
