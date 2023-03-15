@@ -1,4 +1,4 @@
-def load_parameters():
+def load_parameters(self):
     """ Load dictionary of DFNGen parameters onto object
 
     Parameters

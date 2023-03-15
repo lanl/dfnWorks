@@ -3,7 +3,7 @@ __version__ = "2.7"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
-DFN object class. 
+DFN class. 
 """
 
 import os
@@ -11,14 +11,6 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
-import numpy as np
-
-# general functions
-from pydfnworks.general.dfntools import *
-from pydfnworks.general.paths import define_paths
-from pydfnworks.general.legal import legal
-
-from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
 
 
 class DFNWORKS():
@@ -44,6 +36,9 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
+    from pydfnworks.general.paths import define_paths, print_paths
+    from pydfnworks.general.legal import legal
+
     from pydfnworks.general.images import failure, success
     from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle
 
@@ -55,7 +50,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
-    #from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
+    from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
     from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions import add_user_fract, add_user_fract_from_file, write_user_fractures_to_file, print_user_fracture_information
@@ -111,8 +106,9 @@ class DFNWORKS():
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-            define_paths()
-            legal()
+
+            self.define_paths()
+            self.legal()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
@@ -178,6 +174,27 @@ class DFNWORKS():
         self.polygons = dict
 
         self.material_ids = float
+        self.ncpu = ncpu
+
+        self.aper_cell_file = 'aper_node.dat'
+        self.perm_cell_file = 'perm_node.dat'
+        self.aper_file = 'aperture.dat'
+        self.perm_file = 'perm.dat'
+
+        self.num_frac = int
+        self.h = float
+        self.visual_mode = bool
+        self.dudded_points = int
+        self.domain = {'x': 0, 'y': 0, 'z': 0}
+
+        self.fracture_families = []
+        self.user_ell_params = []
+        self.user_rect_params = []
+        self.user_poly_params = []
+
+        self.polygons = dict
+
+        self.material_ids = float
 
         self.num_nodes = num_nodes
         self.vtk_file = vtk_file
@@ -195,7 +212,7 @@ class DFNWORKS():
 
         self.store_polygon_data = store_polygon_data
 
-        self.params, self.mandatory_params = load_parameters()
+        self.params, self.mandatory_params = self.load_parameters()
 
         # if logging:
         #     print("--> Writting output to log file.")
