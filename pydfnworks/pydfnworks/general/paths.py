@@ -23,7 +23,8 @@ def valid(name, path, path_type):
     Notes
     -----
         If file is not found, file is not an executable, or directory does not exists then program exits
-"""
+    """
+
     if path_type == "executable":
         if not os.path.isfile(path):
             error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
@@ -40,8 +41,6 @@ def valid(name, path, path_type):
             error = f"Error checking {name}\n{path} is not a directory.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
-
-    return 0
 
 
 def compile_dfn_exe(path):
@@ -65,6 +64,32 @@ def compile_dfn_exe(path):
     subprocess.call("make", shell=True)
     os.chdir(cwd)
     print("Complete")
+
+
+def print_paths(self):
+    """ Print enviromental variable paths to screen 
+    
+    Parameters
+    -------------
+        None
+
+    Returns
+    -------------
+        None
+
+    Notes
+    -------------
+        None
+
+    """
+    print("dfnWorks paths:")
+    print("---------------")
+    print(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
+    print(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
+    print(f"* PETSC_DIR: {os.environ['PETSC_DIR']}")
+    print(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
+    print(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
+    print(f"* FEHM_EXE: {os.environ['PETSCFEHM_EXE_DIR']}")
 
 
 def define_paths():
