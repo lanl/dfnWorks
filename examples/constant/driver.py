@@ -20,7 +20,6 @@ DFN = DFNWORKS(jobname,
 
 DFN.params['domainSize']['value'] = [10, 10, 10]
 DFN.params['h']['value'] = 0.1
-DFN.params['rAngleOption']['value'] = 1
 DFN.params['orientationOption']['value'] = 1
 DFN.params['stopCondition']['value'] = 0
 DFN.params['nPoly']['value'] = 80

@@ -466,5 +466,5 @@ def grab_polygon_data(self):
             poly.append(poly_dat[3*j+1:3*j+4])
         poly = np.array(poly)
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
-    print('Data from polygons.dat stored on class in self.polygons')
+    print('--> Data from polygons.dat stored on class in self.polygons\n')
 

@@ -27,7 +27,7 @@ def failure(self):
       /                 |             -'
 
     '''
-    
+
     print(doh)
 
     return doh
@@ -56,7 +56,7 @@ def success(self):
            ,--'~'\   /'~'--,
           (_______) (_______)dwb
     '''
-    
+
     print(oh_yeah)
-    
+
     return oh_yeah

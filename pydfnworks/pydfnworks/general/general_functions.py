@@ -4,6 +4,7 @@ from datetime import datetime
 from time import time
 import logging
 
+
 def print_parameters(self):
     print("=" * 80 + "\n")
     print(f"--> Jobname: {self.jobname}")
@@ -21,9 +22,11 @@ def print_parameters(self):
         print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
     print("=" * 80 + "\n")
 
+
 def go_home(self):
     os.chdir(self.jobname)
     print(f"--> Current directory is {os.getcwd()}")
+
 
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file 
@@ -103,8 +106,8 @@ def print_run_time(self):
     #        print(name[i-1]+"\t"+"*"tmp)
     print("\n")
 
+
 def print_log(self, statement):
-    
     '''print and log statments to a file 
 
     Parameters
@@ -119,12 +122,13 @@ def print_log(self, statement):
     -------
     print statments in pydfnworks should generally be replaced with this print_log function. Use self.print_log if function is on DFN object
     '''
-    logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
+    logging.basicConfig(filename=os.getcwd() + os.sep + "dfnWorks.log",
+                        level=logging.DEBUG)
     print(statement)
     logging.info(statement)
 
-def local_print_log(statement):
 
+def local_print_log(statement):
     '''print and log statments to a file
 
     Parameters
@@ -140,11 +144,13 @@ def local_print_log(statement):
     print statments in pydfnworks should generally be replaced with this print_log function. Use local_print_log if function is not in refernce to DFN object
     '''
 
-    logging.basicConfig(filename = os.getcwd() + os.sep + "dfnWorks.log", level = logging.DEBUG)
+    logging.basicConfig(filename=os.getcwd() + os.sep + "dfnWorks.log",
+                        level=logging.DEBUG)
     print(statement)
     logging.info(statement)
 
-def to_pickle(self,filename = None):
+
+def to_pickle(self, filename=None):
     """ Saves the DFN object into a pickle format
 
     Parameters
@@ -165,18 +171,21 @@ def to_pickle(self,filename = None):
         pickle_filename = f'{self.local_jobname}.pkl'
     print(f'--> Pickling DFN object to {pickle_filename}')
     if os.path.isfile(pickle_filename):
-        response = input(f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: ")
+        response = input(
+            f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: "
+        )
         if response == 'yes' or response == 'y':
             print('--> Overwritting file')
-            pickle.dump( self, open( pickle_filename, "wb" ) )
+            pickle.dump(self, open(pickle_filename, "wb"))
             print(f'--> Pickling DFN object to {pickle_filename} : Complete')
         elif response == 'no' or 'n':
-            print("--> Not writting file.") 
+            print("--> Not writting file.")
         else:
             print("Unknown Response. {response}.\nNot writting file.")
     else:
-        pickle.dump(self, open( pickle_filename, "wb" ) )
+        pickle.dump(self, open(pickle_filename, "wb"))
         print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+
 
 def from_pickle(self, filename):
     """ Loads the DFN object from a pickle format
@@ -195,10 +204,6 @@ def from_pickle(self, filename):
     ------------
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
-    import pickle 
-    tmp = pickle.load( open( filename, "rb" ) ) 
+    import pickle
+    tmp = pickle.load(open(filename, "rb"))
     self.__dict__ = tmp.__dict__.copy()
-
-
-
-    
