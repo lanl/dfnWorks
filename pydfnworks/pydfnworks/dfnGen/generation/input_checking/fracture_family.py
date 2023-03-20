@@ -372,8 +372,8 @@ def add_fracture_family(self,
             error = f"0Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
             sys.stderr.write(error)
             sys.exit(1)
-    
-    if trend != None and plunge != None: 
+
+    if trend != None and plunge != None:
         if self.params['orientationOption']['value'] == None:
             print('Setting orientationOption = 1 (trend/plunge)')
             self.params['orientationOption']['value'] = 1
