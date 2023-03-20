@@ -117,7 +117,7 @@ def define_paths(self):
     # Or, change the paths here
     else:
         env_paths = {
-            'dfnworks_PATH': '/Users/jhyman/src/dfnworks-jdhdev/',
+            'dfnworks_PATH': None, 
             'PETSC_DIR': None,
             'PETSC_ARCH': None,
             'PFLOTRAN_EXE': None,
