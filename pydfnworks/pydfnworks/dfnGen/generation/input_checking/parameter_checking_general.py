@@ -280,9 +280,37 @@ def check_no_dep_flags(params):
             hf.print_error(f"\"{key}\" not provided.")
 
 
-# def check_fram(disableFram)
-#     if disableFram['value']:
-#         hf.print_warning("FRAM (feature rejection algorithm for meshing) is disabled.")
+def check_fram(params):
+    ''' Checks for consistency in FRAM on/off. 
+    
+    '''
+
+    if params['disableFram']['value'] == None and params['framOn'][
+            'value'] == None:
+        hf.print_warning(
+            'No value for disableFram or FramOn provided. Using defaults. --> FRAM ON <--'
+        )
+        ## set defaults if the user doesn't provide any thing
+        params['disableFram']['value'] = False
+        params['framOn']['value'] = True
+
+    elif params['disableFram']['value'] == params['framOn']['value']:
+        hf.print_error(
+            f"disableFram and framOn incompatable.\ndisableFram value: {params['disableFram']['value']}.\nframOn value: {params['framOn']['value']}"
+        )
+
+    if params['disableFram']['value']:
+        hf.print_warning(
+            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+        )
+        params['framOn']['value'] = False
+
+    if not params['framOn']['value']:
+        hf.print_warning(
+            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+        )
+        params['disableFram']['value'] = True
+
 
 # def check_aperture(params):
 #     """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family..
@@ -583,6 +611,7 @@ def check_general(params):
     check_no_dep_flags(params)
     check_rejects_per_fracture(params['rejectsPerFracture'])
     check_seed(params['seed'])
+    check_fram(params)
     # check_aperture(params)
     # check_permeability(params)
 

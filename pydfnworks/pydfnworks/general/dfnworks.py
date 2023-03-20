@@ -36,7 +36,7 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
-    from pydfnworks.general.paths import define_paths
+    from pydfnworks.general.paths import define_paths, print_paths
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
