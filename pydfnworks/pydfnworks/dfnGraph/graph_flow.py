@@ -71,8 +71,7 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
     """
 
     if G == None:
-        G = create_intersection_graph(
-            inflow, outflow)
+        G = create_intersection_graph(inflow, outflow)
 
         Gtilde = G.copy()
         # need to add aperture
