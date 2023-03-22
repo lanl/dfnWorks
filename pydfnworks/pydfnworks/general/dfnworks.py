@@ -103,6 +103,40 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None):
+        self.num_frac = int
+        self.h = float
+        self.visual_mode = bool
+        self.dudded_points = int
+        self.domain = {'x': 0, 'y': 0, 'z': 0}
+
+
+        self.aper_cell_file = 'aper_node.dat'
+        self.perm_cell_file = 'perm_node.dat'
+        self.aper_file = 'aperture.dat'
+        self.perm_file = 'perm.dat'
+
+        self.fracture_families = []
+        self.user_ell_params = []
+        self.user_rect_params = []
+        self.user_poly_params = []
+
+        self.polygons = dict
+
+        self.material_ids = float
+
+        self.num_nodes = num_nodes
+        self.vtk_file = vtk_file
+        self.inp_file = inp_file
+        self.uge_file = uge_file
+        self.mat_file = mat_file
+        self.stor_file = stor_file
+        self.flow_solver = flow_solver
+
+        self.cell_based_aperture = cell_based_aperture
+        self.path = path
+        self.prune_file = prune_file
+        self.logging = False
+        self.store_polygon_data = store_polygon_data
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
@@ -154,64 +188,6 @@ class DFNWORKS():
             self.local_dfnTrans_file = None
 
         self.ncpu = ncpu
-
-        self.aper_cell_file = 'aper_node.dat'
-        self.perm_cell_file = 'perm_node.dat'
-        self.aper_file = 'aperture.dat'
-        self.perm_file = 'perm.dat'
-
-        self.num_frac = int
-        self.h = float
-        self.visual_mode = bool
-        self.dudded_points = int
-        self.domain = {'x': 0, 'y': 0, 'z': 0}
-
-        self.fracture_families = []
-        self.user_ell_params = []
-        self.user_rect_params = []
-        self.user_poly_params = []
-
-        self.polygons = dict
-
-        self.material_ids = float
-        self.ncpu = ncpu
-
-        self.aper_cell_file = 'aper_node.dat'
-        self.perm_cell_file = 'perm_node.dat'
-        self.aper_file = 'aperture.dat'
-        self.perm_file = 'perm.dat'
-
-        self.num_frac = int
-        self.h = float
-        self.visual_mode = bool
-        self.dudded_points = int
-        self.domain = {'x': 0, 'y': 0, 'z': 0}
-
-        self.fracture_families = []
-        self.user_ell_params = []
-        self.user_rect_params = []
-        self.user_poly_params = []
-
-        self.polygons = dict
-
-        self.material_ids = float
-
-        self.num_nodes = num_nodes
-        self.vtk_file = vtk_file
-        #self.mesh_type = mesh_type
-        self.inp_file = inp_file
-        self.uge_file = uge_file
-        self.mat_file = mat_file
-        self.stor_file = stor_file
-        self.flow_solver = flow_solver
-
-        self.cell_based_aperture = cell_based_aperture
-        self.path = path
-        self.prune_file = prune_file
-        self.logging = False
-
-        self.store_polygon_data = store_polygon_data
-
         self.params, self.mandatory_params = self.load_parameters()
 
         # if logging:
