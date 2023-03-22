@@ -7,75 +7,118 @@
 import os
 import sys
 import glob
+import shutil
 import numpy as np
 import subprocess
 import pyvtk as pv
 
-# def parse_params_file(quiet=False):
-#     """ Reads params.txt file from DFNGen and parses information
 
-#     Parameters
-#     ---------
-#         quiet : bool
-#             If True details are not printed to screen, if False they area
+def edit_intersection_files(num_poly, fracture_list, path):
+    """ If pruning a DFN, this function walks through the intersection files
+    and removes references to files that are not included in the 
+    fractures that will remain in the network.
+ 
+    Parameters
+    ---------
+        num_poly : int 
+            Number of Fractures in the original DFN
+        fracture_list :list of int
+            List of fractures to keep in the DFN
 
-#     Returns
-#     -------
-#         num_poly: int
-#             Number of Polygons
-#         h: float
-#             Meshing length scale h
-#         dudded_points: int
-#             Expected number of dudded points in Filter (LaGriT)
-#         visual_mode : bool
-#             If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created
-#         domain: dict
-#              x,y,z domain sizes
+    Returns
+    -------
+        None
 
-#     Notes
-#     -----
-#         None
-#     """
-#     if not quiet:
-#         print("\n--> Parsing  params.txt")
-#     fparams = open('params.txt', 'r')
-#     # Line 1 is the number of polygons
-#     num_poly = int(fparams.readline())
-#     #Line 2 is the h scale
-#     h = float(fparams.readline())
-#     # Line 3 is the visualization mode: '1' is True, '0' is False.
-#     visual_mode = int(fparams.readline())
-#     # line 4 dudded points
-#     dudded_points = int(fparams.readline())
+    Notes
+    -----
+    1. Currently running in serial, but it could be parallelized
+    2. Assumes the pruning directory is not the original directory
 
-#     # Dict domain contains the length of the domain in x,y, and z
-#     domain = {'x': 0, 'y': 0, 'z': 0}
-#     #Line 5 is the x domain length
-#     domain['x'] = (float(fparams.readline()))
+    """
+    # Make list of connectivity.dat
+    connectivity = []
+    with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
+        for i in range(num_poly):
+            tmp = []
+            line = fp.readline()
+            line = line.split()
+            for frac in line:
+                tmp.append(int(frac))
+            connectivity.append(tmp)
 
-#     #Line 5 is the x domain length
-#     domain['y'] = (float(fparams.readline()))
+    fractures_to_remove = list(
+        set(range(1, num_poly + 1)) - set(fracture_list))
 
-#     #Line 5 is the x domain length
-#     domain['z'] = (float(fparams.readline()))
-#     fparams.close()
+    cwd = os.getcwd()
+    if os.path.isdir('intersections'):
+        os.unlink('intersections')
+        os.mkdir('intersections')
+    else:
+        os.mkdir('intersections')
 
-#     if not quiet:
-#         print("--> Number of Polygons: %d" % num_poly)
-#         print("--> H_SCALE %f" % h)
-#         if visual_mode > 0:
-#             visual_mode = True
-#             print("--> Visual mode is on")
-#         else:
-#             visual_mode = False
-#             print("--> Visual mode is off")
-#         print(f"--> Expected Number of dudded points: {dudded_points}")
-#         print(f"--> X Domain Size {domain['x']} m")
-#         print(f"--> Y Domain Size {domain['y']} m")
-#         print(f"--> Z Domain Size {domain['z']} m")
-#         print("--> Parsing params.txt complete\n")
+    os.chdir('intersections')
 
-#     return (num_poly, h, visual_mode, dudded_points, domain)
+    ## DEBUGGING ##
+    # clean up directory
+    #fl_list = glob.glob("*prune.inp")
+    #for fl in fl_list:
+    #   os.remove(fl)
+    ## DEBUGGING ##
+
+    print("--> Editing Intersection Files")
+    ## Note this could be easily changed to run in parallel if needed. Just use cf
+    for i in fracture_list:
+        filename = f'intersections_{i}.inp'
+        print(f'--> Working on: {filename}')
+        intersecting_fractures = connectivity[i - 1]
+        pull_list = list(
+            set(intersecting_fractures).intersection(set(fractures_to_remove)))
+        if len(pull_list) > 0:
+            # Create Symlink to original intersection file
+            os.symlink(path + 'intersections/' + filename, filename)
+            # Create LaGriT script to remove intersections with fractures not in prune_file
+            lagrit_script = f"""
+read / {filename} / mo1 
+pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
+"""
+            for j in pull_list[1:]:
+                lagrit_script += f'''
+pset / prune / attribute / b_a / 1,0,0 / eq / {j}
+pset / pset2remove / union / pset2remove, prune
+rmpoint / pset, get, prune
+pset / prune / delete
+     '''
+            lagrit_script += f'''
+rmpoint / pset, get, pset2remove 
+rmpoint / compress
+    
+cmo / modatt / mo1 / imt / ioflag / l
+cmo / modatt / mo1 / itp / ioflag / l
+cmo / modatt / mo1 / isn / ioflag / l
+cmo / modatt / mo1 / icr / ioflag / l
+    
+cmo / status / brief
+dump / intersections_{i}_prune.inp / mo1
+finish
+
+'''
+
+            lagrit_filename = 'prune_intersection.lgi'
+            f = open(lagrit_filename, 'w')
+            f.write(lagrit_script)
+            f.flush()
+            f.close()
+            mh.run_lagrit_script("prune_intersection.lgi",
+                                 f"out_{i}.txt",
+                                 quiet=True)
+            os.remove(filename)
+            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
+        else:
+            try:
+                copy(path + 'intersections/' + filename, filename)
+            except:
+                pass
+    os.chdir(cwd)
 
 
 def check_dudded_points(dudded, hard=False):
@@ -132,31 +175,6 @@ def check_dudded_points(dudded, hard=False):
             print('ERROR! Incorrect Number of points removed')
             print(f"Over 0.01% of nodes removed. Value is {diff_ratio:.2f}")
             return False
-
-
-def cleanup_dir():
-    """ Removes meshing files
-
-    Parameters
-    ----------
-        None
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-    Only runs if production_mode is True
-    """
-
-    files_to_remove = [
-        'part*', 'log_merge*', 'merge*', 'mesh_poly_CPU*', 'mesh*inp',
-        'mesh*lg'
-    ]
-    for name in files_to_remove:
-        for fl in glob.glob(name):
-            os.remove(fl)
 
 
 def gather_mesh_information(self):
@@ -250,9 +268,9 @@ def clean_up_files_after_prune(self):
     with open('poly_info.dat', 'w') as fp:
         for i in range(num_frac):
             fp.write('%d %d %f %f %f %d %f %f %d\n' %
-                    (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
-                    poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
-                    poly_info[i, 7], poly_info[i, 8]))
+                     (i + 1, poly_info[i, 1], poly_info[i, 2], poly_info[i, 3],
+                      poly_info[i, 4], poly_info[i, 5], poly_info[i, 6],
+                      poly_info[i, 7], poly_info[i, 8]))
     self.poly_info = poly_info
 
     print("--> Complete")
@@ -335,19 +353,19 @@ def clean_up_files_after_prune(self):
             for line in fin.readlines():
                 tmp = line.split(' ')
                 if tmp[-1] != 'R':
-                    points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
+                    points.append(
+                        (float(tmp[0]), float(tmp[1]), float(tmp[2])))
             points = np.asarray(points)
             points = points[keep_list - 1, :]
             for i in range(num_frac):
-                fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
-
+                fout.write('%f %f %f\n' %
+                           (points[i, 0], points[i, 1], points[i, 2]))
 
     fout = open('dfnGen_output/surface_area_Final.dat', 'w')
-    fout.write('Fracture Surface Area After Isolated Fracture and Cluster Removal')
+    fout.write(
+        'Fracture Surface Area After Isolated Fracture and Cluster Removal')
     # copy header
-    surface_area = self.surface_area[
-        keep_list -
-        1] 
+    surface_area = self.surface_area[keep_list - 1]
     for i in range(num_frac):
         fout.write(f'{surface_area[i]}\n')
     fout.close()
@@ -393,7 +411,19 @@ def create_mesh_links(self, path):
     from shutil import rmtree
     print(f"--> Creating links for meshing from {path}")
     files = [
-        'params.txt', 'poly_info.dat', 'polys','intersections', 'dfnGen_output/connectivity.dat', 'dfnGen_output/left.dat','dfnGen_output/right.dat', 'dfnGen_output/front.dat', 'dfnGen_output/back.dat', 'dfnGen_output/top.dat', 'dfnGen_output/fracture_info.dat', 'dfnGen_output/intersection_list.dat','dfnGen_output/bottom.dat', 
+        'params.txt',
+        'poly_info.dat',
+        'polys',
+        'intersections',
+        'dfnGen_output/connectivity.dat',
+        'dfnGen_output/left.dat',
+        'dfnGen_output/right.dat',
+        'dfnGen_output/front.dat',
+        'dfnGen_output/back.dat',
+        'dfnGen_output/top.dat',
+        'dfnGen_output/fracture_info.dat',
+        'dfnGen_output/intersection_list.dat',
+        'dfnGen_output/bottom.dat',
     ]
     for filename in files:
         if os.path.isfile(filename) or os.path.isdir(filename):
@@ -562,3 +592,60 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
     else:
         print(f"--> Running LaGriT on script {lagrit_file} successful.\n")
         return failure
+
+
+def setup_meshing_directory():
+
+    dirs = ["lagrit_scripts", "lagrit_logs"]
+    for d in dirs:
+        try:
+            if os.path.isdir(d):
+                shutil.rmtree(d)
+            os.mkdir(d)
+        except:
+            error = f"Unable to make directory {d}"
+            sys.stderr.write(error)
+            sys.exit(1)
+
+
+def cleanup_meshing_files():
+    """ Removes mesh files and directories 
+
+    Parameters
+    ----------
+        None
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+    Only runs if production_mode is True
+    """
+
+    batch_files_to_remove = [
+        'part*', 'log_merge*', 'merge*', 'mesh_poly_CPU*', 'mesh*inp',
+        'mesh*lg'
+    ]
+    for files in batch_files_to_remove:
+        for fl in glob.glob(files):
+            os.remove(fl)
+
+    dirs_to_remove = ['lagrit_scripts', 'lagrit_logs']
+    for d in dirs_to_remove:
+        try:
+            shutil.rmtree(d)
+        except:
+            error = f"Unable to remove directory {d}"
+            sys.stderr.write(error)
+            sys.exit(1)
+
+    files_to_remove = ['user_resolution.mlgi']
+    for filename in files_to_remove:
+        try:
+            os.remove(filename)
+        except:
+            error = f"Unable to remove directory {filename}"
+            sys.stderr.write(error)
+            sys.exit(1)

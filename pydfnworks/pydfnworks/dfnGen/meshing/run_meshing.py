@@ -11,6 +11,7 @@ import sys
 import timeit
 import glob
 
+import numpy as np
 import multiprocessing as mp
 
 mp.set_start_method("fork")
@@ -76,9 +77,10 @@ def cleanup_failed_run(fracture_id, digits, quiet=True):
             pass
 
     symlinks = [
-        f"poly_{fracture_id}.inp", f"intersections_{fracture_id}.inp",
-        f"parameters_{fracture_id}.mlgi", f"mesh_poly_{fracture_id}.lgi",
-        f'points_{fracture_id}.xyz'
+        f"poly_{fracture_id}.inp",
+        f"intersections_{fracture_id}.inp",
+        f"parameters_{fracture_id}.mlgi",
+        f"mesh_poly_{fracture_id}.lgi",
     ]
 
     for f in symlinks:
@@ -91,6 +93,43 @@ def cleanup_failed_run(fracture_id, digits, quiet=True):
 
     if not quiet:
         print(f"--> Cleanup for Fracture {fracture_id} complete")
+
+
+def create_symbolic_links(fracture_id, digits, visual_mode):
+    # Create Symbolic Links
+    try:
+        os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
+    except:
+        print(f"-->\n\n\nError creating link for poly_{fracture_id}.inp\n\n\n")
+        return (fracture_id, -1)
+
+    try:
+        os.symlink(f"lagrit_scripts/parameters_{fracture_id:0{digits}d}.mlgi",\
+            f"parameters_{fracture_id:0{digits}d}.mlgi")
+    except:
+        print(
+            f"-->\n\n\nError creating link for parameters_{fracture_id:0{digits}d}.mlgi\n\n\n"
+        )
+        return (fracture_id, -1)
+
+    try:
+        os.symlink(f"lagrit_scripts/mesh_poly_{fracture_id:0{digits}d}.lgi",\
+            f"mesh_poly_{fracture_id:0{digits}d}.lgi")
+    except:
+        print(
+            f"-->\n\n\nError creating link for mesh_poly_{fracture_id:0{digits}d}.mlgi\n\n\n"
+        )
+        return (fracture_id, -1)
+
+    if not visual_mode:
+        try:
+            os.symlink(f"intersections/intersections_{fracture_id}.inp",\
+                f"intersections_{fracture_id}.inp")
+        except:
+            print(
+                f"\n\n\n--> Error creating link for intersections_{fracture_id}.inp\n\n\n"
+            )
+            return (fracture_id, -1)
 
 
 def mesh_fracture(fracture_id, visual_mode, num_poly):
@@ -110,7 +149,6 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         success index: 
         0 - run was successful
         -1 - error making symbolic link
-        -2 - run failed in Poisson Sampling
         -3 - run failed to produce mesh files
         -4 - line of intersection not preserved
     
@@ -124,6 +162,8 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     p = mp.current_process()
     _, cpu_id = p.name.split("-")
     cpu_id = int(cpu_id)
+
+    # cpu_id = 1
     # get leading digits
     digits = len(str(num_poly))
 
@@ -132,98 +172,36 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     )
 
     tic = timeit.default_timer()
-    # Create Symbolic Links
-    try:
-        os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
-    except:
-        print(f"-->\n\n\nError creating link for poly_{fracture_id}.inp\n\n\n")
-        return (fracture_id, -1)
-
-    try:
-        os.symlink(f"parameters/parameters_{fracture_id}.mlgi",\
-            f"parameters_{fracture_id}.mlgi")
-    except:
-        print(
-            f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n"
-        )
-        return (fracture_id, -1)
-
-    try:
-        os.symlink(f"lagrit_scripts/mesh_poly_{fracture_id}.lgi",\
-            f"mesh_poly_{fracture_id}.lgi")
-    except:
-        print(
-            f"-->\n\n\nError creating link for/parameters_{fracture_id}.mlgi\n\n\n"
-        )
-        return (fracture_id, -1)
-
-    if not visual_mode:
-        try:
-            os.symlink(f"intersections/intersections_{fracture_id}.inp",\
-                f"intersections_{fracture_id}.inp")
-        except:
-            print(
-                f"\n\n\n--> Error creating link for intersections_{fracture_id}.inp\n\n\n"
-            )
-            return (fracture_id, -1)
-
-        ## Poisson Disc Sampling Code Here ##
-        try:
-            single_fracture_poisson(fracture_id)
-        except:
-            print(" Error:", sys.exc_info()[0])
-            print(
-                f"-->\n\n\nERROR occurred generating points for fracture {fracture_id}\n\n\n"
-            )
-            cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, -2)
-        ## Poisson Disc Sampling Code Here ##
-
-        # check if points were created, if not exit
-        if not os.path.isfile(f'points/points_{fracture_id}.xyz'):
-            print(
-                f"-->\n\n\nERROR occurred generating points for fracture {fracture_id}\n\n\n"
-            )
-            cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, -2)
-        try:
-            os.symlink(f"points/points_{fracture_id}.xyz",
-                       f"points_{fracture_id}.xyz")
-        except:
-            print(
-                f"-->\n\n\nError creating link for points_{fracture_id}.xyz\n\n\n"
-            )
-            return (fracture_id, -1)
+    create_symbolic_links(fracture_id, digits, visual_mode)
 
     # run LaGriT Meshing
     try:
         mh.run_lagrit_script(
-            f"mesh_poly_{fracture_id}.lgi",
+            f"mesh_poly_{fracture_id:0{digits}d}.lgi",
             output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
             quiet=True)
     except:
         print(
-            f"\n\n\n--> ERROR occurred during meshing fracture {fracture_id}\n\n\n"
+            f"\n\n\n--> Error occurred during meshing fracture {fracture_id}\n\n\n"
         )
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -3)
 
     # Check if mesh*.lg file was created, if not exit.
-    if not os.path.isfile(f'mesh_{fracture_id}.lg') or os.stat(
-            f'mesh_{fracture_id}.lg') == 0:
+    if not os.path.isfile(f'mesh_{fracture_id:0{digits}d}.lg') or os.stat(
+            f'mesh_{fracture_id:0{digits}d}.lg') == 0:
         print(
-            f"\n\n\n--> ERROR occurred during meshing fracture {fracture_id}\n\n\n"
+            f"\n\n\n--> Error occurred during meshing fracture {fracture_id}\n\n\n"
         )
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -3)
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
     if not visual_mode:
-
         cmd_check = f"{os.environ['CONNECT_TEST_EXE']} \
             intersections_{fracture_id}.inp \
-            id_tri_node_{fracture_id}.list \
-            mesh_{fracture_id}.inp \
+            id_tri_node_{fracture_id:0{digits}d}.list \
+            mesh_{fracture_id:0{digits}d}.inp \
             {fracture_id}"
 
         # If the lines of intersection are not in the final mesh, put depending files
@@ -231,7 +209,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         try:
             if subprocess.call(cmd_check, shell=True):
                 print(
-                    f"\n\n\n--> ERROR: MESH CHECKING FAILED on {fracture_id}!!!\n\nEXITING PROGRAM\n\n\n"
+                    f"\n\n\n--> Error: Meshing checking failed on {fracture_id}!!!\nExiting PROGRAM\n\n\n"
                 )
                 cleanup_failed_run(fracture_id, digits)
                 return (fracture_id, -4)
@@ -243,7 +221,10 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             return (fracture_id, -4)
 
         # Mesh checking was a success. Remove check files and move on
-        files = [f"id_tri_node_{fracture_id}.list", f"mesh_{fracture_id}.inp"]
+        files = [
+            f"id_tri_node_{fracture_id:0{digits}d}.list",
+            f"mesh_{fracture_id:0{digits}d}.inp"
+        ]
         for f in files:
             try:
                 os.remove(f)
@@ -254,14 +235,15 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     # Remove symbolic
     if visual_mode:
         files = [
-            f'poly_{fracture_id}.inp', f'parameters_{fracture_id}.mlgi',
-            f"mesh_poly_{fracture_id}.lgi"
+            f'poly_{fracture_id}.inp',
+            f'parameters_{fracture_id:0{digits}d}.mlgi',
+            f"mesh_poly_{fracture_id:0{digits}d}.lgi"
         ]
     else:
         files = [
             f'poly_{fracture_id}.inp', f'intersections_{fracture_id}.inp',
-            f'points_{fracture_id}.xyz', f'parameters_{fracture_id}.mlgi',
-            f"mesh_poly_{fracture_id}.lgi"
+            f'parameters_{fracture_id:0{digits}d}.mlgi',
+            f"mesh_poly_{fracture_id:0{digits}d}.lgi"
         ]
     for f in files:
         try:
@@ -277,7 +259,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     return (fracture_id, 0)
 
 
-def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
+def mesh_fractures_header(self):
     """ Header function for Parallel meshing of fractures
     
     Creates a queue of fracture numbers ranging from 1, num_poly
@@ -313,17 +295,10 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
     print()
     print('=' * 80)
     print(
-        f"\n--> Triangulating {len(fracture_list)} fractures using {ncpu} processors\n\n"
+        f"\n--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n\n"
     )
-    dirs = ["points", "lagrit_logs"]
-    for d in dirs:
-        if os.path.isdir(d):
-            rmtree(d)
-            os.mkdir(d)
-        else:
-            os.mkdir(d)
 
-    pool = mp.Pool(ncpu)
+    pool = mp.Pool(min(self.num_frac, self.ncpu))
     result_list = []
 
     def log_result(result):
@@ -334,17 +309,19 @@ def mesh_fractures_header(fracture_list, ncpu, visual_mode, h):
             pool.terminate()
             # If a run fails, kill all other processes, and clean up the directory
             names = [
-                "poly_*.inp", "mesh_poly_*.lgi", "parameters_*.mlgi",
-                "intersections_*.inp", "points_*.xzy"
+                "poly_*.inp",
+                "mesh_poly_*.lgi",
+                "parameters_*.mlgi",
+                "intersections_*.inp",
             ]
             for name in names:
                 files_to_remove = glob.glob(name)
                 for f in files_to_remove:
                     os.remove(f)
 
-    for i in fracture_list:
+    for i in self.fracture_list:
         pool.apply_async(mesh_fracture,
-                         args=(i, visual_mode, len(fracture_list)),
+                         args=(i, self.visual_mode, self.num_frac),
                          callback=log_result)
 
     pool.close()
@@ -371,7 +348,7 @@ Error Index:
         failure_list = genfromtxt("failure.txt")
         failure_flag = True
         if type(failure_list) is list:
-            failure_list = sort(failure_list)
+            failure_list = np.sort(failure_list)
         else:
             print('--> Fractures:', failure_list, 'Failed')
         print('--> Main process exiting.')
@@ -424,7 +401,7 @@ def merge_worker(job):
     return False
 
 
-def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
+def merge_the_meshes(n_jobs):
     """Runs the LaGrit Scripts to merge meshes into final mesh 
 
     Parameters
@@ -470,7 +447,7 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     )
     for output in outputs:
         if output:
-            error = "ERROR!!! One of the merges failed\nExiting\n"
+            error = "Error!!! One of the merges failed\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -485,20 +462,18 @@ def merge_the_meshes(num_poly, ncpu, n_jobs, visual_mode):
     elapsed = timeit.default_timer() - tic
     print(f"--> Final merge took {elapsed:.2f} seconds")
 
-    if not visual_mode:
-        if (os.stat("full_mesh.lg").st_size > 0):
-            print("--> Final merge successful")
 
-        else:
-            error = "ERROR: Final merge Failed\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+def check_for_final_mesh(visual_mode):
 
+    print("--> Checking for final mesh")
+    if visual_mode:
+        mesh_name = "reduced_mesh.inp"
     else:
-        if os.stat("reduced_mesh.inp").st_size > 0:
-            print("--> Final merge successful")
-        else:
-            error = "ERROR: Final merge Failed\n"
-            sys.stderr.write(error)
-            sys.exit(1)
-    print('=' * 80)
+        mesh_name = "full_mesh.lg"
+
+    if (os.stat(mesh_name).st_size > 0):
+        print("--> Final merge successful")
+    else:
+        error = f"Error: Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found.\nExitting Program.\n"
+        sys.stderr.write(error)
+        sys.exit(1)
