@@ -118,14 +118,14 @@ def mesh_network(self,
 
     print("--> Creating scripts for LaGriT meshing: complete")
 
+    ##### FOR SERIAL DEBUG ######
+    for frac_id in self.fracture_list:
+        _, msg = run_mesh.mesh_fracture(frac_id, self.visual_mode, self.num_frac)
+        if msg < 0:
+            error = f"Fracture {frac_id} failed to mesh properly.\nMsg {msg}.\nExiting Program\n"
+            sys.stderr.write(error)
+            sys.exit(msg)
     # ##### FOR SERIAL DEBUG ######
-    # for frac_id in self.fracture_list:
-    #     _, msg = run_mesh.mesh_fracture(frac_id, self.visual_mode, self.num_frac)
-    #     if msg < 0:
-    #         error = f"Fracture {frac_id} failed to mesh properly.\nMsg {msg}.\nExiting Program\n"
-    #         sys.stderr.write(error)
-    #         sys.exit(msg)
-    # # ##### FOR SERIAL DEBUG ######
 
     # ### Parallel runs
     if self.mesh_fractures_header():
@@ -135,11 +135,7 @@ def mesh_network(self,
         sys.exit(1)
     # ### Parallel runs
     #
-    n_jobs = self.create_merge_poly_files()
-
-    run_mesh.merge_the_meshes(n_jobs)
-
-    run_mesh.check_for_final_mesh(self.visual_mode)
+    self.merge_network()
 
     if (not self.visual_mode and not self.prune):
         if not mh.check_dudded_points(self.dudded_points):
