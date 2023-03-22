@@ -104,22 +104,20 @@ finish
 '''
 
             lagrit_filename = 'prune_intersection.lgi'
-            f = open(lagrit_filename, 'w')
-            f.write(lagrit_script)
-            f.flush()
-            f.close()
+            with open(lagrit_filename, 'w') as f:
+                f.write(lagrit_script)
+                f.flush()
             mh.run_lagrit_script("prune_intersection.lgi",
                                  f"out_{i}.txt",
                                  quiet=True)
             os.remove(filename)
-            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
+            shutil.move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
         else:
             try:
-                copy(path + 'intersections/' + filename, filename)
+                shutil.copy(path + 'intersections/' + filename, filename)
             except:
                 pass
     os.chdir(cwd)
-
 
 def check_dudded_points(dudded, hard=False):
     """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
@@ -137,11 +135,11 @@ def check_dudded_points(dudded, hard=False):
     
     Notes
     -----
-    If number of dudded points is incorrect by over 1%, program will exit. 
-
+        If number of dudded points is incorrect by over 1%, program will exit. 
     """
+
     print("--> Checking that number of dudded points is correct\n")
-    with open("lagrit_logs/log_merge_all.out", "r") as fp:
+    with open("lagrit_logs/log_merge_all.out",encoding='latin-1') as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
                 print(f'--> From LaGriT: {line}')
