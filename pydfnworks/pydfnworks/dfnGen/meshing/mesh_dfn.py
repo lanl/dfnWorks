@@ -118,23 +118,27 @@ def mesh_network(self,
 
     print("--> Creating scripts for LaGriT meshing: complete")
 
-    ##### FOR SERIAL DEBUG ######
-    for frac_id in self.fracture_list:
-        _, msg = run_mesh.mesh_fracture(frac_id, self.visual_mode, self.num_frac)
-        if msg < 0:
-            error = f"Fracture {frac_id} failed to mesh properly.\nMsg {msg}.\nExiting Program\n"
-            sys.stderr.write(error)
-            sys.exit(msg)
     # ##### FOR SERIAL DEBUG ######
+    # for frac_id in self.fracture_list:
+    #     _, msg = run_mesh.mesh_fracture(frac_id, self.visual_mode, self.num_frac)
+    #     if msg < 0:
+    #         error = f"Fracture {frac_id} failed to mesh properly.\nMsg {msg}.\nExiting Program\n"
+    #         sys.stderr.write(error)
+    #         sys.exit(msg)
+    # # ##### FOR SERIAL DEBUG ######
 
     # ### Parallel runs
+    # if there are more processors than fractures, 
+    if self.ncpu > self.num_frac:
+        print("--> Warning, more processors than fractures requested.\nResetting ncpu to num_frac")
+        self.ncpu = self.num_frac
+
     if self.mesh_fractures_header():
-        # mh.cleanup_meshing_files()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
     # ### Parallel runs
-    #
+    
     self.merge_network()
 
     if (not self.visual_mode and not self.prune):
@@ -168,3 +172,4 @@ def mesh_network(self,
     print('=' * 80)
     print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)
+
