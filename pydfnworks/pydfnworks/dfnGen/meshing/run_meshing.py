@@ -22,7 +22,7 @@ from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson
 
 
-def cleanup_failed_run(fracture_id, digits, quiet=True):
+def cleanup_failed_run(fracture_id, digits):
     """ If meshing fails, this function moves all relavent files
     to a folder for debugging
 
@@ -44,8 +44,7 @@ def cleanup_failed_run(fracture_id, digits, quiet=True):
 
 """
 
-    if not quiet:
-        print(f"--> Cleaning up meshing run for fracture {fracture_id}")
+    print(f"--> Cleaning up meshing run for fracture {fracture_id}")
 
     if not os.path.isfile("failure.txt"):
         with open('failure.txt', "w+") as failure_file:
@@ -58,41 +57,41 @@ def cleanup_failed_run(fracture_id, digits, quiet=True):
     try:
         os.mkdir(folder)
     except:
-        if not quiet:
-            print(f"Warning! Unable to make new folder: {folder}")
+        print(f"Warning! Unable to make new folder: {folder}")
         pass
 
     files = [
-        f"mesh_{fracture_id}.inp", f"{fracture_id}_mesh_errors.txt",
+        f"mesh_{fracture_id:0{digits}d}.inp", f"{fracture_id}_mesh_errors.txt",
         f"id_tri_node_{fracture_id}.list",
-        f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out"
+        f"lagrit_logs/log_lagrit_{fracture_id:0{digits}d}.out",
+        f"polys/poly_{fracture_id}.inp",
+        f"intersections/intersections_{fracture_id}.inp",
+        f"lagrit_scripts/parameters_{fracture_id:0{digits}d}.mlgi",
+        f"lagrit_scripts/mesh_poly_{fracture_id:0{digits}d}.lgi",
     ]
 
     for f in files:
         try:
             copy(f, folder)
         except:
-            if not quiet:
-                print(f'--> Warning: Could copy {f} to failure folder')
+            print(f'--> Warning: Could not copy {f} to failure folder')
             pass
 
     symlinks = [
         f"poly_{fracture_id}.inp",
         f"intersections_{fracture_id}.inp",
-        f"parameters_{fracture_id}.mlgi",
-        f"mesh_poly_{fracture_id}.lgi",
+        f"parameters_{fracture_id:0{digits}d}.mlgi",
+        f"mesh_poly_{fracture_id:0{digits}d}.lgi",
     ]
 
     for f in symlinks:
         try:
             os.unlink(f)
         except:
-            if not quiet:
-                print(f'--> Warning: Could not unlink {f}')
+            print(f'--> Warning: Could not unlink {f}')
             pass
 
-    if not quiet:
-        print(f"--> Cleanup for Fracture {fracture_id} complete")
+    print(f"--> Cleanup for Fracture {fracture_id} complete")
 
 
 def create_symbolic_links(fracture_id, digits, visual_mode):
