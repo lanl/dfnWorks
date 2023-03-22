@@ -58,6 +58,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
     from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
+    from pydfnworks.dfnGen.meshing.poisson_driver import create_lagrit_parameters_file
+    from pydfnworks.dfnGen.meshing.lagrit_merge_mesh import create_merge_poly_files
+    from pydfnworks.dfnGen.meshing.run_meshing import mesh_fractures_header
+
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.map2continuum_helper import in_domain, gather_points
@@ -208,6 +212,12 @@ class DFNWORKS():
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
+
+        if prune_file:
+            self.prune = True
+        else:
+            self.prune = False 
+
         self.logging = False
 
         self.store_polygon_data = store_polygon_data

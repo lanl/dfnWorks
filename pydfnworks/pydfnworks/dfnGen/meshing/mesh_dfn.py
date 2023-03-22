@@ -7,26 +7,24 @@
 
 import os
 import sys
+import shutil
+import timeit
+
 from numpy import genfromtxt, sort
 # pydfnworks Modules
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
-from pydfnworks.dfnGen.meshing import lagrit_scripts_poisson_disc as lagrit
+from pydfnworks.dfnGen.meshing import poisson_driver as lg
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
-from pydfnworks.dfnGen.meshing.poisson_disc.poisson_functions import single_fracture_poisson, dump_poisson_params
+from pydfnworks.dfnGen.meshing import general_lagrit_scripts as lgs
 
 
 def mesh_network(self,
-                 prune=False,
                  uniform_mesh=False,
-                 production_mode=True,
-                 coarse_factor=8,
-                 slope=0.1,
-                 min_dist=1,
-                 max_dist=40,
-                 concurrent_samples=10,
-                 grid_size=10,
-                 well_flag=False):
-    ''' Mesh fracture network using LaGriT
+                 slope=0.2,
+                 min_dist=0.5,
+                 cleanup=True):
+    """
+      Mesh fracture network using LaGriT
 
     Parameters
     ----------
@@ -62,109 +60,115 @@ def mesh_network(self,
 
     Notes
     ------
-    1. For uniform resolution mesh, set slope = 0
-    2. All fractures in self.prune_file must intersect at least 1 other fracture
+        1. For uniform resolution mesh, set slope = 0
+        2. All fractures in self.prune_file must intersect at least 1 other fracture
 
-    '''
+    """
 
     print('=' * 80)
     print("Meshing DFN using LaGriT : Starting")
     print('=' * 80)
+    tic = timeit.default_timer()
 
+    mh.setup_meshing_directory()
+
+    ######## Pruning scripts
+
+    #     if prune:
+    #         if self.prune_file == "":
+    #             error = "ERROR!! User requested pruning in meshing but \
+    # did not provide file of fractures to keep.\nExiting program.\n"
+
+    #             sys.stderr.write(error)
+    #             sys.exit(1)
+
+    #         self.create_mesh_links(self.path)
+
+    #         if self.visual_mode:
+    #             print("\n--> Running in Visual Mode\n")
+    #         print(
+    #             f"Loading list of fractures to remain in network from {self.prune_file}"
+    #         )
+    #         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
+    #         print(fracture_list)
+    #         if not self.visual_mode:
+    #             lagrit.edit_intersection_files(self.num_frac, fracture_list,
+    #                                            self.path)
+    #         self.num_frac = len(fracture_list)
+
+    ######## Pruning scripts
+
+    print("--> Creating scripts for LaGriT meshing")
+    lg.create_poisson_user_function_script()
     if uniform_mesh:
-        slope = 0  # Setting slope = 0, results in a uniform mesh
+        self.slope = 0
+    else:
+        self.slope = slope
+    self.intercept = min_dist * self.h
 
-    if prune:
-        if self.prune_file == "":
-            error = "ERROR!! User requested pruning in meshing but \
-did not provide file of fractures to keep.\nExiting program.\n"
+    digits = len(str(self.num_frac))
+    self.fracture_list = range(1, self.num_frac + 1)
 
-            sys.stderr.write(error)
-            sys.exit(1)
-
-        self.create_mesh_links(self.path)
-
+    for frac_id in self.fracture_list:
+        self.create_lagrit_parameters_file(frac_id, digits)
         if self.visual_mode:
-            print("\n--> Running in Visual Mode\n")
-        print(
-            f"Loading list of fractures to remain in network from {self.prune_file}"
-        )
-        fracture_list = sort(genfromtxt(self.prune_file).astype(int))
-        print(fracture_list)
-        if not self.visual_mode:
-            lagrit.edit_intersection_files(self.num_frac, fracture_list,
-                                           self.path)
-        self.num_frac = len(fracture_list)
+            lg.create_lagrit_reduced_mesh_script(frac_id, digits)
+        else:
+            lg.create_lagrit_poisson_script(frac_id, digits)
 
-    else:
-        fracture_list = range(1, self.num_frac + 1)
+    print("--> Creating scripts for LaGriT meshing: complete")
 
-    # if number of fractures is greater than number of CPUS,
-    # only use num_poly CPUs. This change is only made here, so ncpus
-    # is still used in PFLOTRAN
-    ncpu = min(self.ncpu, self.num_frac)
+    # ##### FOR SERIAL DEBUG ######
+    # for frac_id in self.fracture_list:
+    #     _, msg = run_mesh.mesh_fracture(frac_id, self.visual_mode, self.num_frac)
+    #     if msg < 0:
+    #         error = f"Fracture {frac_id} failed to mesh properly.\nMsg {msg}.\nExiting Program\n"
+    #         sys.stderr.write(error)
+    #         sys.exit(msg)
+    # # ##### FOR SERIAL DEBUG ######
 
-    print('=' * 80)
-    if self.visual_mode:
-        print("\n--> Running in Visual Mode\n")
-    else:
-        print("\n--> Running in Full Meshing Mode\n")
-    print('=' * 80)
-
-    lagrit.create_parameter_mlgi_file(fracture_list, self.h, slope=slope)
-    if self.visual_mode:
-        lagrit.create_lagrit_scripts_reduced_mesh(fracture_list)
-    else:
-
-        # Check for well points well.
-        if well_flag:
-            if not os.path.isfile("well_points.dat"):
-                error = "ERROR!!! Well flag is set to True in DFN.mesh_network(), but file 'well_points.dat' cannot be found.\nPlease run DFN.find_well_intersection_points() for each well prior to meshing\nOr set well_flag = False\nExiting Program\n"
-                sys.stderr.write(error)
-                sys.exit(1)
-
-        dump_poisson_params(self.h, coarse_factor, slope, min_dist, max_dist,
-                            concurrent_samples, grid_size, well_flag)
-
-        lagrit.create_lagrit_scripts_poisson(fracture_list)
-    ##### FOR SERIAL DEBUG ######
-    #     for f in fracture_list:
-    #         run_mesh.mesh_fracture(f, visual_mode, len(fracture_list))
-    # exit()
-
-    print('=' * 80)
-
-    failure = run_mesh.mesh_fractures_header(fracture_list, ncpu,
-                                             self.visual_mode, self.h)
-    if failure:
-        mh.cleanup_dir()
+    # ### Parallel runs
+    if self.mesh_fractures_header():
+        # mh.cleanup_meshing_files()
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
+    # ### Parallel runs
+    #
+    n_jobs = self.create_merge_poly_files()
 
-    n_jobs = lagrit.create_merge_poly_files(ncpu, self.num_frac, fracture_list,
-                                            self.h, self.visual_mode,
-                                            self.domain, self.flow_solver)
+    run_mesh.merge_the_meshes(n_jobs)
 
-    run_mesh.merge_the_meshes(self.num_frac, ncpu, n_jobs, self.visual_mode)
+    run_mesh.check_for_final_mesh(self.visual_mode)
 
-    if (not self.visual_mode and not prune):
+    if (not self.visual_mode and not self.prune):
         if not mh.check_dudded_points(self.dudded_points):
-            mh.cleanup_dir()
-            error = "ERROR!!! Incorrect Number of dudded points.\nExiting Program\n"
+            mh.cleanup_meshing_files()
+            error = "Error!!! Incorrect Number of dudded points.\nExiting Program\n"
             sys.stderr.write(error)
             sys.exit(1)
 
-    if production_mode:
-        mh.cleanup_dir()
-
     if not self.visual_mode:
-        lagrit.define_zones()
+        lgs.define_zones()
 
-    if prune:
+    if self.prune:
         mh.clean_up_files_after_prune(self)
 
     self.gather_mesh_information()
+    elapsed = timeit.default_timer() - tic
+
+    if cleanup:
+        mh.cleanup_meshing_files()
+
+    time_sec = elapsed
+    time_min = elapsed / 60
+    time_hrs = elapsed / 3600
+
+    print("--> Total Time to Mesh Network:")
+    print(
+        f"--> {time_sec:.2e} seconds\t{time_min:.2e} minutes\t{time_hrs:.2e} hours"
+    )
+    print()
     print('=' * 80)
     print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)
