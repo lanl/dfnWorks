@@ -159,11 +159,13 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     """
 
     # get current process information
-    p = mp.current_process()
-    _, cpu_id = p.name.split("-")
-    cpu_id = int(cpu_id)
-
-    # cpu_id = 1
+    try:
+        p = mp.current_process()
+        _, cpu_id = p.name.split("-")
+        cpu_id = int(cpu_id)
+    except:
+        cpu_id = 1 
+    
     # get leading digits
     digits = len(str(num_poly))
 
@@ -388,8 +390,8 @@ def merge_worker(job):
     print(f"--> Starting merge: {job}")
     tic = timeit.default_timer()
 
-    if mh.run_lagrit_script(f"lagrit_scripts/merge_poly_part_{job}.lgi",
-                            f"lagrit_logs/merge_poly_part{job}",
+    if mh.run_lagrit_script(f"lagrit_scripts/merge_part_{job}.lgi",
+                            f"lagrit_logs/merge_part_{job}",
                             quiet=True):
         print(f"Error {job} failed")
         return True
@@ -401,7 +403,9 @@ def merge_worker(job):
     return False
 
 
-def merge_the_meshes(n_jobs):
+
+
+def merge_the_fractures(ncpu):
     """Runs the LaGrit Scripts to merge meshes into final mesh 
 
     Parameters
@@ -424,19 +428,18 @@ def merge_the_meshes(n_jobs):
         Meshes are merged in batches for efficiency  
     """
     print('=' * 80)
-    if n_jobs == 1:
+    if ncpu == 1:
         print(
-            f"--> Merging triangulated fracture meshes using {n_jobs} processor."
+            f"--> Merging triangulated fracture meshes using {ncpu} processor."
         )
     else:
         print(
-            f"--> Merging triangulated fracture meshes using {n_jobs} processors."
+            f"--> Merging triangulated fracture meshes using {ncpu} processors."
         )
 
-    jobs = range(1, n_jobs + 1)
+    jobs = range(1, ncpu + 1)
     tic = timeit.default_timer()
-    num_cpu = len(jobs)
-    pool = mp.Pool(num_cpu)
+    pool = mp.Pool(ncpu)
     outputs = pool.map(merge_worker, jobs)
     pool.close()
     pool.join()
@@ -451,11 +454,13 @@ def merge_the_meshes(n_jobs):
             sys.stderr.write(error)
             sys.exit(1)
 
+
+def merge_final_mesh():
+
     print('=' * 80)
     print("--> Starting Final Merge")
     tic = timeit.default_timer()
-
-    mh.run_lagrit_script('lagrit_scripts/merge_rmpts.lgi',
+    mh.run_lagrit_script('lagrit_scripts/merge_network.lgi',
                          'lagrit_logs/log_merge_all',
                          quiet=True)
 
@@ -477,3 +482,11 @@ def check_for_final_mesh(visual_mode):
         error = f"Error: Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found.\nExitting Program.\n"
         sys.stderr.write(error)
         sys.exit(1)
+
+
+def merge_network(self):
+    self.create_merge_poly_scripts()
+    self.create_final_merge_script()
+    merge_the_fractures(self.ncpu)
+    merge_final_mesh()
+    check_for_final_mesh(self.visual_mode) 
