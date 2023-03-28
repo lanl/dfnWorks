@@ -84,6 +84,7 @@ def print_user_fracture_information(self, shape, frac_number=None):
 def add_user_fract_from_file(self,
                              filename,
                              shape,
+                             nPolygons,
                              by_coord=False,
                              aperture=None,
                              transmissivity=None,
@@ -100,6 +101,9 @@ def add_user_fract_from_file(self,
 
         by_coord : boolean
             True / False of file format for coordinate or general input
+
+        nPolygons : int
+            The number of polygons specified in the file
 
         permeability : float
             Permeability of the fracture 
@@ -127,6 +131,7 @@ def add_user_fract_from_file(self,
     fracture_dictionary['transmissivity'] = transmissivity
     fracture_dictionary['permeability'] = permeability
     fracture_dictionary['hy_prop_type'] = hy_prop_type
+    fracture_dictionary['nPolygons'] = nPolygons
 
     if shape == 'rect':
         self.params['RectByCoord_Input_File_Path']['value'] = filename
@@ -244,6 +249,7 @@ def add_user_fract(self,
 
     # if specifying details in the python driver file.
     fracture_dictionary = {"shape": shape}
+    fracture_dictionary['nPolygons'] = 1
     # Check input parameters
     if filename:
         fracture_dictionary['filename'] = filename
