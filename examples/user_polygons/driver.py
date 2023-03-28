@@ -28,7 +28,8 @@ DFN.params['ignoreBoundaryFaces']['value'] = True
 
 DFN.add_user_fract_from_file(shape="poly",
                    filename = f'{src_path}/polygons.dat',
-                   permeability = 1e-12)
+                   permeability = 1e-12,
+                   nPolygons = 9)
 # build network
 DFN.make_working_directory(delete=True)
 DFN.print_domain_parameters()
