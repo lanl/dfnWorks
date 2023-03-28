@@ -265,7 +265,7 @@ def gather_dfn_gen_output(self):
                 line = line.split()
                 centers.append(
                     [float(line[0]),
-                     float(line[0]),
+                     float(line[1]),
                      float(line[2])])
     self.centers = np.array(centers)
 
