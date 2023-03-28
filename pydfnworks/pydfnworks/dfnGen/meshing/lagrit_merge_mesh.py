@@ -31,11 +31,6 @@ def create_merge_poly_scripts(self):
     """
     print("--> Writting partial merge scripts")
 
-    # get leading digits
-    digits = len(str(self.num_frac))
-    part_size = int(max(np.floor(self.num_frac / self.ncpu) + 1,
-                    1))  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
-    print(f"--> There are {part_size} fractures in each part")
 
     lagrit_input = """
 # Change to read LaGriT
@@ -63,12 +58,21 @@ dump lagrit part{0}.lg cmo_tmp
 finish
 """
 
+    # get leading digits
+    digits = len(str(self.num_frac))
+    part_size = int(max(np.floor(self.num_frac / self.ncpu) + 1,
+                    1))  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
+    
+
+
+    print(f"--> There are {part_size} fractures in each part")
+
     frac_index = 0
     for cpu in range(self.ncpu):
         # grab the fractures for this cpu
-        current_fractures = self.fracture_list[frac_index:frac_index + part_size]
-        print(f"cpu: {cpu}")
-        print(current_fractures)
+        current_fractures = list(self.fracture_list[frac_index:frac_index + part_size])
+        # print(f"cpu: {cpu}")
+        # print(current_fractures)
         frac_index += part_size
         # write script to merge them in batch
         with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
@@ -77,6 +81,7 @@ finish
                 fout.write(lagrit_input.format(filename, frac_id))
             fout.write(lagrit_input_2.format(cpu+1))
 
+    print("--> Writting merge scripts: Complete ")
 
 def create_final_merge_script(self):
 
