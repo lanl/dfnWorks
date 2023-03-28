@@ -155,11 +155,10 @@ def mesh_network(self,
         mh.clean_up_files_after_prune(self)
 
     self.gather_mesh_information()
-    elapsed = timeit.default_timer() - tic
-
+  
     if cleanup:
         mh.cleanup_meshing_files()
-
+    elapsed = timeit.default_timer() - tic
     time_sec = elapsed
     time_min = elapsed / 60
     time_hrs = elapsed / 3600
