@@ -245,6 +245,9 @@ def gather_dfn_gen_output(self):
     ## populate radius array
     self.radii = np.zeros((self.num_frac, 3))
     # First Column is x, second is y, 3rd is max
+    if self.num_frac == 1:
+        data = np.array([data])
+    
     self.radii[:, :2] = data[:, :2]
     for i in range(self.num_frac):
         self.radii[i, 2] = max(self.radii[i, 0], self.radii[i, 1])
@@ -376,7 +379,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_ell_params[i]['nPolygons']):
                 print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_ell_params[i]['hy_prop_type']
-                value = self.user_ell_params[i][hy_prop_type]
+                value = self.user_ell_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -386,7 +389,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_rect_params[i]['nPolygons']):
                 print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_rect_params[i]['hy_prop_type']
-                value = self.user_rect_params[i][hy_prop_type]
+                value = self.user_rect_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -396,7 +399,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_poly_params[i]['nPolygons']):
                 print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_poly_params[i]['hy_prop_type']
-                value = self.user_poly_params[i][hy_prop_type]
+                value = self.user_poly_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -408,7 +411,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_rect_params[i]['nPolygons']):
                 print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_rect_params[i]['hy_prop_type']
-                value = self.user_rect_params[i][hy_prop_type]
+                value = self.user_rect_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -418,7 +421,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_ell_params[i]['nPolygons']):
                 print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_ell_params[i]['hy_prop_type']
-                value = self.user_ell_params[i][hy_prop_type]
+                value = self.user_ell_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -428,7 +431,7 @@ def assign_hydraulic_properties(self):
             for j in range(self.user_poly_params[i]['nPolygons']):
                 print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
                 hy_prop_type = self.user_poly_params[i]['hy_prop_type']
-                value = self.user_poly_params[i][hy_prop_type]
+                value = self.user_poly_params[i][hy_prop_type][j]
                 print(f'{hy_prop_type} = {value}')
                 self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -458,6 +461,10 @@ def grab_polygon_data(self):
     self.polygons = {}
 
     polygon_data = np.genfromtxt('dfnGen_output/polygons.dat', dtype = str, delimiter = 'dummy', skip_header = 1) #weird format, so read data in as strings
+    
+    if self.num_frac == 1:
+        polygon_data = np.array([polygon_data])
+
 
     for i in range(len(polygon_data)):
         poly_dat = polygon_data[i] #read in data for one polygon

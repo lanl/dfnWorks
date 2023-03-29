@@ -9,6 +9,7 @@ import sys
 import glob
 from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
+import numpy as np
 import subprocess
 
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
@@ -166,6 +167,9 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
+    
+    if len(data.shape) == 1: #if single fractuer, shape will be 1d not 2
+        data = np.array([data])
 
     for index, i in enumerate(fracture_list):
         # using i - 1 do to python indexing from 0
