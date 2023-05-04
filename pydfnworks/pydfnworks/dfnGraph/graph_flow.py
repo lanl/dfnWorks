@@ -288,7 +288,7 @@ def compute_dQ(self, G):
     print(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
     print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     print("--> Complete \n")
-    return p32, dQ
+    return p32, dQ, Qf
 
 
 def dump_graph_flow_values(G):
