@@ -28,7 +28,7 @@ Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths
 - PYTHON_EXE:  Path to python executable 
 - LAGRIT_EXE:  Path to LaGriT executable 
 
-    $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
+    $ vi dfnWorks/pydfnworks/pydfnworks/general/paths.py
 
 For example:
     
