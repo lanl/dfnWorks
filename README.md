@@ -37,7 +37,7 @@ For example:
 Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
 
     {
-        "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
+        "dfnworks_PATH": "<your-home-directory>/src/dfnWorks/",
         "PETSC_DIR": "<your-home-directory>/src/petsc",
         "PETSC_ARCH": "arch-darwin-c-debug",
         "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
