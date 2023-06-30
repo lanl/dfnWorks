@@ -1,0 +1,7 @@
+*DS_Store
+*.ipynb_checkpoints
+*/build/*
+*/dist/*
+*.egg
+*pycache*
+*__pycache_*
