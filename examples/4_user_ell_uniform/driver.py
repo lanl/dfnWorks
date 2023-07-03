@@ -17,7 +17,7 @@ dfnTrans_file = f"{src_path}/PTDFN_control.dat"
 DFN = DFNWORKS(jobname,
                dfnFlow_file=dfnFlow_file,
                dfnTrans_file=dfnTrans_file,
-               ncpu=8)
+               ncpu=4)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
 DFN.params['h']['value'] = 0.025

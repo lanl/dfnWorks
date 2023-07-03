@@ -22,7 +22,8 @@ def mesh_network(self,
                  uniform_mesh=False,
                  slope=0.2,
                  min_dist=0.5,
-                 cleanup=True):
+                 cleanup=True,
+                 strict = True):
     """
       Mesh fracture network using LaGriT
 
@@ -144,9 +145,10 @@ def mesh_network(self,
     if (not self.visual_mode and not self.prune):
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
-            error = "Error!!! Incorrect Number of dudded points.\nExiting Program\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            if strict:
+                error = "Error!!! Incorrect Number of dudded points.\nExiting Program\n"
+                sys.stderr.write(error)
+                sys.exit(1)
 
     if not self.visual_mode:
         lgs.define_zones()
@@ -158,6 +160,7 @@ def mesh_network(self,
   
     if cleanup:
         mh.cleanup_meshing_files()
+        
     elapsed = timeit.default_timer() - tic
     time_sec = elapsed
     time_min = elapsed / 60

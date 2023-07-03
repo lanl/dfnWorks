@@ -16,10 +16,10 @@ dfnTrans_file = src_path + '/PTDFN_control.dat'
 DFN = DFNWORKS(jobname,
                dfnFlow_file=dfnFlow_file,
                dfnTrans_file=dfnTrans_file,
-               ncpu=8)
+               ncpu=4)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
-DFN.params['h']['value'] = 0.050
+DFN.params['h']['value'] = 0.01
 
 DFN.add_user_fract(shape='rect',
                    radii=0.6,
@@ -52,7 +52,7 @@ DFN.print_domain_parameters()
 
 # define_paths()
 DFN.create_network()
-DFN.mesh_network()
+DFN.mesh_network(uniform_mesh = True)
 
-DFN.dfn_flow()
-DFN.dfn_trans()
+# DFN.dfn_flow()
+# DFN.dfn_trans()
