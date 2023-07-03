@@ -162,7 +162,7 @@ def check_dudded_points(dudded, hard=False):
     elif diff > 0:
         ## compare with total number poins
         print(
-            '--> WARNING!!! Number of points removed does not match the expected value'
+            '--> Warning!!! Number of points removed does not match the expected value'
         )
         diff_ratio = 100 * (float(diff) / float(total_points))
         if diff_ratio < 0.01 and hard == False:
@@ -170,7 +170,7 @@ def check_dudded_points(dudded, hard=False):
             print("--> Proceeding\n")
             return True
         else:
-            print('ERROR! Incorrect Number of points removed')
+            print('Warning! Incorrect Number of points removed')
             print(f"Over 0.01% of nodes removed. Value is {diff_ratio:.2f}")
             return False
 
@@ -619,9 +619,9 @@ def cleanup_meshing_files():
 
     Notes
     -----
-    Only runs if production_mode is True
+    Only runs if cleanup is true
     """
-
+    print("\n--> Cleaning up directory after meshing")
     batch_files_to_remove = [
         'part*', 'log_merge*', 'merge*', 'mesh_poly_CPU*', 'mesh*inp',
         'mesh*lg'
@@ -633,7 +633,8 @@ def cleanup_meshing_files():
     dirs_to_remove = ['lagrit_scripts', 'lagrit_logs']
     for d in dirs_to_remove:
         try:
-            shutil.rmtree(d)
+            if os.path.isdir(d):
+                shutil.rmtree(d)
         except:
             error = f"Unable to remove directory {d}"
             sys.stderr.write(error)
@@ -642,8 +643,10 @@ def cleanup_meshing_files():
     files_to_remove = ['user_resolution.mlgi']
     for filename in files_to_remove:
         try:
-            os.remove(filename)
+            if os.path.isfile(filename):
+                os.remove(filename)
         except:
-            error = f"Unable to remove directory {filename}"
+            error = f"Unable to remove file {filename}"
             sys.stderr.write(error)
             sys.exit(1)
+    print("--> Cleaning up directory after meshing complete")
