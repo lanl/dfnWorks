@@ -70,6 +70,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
 
     if nx * ny * nz > 1e8:
         error = "Error: Number of elements too large (> 1e8). Exiting"
+        error = "Error: Number of elements too large (> 1e8). Exiting"
         sys.stderr.write(error)
         sys.exit(1)
 
