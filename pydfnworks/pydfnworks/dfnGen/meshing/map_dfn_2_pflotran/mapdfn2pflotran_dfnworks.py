@@ -229,15 +229,19 @@ def setup_domain(domain,cell_size):
     domain_origin = [
         -1 * domain['x'] / 2, -1 * domain['y'] / 2, -1 * domain['z'] / 2
     ]
+    print(domain_origin)
     # Origin of area to map in DFN domain coordinates (0,0,0 is center of DFN)
     [nx, ny, nz] = [
         int(domain['x'] / cell_size),
         int(domain['y']  / cell_size),
         int(domain['z']  / cell_size)
         ]
-    if nx + ny + nz > 0:
+    
+    print(nx,ny,nz)
+    print(domain['x'] % cell_size, domain['y'] % cell_size, domain['z'] % cell_size )
+    if domain['x'] % cell_size + domain['y'] % cell_size + domain['z'] % cell_size > 0:
         error_msg = f"Error: The cell size you've specified, {cell_size} m, does not evenly divide the domain. Domain size: {domain['x']} x {domain['y']} x {domain['z']} m^3."
-        sys.write(error_msg)
+        sys.stderr.write(error_msg)
         sys.exit(1)
 
     return domain_origin, nx, ny, nz 
@@ -248,6 +252,8 @@ def get_perms_and_porosity(self, ellipses, origin, nx, ny, nz, cell_size, matrix
     # Call mapdfn functions
     print('Mapping DFN to grid')
     fractures = self.map_dfn( origin, nx, ny, nz, cell_size)
+    # This really isn't a transmissivity. It doesn't have the right units. 
+    ###
     T = self.apertures * self.perm
     k_iso = perm_iso(fractures, T, cell_size, matrix_perm)
 
@@ -472,8 +478,8 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
 def map_dfn_2_pflotran(self,
                     mat_perm,
                     mat_porosity,
-                    tortuosity_factor,
-                    cell_size=20,
+                    cell_size,
+                    tortuosity_factor =  0.001,
                     correction_factor=True,
                     output_dir="ecpm"):
     """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
@@ -519,7 +525,7 @@ def map_dfn_2_pflotran(self,
 
     filenames = setup_output_dir(output_dir)
 
-    origin, domain_origin, nx, ny, nz  = setup_domain(self.domain, cell_size)
+    domain_origin, nx, ny, nz  = setup_domain(self.domain, cell_size)
 
     fractures, k_iso, k_aniso, porosity = self.get_perms_and_porosity(domain_origin, nx, ny, nz, cell_size, mat_perm, mat_porosity, correction_factor)
 
