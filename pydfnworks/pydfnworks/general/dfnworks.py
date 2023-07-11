@@ -63,7 +63,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.udfm.map2continuum_helper import in_domain, gather_points
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
-    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, get_normal
+    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, run_find_well_intersection_points, convert_well_to_polyline_avs, well_point_of_intersection, expand_well
 
     # dfnFlow
     import pydfnworks.dfnFlow
