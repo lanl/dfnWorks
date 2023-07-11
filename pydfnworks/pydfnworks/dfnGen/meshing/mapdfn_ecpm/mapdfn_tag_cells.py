@@ -35,6 +35,7 @@ import numpy as np
 import itertools
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
 
+
 def get_corner(origin, i, j, k, cell_size):
     """ Returns the x,y,z corners of a hex cell
 
@@ -61,15 +62,41 @@ def get_corner(origin, i, j, k, cell_size):
         None
     
     """
-    corner = [[origin[0] + i * cell_size, origin[1] + j * cell_size, origin[2] + k * cell_size],
-        [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size, origin[2] + k * cell_size],
-        [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
-        [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
-        [origin[0] + i * cell_size, origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
-        [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
-        [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size],
-        [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size]]
-    return corner 
+    corner = [[
+        origin[0] + i * cell_size, origin[1] + j * cell_size,
+        origin[2] + k * cell_size
+    ],
+              [
+                  origin[0] + (i + 1) * cell_size, origin[1] + j * cell_size,
+                  origin[2] + k * cell_size
+              ],
+              [
+                  origin[0] + (i + 1) * cell_size,
+                  origin[1] + (j + 1) * cell_size, origin[2] + k * cell_size
+              ],
+              [
+                  origin[0] + i * cell_size, origin[1] + (j + 1) * cell_size,
+                  origin[2] + k * cell_size
+              ],
+              [
+                  origin[0] + i * cell_size, origin[1] + j * cell_size,
+                  origin[2] + (k + 1) * cell_size
+              ],
+              [
+                  origin[0] + (i + 1) * cell_size, origin[1] + j * cell_size,
+                  origin[2] + (k + 1) * cell_size
+              ],
+              [
+                  origin[0] + (i + 1) * cell_size,
+                  origin[1] + (j + 1) * cell_size,
+                  origin[2] + (k + 1) * cell_size
+              ],
+              [
+                  origin[0] + i * cell_size, origin[1] + (j + 1) * cell_size,
+                  origin[2] + (k + 1) * cell_size
+              ]]
+    return corner
+
 
 def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
     """ Identify intersecting fractures for each cell of the ECPM domain.
@@ -104,19 +131,19 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         None
 
     """
-    print(f"** Tagging cells in hex mesh that intersect fractures **" ) 
+    print(f"** Tagging cells in hex mesh that intersect fractures **")
 
-    # creat dictionary 
-    index_list = range(num_cells)  
+    # creat dictionary
+    index_list = range(num_cells)
     cell_fracture_id = {key: [] for key in index_list}
     t0 = time.time()
-    mod = self.num_frac/10
+    mod = self.num_frac / 10
     if mod < 1: mod = 1
     for ifrac in range(self.num_frac):
-        if ifrac%mod == 0:
+        if ifrac % mod == 0:
             print(f'--> Tagging cells for fracture {ifrac} of {self.num_frac}')
         normal = self.normal_vectors[ifrac]
-        translation =  self.centers[ifrac]
+        translation = self.centers[ifrac]
         xrad = self.radii[ifrac][0]
         yrad = self.radii[ifrac][1]
         #calculate rotation matrix for use later in rotating coordinates of nearby cells
@@ -126,7 +153,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         angle = np.arccos(normal[2])  # everything is in radians
         M = tr.rotation_matrix(angle, direction)
         #find fracture in domain coordinates so can look for nearby cells
-        # This can be rebuilt using the polygon boundary 
+        # This can be rebuilt using the polygon boundary
 
         max_rad = max(xrad, yrad)
         x1 = translation[0] - max_rad
@@ -134,7 +161,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         y1 = translation[1] - max_rad
         y2 = translation[1] + max_rad
         z1 = translation[2] - max_rad
-        z2 = translation[2] + max_rad 
+        z2 = translation[2] + max_rad
 
         #find indices of nearby cells so don't have to check all of them!
         i1 = max(0, int((x1 - origin[0]) / cell_size))  #round down
@@ -145,19 +172,24 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         k2 = min(nz, int((z2 - origin[2]) / cell_size + 1))
 
         # use itertools generator
-        index_set = itertools.product( range(k1, k2), range(j1, j2), range(i1, i2) )
+        index_set = itertools.product(range(k1, k2), range(j1, j2),
+                                      range(i1, i2))
         for k, j, i in index_set:
             # Bounding box check
             # check if cell center is inside radius of fracture
-            center = [origin[0] + i * cell_size + 0.5*cell_size,
-                    origin[1] + j * cell_size + 0.5*cell_size,
-                    origin[2] + k * cell_size + 0.5*cell_size]
-            if x1 < center[0] < x2 and y1 < center[1] < y2 and z1 < center[2] < z2:
+            center = [
+                origin[0] + i * cell_size + 0.5 * cell_size,
+                origin[1] + j * cell_size + 0.5 * cell_size,
+                origin[2] + k * cell_size + 0.5 * cell_size
+            ]
+            if x1 < center[0] < x2 and y1 < center[1] < y2 and z1 < center[
+                    2] < z2:
                 local_center = center - translation
                 #rotate cell center coordinates to xyz of fracture
                 rotate_center = np.dot(local_center, M[:3, :3])
                 #calculate r^2 of cell center in xy of fracture (fracture lies in z=0 plane)
-                rsq_cell = np.square(rotate_center[0]) + np.square(rotate_center[1])
+                rsq_cell = np.square(rotate_center[0]) + np.square(
+                    rotate_center[1])
                 if rsq_cell < np.square(xrad):
                     #center is in radius, so check if fracture intersects cell
                     #find z of cell corners in xyz of fracture
@@ -176,9 +208,9 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
                             index = i + nx * j + nx * ny * k
                             #   store number of fractures that intersect cell
                             cell_fracture_id[index].append(ifrac)
-                            # break the corner for loop, we done here. 
+                            # break the corner for loop, we done here.
                             break
 
     tnow = time.time() - t0
     print(f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
-    return cell_fracture_id 
+    return cell_fracture_id

@@ -21,19 +21,21 @@
    SAND Number: SAND2018-7605 O
 
 '''
-import time 
+import time
 
-from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_porosity, mapdfn_perm_iso, mapdfn_perm_aniso 
-from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_io import write_h5_files 
-from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_helper_functions import setup_output_dir, setup_domain 
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_porosity, mapdfn_perm_iso, mapdfn_perm_aniso
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_io import write_h5_files
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_helper_functions import setup_output_dir, setup_domain
 
-def mapdfn_ecpm(self,matrix_perm,
-                    matrix_porosity,
-                    cell_size,
-                    tortuosity_factor =  0.001,
-                    lump_diag_terms = False,
-                    correction_factor=True,
-                    output_dir="mapdfn_ecpm"):
+
+def mapdfn_ecpm(self,
+                matrix_perm,
+                matrix_porosity,
+                cell_size,
+                tortuosity_factor=0.001,
+                lump_diag_terms=False,
+                correction_factor=True,
+                output_dir="mapdfn_ecpm"):
     """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
   
     Parameters
@@ -75,30 +77,32 @@ def mapdfn_ecpm(self,matrix_perm,
 
     # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
-    domain_origin, nx, ny, nz, num_cells  = setup_domain(self.domain, cell_size)
+    domain_origin, nx, ny, nz, num_cells = setup_domain(self.domain, cell_size)
 
     # id cells that intersect the DFN
-    cell_fracture_id  = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny, nz, cell_size)
+    cell_fracture_id = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny,
+                                             nz, cell_size)
 
     print("\n** Starting upscaling **")
     # compute the porosities of the cells
-    porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture, cell_size, matrix_porosity)
-    T = self.aperture * self.perm 
+    porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture,
+                               cell_size, matrix_porosity)
+    T = self.aperture * self.perm
 
     # compute the perms
-    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size, matrix_perm)
-    k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells,cell_fracture_id, self.normal_vectors, T,
-               cell_size,
-               matrix_perm,
-               lump_diag_terms, 
-               correction_factor)
+    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size,
+                            matrix_perm)
+    k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells, cell_fracture_id,
+                                self.normal_vectors, T, cell_size, matrix_perm,
+                                lump_diag_terms, correction_factor)
 
     print("** Upscaling Complete **\n")
 
     # write evereything to files
-    write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz, cell_size,
-                 cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm, tortuosity_factor)
-    
+    write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz,
+                   cell_size, cell_fracture_id, k_iso, k_aniso, porosity,
+                   matrix_perm, tortuosity_factor)
+
     print('=' * 80)
     print("* MAPDFN Complete")
     print('=' * 80)

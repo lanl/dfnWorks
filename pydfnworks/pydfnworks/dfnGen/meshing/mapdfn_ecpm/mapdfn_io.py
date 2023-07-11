@@ -2,7 +2,9 @@ import numpy as np
 from h5py import File
 import itertools
 
-def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity, cell_fracture_id):
+
+def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso,
+                     k_aniso, matrix_perm, porosity, cell_fracture_id):
     h5origin = [x - y for x, y in zip(origin, domain_origin)]
     # arrays for PFLOTRAN hf files
     x = np.zeros(nx + 1, '=f8')
@@ -19,7 +21,7 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_anis
     phdf5 = np.zeros((nx, ny, nz), '=f8')
 
     index_set = itertools.product(range(nz), range(ny), range(nx))
-    for k,j,i in index_set:
+    for k, j, i in index_set:
         z[k] = h5origin[2] + k * cell_size
         y[j] = h5origin[1] + j * cell_size
         index = i + nx * j + nx * ny * k
@@ -30,7 +32,8 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_anis
         kz[i][j][k] = k_aniso[index][2]
         phdf5[i][j][k] = porosity[index]
         if len(cell_fracture_id[index]) > 0:
-            fracture_id[i][j][k] =  cell_fracture_id[index][0] + 1 #color by the first fracture number in the list
+            fracture_id[i][j][k] = cell_fracture_id[index][
+                0] + 1  #color by the first fracture number in the list
         else:
             fracture_id[i][j][k] = 0  #color it zero
 
@@ -60,19 +63,22 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_anis
     #             else:
     #                 a[i][j][k] = 0  #color it zero
 
-    return x,y,z,fracture_id,khdf5,kx,ky,kz,phdf5, h5origin, idx_array, mat_array
+    return x, y, z, fracture_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array
 
 
 def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
-                cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm, tortuosity_factor):
+                   cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm,
+                   tortuosity_factor):
 
-    x,y,z,material_id,khdf5,kx,ky,kz,phdf5,h5origin, idx_array, mat_array = create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity, cell_fracture_id) 
+    x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
+        origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
+        matrix_perm, porosity, cell_fracture_id)
 
     print("--> Dumping h5 files")
     # Write same information to mapELLIPSES.h5. This file can be opened in Paraview
     # by chosing "PFLOTRAN file" as the format.
     print(f"--> Writing {filenames['mapdfn']} file for viz")
-    with File(filenames['mapdfn'], 'w') as h5file: 
+    with File(filenames['mapdfn'], 'w') as h5file:
         dataset_name = 'Coordinates/X [m]'
         h5dset = h5file.create_dataset(dataset_name, data=x)
         dataset_name = 'Coordinates/Y [m]'
@@ -93,7 +99,9 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
         hfdset = h5file.create_dataset(dataset_name, data=phdf5)
 
     # Write isotropic permeability to a gridded dataset for use with PFLOTRAN.
-    print(f"--> Writing isotropic permeability into {filenames['isotropic_k']} for isotropic permeability field")
+    print(
+        f"--> Writing isotropic permeability into {filenames['isotropic_k']} for isotropic permeability field"
+    )
     with File(filenames['isotropic_k'], 'w') as h5file2:
         # 3d uniform grid
         h5grp = h5file2.create_group('Permeability')
@@ -111,7 +119,9 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
             'Data', data=khdf5)  #does this matter that it is also called data?
 
     # Write porosity as a gridded dataset for use with PFLOTRAN.
-    print(f"--> Writting porosity into {filenames['porosity']} as a gridded dataset")
+    print(
+        f"--> Writting porosity into {filenames['porosity']} as a gridded dataset"
+    )
     with File(filenames['porosity'], 'w') as h5file2:
         # 3d uniform grid
         h5grp = h5file2.create_group('Porosity')
@@ -128,7 +138,9 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
         h5grp.create_dataset('Data', data=phdf5)
 
     # Write tortuosity as a gridded dataset for use with PFLOTRAN.
-    print(f"--> Writting tortuosity into {filenames['tortuosity']} as a gridded dataset")
+    print(
+        f"--> Writting tortuosity into {filenames['tortuosity']} as a gridded dataset"
+    )
     with File(filenames['tortuosity'], 'w') as h5file2:
         # 3d uniform grid
         h5grp = h5file2.create_group('Tortuosity')
@@ -145,7 +157,9 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
         h5grp.create_dataset('Data', data=tortuosity_factor / phdf5)
 
     # Write anisotropic permeability as a gridded dataset for use with PFLOTRAN.
-    print(f"--> Writting anisotropic permeability into {filenames['anisotropic_k']} as a gridded dataset")
+    print(
+        f"--> Writting anisotropic permeability into {filenames['anisotropic_k']} as a gridded dataset"
+    )
     with File(filenames['anisotropic_k'], 'w') as h5file3:
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityX')
@@ -193,7 +207,9 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
             'Data', data=kz)  #does this matter that it is also called data?
 
     # Write materials.h5 to inactivate non-fracture cells in PFLOTRAN.
-    print(f"--> Writting material id into {filenames['materials']} file for inactivating matrix cells")
+    print(
+        f"--> Writting material id into {filenames['materials']} file for inactivating matrix cells"
+    )
     with File(filenames['materials'], 'w') as h5file4:
         materials_group = h5file4.create_group('Materials')
         h5dset = materials_group.create_dataset('Cell Ids', data=idx_array)

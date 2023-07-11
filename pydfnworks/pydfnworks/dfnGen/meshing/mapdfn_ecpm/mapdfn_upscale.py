@@ -1,9 +1,11 @@
 import math as m
 import numpy as np
-import time 
+import time
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
 
-def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size, matrix_porosity):
+
+def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
+                    matrix_porosity):
     """ Calculate fracture porosity for each cell of ECPM intersected by one or more fractures. Simplifying assumptions: 1) each fracture crosses the cell parallel to cell faces, 2) each fracture completely crosses the cell. Assign bulk porosity to cells not intersected by fractures. 
 
     Parameters
@@ -39,7 +41,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size, matrix_por
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
             for ifrac in fractures:
-                porosity[cell_id] += aperture[ifrac]/cell_size 
+                porosity[cell_id] += aperture[ifrac] / cell_size
         else:
             porosity[cell_id] = matrix_porosity
 
@@ -47,6 +49,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size, matrix_por
     print(f'--> Time spent upscaling porosity : {t1 - t0:0.2f} sec')
 
     return porosity
+
 
 def mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size, k_background):
     '''Calculate isotropic permeability for each cell of ECPM intersected by
@@ -75,17 +78,22 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size, k_background):
     for key in cell_fracture_id.keys():
         if len(cell_fracture_id[key]) > 0:
             for ifrac in cell_fracture_id[key]:
-                k_iso[key] += T[ifrac]/cell_size 
+                k_iso[key] += T[ifrac] / cell_size
 
     t1 = time.time()
     print(f'--> Time spent in permIso() = {t1 - t0:0.2f} sec')
     return k_iso
 
-def mapdfn_perm_aniso(num_frac, num_cells,cell_fracture_id, normal_vectors, T,
-               cell_size,
-               matrix_perm,
-               LUMP = False,
-               correction_factor=True):
+
+def mapdfn_perm_aniso(num_frac,
+                      num_cells,
+                      cell_fracture_id,
+                      normal_vectors,
+                      T,
+                      cell_size,
+                      matrix_perm,
+                      LUMP=False,
+                      correction_factor=True):
     '''Calculate anisotropic permeability tensor for each cell of ECPM
      intersected by one or more fractures. Discard off-diagonal components
      of the tensor. Assign background permeability to cells not intersected
@@ -137,15 +145,18 @@ def mapdfn_perm_aniso(num_frac, num_cells,cell_fracture_id, normal_vectors, T,
     k_aniso = np.full((num_cells, 3), matrix_perm, '=f8')
     for icell in range(num_cells):
         if len(cell_fracture_id[icell]) > 0:
-            for ifrac in cell_fracture_id[icell]: 
+            for ifrac in cell_fracture_id[icell]:
                 if LUMP:  #lump off diagonal terms
                     #because symmetrical doesn't matter if direction of summing is correct, phew!
-                    k_aniso[icell][0] += np.sum(fullTensor[ifrac][0, :3]) / cell_size
-                    k_aniso[icell][1] += np.sum(fullTensor[ifrac][1, :3]) / cell_size
-                    k_aniso[icell][2] += np.sum(fullTensor[ifrac][2, :3]) / cell_size
+                    k_aniso[icell][0] += np.sum(
+                        fullTensor[ifrac][0, :3]) / cell_size
+                    k_aniso[icell][1] += np.sum(
+                        fullTensor[ifrac][1, :3]) / cell_size
+                    k_aniso[icell][2] += np.sum(
+                        fullTensor[ifrac][2, :3]) / cell_size
                 else:  #discard off diagonal terms (default)
                     #ellipseT is 0 indexed, fracture numbers are 1 indexed
-                    k_aniso[icell][0] += ellipseT[ifrac][0] / cell_size  
+                    k_aniso[icell][0] += ellipseT[ifrac][0] / cell_size
                     k_aniso[icell][1] += ellipseT[ifrac][1] / cell_size
                     k_aniso[icell][2] += ellipseT[ifrac][2] / cell_size
 
@@ -156,7 +167,7 @@ def mapdfn_perm_aniso(num_frac, num_cells,cell_fracture_id, normal_vectors, T,
                 min_n2 = 1e6
                 min_n3 = 1e6
 
-                for ifrac in cell_fracture_id[icell]: 
+                for ifrac in cell_fracture_id[icell]:
                     # normal = ellipses[ifrac]['normal']
                     n1_temp = normal[0]
                     theta1_t = m.degrees(m.acos(n1_temp)) % 90
@@ -190,5 +201,3 @@ def mapdfn_perm_aniso(num_frac, num_cells,cell_fracture_id, normal_vectors, T,
     print(f'Time spent summing cell permeabilities {t1 - t0}')
 
     return k_aniso
-
-

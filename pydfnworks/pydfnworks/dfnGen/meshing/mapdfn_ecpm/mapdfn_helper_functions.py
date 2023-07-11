@@ -1,5 +1,6 @@
 import os, sys
 
+
 def setup_output_dir(output_dir, jobname):
     """ Create ECPM output directory
 
@@ -32,8 +33,8 @@ def setup_output_dir(output_dir, jobname):
         'materials': output_dir + '/materials.h5'
     }
 
-
     return filenames
+
 
 def setup_domain(domain, cell_size):
     """ Initialize domain and discretization
@@ -72,13 +73,14 @@ def setup_domain(domain, cell_size):
     # Origin of area to map in DFN domain coordinates (0,0,0 is center of DFN)
     [nx, ny, nz] = [
         int(domain['x'] / cell_size),
-        int(domain['y']  / cell_size),
-        int(domain['z']  / cell_size)
-        ]
-    
-    num_cells = nx*ny*nz
+        int(domain['y'] / cell_size),
+        int(domain['z'] / cell_size)
+    ]
 
-    if domain['x'] % cell_size + domain['y'] % cell_size + domain['z'] % cell_size > 0:
+    num_cells = nx * ny * nz
+
+    if domain['x'] % cell_size + domain['y'] % cell_size + domain[
+            'z'] % cell_size > 0:
         error_msg = f"Error: The cell size you've specified, {cell_size} m, does not evenly divide the domain. Domain size: {domain['x']} x {domain['y']} x {domain['z']} m^3."
         sys.stderr.write(error_msg)
         sys.exit(1)
@@ -86,5 +88,3 @@ def setup_domain(domain, cell_size):
     print(f"--> Domain is {nx} x {ny} x {ny} cells. ")
     print(f"--> Total number of cells {num_cells}\n")
     return domain_origin, nx, ny, nz, num_cells
-
-
