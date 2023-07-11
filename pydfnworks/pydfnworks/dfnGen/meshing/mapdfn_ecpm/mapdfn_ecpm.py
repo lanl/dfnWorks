@@ -76,19 +76,21 @@ def mapdfn_ecpm(self,matrix_perm,
     """
     print("\n")
     print('=' * 80)
-    print("* Starting MAPDFN")
+    print("* Starting MAPDFN - ECPM")
     print('=' * 80)
 
+    # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
-
     domain_origin, nx, ny, nz, num_cells  = setup_domain(self.domain, cell_size)
 
-    # ellipsis = get_ellipses(self.radii, self.normal_vectors, self.centers)
+    # id cells that intersect the DFN
     cell_fracture_id  = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny, nz, cell_size)
 
+    # compute the porosities of the cells
     porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture, cell_size, matrix_porosity)
     T = self.aperture * self.perm 
 
+    # compute the perms
     k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size, matrix_perm)
     k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells,cell_fracture_id, self.normal_vectors, T,
                cell_size,
@@ -96,8 +98,10 @@ def mapdfn_ecpm(self,matrix_perm,
                lump_diag_terms, 
                correction_factor)
 
+    # write evereything to files
     write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz, cell_size,
                  cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm, tortuosity_factor)
+    
     print('=' * 80)
     print("* MAPDFN Complete")
     print('=' * 80)

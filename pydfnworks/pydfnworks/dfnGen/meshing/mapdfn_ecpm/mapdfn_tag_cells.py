@@ -36,40 +36,84 @@ import itertools
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
 
 def get_corner(origin, i, j, k, cell_size):
-   
-  corner = [[origin[0] + i * cell_size, origin[1] + j * cell_size,
-            origin[2] + k * cell_size],
-            [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size, origin[2] + k * cell_size],
-            [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
-            [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
-            [origin[0] + i * cell_size, origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
-            [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
-            [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size],
-            [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size]]
-  return corner 
+    """ Returns the x,y,z corners of a hex cell
+
+    Parameters
+    ---------------
+        origin : list
+            min x,y,z corner of domain
+        i : int
+            x index
+        j : int
+            y index
+        k : int
+            z index
+        cell_size : float
+            hex cell size 
+
+    Returns
+    ---------------
+        corner : list
+            list of 8 corners of the hex cell
+    
+    Notes
+    ---------------
+        None
+    
+    """
+    corner = [[origin[0] + i * cell_size, origin[1] + j * cell_size, origin[2] + k * cell_size],
+        [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size, origin[2] + k * cell_size],
+        [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
+        [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + k * cell_size],
+        [origin[0] + i * cell_size, origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
+        [origin[0] + (i + 1) * cell_size,origin[1] + j * cell_size,origin[2] + (k + 1) * cell_size],
+        [origin[0] + (i + 1) * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size],
+        [origin[0] + i * cell_size,origin[1] + (j + 1) * cell_size,origin[2] + (k + 1) * cell_size]]
+    return corner 
 
 def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
-    '''Identify intersecting fractures for each cell of the ECPM domain.
+    """ Identify intersecting fractures for each cell of the ECPM domain.
     Extent of ECPM domain is determined by nx,ny,nz, and d (see below).
      ECPM domain can be smaller than the DFN domain.
      Return numpy array (fracture) that contains for each cell:
      number of intersecting fractures followed by each intersecting fracture id.
 
-     origin = [x,y,z] float coordinates of lower left front corner of DFN domain
-     nx = int number of cells in x in ECPM domain
-     ny = int number of cells in y in ECPM domain
-     nz = int number of cells in z in ECPM domain
-     d = float discretization length in ECPM domain
-    '''
-    # List of Keys
+    Parameters
+    -----------------
+        origin : list 
+            [x,y,z] float coordinates of lower left front corner of DFN domain
+        num_cells : int
+            Number of cells in the domain 
+        nx : int
+            number of cells in x in ECPM domain
+        ny : int 
+            number of cells in y in ECPM domain
+        nz : int 
+            number of cells in z in ECPM domain
+        cell_size : float 
+            discretization length in ECPM domain
+        
+
+    Returns
+    --------------
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+    Notes
+    ------------
+        None
+
+    """
+    print(f"--> Tagging cells in hex mesh that intersect fractures " ) 
+
+    # creat dictionary 
     index_list = range(num_cells)  
-    # Using Dictionary comprehension
     cell_fracture_id = {key: [] for key in index_list}
     t0 = time.time()
-    # mod = nfrac/10
+    mod = self.num_frac/10
     for ifrac in range(self.num_frac):
-        #   if f%mod == 0:
-        print(f'--> Tagging cells for fracture {ifrac} of {self.num_frac}')
+        if ifrac%mod == 0:
+            print(f'--> Tagging cells for fracture {ifrac} of {self.num_frac}')
         normal = self.normal_vectors[ifrac]
         translation =  self.centers[ifrac]
         xrad = self.radii[ifrac][0]
@@ -99,6 +143,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         k1 = max(0, int((z1 - origin[2]) / cell_size))
         k2 = min(nz, int((z2 - origin[2]) / cell_size + 1))
 
+        # use itertools generator
         index_set = itertools.product( range(k1, k2), range(j1, j2), range(i1, i2) )
         for k, j, i in index_set:
             # Bounding box check
@@ -130,9 +175,9 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
                             index = i + nx * j + nx * ny * k
                             #   store number of fractures that intersect cell
                             cell_fracture_id[index].append(ifrac)
+                            # break the corner for loop, we done here. 
                             break
 
-
     tnow = time.time() - t0
-    print(f'--> Time elapsed in tag_cells() = {tnow:0.2f}.')
+    print(f'--> Time required for tagging cells : {tnow:0.2f} seconds')
     return cell_fracture_id 

@@ -4,42 +4,47 @@ import time
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
 
 def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size, matrix_porosity):
-    '''Calculate fracture porosity for each cell of ECPM intersected by
-     one or more fractures. Simplifying assumptions: 1) each fracture crosses
-     the cell parallel to cell faces, 2) each fracture completely crosses the cell.
-     Assign bulk porosity to cells not intersected by fractures.
-     Return numpy array of porosity for each cell in the ECPM domain.
+    """ Calculate fracture porosity for each cell of ECPM intersected by one or more fractures. Simplifying assumptions: 1) each fracture crosses the cell parallel to cell faces, 2) each fracture completely crosses the cell. Assign bulk porosity to cells not intersected by fractures. 
 
-     fracture = numpy array containing number of fractures in each cell, list of fracture numbers in each cell
-     apertures = list containing aperture of each fracture
-     d = float length of cell side
-     bulk_por = float bulk porosity (which would normally be larger than fracture porosity)
-  '''
+    Parameters
+    ---------------
+        num_cells : int
+            Total number of cells in the domain 
+    
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
 
+        apertures : numpy array
+            array of fracture apertures (likely from DFN.aperture)
+
+        cell_size : float 
+            discretization length in ECPM domain
+        
+        matrix_porosity : float
+            porosity of the matrix cells without fratures 
+
+    Returns
+    -----------
+        porosity : numpy array
+            porosity values in the domain cells
+
+    Notes
+    ----------
+        None
+    """
+    
+    print(f'--> Upscaling porosity')
     t0 = time.time()
-
-    # ncell = fracture.shape[0]
-    # porosity = np.zeros((ncell), '=f8')
-    # for i in range(ncell):
-    #     if fracture[i][0] == 0:
-    #         porosity[i] = matrix_porosity
-    #     else:  #there are fractures in this cell
-    #         for j in range(1, fracture[i][0] + 1):
-    #             fracnum = fracture[i][j]
-    #             porosity[i] += apertures[
-    #                 fracnum -
-    #                 1] / cell_size  #aperture is 0 indexed, fracture numbers are 1 indexed
-
     porosity = np.zeros(num_cells, '=f8')
-    for key in cell_fracture_id.keys():
-        if len(cell_fracture_id[key]) > 0:
-            for ifrac in cell_fracture_id[key]:
-                porosity[key] += aperture[ifrac]/cell_size 
+    for cell_id, fractures in cell_fracture_id.items():
+        if fractures > 0:
+            for ifrac in fractures:
+                porosity[cell_id] += aperture[ifrac]/cell_size 
         else:
-            porosity[key] = matrix_porosity
+            porosity[cell_id] = matrix_porosity
 
     t1 = time.time()
-    print(f'--> Time spent in porosity() = {t1 - t0:0.2f} sec')
+    print(f'--> Time spent upscaling porosity : {t1 - t0:0.2f} sec')
 
     return porosity
 
