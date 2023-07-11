@@ -32,12 +32,12 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size, matrix_por
     ----------
         None
     """
-    
+
     print(f'--> Upscaling porosity')
     t0 = time.time()
     porosity = np.zeros(num_cells, '=f8')
     for cell_id, fractures in cell_fracture_id.items():
-        if fractures > 0:
+        if len(fractures) > 0:
             for ifrac in fractures:
                 porosity[cell_id] += aperture[ifrac]/cell_size 
         else:

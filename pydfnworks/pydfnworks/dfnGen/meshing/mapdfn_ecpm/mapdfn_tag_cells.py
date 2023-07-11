@@ -104,13 +104,14 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         None
 
     """
-    print(f"--> Tagging cells in hex mesh that intersect fractures " ) 
+    print(f"** Tagging cells in hex mesh that intersect fractures **" ) 
 
     # creat dictionary 
     index_list = range(num_cells)  
     cell_fracture_id = {key: [] for key in index_list}
     t0 = time.time()
     mod = self.num_frac/10
+    if mod < 1: mod = 1
     for ifrac in range(self.num_frac):
         if ifrac%mod == 0:
             print(f'--> Tagging cells for fracture {ifrac} of {self.num_frac}')
@@ -147,7 +148,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         index_set = itertools.product( range(k1, k2), range(j1, j2), range(i1, i2) )
         for k, j, i in index_set:
             # Bounding box check
-            #check if cell center is inside radius of fracture
+            # check if cell center is inside radius of fracture
             center = [origin[0] + i * cell_size + 0.5*cell_size,
                     origin[1] + j * cell_size + 0.5*cell_size,
                     origin[2] + k * cell_size + 0.5*cell_size]
@@ -179,5 +180,5 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
                             break
 
     tnow = time.time() - t0
-    print(f'--> Time required for tagging cells : {tnow:0.2f} seconds')
+    print(f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
     return cell_fracture_id 

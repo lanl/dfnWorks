@@ -65,7 +65,7 @@ packages = [
     "pydfnworks.dfnGen.generation.input_checking",
     "pydfnworks.dfnGen.generation.output_report",
     "pydfnworks.dfnGen.generation.output_report", "pydfnworks.dfnGen.meshing",
-    "pydfnworks.dfnGen.meshing.udfm", "pydfnworks.dfnGen.meshing.map_dfn_2_pflotran",
+    "pydfnworks.dfnGen.meshing.udfm", "pydfnworks.dfnGen.meshing.mapdfn_ecpm",
     "pydfnworks.dfnGen.meshing.poisson_disc",
     "pydfnworks.dfnGen.well_package", "pydfnworks.dfnFlow",
     "pydfnworks.dfnTrans", "pydfnworks.dfnGraph"

@@ -82,8 +82,8 @@ def setup_domain(domain, cell_size):
         error_msg = f"Error: The cell size you've specified, {cell_size} m, does not evenly divide the domain. Domain size: {domain['x']} x {domain['y']} x {domain['z']} m^3."
         sys.stderr.write(error_msg)
         sys.exit(1)
-
-    print(f"--> Domain is {nx} x {ny} x {ny} m. ")
+    print(f"--> Hexahedron edge length {cell_size} m")
+    print(f"--> Domain is {nx} x {ny} x {ny} cells. ")
     print(f"--> Total number of cells {num_cells}\n")
     return domain_origin, nx, ny, nz, num_cells
 

@@ -41,16 +41,10 @@ def mapdfn_ecpm(self,matrix_perm,
         self : dfnWorks object
         
         cell_size : float
-        The cell size (meters) to use for the meshing
-
-        meshing_case : string 
-        A case switch for the meshing to be performed. 
-
-        user_defined : boolean
-        If passed, strips the 6 user-defined fractures out before meshing. 
+            The cell size (meters) to use for the meshing
 
         correction_factor : boolean
-        Apply stairstep correction from EDFM to  not applied to permeability
+            Apply stairstep correction from EDFM to  not applied to permeability
 
         
     Returns
@@ -86,6 +80,7 @@ def mapdfn_ecpm(self,matrix_perm,
     # id cells that intersect the DFN
     cell_fracture_id  = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny, nz, cell_size)
 
+    print("\n** Starting upscaling **")
     # compute the porosities of the cells
     porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture, cell_size, matrix_porosity)
     T = self.aperture * self.perm 
@@ -97,6 +92,8 @@ def mapdfn_ecpm(self,matrix_perm,
                matrix_perm,
                lump_diag_terms, 
                correction_factor)
+
+    print("** Upscaling Complete **\n")
 
     # write evereything to files
     write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz, cell_size,
