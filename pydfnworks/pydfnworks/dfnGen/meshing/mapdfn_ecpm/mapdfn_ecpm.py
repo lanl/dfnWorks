@@ -1,0 +1,104 @@
+'''
+   mapdfn2pflotran.py
+
+   Call methods in mapdfn.py to take output of dfnWorks-Version2.0, create
+   equivalent continuous porous medium representation, and write parameters
+   (permeability, porosity, tortuosity) to files for use with PFLOTRAN.
+
+   Usage: Edit values for origin, nx, ny, nz, d, k_background, bulk_por,
+          tortuosity factor, and h5origin.
+          Paths and filenames are hardwired and may also need to be checked.
+          As written, they assume script is being called from a subdirectory.
+          Then: python mapdfn2pflotran.py
+
+   Dependencies: mapdfn.py
+                 numpy
+                 h5py
+
+   Author: 
+
+   Date: 07/13/18
+   SAND Number: SAND2018-7605 O
+
+'''
+import time 
+
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_porosity, mapdfn_perm_iso, mapdfn_perm_aniso 
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_io import write_h5_files 
+from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_helper_functions import setup_output_dir, setup_domain 
+
+def mapdfn_ecpm(self,matrix_perm,
+                    matrix_porosity,
+                    cell_size,
+                    tortuosity_factor =  0.001,
+                    lump_diag_terms = False,
+                    correction_factor=True,
+                    output_dir="mapdfn_ecpm"):
+    """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
+  
+    Parameters
+    -----------------
+        self : dfnWorks object
+        
+        cell_size : float
+        The cell size (meters) to use for the meshing
+
+        meshing_case : string 
+        A case switch for the meshing to be performed. 
+
+        user_defined : boolean
+        If passed, strips the 6 user-defined fractures out before meshing. 
+
+        correction_factor : boolean
+        Apply stairstep correction from EDFM to  not applied to permeability
+
+        
+    Returns
+    -----------------
+        None
+
+    Authors
+    -----------------
+        Emily Stein (ergiamb@sandia.gov)
+        Applied Systems Analysis and Research, 8844
+        Sandia National Laboratories
+    
+        Edited by Teresa Portone (tporton@sandia.gov) 11/2020 to take arguments.
+
+        Rosie Leone 
+
+        Jeffrey Hyman 07/2023 - Integration with pydfnWorks 
+
+    Notes
+    -----------------
+
+
+    """
+    print("\n")
+    print('=' * 80)
+    print("* Starting MAPDFN")
+    print('=' * 80)
+
+    filenames = setup_output_dir(output_dir, self.jobname)
+
+    domain_origin, nx, ny, nz, num_cells  = setup_domain(self.domain, cell_size)
+
+    # ellipsis = get_ellipses(self.radii, self.normal_vectors, self.centers)
+    cell_fracture_id  = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny, nz, cell_size)
+
+    porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture, cell_size, matrix_porosity)
+    T = self.aperture * self.perm 
+
+    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size, matrix_perm)
+    k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells,cell_fracture_id, self.normal_vectors, T,
+               cell_size,
+               matrix_perm,
+               lump_diag_terms, 
+               correction_factor)
+
+    write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz, cell_size,
+                 cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm, tortuosity_factor)
+    print('=' * 80)
+    print("* MAPDFN Complete")
+    print('=' * 80)
+    print("\n")
