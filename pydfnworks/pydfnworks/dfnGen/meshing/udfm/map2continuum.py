@@ -87,7 +87,10 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
 
     ## gather points on polygons
     points = self.gather_points()
-    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self. normal_vectors,points)
+    if self.num_frac == 1:
+        self.normal_vectors = np.array([self.normal_vectors])
+
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points)
 
     #lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
     #              self.centers)
