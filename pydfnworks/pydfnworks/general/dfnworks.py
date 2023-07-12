@@ -65,6 +65,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
     from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, get_normal
 
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm import mapdfn_ecpm 
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells import mapdfn_tag_cells
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_upscale
+
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
