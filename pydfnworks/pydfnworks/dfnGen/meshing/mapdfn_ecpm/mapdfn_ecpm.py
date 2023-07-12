@@ -77,31 +77,21 @@ def mapdfn_ecpm(self,
 
     # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
-    domain_origin, nx, ny, nz, num_cells = setup_domain(self.domain, cell_size)
+    origin, nx, ny, nz, num_cells = setup_domain(self.domain, cell_size)
 
     # id cells that intersect the DFN
-    cell_fracture_id = self.mapdfn_tag_cells(domain_origin, num_cells, nx, ny,
-                                             nz, cell_size)
+    cell_fracture_id = self.mapdfn_tag_cells(origin, num_cells, nx, ny, nz,
+                                             cell_size)
 
-    print("\n** Starting upscaling **")
-    # compute the porosities of the cells
-    porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture,
-                               cell_size, matrix_porosity)
-    T = self.aperture * self.perm
-
-    # compute the perms
-    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, T, cell_size,
-                            matrix_perm)
-    k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells, cell_fracture_id,
-                                self.normal_vectors, T, cell_size, matrix_perm,
-                                lump_diag_terms, correction_factor)
-
-    print("** Upscaling Complete **\n")
+    porosity, k_iso, k_aniso = self.mapdfn_upscale(num_cells, cell_fracture_id,
+                                                   cell_size, matrix_porosity,
+                                                   matrix_perm,
+                                                   lump_diag_terms,
+                                                   correction_factor)
 
     # write evereything to files
-    write_h5_files(domain_origin, domain_origin, filenames, nx, ny, nz,
-                   cell_size, cell_fracture_id, k_iso, k_aniso, porosity,
-                   matrix_perm, tortuosity_factor)
+    write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
+                   k_aniso, porosity, matrix_perm, tortuosity_factor)
 
     print('=' * 80)
     print("* MAPDFN Complete")

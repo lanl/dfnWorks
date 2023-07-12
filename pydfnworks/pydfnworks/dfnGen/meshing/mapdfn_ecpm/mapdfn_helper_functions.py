@@ -48,7 +48,7 @@ def setup_domain(domain, cell_size):
 
     Returns
     -----------------
-        domain_origin : list 
+        origin : list 
             min_x, min_y, min_z values of domain
         nx : int
             Number of cells in x direction 
@@ -67,9 +67,7 @@ def setup_domain(domain, cell_size):
     
     """
     print("--> Computing discrete domain parameters")
-    domain_origin = [
-        -1 * domain['x'] / 2, -1 * domain['y'] / 2, -1 * domain['z'] / 2
-    ]
+    origin = [-1 * domain['x'] / 2, -1 * domain['y'] / 2, -1 * domain['z'] / 2]
     # Origin of area to map in DFN domain coordinates (0,0,0 is center of DFN)
     [nx, ny, nz] = [
         int(domain['x'] / cell_size),
@@ -87,4 +85,4 @@ def setup_domain(domain, cell_size):
     print(f"--> Hexahedron edge length {cell_size} m")
     print(f"--> Domain is {nx} x {ny} x {ny} cells. ")
     print(f"--> Total number of cells {num_cells}\n")
-    return domain_origin, nx, ny, nz, num_cells
+    return origin, nx, ny, nz, num_cells

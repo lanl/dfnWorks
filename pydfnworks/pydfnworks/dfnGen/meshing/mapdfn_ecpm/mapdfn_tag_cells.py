@@ -137,11 +137,15 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
     index_list = range(num_cells)
     cell_fracture_id = {key: [] for key in index_list}
     t0 = time.time()
-    mod = self.num_frac / 10
+    mod = int(self.num_frac / 10)
+    percent = 0
     if mod < 1: mod = 1
     for ifrac in range(self.num_frac):
         if ifrac % mod == 0:
-            print(f'--> Tagging cells for fracture {ifrac} of {self.num_frac}')
+            print(
+                f'--> Tagging cells for fracture\t{ifrac} of {self.num_frac}\t({percent}%)'
+            )
+            percent += 10
         normal = self.normal_vectors[ifrac]
         translation = self.centers[ifrac]
         xrad = self.radii[ifrac][0]

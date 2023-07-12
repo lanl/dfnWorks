@@ -1,11 +1,30 @@
 import numpy as np
 from h5py import File
 import itertools
+import time
 
 
-def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso,
-                     k_aniso, matrix_perm, porosity, cell_fracture_id):
-    h5origin = [x - y for x, y in zip(origin, domain_origin)]
+def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
+                     porosity, cell_fracture_id):
+    """ Converts values into arrays to be dumped into h5 files
+
+    Parameters
+    ------------------
+
+
+    Returns
+    ------------------
+
+
+    Notes
+    ------------------
+
+     
+    
+    """
+
+    #h5origin = [x - y for x, y in zip(domain_origin, domain_origin)]
+    h5origin = [0, 0, 0]
     # arrays for PFLOTRAN hf files
     x = np.zeros(nx + 1, '=f8')
     x[nx] = h5origin[0] + nx * cell_size
@@ -22,10 +41,13 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso,
 
     index_set = itertools.product(range(nz), range(ny), range(nx))
     for k, j, i in index_set:
-        z[k] = h5origin[2] + k * cell_size
-        y[j] = h5origin[1] + j * cell_size
-        index = i + nx * j + nx * ny * k
+        # complute xyz coords
         x[i] = h5origin[0] + i * cell_size
+        y[j] = h5origin[1] + j * cell_size
+        z[k] = h5origin[2] + k * cell_size
+        # compute linear index
+        index = i + nx * j + nx * ny * k
+        # convert linear index to 3D arrays
         khdf5[i][j][k] = k_iso[index]
         kx[i][j][k] = k_aniso[index][0]
         ky[i][j][k] = k_aniso[index][1]
@@ -33,10 +55,11 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso,
         phdf5[i][j][k] = porosity[index]
         if len(cell_fracture_id[index]) > 0:
             fracture_id[i][j][k] = cell_fracture_id[index][
-                0] + 1  #color by the first fracture number in the list
+                0] + 1  # color by the first fracture number in the list (+1 is becuase fracture indices start at 0)
         else:
-            fracture_id[i][j][k] = 0  #color it zero
+            fracture_id[i][j][k] = 0  # color it zero
 
+    # compute indicator arrays for material properties
     idx_array = np.zeros((nx * ny * nz), '=i4')
     mat_array = np.zeros((nx * ny * nz), '=i4')
     for i in range(nx * ny * nz):
@@ -46,38 +69,40 @@ def create_h5_arrays(origin, domain_origin, nx, ny, nz, cell_size, k_iso,
         else:
             mat_array[i] = 1
 
-    # for k in range(nz):
-    #     z[k] = h5origin[2] + k * cell_size
-    #     for j in range(ny):
-    #         y[j] = h5origin[1] + j * cell_size
-    #         for i in range(nx):
-    #             index = i + nx * j + nx * ny * k
-    #             x[i] = h5origin[0] + i * cell_size
-    #             khdf5[i][j][k] = k_iso[index]
-    #             kx[i][j][k] = k_aniso[index][0]
-    #             ky[i][j][k] = k_aniso[index][1]
-    #             kz[i][j][k] = k_aniso[index][2]
-    #             phdf5[i][j][k] = porosity[index]
-    #             if len(cell_fracture_id[index]) > 0:
-    #                 a[i][j][k] =  cell_fracture_id[index][0] + 1 #color by the first fracture number in the list
-    #             else:
-    #                 a[i][j][k] = 0  #color it zero
-
     return x, y, z, fracture_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array
 
 
-def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
-                   cell_fracture_id, k_iso, k_aniso, porosity, matrix_perm,
-                   tortuosity_factor):
+def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
+                   k_aniso, porosity, matrix_perm, tortuosity_factor):
+    """ Write informaiton into h5 files for pflotran run. 
+
+    Parameters
+    ----------------
+
+
+
+    Returns
+    ------------
+
+
+
+    Notes
+    -----------
+        * All files are writting into the output_dir. 
+        * mapdfn.h5 can be opened in Paraview by chosing "PFLOTRAN file" format. This file contains all material, porosity, and permeability information
+    
+    """
+    #x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
+    #    origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
+    #    matrix_perm, porosity, cell_fracture_id)
 
     x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
-        origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
-        matrix_perm, porosity, cell_fracture_id)
+        nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
+        cell_fracture_id)
+    print("** Dumping h5 files **")
+    t0 = time.time()
 
-    print("--> Dumping h5 files")
-    # Write same information to mapELLIPSES.h5. This file can be opened in Paraview
-    # by chosing "PFLOTRAN file" as the format.
-    print(f"--> Writing {filenames['mapdfn']} file for viz")
+    print(f"--> Writting {filenames['mapdfn']} file for viz")
     with File(filenames['mapdfn'], 'w') as h5file:
         dataset_name = 'Coordinates/X [m]'
         h5dset = h5file.create_dataset(dataset_name, data=x)
@@ -100,7 +125,7 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
 
     # Write isotropic permeability to a gridded dataset for use with PFLOTRAN.
     print(
-        f"--> Writing isotropic permeability into {filenames['isotropic_k']} for isotropic permeability field"
+        f"--> Writing isotropic permeability into {filenames['isotropic_k']} as a gridded dataset"
     )
     with File(filenames['isotropic_k'], 'w') as h5file2:
         # 3d uniform grid
@@ -214,3 +239,7 @@ def write_h5_files(origin, domain_origin, filenames, nx, ny, nz, cell_size,
         materials_group = h5file4.create_group('Materials')
         h5dset = materials_group.create_dataset('Cell Ids', data=idx_array)
         h5dset = materials_group.create_dataset('Material Ids', data=mat_array)
+    t1 = time.time()
+    print(
+        f'** Writting h5 files complete. Time required : {t1 - t0:0.2f} seconds **\n'
+    )
