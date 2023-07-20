@@ -174,10 +174,11 @@ def create_spectral(self):
                 -1 - self.params['H']['value'])
 
     elif self.params['model']['value'] == 'smooth':
-        Fmodulus = (
+        Fmodulus[idx] = (
             two_pi /
             (self.params['lambda_0']['value'] * min(self.lx, self.ly)) +
             q[idx])**(-1 - self.params['H']['value'])
+
 
     # First surface spectrum
     Phase1 = two_pi * rand_stream1.rand(self.ny, self.nx)
