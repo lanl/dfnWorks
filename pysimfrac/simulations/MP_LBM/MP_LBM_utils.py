@@ -390,7 +390,7 @@ def erase_regions(rock):
     
     # Erase all isolated regions within the rock matrix
     # This is done by setting all elements in 'rock' that are part of an isolated region (where the corresponding element in 'blobs_labels' is greater than 1) to 0
-    rock[blobs_labels > 1] = 0
+    rock[blobs_labels > 1] = 1
     
     return rock
 
