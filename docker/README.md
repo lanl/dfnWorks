@@ -5,7 +5,6 @@ more frequently than dfnWorks does itself, and because
 the dependencies take significant compute time to build,
 the Docker build process is segmented into two parts.
 
-
 ### `build-core.dockerfile`
 
 This file builds the depdencies into its own container. This 
@@ -22,6 +21,24 @@ This container is intended to be updated infrequently.
 This Dockerfile constructs the final dfnWorks container, using
 the `build-core` container as a starting image. 
 
+
+
+
+## Trouble shooting
+If no space left on device run
+    1. docker container prune
+    2. docker image prune
+    3. docker rmi $(docker images -q -f "dangling=true")
+    4. docker rm $(docker ps -q -f 'status=exited')
+
+##  Push to docker 
+docker login --username=<username>
+docker push ees16/dfnworks:latest
+
+docker tag #image_id ees16/dfnworks:<v2.*>
+
 **Usage:**
 
     docker build -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
+
+

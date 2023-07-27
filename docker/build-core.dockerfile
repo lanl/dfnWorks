@@ -49,7 +49,7 @@ ENV alias gfortran="gfortran-10"
 # # 3.2 Install and configure PETSc
 RUN ["git","clone","https://gitlab.com/petsc/petsc.git","lib/petsc"]
 WORKDIR $APP_PATH/lib/petsc
-RUN ["git","checkout","v3.16.2"]
+RUN ["git","checkout","v3.19.3"]
 
 ENV PETSC_DIR=/dfnWorks/lib/petsc
 ENV PETSC_ARCH=arch-linux2-c-debug
@@ -70,7 +70,7 @@ WORKDIR $APP_PATH/pflotran/src/pflotran
 RUN ["git","fetch"]
 RUN ["git", "branch"]
 
-RUN ["git","checkout","maint/v4.0"]
+# RUN ["git","checkout","maint/v4.0"]
 RUN ["make","pflotran"]
 WORKDIR $APP_PATH
 RUN ["mv","pflotran/src/pflotran/pflotran","bin/pflotran"]
@@ -89,7 +89,7 @@ RUN ["rm","-Rf","FEHM/"]
 WORKDIR $APP_PATH
 
 # # # 3.1 Install and configure LaGriT
-RUN ["git","clone","--depth","1","https://github.com/lanl/LaGriT.git"]
+RUN ["git","clone","https://github.com/lanl/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
 RUN ["git","fetch","--all"]
 RUN ["git","branch"]
