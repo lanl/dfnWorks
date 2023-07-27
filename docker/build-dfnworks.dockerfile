@@ -72,7 +72,7 @@ WORKDIR $APP_PATH
 
 RUN ["rm","-Rf","C_stor_correct/","C_uge_correct/","DFNGen/","DFNTrans/",\
      "DFN_Mesh_Connectivity_Test/","pydfnworks/",".git",".gitignore",\
-     "internal/","docker/","scripts/","Dockerfile", "Documentation/"]
+     "internal/","docker/","scripts/","Dockerfile", "Documentation/","pysimfrac"]
 
 # Run bash on container launch
 CMD ["bash"]
