@@ -91,12 +91,13 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_left_w.ex
+  FILE well_inject.ex
 END
 
 REGION outflow
-  FILE pboundary_right_e.ex
+  FILE well_extract.ex
 END
+
 
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial

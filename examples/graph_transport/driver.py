@@ -21,7 +21,6 @@ DFN.params['ignoreBoundaryFaces']['value'] = True
 DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
 DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['disableFram']['value'] = True
-DFN.params['eAngleOption']['value'] = 1
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",

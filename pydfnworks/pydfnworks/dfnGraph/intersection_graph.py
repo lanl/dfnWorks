@@ -1,4 +1,3 @@
-from tkinter import W
 import networkx as nx
 import numpy as np
 import json
@@ -45,9 +44,11 @@ def boundary_index(bc_name):
         sys.stderr.write(error)
         sys.exit(1)
 
-def create_intersection_graph(inflow,
-                              outflow,
-                              intersection_file="dfnGen_output/intersection_list.dat"):
+
+def create_intersection_graph(
+        inflow,
+        outflow,
+        intersection_file="dfnGen_output/intersection_list.dat"):
     """ Create a graph based on topology of network.
     Edges are represented as nodes and if two intersections
     are on the same fracture, there is an edge between them in the graph. 

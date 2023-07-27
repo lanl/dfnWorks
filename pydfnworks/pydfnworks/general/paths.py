@@ -24,7 +24,8 @@ def valid(name, path, path_type):
     Notes
     -----
         If file is not found, file is not an executable, or directory does not exists then program exits
-"""
+    """
+
     if path_type == "executable":
         if not os.path.isfile(path):
             error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
@@ -41,8 +42,6 @@ def valid(name, path, path_type):
             error = f"Error checking {name}\n{path} is not a directory.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
             sys.stderr.write(error)
             sys.exit(1)
-
-    return 0
 
 
 def compile_dfn_exe(path):
@@ -68,8 +67,34 @@ def compile_dfn_exe(path):
     print("Complete")
 
 
-def define_paths():
-    """Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
+def print_paths(self):
+    """ Print enviromental variable paths to screen 
+    
+    Parameters
+    -------------
+        None
+
+    Returns
+    -------------
+        None
+
+    Notes
+    -------------
+        None
+
+    """
+    print("\ndfnWorks paths:")
+    print("---------------")
+    print(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
+    print(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
+    print(f"* PETSC_DIR: {os.environ['PETSC_DIR']}")
+    print(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
+    print(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
+    print(f"* FEHM_EXE: {os.environ['FEHM_EXE']}\n")
+
+
+def define_paths(self):
+    """ Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
     Parameters
     ----------
         None
@@ -79,7 +104,7 @@ def define_paths():
     Notes
     -----
         Environmental variables are set to executables
-"""
+    """
 
     # ================================================
     # THESE PATHS MUST BE SET BY THE USER.
@@ -92,13 +117,12 @@ def define_paths():
     # Or, change the paths here
     else:
         env_paths = {
-            'dfnworks_PATH': '',
-            'PETSC_DIR': '',
-            'PETSC_ARCH': '',
-            'PFLOTRAN_EXE': '',
-            'PYTHON_EXE': '',
-            'LAGRIT_EXE': '',
-            'FEHM_EXE': ''
+            'dfnworks_PATH': None, 
+            'PETSC_DIR': None,
+            'PETSC_ARCH': None,
+            'PFLOTRAN_EXE': None,
+            'LAGRIT_EXE': None,
+            'FEHM_EXE': None
         }
 
     # Or, read the variables from the environment
@@ -107,31 +131,44 @@ def define_paths():
             env_paths[envVar] = os.environ.get(envVar, '')
 
     # the dfnworks  repository
-    os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
-    valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
+    if env_paths['dfnworks_PATH']:
+        os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
+        valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
+    else:
+        error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
+        sys.stderr.write(error)
+        sys.exit(1)
 
     # PETSC paths
-    os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
-    os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
-    valid('PETSC_DIR', os.environ['PETSC_DIR'], "directory")
-    valid('PETSC_ARCH',
-          os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
-          "directory")
+    if env_paths['PETSC_DIR']:
+        os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
+        os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
+        valid('PETSC_DIR', os.environ['PETSC_DIR'], "directory")
+        valid('PETSC_ARCH',
+              os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
+              "directory")
+    else:
+        print("--> Warning. No PETSC Directory provided.")
 
     # PFLOTRAN path
-    os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
-    valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
+    if env_paths['PETSC_DIR']:
+        os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
+        valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
+    else:
+        print("--> Warning. No PFLOTRAN path provided.")
 
-    # Python executable
-    os.environ['PYTHON_EXE'] = env_paths['PYTHON_EXE']
-    valid('PYTHON_EXE', os.environ['PYTHON_EXE'], "executable")
+    if env_paths['FEHM_EXE']:
+        os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
+        valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
+    else:
+        print("Warning. No FEHM path provided.")
 
     # LaGriT executable
-    os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
-    valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
-
-    os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
-    valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
+    if env_paths['LAGRIT_EXE']:
+        os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
+        valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
+    else:
+        print("--> Warning. No LaGriT path provided.")
 
     # ===================================================
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.

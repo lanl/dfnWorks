@@ -24,7 +24,8 @@ def add_perm(G):
 
 """
 
-    perm = np.genfromtxt("dfnGen_output/fracture_info.dat", skip_header=1)[:, 1]
+    perm = np.genfromtxt("dfnGen_output/fracture_info.dat", skip_header=1)[:,
+                                                                           1]
     aperture = np.sqrt(12 * perm)
 
     if G.graph['representation'] == "fracture":
@@ -79,7 +80,8 @@ def add_area(G):
         None
 '''
 
-    aperture = np.genfromtxt("dfnGen_output/fracture_info.dat", skip_header=1)[:, 2]
+    aperture = np.genfromtxt("dfnGen_output/fracture_info.dat",
+                             skip_header=1)[:, 2]
     edges = list(nx.edges(G))
     for u, v in edges:
         x = G.edges[u, v]['frac']

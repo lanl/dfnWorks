@@ -23,10 +23,13 @@ DFN.params['h']['value'] = 0.25
 DFN.params['tripleIntersections']['value'] = True
 DFN.params['stopCondition']['value'] = 0 #define stopCondition and nPoly for user polygons to avoid exception
 DFN.params['nPoly']['value'] = 3
+DFN.params['ignoreBoundaryFaces']['value'] = True
+
 
 DFN.add_user_fract_from_file(shape="poly",
                    filename = f'{src_path}/polygons.dat',
-                   permeability = 1e-12)
+                   permeability = 9*[1e-12], #list or array of nPolygons perms
+                   nPolygons = 9)
 # build network
 DFN.make_working_directory(delete=True)
 DFN.print_domain_parameters()

@@ -140,6 +140,7 @@ def check_regions_and_layers_fracture(params, prefix):
                 f"The {shape} family #{i+1} is defined in both regions and layers. Only one can be specified and the other must be set to 0."
             )
 
+
 def convert_angleOption_value(params):
     """ Changes angleOption value from 'radians' to 0 or 'degrees' to 1
     This change is required for dfnGen
@@ -164,7 +165,9 @@ def convert_angleOption_value(params):
         params['angleOption']['value'] = 1
         print("Converting angleOption value from degree to 1 for dfnGen input")
     else:
-        hf.print_error(f"Error. Unknown DFN.params['angleOption']['value']. provided: {angle_option}. Acceptable values are 'radian', 'degree'.\nExiting.")
+        hf.print_error(
+            f"Error. Unknown DFN.params['angleOption']['value']. provided: {angle_option}. Acceptable values are 'radian', 'degree'.\nExiting."
+        )
 
 
 def check_orientations(params, prefix):
