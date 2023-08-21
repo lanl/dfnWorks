@@ -39,14 +39,14 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure, mas_filename,
     values = list(filter(None, values))
     # find index of mass outflow rate 
     for index,name in enumerate(header):
-        print(name)
+        # print(name)
         if "outflow Water Mass [kg/" in name:
             print(index, name)
             break
 
     mass_flowrate_name = header[index]
     mass_flowrate_value = abs(float(values[index]))
-    print(mass_flowrate_name,  mass_flowrate_value )
+    # print(mass_flowrate_name,  mass_flowrate_value )
     rates = ['kg/s', 'kg/d', 'kg/y']
     for irate,rate in enumerate(rates):
         if rate in mass_flowrate_name:
@@ -55,12 +55,14 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure, mas_filename,
                 print("Will convert to kg/s")
             break
 
+
     if irate == 1:
         # convert days to seconds
-        mass_flowrate_value *= 86400
+        mass_flowrate_value /= 86400
     elif irate == 2:
         # concert years to seconds 
-        mass_flowrate_value *= 0.00273973
+        mass_flowrate_value /= 3.14 * 1e7
+
     ## Parameters 
     mu = 8.9e-4  #dynamic viscosity of water at 20 degrees C, Pa*s
     density = 9.980123e2 ## Density of water at 20 C
