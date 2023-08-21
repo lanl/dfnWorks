@@ -174,33 +174,41 @@ def define_paths(self):
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
     # ====================================================
 
-    # Directories
-    os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
-    if not os.path.isfile(os.environ['DFNGEN_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-        valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
+    # # Directories
+    # os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
+    # if not os.path.isfile(os.environ['DFNGEN_EXE']):
+    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+    #     valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
-    os.environ[
-        'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
-    if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
-    valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
+    # os.environ[
+    #     'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
+    # if not os.path.isfile(os.environ['DFNTRANS_EXE']):
+    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+    # valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
-    os.environ['CORRECT_UGE_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
-    if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
-    valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
+    # os.environ['CORRECT_UGE_EXE'] = os.environ[
+    #     'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
+    # if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
+    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+    # valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
-    os.environ['CORRECT_STOR_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
-    if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
-    valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
+    # os.environ['CORRECT_STOR_EXE'] = os.environ[
+    #     'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
+    # if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
+    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+    # valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
-    os.environ['CONNECT_TEST_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
-    if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] +
-                        'DFN_Mesh_Connectivity_Test/')
-    valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
+    # os.environ['CONNECT_TEST_EXE'] = os.environ[
+    #     'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
+    # if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
+    #     compile_dfn_exe(os.environ['dfnworks_PATH'] +
+    #                     'DFN_Mesh_Connectivity_Test/')
+    # valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
+
+
+    ### for DOCKER
+    os.environ['DFNGEN_EXE'] = 'bin/DFNGen'
+    os.environ['DFNTRANS_EXE'] = 'bin/DFNTrans'
+    os.environ['CORRECT_UGE_EXE'] = 'bin/correct_uge'
+    os.environ['CORRECT_STOR_EXE'] = 'bin/correct_stor'
+    os.environ['CONNECT_TEST_EXE'] = 'bin/ConnectivityTest'
