@@ -68,6 +68,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm import mapdfn_ecpm 
     from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells import mapdfn_tag_cells
     from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_upscale
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm import mapdfn_effective_perm
 
     # dfnFlow
     import pydfnworks.dfnFlow
