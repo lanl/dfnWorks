@@ -327,7 +327,7 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
         return 0
 
     darcy_vel_file = 'darcyvel.dat'
-    pflotran_input_file = self.local_dfnFlow_file
+    # pflotran_input_file = self.local_dfnFlow_file
 
     print(f"--> Inflow file name:\t\t{boundary_file}")
     print(f"--> Darcy Velocity File:\t{darcy_vel_file}")
