@@ -207,8 +207,8 @@ def define_paths(self):
 
 
     ### for DOCKER
-    os.environ['DFNGEN_EXE'] = 'bin/DFNGen'
-    os.environ['DFNTRANS_EXE'] = 'bin/DFNTrans'
-    os.environ['CORRECT_UGE_EXE'] = 'bin/correct_uge'
-    os.environ['CORRECT_STOR_EXE'] = 'bin/correct_stor'
-    os.environ['CONNECT_TEST_EXE'] = 'bin/ConnectivityTest'
+    os.environ['DFNGEN_EXE'] = '/dfnWorks/bin/DFNGen'
+    os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/DFNTrans'
+    os.environ['CORRECT_UGE_EXE'] = '/dfnWorks/bin/correct_uge'
+    os.environ['CORRECT_STOR_EXE'] = '/dfnWorks/bin/correct_stor'
+    os.environ['CONNECT_TEST_EXE'] = '/dfnWorks/bin/ConnectivityTest'
