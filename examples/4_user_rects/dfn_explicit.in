@@ -75,9 +75,9 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d-1 d
-  FINAL_TIME 1.d2 d
-  MAXIMUM_TIMESTEP_SIZE 10.d0 d
+  INITIAL_TIMESTEP_SIZE  1.d-1 y
+  FINAL_TIME 1.d2 y
+  MAXIMUM_TIMESTEP_SIZE 10.d0 y
 END
 
 # REFERENCE_PRESSURE 1500000.

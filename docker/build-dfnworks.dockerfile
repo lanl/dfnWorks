@@ -12,15 +12,15 @@ MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
-ENV https_proxy=
-ENV http_proxy=
-ENV HTTPS_PROXY=
-ENV HTTP_PROXY=
+# ENV https_proxy=
+# ENV http_proxy=
+# ENV HTTPS_PROXY=
+# ENV HTTP_PROXY=
 
 COPY . .
 
 RUN ["pip3","install","mpmath"]
-# RUN ["pip3","install","fpdf"]
+RUN ["pip3","install","datetime"]
 # RUN ["pip3","install","rich"]
 # RUN ["pip3","install","seaborn"]
 # RUN ["pip3","install","mplstereonet"]
