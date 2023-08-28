@@ -588,6 +588,28 @@ def cleanup_mesh_dfm_directory():
 
 
 def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
+    """" Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))
+
+    Parameters
+    ------------------
+        self : DFN Object
+        dirname : string
+            name of working directory. Default : dfm_mesh
+        cleanup : bool
+            Clean up working directory. If true dep files are moved into subdirectories
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    --------------
+        Assumes uniform size domain in x,y,z
+    
+    
+    
+    """
+
     print('=' * 80)
     print("Creating conforming DFM mesh using LaGriT : Starting")
     print('=' * 80)
