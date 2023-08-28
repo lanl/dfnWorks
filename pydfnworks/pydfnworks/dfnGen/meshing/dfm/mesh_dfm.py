@@ -75,15 +75,6 @@ def create_domain(domain, h):
         Assuming that 
 
     """
-
-    # make sure domain size is equal in x,y,z
-    # This won't be needed in the future
-    if not domain['x'] == domain['y'] == domain['z']:
-        error = f"Error. Domain size in x, y, and z are not equal.\nx : {domain['x']}m\ny : {domain['y']}\nz : {domain['z']}m\n\nExiting Program"
-        sys.stderr.write(error)
-        sys.exit(1)
-
-
     box_domain = {"x0": None, "x0": None,
                   "y0": None, "y1": None, 
                   "z0": None, "z1": None 
@@ -99,17 +90,23 @@ def create_domain(domain, h):
 
     # Mesh size in matrix
     l = h/2
-    # Number of points in each direction in matrix
-    num_points = domain['x'] / l + 1
+    # # Number of points in each direction in matrix
+    # num_points = domain['x'] / l + 1
+    # if num_points**3 > 1e8:
+    #     error = f"Error: Too many elements for DFM meshing.\nValue {num_points**3}\nMaximum is 1e8\nExiting Program"
+    #     sys.stderr.write(error)
+    #     sys.exit(1)
 
-    if num_points**3 > 1e8:
-        error = f"Error: Too many elements for DFM meshing.\nValue {num_points**3}\nMaximum is 1e8\nExiting Program"
+    num_points_x = domain['x'] / l + 1
+    num_points_y = domain['y'] / l + 1
+    num_points_z = domain['z'] / l + 1
+    if num_points_x*num_points_y*num_points_z > 1e8:
+        error = f"Error: Too many elements for DFM meshing.\nValue {num_points_x*num_points_y*num_points_z }\nMaximum is 1e8\nExiting Program"
         sys.stderr.write(error)
         sys.exit(1)
+    return box_domain, num_points_x, num_points_y, num_points_z 
 
-    return box_domain, num_points
-
-def dfm_driver(num_points, num_fracs, h):
+def dfm_driver(num_points_x, num_points_y, num_points_z , num_fracs, h):
     """ This function creates the main lagrit driver script, which calls the other lagrit scripts.
 
     Parameters
@@ -171,8 +168,12 @@ quality/edge_max
 # triangulation is uniform resolution triangles. No attempt is made
 # to adapt the volume mesh resolution to the DFN triangle resolution.
 #
-define / NP / {num_points}
-define / NPM1 / {num_points - 1}
+define / NPX / {num_points_x}
+# define / NPXM1 / {num_points_x - 1}
+define / NPY / {num_points_y}
+# define / NPYM1 / {num_points_y - 1}
+define / NPZ / {num_points_z}
+# define / NPZM1 / {num_points_z - 1}
 define / VERTEX_CLOSE / {h / 4}
 #
 define / MO_BACKGROUND / mo_background
@@ -366,7 +367,7 @@ def dfm_build():
 # Build a uniform background point distribution.
 #
 cmo / create / MO_BACKGROUND / / / tet
-createpts / xyz / NP NP NP / X0 Y0 Z0 / X1 Y1 Z1 / 1 1 1
+createpts / xyz / NPX NPY NPZ / X0 Y0 Z0 / X1 Y1 Z1 / 1 1 1
 cmo / setatt / MO_BACKGROUND / imt / 1 0 0 / 1
 connect / noadd
 cmo / setatt / MO_BACKGROUND / itetclr / 1 0 0 / 1
@@ -604,10 +605,8 @@ def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
 
     Notes
     --------------
-        Assumes uniform size domain in x,y,z
-    
-    
-    
+        None 
+         
     """
 
     print('=' * 80)
@@ -616,8 +615,8 @@ def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
 
     setup_mesh_dfm_directory(self.jobname, dirname)
 
-    box_domain, num_points = create_domain(self.domain, self.h)
-    dfm_driver(num_points, self.num_frac, self.h)
+    box_domain, num_points_x, num_points_y, num_points_z  = create_domain(self.domain, self.h)
+    dfm_driver(num_points_x, num_points_y, num_points_z , self.num_frac, self.h)
     dfm_box(box_domain)    
     dfm_build()
     dfm_fracture_facets(self.num_frac)
