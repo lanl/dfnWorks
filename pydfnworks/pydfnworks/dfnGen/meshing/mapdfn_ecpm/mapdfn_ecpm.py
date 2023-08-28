@@ -32,6 +32,7 @@ def mapdfn_ecpm(self,
                 matrix_perm,
                 matrix_porosity,
                 cell_size,
+                matrix_on = False, 
                 tortuosity_factor=0.001,
                 lump_diag_terms=False,
                 correction_factor=True,
@@ -91,7 +92,7 @@ def mapdfn_ecpm(self,
 
     # write evereything to files
     write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor)
+                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on)
 
     print('=' * 80)
     print("* MAPDFN Complete")
