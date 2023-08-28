@@ -127,11 +127,11 @@ def dfm_driver(num_points_x, num_points_y, num_points_z , num_fracs, h):
         None 
     """
     floop = ""
-    for i in range(1, num_fracs + 1):
-        if i < num_fracs:
-            floop += f"facets_f{i}.table &\n"
+    for ifrac in range(1, num_fracs + 1):
+        if ifrac < num_fracs:
+            floop += f"facets_f{ifrac}.table &\n"
         else:
-            floop += f"facets_f{i}.table &\n"
+            floop += f"facets_f{ifrac}.table &\n"
             floop += "left.table &\n"
             floop += "right.table &\n"
             floop += "front.table &\n"
@@ -384,13 +384,16 @@ def dfm_fracture_facets(num_frac):
 
     Parameters
     ----------
+        num_frac : int 
+            Number of fractures in the DFN
     
     Returns
     -------
+        None
 
     Notes
     -----
-
+        None 
     """
     floop1 = ""
     floop2 = ""
