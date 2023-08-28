@@ -5,7 +5,7 @@ import time
 
 
 def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
-                     porosity, cell_fracture_id):
+                     porosity, cell_fracture_id, matrix_on):
     """ Converts values into arrays to be dumped into h5 files
 
     Parameters
@@ -64,8 +64,11 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
     mat_array = np.zeros((nx * ny * nz), '=i4')
     for i in range(nx * ny * nz):
         idx_array[i] = i + 1
-        if k_iso[i] == matrix_perm:
-            mat_array[i] = 0
+        if not matrix_on:
+            if k_iso[i] == matrix_perm:
+                mat_array[i] = 0
+            else:
+                mat_array[i] = 1
         else:
             mat_array[i] = 1
 
@@ -73,7 +76,7 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
 
 def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor):
+                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on):
     """ Write informaiton into h5 files for pflotran run. 
 
     Parameters
@@ -98,7 +101,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
 
     x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
         nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
-        cell_fracture_id)
+        cell_fracture_id, matrix_on)
     print("** Dumping h5 files **")
     t0 = time.time()
 
