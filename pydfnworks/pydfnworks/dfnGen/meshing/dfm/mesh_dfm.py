@@ -5,16 +5,90 @@
 
 """
 
+import os
 import sys
+import shutil
+import glob 
+
 # pydfnworks Modules
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
+def setup_mesh_dfm_directory(jobname, dirname):
+    """ Setup working directory for meshing the DFM. 
+
+    Parameters
+    ----------------
+        jobname : string
+            path to DFN working directory 
+        dirname : string 
+            name of working directory
+
+    Returns
+    --------------
+        None
+
+    Notes
+    -------------
+        None 
+    """
+    path = jobname + os.sep + dirname
+    try: 
+        os.mkdir(path)
+        os.chdir(path)
+    except:
+        shutil.rmtree(path)
+        os.mkdir(path)
+        os.chdir(path)
+
+
+    print(f"--> Working directory is now {os.getcwd()}")
+    # Make symbolic links to required files
+    try:
+        os.symlink(jobname + os.sep + "full_mesh.inp", "full_mesh.inp")
+    except:
+        error = f"Error. Unable to make symbolic link to full_mesh.inp file for DFM meshing from {jobname}.\nExitting program."
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    print("--> Setting up DFM meshing directory complete")
+
 def create_domain(domain, h):
+    """ Gather domain information. 
+
+    Parameters
+    ----------
+        domain : dict
+            Domain size dictionary from DFN object 
+        h : float 
+            Meshing length scale from DFN object 
+
+    Returns
+    -------
+        num_points : int 
+            Number of points on side of the domain 
+        box_domain : dict
+            dictionary of domain min/max for x,y,z
+
+    Notes
+    ------
+        Exits program is too many points are in domain. 
+        Assuming that 
+
+    """
+
+    # make sure domain size is equal in x,y,z
+    # This won't be needed in the future
+    if not domain['x'] == domain['y'] == domain['z']:
+        error = f"Error. Domain size in x, y, and z are not equal.\nx : {domain['x']}m\ny : {domain['y']}\nz : {domain['z']}m\n\nExiting Program"
+        sys.stderr.write(error)
+        sys.exit(1)
+
 
     box_domain = {"x0": None, "x0": None,
                   "y0": None, "y1": None, 
                   "z0": None, "z1": None 
                   }
+
     # Extent of domain
     box_domain['x0'] = - 0.5*domain['x']
     box_domain['x1'] = 0.5*domain['x'] 
@@ -35,27 +109,32 @@ def create_domain(domain, h):
 
     return box_domain, num_points
 
-
-def dfm_driver(np, num_poly, h):
-    """ This function creates the main lagrit driver script, which calls all
-    lagrit scripts.
+def dfm_driver(num_points, num_fracs, h):
+    """ This function creates the main lagrit driver script, which calls the other lagrit scripts.
 
     Parameters
     ----------
-    
+        num_points : int 
+            Number of points on side of the domain 
+        num_fracs : int 
+            Number of Fractures in the DFN
+        h : float
+            meshing length scale 
+
     Returns
     -------
+        None
 
     Notes
     -----
-
+        None 
     """
     floop = ""
-    for i in range(1,num_poly+1):
-        if i < num_poly:
-            floop += "facets_f{0}.table &\n".format(i)
+    for i in range(1, num_fracs + 1):
+        if i < num_fracs:
+            floop += f"facets_f{i}.table &\n"
         else:
-            floop += "facets_f{0}.table &\n".format(i)
+            floop += f"facets_f{i}.table &\n"
             floop += "left.table &\n"
             floop += "right.table &\n"
             floop += "front.table &\n"
@@ -63,14 +142,12 @@ def dfm_driver(np, num_poly, h):
             floop += "top.table &\n"
             floop += "bottom.table"
             
-    f_name = 'dfm_mesh_fracture_driver.lgi'
-    f = open(f_name, 'w')
-    fin = ("""#
-# dfm_mesh_fracture_driver.lgi
+    lagrit_script  = f"""#
+#   dfm_mesh_fracture_driver.lgi
 #   dfm_box_dimensions.mlgi
 #   dfm_build_background_mesh.mlgi
 #   dfm_extract_fracture_facets.mlgi
-#      dfm_extract_facets.mlgi
+#   dfm_extract_facets.mlgi
 #
 # extract_fracture_facets.mlgi must be customized for the number of fractures in the DFN
 #
@@ -94,9 +171,9 @@ quality/edge_max
 # triangulation is uniform resolution triangles. No attempt is made
 # to adapt the volume mesh resolution to the DFN triangle resolution.
 #
-define / NP / {0}
-define / NPM1 / {1}
-define / VERTEX_CLOSE / {2}
+define / NP / {num_points}
+define / NPM1 / {num_points - 1}
+define / VERTEX_CLOSE / {h / 4}
 #
 define / MO_BACKGROUND / mo_background
 infile dfm_box_dimensions.mlgi
@@ -130,7 +207,7 @@ quality
 #
 #compute / signed_distance_field / mo_dfm / mo_dfn / df_sign_dfm_dfn
 #
-#crush_thin_tets / mo_dfm / 0.25 / 1 0 0 
+# crush_thin_tets / mo_dfm / 0.25 / 1 0 0 
 dump / avs    / dfm_tet_mesh.inp / mo_dfm
 dump / lagrit / dfm_tet_mesh.lg  / mo_dfm
 dump / exo    / dfm_tet_mesh.exo / mo_dfm
@@ -221,13 +298,16 @@ cmo / delete / mo_tmp
 #
 dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / / / &
      facesets &
-""".format(int(np), int(np-1), h/4) + floop + """
+"""
+    lagrit_script += floop 
+    lagrit_script += """
 finish
-""")
+"""
 
-    f.write(fin)
-    f.flush()
-    f.close()
+    with open('dfm_mesh_fracture_driver.lgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+
     print("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
 
 def dfm_box(box_domain):    
@@ -235,17 +315,20 @@ def dfm_box(box_domain):
 
     Parameters
     ----------
-    
+        box_domain : dict
+            dictionary of domain min/max for x,y,z
+  
     Returns
     -------
+        None 
 
     Notes
     -----
+        None 
 
     """
-    f_name = 'dfm_box_dimensions.mlgi'
-    f = open(f_name, 'w')
-    fin = f"""#
+
+    lagrit_script = f"""#
 # Define a bounding box that surrounds, and is a big bigger, than the DFN
 #
 define / X0 / {box_domain['x0']}
@@ -257,27 +340,29 @@ define / Z1 / {box_domain['z1']}
 
 finish
 """
-    f.write(fin)
-    f.flush()
-    f.close()
+    with open('dfm_box_dimensions.mlgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+
     print("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
 def dfm_build():
-    """ This function creates the dfm_build_background_mesh.mlgi lagrit script.
+    """ Create the dfm_build_background_mesh.mlgi lagrit script.
 
     Parameters
     ----------
-    
+        None 
+
     Returns
     -------
+        None 
 
     Notes
     -----
-
+        Needs to be modified to have different NPX, NPY, NPZ 
     """
-    f_name = 'dfm_build_background_mesh.mlgi'
-    f = open(f_name, 'w')
-    fin = ("""#
+
+    lagrit_script = """#
 # Build a uniform background point distribution.
 #
 cmo / create / MO_BACKGROUND / / / tet
@@ -287,13 +372,13 @@ connect / noadd
 cmo / setatt / MO_BACKGROUND / itetclr / 1 0 0 / 1
 #
 finish
-""")
-    f.write(fin)
-    f.flush()
-    f.close()
+"""
+    with open('dfm_build_background_mesh.mlgi', 'w') as fp: 
+        fp.write(lagrit_script)
+        fp.flush()
     print("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
-def dfm_fracture_facets(num_poly):
+def dfm_fracture_facets(num_frac):
     """ This function creates the dfm_extract_fracture_facets.mlgi lagrit script.
 
     Parameters
@@ -308,24 +393,23 @@ def dfm_fracture_facets(num_poly):
     """
     floop1 = ""
     floop2 = ""
-    for i in range(1,num_poly+1):
-        floop1 += """
-define / FRAC_ID / {0}
-define / FRAC_FILE_OUT / facets_f{0}.inp
-define / FRAC_TABLE_OUT / facets_f{0}.table
+    for ifrac in range(1,num_frac+1):
+        floop1 += f"""
+define / FRAC_ID / {ifrac}
+define / FRAC_FILE_OUT / facets_f{ifrac}.inp
+define / FRAC_TABLE_OUT / facets_f{ifrac}.table
 #
 infile dfm_extract_facets.mlgi
-        """.format(i)
-        floop2 += """
-read / avs2 / facets_f{0}.inp / mo
-cmo / setatt / mo / itetclr / 1 0 0 / {0}
+        """
+        floop2 += f"""
+read / avs2 / facets_f{ifrac}.inp / mo
+cmo / setatt / mo / itetclr / 1 0 0 / {ifrac}
 addmesh / merge / mo_merge / mo_merge / mo
 cmo / delete / mo
-        """.format(i)
+        """
 
-    f_name = 'dfm_extract_fracture_facets.mlgi'
-    f = open(f_name, 'w')
-    fin = ("""#
+
+    lagrit_script = """#
 define / INPUT / full_mesh.inp
 define / MO_ONE_FRAC / mo_tmp_one_fracture
 #
@@ -342,10 +426,10 @@ dump / avs2 / facets_merged.table / mo_merge / 0 0 0 2
 cmo / delete / mo_merge
 
 finish
-""")
-    f.write(fin)
-    f.flush()
-    f.close()
+"""
+    with open('dfm_extract_fracture_facets.mlgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
     print("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
 
 def dfm_facets():
@@ -353,17 +437,19 @@ def dfm_facets():
 
     Parameters
     ----------
-    
+        None 
+
     Returns
     -------
+        None 
 
     Notes
     -----
+        None
 
     """
-    f_name = 'dfm_extract_facets.mlgi'
-    f = open(f_name, 'w')
-    fin = ("""#
+
+    lagrit_script = f"""#
 cmo / copy / MO_ONE_FRAC / mo_dfn
 cmo / select / MO_ONE_FRAC
 rmmat / FRAC_ID / element / exclusive
@@ -417,13 +503,14 @@ cmo / delete / MO_ONE_FRAC_EXTRACT
 cmo / status / brief
 #
 finish
-""")
-    f.write(fin)
-    f.flush()
-    f.close()
+"""
+    with open('dfm_extract_facets.mlgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+
     print("Creating dfm_extract_facets.mlgi file: Complete\n")
 
-def dfm_run():
+def create_dfm():
     """ This function executes the lagrit scripts. 
     
     Parameters
@@ -444,19 +531,79 @@ def dfm_run():
         "dfm_mesh_fracture_driver.lgi",
         quiet=False)
     
-def mesh_dfm(self):
+def cleanup_mesh_dfm_directory():
+    """ Clean up working files from meshing the DFM
+
+    Parameters
+    ---------------
+        None
+
+    Returns
+    ----------------
+        None
+
+    Notes
+    ---------------
+        None
+
+    """
+    print("--> Cleaning up working directory")
+    # clean up LaGrit Scripts
+    lagrit_script_dir = "dfm_lagrit_scripts" 
+    try:
+        os.mkdir(lagrit_script_dir)
+    except:
+        shutil.rmtree(lagrit_script_dir)
+        os.mkdir(lagrit_script_dir)
+    lagrit_scripts = glob.glob("*lgi")
+    for filename in lagrit_scripts:
+        shutil.copyfile(filename, lagrit_script_dir + os.sep + filename)
+        os.remove(filename)
+
+    table_dir = "tables"
+    try:
+        os.mkdir(table_dir)
+    except:
+        shutil.rmtree(table_dir)
+        os.mkdir(table_dir)
+
+    table_files = glob.glob("*table")
+    for filename in table_files:
+        shutil.copyfile(filename, table_dir + os.sep + filename)
+        os.remove(filename)
+
+    facets_dir = "facets"
+    try:
+        os.mkdir(facets_dir)
+    except:
+        shutil.rmtree(facets_dir)
+        os.mkdir(facets_dir)
+
+    facet_files = glob.glob("facets*inp")
+    for filename in facet_files:
+        shutil.copyfile(filename, facets_dir + os.sep + filename)
+        os.remove(filename)
+
+    print("--> Cleaning up working directory: Complete")
+
+
+def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
     print('=' * 80)
     print("Creating conforming DFM mesh using LaGriT : Starting")
     print('=' * 80)
 
+    setup_mesh_dfm_directory(self.jobname, dirname)
+
     box_domain, num_points = create_domain(self.domain, self.h)
     dfm_driver(num_points, self.num_frac, self.h)
-
     dfm_box(box_domain)    
     dfm_build()
     dfm_fracture_facets(self.num_frac)
     dfm_facets()
-    dfm_run()
+    create_dfm()
+
+    if cleanup:
+        cleanup_mesh_dfm_directory()
 
     print('=' * 80)
     print("Creating conforming DFM mesh using LaGriT : Complete")
