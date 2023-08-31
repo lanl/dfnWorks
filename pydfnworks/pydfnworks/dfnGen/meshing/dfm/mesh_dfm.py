@@ -219,7 +219,7 @@ cmo / delete / mo_dfn
 cmo / status / brief
 #
 infile dfm_extract_fracture_facets.mlgi
-# infile diagnostics.mlgi
+infile dfm_diagonstics.mlgi
 #
 # Delete this !!!! 
 # Hardcoded facesets on boundaries for Alex EES17
@@ -405,28 +405,33 @@ define / FRAC_TABLE_OUT / facets_f{ifrac}.table
 #
 infile dfm_extract_facets.mlgi
         """
-        floop2 += f"""
-read / avs2 / facets_f{ifrac}.inp / mo
+        if ifrac == 1:
+            floop2 += f"""
+read / avs / facets_f{ifrac}.inp / mo_merge
+cmo / setatt / mo_merge / itetclr / 1 0 0 / {ifrac}
+        """
+        else:
+            floop2 += f"""
+read / avs / facets_f{ifrac}.inp / mo
 cmo / setatt / mo / itetclr / 1 0 0 / {ifrac}
 addmesh / merge / mo_merge / mo_merge / mo
 cmo / delete / mo
         """
-
-
     lagrit_script = """#
 define / INPUT / full_mesh.inp
 define / MO_ONE_FRAC / mo_tmp_one_fracture
 #
 read / avs / dfm_tet_mesh.inp / mo_dfm
 #
+cmo / create / mo_merge
 cmo / status / brief
 read / avs / INPUT / mo_dfn
 cmo / status / brief
 """ + floop1 + floop2 + """
-dump / avs2 / facets_merged.inp / mo_merge
+dump / avs / facets_merged.inp / mo_merge
 cmo / addatt / mo_merge / id_frac / vint / scalar / nelements
 cmo / copyatt / mo_merge / mo_merge / id_frac / itetclr
-dump / avs2 / facets_merged.table / mo_merge / 0 0 0 2
+dump / avs / facets_merged.table / mo_merge / 0 0 0 2
 cmo / delete / mo_merge
 
 finish
@@ -514,6 +519,76 @@ finish
 
     print("Creating dfm_extract_facets.mlgi file: Complete\n")
 
+
+def dfm_diagonstics():
+    """
+    
+    """
+    lagrit_script = """
+
+# Figure out which cells (tringles) from DFN full_mesh.inp were not reproduced
+# in the DFM tet fracture faces (facets_f1.inp, facets_f2.inp, etc).
+#
+read / avs / full_mesh.inp / mo_full
+#
+read / avs / facets_merged.inp / mo_merge
+#
+# If the above file exists the next lines can be removed.
+#
+# Interpolate does not work well on coincident 2D triangulations. C'est la vie.
+# To work around this turn the facets into prism volumes by giving them a small
+# negative offset and then a positive extrude. They you have volume cells to
+# interpolate from.
+#
+#++++++++++++++++++++++++++++++++++++
+# EPS_OFFSET  should be set to 0.2h
+# EPS_EXTRUDE should be set to 0.4h
+#
+define / EPS_OFFSET  / -0.02
+define / EPS_EXTRUDE /  0.04
+#++++++++++++++++++++++++++++++++++++
+offsetsurf / mo_offset / mo_merge / EPS_OFFSET
+extrude / mo_extrude / mo_offset / const / EPS_EXTRUDE / volume / norm
+cmo / delete / mo_merge
+cmo / delete / mo_offset
+
+cmo / addatt / mo_full / mat_interp / vint / scalar / nelements
+cmo / setatt / mo_extrude / itetclr / 1 0 0 / 1
+interpolate / map / mo_full mat_interp / 1 0 0 / &
+                    mo_extrude itetclr
+dump / avs / tmp_interpolate.inp / mo_full
+
+eltset / ekeep / mat_interp / eq / 2
+eltset / edelete / mat_interp / eq / 1
+
+cmo / addatt / mo_full / volume / e_area
+math / sum / mo_full / area_sum / 1,0,0 / mo_full / e_area
+
+rmpoint / element /  eltset get edelete
+rmpoint / compress
+
+cmo / status / brief
+
+cmo / addatt / mo_full / volume / e_area
+math / sum / mo_full / area_sum / 1,0,0 / mo_full / e_area
+#
+# The attributes that are output in this file could be cleaned up so
+# extra unnecessary information is not included.
+cmo / DELATT / mo_full / e_area
+cmo / DELATT / mo_full / mat_interp
+#
+dump / avs / missed_cells_full_mesh.inp / mo_full
+
+finish
+
+"""
+    with open('dfm_diagonstics.mlgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+
+    print("Creating dfm_diagonstics.mlgi file: Complete\n")
+
+
 def create_dfm():
     """ This function executes the lagrit scripts. 
     
@@ -534,7 +609,9 @@ def create_dfm():
     mh.run_lagrit_script(
         "dfm_mesh_fracture_driver.lgi",
         quiet=False)
-    
+
+
+
 def cleanup_mesh_dfm_directory():
     """ Clean up working files from meshing the DFM
 
@@ -624,6 +701,7 @@ def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
     dfm_build()
     dfm_fracture_facets(self.num_frac)
     dfm_facets()
+    dfm_diagonstics()
     create_dfm()
 
     if cleanup:
