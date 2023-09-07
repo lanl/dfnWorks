@@ -219,7 +219,7 @@ cmo / delete / mo_dfn
 cmo / status / brief
 #
 infile dfm_extract_fracture_facets.mlgi
-infile dfm_diagonstics.mlgi
+infile dfm_diagnostics.mlgi
 #
 # Delete this !!!! 
 # Hardcoded facesets on boundaries for Alex EES17
@@ -520,7 +520,7 @@ finish
     print("Creating dfm_extract_facets.mlgi file: Complete\n")
 
 
-def dfm_diagonstics():
+def dfm_diagnostics():
     """
     
     """
@@ -537,28 +537,41 @@ read / avs / facets_merged.inp / mo_merge
 #
 # Interpolate does not work well on coincident 2D triangulations. C'est la vie.
 # To work around this turn the facets into prism volumes by giving them a small
-# negative offset and then a positive extrude. They you have volume cells to
-# interpolate from.
+# negative and positive offset and then combine to make prisms. Then you have volume
+# cells to interpolate from.
 #
 #++++++++++++++++++++++++++++++++++++
-# EPS_OFFSET  should be set to 0.2h
-# EPS_EXTRUDE should be set to 0.4h
+# EPS_OFFSET  should be set to ~0.1h
 #
-define / EPS_OFFSET  / -0.02
-define / EPS_EXTRUDE /  0.04
+define / EPS_OFFSET_1  / -0.002
+define / EPS_OFFSET_2  /  0.002
 #++++++++++++++++++++++++++++++++++++
-offsetsurf / mo_offset / mo_merge / EPS_OFFSET
-extrude / mo_extrude / mo_offset / const / EPS_EXTRUDE / volume / norm
+offsetsurf / mo_offset_1 / mo_merge / EPS_OFFSET_1
+cmo / setatt / mo_offset_1 / imt / 1 0 0 / 1
+offsetsurf / mo_offset_2 / mo_merge / EPS_OFFSET_2
+cmo / setatt / mo_offset_2 / imt / 1 0 0 / 2
+addmesh / merge / mo_offset_1_2 / mo_offset_1 / mo_offset_2
+pset / p_bottom / attribute / imt / 1 0 0 / eq / 1
+pset / p_top    / attribute / imt / 1 0 0 / eq / 2
+
+extrude / mo_extrude / mo_offset_1_2 / interp / 0 / &
+        pset,get,p_bottom / pset,get,p_top
+
 cmo / delete / mo_merge
-cmo / delete / mo_offset
+cmo / delete / mo_offset_1
+cmo / delete / mo_offset_2
+cmo / delete / mo_offset_1_2
+cmo / select / mo_extrude
+quality
 
 cmo / addatt / mo_full / mat_interp / vint / scalar / nelements
+cmo / setatt / mo_full / mat_interp / 1 0 0 / 2
 cmo / setatt / mo_extrude / itetclr / 1 0 0 / 1
 interpolate / map / mo_full mat_interp / 1 0 0 / &
                     mo_extrude itetclr
 dump / avs / tmp_interpolate.inp / mo_full
-
-eltset / ekeep / mat_interp / eq / 2
+cmo / delete / mo_extrude
+cmo / select / mo_full
 eltset / edelete / mat_interp / eq / 1
 
 cmo / addatt / mo_full / volume / e_area
@@ -566,23 +579,40 @@ math / sum / mo_full / area_sum / 1,0,0 / mo_full / e_area
 
 rmpoint / element /  eltset get edelete
 rmpoint / compress
+# Note: If there are no missed cells, this will return:
+# RMPOINT: new point count is            0                                        
+# RMPOINT: new element count is          0                                        
 
 cmo / status / brief
 
 cmo / addatt / mo_full / volume / e_area
 math / sum / mo_full / area_sum / 1,0,0 / mo_full / e_area
+# Note: If there are no missed cells, this MO will be empty and this
+# command will return:
+# 0 element attribute: e_area
+# FATAL ERROR: SUM unable to begin.
+# error in command : math/sum/mo_full/area_sum/1,0,0/mo_full/e_area
 #
 # The attributes that are output in this file could be cleaned up so
 # extra unnecessary information is not included.
 cmo / DELATT / mo_full / e_area
 cmo / DELATT / mo_full / mat_interp
 #
+# NOTE: If there are no missed cells, mo_full will be an empty (#nodes=0) MO
+# No file will be written and LaGriT message will be:
+# WARNING: dumpavs             
+# WARNING: nnodes=0 nelements = 0
+# WARNING: No output
 dump / avs / missed_cells_full_mesh.inp / mo_full
+
+cmo / delete / mo_full
 
 finish
 
+
+
 """
-    with open('dfm_diagonstics.mlgi', 'w') as fp:
+    with open('dfm_diagnostics.mlgi', 'w') as fp:
         fp.write(lagrit_script)
         fp.flush()
 
@@ -630,7 +660,7 @@ def cleanup_mesh_dfm_directory():
     """
     print("--> Cleaning up working directory")
     # clean up LaGrit Scripts
-    lagrit_script_dir = "dfm_lagrit_scripts" 
+    lagrit_script_dir = "dfm_lagrit_files" 
     try:
         os.mkdir(lagrit_script_dir)
     except:
@@ -638,6 +668,12 @@ def cleanup_mesh_dfm_directory():
         os.mkdir(lagrit_script_dir)
     lagrit_scripts = glob.glob("*lgi")
     for filename in lagrit_scripts:
+        shutil.copyfile(filename, lagrit_script_dir + os.sep + filename)
+        os.remove(filename)
+
+    extra_files = ['dfm_mesh_fracture_driver.lgi.log','dfm_mesh_fracture_driver.lgi.out',
+                   'tmp_interpolate.inp']
+    for filename in extra_files:
         shutil.copyfile(filename, lagrit_script_dir + os.sep + filename)
         os.remove(filename)
 
@@ -665,10 +701,58 @@ def cleanup_mesh_dfm_directory():
         shutil.copyfile(filename, facets_dir + os.sep + filename)
         os.remove(filename)
 
+
     print("--> Cleaning up working directory: Complete")
 
 
-def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
+def check_dfm_mesh(allowed_percentage):
+    """ Checks how many elements of the DFN meshing are missinf from the DFM. If the percentage missing is larger than the allowed percentage, then the program exists.
+
+    Parameters
+    ----------------
+        allowed_percentage : float
+            Percentage of the mesh allowed to be missing and still continue
+
+    Returns
+    ----------
+        None
+
+    Notes
+    ----------
+        None
+    
+    """
+
+    print("--> Checking for missing elements")
+    if os.path.isfile('missed_cells_full_mesh.inp'):
+        print("--> Missing elements have been found.")
+        print(f"--> Missing elements are in the file 'missed_cells_full_mesh.inp' if you want to see them.")
+        # get number of missed elements in the 
+        with open('missed_cells_full_mesh.inp', 'r') as fp:
+            line = fp.readline().split()
+            missing_num_elems = int(line[1])
+        # get the total number of elements
+
+        with open('full_mesh.inp', 'r') as fp:
+            line = fp.readline().split()
+            total_num_elems = int(line[1])
+        # Compute percentage and compare
+        missing_percent = 100*(missing_num_elems/total_num_elems)
+        print(f"--> Out of {total_num_elems} elements in the DFN there are {missing_num_elems} missing from the DFM.")
+        print(f"--> That's {missing_percent:0.2f} percent of the mesh.")
+
+        if  missing_percent > allowed_percentage:
+            error = f"*** Error. Missing percent of mesh is larger than tolerance {allowed_percentage} ***\n*** Exitting ***\n "
+            sys.stderr.write(error)
+            sys.exit(1)
+        else:
+            print("--> Doesn't seem to bad. Keep Calm and Carry on.")
+
+    # if the file 'missed_cells_full_mesh.inp' does not exists, this means no elements were missed.  
+    else:
+        print("--> No missinng elements found. ")
+
+def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, cleanup = True):
     """" Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))
 
     Parameters
@@ -676,6 +760,8 @@ def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
         self : DFN Object
         dirname : string
             name of working directory. Default : dfm_mesh
+        percentage : float
+
         cleanup : bool
             Clean up working directory. If true dep files are moved into subdirectories
 
@@ -701,8 +787,10 @@ def mesh_dfm(self, dirname = "dfm_mesh", cleanup = True):
     dfm_build()
     dfm_fracture_facets(self.num_frac)
     dfm_facets()
-    dfm_diagonstics()
+    dfm_diagnostics()
     create_dfm()
+
+    check_dfm_mesh(allowed_percentage)
 
     if cleanup:
         cleanup_mesh_dfm_directory()
