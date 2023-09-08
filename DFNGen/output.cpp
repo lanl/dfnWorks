@@ -32,7 +32,7 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
     output += dfnGenExtension;
-    std::cout << output << '\n';  
+    std::cout << output << '\n';
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";
     // std::string aperture = output + "/aperture.dat";

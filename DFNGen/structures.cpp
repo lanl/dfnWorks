@@ -97,8 +97,6 @@ Stats::Stats() {
     tripleNodeCount = 0;
     areaBeforeRemoval = 0;
     areaAfterRemoval = 0;
-    volBeforeRemoval = 0;
-    volAfterRemoval = 0;
 }
 
 // Constructor
