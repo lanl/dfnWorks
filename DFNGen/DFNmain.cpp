@@ -52,11 +52,11 @@ int main (int argc, char **argv) {
     // 2nd argument = output folder path
     if (argc != 3) {
         if (argc == 1 ) {
-            std::cout << "ERROR: DFNWorks input and output file "
+            std::cout << "Error: DFNWorks input and output file "
                       << "paths were not included on command line.\n";
             return 1;
         } else if (argc == 2) {
-            std::cout << "ERROR: DFNWorks output file path "
+            std::cout << "Error: DFNWorks output file path "
                       << "was not included on command line.\n";
             return 1;
         }
@@ -167,6 +167,7 @@ int main (int argc, char **argv) {
     
     /********************* User Defined Shapes Insertion ************************/
     // User Polygons are always inserted first
+    
     if (userPolygonByCoord != 0) {
         insertUserPolygonByCoord(acceptedPoly, intPts, pstats, triplePoints);
     }
