@@ -50,7 +50,7 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
                 radius = logDistribution(generator);
                 
                 if (count % 1000 == 0) {
-                    std::cout << "\nWARNING: Lognormal distribution for " << shapeType(shapeFam)
+                    std::cout << "\nWarning: Lognormal distribution for " << shapeType(shapeFam)
                               << " family " << getFamilyNumber(familyIndex, shapeFam.shapeFamily)
                               << " has been  unable to generate a fracture with radius within set parameters after "
                               << count << " consecutive tries.\n";
