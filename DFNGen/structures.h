@@ -117,7 +117,11 @@ struct Point {
     Point(double _x, double _y, double _z);
 };
 
-
+struct RejectedUserFracture {
+    int id;
+    int userFractureType;
+    RejectedUserFracture();
+};
 
 /**************************************************************************************/
 /**************************************************************************************/
@@ -374,6 +378,8 @@ struct Stats {
     std::vector<struct FractureGroups> fractGroup;
     /*! Fracture cluster data. See struct GroupData. */
     std::vector<struct GroupData> groupData;
+    /*! Rejected User Fractures */
+    std::vector<struct RejectedUserFracture>  rejectedUserFracture;
     // Constructor
     Stats();
 };

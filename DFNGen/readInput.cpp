@@ -722,7 +722,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         }
         
         std::cout << "\n";
-    } 
+    }
     
     if (nFamEll > 0 || nFamRect > 0) {
         searchVar(inputFile, "famProb:");

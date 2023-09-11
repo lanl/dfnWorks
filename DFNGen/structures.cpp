@@ -10,6 +10,12 @@ IntPoints::IntPoints() {
     fract2 = -1;
     intersectionShortened = false;
 }
+// Constructor
+/*! Zeros id & User Frature Type */
+RejectedUserFracture::RejectedUserFracture() {
+    id = 0;
+    userFractureType = 0;
+}
 
 // Constructor
 /*! Zeros all rejection counters. */
@@ -97,8 +103,6 @@ Stats::Stats() {
     tripleNodeCount = 0;
     areaBeforeRemoval = 0;
     areaAfterRemoval = 0;
-    volBeforeRemoval = 0;
-    volAfterRemoval = 0;
 }
 
 // Constructor

@@ -52,11 +52,11 @@ int main (int argc, char **argv) {
     // 2nd argument = output folder path
     if (argc != 3) {
         if (argc == 1 ) {
-            std::cout << "ERROR: DFNWorks input and output file "
+            std::cout << "Error: DFNWorks input and output file "
                       << "paths were not included on command line.\n";
             return 1;
         } else if (argc == 2) {
-            std::cout << "ERROR: DFNWorks output file path "
+            std::cout << "Error: DFNWorks output file path "
                       << "was not included on command line.\n";
             return 1;
         }
@@ -167,6 +167,7 @@ int main (int argc, char **argv) {
     
     /********************* User Defined Shapes Insertion ************************/
     // User Polygons are always inserted first
+    
     if (userPolygonByCoord != 0) {
         insertUserPolygonByCoord(acceptedPoly, intPts, pstats, triplePoints);
     }
@@ -305,7 +306,6 @@ int main (int argc, char **argv) {
                 
                 // Create/assign bounding box
                 createBoundingBox(newPoly);
-                
                 // Find line of intersection and FRAM check
                 // rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
                 // Find line of intersection and FRAM check
@@ -314,7 +314,6 @@ int main (int argc, char **argv) {
                 //} else {
                 //    rejectCode = 0;
                 //}
-                
 #ifdef TESTING
                 
                 if (rejectCode != 0) {
@@ -489,18 +488,14 @@ int main (int argc, char **argv) {
     file << "\n________________________________________________________\n";
     // Calculate total area, volume
     double userDefinedShapesArea = 0;
-    double userDefinedVol = 0;
     double *familyArea = nullptr;
-    double *familyVol = nullptr;
     
     if (totalFamilies > 0 ) {
         familyArea = new double[totalFamilies]; // Holds fracture area per family
-        familyVol = new double[totalFamilies];
         
         // Zero array
         for (int i = 0; i < totalFamilies; i++) {
             familyArea[i] = 0;
-            familyVol[i] = 0;
         }
     }
     
@@ -514,26 +509,20 @@ int main (int argc, char **argv) {
     // Calculate total fracture area, and area per family
     for (unsigned int i = 0; i < acceptedPoly.size(); i++) {
         double area = acceptedPoly[i].area;
-        // double vol = area * acceptedPoly[i].aperture;
         pstats.areaBeforeRemoval += area;
-        // pstats.volBeforeRemoval += vol;
         
         if (acceptedPoly[i].familyNum >= 0) {
             familyArea[acceptedPoly[i].familyNum] += area;
-            // familyVol[acceptedPoly[i].familyNum] += vol;
         } else { // User-defined polygon
             userDefinedShapesArea += area;
-            // userDefinedVol += vol;
         }
     }
     
     std::cout << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
-    std::cout << "Total Fractures Volume: " << pstats.volBeforeRemoval << " m^3\n";
     std::cout << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";
     std::cout << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * 2) / domVol << "\n";
     // std::cout << "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
     file << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
-    file << "Total Fractures Volume: " << pstats.volBeforeRemoval << " m^3\n";
     file << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";
     file << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * 2) / domVol << "\n";
     // file << "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
@@ -570,21 +559,17 @@ int main (int argc, char **argv) {
         }
         
         std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        std::cout << "    Volume: " << familyVol[i] << " m^3\n";
         std::cout << "    Fracture Intensity (P32): " << shapeFamilies[i].currentP32 << "\n\n";
         file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        file << "    Volume: " << familyVol[i] << " m^3\n";
         file << "    Fracture Intensity (P32): " << shapeFamilies[i].currentP32 << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
         std::cout << "User Defined: \n";
         std::cout << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        std::cout << "    Volume: " << userDefinedVol << " m^3\n";
         std::cout << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
         file << "User Defined: \n";
         file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        file << "    Volume: " << userDefinedVol << " m^3\n";
         file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
     }
     
@@ -629,11 +614,11 @@ int main (int argc, char **argv) {
     }
     
     if (finalFractures.size() == 0) {
-        std::cout << "\nERROR: DFN Generation has finished, however"
+        std::cout << "\nError: DFN Generation has finished, however"
                   << " there are no intersecting fractures."
                   << " Please adjust input parameters.\n";
         std::cout << "Try increasing the fracture density, or shrinking the domain.\n";
-        file << "\nERROR: DFN Generation has finished, however"
+        file << "\nError: DFN Generation has finished, however"
              << " there are no intersecting fractures."
              << " Please adjust input parameters.\n";
         file << "Try increasing the fracture density, or shrinking the domain.\n";
@@ -652,31 +637,25 @@ int main (int argc, char **argv) {
     file << "Final Number of Fractures: " << finalFractures.size() << "\n";
     file << "Isolated Fractures Removed: " << acceptedPoly.size() - finalFractures.size() << "\n";
     file << "Fractures before isolated fractures removed:: " << acceptedPoly.size() << "\n\n";
-    // Reset totalVolume and totalArea to 0
+    // Reset totalArea to 0
     userDefinedShapesArea = 0;
-    userDefinedVol = 0;
     
     if (totalFamilies > 0 ) {
         //zero out array.
         for (int i = 0; i < totalFamilies; i++) {
             familyArea[i] = 0;
-            familyVol[i] = 0;
         }
     }
     
     // Calculate total fracture area, and area per family
     for (unsigned int i = 0; i < finalFractures.size(); i++) {
         double area = acceptedPoly[finalFractures[i]].area;
-        // double vol = area * acceptedPoly[finalFractures[i]].aperture;
         pstats.areaAfterRemoval += area;
-        // pstats.volAfterRemoval += vol;
         
         if (acceptedPoly[finalFractures[i]].familyNum >= 0) {
             familyArea[acceptedPoly[finalFractures[i]].familyNum] += area;
-            // familyVol[acceptedPoly[finalFractures[i]].familyNum] += vol;
         } else { // User-defined polygon
             userDefinedShapesArea += area;
-            // userDefinedVol += vol;
         }
     }
     
@@ -701,15 +680,11 @@ int main (int argc, char **argv) {
     }
     
     std::cout << "Total Surface Area:     " << pstats.areaAfterRemoval * 2 << " m^2\n";
-    std::cout << "Total Fractures Volume: " << pstats.volAfterRemoval << " m^3\n";
     std::cout << "Total Fracture Density   (P30): " << finalFractures.size() / domVol << "\n";
     std::cout << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * 2) / domVol << "\n";
-    // std::cout << "Total Fracture Porosity  (P33): " << pstats.volAfterRemoval / domVol << "\n\n";
     file << "Total Surface Area:     " << pstats.areaAfterRemoval * 2 << " m^2\n";
-    file << "Total Fractures Volume: " << pstats.volAfterRemoval << " m^3\n";
     file << "Total Fracture Density   (P30): " << finalFractures.size() / domVol << "\n";
     file << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * 2) / domVol << "\n";
-    // file << "Total Fracture Porosity  (P33): " << pstats.volAfterRemoval / domVol << "\n\n";
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
@@ -747,21 +722,17 @@ int main (int argc, char **argv) {
         }
         
         std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        std::cout << "    Volume: " << familyVol[i] << " m^3\n";
         std::cout << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
         file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        file << "    Volume: " << familyVol[i] << " m^3\n";
         file << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
         std::cout << "User Defined Shapes: \n";
         std::cout << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        std::cout << "    Volume: " << userDefinedVol << " m^3\n";
         std::cout << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
         file << "User Defined Shapes: \n";
         file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        file << "    Volume: " << userDefinedVol << " m^3\n";
         file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
     }
     
@@ -883,7 +854,6 @@ int main (int argc, char **argv) {
          << pstats.tripleNodeCount << ")\n";
     file.close();
     cout << "DFNGen - Complete" << endl;
-
     return 0;
 }
 

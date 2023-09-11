@@ -24,6 +24,7 @@ void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoin
     
     for (unsigned int i = 0; i < nRectByCoord; i++) {
         Poly newPoly;
+        RejectedUserFracture rejectedUserFracture;
         newPoly.familyNum = -2; // Using -2 for all user specified rectangles
         newPoly.vertices = new double[12]; // 4 * {x,y,z}
         // Set number of nodes  - needed for rotations
@@ -101,6 +102,9 @@ void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoin
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
             std::cout << "\nUser Rectangle (defined by coordinates) " << i + 1 << " was rejected for being outside the defined domain.\n";
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -2;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
             continue; // Go to next poly (go to next iteration of for loop)
         }
         
@@ -128,6 +132,9 @@ void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoin
             pstats.rejectedPolyCount++;
             std::cout << "\nRejected User Defined Rectangular Fracture (Defined By Coordinates) " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -2;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
         }
     } // End loop
     
