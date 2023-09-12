@@ -11,6 +11,17 @@ import numpy as np
 
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
+def load_connectivity_file(path):
+   connectivity = []
+   with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
+      for line in fp.readlines():
+         tmp = []
+         line = line.split()
+         for frac in line:
+            tmp.append(int(frac))
+         connectivity.append(tmp)
+   return connectivity 
+
 def edit_intersection_files(self):
    """ If pruning a DFN, this function walks through the intersection files
     and removes references to files that are not included in the 
@@ -34,15 +45,6 @@ def edit_intersection_files(self):
 
    """
    # Make list of connectivity.dat
-   connectivity = []
-   with open(self.path + "/dfnGen_output/connectivity.dat", "r") as fp:
-      for i in range(self.num_frac):
-         tmp = []
-         line = fp.readline()
-         line = line.split()
-         for frac in line:
-            tmp.append(int(frac))
-         connectivity.append(tmp)
 
    fractures_to_remove = list( set(range(1, self.num_frac + 1)) - set(self.fracture_list))
 
@@ -62,11 +64,12 @@ def edit_intersection_files(self):
    ## DEBUGGING ##
 
    print("--> Editing Intersection Files")
+   connectivity = load_connectivity_file(self.path)
    ## Note this could be easily changed to run in parallel if needed. Just use cf
-   for i in self.fracture_list:
-      filename = f'intersections_{i}.inp'
+   for ifrac in self.fracture_list:
+      filename = f'intersections_{ifrac}.inp'
       print(f'--> Working on: {filename}')
-      intersecting_fractures = connectivity[i - 1]
+      intersecting_fractures = connectivity[ifrac - 1]
       pull_list = list(
          set(intersecting_fractures).intersection(set(fractures_to_remove)))
       if len(pull_list) > 0:
@@ -77,9 +80,9 @@ def edit_intersection_files(self):
 read / {filename} / mo1 
 pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
 """
-         for j in pull_list[1:]:
+         for jfrac in pull_list[1:]:
             lagrit_script += f'''
-pset / prune / attribute / b_a / 1,0,0 / eq / {j}
+pset / prune / attribute / b_a / 1,0,0 / eq / {jfrac}
 pset / pset2remove / union / pset2remove, prune
 rmpoint / pset, get, prune
 pset / prune / delete
@@ -94,9 +97,8 @@ cmo / modatt / mo1 / isn / ioflag / l
 cmo / modatt / mo1 / icr / ioflag / l
     
 cmo / status / brief
-dump / intersections_{i}_prune.inp / mo1
+dump / intersections_{ifrac}_prune.inp / mo1
 finish
-
 '''
 
          lagrit_filename = 'prune_intersection.lgi'
@@ -107,10 +109,10 @@ finish
             f"pruning_{i}.txt",
             quiet=True)
          os.remove(filename)
-         if os.path.isfile(f"intersections_{i}_prune.inp"):
-            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
+         if os.path.isfile(f"intersections_{ifrac}_prune.inp"):
+            move(f"intersections_{ifrac}_prune.inp", f"intersections_{ifrac}.inp")
          else:
-            error = "Error. intersections_{i}_prune.inp file not found.\nExitting Program"
+            error = f"Error. intersections_{ifrac}_prune.inp file not found.\nExitting Program"
             sys.stderr.write(error)
             sys.exit(1)
       else:
@@ -118,9 +120,10 @@ finish
             copy(self.path + 'intersections/' + filename, filename)
          except:
             pass
+
    os.chdir(self.jobname)
    self.num_frac = len(self.fracture_list)
-
+   print("--> Done editting intersection files")
 
 def clean_up_files_after_prune(self, dump_files = False):
    ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
@@ -152,7 +155,7 @@ def clean_up_files_after_prune(self, dump_files = False):
    self.surface_area = self.surface_area[keep_list - 1]
 
    if dump_files:
-
+      ## this is probably broken, but everything else is in memory now so....
       print("--> Editing params.txt file")
       fin = open(self.path + '/params.txt')
       try:
@@ -222,11 +225,9 @@ def clean_up_files_after_prune(self, dump_files = False):
          if tmp[-1] != 'R':
                points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
       points = np.asarray(points)
-
       for i in range(self.num_frac):
          fout.write('%f %f %f\n' % (points[i, 0], points[i, 1], points[i, 2]))
       fout.close()
-
       print("--> Complete")
 
       print("--> Editing translations.dat file")
@@ -266,8 +267,6 @@ def clean_up_files_after_prune(self, dump_files = False):
                for fracture, line in enumerate(data.split('\n')):
                   if fracture - 1 in keep_list:
                      fout.write(line + "\n")
-
-
 
    print("--> Editing Fracture Files Complete")
 
