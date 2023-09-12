@@ -20,10 +20,11 @@ from pydfnworks.dfnGen.meshing import general_lagrit_scripts as lgs
 
 def mesh_network(self,
                  uniform_mesh=False,
-                 slope=0.2,
-                 min_dist=0.5,
+                 slope=0.5,
+                 min_dist=1,
                  cleanup=True,
-                 strict = True):
+                 strict = True,
+                 ):
     """
       Mesh fracture network using LaGriT
 
@@ -31,29 +32,12 @@ def mesh_network(self,
     ----------
         self : object 
             DFN Class
-        prune : bool
-            If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file 
         uniform_mesh : bool
-            If true, mesh is uniform resolution. If False, mesh is spatially variable            
-        production_mode : bool
-            If True, all working files while meshing are cleaned up. If False, then working files will not be deleted
-        visual_mode : None
-            If the user wants to run in a different meshing mode from what is in params.txt, 
-            set visual_mode = True/False on command line to override meshing mode
-        coarse_factor: float
-            Maximum resolution of the mesh. Given as a factor of h
+            toggle for uniform or variable mesh. Default : False 
         slope : float
             slope of variable coarsening resolution. 
-        min_dist : float 
-            Range of constant min-distance around an intersection (in units of h). 
-        max_dist : float 
-            Range over which the min-distance between nodes increases (in units of h)
-        concurrent_samples : int
-            number of new candidates sampled around an accepted node at a time.
-        grid_size : float
-            side length of the occupancy grid is given by H/occupancy_factor
-        well_flag : bool
-            If well flag is true, higher resolution around the points in 
+        cleanup : bool
+            toggle to clean up directory (remove meshing files after a run). Default : True
 
     Returns
     -------
@@ -74,29 +58,23 @@ def mesh_network(self,
     mh.setup_meshing_directory()
 
     ######## Pruning scripts
+    if self.prune_file:
+        print(
+            f"Loading list of fractures to remain in network from {self.prune_file}"
+        )
+        self.fracture_list = sort(genfromtxt(self.prune_file).astype(int))
+        print("--> Retaining Fractures: ")
+        print(self.fracture_list)
+        print("\n")
+        if self.path:
+            self.create_mesh_links(self.path)
+        else:
+            error = "Error. User requested pruning in meshing but did not provide path for main files.\nExiting program.\n"
+            sys.stderr.write(error)
+            sys.exit(1)        
 
-    #     if prune:
-    #         if self.prune_file == "":
-    #             error = "ERROR!! User requested pruning in meshing but \
-    # did not provide file of fractures to keep.\nExiting program.\n"
-
-    #             sys.stderr.write(error)
-    #             sys.exit(1)
-
-    #         self.create_mesh_links(self.path)
-
-    #         if self.visual_mode:
-    #             print("\n--> Running in Visual Mode\n")
-    #         print(
-    #             f"Loading list of fractures to remain in network from {self.prune_file}"
-    #         )
-    #         fracture_list = sort(genfromtxt(self.prune_file).astype(int))
-    #         print(fracture_list)
-    #         if not self.visual_mode:
-    #             lagrit.edit_intersection_files(self.num_frac, fracture_list,
-    #                                            self.path)
-    #         self.num_frac = len(fracture_list)
-
+        if not self.visual_mode:
+            self.edit_intersection_files()
     ######## Pruning scripts
 
     print("--> Creating scripts for LaGriT meshing")
@@ -105,10 +83,13 @@ def mesh_network(self,
         self.slope = 0
     else:
         self.slope = slope
+        
     self.intercept = min_dist * self.h
 
     digits = len(str(self.num_frac))
-    self.fracture_list = range(1, self.num_frac + 1)
+
+    if not self.prune_file:
+        self.fracture_list = range(1, self.num_frac + 1)
 
     for frac_id in self.fracture_list:
         self.create_lagrit_parameters_file(frac_id, digits)
@@ -142,19 +123,19 @@ def mesh_network(self,
     
     self.merge_network()
 
-    if (not self.visual_mode and not self.prune):
+    if (not self.visual_mode and not self.prune_file):
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
             if strict:
-                error = "Error!!! Incorrect Number of dudded points.\nExiting Program\n"
+                error = "Error. Incorrect Number of dudded points.\nExiting Program\n"
                 sys.stderr.write(error)
                 sys.exit(1)
 
     if not self.visual_mode:
         lgs.define_zones()
 
-    if self.prune:
-        mh.clean_up_files_after_prune(self)
+    if self.prune_file:
+        self.clean_up_files_after_prune()
 
     self.gather_mesh_information()
   
