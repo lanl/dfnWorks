@@ -61,7 +61,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.poisson_driver import create_lagrit_parameters_file
     from pydfnworks.dfnGen.meshing.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
     from pydfnworks.dfnGen.meshing.run_meshing import mesh_fractures_header,merge_network
-
+    from pydfnworks.dfnGen.meshing.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.map2continuum_helper import in_domain, gather_points
@@ -114,7 +114,6 @@ class DFNWORKS():
                  stor_file=None,
                  vtk_file=None,
                  num_nodes=None,
-                 mesh_type='dfn',
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None):
@@ -124,7 +123,6 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
-
 
         self.aper_cell_file = 'aper_node.dat'
         self.perm_cell_file = 'perm_node.dat'
