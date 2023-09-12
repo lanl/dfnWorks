@@ -91,8 +91,8 @@ def mesh_network(self,
     if not self.prune_file:
         self.fracture_list = range(1, self.num_frac + 1)
 
-    for frac_id in self.fracture_list:
-        self.create_lagrit_parameters_file(frac_id, digits)
+    for index, frac_id in enumerate(self.fracture_list):
+        self.create_lagrit_parameters_file(frac_id, index + 1, digits)
         if self.visual_mode:
             lg.create_lagrit_reduced_mesh_script(frac_id, digits)
         else:
@@ -134,10 +134,10 @@ def mesh_network(self,
     if not self.visual_mode:
         lgs.define_zones()
 
+    self.gather_mesh_information()
+    
     if self.prune_file:
         self.clean_up_files_after_prune()
-
-    self.gather_mesh_information()
   
     if cleanup:
         mh.cleanup_meshing_files()

@@ -29,7 +29,7 @@ finish
         fp.flush()
 
 
-def create_lagrit_parameters_file(self, fracture_id, digits):
+def create_lagrit_parameters_file(self, fracture_id, index, digits):
 
     ## while h is th key paramter, the intersecctions are meshed at h/2
     local_h = 0.5 * self.h
@@ -84,7 +84,7 @@ define / H_SCALE2 / {1.5*local_h:0.12e}
 define / H_PRIME / {0.8 * local_h: 0.12e}
 define / H_PRIME2 / {0.3 * local_h: 0.12e}
 
-define / ID / {fracture_id}
+define / ID / {index}
 define / THETA / {theta:0.12f} 
 define / X1 / {x1:0.12f} 
 define / Y1 / {y1:0.12f} 
@@ -207,9 +207,6 @@ resetpts / itp
 # Translate back to the original coordinates.
 trans / 1 0 0 / original / xyz 
 cmo / printatt / mo_final / -xyz- / minmax 
-
-
-
 
 ##### DEBUG #####
 # If meshing fails, uncomment and rerun the script to get tmp meshes, 
