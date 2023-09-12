@@ -84,11 +84,12 @@ def print_user_fracture_information(self, shape, frac_number=None):
 def add_user_fract_from_file(self,
                              filename,
                              shape,
+                             nPolygons,
                              by_coord=False,
                              aperture=None,
                              transmissivity=None,
                              permeability=None):
-    """ Sets up paths for fractures defined in user input file
+    """ Sets up paths for fractures defined in user input file. When inserting user fractures from file, hydraulic properties must be provided as a list of length nPolygons (number of fractures defined in the file)
 
     Paramters
     ----------------
@@ -101,14 +102,17 @@ def add_user_fract_from_file(self,
         by_coord : boolean
             True / False of file format for coordinate or general input
 
-        permeability : float
-            Permeability of the fracture 
+        nPolygons : int
+            The number of polygons specified in the file
 
-        transmissivity : float
-            Fracture Tramsmissivity
+        permeability : list or array
+            Permeabilities of the fractures 
 
-        aperture : float
-            Hydraulic aperture of the fracture
+        transmissivity : list or array
+            Fracture Tramsmissivities
+
+        aperture : list or array
+            Hydraulic apertures of the fracture
 
     Returns
     ---------------
@@ -127,6 +131,19 @@ def add_user_fract_from_file(self,
     fracture_dictionary['transmissivity'] = transmissivity
     fracture_dictionary['permeability'] = permeability
     fracture_dictionary['hy_prop_type'] = hy_prop_type
+    fracture_dictionary['nPolygons'] = nPolygons
+
+
+    if aperture is not None:
+        if len(aperture) != nPolygons:
+            print_error("Error. aperture list for user fractures from file is not the same length as nPolygons, please check input for add_user_fract_from_file\n")
+    if transmissivity is not None:
+        if len(transmissivity) != nPolygons:
+            print_error("Error. transmissivity list for user fractures from file is not the same length as nPolygons, please check input for add_user_fract_from_file\n")
+    if permeability is not None:
+        if len(permeability) != nPolygons:
+            print_error("Error. aperture list for user fractures from file is not the same length as nPolygons, please check input for add_user_fract_from_file\n")
+
 
     if shape == 'rect':
         self.params['RectByCoord_Input_File_Path']['value'] = filename
@@ -244,6 +261,7 @@ def add_user_fract(self,
 
     # if specifying details in the python driver file.
     fracture_dictionary = {"shape": shape}
+    fracture_dictionary['nPolygons'] = 1
     # Check input parameters
     if filename:
         fracture_dictionary['filename'] = filename
@@ -347,9 +365,9 @@ def add_user_fract(self,
     # hydraulic properties
     hy_prop_type = determine_hy_prop_type(aperture, transmissivity,
                                           permeability)
-    fracture_dictionary['aperture'] = aperture
-    fracture_dictionary['transmissivity'] = transmissivity
-    fracture_dictionary['permeability'] = permeability
+    fracture_dictionary['aperture'] = [aperture]
+    fracture_dictionary['transmissivity'] = [transmissivity]
+    fracture_dictionary['permeability'] = [permeability]
     fracture_dictionary['hy_prop_type'] = hy_prop_type
 
     ## Logic for i/o
@@ -580,10 +598,10 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
 
     hy_prop_type = None
 
-    if aperture != None:
+    if aperture is not None:
         hy_prop_type = 'aperture'
 
-    if transmissivity != None:
+    if transmissivity is not None:
         if hy_prop_type != None:
             error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
             sys.stderr.write(error)
@@ -591,7 +609,7 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
         else:
             hy_prop_type = 'transmissivity'
 
-    if permeability != None:
+    if permeability is not None:
         if hy_prop_type != None:
             error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
             sys.stderr.write(error)
