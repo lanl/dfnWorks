@@ -1,5 +1,3 @@
-# Jan 13, 2014
-# Nataliia Makedonska, Satish Karra, LANL
 #================================================
 
 SIMULATION
@@ -12,38 +10,57 @@ SIMULATION
       /
     /
   /
+
+  CHECKPOINT
+    FORMAT HDF5
+  /
+
 END
 SUBSURFACE
-
-DFN
-
-#=========================== discretization ===================================
-GRID
-  TYPE unstructured_explicit full_mesh_vol_area.uge 
-  GRAVITY 0.d0 0.d0 0.d0
-END
-
 
 #=========================== fluid properties =================================
 FLUID_PROPERTY
   DIFFUSION_COEFFICIENT 1.d-9
 END
 
-DATASET Permeability
-  FILENAME dfn_properties.h5
+#=========================== datasets==========================================
+DATASET permX
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityX
 END
+
+DATASET permY
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityY
+END
+
+DATASET permZ
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityZ
+END
+
+DATASET Tortuosity
+  FILENAME tortuosity.h5
+  HDF5_DATASET_NAME Tortuosity
+END
+
+DATASET Porosity
+  FILENAME porosity.h5
+  HDF5_DATASET_NAME Porosity
+END
+
 
 #=========================== material properties ==============================
 MATERIAL_PROPERTY soil1
   ID 1
-  POROSITY 0.25d0
-  TORTUOSITY 0.5d0
+  POROSITY DATASET Porosity
+  TORTUOSITY DATASET Tortuosity
   CHARACTERISTIC_CURVES default
   PERMEABILITY
-    DATASET Permeability
+    ANISOTROPIC
+    DATASET perm
   /
 END
-
 
 #=========================== characteristic curves ============================
 CHARACTERISTIC_CURVES default
@@ -61,26 +78,28 @@ END
 
 #=========================== output options ===================================
 OUTPUT
-#  FORMAT TECPLOT BLOCK
-  PRINT_PRIMAL_GRID
-  ACKNOWLEDGE_VTK_FLAW
-  FORMAT VTK
-  MASS_FLOWRATE
-  MASS_BALANCE
-  VARIABLES
-    LIQUID_PRESSURE
-    PERMEABILITY
-  /
+  SNAPSHOT_FILE
+  / 
 END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d-1 d
-  FINAL_TIME 1.d2 d
+  INITIAL_TIMESTEP_SIZE  1.d-2 d
+  FINAL_TIME 100.d0 d
   MAXIMUM_TIMESTEP_SIZE 10.d0 d
 END
 
-# REFERENCE_PRESSURE 1500000.
+#=========================== discretization ===================================
+GRID
+  TYPE structured
+  NXYZ 50 50 50
+  DXYZ
+    20.
+    20.
+    20.
+  /
+  GRAVITY 0.d0 0.d0 0.d0
+END
 
 #=========================== regions ==========================================
 REGION All
@@ -91,21 +110,28 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_bottom.ex
+  FACE west
+  COORDINATES
+    0.0  0.0   0.0
+    0.0  1000. 1000.
+  /
 END
 
 REGION outflow
-  FILE pboundary_top.ex
+  FACE east
+  COORDINATES
+    1000. 0.0   0.0
+    1000. 1000. 1000.
+  /
 END
 
 #=========================== flow conditions ==================================
 FLOW_CONDITION initial
   TYPE
-     LIQUID_PRESSURE dirichlet 
+     LIQUID_PRESSURE DIRICHLET
   /
-  LIQUID_PRESSURE 1.01325d6
+  LIQUID_PRESSURE 1.d6
 END
-
 
 FLOW_CONDITION outflow 
   TYPE 
@@ -116,34 +142,31 @@ END
 
 FLOW_CONDITION inflow
   TYPE
-    LIQUID_PRESSURE dirichlet
+    LIQUID_PRESSURE DIRICHLET
   /
-  LIQUID_PRESSURE 2.d6
+  LIQUID_PRESSURE 1.001d6
 END
 
 #=========================== condition couplers ===============================
 # initial condition
-INITIAL_CONDITION
+INITIAL_CONDITION initial
   FLOW_CONDITION initial
   REGION All
 END
 
-
-BOUNDARY_CONDITION INFLOW 
+BOUNDARY_CONDITION inflow
   FLOW_CONDITION inflow
   REGION inflow
 END
 
-BOUNDARY_CONDITION OUTFLOW
-  FLOW_CONDITION outflow 
+BOUNDARY_CONDITION outflow
+  FLOW_CONDITION outflow
   REGION outflow
 END
 
 #=========================== stratigraphy couplers ============================
 STRATA
-  REGION All 
-  MATERIAL soil1
+  FILE materials.h5
 END
 
 END_SUBSURFACE
-
