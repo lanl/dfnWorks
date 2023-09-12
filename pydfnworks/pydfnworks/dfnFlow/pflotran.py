@@ -216,23 +216,23 @@ def write_perms_and_correct_volumes_areas(self):
     print('*' * 80)
     print("--> Correcting UGE file: Starting")
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
+        error = "Error. Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     print("--> Writing Perms and Correct Volume Areas")
     if self.inp_file == '':
-        error = 'ERROR: inp file must be specified!\n'
+        error = 'Error.: inp file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     if self.uge_file == '':
-        error = 'ERROR: uge file must be specified!\n'
+        error = 'Error. uge file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     if self.perm_file == '' and self.perm_cell_file == '':
-        error = 'ERROR: perm file must be specified!\n'
+        error = 'Error. perm file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
