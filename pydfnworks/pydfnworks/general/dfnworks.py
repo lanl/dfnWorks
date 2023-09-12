@@ -1,9 +1,9 @@
 __author__ = "Jeffrey Hyman, Satish Karra"
-__version__ = "2.7"
+__version__ = "2.8"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
-DFN class. 
+DFN object. 
 """
 
 import os
@@ -118,6 +118,7 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None):
+        ## initialize variables 
         self.num_frac = int
         self.h = float
         self.visual_mode = bool
@@ -234,7 +235,6 @@ class DFNWORKS():
 
 # '''
 #         print(output)
-
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
