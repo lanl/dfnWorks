@@ -169,7 +169,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
     digits = len(str(num_poly))
 
     print(
-        f"--> Fracture {fracture_id:0{digits}d} out of {num_poly} is starting on worker {cpu_id}"
+        f"--> Fracture id {fracture_id:0{digits}d} out of {num_poly} is starting on worker {cpu_id}"
     )
 
     tic = timeit.default_timer()
@@ -210,13 +210,13 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         try:
             if subprocess.call(cmd_check, shell=True):
                 print(
-                    f"\n\n\n--> Error: Meshing checking failed on {fracture_id}!!!\nExiting PROGRAM\n\n\n"
+                    f"\n\n\n--> Error: Meshing checking failed on {fracture_id}.\nExiting program\n\n\n"
                 )
                 cleanup_failed_run(fracture_id, digits)
                 return (fracture_id, -4)
         except:
             print(
-                f"\n\n\n--> ERROR: MESH CHECKING FAILED on {fracture_id}!!!\n\nEXITING PROGRAM\n\n\n"
+                f"\n\n\n--> Error: Meshing checking failed on {fracture_id}.\nExiting program\n\n\n"
             )
             cleanup_failed_run(fracture_id, digits)
             return (fracture_id, -4)
