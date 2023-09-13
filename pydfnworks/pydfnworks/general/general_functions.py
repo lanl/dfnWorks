@@ -128,6 +128,7 @@ def print_log(self, statement):
     logging.info(statement)
 
 
+
 def local_print_log(statement):
     '''print and log statments to a file
 

@@ -12,6 +12,7 @@ import timeit
 
 from numpy import genfromtxt, sort
 # pydfnworks Modules
+from pydfnworks.general import helper_functions as hf
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 from pydfnworks.dfnGen.meshing import poisson_driver as lg
 from pydfnworks.dfnGen.meshing import run_meshing as run_mesh
@@ -20,11 +21,12 @@ from pydfnworks.dfnGen.meshing import general_lagrit_scripts as lgs
 
 def mesh_network(self,
                  uniform_mesh=False,
-                 slope=0.5,
-                 min_dist = 1,
+                 slope=0.3,
+                 min_dist = 0.1,
                  max_dist = 10,
                  cleanup=True,
                  strict = True,
+                 quiet = True
                  ):
     """
       Mesh fracture network using LaGriT
@@ -70,9 +72,7 @@ def mesh_network(self,
         if self.path:
             self.create_mesh_links(self.path)
         else:
-            error = "Error. User requested pruning in meshing but did not provide path for main files.\nExiting program.\n"
-            sys.stderr.write(error)
-            sys.exit(1)        
+            hf.print_error("User requested pruning in meshing but did not provide path for main files.")
 
         if not self.visual_mode:
             self.edit_intersection_files()
@@ -84,9 +84,11 @@ def mesh_network(self,
         self.slope = 0
     else:
         self.slope = slope
+
+    ## check for self consistency of meshing parameters
+    if min_dist >= max_dist:
+        hf.print_error(f"min_dist greater than or equal to max_dist.\nmin_dist : {min_dist}\nmax_dist : {max_dist}")
     self.intercept = min_dist * self.h
-
-
 
     if not self.prune_file:
         self.fracture_list = range(1, self.num_frac + 1)
@@ -113,13 +115,11 @@ def mesh_network(self,
     # ### Parallel runs
     # if there are more processors than fractures, 
     if self.ncpu > self.num_frac:
-        print("--> Warning, more processors than fractures requested.\nResetting ncpu to num_frac")
+        hf.print_warning("More processors than fractures requested.\nResetting ncpu to num_frac")
         self.ncpu = self.num_frac
 
-    if self.mesh_fractures_header():
-        error = "One or more fractures failed to mesh properly.\nExiting Program\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+    if self.mesh_fractures_header(quiet):
+        hf.print_error("One or more fractures failed to mesh properly.")
 
     # ### Parallel runs 
     self.merge_network()
@@ -129,9 +129,7 @@ def mesh_network(self,
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
             if strict:
-                error = "Error. Incorrect Number of dudded points.\nExiting Program\n"
-                sys.stderr.write(error)
-                sys.exit(1)
+                hf.print_error("Incorrect Number of dudded points removed.")
 
     if not self.visual_mode:
         lgs.define_zones()

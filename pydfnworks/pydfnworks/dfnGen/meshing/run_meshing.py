@@ -131,7 +131,7 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
             return (fracture_id, -1)
 
 
-def mesh_fracture(fracture_id, visual_mode, num_poly):
+def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
     """Child function for parallelized meshing of fractures
 
     Parameters
@@ -140,7 +140,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             Current Fracture ID number
         visual_mode : bool
             True/False for reduced meshing
-        num_poly : int 
+        num_frac : int 
             Total Number of Fractures in the DFN
 
     Returns
@@ -166,12 +166,14 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         cpu_id = 1 
     
     # get leading digits
-    digits = len(str(num_poly))
+    digits = len(str(num_frac))
 
-    print(
-        f"--> Fracture id {fracture_id:0{digits}d} out of {num_poly} is starting on worker {cpu_id}"
-    )
-
+    if not quiet:
+        print(
+            f"--> Fracture id {fracture_id:0{digits}d} out of {num_frac} is starting on worker {cpu_id}"
+        )
+    if fracture_id % 10**(digits - 1) == 0:
+        print(f"Starting on Fracture {fracture_id} out of {num_frac}")
     tic = timeit.default_timer()
     create_symbolic_links(fracture_id, digits, visual_mode)
 
@@ -180,7 +182,7 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
         mh.run_lagrit_script(
             f"mesh_poly_{fracture_id:0{digits}d}.lgi",
             output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
-            quiet=True)
+            quiet=quiet)
     except:
         print(
             f"\n\n\n--> Error occurred during meshing fracture {fracture_id}\n\n\n"
@@ -254,16 +256,17 @@ def mesh_fracture(fracture_id, visual_mode, num_poly):
             pass
 
     elapsed = timeit.default_timer() - tic
-    print(
-        f"--> Fracture {fracture_id:0{digits}d} out of {num_poly} is complete on worker {cpu_id}. Time required: {elapsed:.2f} seconds\n"
-    )
+    if not quiet:
+        print(
+            f"--> Fracture {fracture_id:0{digits}d} out of {num_frac} is complete on worker {cpu_id}. Time required: {elapsed:.2f} seconds\n"
+        )
     return (fracture_id, 0)
 
 
-def mesh_fractures_header(self):
+def mesh_fractures_header(self, quiet = True):
     """ Header function for Parallel meshing of fractures
     
-    Creates a queue of fracture numbers ranging from 1, num_poly
+    Creates a queue of fracture numbers ranging from 1, num_frac
     
     Each fractures is meshed using mesh_fracture called within the
     worker function.
@@ -278,7 +281,7 @@ def mesh_fractures_header(self):
             Fractures to be meshed
         visual_mode : bool
             True/False for reduced meshing
-        num_poly : int
+        num_frac : int
             Total Number of Fractures
 
     Returns
@@ -296,7 +299,7 @@ def mesh_fractures_header(self):
     print()
     print('=' * 80)
     print(
-        f"\n--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n\n"
+        f"\n--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n"
     )
 
     pool = mp.Pool(min(self.num_frac, self.ncpu))
@@ -320,9 +323,12 @@ def mesh_fractures_header(self):
                 for f in files_to_remove:
                     os.remove(f)
 
+    # get leading digits
+    digits = len(str(self.num_frac))
+
     for i in self.fracture_list:
         pool.apply_async(mesh_fracture,
-                         args=(i, self.visual_mode, self.num_frac),
+                         args=(i, self.visual_mode, self.num_frac, quiet),
                          callback=log_result)
 
     pool.close()
@@ -356,7 +362,7 @@ Error Index:
     else:
         failure_flag = False
 
-        print('--> Triangulating Polygons: Complete')
+        print('--> Triangulating Polygons: Complete\n')
         time_sec = elapsed
         time_min = elapsed / 60
         time_hrs = elapsed / 3600
@@ -370,7 +376,7 @@ Error Index:
     return failure_flag
 
 
-def merge_worker(job):
+def merge_worker(job, quiet = True):
     """Parallel worker for merge meshes into final mesh 
 
     Parameters
@@ -386,9 +392,10 @@ def merge_worker(job):
     -----
     """
 
-    print(f"--> Starting merge: {job}")
-    tic = timeit.default_timer()
+    if not quiet:
+        print(f"--> Starting merge: {job}")
 
+    tic = timeit.default_timer()
     if mh.run_lagrit_script(f"lagrit_scripts/merge_part_{job}.lgi",
                             f"lagrit_logs/merge_part_{job}",
                             quiet=True):
@@ -396,20 +403,19 @@ def merge_worker(job):
         return True
 
     elapsed = timeit.default_timer() - tic
-    print(
-        f"--> Merge Number {job} Complete. Time elapsed: {elapsed:.2f} seconds."
-    )
+    if not quiet:
+        print(
+            f"--> Merge Number {job} Complete. Time elapsed: {elapsed:.2f} seconds."
+        )
     return False
 
 
-
-
 def merge_the_fractures(ncpu):
-    """Runs the LaGrit Scripts to merge meshes into final mesh 
+    """ Runs the LaGrit Scripts to merge meshes into final mesh 
 
     Parameters
     ----------
-        num_poly : int
+        num_frac : int
             Number of Fractures
         ncpu : int
             Number of Processors
@@ -445,7 +451,7 @@ def merge_the_fractures(ncpu):
     pool.terminate()
     elapsed = timeit.default_timer() - tic
     print(
-        f"\n--> Initial merging complete. Time elapsed: {elapsed:.2f} seconds.\n"
+        f"\n--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds.\n"
     )
     for output in outputs:
         if output:
@@ -464,7 +470,8 @@ def merge_final_mesh():
                          quiet=True)
 
     elapsed = timeit.default_timer() - tic
-    print(f"--> Final merge took {elapsed:.2f} seconds")
+    print(f"--> Final merge complete. Time elapsed: {elapsed:.2e} seconds")
+
 
 
 def check_for_final_mesh(visual_mode):
