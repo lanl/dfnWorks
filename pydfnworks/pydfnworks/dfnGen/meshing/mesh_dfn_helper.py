@@ -11,6 +11,8 @@ import shutil
 import numpy as np
 import subprocess
 import pyvtk as pv
+from pydfnworks.general import helper_functions as hf
+
 
 def check_dudded_points(dudded, hard=False):
     """Parses LaGrit log_merge_all.out and checks if number of dudded points is the expected number
@@ -53,18 +55,15 @@ def check_dudded_points(dudded, hard=False):
         print('--> The correct number of points were removed. Onward!\n')
         return True
     elif diff > 0:
+        hf.print_warning('Number of points removed does not match the expected value')
         ## compare with total number poins
-        print(
-            '--> Warning!!! Number of points removed does not match the expected value'
-        )
         diff_ratio = 100 * (float(diff) / float(total_points))
         if diff_ratio < 0.01 and hard == False:
             print(f"--> However value is small: {diff}")
             print("--> Proceeding\n")
             return True
         else:
-            print('Warning! Incorrect Number of points removed')
-            print(f"Over 0.01% of nodes removed. Value is {diff_ratio:.2f}")
+            hf.print_warning(f"Incorrect Number of points removed\nOver 0.01% of nodes removed. Value is {diff_ratio:.2f}")
             return False
 
 
@@ -152,16 +151,16 @@ def create_mesh_links(self, path):
             try:
                 rmtree(filename)
             except:
-                print(f"Unable to remove {filename}")
+                hf.print_warning(f"Unable to remove {filename}")
         try:
             os.symlink(path + filename, filename)
         except:
-            print(f"Unable to make link for {filename}")
+            hf.print_warning(f"Unable to make link for {filename}")
             pass
     print("--> Complete")
 
 
-def inp2gmv(self, inp_file=''):
+def inp2gmv(self, inp_file = None):
     """ Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv
 
     Parameters
@@ -184,10 +183,8 @@ def inp2gmv(self, inp_file=''):
     else:
         inp_file = self.inp_file
 
-    if inp_file == '':
-        error = 'ERROR: inp file must be specified in inp2gmv!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+    if not inp_file:
+        hf.print_error('inp file must be specified in inp2gmv' )
 
     gmv_file = inp_file[:-4] + '.gmv'
 
@@ -199,9 +196,7 @@ def inp2gmv(self, inp_file=''):
     failure = run_lagrit_script('inp2gmv.lgi')
 
     if failure:
-        error = 'ERROR: Failed to run LaGrit to get gmv from inp file!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error('Failed to run LaGrit to get gmv from inp file.')
     print("--> Finished writing gmv format from avs format")
 
 
@@ -223,18 +218,14 @@ def inp2vtk_python(self):
     """
 
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error("inp2vtk requires PFLOTRAN flow solver be selected")
 
     print("--> Using Python to convert inp files to VTK files")
     if self.inp_file:
         inp_file = self.inp_file
 
-    if inp_file == '':
-        error = 'ERROR: Please provide inp filename!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+    if not inp_file :
+        hf.print_error("inp filename not provided")
 
     if self.vtk_file:
         vtk_file = self.vtk_file
@@ -307,11 +298,10 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
         print(f"--> Running: {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure:
-        error = f"ERROR running LaGriT on script {lagrit_file}. Exiting Program.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error(f"Failed to running LaGriT on script {lagrit_file}")
     else:
-        print(f"--> Running LaGriT on script {lagrit_file} successful.\n")
+        if not quiet:
+            print(f"--> Running LaGriT on script {lagrit_file} successful.\n")
         return failure
 
 
@@ -324,9 +314,7 @@ def setup_meshing_directory():
                 shutil.rmtree(d)
             os.mkdir(d)
         except:
-            error = f"Unable to make directory {d}"
-            sys.stderr.write(error)
-            sys.exit(1)
+            hf.print(f"Unable to make directory {d}")
 
 
 def cleanup_meshing_files():
@@ -359,9 +347,7 @@ def cleanup_meshing_files():
             if os.path.isdir(d):
                 shutil.rmtree(d)
         except:
-            error = f"Unable to remove directory {d}"
-            sys.stderr.write(error)
-            sys.exit(1)
+            hf.print_error(f"Unable to remove directory {d}")
 
     files_to_remove = ['user_resolution.mlgi']
     for filename in files_to_remove:
@@ -369,7 +355,5 @@ def cleanup_meshing_files():
             if os.path.isfile(filename):
                 os.remove(filename)
         except:
-            error = f"Unable to remove file {filename}"
-            sys.stderr.write(error)
-            sys.exit(1)
+            hf.print_error(f"Unable to remove file {filename}")
     print("--> Cleaning up directory after meshing complete")
