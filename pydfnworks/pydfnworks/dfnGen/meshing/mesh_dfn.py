@@ -21,7 +21,8 @@ from pydfnworks.dfnGen.meshing import general_lagrit_scripts as lgs
 def mesh_network(self,
                  uniform_mesh=False,
                  slope=0.5,
-                 min_dist=1,
+                 min_dist = 1,
+                 max_dist = 10,
                  cleanup=True,
                  strict = True,
                  ):
@@ -83,16 +84,16 @@ def mesh_network(self,
         self.slope = 0
     else:
         self.slope = slope
-        
     self.intercept = min_dist * self.h
 
-    digits = len(str(self.num_frac))
+
 
     if not self.prune_file:
         self.fracture_list = range(1, self.num_frac + 1)
 
+    digits = len(str(self.num_frac))
     for index, frac_id in enumerate(self.fracture_list):
-        self.create_lagrit_parameters_file(frac_id, index + 1, digits)
+        self.create_lagrit_parameters_file(frac_id, index + 1, digits, max_dist)
         if self.visual_mode:
             lg.create_lagrit_reduced_mesh_script(frac_id, digits)
         else:
@@ -119,10 +120,11 @@ def mesh_network(self,
         error = "One or more fractures failed to mesh properly.\nExiting Program\n"
         sys.stderr.write(error)
         sys.exit(1)
-    # ### Parallel runs
-    
+
+    # ### Parallel runs 
     self.merge_network()
 
+    ## checking and clean up
     if (not self.visual_mode and not self.prune_file):
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
