@@ -29,10 +29,11 @@ finish
         fp.flush()
 
 
-def create_lagrit_parameters_file(self, fracture_id, index, digits):
+def create_lagrit_parameters_file(self, fracture_id, index,  digits, max_dist):
 
     ## while h is th key paramter, the intersecctions are meshed at h/2
     local_h = 0.5 * self.h
+    max_dist_h = max_dist*self.h 
 
     # Extrude and Translate computation
     # Parameters, delta: buffer zone, amount of h/2 we remove from around line
@@ -67,7 +68,7 @@ define / OUTFILE_AVS / mesh_{fracture_id:0{digits}d}.inp
 define / OUTPUT_INTER_ID_SSINT / id_tri_node_{fracture_id:0{digits}d}.list
 
 # define / H_SCALE /  {self.h}
-# define / 6H_SCALE / {6*self.h}
+# define / 6H_SCALE / {max_dist_h}
 # define / H_EXTRUDE / {h_extrude}
 # define / H_TRANS / {h_trans}
 # define / H_EPS / {self.h * 10**-7:0.12e}
