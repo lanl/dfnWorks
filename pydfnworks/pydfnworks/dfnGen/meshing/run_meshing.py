@@ -68,6 +68,7 @@ def cleanup_failed_run(fracture_id, digits):
         f"intersections/intersections_{fracture_id}.inp",
         f"lagrit_scripts/parameters_{fracture_id:0{digits}d}.mlgi",
         f"lagrit_scripts/mesh_poly_{fracture_id:0{digits}d}.lgi",
+        "user_resolution.mlgi"
     ]
 
     for f in files:
@@ -172,8 +173,10 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
         print(
             f"--> Fracture id {fracture_id:0{digits}d} out of {num_frac} is starting on worker {cpu_id}"
         )
+    if fracture_id == 1:
+        print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac}")
     if fracture_id % 10**(digits - 1) == 0:
-        print(f"Starting on Fracture {fracture_id} out of {num_frac}")
+        print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac}")
     tic = timeit.default_timer()
     create_symbolic_links(fracture_id, digits, visual_mode)
 
@@ -185,10 +188,19 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
             quiet=quiet)
     except:
         print(
-            f"\n\n\n--> Error occurred during meshing fracture {fracture_id}\n\n\n"
+            f"\n--> Error occurred during meshing fracture {fracture_id}\n"
         )
-        cleanup_failed_run(fracture_id, digits)
-        return (fracture_id, -3)
+        try: 
+            print(f"--> Trying on {fracture_id}.")
+            mh.run_lagrit_script(
+                f"mesh_poly_{fracture_id:0{digits}d}.lgi",
+                output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
+                quiet=quiet)
+            print(f"--> Successful on {fracture_id}!")
+        except:
+            print("it treall failed")
+            cleanup_failed_run(fracture_id, digits)
+            return (fracture_id, -2)
 
     # Check if mesh*.lg file was created, if not exit.
     if not os.path.isfile(f'mesh_{fracture_id:0{digits}d}.lg') or os.stat(
@@ -196,6 +208,8 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
         print(
             f"\n\n\n--> Error occurred during meshing fracture {fracture_id}\n\n\n"
         )
+        # Try again! 
+
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -3)
 
@@ -221,7 +235,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
                 f"\n\n\n--> Error: Meshing checking failed on {fracture_id}.\nExiting program\n\n\n"
             )
             cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, -4)
+            return (fracture_id, -5)
 
         # Mesh checking was a success. Remove check files and move on
         files = [
@@ -362,7 +376,7 @@ Error Index:
     else:
         failure_flag = False
 
-        print('--> Triangulating Polygons: Complete\n')
+        print('\n--> Triangulating Polygons: Complete\n')
         time_sec = elapsed
         time_min = elapsed / 60
         time_hrs = elapsed / 3600
