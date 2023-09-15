@@ -520,11 +520,12 @@ finish
     print("Creating dfm_extract_facets.mlgi file: Complete\n")
 
 
-def dfm_diagnostics():
+def dfm_diagnostics(h):
     """
     
     """
-    lagrit_script = """
+    eps_offset = 0.1*h
+    lagrit_script = f"""
 
 # Figure out which cells (tringles) from DFN full_mesh.inp were not reproduced
 # in the DFM tet fracture faces (facets_f1.inp, facets_f2.inp, etc).
@@ -543,8 +544,8 @@ read / avs / facets_merged.inp / mo_merge
 #++++++++++++++++++++++++++++++++++++
 # EPS_OFFSET  should be set to ~0.1h
 #
-define / EPS_OFFSET_1  / -0.002
-define / EPS_OFFSET_2  /  0.002
+define / EPS_OFFSET_1  / {-1*eps_offset}
+define / EPS_OFFSET_2  /  {eps_offset}
 #++++++++++++++++++++++++++++++++++++
 offsetsurf / mo_offset_1 / mo_merge / EPS_OFFSET_1
 cmo / setatt / mo_offset_1 / imt / 1 0 0 / 1
@@ -787,7 +788,7 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, cleanup = True)
     dfm_build()
     dfm_fracture_facets(self.num_frac)
     dfm_facets()
-    dfm_diagnostics()
+    dfm_diagnostics(self.h)
     create_dfm()
 
     check_dfm_mesh(allowed_percentage)
