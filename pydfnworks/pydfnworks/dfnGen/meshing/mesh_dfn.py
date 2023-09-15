@@ -21,9 +21,9 @@ from pydfnworks.dfnGen.meshing import general_lagrit_scripts as lgs
 
 def mesh_network(self,
                  uniform_mesh=False,
-                 min_dist = 1,
+                 min_dist = 0.5,
                  max_dist = 10,
-                 max_resolution_factor = 5,
+                 max_resolution_factor = 10,
                  cleanup = True,
                  strict = True,
                  quiet = True
@@ -49,14 +49,14 @@ def mesh_network(self,
             Toggle if a few mesh errors are acceptable. default is true
         quiet : bool
             Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen
+
     Returns
     -------
         None
 
     Notes
     ------
-        1. For uniform resolution mesh, set slope = 0
-        2. All fractures in self.prune_file must intersect at least 1 other fracture
+        1. All fractures in self.prune_file must intersect at least 1 other fracture
 
     """
 
