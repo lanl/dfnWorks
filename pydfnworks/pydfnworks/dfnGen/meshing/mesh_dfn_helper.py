@@ -298,10 +298,10 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
         print(f"--> Running: {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure:
-        hf.print_error(f"Failed to running LaGriT on script {lagrit_file}")
+        hf.print_error(f"LaGriT script {lagrit_file} failed to run properly")
     else:
         if not quiet:
-            print(f"--> Running LaGriT on script {lagrit_file} successful.\n")
+            print(f"--> LaGriT script {lagrit_file}  was run successful")
         return failure
 
 
