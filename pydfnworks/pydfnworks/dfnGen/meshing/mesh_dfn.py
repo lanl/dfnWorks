@@ -24,6 +24,7 @@ def mesh_network(self,
                  min_dist = 0.5,
                  max_dist = 10,
                  max_resolution_factor = 10,
+                 well = False,
                  cleanup = True,
                  strict = True,
                  quiet = True
@@ -87,6 +88,8 @@ def mesh_network(self,
     else:
         self.fracture_list = range(1, self.num_frac + 1)
 
+    if well:
+        add_well_points_to_line_of_intersection()
 
     slope,intercept = mh.compute_mesh_slope_and_intercept(self.h, min_dist, max_dist, max_resolution_factor, uniform_mesh)
     digits = len(str(self.num_frac))
