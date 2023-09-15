@@ -357,3 +357,75 @@ def cleanup_meshing_files():
         except:
             hf.print_error(f"Unable to remove file {filename}")
     print("--> Cleaning up directory after meshing complete")
+
+
+
+def compute_mesh_slope_and_intercept(h, min_dist, max_dist, max_resolution_factor, uniform_mesh):
+    """ computes the slope and intercept of the meshing resolution. The mesh resolution is a piecewise constant and linear function of the distance (d) from the intersection. 
+
+
+    if  0 < d < x0*h, then  r(d) = h/2
+    if x0*h <= d <= x1*h then r(d) = m * d + b
+    if d < x1 then r(d) = max_resolution_factor*h
+
+    Note that x0 and x1 are factors of h, not spatial units of Length. 
+   
+    Parameters
+    -------------------
+        h : float
+            FRAM h scale. Mesh resolution along intersections is h/2
+        min_dist : float
+            Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h
+        max_dist : float
+            Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h
+        max_resolution_factor : float
+            Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
+        uniform_mesh : bool
+            Boolean for uniform mesh resolution
+
+    Returns
+    -------------------
+        slope : float 
+            slope of the linear function of the mesh resolution
+        intercept : float 
+            Intercept of the linear function of the mesh resolution 
+
+
+    Notes
+    -------------------
+
+    
+    """
+    print("--> Computing mesh resolution function")
+    if uniform_mesh:
+        print("--> Uniform Mesh Resolution Selected")
+        print("*** Mesh resolution ***")
+        print(f"\tr(d) = {0.5*h}\n")
+        slope = 0
+        intercept = 0.5*h 
+    else:
+        print("--> Variable Mesh Resolution Selected")
+        print(f"*** Minimum distance [m] from intersection with constant resolution h/2 : {min_dist*h}")
+        print(f"*** Maximum distance [m] from intersection variable resolution : {max_dist*h}")
+        print(f"*** Upper bound on resolution [m] : {max_resolution_factor*h:0.2f}\n")
+        ## do some algebra to figure out the slope and intercept 
+        if min_dist >= max_dist:
+            hf.print_error(f"min_dist greater than or equal to max_dist.\nmin_dist : {min_dist}\nmax_dist : {max_dist}")
+        slope = h*(max_resolution_factor - 0.5) / (max_dist - min_dist)
+        if slope > 1:
+            hf.print_warning(f"Meshing slope too large. {slope} > 1. Resetting to 0.9")
+            slope = 0.9
+
+        intercept = h * ( 0.5 - slope * min_dist)
+
+        print("*** Meshing function : ")
+        x0 = (0.5*h - intercept)/(slope*h)
+        x1 = (max_resolution_factor*h - intercept)/(slope*h)
+        print(f"\tr(d) = {0.5*h:0.2f}\t\t\tfor 0 < d < {x0:0.2f}")
+        if intercept > 0:
+            print(f"\tr(d) = {slope:0.2f} * d + {intercept:0.2f}\t\tfor {x0:0.2f} <= d <= {x1:0.2f} ")
+        else:
+            print(f"\tr(d) = {slope:0.2f} * d {intercept:0.2f}\t\tfor {x0:0.2f} < d < {x1:0.2f} ")
+        print(f"\tr(d) = {max_resolution_factor*h:0.2f} \t\t\tfor d < {x1:0.2f}")
+    print("--> Computing mesh resolution function : complete \n")
+    return slope, intercept 
