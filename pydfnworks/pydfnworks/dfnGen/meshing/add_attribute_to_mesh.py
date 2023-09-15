@@ -4,6 +4,7 @@ import sys
 import os
 
 from pydfnworks.dfnGen.meshing.mesh_dfn_helper import run_lagrit_script
+from pydfnworks.general import helper_functions as hf
 
 
 def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
@@ -17,7 +18,8 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
         variable_file : string
             name of file containing variable files. Must be a single column where each line corresponds to that fracture number. 
         matid_file : string
-            name of materialid file produced by large. Normally produced by run_meshing. Can 
+            name of materialid file produced by large. Normally produced by run_meshing.
+
     Returns
     ----------
         variable_file_by_node : string
@@ -28,9 +30,8 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     print(f"--> Making {variable} by node file")
     values = genfromtxt(variable_file, skip_header=0, usecols=(-1))
     if not os.path.isfile(matid_file):
-        error = f"ERROR!!! Cannot locate the file '{matid_file}'\nExiting\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error(f"Cannot locate the file '{matid_file}")
+    
     nodes = genfromtxt(matid_file, skip_header=3).astype(int)
     value_by_node = zeros(len(nodes))
     for i, n in enumerate(nodes):
@@ -72,11 +73,10 @@ finish
 '''
 
     lagrit_file = f"add_{variable}_to_mesh.lgi"
-    fp = open(lagrit_file, "w")
-    fp.write(lagrit_script)
-    fp.flush()
-    fp.close()
-    print("Complete")
+    with  open(lagrit_file, "w") as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+    print("--> Complete")
     return lagrit_file
 
 
@@ -114,14 +114,10 @@ def add_variable_to_mesh(self,
 
     # Check input files
     if not os.path.isfile(variable_file):
-        error = f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename."
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error(f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename.")
 
     if not os.path.isfile(mesh_file_in):
-        error = f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename."
-        sys.stderr.write(error)
-        sys.exit(1)
+        hf.print_error(f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename.")
 
     # if an output mesh file is not provided, set target mesh to be the source mesh.
     if mesh_file_out is None:
