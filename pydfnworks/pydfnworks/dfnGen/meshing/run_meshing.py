@@ -446,7 +446,7 @@ def merge_worker(job, quiet = True):
     if mh.run_lagrit_script(f"lagrit_scripts/merge_part_{job}.lgi",
                             f"lagrit_logs/merge_part_{job}",
                             quiet=True):
-        print(f"Error {job} failed")
+        hf.print_warning(f" Merge job : {job} failed")
         return True
 
     elapsed = timeit.default_timer() - tic
