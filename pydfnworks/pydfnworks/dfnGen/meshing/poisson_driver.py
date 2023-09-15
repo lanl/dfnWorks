@@ -1,6 +1,8 @@
 import os
 import numpy as np
 
+from pydfnworks.general import helper_functions as hf
+
 
 def create_poisson_user_function_script():
 
@@ -18,7 +20,7 @@ math / floor /   MO_H_FIELD / h_field_att / 1 0 0 / &
                  MO_H_FIELD / h_field_att / H_SCALE
 
 math / ceiling / MO_H_FIELD / h_field_att / 1 0 0 / &
-                 MO_H_FIELD / h_field_att / 6H_SCALE
+                 MO_H_FIELD / h_field_att / MAX_H_SCALE
  
 cmo / delete / mo_line_pts
 finish
@@ -28,12 +30,20 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
+def grab_z_value(fracture_id):
 
-def create_lagrit_parameters_file(self, fracture_id, index,  digits, max_dist):
+    with open(f'polys/poly_{fracture_id}.inp', 'r') as fp:
+        _ = fp.readline()
+        line = fp.readline().split()
+        z_value = line[-1]
+    return z_value 
+
+
+def create_lagrit_parameters_file(self, fracture_id, index, digits, slope,
+                                  intercept, max_resolution_factor):
 
     ## while h is th key paramter, the intersecctions are meshed at h/2
     local_h = 0.5 * self.h
-    max_dist_h = max_dist*local_h 
 
     # Extrude and Translate computation
     # Parameters, delta: buffer zone, amount of h/2 we remove from around line
@@ -45,7 +55,7 @@ def create_lagrit_parameters_file(self, fracture_id, index,  digits, max_dist):
     # h_extrude = 2*self.h # upper limit on spacing of points on intersection line
     h_extrude = 2 * local_h  # upper limit on spacing of points on intersection line
     h_radius = np.sqrt((0.5 * h_extrude)**2 + (0.5 * h_extrude)**2)
-    h_trans = -0.5 * h_extrude + h_radius * np.cos(np.arcsin(delta))
+    h_trans = -0.6 * h_extrude + h_radius * np.cos(np.arcsin(delta))
 
     theta = self.poly_info[fracture_id - 1, 2]
     x1 = self.poly_info[fracture_id - 1, 3]
@@ -55,6 +65,8 @@ def create_lagrit_parameters_file(self, fracture_id, index,  digits, max_dist):
     y2 = self.poly_info[fracture_id - 1, 7]
     z2 = self.poly_info[fracture_id - 1, 8]
     family = self.poly_info[fracture_id - 1, 1]
+
+    z_value_save = grab_z_value(fracture_id)
 
     lagrit_script = f"""
 
@@ -67,17 +79,8 @@ define / OUTFILE_LG / mesh_{fracture_id:0{digits}d}.lg
 define / OUTFILE_AVS / mesh_{fracture_id:0{digits}d}.inp
 define / OUTPUT_INTER_ID_SSINT / id_tri_node_{fracture_id:0{digits}d}.list
 
-# define / H_SCALE /  {self.h}
-# define / 6H_SCALE / {max_dist_h}
-# define / H_EXTRUDE / {h_extrude}
-# define / H_TRANS / {h_trans}
-# define / H_EPS / {self.h * 10**-7:0.12e}
-# define / H_SCALE2 / {1.5*self.h:0.12e}
-# define / H_PRIME / {0.8 * self.h: 0.12e}
-# define / H_PRIME2 / {0.3 * self.h: 0.12e}
-
 define / H_SCALE /  {local_h}
-define / 6H_SCALE / {max_dist_h}
+define / MAX_H_SCALE / {max_resolution_factor*local_h}
 define / H_EXTRUDE / {h_extrude}
 define / H_TRANS / {h_trans}
 define / H_EPS / {local_h * 10**-7:0.12e}
@@ -94,12 +97,13 @@ define / X2 / {x2:0.12f}
 define / Y2 / {y2:0.12f} 
 define / Z2 / {z2:0.12f} 
 define / FAMILY / {family}
+define / ZVALUE_SAVE / {z_value_save}
 
 # Y = Ax + B
 # Slope
-define / SLOPE / {self.slope}
+define / SLOPE / {slope}
 # Intersect
-define / PARAM_B / {self.intercept} 
+define / PARAM_B / {intercept} 
 finish 
 
 """
@@ -125,6 +129,8 @@ createpts / poisson_disk / 2d_polygon / mo_poisson_pts / mo_polygon &
       / H_SCALE / connect / user_resolution.mlgi
 
 cmo / printatt / mo_poisson_pts / -xyz- / minmax
+## move everything to z = 0
+cmo/setatt / mo_poisson_pts / zic /1 0 0 / 0  
 
 quality / edge_min / y
 
@@ -136,6 +142,7 @@ cmo / delete / mo_polygon
 # read in intersection file  
 read / INTERSECTION / mo_line_work
 cmo / select / mo_line_work
+cmo/setatt / mo_line_work / zic /1 0 0 / 0  
 
 # extrude the line 
 extrude / mo_quad / mo_line_work / const / H_EXTRUDE / volume / 0. 0. 1. 
@@ -208,6 +215,9 @@ resetpts / itp
 # Translate back to the original coordinates.
 trans / 1 0 0 / original / xyz 
 cmo / printatt / mo_final / -xyz- / minmax 
+cmo / setatt / mo_final / zic / 1 0 0 / ZVALUE_SAVE 
+
+
 
 ##### DEBUG #####
 # If meshing fails, uncomment and rerun the script to get tmp meshes, 
@@ -230,22 +240,22 @@ cmo / status / brief
 ## Do we still need this? Think we have this in poisson disk
 ## driver, correct? 
 #########################################################
-# ## Massage the mesh where vertices are are not on the boundary and
-# # not within a distance H_EPS of the intersection vertices.
-pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
-pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
-pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
-pset / psmooth / not / pregion pref pboundary 
+# # ## Massage the mesh where vertices are are not on the boundary and
+# # # not within a distance H_EPS of the intersection vertices.
+# pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
+# pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
+# pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
+# pset / psmooth / not / pregion pref pboundary 
 
-assign///maxiter_sm/1 
-smooth / position / esug / pset get psmooth
-recon 0
-smooth / position / esug / pset get psmooth
-recon 0
-smooth / position / esug / pset get psmooth
-recon 1
-assign///maxiter_sm/10
-#########################################################
+# assign///maxiter_sm/1 
+# smooth / position / esug / pset get psmooth
+# recon 0
+# smooth / position / esug / pset get psmooth
+# recon 0
+# smooth / position / esug / pset get psmooth
+# recon 1
+# assign///maxiter_sm/10
+# #########################################################
 
 
 ###########################################
