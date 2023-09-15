@@ -240,22 +240,22 @@ cmo / status / brief
 ## Do we still need this? Think we have this in poisson disk
 ## driver, correct? 
 #########################################################
-# # ## Massage the mesh where vertices are are not on the boundary and
-# # # not within a distance H_EPS of the intersection vertices.
-# pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
-# pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
-# pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
-# pset / psmooth / not / pregion pref pboundary 
+# ## Massage the mesh where vertices are are not on the boundary and
+# # not within a distance H_EPS of the intersection vertices.
+pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
+pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
+pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
+pset / psmooth / not / pregion pref pboundary 
 
-# assign///maxiter_sm/1 
-# smooth / position / esug / pset get psmooth
-# recon 0
-# smooth / position / esug / pset get psmooth
-# recon 0
-# smooth / position / esug / pset get psmooth
-# recon 1
-# assign///maxiter_sm/10
-# #########################################################
+assign///maxiter_sm/1 
+smooth / position / esug / pset get psmooth
+recon 0
+smooth / position / esug / pset get psmooth
+recon 0
+smooth / position / esug / pset get psmooth
+recon 1
+assign///maxiter_sm/10
+#########################################################
 
 
 ###########################################
