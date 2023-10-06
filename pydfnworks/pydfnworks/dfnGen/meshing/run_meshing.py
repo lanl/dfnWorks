@@ -195,7 +195,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
         print(
             f"--> Fracture id {fracture_id:0{digits}d} out of {num_frac} is starting on worker {cpu_id}"
         )
-    if fracture_id == 1:
+    if fracture_id == 1 and digits != 1:
         print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *")
     if fracture_id % 10**(digits - 1) == 0:
         print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *")
