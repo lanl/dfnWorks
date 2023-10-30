@@ -233,7 +233,7 @@ def load_parameters(self):
             'value': None,
             'description': 'Toggle for FRAM on/off. '
         },
-        'rfram': {
+        'rFram': {
             'type': bool,
             'list': False,
             'value': False,
