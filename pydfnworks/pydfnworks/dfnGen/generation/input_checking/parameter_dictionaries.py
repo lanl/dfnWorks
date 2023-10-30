@@ -233,6 +233,12 @@ def load_parameters(self):
             'value': None,
             'description': 'Toggle for FRAM on/off. '
         },
+        'rfram': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'Toggle for rFRAM on/off. '
+        },
         'radiiListIncrease': {
             'type':
             float,
