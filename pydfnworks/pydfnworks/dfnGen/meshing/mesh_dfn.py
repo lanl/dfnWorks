@@ -129,7 +129,7 @@ def mesh_network(self,
     self.merge_network()
 
     ## checking and clean up
-    if (not self.visual_mode and not self.prune_file):
+    if (not self.visual_mode and not self.prune_file and not self.r_fram):
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
             if strict:

@@ -153,7 +153,7 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     return True
 
 
-def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
+def mesh_fracture(fracture_id, visual_mode, num_frac, quiet, r_fram):
     """ Child function for parallelized meshing of fractures
 
     Parameters
@@ -164,6 +164,8 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
             True/False for reduced meshing
         num_frac : int 
             Total Number of Fractures in the DFN
+        r_fram : boolean
+            relaxed fram
 
     Returns
     -------
@@ -246,7 +248,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
 
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
-    if not visual_mode:
+    if not visual_mode and not r_fram:
         cmd_check = f"{os.environ['CONNECT_TEST_EXE']} \
             intersections_{fracture_id}.inp \
             id_tri_node_{fracture_id:0{digits}d}.list \
@@ -269,6 +271,19 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet):
             cleanup_failed_run(fracture_id, digits)
             return (fracture_id, -4)
 
+        # Mesh checking was a success. Remove check files and move on
+        files = [
+            f"id_tri_node_{fracture_id:0{digits}d}.list",
+            f"mesh_{fracture_id:0{digits}d}.inp"
+        ]
+        for f in files:
+            try:
+                os.remove(f)
+            except:
+                print(f"--> Could not remove {f}\n")
+                pass
+
+    elif r_fram:
         # Mesh checking was a success. Remove check files and move on
         files = [
             f"id_tri_node_{fracture_id:0{digits}d}.list",
@@ -374,7 +389,7 @@ def mesh_fractures_header(self, quiet = True):
 
     for i in self.fracture_list:
         pool.apply_async(mesh_fracture,
-                         args=(i, self.visual_mode, self.num_frac, quiet),
+                         args=(i, self.visual_mode, self.num_frac, self.r_fram, quiet),
                          callback=log_result)
 
     pool.close()
