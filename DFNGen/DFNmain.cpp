@@ -305,7 +305,6 @@ int main (int argc, char **argv) {
                 
                 // Create/assign bounding box
                 createBoundingBox(newPoly);
-                
                 // Find line of intersection and FRAM check
                 // rejectCode = intersectionChecking(newPoly, acceptedPoly, intPts, pstats, triplePoints);
                 // Find line of intersection and FRAM check
@@ -314,7 +313,6 @@ int main (int argc, char **argv) {
                 //} else {
                 //    rejectCode = 0;
                 //}
-                
 #ifdef TESTING
                 
                 if (rejectCode != 0) {
@@ -883,7 +881,6 @@ int main (int argc, char **argv) {
          << pstats.tripleNodeCount << ")\n";
     file.close();
     cout << "DFNGen - Complete" << endl;
-
     return 0;
 }
 
