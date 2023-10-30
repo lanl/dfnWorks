@@ -39,6 +39,10 @@ bool disableFram;
             modeling of flow and transport is possible.*/
 bool visualizationMode;
 
+/*! This option uses a relaxed version of the FRAM algorithm. The mesh may not
+be perfectly conforming*/
+bool rFram;
+
 /*! Accept or reject triple intersections
         False - Off (Reject)
         True  - On  (Accept)*/
@@ -654,6 +658,13 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     
     if (disableFram == true) {
         std::cout << "\nFRAM IS DISABLED\n";
+    }
+    
+    searchVar(inputFile, "rFram:");
+    inputFile >> rFram;
+    
+    if (rFram == true) {
+        std::cout << "\nRunning with relaxed FRAM. Mesh may not be fully conforming\n";
     }
     
     searchVar(inputFile, "tripleIntersections:");
