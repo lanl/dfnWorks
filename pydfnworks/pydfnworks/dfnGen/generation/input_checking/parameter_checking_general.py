@@ -312,7 +312,7 @@ def check_fram(params):
         params['disableFram']['value'] = True
 
     if params['framOn']['value']:
-        if params['rframOn']['value']:
+        if params['rFram']['value']:
             hf.print_warning(
                 "Running with rFRAM. Mesh will not be perfectly conforming."
             ) 
