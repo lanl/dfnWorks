@@ -1,6 +1,8 @@
 # README
 
-For information on how to get dfnWorks up and running, please see the document dfnWorks.pdf, in this directory.
+For information on how to get dfnWorks up and running, please see the document dfnWorks.pdf, in this directory. Documentation is also available [here](https://lanl.github.io/dfnWorks/intro.html)
+
+    https://lanl.github.io/dfnWorks/intro.html
 
 ## Native build from github repository
 
