@@ -3,7 +3,7 @@ from numpy import genfromtxt, zeros, savetxt
 import sys
 import os
 
-from pydfnworks.dfnGen.meshing.mesh_dfn_helper import run_lagrit_script
+from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import run_lagrit_script
 from pydfnworks.general import helper_functions as hf
 
 

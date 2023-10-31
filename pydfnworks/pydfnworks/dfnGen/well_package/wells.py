@@ -2,7 +2,7 @@ import os
 import numpy as np
 import shutil
 
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 
 def tag_well_in_mesh(self, wells):
     """ Identifies nodes in a DFN for nodes the intersect a well with radius r [m]\n
