@@ -17,7 +17,7 @@ import glob
 import pickle
 
 
-def upscale(self, mat_perm, mat_por, path='../', simple = False):
+def upscale(self, mat_perm, mat_por, path='../'):
     """ Generate permeabilities and porosities based on output of map2continuum.
 
     Parameters
@@ -88,102 +88,92 @@ def upscale(self, mat_perm, mat_por, path='../', simple = False):
     for i in range(1, num_nodes + 1):
         if i in f_dict:
             # Get porosity:
-            if simple == True:
-                for j in range(len(f_dict[i])): #makes the assumption that cells are cubes, and fracture intersect the cube along the x y or z axis
-                    frac_vol[i - 1] += self.aperture[f_dict[i][j][0] - 1] #technically not a volume, but the fracture area falls out with this assumption (bv**(2/3)/v = b/v**i(1/3))
-                por_var[i-1] = frac_vol[i - 1] / cv_vol[i - 1]**(1./3.) 
-            else:
-                for j in range(len(f_dict[i])):
-                    # Calculate total volume of fractures in cv cell i
-                    frac_vol[i - 1] += self.aperture[f_dict[i][j][0] -
+            for j in range(len(f_dict[i])):
+                # Calculate total volume of fractures in cv cell i
+                frac_vol[i - 1] += self.aperture[f_dict[i][j][0] -
                                                  1] * f_dict[i][j][1]
-                por_var[i - 1] = frac_vol[i - 1] / cv_vol[i - 1]
+            por_var[i - 1] = frac_vol[i - 1] / cv_vol[i - 1]
             if por_var[i - 1] == 0:
                 por_var[i - 1] = mat_por
             if por_var[i - 1] > 1.0:
                 por_var[i - 1] = 1.0
 
             # Get permeability:
-            if simple == True:
-                for j in range(len(f_dict[i])): #frac_vol/tot_vol of individual frac times frac perm to get weighted average
-                    perm_var[i - 1] += self.aperture[f_dict[i][j][0] - 1]**3/12.0/cv_vol[i-1]**(1./3.)
-                perm_var[i - 1] += (1 - por_var[i - 1])*mat_por #matrix perm part of weighted sum
-            else:
-                perm_tensor = np.zeros([3, 3])
-                phi_sum = 0
-                for j in range(len(f_dict[i])):
-                    phi = (self.aperture[f_dict[i][j][0] - 1] *
-                           f_dict[i][j][1]) / cv_vol[i - 1]
-                    if phi > 1.0:
-                        phi = 1.0
-                    phi_sum += phi
-                    if phi_sum > 1.0:
-                        phi_sum = 1.0
-                    b = self.aperture[f_dict[i][j][0] - 1]
-                    # Construct tensor Omega
-                    Omega = np.zeros([3, 3])
-                    n1 = self.normal_vectors[f_dict[i][j][0] - 1][0]
-                    n2 = self.normal_vectors[f_dict[i][j][0] - 1][1]
-                    n3 = self.normal_vectors[f_dict[i][j][0] - 1][2]
-                    Omega[0][0] = (n2)**2 + (n3)**2
-                    Omega[0][1] = -n1 * n2
-                    Omega[0][2] = -n3 * n1
-                    Omega[1][0] = -n1 * n2
-                    Omega[1][1] = (n3)**2 + (n1)**2
-                    Omega[1][2] = -n2 * n3
-                    Omega[2][0] = -n3 * n1
-                    Omega[2][1] = -n2 * n3
-                    Omega[2][2] = (n1)**2 + (n2)**2
-                    perm_tensor += (phi * (b)**2 * Omega)
-                perm_tensor *= 1. / 12
+            perm_tensor = np.zeros([3, 3])
+            phi_sum = 0
+            for j in range(len(f_dict[i])):
+                phi = (self.aperture[f_dict[i][j][0] - 1] *
+                       f_dict[i][j][1]) / cv_vol[i - 1]
+                if phi > 1.0:
+                    phi = 1.0
+                phi_sum += phi
+                if phi_sum > 1.0:
+                    phi_sum = 1.0
+                b = self.aperture[f_dict[i][j][0] - 1]
+                # Construct tensor Omega
+                Omega = np.zeros([3, 3])
+                n1 = self.normal_vectors[f_dict[i][j][0] - 1][0]
+                n2 = self.normal_vectors[f_dict[i][j][0] - 1][1]
+                n3 = self.normal_vectors[f_dict[i][j][0] - 1][2]
+                Omega[0][0] = (n2)**2 + (n3)**2
+                Omega[0][1] = -n1 * n2
+                Omega[0][2] = -n3 * n1
+                Omega[1][0] = -n1 * n2
+                Omega[1][1] = (n3)**2 + (n1)**2
+                Omega[1][2] = -n2 * n3
+                Omega[2][0] = -n3 * n1
+                Omega[2][1] = -n2 * n3
+                Omega[2][2] = (n1)**2 + (n2)**2
+                perm_tensor += (phi * (b)**2 * Omega)
+            perm_tensor *= 1. / 12
 
-                # Calculate eigenvalues
-                permX[i - 1] = np.linalg.eigvals(perm_tensor)[0]
-                permY[i - 1] = np.linalg.eigvals(perm_tensor)[1]
-                permZ[i - 1] = np.linalg.eigvals(perm_tensor)[2]
+            # Calculate eigenvalues
+            permX[i - 1] = np.linalg.eigvals(perm_tensor)[0]
+            permY[i - 1] = np.linalg.eigvals(perm_tensor)[1]
+            permZ[i - 1] = np.linalg.eigvals(perm_tensor)[2]
 
-                # Arithmetic average of matrix perm
-                permX[i - 1] += (1 - phi_sum) * mat_perm
-                permY[i - 1] += (1 - phi_sum) * mat_perm
-                permZ[i - 1] += (1 - phi_sum) * mat_perm
+            # Arithmetic average of matrix perm
+            permX[i - 1] += (1 - phi_sum) * mat_perm
+            permY[i - 1] += (1 - phi_sum) * mat_perm
+            permZ[i - 1] += (1 - phi_sum) * mat_perm
 
-                # Correction factor
+            # Correction factor
 
-                # Actual value doesn't matter here, just needs to be high
-                min_n1 = 1e6
-                min_n2 = 1e6
-                min_n3 = 1e6
+            # Actual value doesn't matter here, just needs to be high
+            min_n1 = 1e6
+            min_n2 = 1e6
+            min_n3 = 1e6
 
-                # See Sweeney et al. 2019 Computational Geoscience
-                for j in range(len(f_dict[i])):
-                    n1_temp = self.normal_vectors[f_dict[i][j][0] - 1][0]
-                    theta1_t = m.degrees(m.acos(n1_temp)) % 90
-                    if abs(theta1_t - 45) <= min_n1:
-                        theta1 = theta1_t
-                        min_n1 = theta1_t
-                    n2_temp = self.normal_vectors[f_dict[i][j][0] - 1][1]
-                    theta2_t = m.degrees(m.acos(n2_temp)) % 90
-                    if abs(theta2_t - 45) <= min_n2:
-                        theta2 = theta2_t
-                        min_n2 = theta2_t
-                    n3_temp = self.normal_vectors[f_dict[i][j][0] - 1][2]
-                    theta3_t = m.degrees(m.acos(n3_temp)) % 90
-                    if abs(theta3_t - 45) <= min_n3:
-                        theta3 = theta3_t
-                        min_n3 = theta3_t
+            # See Sweeney et al. 2019 Computational Geoscience
+            for j in range(len(f_dict[i])):
+                n1_temp = self.normal_vectors[f_dict[i][j][0] - 1][0]
+                theta1_t = m.degrees(m.acos(n1_temp)) % 90
+                if abs(theta1_t - 45) <= min_n1:
+                    theta1 = theta1_t
+                    min_n1 = theta1_t
+                n2_temp = self.normal_vectors[f_dict[i][j][0] - 1][1]
+                theta2_t = m.degrees(m.acos(n2_temp)) % 90
+                if abs(theta2_t - 45) <= min_n2:
+                    theta2 = theta2_t
+                    min_n2 = theta2_t
+                n3_temp = self.normal_vectors[f_dict[i][j][0] - 1][2]
+                theta3_t = m.degrees(m.acos(n3_temp)) % 90
+                if abs(theta3_t - 45) <= min_n3:
+                    theta3 = theta3_t
+                    min_n3 = theta3_t
 
-                sl = (2 * 2**(1. / 2) - 1) / -45.0
-                b = 2 * 2**(1. / 2)
+            sl = (2 * 2**(1. / 2) - 1) / -45.0
+            b = 2 * 2**(1. / 2)
 
-                cf_x = sl * abs(theta1 - 45) + b
-                cf_y = sl * abs(theta2 - 45) + b
-                cf_z = sl * abs(theta3 - 45) + b
+            cf_x = sl * abs(theta1 - 45) + b
+            cf_y = sl * abs(theta2 - 45) + b
+            cf_z = sl * abs(theta3 - 45) + b
 
-                permX[i - 1] *= cf_x
-                permY[i - 1] *= cf_y
-                permZ[i - 1] *= cf_z
+            permX[i - 1] *= cf_x
+            permY[i - 1] *= cf_y
+            permZ[i - 1] *= cf_z
 
-                perm_var[i - 1] = max(permX[i - 1], permY[i - 1], permZ[i - 1])
+            perm_var[i - 1] = max(permX[i - 1], permY[i - 1], permZ[i - 1])
         else:
             # Assign matrix properties
             por_var[i - 1] = mat_por
@@ -202,8 +192,8 @@ def upscale(self, mat_perm, mat_por, path='../', simple = False):
                     str(perm_var[i - 1]) + "\n")
             with open("rock_fehm.dat", "a") as g:
                 g.write(
-                    str(i) + " " + str(i) + " " + "1" + " " + "2650." + " " +
-                    "1046." + " " + str(por_var[i - 1]) + "\n")
+                    str(i) + " " + str(i) + " " + "1" + " " + "2165." + " " +
+                    "931." + " " + str(por_var[i - 1]) + "\n")
 
     # Need an extra space at end for FEHM
     if self.flow_solver == "FEHM":
