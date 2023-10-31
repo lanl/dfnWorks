@@ -49,11 +49,16 @@ Go up into the pydfnworks sub-directory:
     $ cd dfnWorks/pydfnworks/
 
 Compile The pydfnWorks Package & Install on Your Local Machine:
-    
-    $ python setup.py bdist_wheel
-    $ python -m pip install dist/pydfnworks-<CURRENT VERSION NUMBER>-py3-none-any.whl
+   
+    $ pip install -r requirements.txt
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+or  
+
+    $ pip install -r requirements.txt --user
+
+if you don't have admin privileges.
+
+**Note that the python version needs to be consistent with the current release**
 
 ## Installation Requirements for Native Build
 Tools that you will need to run the dfnWorks work flow are described in 
