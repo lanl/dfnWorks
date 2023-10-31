@@ -51,9 +51,12 @@ Go up into the pydfnworks sub-directory:
 Compile The pydfnWorks Package & Install on Your Local Machine:
    
     $ pip install -r requirements.txt
-    or  
+
+or  
+
     $ pip install -r requirements.txt --user
-    if you don't have admin privileges.
+
+if you don't have admin privileges.
 
 **Note that the python version needs to be consistent with the current release**
 
