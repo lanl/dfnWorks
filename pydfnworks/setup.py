@@ -3,9 +3,9 @@
 """
 Setup script for pydfnworks
 You can install pydfnworks with
-python setup.py install 
+pip install -r requirements.txt 
 or
-python setup.py install --user 
+pip install -r requirements.txt --user
 
 if you don't have admin privileges. 
 """
@@ -21,7 +21,7 @@ for d in dirs:
         shutil.rmtree(d)
 
 if sys.argv[-1] == 'setup.py':
-    print("To install, run 'python setup.py install'")
+    print("To install, run 'pip install -r requirements.txt'")
     print()
 
 if sys.version_info[:2] < (3, 6):
