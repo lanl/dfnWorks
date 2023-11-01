@@ -133,9 +133,9 @@ int main(int argc, char **argv) {
         
         if (searchIdx >= edgeGraphSize) {
 //            #ifdef DEBUG
-            std::cout << "ERROR: Attempted to search beyond edge graph's array bounds. "
-                      << "Node connection (" << searchIdx + minId << ", " << searchFor
-                      << ")  does not exist in edge graph.\n";
+            //std::cout << "ERROR: Attempted to search beyond edge graph's array bounds. "
+            //          << "Node connection (" << searchIdx + minId << ", " << searchFor
+            //          << ")  does not exist in edge graph.\n";
 //            #endif
             delete[] connections;
             delete[] edgeGraph;
@@ -165,12 +165,11 @@ int main(int argc, char **argv) {
     // Clean up
     delete[] connections;
     delete[] edgeGraph;
-
-    if (error == true){
-        std::cout << "One or more connections missing on Fracture ID " << argv[4] << std::endl; 
+    
+    if (error == true) {
         return 1;
     }
-
+    
 #ifdef CHECKALLNODES
     
     if (error == true) {
