@@ -26,6 +26,7 @@ DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['ignoreBoundaryFaces']['value'] = False
 DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
 DFN.params['seed']['value'] = 2
+DFN.params['rFram']['value'] = True 
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -36,7 +37,7 @@ DFN.add_fracture_family(shape="ell",
                         theta=0.0,
                         phi=0.0,
                         #aspect=2,
-                        p32=0.5,
+                        p32=2,
                         hy_variable='aperture',
                         hy_function='correlated',
                         number_of_points = 8,
