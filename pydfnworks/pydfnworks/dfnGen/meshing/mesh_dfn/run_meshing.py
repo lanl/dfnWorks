@@ -56,7 +56,7 @@ def cleanup_failed_run(fracture_id, digits):
     try:
         os.mkdir(folder)
     except:
-        print(f"Warning! Unable to make new folder: {folder}")
+        hf.print_warning(f"Unable to make new folder: {folder}")
         pass
 
     files = [
@@ -74,7 +74,7 @@ def cleanup_failed_run(fracture_id, digits):
         try:
             copy(f, folder)
         except:
-            print(f'--> Warning: Could not copy {f} to failure folder')
+            hf.print_warning(f'--> Could not copy {f} to failure folder')
             pass
 
     symlinks = [
@@ -88,7 +88,7 @@ def cleanup_failed_run(fracture_id, digits):
         try:
             os.unlink(f)
         except:
-            print(f'--> Warning: Could not unlink {f}')
+            hf.print_warning(f'--> Could not unlink {f}')
             pass
 
     print(f"--> Cleanup for Fracture {fracture_id} complete")
@@ -118,7 +118,7 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     try:
         os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
     except:
-        print(f"-->\nError creating link for poly_{fracture_id}.inp\n")
+        hf.print_error(f"-->\nError creating link for poly_{fracture_id}.inp\n")
         return False
 
     try:
@@ -152,7 +152,7 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     return True
 
 
-def mesh_fracture(fracture_id, visual_mode, num_frac, quiet, r_fram):
+def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     """ Child function for parallelized meshing of fractures
 
     Parameters
@@ -212,38 +212,20 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet, r_fram):
             output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
             quiet=quiet)
     except:
-        print(
-            f"\n--> Error occurred during meshing fracture {fracture_id}\n"
-        )
-        try: 
-            print(f"--> Trying again on {fracture_id}.")
-            mh.run_lagrit_script(
-                f"mesh_poly_{fracture_id:0{digits}d}.lgi",
-                output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
-                quiet=quiet)
-            print(f"--> Successful on {fracture_id}!")
-        except:
-            print("Meshing failed completely.")
-            cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, -2)
+        hf.print_error(
+             f"Error occurred during meshing fracture {fracture_id}\n"
+         )
+        cleanup_failed_run(fracture_id, digits)
+        return (fracture_id, -2)
 
     # Check if mesh*.lg file was created, if not exit.
     if not os.path.isfile(f'mesh_{fracture_id:0{digits}d}.lg') or os.stat(
             f'mesh_{fracture_id:0{digits}d}.lg') == 0:
-        print(
-            f"\n--> Mesh for fracture {fracture_id} was either not produced or has zero size\n"
+        hf.print_error(
+             f" Mesh for fracture {fracture_id} was either not produced or has zero size\n"
         )
-        try: 
-            print(f"--> Trying again on {fracture_id}.")
-            mh.run_lagrit_script(
-                f"mesh_poly_{fracture_id:0{digits}d}.lgi",
-                output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
-                quiet=quiet)
-            print(f"--> Successful on {fracture_id}!")
-        except:
-            print("Meshing failed completely.")
-            cleanup_failed_run(fracture_id, digits)
-            return (fracture_id, -3)
+        cleanup_failed_run(fracture_id, digits)
+        return (fracture_id, -3)
 
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
@@ -259,17 +241,14 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet, r_fram):
         try:
             if subprocess.call(cmd_check, shell=True):
                 if not r_fram:
-                    print(
-                        f"\n--> Error: Meshing checking failed on {fracture_id}.\n"
-                    )
-                
+                    hf.print_error(
+                        f"Meshing checking failed on {fracture_id}.\n"
+                    ) 
                     cleanup_failed_run(fracture_id, digits)
                     return (fracture_id, -4)
-                else:
-                    print("Running in relaxed FRAM. Mesh is not perfectly conforming.")
         except:
-            print(
-                f"\n--> Error: Unable to run mesh checking checking on {fracture_id}.\n"
+            hf.print_error(
+                f"Unable to run mesh checking checking on {fracture_id}.\n"
             )
             cleanup_failed_run(fracture_id, digits)
             return (fracture_id, -4)
@@ -283,7 +262,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, quiet, r_fram):
             try:
                 os.remove(f)
             except:
-                print(f"--> Could not remove {f}\n")
+                hf.print_warning(f"--> Could not remove {f}\n")
                 pass
 
     # Remove symbolic
