@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
             meshErrorFile.open(meshErrorFileName);
             meshErrorFile << "Fracture ID " << argv[4] << std::endl;
             // Clean up
-            std::cout << "Did not find connection (" << searchIdx + minId << ", " << searchFor << ")\n";
+            //std::cout << "Did not find connection (" << searchIdx + minId << ", " << searchFor << ")\n";
             // TODO: print diagnostics here
             meshErrorFile << searchIdx << " " << searchFor << " " << std::endl;
             error = true;
@@ -165,6 +165,12 @@ int main(int argc, char **argv) {
     // Clean up
     delete[] connections;
     delete[] edgeGraph;
+
+    if (error == true){
+        std::cout << "One or more connections missing on Fracture ID " << argv[4] << std::endl; 
+        return 1;
+    }
+
 #ifdef CHECKALLNODES
     
     if (error == true) {
