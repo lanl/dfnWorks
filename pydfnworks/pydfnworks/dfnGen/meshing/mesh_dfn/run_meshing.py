@@ -364,6 +364,18 @@ def mesh_fractures_header(self, quiet = True):
     pool.close()
     pool.join()
 
+    elapsed = timeit.default_timer() - t_all
+    print('\n--> Triangulating Polygons: Complete\n')
+    time_sec = elapsed
+    time_min = elapsed / 60
+    time_hrs = elapsed / 3600
+    print("--> Total Time to Mesh Network:")
+    print(
+        f"--> {time_sec:.2e} seconds\t{time_min:.2e} minutes\t{time_hrs:.2e} hours"
+    )
+    print('=' * 80)
+
+    print("* Checking for meshing issues.")
     for result in result_list:
         if result[1] != 0:
             print(
@@ -378,73 +390,74 @@ def mesh_fractures_header(self, quiet = True):
 -4 - line of intersection not preserved
         """
             print(details)
-            return 1
+            return False 
 
-    elapsed = timeit.default_timer() - t_all
     if os.path.isfile("failure.txt"):
         failure_list = genfromtxt("failure.txt")
-        failure_flag = True
         if type(failure_list) is list:
             failure_list = np.sort(failure_list)
         else:
             print('--> Fractures:', failure_list, 'Failed')
         print('--> Main process exiting.')
-    else:
-        failure_flag = False
-
+        return True 
 
         ## check for meshing errors in r_fram
         if self.r_fram:
-            print("")
-            print('=' * 80)
-            print("* Checking missed edges from relaxed FRAM")
-            # get total number of edges
-            total_edges = 0
-            for ifrac in self.fracture_list:
-                with open(f"intersections/intersections_{ifrac}.inp", "r") as fp:
-                    header = fp.readline()
-                    header = header.split()
-                    num_edges = int(header[1])
-                total_edges += num_edges
- 
-            missed_edges = 0
-            missed_edges_list = []
-            error_file_list = glob.glob("*_mesh_errors.txt")
-            num_frac_missed = len(error_file_list)
-            for filename in error_file_list:
-                with open(filename, 'r') as fp:
-                    for i,line in enumerate(fp.readlines()):
-                        continue
-                    missed_edges += i
-                    missed_edges_list.append(i)
-                os.remove(filename)
+            if self.check_for_missing_edges():
+                return False
 
-            print(f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
-            print(f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}")
-            print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
-            print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
-            print(f"* Total number of missed edges: {missed_edges}")
-            print(f"* Total number of intersection edges: {total_edges}")
-            print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
-            if missed_edges/total_edges > 0.02:
-                print(f"* Percentage of missed edges too large (> 2%). Exitting program.")
-                failure_flag = True
-            print('=' * 80)
 
-        print('\n--> Triangulating Polygons: Complete\n')
-        time_sec = elapsed
-        time_min = elapsed / 60
-        time_hrs = elapsed / 3600
+def check_for_missing_edges(self):
+    """ Checks for missing edges that can occur with relaxed FRAM.
 
-        print("--> Total Time to Mesh Network:")
-        print(
-            f"--> {time_sec:.2e} seconds\t{time_min:.2e} minutes\t{time_hrs:.2e} hours"
-        )
+    Parameters
+    ------------------
+        self : DFN Object
 
-        print('=' * 80)
+    Returns
+    ------------------
+        failure_flag : bool
+            True if too many edges were lost, False if mesh is okay.    
+    """
+    print("")
+    print('=' * 80)
+    print("* Checking missed edges from relaxed FRAM")
+    # get total number of edges
+    total_edges = 0
+    for ifrac in self.fracture_list:
+        with open(f"intersections/intersections_{ifrac}.inp", "r") as fp:
+            header = fp.readline()
+            header = header.split()
+            num_edges = int(header[1])
+        total_edges += num_edges
 
-    return failure_flag
+    missed_edges = 0
+    missed_edges_list = []
+    error_file_list = glob.glob("*_mesh_errors.txt")
+    num_frac_missed = len(error_file_list)
+    for filename in error_file_list:
+        with open(filename, 'r') as fp:
+            for i,line in enumerate(fp.readlines()):
+                continue
+            missed_edges += i
+            missed_edges_list.append(i)
+        os.remove(filename)
 
+    print(f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
+    print(f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}")
+    print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
+    print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
+    print(f"* Total number of missed edges: {missed_edges}")
+    print(f"* Total number of intersection edges: {total_edges}")
+    print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
+    if missed_edges/total_edges > 0.02:
+        print(f"* Percentage of missed edges too large (> 2%). Exitting program.")
+        failure_flag = True
+    else:
+        failure_flag = False
+    print('=' * 80)
+
+    return failure_flag 
 
 def merge_worker(job, quiet = True):
     """Parallel worker for merge meshes into final mesh 
