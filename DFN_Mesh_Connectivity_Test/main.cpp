@@ -170,7 +170,12 @@ int main(int argc, char **argv) {
     // Clean up
     delete[] connections;
     delete[] edgeGraph;
-    meshErrorFile.close();
+
+    if (error == true){
+        std::cout << "One or more connections missing on Fracture ID " << argv[4] << std::endl; 
+        return 1;
+    }
+
 #ifdef CHECKALLNODES
     
     if (error == true) {
