@@ -10,7 +10,7 @@
 //#define DEBUG
 
 // Comment/Uncomment to display all node disconnect pairs before exiting
-//#define CHECKALLNODES
+#define CHECKALLNODES
 
 
 /*************************************************************************************/
@@ -35,6 +35,11 @@ int main(int argc, char **argv) {
         exit(1);
     }
     
+    std::ofstream meshErrorFile;
+    std::string fractureNumber = std::string(argv[4]);;
+    std::string meshErrorFileName = fractureNumber  + "_mesh_errors.txt";;
+    meshErrorFile.open(meshErrorFileName);
+    meshErrorFile << "Fracture ID " << argv[4] << std::endl;
 #ifdef DEBUG
     cout << "\nIntersections file: " << argv[1] << endl;
     cout << "Global node numbers file: " << argv[2] << endl;
@@ -107,7 +112,7 @@ int main(int argc, char **argv) {
 #endif
     // check that all connections in connections[]
     // also exist in edge graph
-    bool error = false;
+    // bool error = false;
     
     for (int i = 0; i < connSize; i++) {
         int searchIdx;
@@ -147,17 +152,17 @@ int main(int argc, char **argv) {
         Node* node = edgeGraph[searchIdx].find(searchFor);
         
         if (node == nullptr) {
-            std::ofstream meshErrorFile;
-            std::string fractureNumber = std::string(argv[4]);;
-            std::string meshErrorFileName = fractureNumber  + "_mesh_errors.txt";;
-            meshErrorFile.open(meshErrorFileName);
-            meshErrorFile << "Fracture ID " << argv[4] << std::endl;
+            // std::ofstream meshErrorFile;
+            // std::string fractureNumber = std::string(argv[4]);;
+            // std::string meshErrorFileName = fractureNumber  + "_mesh_errors.txt";;
+            // meshErrorFile.open(meshErrorFileName);
+            // meshErrorFile << "Fracture ID " << argv[4] << std::endl;
             // Clean up
-            //std::cout << "Did not find connection (" << searchIdx + minId << ", " << searchFor << ")\n";
+            //std::cout << "Did not find connection (" << searchIdx + minId << ", " << searchFor << ") on Fracture ID " << argv[4] << "\n";
             // TODO: print diagnostics here
             meshErrorFile << searchIdx << " " << searchFor << " " << std::endl;
             error = true;
-            meshErrorFile.close();
+            //meshErrorFile.close();
         }
     }
     
@@ -165,11 +170,7 @@ int main(int argc, char **argv) {
     // Clean up
     delete[] connections;
     delete[] edgeGraph;
-    
-    if (error == true) {
-        return 1;
-    }
-    
+    meshErrorFile.close();
 #ifdef CHECKALLNODES
     
     if (error == true) {
