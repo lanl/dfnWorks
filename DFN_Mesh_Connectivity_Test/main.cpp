@@ -170,11 +170,7 @@ int main(int argc, char **argv) {
     // Clean up
     delete[] connections;
     delete[] edgeGraph;
-    
-    if (error == true) {
-        return 1;
-    }
-    
+    meshErrorFile.close();
 #ifdef CHECKALLNODES
     
     if (error == true) {
