@@ -12,7 +12,7 @@ from time import time
 import numpy as np
 
 
-def lagrit2pflotran(self):
+def lagrit2pflotran(self, boundary_cell_area = None):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
     Calls the function write_perms_and_correct_volumes_areas() and zone2ex
    
@@ -51,7 +51,11 @@ def lagrit2pflotran(self):
         sys.exit(1)
 
     self.write_perms_and_correct_volumes_areas()
-    self.zone2ex(zone_file='all')
+    
+    if not boundary_cell_area:
+        boundary_cell_area = 1/self.h 
+
+    self.zone2ex(zone_file='all', boundary_cell_area = boundary_cell_area)
     self.dump_h5_files()
     print("Conversion of files for PFLOTRAN complete")
     print('=' * 80)
