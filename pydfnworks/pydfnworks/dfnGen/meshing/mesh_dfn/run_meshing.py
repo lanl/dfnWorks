@@ -434,13 +434,15 @@ def check_for_missing_edges(self):
     missed_edges = 0
     missed_edges_list = []
     error_file_list = glob.glob("*_mesh_errors.txt")
-    num_frac_missed = len(error_file_list)
+    num_frac_missed = 0 
     for filename in error_file_list:
         with open(filename, 'r') as fp:
             for i,line in enumerate(fp.readlines()):
                 continue
             missed_edges += i
             missed_edges_list.append(i)
+            if i > 0:
+                num_frac_missed += 1
         os.remove(filename)
 
     print(f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
