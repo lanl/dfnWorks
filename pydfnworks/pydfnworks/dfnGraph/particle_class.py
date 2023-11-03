@@ -45,6 +45,7 @@ class Particle():
         self.cp_index = 0
         self.direction = direction
         self.exit_flag = False
+        self.frac = int()
         self.frac_seq = []
         self.cp_adv_time = []
         self.cp_tdrw_time = []
@@ -52,8 +53,11 @@ class Particle():
         self.lengths = []
         self.times = []
         self.coords = []
-        self.fracs = []
 
+
+    def initalize(self,G):
+        self.frac = (G.nodes[self.curr_node]['frac'][1])
+    
     def interpolate_time(self, x0, t1, t2, x1, x2):
         """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
 
@@ -107,6 +111,7 @@ class Particle():
 
             self.frac = G.edges[self.curr_node, self.next_node]['frac']
             self.frac_seq.append(self.frac)
+
             self.delta_t = G.edges[self.curr_node, self.next_node]['time']
             self.delat_l = G.edges[self.curr_node, self.next_node]['length']
             self.delta_beta = (
@@ -188,15 +193,14 @@ class Particle():
         self.lengths.append(self.delat_l)
         self.times.append(self.delta_t)
         self.coords.append(self.curr_coords)
-        self.fracs.append(self.frac)
+        # self.fracs.append(self.frac)
 
     def cleanup_frac_seq(self):
-        frac_seq_set = set()
-        frac_seq_add = frac_seq_set.add
-        frac_seq = [
-            x for x in self.frac_seq
-            if not (x in frac_seq_set or frac_seq_add(x))
-        ]
+        frac_seq = [self.frac_seq[0]]
+        for frac in self.frac_seq:
+            if frac != frac_seq[-1]:
+                frac_seq.append(frac)
+
         self.frac_seq = frac_seq
 
     def track(self, G, nbrs_dict):
@@ -212,6 +216,7 @@ class Particle():
             None
         """
         np.random.seed(self.particle_number)
+        self.initalize(G)
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:

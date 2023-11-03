@@ -42,11 +42,16 @@ def get_laplacian_sparse_mat(G,
             Adjacency matrix of graph
     """
 
-    A = nx.to_scipy_sparse_matrix(G,
-                                  nodelist=nodelist,
-                                  weight=weight,
-                                  dtype=dtype,
-                                  format=format)
+    # A = nx.to_scipy_sparse_matrix(G,
+    #                               nodelist=nodelist,
+    #                               weight=weight,
+    #                               dtype=dtype,
+    #                               format=format)
+    A = nx.to_scipy_sparse_array(G,
+                                nodelist=nodelist,
+                                weight=weight,
+                                dtype=dtype,
+                                format=format)
 
     (n, n) = A.shape
     data = np.asarray(A.sum(axis=1).T)

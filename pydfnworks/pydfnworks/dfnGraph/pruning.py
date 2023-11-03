@@ -48,7 +48,9 @@ def current_flow_threshold(self,
                                                             weight=weight)
     print("Current Flow Complete")
     currentflow_edges = [(u, v) for (u, v), d in cf.items() if d > thrs]
-    H = nx.Graph(currentflow_edges, representation=G.graph["representation"])
+    H = G.edge_subgraph(currentflow_edges).copy()   
+    H.graph["representation"] = G.graph["representation"]
+    # H = nx.Graph(currentflow_edges, representation=G.graph["representation"])
     print(
         f"--> Of the {G.number_of_nodes()} in the original graph,  {H.number_of_nodes()} are in the thresholded network"
     )
@@ -111,7 +113,7 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
         See Hyman et al. 2017 "Predictions of first passage times in sparse discrete fracture networks using graph-based reductions" Physical Review E for more details
 """
 
-    print("\n--> Determining %d shortest paths in the network" % k)
+    print(f"\n--> Determining {k} shortest paths in the network")
     H = G.copy()
     k_shortest = set([])
     for path in k_shortest_paths(G, k, source, target, weight):
