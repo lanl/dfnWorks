@@ -1,6 +1,7 @@
-To install, go to the base directory and run:
+To install, in the dfnWorks/pydfnworks (current) directory run:
 
-python setup.py bdist_wheel
+| pip install -r requirements.txt
+| or
+| pip install -r requirements.txt --user
+| if you don't have admin privileges.
 
-python -m pip install dist/pydfnworks-2.6.1-py3-none-any.whl
- 
