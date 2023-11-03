@@ -404,7 +404,7 @@ def mesh_fractures_header(self, quiet = True):
     ## check for meshing errors in r_fram
     if self.r_fram:
         if self.check_for_missing_edges():
-            return False
+            return True
 
 
 def check_for_missing_edges(self):
@@ -441,7 +441,7 @@ def check_for_missing_edges(self):
                 continue
             missed_edges += i
             missed_edges_list.append(i)
-            if i > 0:
+            if i > 1:
                 num_frac_missed += 1
         os.remove(filename)
 
@@ -454,12 +454,13 @@ def check_for_missing_edges(self):
     print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
     if missed_edges/total_edges > 0.1:
         print(f"* Percentage of missed edges too large (> 10%). Exitting program.")
-        failure_flag = True
+        print('=' * 80)
+        return True
     else:
-        failure_flag = False
-    print('=' * 80)
+        print('=' * 80)
+        return False 
 
-    return failure_flag 
+
 
 def merge_worker(job, quiet = True):
     """Parallel worker for merge meshes into final mesh 
