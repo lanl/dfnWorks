@@ -7,6 +7,8 @@
 
 from pydfnworks import *
 import os
+import numpy as np
+
 
 jobname = os.getcwd() + "/output"
 dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
@@ -51,7 +53,11 @@ DFN.print_domain_parameters()
 DFN.make_working_directory(delete = True)
 DFN.check_input()
 DFN.create_network()
-# DFN.output_report()
+
+print(np.sum((DFN.aperture*DFN.surface_area)))
+DFN.output_report()
+exit()
+
 DFN.mesh_network(min_dist = 1, max_dist = 5, slope = 0.4)
 DFN.dfn_flow()
 DFN.dfn_trans()

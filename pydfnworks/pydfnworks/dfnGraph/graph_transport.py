@@ -170,6 +170,7 @@ def create_neighbor_list(G):
         for v in G.successors(u):
             node_list.append(v)
             prob_list.append(G.edges[u, v]['vol_flow_rate'])
+
         if node_list:
             nbrs_dict[u]['child'] = node_list
             nbrs_dict[u]['prob'] = np.asarray(prob_list) / sum(prob_list)

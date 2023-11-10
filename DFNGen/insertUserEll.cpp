@@ -24,6 +24,7 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
     for (int i = 0; i < nUserEll; i++) {
         int index = i * 3; // Index to start of vertices/nodes
         Poly newPoly; // New poly/fracture to be tested
+        RejectedUserFracture rejectedUserFracture;
         newPoly.familyNum = -1; // Using -1 for all user specified ellipses
         newPoly.vertices = new double[uenumPoints[i] * 3];
         // Set number of nodes  - needed for rotations
@@ -72,6 +73,9 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
             std::cout << "\nUser Ellipse " << i + 1 << " was rejected for being outside the defined domain.\n";
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -1;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
             continue; // Go to next poly (go to next iteration of for loop)
         }
         
@@ -98,6 +102,9 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
             pstats.rejectedPolyCount++;
             std::cout << "\nRejected User Defined Elliptical Fracture " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -1;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
 #ifdef TESTING
             exit(1);
 #endif

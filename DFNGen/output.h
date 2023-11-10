@@ -50,6 +50,7 @@ void writeTriplePts(std::vector<Point> &triplePoints, std::vector<unsigned int> 
 void makeDIR(const char *dir);
 void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeRejectionStats(Stats &pstats, std::string &output);
+void writeUserRejectedFractureInformation(Stats &pstats, std::string &output);
 void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output);
 void writeFractureTranslations(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output);
 void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::string &output);
