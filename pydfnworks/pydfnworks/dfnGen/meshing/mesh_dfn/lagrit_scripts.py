@@ -678,6 +678,10 @@ boundary_components
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
+# New additions for dfnTrans2.0
+dump / elem_adj_node / node_connect.dat / mo_all
+dump / elem_adj_elem / elem_connect.dat / mo_all
+
 """
         if flow_solver == "PFLOTRAN":
             print("\nDumping output for %s" % flow_solver)
@@ -698,7 +702,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("WARNING!!!!!!!\nUnkown flow solver selection: %s" %
+            print("Warning!\nUnkown flow solver selection: %s" %
                   flow_solver)
         lagrit_input += """ 
 # Dump out Material ID Dat file
