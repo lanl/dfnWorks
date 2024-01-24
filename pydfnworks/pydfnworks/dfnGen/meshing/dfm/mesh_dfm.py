@@ -81,12 +81,14 @@ def create_domain(domain, h):
                   }
 
     # Extent of domain
-    box_domain['x0'] = - 0.5*domain['x']
-    box_domain['x1'] = 0.5*domain['x'] 
-    box_domain['y0'] = - 0.5*domain['y'] 
+    box_domain['x0'] = -0.5*domain['x']
+    box_domain['x1'] = 0.5*domain['x']
+
+    box_domain['y0'] = -0.5*domain['y'] 
     box_domain['y1'] = 0.5*domain['y'] 
-    box_domain['z0'] = - 0.5*domain['z'] 
-    box_domain['z1'] = 0.5*domain['z'] 
+
+    box_domain['z0'] = -0.5*domain['z']
+    box_domain['z1'] = 0.5*domain['z']
 
     # Mesh size in matrix
     l = h/2
@@ -300,28 +302,19 @@ cmo / delete / mo_tmp
 """
     
     if psets:
+        eps = h/4
         lagrit_script += f"""
 cmo / select / mo_dfm
 cmo / printatt / mo_dfm / -xyz- / minmax
 
-pset/ pleft / geom / xyz / 1, 0, 0 /  {box_domain['x0'] - h} {box_domain['y0']} {box_domain['z0']} / {box_domain['x0'] + h} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
-pset/ pright / geom / xyz / 1, 0, 0 / {box_domain['x1'] - h} {box_domain['y0']} {box_domain['z0']} / {box_domain['x1'] + h} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
+pset/ pleft / geom / xyz / 1, 0, 0 /  {box_domain['x0'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x0'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
+pset/ pright / geom / xyz / 1, 0, 0 / {box_domain['x1'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x1'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
 
-pset / pbottom / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0']} {box_domain['z0'] - h} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z0'] + h}/ 0,0,0 
-pset / ptop / geom / xyz / 1, 0, 0 /    {box_domain['x0']} {box_domain['y0']} {box_domain['z1'] - h} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z1'] + h} / 0,0,0 
+pset / pfront / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0'] - eps}  {box_domain['z0']} / {box_domain['x1']}  {box_domain['y0'] + eps}  {box_domain['z1']}  / 0,0,0 
+pset / pback / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y1'] - eps}  {box_domain['z0']}  / {box_domain['x1']}  {box_domain['y1'] + eps}  {box_domain['z1']}  / 0,0,0 
 
-pset / pfront / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0'] - h}  {box_domain['z0']} / {box_domain['x1']}  {box_domain['y0'] + h}  {box_domain['z1']}  / 0,0,0 
-pset / pback / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y1'] - h}  {box_domain['z0']}  / {box_domain['x1']}  {box_domain['y1'] + h}  {box_domain['z1']}  / 0,0,0 
-
-
-# # Get boundary psets 
-# pset/ pleft / geom / xyz / 1, 0, 0 / -25.1, -75, -50 / -24.9, 75, 50  / 0,0,0
-# pset/ pright / geom / xyz / 1, 0, 0 / 24.9, -75, -50 / 25.1, 75, 50  / 0,0,0 
-# pset / ptop / geom / xyz / 1, 0, 0 / -25 -75 49.9 / 25 75 50.1 / 0,0,0 
-# pset / pbottom / geom / xyz / 1, 0, 0 / -25 -75 -50.01 / 25 75 -49.9 / 0,0,0 
-# pset / pfront / geom / xyz / 1, 0, 0 / -25 -75.1 -50 / 25 -74.9 50 / 0,0,0 
-# pset / pback / geom / xyz / 1, 0, 0 / -25 74.9 -50 / 25 75.1 50 / 0,0,0 
-
+pset / pbottom / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0']} {box_domain['z0'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z0'] + eps}/ 0,0,0 
+pset / ptop / geom / xyz / 1, 0, 0 /    {box_domain['x0']} {box_domain['y0']} {box_domain['z1'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z1'] + eps} / 0,0,0 
 
 # corners of the mesh 1
 pset / p_tmp / inter / pleft pbottom
@@ -516,8 +509,6 @@ pset / ptop / not / ptop p_edge_btop
 
 ####### 
 
-
-
 cmo / addatt / mo_dfm / right / vint / scalar / nnodes
 cmo/setatt / mo_dfm / right / 1,0,0 / 0
 cmo/setatt / mo_dfm / right /pset,get,pright / 1
@@ -535,7 +526,6 @@ cmo / addatt / mo_dfm / top / vint / scalar / nnodes
 cmo/setatt / mo_dfm / top / 1,0,0 / 0
 cmo/setatt / mo_dfm / top /pset,get,ptop / 1
 
-
 cmo / addatt / mo_dfm / bottom / vint / scalar / nnodes
 cmo/setatt / mo_dfm / bottom / 1,0,0 / 0
 cmo/setatt / mo_dfm / bottom /pset,get,pbottom / 1
@@ -547,9 +537,9 @@ cmo/setatt / mo_dfm / front /pset,get,pfront / 1
 dump / dfm_tet_w_psets.inp / mo_dfm
 """
 
-
     lagrit_script += """
-dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / / / &
+
+dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / psets / / &
      facesets &
 """
     lagrit_script += floop 
