@@ -443,15 +443,20 @@ def check_for_missing_edges(self):
             missed_edges_list.append(i)
             if i > 1:
                 num_frac_missed += 1
+
+    for filename in error_file_list:
+        #print(f"--> Removing filename :{filename}")
         os.remove(filename)
 
     print(f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
-    print(f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}")
-    print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
-    print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
-    print(f"* Total number of missed edges: {missed_edges}")
-    print(f"* Total number of intersection edges: {total_edges}")
-    print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
+    if num_frac_missed > 0:
+        print(f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}")
+        print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
+        print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
+        print(f"* Total number of missed edges: {missed_edges}")
+        print(f"* Total number of intersection edges: {total_edges}")
+        print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
+
     if missed_edges/total_edges > 0.1:
         print(f"* Percentage of missed edges too large (> 10%). Exitting program.")
         print('=' * 80)
@@ -460,10 +465,8 @@ def check_for_missing_edges(self):
         print('=' * 80)
         return False 
 
-
-
 def merge_worker(job, quiet = True):
-    """Parallel worker for merge meshes into final mesh 
+    """ Parallel worker for merge meshes into final mesh 
 
     Parameters
     ----------
