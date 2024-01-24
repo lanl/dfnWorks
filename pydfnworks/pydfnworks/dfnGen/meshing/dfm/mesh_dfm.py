@@ -541,15 +541,20 @@ cmo/setatt / mo_dfm / front / 1,0,0 / 0
 cmo/setatt / mo_dfm / front /pset,get,pfront / 1
 
 dump / dfm_tet_w_psets.inp / mo_dfm
-"""
-
-    lagrit_script += """
-
 dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / psets / / &
      facesets &
 """
-    lagrit_script += floop 
-    lagrit_script += """
+        lagrit_script += floop 
+        lagrit_script += """
+finish
+"""
+    else: ## no psets
+        lagrit_script += """
+dump / exo / dfm_tet_mesh_w_fsets.exo / mo_dfm / / / &
+     facesets &
+"""
+        lagrit_script += floop 
+        lagrit_script += """
 finish
 """
 
