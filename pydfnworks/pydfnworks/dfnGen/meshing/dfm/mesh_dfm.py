@@ -307,14 +307,20 @@ cmo / delete / mo_tmp
 cmo / select / mo_dfm
 cmo / printatt / mo_dfm / -xyz- / minmax
 
-pset/ pleft / geom / xyz / 1, 0, 0 /  {box_domain['x0'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x0'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
-pset/ pright / geom / xyz / 1, 0, 0 / {box_domain['x1'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x1'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
+pset/ pleft / geom / xyz / 1, 0, 0 /  &
+     {box_domain['x0'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x0'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
+pset/ pright / geom / xyz / 1, 0, 0 / &
+    {box_domain['x1'] - eps} {box_domain['y0']} {box_domain['z0']} / {box_domain['x1'] + eps} {box_domain['y1']} {box_domain['z1']}  / 0,0,0
 
-pset / pfront / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0'] - eps}  {box_domain['z0']} / {box_domain['x1']}  {box_domain['y0'] + eps}  {box_domain['z1']}  / 0,0,0 
-pset / pback / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y1'] - eps}  {box_domain['z0']}  / {box_domain['x1']}  {box_domain['y1'] + eps}  {box_domain['z1']}  / 0,0,0 
+pset / pfront / geom / xyz / 1, 0, 0 / & 
+    {box_domain['x0']} {box_domain['y0'] - eps}  {box_domain['z0']} / {box_domain['x1']}  {box_domain['y0'] + eps}  {box_domain['z1']}  / 0,0,0 
+pset / pback / geom / xyz / 1, 0, 0 / & 
+    {box_domain['x0']} {box_domain['y1'] - eps}  {box_domain['z0']}  / {box_domain['x1']}  {box_domain['y1'] + eps}  {box_domain['z1']}  / 0,0,0 
 
-pset / pbottom / geom / xyz / 1, 0, 0 / {box_domain['x0']} {box_domain['y0']} {box_domain['z0'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z0'] + eps}/ 0,0,0 
-pset / ptop / geom / xyz / 1, 0, 0 /    {box_domain['x0']} {box_domain['y0']} {box_domain['z1'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z1'] + eps} / 0,0,0 
+pset / pbottom / geom / xyz / 1, 0, 0 / &
+    {box_domain['x0']} {box_domain['y0']} {box_domain['z0'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z0'] + eps}/ 0,0,0 
+pset / ptop / geom / xyz / 1, 0, 0 /  & 
+    {box_domain['x0']} {box_domain['y0']} {box_domain['z1'] - eps} / {box_domain['x1']}  {box_domain['y1']} {box_domain['z1'] + eps} / 0,0,0 
 
 # corners of the mesh 1
 pset / p_tmp / inter / pleft pbottom
