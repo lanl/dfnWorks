@@ -69,7 +69,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     nz = self.domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
-        error = "ERROR: Number of elements > 1e8. Exiting"
+        error = "Error: Number of elements too large (> 1e8). Exiting"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -338,7 +338,7 @@ cmo / select / MOTET
 cmo / modatt / MOTET / itp / ioflag / l
 cmo / modatt / MOTET / isn / ioflag / l
 cmo / modatt / MOTET / icr / ioflag / l
-#
+# #
 
 define / ZONE / 1
 define / FOUT / pboundary_top
