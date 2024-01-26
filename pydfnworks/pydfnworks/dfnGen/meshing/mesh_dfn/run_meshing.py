@@ -258,6 +258,9 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             f"id_tri_node_{fracture_id:0{digits}d}.list",
             f"mesh_{fracture_id:0{digits}d}.inp"
         ]
+        if not r_fram:
+            files.append(f'{fracture_id}_mesh_errors.txt')
+
         for f in files:
             try:
                 os.remove(f)
@@ -405,6 +408,7 @@ def mesh_fractures_header(self, quiet = True):
     if self.r_fram:
         if self.check_for_missing_edges():
             return True
+     
 
 
 def check_for_missing_edges(self):
