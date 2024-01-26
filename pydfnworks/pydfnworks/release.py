@@ -1,7 +1,7 @@
 
 name = "pydfnWorks"
 
-date = "26 January 2024" 
+date = "12 September 2023" 
 
 version = "2.8"
 
