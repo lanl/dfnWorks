@@ -19,14 +19,13 @@ DFN = DFNWORKS(jobname,
                dfnTrans_file=dfnTrans_file,
                ncpu=12)
 
-DFN.params['domainSize']['value'] = [25, 25, 25]
+DFN.params['domainSize']['value'] = [15, 15, 15]
 DFN.params['h']['value'] = 0.1
 DFN.params['domainSizeIncrease']['value'] = [0.5, 0.5, 0.5]
 DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['ignoreBoundaryFaces']['value'] = False
 DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
 DFN.params['seed']['value'] = 2
-DFN.params['rFram']['value'] = True 
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -37,7 +36,7 @@ DFN.add_fracture_family(shape="ell",
                         theta=0.0,
                         phi=0.0,
                         #aspect=2,
-                        p32=2,
+                        p32=1,
                         hy_variable='aperture',
                         hy_function='correlated',
                         number_of_points = 8,
@@ -53,6 +52,6 @@ DFN.make_working_directory(delete = True)
 DFN.check_input()
 DFN.create_network()
 DFN.output_report()
-DFN.mesh_network(min_dist = 1, max_dist = 5, slope = 0.4)
+DFN.mesh_network(min_dist = 1, max_dist = 5,    max_resolution_factor=10)
 DFN.dfn_flow()
 DFN.dfn_trans()
