@@ -73,7 +73,6 @@ def upscale(self, mat_perm, mat_por, path='../'):
             fline = f.readline().strip().split()
             cv_vol[i] = float(fline[4])
             iarray[i] = int(fline[0])
-    f.close()
 
     perm_var = np.zeros(num_nodes, 'float')
     por_var = np.zeros(num_nodes, 'float')

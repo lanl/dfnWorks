@@ -7,7 +7,6 @@ import h5py
 # pydfnworks modules
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
 
 def get_laplacian_sparse_mat(G,
@@ -42,16 +41,11 @@ def get_laplacian_sparse_mat(G,
             Adjacency matrix of graph
     """
 
-    # A = nx.to_scipy_sparse_matrix(G,
-    #                               nodelist=nodelist,
-    #                               weight=weight,
-    #                               dtype=dtype,
-    #                               format=format)
     A = nx.to_scipy_sparse_array(G,
-                                nodelist=nodelist,
-                                weight=weight,
-                                dtype=dtype,
-                                format=format)
+                                  nodelist=nodelist,
+                                  weight=weight,
+                                  dtype=dtype,
+                                  format=format)
 
     (n, n) = A.shape
     data = np.asarray(A.sum(axis=1).T)
