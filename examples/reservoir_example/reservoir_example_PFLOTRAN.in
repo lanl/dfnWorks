@@ -1,0 +1,195 @@
+#================================================
+# Description: Hydrofrac network
+# Satish Karra, LANL
+# Email: satkarra@lanl.gov
+# Jan 15, 2013
+# variable perm/aperture per fracture
+# no gravity
+#================================================
+
+SIMULATION
+  SIMULATION_TYPE SUBSURFACE
+  PROCESS_MODELS
+    SUBSURFACE_FLOW flow
+      MODE RICHARDS
+    /
+  /
+END
+SUBSURFACE
+
+
+
+DFN
+
+#=========================== flow mode ========================================
+#MODE RICHARDS
+
+#=========================== discretization ===================================
+GRID
+  TYPE unstructured_explicit full_mesh_vol_area.uge
+  GRAVITY 0.d0 0.d0 0.d0
+END
+
+#PRINT_PRIMAL_GRID
+
+#=========================== fluid properties =================================
+FLUID_PROPERTY
+  DIFFUSION_COEFFICIENT 1.d-9
+END
+
+#=========================== datasets =================================
+DATASET Permeability
+  FILENAME dfn_properties.h5
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY soil1
+  ID 1
+  POROSITY 0.25d0
+  TORTUOSITY 0.5d0
+  CHARACTERISTIC_CURVES default
+  PERMEABILITY
+    DATASET Permeability
+  /
+END
+
+#TIMESTEPPER FLOW
+#  MAX_PRESSURE_CHANGE 1.d2
+#END
+
+#=========================== saturation functions =============================
+
+CHARACTERISTIC_CURVES default
+  SATURATION_FUNCTION VAN_GENUCHTEN
+    M 0.5d0
+    ALPHA  1.d-4
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+    MAX_CAPILLARY_PRESSURE 1.d8
+  /
+  PERMEABILITY_FUNCTION MUALEM_VG_LIQ
+    M 0.5d0
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+  /
+END
+
+
+#=========================== output options ===================================
+OUTPUT
+  FORMAT VTK
+  MASS_FLOWRATE
+  MASS_BALANCE
+  VARIABLES
+    LIQUID_PRESSURE
+    PERMEABILITY
+  /
+END
+
+#=========================== times ============================================
+TIME
+  INITIAL_TIMESTEP_SIZE  1.d0 d
+  FINAL_TIME 1.d3 d
+  MAXIMUM_TIMESTEP_SIZE 1.d2 d
+END
+
+#REFERENCE_PRESSURE 101325.
+
+#=========================== regions ==========================================
+REGION All
+  COORDINATES
+    -1.d20 -1.d20 -1.d20
+    1.d20 1.d20 1.d20
+  /
+END 
+
+
+REGION well
+  FILE well.ex
+END
+
+
+REGION top
+  FILE pboundary_top.ex
+END
+
+REGION bottom
+  FILE pboundary_bottom.ex
+END
+
+REGION right
+  FILE pboundary_right_e.ex
+END
+
+REGION left
+  FILE pboundary_left_w.ex
+END
+
+#=========================== flow conditions ==================================
+FLOW_CONDITION initial
+  TYPE
+     LIQUID_PRESSURE dirichlet	
+  /
+  DATUM 0.d0 0.d0 0.d0
+  LIQUID_PRESSURE 17.d6
+END
+
+
+FLOW_CONDITION well
+ TYPE
+    LIQUID_PRESSURE dirichlet
+  /
+  LIQUID_PRESSURE 17.d6
+END
+
+
+FLOW_CONDITION high
+  TYPE
+    LIQUID_PRESSURE dirichlet
+  /
+  LIQUID_PRESSURE 21.d6
+END
+ 
+#=========================== condition couplers ===============================
+# initial condition
+INITIAL_CONDITION
+  FLOW_CONDITION initial
+  REGION All
+END
+
+BOUNDARY_CONDITION high1 
+  FLOW_CONDITION high 
+  REGION top 
+END
+
+BOUNDARY_CONDITION high2 
+  FLOW_CONDITION high 
+  REGION bottom
+END 
+
+BOUNDARY_CONDITION high3 
+  FLOW_CONDITION high 
+  REGION right 
+END
+
+BOUNDARY_CONDITION high4 
+  FLOW_CONDITION high 
+  REGION left
+END 
+
+BOUNDARY_CONDITION well
+  FLOW_CONDITION well
+  REGION well
+END
+
+
+#SOURCE_SINK well
+#  FLOW_CONDITION well 
+#  REGION well
+#END
+
+#=========================== stratigraphy couplers ============================
+STRATA
+  REGION All 
+  MATERIAL soil1
+END
+
+END_SUBSURFACE

@@ -1,0 +1,159 @@
+/***********************************************************************/
+/*   CONTROL FILE FOR PARTICLE TRACKING IN DISCRETE FRACTURE NETWORK   */
+/***********************************************************************/
+
+/**********************  INPUT FILES: grid *****************************/
+/**** input files with grid of DFN, mainly it's output of DFNGen ******/
+param: params.txt
+poly: poly_info.dat
+inp: full_mesh.inp
+stor: full_mesh.stor
+boundary: allboundaries.zone
+/* boundary conditions: reading the nodes that belong to in-flow and 
+out-flow boundaries. Should be consistent with those applied to obtain
+steady state pressure solution (PFLOTRAN)   */
+/*1 - top;  2 - bottom;  3 - left_w;  4 - front_s;  5 - right_e;  6 - back_n */
+in-flow-boundary: 3 
+out-flow-boundary: 5
+
+
+/**************** INPUT FILES: PFLOTRAN flow solution *******************/
+PFLOTRAN: yes
+PFLOTRAN_vel: darcyvel.dat 
+PFLOTRAN_cell: cellinfo.dat
+PFLOTRAN_uge: full_mesh_vol_area.uge
+
+/**************** INPUT FILES: FEHM flow solution ***********************/
+/*currently we are using PFLOTRAN , but the code would work with FEHM, too */ 
+FEHM: no
+FEHM_fin:  tri_frac.fin
+
+/************************  OUTPUT FILES  ********************************/
+/* initial grid info structure output, useful for debugging */
+out_grid: no
+/* flow field: 3D Darcy velocities: output file has an each nodes position 
+and its Darcy velocity, reconstructed from fluxes */ 
+out_3dflow: no
+/* out initial positions of particles into separate file */ 
+out_init: no 
+/* out particle trajectories tortuosity file, torts.dat */
+out_tort: no
+
+/*************** output options for particles trajectories ****************/
+/* output frequency is set according to trajectories curvature. We check the 
+curvature of particles trajectory each segment, from intersection to intersection.
+If it's like a straight line, then the output is less frequent (in case of 
+"out_curv:yes", if "no",  the output file will contain every time step) */
+out_curv: no 
+/* output into avs file (GMV visualization, Paraview visualization) */
+out_avs: no 
+/* output into trajectories ascii files (veloc+posit+cell+fract+time) */
+out_traj: no
+out_fract: no 
+
+/* temporary outputs (every time step from intersection to intersection)*/
+/* use outputs to file or memory buffer. Memory buffer by default */
+out_filetemp: no
+
+/************* output directories *************************************/
+out_dir: dfnTrans_output /* path and name of directory where all the particle 
+                     tracking results will be written*/
+
+
+out_path: trajectories /*name of directory where all particle
+                    trajectories will be saved, in out_dir path */ 
+
+/* name of resultant file (in out_dir path), which contains total travel time and 
+				final positions of particles */
+
+out_time: partime.dat
+
+/*************** Intersection Mixing Rule **********************************/
+/****streamline_routing: if yes - streamline routing is the selected subgrid process
+     otherwise the complete mixing rule is selected ****/
+streamline_routing: yes 
+
+/**************** PARTICLES INITIAL POSITIONS ******************************/
+/****init_nf: if yes - the same number of particles (init_partn) will be placed 
+     on every boundary fracture edge on in-flow boundary, 
+     equidistant from each other ****/
+init_nf: yes
+init_partn: 1000
+
+/****init_eqd: if yes - particles will be placed on the same distance from
+     each other on all over in-flow boundary edges ***********************/  
+init_eqd: no  //maximum number of particles that user expects on one boundary edge
+init_npart: 1000
+
+/*** all particles start from the same region at in-flow boundary, in a range  
+    {in_xmin, in_xmax,in_ymin, in_ymax, in_zmin, in_zmax} **************/
+init_oneregion: no    
+in_partn: 100000
+in_xmin: -50.0 
+in_xmax: -50.0 
+in_ymin: -20.0 
+in_ymax:  20.0 
+in_zmin: -15.0 
+in_zmax:  0.0
+
+/**** all particles are placed randomly over all fracture surface 
+     (not only on boundary edges!) ************************************/
+init_random: no 
+// total number of particles
+in_randpart: 100    
+
+/*****  particles positions according to in-flow flux weight *********/
+init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
+init_totalnumber: 10000 // distance [m] between particles at inflow face for equal flux weight calculation
+
+
+/****************** FLOW AND FRACTURE PARAMETERS **********************/
+porosity: 1.0 // porosity 
+density: 997.73  //fluid density 
+satur: 1.0
+thickness: 1.0 //DFN aperture  (used in case of no aperture file provided)
+
+/************************ APERTURE *********************************/ 
+
+aperture: yes  //DFN aperture
+aperture_type: frac //aperture is giving per cell (type "cell") 
+//    or per fracture (type "frac")
+// for now we use an aperture giving per fracture
+aperture_file: aperture.dat
+
+/************* TIME DOMAIN RANDOM WALK ******************************/
+tdrw: yes 
+tdrw_porosity: 0.02
+tdrw_diffcoeff: 1.0e-11
+
+/********************  TIME ********************************************/
+timesteps: 2000000
+//units of time (years, days, hours, minutes) 
+time_units: seconds
+
+/**** flux weighted particles*/
+/**** in case of random initial positions of particles - it's aperture weighted **/
+flux_weight: yes
+/* random generator seed */
+seed: 337799
+
+
+/*********************  Control Plane/Cylinder Output ********************/
+/*** virtual Control planes will be build in the direction of flow. 
+Once particle crosses the control plane, it's position, velocity, time 
+will output to an ascii file. ****/ 
+ControlPlane: no 
+
+/* the path and directory name with all particles output files */
+control_out: outcontroldir
+
+/* Delta Control Plane - the distance between control planes */
+delta_Control: 1
+
+/* ControlPlane: direction of flow: x-0; y-1; z-2 */
+flowdir: 0 
+
+
+/**************************************************************************/
+/endendend/
+END

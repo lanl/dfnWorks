@@ -1,0 +1,157 @@
+# 11 July 2023 
+# Jeffrey Hyman
+# jhyman@lanl.gov  
+#================================================
+
+SIMULATION
+  SIMULATION_TYPE SUBSURFACE
+  PROCESS_MODELS
+    SUBSURFACE_FLOW flow
+      MODE RICHARDS
+    /
+  /
+END
+SUBSURFACE
+
+DFN
+
+#=========================== discretization ===================================
+GRID
+  TYPE unstructured_explicit full_mesh.uge 
+  GRAVITY 0.d0 0.d0 0.d0
+END
+
+#=========================== fluid properties =================================
+FLUID_PROPERTY
+  DIFFUSION_COEFFICIENT 1.d-9
+END
+
+DATASET Permeability
+  FILENAME dfn_properties.h5
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY soil1
+  ID 1
+  POROSITY 0.25 
+  TORTUOSITY 0.5d0
+  CHARACTERISTIC_CURVES default
+  PERMEABILITY
+    DATASET Permeability
+    /
+END
+
+#=========================== characteristic curves ============================
+CHARACTERISTIC_CURVES default
+  SATURATION_FUNCTION VAN_GENUCHTEN
+    M 0.5d0
+    ALPHA  1.d-4
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+    MAX_CAPILLARY_PRESSURE 1.d8
+  /
+  PERMEABILITY_FUNCTION MUALEM_VG_LIQ
+    M 0.5d0
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+  /
+END
+
+#=========================== output options ===================================
+OUTPUT
+#  FORMAT TECPLOT BLOCK
+  PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
+  FORMAT VTK
+  MASS_FLOWRATE
+  MASS_BALANCE
+  VARIABLES
+    LIQUID_PRESSURE
+    PERMEABILITY
+  /
+END
+
+#=========================== times ============================================
+TIME
+  INITIAL_TIMESTEP_SIZE  1.d0 d
+  FINAL_TIME 1.d3 d
+  MAXIMUM_TIMESTEP_SIZE 1.d2 d
+END
+
+#=========================== regions ==========================================
+REGION All
+  COORDINATES
+    -1.d20 -1.d20 -1.d20
+    1.d20 1.d20 1.d20
+  /
+END 
+
+REGION pinned 
+  FILE pinned.ex
+END
+
+REGION inflow
+  FILE well_inject.ex
+END
+
+REGION outflow
+  FILE well_extract.ex
+END
+
+#=========================== flow conditions ==================================
+FLOW_CONDITION initial
+  TYPE
+     LIQUID_PRESSURE dirichlet 
+  /
+  LIQUID_PRESSURE 1.01325d5
+END
+
+FLOW_CONDITION injection
+    TYPE
+        RATE SCALED_VOLUMETRIC_RATE VOLUME
+    /
+    RATE 1.d-5 m^3/s
+END
+
+FLOW_CONDITION extraction 
+    TYPE
+        RATE SCALED_VOLUMETRIC_RATE VOLUME
+    /
+    RATE -1.d-5 m^3/s
+END
+
+SOURCE_SINK inflow
+    FLOW_CONDITION injection 
+    REGION inflow
+END
+
+SOURCE_SINK outflow
+    FLOW_CONDITION extraction   
+    REGION outflow 
+END
+
+FLOW_CONDITION pinned
+  TYPE
+    LIQUID_PRESSURE dirichlet
+  /
+  LIQUID_PRESSURE 1.01325d5
+END
+
+#=========================== condition couplers ===============================
+# initial condition
+INITIAL_CONDITION
+  FLOW_CONDITION initial
+  REGION All
+END
+
+BOUNDARY_CONDITION INFLOW 
+  FLOW_CONDITION pinned
+  REGION inflow
+END
+
+#=========================== stratigraphy couplers ============================
+STRATA
+  REGION All 
+  MATERIAL soil1
+END
+
+END_SUBSURFACE
+
