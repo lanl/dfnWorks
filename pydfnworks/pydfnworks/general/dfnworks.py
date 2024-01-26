@@ -63,10 +63,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
     from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
-    from pydfnworks.dfnGen.meshing.poisson_driver import create_lagrit_parameters_file
-    from pydfnworks.dfnGen.meshing.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
-    from pydfnworks.dfnGen.meshing.run_meshing import mesh_fractures_header,merge_network
-    from pydfnworks.dfnGen.meshing.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
+    from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
+    from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
+    from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network
+    from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
 
     # udfm meshing functions 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
