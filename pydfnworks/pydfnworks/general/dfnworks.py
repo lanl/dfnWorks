@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 __author__ = "Jeffrey Hyman"
-=======
-__author__ = "Jeffrey Hyman, Satish Karra"
->>>>>>> fc800d3afe77fb2a7731af824db197bc64b784c8
 __version__ = "2.8"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
@@ -67,13 +63,6 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
     from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
-<<<<<<< HEAD
-=======
-    from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
-    from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
-    from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
->>>>>>> fc800d3afe77fb2a7731af824db197bc64b784c8
 
     # udfm meshing functions 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
