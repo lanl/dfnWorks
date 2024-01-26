@@ -1,8 +1,6 @@
 import os
 import numpy as np
-
 from pydfnworks.general import helper_functions as hf
-
 
 def create_poisson_user_function_script():
 
