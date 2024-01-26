@@ -7,120 +7,12 @@
 import os
 import sys
 import glob
-from shutil import copy, rmtree, move
+
 from numpy import genfromtxt, sqrt, cos, arcsin
 import numpy as np
 import subprocess
 
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
-
-
-def edit_intersection_files(num_poly, fracture_list, path):
-    """ If pruning a DFN, this function walks through the intersection files
-    and removes references to files that are not included in the 
-    fractures that will remain in the network.
- 
-    Parameters
-    ---------
-        num_poly : int 
-            Number of Fractures in the original DFN
-        fracture_list :list of int
-            List of fractures to keep in the DFN
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-    1. Currently running in serial, but it could be parallelized
-    2. Assumes the pruning directory is not the original directory
-
-    """
-    # Make list of connectivity.dat
-    connectivity = []
-    with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
-        for i in range(num_poly):
-            tmp = []
-            line = fp.readline()
-            line = line.split()
-            for frac in line:
-                tmp.append(int(frac))
-            connectivity.append(tmp)
-
-    fractures_to_remove = list(
-        set(range(1, num_poly + 1)) - set(fracture_list))
-    
-    cwd = os.getcwd()
-    if os.path.isdir('intersections'):
-        os.unlink('intersections')
-        os.mkdir('intersections')
-    else:
-        os.mkdir('intersections') 
-
-    os.chdir('intersections')
-
-    ## DEBUGGING ##
-    # clean up directory
-    #fl_list = glob.glob("*prune.inp")
-    #for fl in fl_list:
-    #   os.remove(fl)
-    ## DEBUGGING ##
-
-    print("--> Editing Intersection Files")
-    ## Note this could be easily changed to run in parallel if needed. Just use cf
-    for i in fracture_list:
-        filename = f'intersections_{i}.inp'
-        print(f'--> Working on: {filename}')
-        intersecting_fractures = connectivity[i - 1]
-        pull_list = list(
-            set(intersecting_fractures).intersection(set(fractures_to_remove)))
-        if len(pull_list) > 0:
-            # Create Symlink to original intersection file
-            os.symlink(path + 'intersections/' + filename, filename)
-            # Create LaGriT script to remove intersections with fractures not in prune_file
-            lagrit_script = f"""
-read / {filename} / mo1 
-pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
-"""
-            for j in pull_list[1:]:
-                lagrit_script += f'''
-pset / prune / attribute / b_a / 1,0,0 / eq / {j}
-pset / pset2remove / union / pset2remove, prune
-rmpoint / pset, get, prune
-pset / prune / delete
-     '''
-            lagrit_script += f'''
-rmpoint / pset, get, pset2remove 
-rmpoint / compress
-    
-cmo / modatt / mo1 / imt / ioflag / l
-cmo / modatt / mo1 / itp / ioflag / l
-cmo / modatt / mo1 / isn / ioflag / l
-cmo / modatt / mo1 / icr / ioflag / l
-    
-cmo / status / brief
-dump / intersections_{i}_prune.inp / mo1
-finish
-
-'''
-
-            lagrit_filename = 'prune_intersection.lgi'
-            f = open(lagrit_filename, 'w')
-            f.write(lagrit_script)
-            f.flush()
-            f.close()
-            mh.run_lagrit_script("prune_intersection.lgi",
-                                 f"out_{i}.txt",
-                                 quiet=True)
-            os.remove(filename)
-            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
-        else:
-            try:
-                copy(path + 'intersections/' + filename, filename)
-            except:
-                pass
-    os.chdir(cwd)
 
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
@@ -889,40 +781,22 @@ def define_zones():
         None 
     """
 
-    fall = open("allboundaries.zone", "w")
-    #copy all but last 2 lines of boundary_top.zone in allboundaries.zone
-    fzone = open("boundary_top.zone", "r")
-    lines = fzone.readlines()
-    lines = lines[:-2]
-    fzone.close()
-    fall.writelines(lines)
-    #copy all but frist and last 2 lines of boundary_bottom.zone in allboundaries.zone
-    files = ['bottom', 'left_w', 'front_n', 'right_e']
-    for f in files:
-        fzone = open("boundary_%s.zone" % f, "r")
+    with open("allboundaries.zone", "w") as fall:
+        #copy all but last 2 lines of boundary_top.zone in allboundaries.zone
+        fzone = open("boundary_top.zone", "r")
         lines = fzone.readlines()
-        lines = lines[1:-2]
+        lines = lines[:-2]
         fzone.close()
         fall.writelines(lines)
-    fzone = open("boundary_back_s.zone", "r")
-    lines = fzone.readlines()
-    lines = lines[1:]
-    fzone.close()
-    fall.writelines(lines)
-    fall.close()
-    # copies boundary zone files for PFLOTRAN
-    # This can be deleted once we clean up the flow
-    move('boundary_bottom.zone', 'pboundary_bottom.zone')
-    move('boundary_left_w.zone', 'pboundary_left_w.zone')
-    move('boundary_front_n.zone', 'pboundary_front_n.zone')
-    move('boundary_right_e.zone', 'pboundary_right_e.zone')
-    move('boundary_back_s.zone', 'pboundary_back_s.zone')
-    move('boundary_top.zone', 'pboundary_top.zone')
-
-    ## Remove Left over zone files
-    #os.remove('boundary_bottom.zone')
-    #os.remove('boundary_top.zone')
-    #os.remove('boundary_left_w.zone')
-    #os.remove('boundary_right_e.zone')
-    #os.remove('boundary_front_n.zone')
-    #os.remove('boundary_back_s.zone')
+        #copy all but frist and last 2 lines of boundary_bottom.zone in allboundaries.zone
+        files = ['bottom', 'left_w', 'front_n', 'right_e']
+        for filename in files:
+            with open(f"boundary_{filename}.zone", "r") as fzone:
+                lines = fzone.readlines()
+                lines = lines[1:-2]
+            fall.writelines(lines)
+        fzone = open("boundary_back_s.zone", "r")
+        lines = fzone.readlines()
+        lines = lines[1:]
+        fzone.close()
+        fall.writelines(lines)
