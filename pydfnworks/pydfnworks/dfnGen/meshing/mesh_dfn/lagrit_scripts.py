@@ -9,119 +9,7 @@ import sys
 import glob
 from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
-import numpy as np
 import subprocess
-
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
-
-
-def edit_intersection_files(num_poly, fracture_list, path):
-    """ If pruning a DFN, this function walks through the intersection files
-    and removes references to files that are not included in the 
-    fractures that will remain in the network.
- 
-    Parameters
-    ---------
-        num_poly : int 
-            Number of Fractures in the original DFN
-        fracture_list :list of int
-            List of fractures to keep in the DFN
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-    1. Currently running in serial, but it could be parallelized
-    2. Assumes the pruning directory is not the original directory
-
-    """
-    # Make list of connectivity.dat
-    connectivity = []
-    with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
-        for i in range(num_poly):
-            tmp = []
-            line = fp.readline()
-            line = line.split()
-            for frac in line:
-                tmp.append(int(frac))
-            connectivity.append(tmp)
-
-    fractures_to_remove = list(
-        set(range(1, num_poly + 1)) - set(fracture_list))
-    
-    cwd = os.getcwd()
-    if os.path.isdir('intersections'):
-        os.unlink('intersections')
-        os.mkdir('intersections')
-    else:
-        os.mkdir('intersections') 
-
-    os.chdir('intersections')
-
-    ## DEBUGGING ##
-    # clean up directory
-    #fl_list = glob.glob("*prune.inp")
-    #for fl in fl_list:
-    #   os.remove(fl)
-    ## DEBUGGING ##
-
-    print("--> Editing Intersection Files")
-    ## Note this could be easily changed to run in parallel if needed. Just use cf
-    for i in fracture_list:
-        filename = f'intersections_{i}.inp'
-        print(f'--> Working on: {filename}')
-        intersecting_fractures = connectivity[i - 1]
-        pull_list = list(
-            set(intersecting_fractures).intersection(set(fractures_to_remove)))
-        if len(pull_list) > 0:
-            # Create Symlink to original intersection file
-            os.symlink(path + 'intersections/' + filename, filename)
-            # Create LaGriT script to remove intersections with fractures not in prune_file
-            lagrit_script = f"""
-read / {filename} / mo1 
-pset / pset2remove / attribute / b_a / 1,0,0 / eq / {pull_list[0]}
-"""
-            for j in pull_list[1:]:
-                lagrit_script += f'''
-pset / prune / attribute / b_a / 1,0,0 / eq / {j}
-pset / pset2remove / union / pset2remove, prune
-rmpoint / pset, get, prune
-pset / prune / delete
-     '''
-            lagrit_script += f'''
-rmpoint / pset, get, pset2remove 
-rmpoint / compress
-    
-cmo / modatt / mo1 / imt / ioflag / l
-cmo / modatt / mo1 / itp / ioflag / l
-cmo / modatt / mo1 / isn / ioflag / l
-cmo / modatt / mo1 / icr / ioflag / l
-    
-cmo / status / brief
-dump / intersections_{i}_prune.inp / mo1
-finish
-
-'''
-
-            lagrit_filename = 'prune_intersection.lgi'
-            f = open(lagrit_filename, 'w')
-            f.write(lagrit_script)
-            f.flush()
-            f.close()
-            mh.run_lagrit_script("prune_intersection.lgi",
-                                 f"out_{i}.txt",
-                                 quiet=True)
-            os.remove(filename)
-            move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
-        else:
-            try:
-                copy(path + 'intersections/' + filename, filename)
-            except:
-                pass
-    os.chdir(cwd)
-
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     """Create parameteri.mlgi files used in running LaGriT Scripts
@@ -160,23 +48,18 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     # h_trans : amount needed to translate to create delta buffer
     # It's  just a little trig!
     delta = 0.75
-    h_extrude = 0.5 * h  # upper limit on spacing of points on intersection line
+    h_extrude = 0.5 * h  # upper limit on spacing of points on interssction line
     h_radius = sqrt((0.5 * h_extrude)**2 + (0.5 * h_extrude)**2)
     h_trans = -0.5 * h_extrude + h_radius * cos(arcsin(delta))
 
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
     data = genfromtxt('poly_info.dat')
-    
-    if len(data.shape) == 1: #if single fractuer, shape will be 1d not 2
-        data = np.array([data])
-
     for index, i in enumerate(fracture_list):
         # using i - 1 do to python indexing from 0
         # fracture index starts at 1
         frac_id = str(int(data[i - 1, 0]))
         long_name = str(int(data[i - 1, 0]))
-
         theta = data[i - 1, 2]
         x1 = data[i - 1, 3]
         y1 = data[i - 1, 4]
@@ -205,27 +88,28 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         f.write('define / H_SCALE2 / %e \n' % (1.5 * h))
 
         f.write('define / H_EXTRUDE / %e \n' % (h_extrude))
-        f.write('define / H_TRANS / %f \n' % (h_trans))
+        f.write('define / H_TRANS / %e \n' % (h_trans))
 
-        f.write('define / H_PRIME / %e \n' % (0.4 * h))
+        f.write('define / H_PRIME / %e \n' % (0.8 * h))
+        f.write('define / H_PRIME2 / %e \n' % (0.3 * h))
 
-        # f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
-        # f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
-        # f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
-        # f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
-        # f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
+        f.write('define / H_SCALE3 / %e \n' % (3.0 * h))
+        f.write('define / H_SCALE8 / %e \n' % (8.0 * h))
+        f.write('define / H_SCALE16 / %e \n' % (16.0 * h))
+        f.write('define / H_SCALE32 / %e \n' % (32.0 * h))
+        f.write('define / H_SCALE64 / %e \n' % (64.0 * h))
 
-        # f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
-        # f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
-        # f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
-        # f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
+        f.write('define / PERTURB8 / %e \n' % (8 * 0.05 * h))
+        f.write('define / PERTURB16 / %e \n' % (16 * 0.05 * h))
+        f.write('define / PERTURB32 / %e \n' % (32 * 0.05 * h))
+        f.write('define / PERTURB64 / %e \n' % (64 * 0.05 * h))
 
-        # f.write('define / PARAM_A / %f \n' % slope)
-        # f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
+        f.write('define / PARAM_A / %f \n' % slope)
+        f.write('define / PARAM_B / %f \n' % (h * (1 - slope * refine_dist)))
 
-        # f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
-        # f.write('define / PARAM_B2 / %f \n' %
-        #         (h * (1 - 0.5 * slope * refine_dist)))
+        f.write('define / PARAM_A2 / %f \n' % (0.5 * slope))
+        f.write('define / PARAM_B2 / %f \n' %
+                (h * (1 - 0.5 * slope * refine_dist)))
 
         f.write('define / THETA  / %0.12f \n' % theta)
         f.write('define / X1 /  %0.12f \n' % x1)
@@ -238,50 +122,25 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         f.write('finish \n')
         f.flush()
         f.close()
-
-
-#         lagrit_input = f"""
-# define / ID / {index + 1}
-# define / OUTFILE_AVS / mesh_{long_name}.inp
-# define / OUTFILE_LG / mesh_{long_name}.lg
-# define / POLY_FILE / poly_{long_name}.inp
-
-# define / H_SCALE / {h:e}
-# define / H_EPS / {h*10**-7:0.12e}
-# define / H_SCALE2 / {h*1.5:0.12e}
-# define / H_EXTRUDE / {h_extrude:0.12e}
-# define / H_TRANS / {h_trans:0.12e}
-# define / H_PRIME / {0.8*h:0.12e}
-
-# define / THETA  / {theta:0.12f}
-# define / X1 / {x1:0.12f}
-# define / Y1 / {y1:0.12f}
-# define / Z1 / {z1:0.12f}
-
-# define / X2 / {x2:0.12f}
-# define / Y2 / {y2:0.12f}
-# define / Z2 / {z2:0.12f}
-# define / FAMILY / {family}
-
-# finish
-
-# # """
-#         with open(f'parameters/parameters_{long_name}.mlgi', 'w') as fp:
-#             fp.write(lagrit_input)
-#             fp.flush()
-#             fp.close()
-
     print("--> Creating parameter*.mlgi files: Complete\n")
 
 
-def create_lagrit_scripts_poisson(fracture_list):
-    """ Creates LaGriT script to be mesh each polygon using Poisson-Disc
-    sampling method
+def create_lagrit_scripts(visual_mode,
+                          ncpu,
+                          refine_factor=1,
+                          production_mode=True):
+    """ Creates LaGriT script to be mesh each polygon
     
     Parameters
     ---------- 
-        fracture_list : list
-            list of fracture numbers to be meshed
+        visual_mode : bool 
+            Sets if running if visual mode or in full dump
+        ncpu : int
+            Number of cpus
+        refine_factor : int 
+            Number of times original polygon gets refined 
+        production_mode : bool
+            Determines if clean up of work files occurs on the fly. 
 
     Returns
     -------
@@ -289,7 +148,8 @@ def create_lagrit_scripts_poisson(fracture_list):
 
     Notes
     -----
-
+    1. Only ncpu of these files are created
+    2. Symbolic links are used to rotate through fractures on different CPUs 
     """
 
     #Section 2 : Creates LaGriT script to be run for each polygon
@@ -303,87 +163,150 @@ def create_lagrit_scripts_poisson(fracture_list):
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
 
-    lagrit_input = """
-# This LaGriT Scripts reads in the points generated by the Poisson-Disc
-# sampling method. Then it reads in the intersection points generated 
-# in dfnGEn. All points in the Poisson-Disc set that are too close to
-# the line of intersection are removed. Then the mesh is written out 
-# in binary LaGriT and AVS UCD format. 
+    lagrit_input = """infile %s 
+#LaGriT Script
+# Name the input files that contain the polygons 
+# and lines of intersection. 
 
-# LaGriT Parameter file 
-infile parameters_{0}.mlgi
+define / POLY_FILE / %s 
+define / LINE_FILE / %s 
+define / OUTPUT_INTER_ID_SSINT / id_tri_node_CPU%d.list
 
-# Name of input files that contains the lines of intersection
-# and Poisson Points
+# Define parameters such as: 
+# length scale to refine triangular mesh  
+# purturbation distance to break symmetry of refined mesh# 
 
-define / POINT_FILE / points_{0}.xyz
-define / LINE_FILE / intersections_{0}.inp
+# Read in line and polygon files  
+read / POLY_FILE / mo_poly_work
+"""
+    if not visual_mode:
+        lagrit_input += """
+read / LINE_FILE / mo_line_work 
+"""
+    #
+    # START: Refine the point distribution
+    #
+    if (refine_factor > 1):
+        lagrit_input += 'extrude / mo_quad_work / mo_line_work / const / H_SCALE8 / volume / 0. 0. 1.  \n'
+        if (refine_factor == 2):
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
 
-# connectivity file used in mesh checking
-define / OUTPUT_INTER_ID_SSINT / id_tri_node_{0}.list
+        if (refine_factor == 4):
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
 
-#### READ IN POISSON DISC POINTS
+        if (refine_factor == 8):
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
+            lagrit_input += 'refine/constant/imt1/linear/element/1 0 0 /-1.,0.,0./inclusive amr 2  \n'
 
-# Create a mesh object named mo_pts
-cmo / create / mo_pts / / / triplane
+        lagrit_input += """ 
+# Convert octree data structure with overlapping parent/child cells to a
+# simple octree mesh that only keeps the child cells.
+grid2grid / tree_to_fe / mo_quad_work / mo_quad_work 
+# Extract a quad surface mesh of the exterior of the octree mesh.
+extract / surfmesh / 1,0,0 / mo_ext_work / mo_quad_work / external
+# Compute the distance field from mo_line_work to mo_ext_work and
+# put the distance field in attribute dfield.
+compute / distance_field / mo_ext_work / mo_line_work / dfield
+# Make a pset of vertices that have dfield values greater than H_SCALE3
+pset / pdel_work / attribute / dfield / 1 0 0 / H_SCALE3 / gt
+# Delete all the exterior surface quads in the pset
+rmpoint / pset get pdel_work / inclusive
+rmpoint / compress 
+# The mesh object mo_ext_work now exists only where dfield is < H_SCALE3
 
-# Read in the three column x,y,z vertex data
-cmo / readatt / mo_pts / xic,yic,zic / 1,0,0 / POINT_FILE
+# Clean up some mesh objects
+cmo / delete / mo_quad_work
+cmo / delete / mo_line_work
+# Change the name of mo_ext_work to mo_line_work
+cmo / move / mo_line_work / mo_ext_work
+rmpoint / compress 
+ 
+"""
+        # END: Refine the point distribution
+        #
+    lagrit_input += """
+## Triangulate Fracture without point addition 
+cmo / create / mo_pts / / / triplane 
+copypts / mo_pts / mo_poly_work 
+cmo / select / mo_pts 
+triangulate / counterclockwise 
 
-# Send some diagnostic output to the screen
-cmo / status / brief
-cmo / printatt / mo_pts / -xyz- / minmax
+cmo / setatt / mo_pts / imt / 1 0 0 / ID 
+cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
+resetpts / itp 
+cmo / delete / mo_poly_work 
+cmo / select / mo_pts 
 
-# Set imt (integer material type) of all vertices to ID
-cmo / setatt / mo_pts / imt / 1 0 0 / ID
-# Set itp of all vertices to 0
-cmo / setatt / mo_pts / itp / 1 0 0 / 0
-
-# This should not do anything. If there were 2 or more vertices within distance
-# epsilon of one another, this would remove all but one. Since the distributions
-# should be well behaved, it should not filter/delete any vertices.
-
-filter / 1 0 0
-rmpoint / compress
-#
-# Connect the 2D planar (XY-plane) vertices to create a Delaunay triangular mesh
-# with an exterior boundary that is the convex hull of the vertices in mo_pts.
-connect
+"""
+    if not visual_mode:
+        lagrit_input += """
+# Creates a Coarse Mesh and then refines it using the distance field from intersections
+massage / H_SCALE64 / H_EPS  / H_EPS
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
 resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PERTURB64 PERTURB64 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
 
-# Diagnostic output to the screen on triangle aspect ratio and volume (area)
-quality
+massage / H_SCALE32 / H_EPS / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PERTURB32 PERTURB32 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
 
-# Add cell attribute for area and aspect ratio
-cmo / addatt / mo_pts / area / tri_area
-quality / aspect / y
+massage / H_SCALE16 / H_EPS  / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PERTURB16 PERTURB16 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
 
-# Apply two iterations of Laplace smoothing and Lawson flipping to smooth the mesh
-# and recover the Delaunay triangulation.
-assign///maxiter_sm/ 1                                                           
-smooth;recon 0
-smooth;recon 1
+massage / H_SCALE8 / H_EPS / H_EPS
+resetpts / itp
+pset / p_move / attribute / itp / 1 0 0 / 0 / eq
+perturb / pset get p_move / PERTURB8 PERTURB8 0.0
+recon 0; smooth;recon 0;smooth;recon 0;smooth;recon 0
+smooth;recon 0;smooth;recon 0;smooth;recon 0
 
-##### DEBUG #####
-# comments out to dump poisson initial triangulation 
-# dump / avs2 / output_{0}.inp / mo_pts
-##### DEBUG #####
+cmo/addatt/ mo_pts /x_four/vdouble/scalar/nnodes 
+cmo/addatt/ mo_pts /fac_n/vdouble/scalar/nnodes 
 
-## Read the lines of intersections into mesh object mo_line_work
-read / LINE_FILE / mo_line_work
+# Massage points based on linear function down to h_prime
+massage2/user_function2.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
 
-# Extrude the line mesh a distance H_EXTRUDE in the Z direction (vector 0.,0.,1.) to create a quad mesh.
+assign///maxiter_sm/1 
+smooth;recon 0;smooth;recon 0;smooth;recon 0
+
+assign///maxiter_sm/10
+
+massage2/user_function.lgi/H_PRIME/fac_n/1.e-5/1.e-5/1 0 0/strictmergelength 
+cmo / DELATT / mo_pts / rf_field_name 
+
+# Extrude and excavate the lines of intersection
+cmo / select / mo_line_work 
+
 extrude / mo_quad / mo_line_work / const / H_EXTRUDE / volume / 0. 0. 1. 
+"""
+        if not production_mode:
+            lagrit_input += """
+dump / avs / QUAD_FILE / mo_quad 
+cmo / delete / mo_quad 
+read / QUAD_FILE / mo_quad 
+"""
+        else:
+            lagrit_input += 'cmo / select / mo_quad \n'
 
-
-# Translate extruded lines of intersection down slightly to excavate 
+        lagrit_input += """
+# Translate extruced lines of intersectino down slightly to excavate 
 # nearby points from the mesh 
 
 trans / 1 0 0 / 0. 0. 0. / 0. 0. H_TRANS
 hextotet / 2 / mo_tri / mo_quad 
-cmo / delete / mo_quad
-# Remove (excavate) vertices from mo_pts that fall within the circumscribed sphere of any triangle in mo_tri.
-# Place the result in mo_excavate. 
+cmo / delete / mo_quad 
 addmesh / excavate / mo_excavate / mo_pts / mo_tri
 
 ##### DEBUG #####
@@ -392,67 +315,63 @@ addmesh / excavate / mo_excavate / mo_pts / mo_tri
 #dump / avs2 / tmp_tri.inp / mo_tri / 1 1 1 0
 #dump / avs2 / tmp_pts.inp / mo_pts / 1 1 1 0
 #dump / avs2 / tmp_excavate.inp / mo_excavate / 1 1 1 0
-##### DEBUG #####
-
+#finish
+#####
+ 
 cmo / delete / mo_tri 
 cmo / delete / mo_pts 
 
 # recompute dfield 
 cmo / create / mo_final / / / triplane 
-copypts / mo_final / mo_excavate 
-# Compute the distance field between the vertices in mo_line_work (fracture intersections)
-# and the vertices in mo_final (fracture mesh vertices).
+copypts / mo_final / mo_excavate  
 compute / distance_field / mo_final / mo_line_work / dfield 
-# Output min/max values of distance field (dfield)
 cmo / printatt / mo_final / dfield / minmax 
-pset / pdel / attribute dfield / 1,0,0 / lt H_PRIME 
-# Delete any vertices with distance field less than H_PRIME
+pset / pdel / attribute dfield / 1,0,0 / lt H_PRIME2 
 rmpoint / pset,get,pdel / inclusive  
 rmpoint / compress  
-# Copy the intersection vertices into the fracture mesh mo_final
+
 copypts / mo_final / mo_line_work  
 
 cmo / select / mo_final 
 cmo / setatt / mo_final / imt / 1 0 0 / ID 
 cmo / setatt / mo_final / itp / 1 0 0 / 0 
+cmo / setatt / mo_final / itetclr / 1 0 0 / ID 
 # cmo / printatt / mo_final / -xyz- / minmax 
-# Translate the vertices so the bounding box is centered on 0,0,0.
 trans/ 1 0 0 / zero / xyz 
-# Due to slight numerical jitter, all Z values may not be 0. Set them to 0.
 cmo / setatt / mo_final / zic / 1 0 0 / 0.0 
 cmo / printatt / mo_final / -xyz- / minmax 
-# Connect the 2D planar (XY-plane) vertices to create a Delaunay triangular mesh
-# with an exterior boundary that is the convex hull of the vertices in mo_final.
 connect 
-cmo / setatt / mo_final / itetclr / 1 0 0 / ID 
-resetpts / itp 
-# Translate back to the original coordinates.
+
 trans / 1 0 0 / original / xyz 
 cmo / printatt / mo_final / -xyz- / minmax 
 
 #cmo / delete / mo_line_work 
 cmo / delete / mo_excavate
 cmo / select / mo_final 
+resetpts / itp 
 
-## Massage the mesh where vertices are are not on the boundary and
-# not within a distance H_EPS of the intersection vertices.
+"""
+        if not production_mode:
+            lagrit_input += 'dump / gmv / PRE_FINAL_MASSAGE / mo_final \n'
+
+        lagrit_input += """
+## Massage Mesh Away from Intersection 
 pset / pref / attribute / dfield / 1,0,0 / lt / H_EPS 
 pset / pregion / attribute / dfield / 1,0,0 / gt / H_SCALE2 
 pset / pboundary / attribute / itp / 1,0,0 / eq / 10 
 pset / psmooth / not / pregion pref pboundary 
+#massage / H_SCALE / 1.e-5 / 1.e-5 / pset get pref / & 
+#nosmooth / strictmergelenth
 
 assign///maxiter_sm/1 
-smooth / position / esug / pset get psmooth
-recon 0
-smooth / position / esug / pset get psmooth
-recon 0
-smooth / position / esug / pset get psmooth
-recon 1
+
+smooth / position / esug / pset get psmooth; recon 0; 
+smooth / position / esug / pset get psmooth; recon 0; 
+smooth / position / esug / pset get psmooth; recon 0; 
+
 assign///maxiter_sm/10
-
-
 ###########################################
-# nodes for Intersection / Mesh Connectivity Check dump
+# nodes for Intersection / Mesh Connectivity Check 
 cmo / copy / mo_final_check / mo_final
 #
 # Define variables that are hard wired for this part of the workflow
@@ -489,7 +408,7 @@ cmo / modatt / mo_line_work / icr / ioflag / l
 cmo / modatt / mo_line_work / a_b / ioflag / l
 cmo / modatt / mo_line_work / b_a / ioflag / l
 #
-# Output list of intersection nodes with the corresponding node id number from the triangle mesh
+# Output list of intersection nodes with the corrosponding node id number from the triangle mesh
 
 dump / avs2 / OUTPUT_INTER_ID_SSINT / mo_line_work / 0 0 2 0
 cmo / delete / mo_line_work
@@ -499,132 +418,137 @@ cmo / delete / mo_final_check
 
 cmo / select / mo_final 
 
-##### DEBUG ###### 
-# Write out mesh before it is rotate back into its final location
-# Useful to compare with meshing work-flow if something crashes
+##### DEBUG
+# write out mesh before it is rotate back into its final location
+# Useful to compare with meshing workflow if something crashes
 #dump / avs2 / tmp_mesh_2D.inp / mo_final / 1 1 1 0 
-##### DEBUG #####
-
-# Rotate fracture back into original plane 
+##### DEBUG
+# Rotate facture back into original plane 
 rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/  
-cmo / printatt / mo_final / -xyz- / minmax
+cmo / printatt / mo_final / -xyz- / minmax 
+recon 1 
 
-# Create cell attributes, xnorm, ynorm, znorm, and fill them with the unit normal vector.
+resetpts / itp 
+
 cmo / addatt / mo_final / unit_area_normal / xyz / vnorm 
 cmo / addatt / mo_final / scalar / xnorm ynorm znorm / vnorm 
-cmo / DELATT / mo_final / vnorm
+cmo / DELATT / mo_final / vnorm 
 
+"""
+        # Clean up before output to GMV/AVS
+        if production_mode:
+            lagrit_input += """
+cmo / DELATT / mo_final / x_four 
+cmo / DELATT / mo_final / fac_n 
+cmo / DELATT / mo_final / rf_field_name 
+cmo / DELATT / mo_final / xnorm 
+cmo / DELATT / mo_final / ynorm 
+cmo / DELATT / mo_final / znorm 
+cmo / DELATT / mo_final / a_b 
+cmo / setatt / mo_final / ipolydat / no 
+cmo / modatt / mo_final / icr1 / ioflag / l 
+cmo / modatt / mo_final / isn1 / ioflag / l 
+    
+# Create Family element set
+cmo / addatt / mo_final / family_id / vint / scalar / nelements 
+cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
+    
+"""
+        lagrit_input += """
+dump / OUTFILE_AVS / mo_final
+dump / lagrit / OUTFILE_LG / mo_final
+"""
+    else:
+        lagrit_input += """
+cmo / setatt / mo_pts / imt / 1 0 0 / ID 
+cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
+resetpts / itp 
+
+cmo / setatt / mo_line_work / imt / 1 0 0 / ID 
+cmo / setatt / mo_line_work / itetclr / 1 0 0 / ID
+
+addmesh / merge / mo_final / mo_pts / mo_line_work 
+cmo / delete / mo_pts 
+cmo / delete / mo_line_work 
+    
 # Create Family element set
 cmo / addatt / mo_final / family_id / vint / scalar / nelements 
 cmo / setatt / mo_final / family_id / 1 0 0 / FAMILY
 
-# Output mesh in AVS UCD format - required for connectivity checking, is promptly deleted
-dump / OUTFILE_AVS / mo_final
-# Output mesh in LaGriT binary format. 
-dump / lagrit / OUTFILE_LG / mo_final
+cmo / select / mo_final 
+# Rotate 
+rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/ 
 
+cmo / printatt / mo_final / -xyz- / minmax 
+cmo / modatt / mo_final / icr1 / ioflag / l 
+cmo / modatt / mo_final / isn1 / ioflag / l
+dump / lagrit / OUTFILE_LG / mo_final 
+"""
+
+    lagrit_input += """
 quality 
 cmo / delete / mo_final 
 cmo / status / brief 
 finish
-
 """
 
-    if os.path.isdir('lagrit_scripts'):
-        rmtree("lagrit_scripts")
-        os.mkdir("lagrit_scripts")
-    else:
-        os.mkdir("lagrit_scripts")
-
-    # Create a different run file for each fracture
-    for i in fracture_list:
-        file_name = 'lagrit_scripts/mesh_poly_{0}.lgi'.format(i)
-        with open(file_name, 'w') as f:
-            f.write(lagrit_input.format(i))
-            f.flush()
+    # Create a different Run file for each CPU
+    for i in range(1, ncpu + 1):
+        file_name = 'mesh_poly_CPU%d.lgi' % i
+        f = open(file_name, 'w')
+        #Name of parameter Input File
+        fparameter_name = 'parameters_CPU%d.mlgi' % i
+        fintersection_name = 'intersections_CPU%d.inp' % i
+        fpoly_name = 'poly_CPU%d.inp' % i
+        parameters = (fparameter_name, fpoly_name, fintersection_name, i)
+        f.write(lagrit_input % parameters)
+        f.flush()
+        f.close()
     print('--> Writing LaGriT Control Files: Complete')
 
 
-def create_lagrit_scripts_reduced_mesh(fracture_list):
-    """ Creates LaGriT scripts to create a coarse (non-conforming) 
-    mesh of each fracture. 
+def create_user_functions():
+    """ Create user_function.lgi files for meshing
     
     Parameters
-    ---------- 
-        fracture_list : list
-            list of fracture numbers to be meshed
-
+    ----------
+        None
+    
     Returns
     -------
         None
-
+    
     Notes
     -----
+    These functions are called within LaGriT. It controls the mesh resolution using slope and refine_dist
+
     """
 
-    #Section 2 : Creates LaGriT script to be run for each polygon
-    #Switches to control the LaGriT output
-    #Network visualization mode True ouputs the triangulated mesh
-    #for each fracture without any refinement. The goal is to visualize
-    #the network structure instead of outputing the appropriate values
-    #for computation
-
-    print("--> Writing LaGriT Control Files")
-
+    # user_function.lgi useing PARAM_A and PARAM_B for slope and intercept
     lagrit_input = """
-
-# LaGriT Parameter file 
-infile parameters_{0}.mlgi
-
-# Name of input files that contains the boundary of the polygon/fracture 
-
-define / POLY_FILE / poly_{0}.inp
-
-## Triangulate Fracture perimeter without point addition 
-read / POLY_FILE / mo_poly_work
-cmo / create / mo_pts / / / triplane 
-copypts / mo_pts / mo_poly_work 
-cmo / select / mo_pts 
-triangulate / counterclockwise 
-
-cmo / setatt / mo_pts / imt / 1 0 0 / ID 
-cmo / setatt / mo_pts / itetclr / 1 0 0 / ID 
-resetpts / itp 
-cmo / delete / mo_poly_work 
-cmo / select / mo_pts 
-
-# Create Family element set
-cmo / addatt / mo_pts / family_id / vint / scalar / nelements 
-cmo / setatt / mo_pts / family_id / 1 0 0 / FAMILY
-
-# Rotate 
-rotateln / 1 0 0 / nocopy / X1, Y1, Z1 / X2, Y2, Z2 / THETA / 0.,0.,0.,/ 
-# Supress AVS output of a icr and isn node attributes
-cmo / modatt / mo_pts / icr1 / ioflag / l 
-cmo / modatt / mo_pts / isn1 / ioflag / l
-cmo / copy/ mo_final /mo_pts
-# Output mesh in AVS UCD format and LaGriT binary format.
-dump / lagrit / OUTFILE_LG / mo_final 
-dump / OUTFILE_AVS / mo_final 
+cmo/DELATT/mo_pts/dfield
+compute / distance_field / mo_pts / mo_line_work / dfield
+math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A/
+math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B/
+cmo/copyatt/mo_pts/mo_pts/fac_n/x_four
 finish
-
 """
+    f = open('user_function.lgi', 'w')
+    f.write(lagrit_input)
+    f.close()
 
-    if os.path.isdir('lagrit_scripts'):
-        rmtree("lagrit_scripts")
-        os.mkdir("lagrit_scripts")
-    else:
-        os.mkdir("lagrit_scripts")
-
-    # Create a different run file for each fracture
-    for i in fracture_list:
-        file_name = f'lagrit_scripts/mesh_poly_{i}.lgi'
-        with open(file_name, 'w') as f:
-            f.write(lagrit_input.format(i))
-            f.flush()
-    print('--> Writing LaGriT Control Files: Complete')
-
-    print('--> Writing LaGriT Control Files: Complete')
+    # user_function2.lgi uses PARAM_A2 and PARAM_B2 for slope and intercept
+    lagrit_input = """
+cmo/DELATT/mo_pts/dfield
+compute / distance_field / mo_pts / mo_line_work / dfield
+math/multiply/mo_pts/x_four/1,0,0/mo_pts/dfield/PARAM_A2/
+math/add/mo_pts/x_four/1,0,0/mo_pts/x_four/PARAM_B2/
+cmo/copyatt/mo_pts/mo_pts/fac_n/x_four
+finish
+"""
+    f = open('user_function2.lgi', 'w')
+    f.write(lagrit_input)
+    f.close()
 
 
 def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode,
@@ -695,7 +619,7 @@ finish \n
 """
 
     j = 0  # Counter for cpus
-    fout = 'lagrit_scripts/merge_poly_part_1.lgi'
+    fout = 'merge_poly_part_1.lgi'
     f = open(fout, 'w')
     for i in fracture_list:
         tmp = 'mesh_' + str(i) + '.lg'
@@ -707,7 +631,7 @@ finish \n
             f.flush()
             f.close()
             j += 1
-            fout = 'lagrit_scripts/merge_poly_part_' + str(j + 1) + '.lgi'
+            fout = 'merge_poly_part_' + str(j + 1) + '.lgi'
             f = open(fout, 'w')
 
     f.flush()
@@ -721,7 +645,7 @@ read / lagrit / part%d.lg / junk / binary
 addmesh / merge / mo_all / mo_all / cmo_tmp 
 cmo / delete / cmo_tmp 
     """
-    f = open('lagrit_scripts/merge_rmpts.lgi', 'w')
+    f = open('merge_rmpts.lgi', 'w')
     for j in range(1, n_jobs + 1):
         f.write(lagrit_input % (j))
 
@@ -754,15 +678,19 @@ boundary_components
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
+# New additions for dfnTrans2.0
+dump / elem_adj_node / node_connect.dat / mo_all
+dump / elem_adj_elem / elem_connect.dat / mo_all
+
 """
         if flow_solver == "PFLOTRAN":
-            print("\n--> Dumping output for %s" % flow_solver)
+            print("\nDumping output for %s" % flow_solver)
             lagrit_input += """
 dump / pflotran / full_mesh / mo_all / nofilter_zero
 dump / stor / full_mesh / mo_all / ascii
     """
         elif flow_solver == "FEHM":
-            print("\n--> Dumping output for %s" % flow_solver)
+            print("\nDumping output for %s" % flow_solver)
             lagrit_input += """
 dump / stor / full_mesh / mo_all / ascii
 dump / coord / full_mesh / mo_all 
@@ -774,7 +702,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("WARNING!!!!!!!\nUnknown flow solver selection: %s" %
+            print("Warning!\nUnkown flow solver selection: %s" %
                   flow_solver)
         lagrit_input += """ 
 # Dump out Material ID Dat file
@@ -799,11 +727,12 @@ cmo / modatt / mo_all / meshid / ioflag / l
 cmo / modatt / mo_all / id_n_1 / ioflag / l
 cmo / modatt / mo_all / id_n_2 / ioflag / l
 cmo / modatt / mo_all / pt_gtg / ioflag / l
+cmo / modatt / mo_all / pt_gtg / ioflag / l
 # Dump out Material ID Dat file
 dump / avs2 / materialid.dat / mo_all / 0 0 2 0
 
 cmo / modatt / mo_all / imt1 / ioflag / l
-#cmo / modatt / mo_all / family_id / ioflag / l
+cmo / modatt / mo_all / family_id / ioflag / l
 cmo / modatt / mo_all / evol_onen / ioflag / l
 # Dump mesh with no attributes for viz
 dump / full_mesh_viz.inp / mo_all

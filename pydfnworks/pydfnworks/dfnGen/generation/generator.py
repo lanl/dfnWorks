@@ -157,16 +157,7 @@ def parse_params_file(self, quiet=False):
 
     Returns
     -------
-        num_poly: int
-            Number of Polygons
-        h: float 
-            Meshing length scale h
-        dudded_points: int 
-            Expected number of dudded points in Filter (LaGriT)
-        visual_mode : bool
-            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-        domain: dict
-             x,y,z domain sizes 
+        None
     
     Notes
     -----
@@ -174,6 +165,7 @@ def parse_params_file(self, quiet=False):
     """
     if not quiet:
         print("\n--> Parsing  params.txt")
+
     fparams = open('params.txt', 'r')
     # Line 1 is the number of polygons
     self.num_frac = int(fparams.readline())
@@ -194,6 +186,8 @@ def parse_params_file(self, quiet=False):
 
     #Line 5 is the x domain length
     self.domain['z'] = (float(fparams.readline()))
+    self.r_fram = self.params['rFram']['value']
+    
     fparams.close()
 
     if not quiet:
@@ -205,6 +199,7 @@ def parse_params_file(self, quiet=False):
         else:
             self.visual_mode = False
             print("--> Visual mode is off")
+
         print(f"--> Expected Number of dudded points: {self.dudded_points}")
         print(f"--> X Domain Size {self.domain['x']} m")
         print(f"--> Y Domain Size {self.domain['y']} m")

@@ -84,7 +84,9 @@ DFN.check_input()
 
 DFN.create_network()
 DFN.output_report()
-DFN.mesh_network()
+DFN.mesh_network(uniform_mesh= True)
+exit()
+
 
 DFN.dfn_flow()
 DFN.dfn_trans()

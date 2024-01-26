@@ -311,6 +311,13 @@ def check_fram(params):
         )
         params['disableFram']['value'] = True
 
+    if params['framOn']['value']:
+        if params['rFram']['value']:
+            hf.print_warning(
+                "Running with rFRAM. Mesh will not be perfectly conforming."
+            ) 
+
+
 
 # def check_aperture(params):
 #     """ Checks how apertures are being defined. This feature will be removed in the future and apertures will be defined by family..
