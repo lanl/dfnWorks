@@ -21,6 +21,7 @@ from numpy import genfromtxt
 from pydfnworks.general import helper_functions as hf
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 
+
 def cleanup_failed_run(fracture_id, digits):
     """ If meshing fails, this function moves all relavent files
     to a folder for debugging
@@ -118,7 +119,8 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     try:
         os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
     except:
-        hf.print_error(f"-->\nError creating link for poly_{fracture_id}.inp\n")
+        hf.print_error(
+            f"-->\nError creating link for poly_{fracture_id}.inp\n")
         return False
 
     try:
@@ -148,7 +150,7 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
                 f"\n--> Error creating link for intersections_{fracture_id}.inp\n"
             )
             return False
-        
+
     return True
 
 
@@ -187,8 +189,8 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
         _, cpu_id = p.name.split("-")
         cpu_id = int(cpu_id)
     except:
-        cpu_id = 1 
-    
+        cpu_id = 1
+
     # get leading digits
     digits = len(str(num_frac))
 
@@ -197,9 +199,13 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             f"--> Fracture id {fracture_id:0{digits}d} out of {num_frac} is starting on worker {cpu_id}"
         )
     if fracture_id == 1 and digits != 1:
-        print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *")
+        print(
+            f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *"
+        )
     if fracture_id % 10**(digits - 1) == 0:
-        print(f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *")
+        print(
+            f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *"
+        )
     tic = timeit.default_timer()
 
     if not create_symbolic_links(fracture_id, digits, visual_mode):
@@ -213,8 +219,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             quiet=quiet)
     except:
         hf.print_error(
-             f"Error occurred during meshing fracture {fracture_id}\n"
-         )
+            f"Error occurred during meshing fracture {fracture_id}\n")
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -2)
 
@@ -222,11 +227,10 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     if not os.path.isfile(f'mesh_{fracture_id:0{digits}d}.lg') or os.stat(
             f'mesh_{fracture_id:0{digits}d}.lg') == 0:
         hf.print_error(
-             f" Mesh for fracture {fracture_id} was either not produced or has zero size\n"
+            f" Mesh for fracture {fracture_id} was either not produced or has zero size\n"
         )
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -3)
-
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
     if not visual_mode:
@@ -242,14 +246,12 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             if subprocess.call(cmd_check, shell=True):
                 if not r_fram:
                     hf.print_error(
-                        f"Meshing checking failed on {fracture_id}.\n"
-                    ) 
+                        f"Meshing checking failed on {fracture_id}.\n")
                     cleanup_failed_run(fracture_id, digits)
                     return (fracture_id, -4)
         except:
             hf.print_error(
-                f"Unable to run mesh checking checking on {fracture_id}.\n"
-            )
+                f"Unable to run mesh checking checking on {fracture_id}.\n")
             cleanup_failed_run(fracture_id, digits)
             return (fracture_id, -4)
 
@@ -296,7 +298,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     return (fracture_id, 0)
 
 
-def mesh_fractures_header(self, quiet = True):
+def mesh_fractures_header(self, quiet=True):
     """ Header function for Parallel meshing of fractures
     
     Creates a queue of fracture numbers ranging from 1, num_frac
@@ -361,7 +363,8 @@ def mesh_fractures_header(self, quiet = True):
 
     for i in self.fracture_list:
         pool.apply_async(mesh_fracture,
-                         args=(i, self.visual_mode, self.num_frac, self.r_fram, quiet),
+                         args=(i, self.visual_mode, self.num_frac, self.r_fram,
+                               quiet),
                          callback=log_result)
 
     pool.close()
@@ -393,7 +396,7 @@ def mesh_fractures_header(self, quiet = True):
 -4 - line of intersection not preserved
         """
             print(details)
-            return False 
+            return False
 
     if os.path.isfile("failure.txt"):
         failure_list = genfromtxt("failure.txt")
@@ -402,13 +405,12 @@ def mesh_fractures_header(self, quiet = True):
         else:
             print('--> Fractures:', failure_list, 'Failed')
         print('--> Main process exiting.')
-        return True 
+        return True
 
     ## check for meshing errors in r_fram
     if self.r_fram:
         if self.check_for_missing_edges():
             return True
-     
 
 
 def check_for_missing_edges(self):
@@ -438,10 +440,10 @@ def check_for_missing_edges(self):
     missed_edges = 0
     missed_edges_list = []
     error_file_list = glob.glob("*_mesh_errors.txt")
-    num_frac_missed = 0 
+    num_frac_missed = 0
     for filename in error_file_list:
         with open(filename, 'r') as fp:
-            for i,line in enumerate(fp.readlines()):
+            for i, line in enumerate(fp.readlines()):
                 continue
             missed_edges += i
             missed_edges_list.append(i)
@@ -452,24 +454,33 @@ def check_for_missing_edges(self):
         #print(f"--> Removing filename :{filename}")
         os.remove(filename)
 
-    print(f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
+    print(
+        f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}"
+    )
     if num_frac_missed > 0:
-        print(f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}")
+        print(
+            f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}"
+        )
         print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
         print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
         print(f"* Total number of missed edges: {missed_edges}")
         print(f"* Total number of intersection edges: {total_edges}")
-        print(f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%")
+        print(
+            f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%"
+        )
 
-    if missed_edges/total_edges > 0.1:
-        print(f"* Percentage of missed edges too large (> 10%). Exitting program.")
+    if missed_edges / total_edges > 0.1:
+        print(
+            f"* Percentage of missed edges too large (> 10%). Exitting program."
+        )
         print('=' * 80)
         return True
     else:
         print('=' * 80)
-        return False 
+        return False
 
-def merge_worker(job, quiet = True):
+
+def merge_worker(job, quiet=True):
     """ Parallel worker for merge meshes into final mesh 
 
     Parameters
@@ -578,6 +589,7 @@ def merge_final_mesh():
     elapsed = timeit.default_timer() - tic
     print(f"--> Final merge complete. Time elapsed: {elapsed:.2e} seconds")
 
+
 def check_for_final_mesh(visual_mode):
     """ Check that the final mesh was successfully created
 
@@ -603,7 +615,10 @@ def check_for_final_mesh(visual_mode):
     if (os.stat(mesh_name).st_size > 0):
         print("--> Checking for final mesh: Complete")
     else:
-        hf.print_error(f"Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found.")
+        hf.print_error(
+            f"Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found."
+        )
+
 
 def merge_network(self):
     """ Merges the individual meshed fractures into a single mesh objection. This is done in stages. First, individual fractures are merged into sub-networks, then those sub-networks are merged to form the whole network. 
@@ -625,4 +640,4 @@ def merge_network(self):
     self.create_final_merge_script()
     merge_the_fractures(self.ncpu)
     merge_final_mesh()
-    check_for_final_mesh(self.visual_mode) 
+    check_for_final_mesh(self.visual_mode)

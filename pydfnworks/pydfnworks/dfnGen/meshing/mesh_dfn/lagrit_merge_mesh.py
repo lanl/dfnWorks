@@ -31,7 +31,6 @@ def create_merge_poly_scripts(self):
     """
     print("--> Writting partial merge scripts")
 
-
     lagrit_input = """
 # Change to read LaGriT
 read / lagrit / {0} / mo_{1} / binary
@@ -60,17 +59,17 @@ finish
 
     # get leading digits
     digits = len(str(self.num_frac))
-    part_size = int(max(np.floor(self.num_frac / self.ncpu) + 1,
-                    1))  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
-    
-
+    part_size = int(
+        max(np.floor(self.num_frac / self.ncpu) + 1, 1)
+    )  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
 
     print(f"--> There are {part_size} fractures in each part")
 
     frac_index = 0
     for cpu in range(self.ncpu):
         # grab the fractures for this cpu
-        current_fractures = list(self.fracture_list[frac_index:frac_index + part_size])
+        current_fractures = list(self.fracture_list[frac_index:frac_index +
+                                                    part_size])
         # print(f"cpu: {cpu}")
         # print(current_fractures)
         frac_index += part_size
@@ -79,9 +78,10 @@ finish
             for frac_id in current_fractures:
                 filename = f'mesh_{frac_id:0{digits}d}.lg'
                 fout.write(lagrit_input.format(filename, frac_id))
-            fout.write(lagrit_input_2.format(cpu+1))
+            fout.write(lagrit_input_2.format(cpu + 1))
 
     print("--> Writting merge scripts: Complete ")
+
 
 def create_final_merge_script(self):
 
@@ -215,7 +215,7 @@ dump / lagrit / full_mesh.lg / mo_all
     pset / back_s / zone / FOUT/ ascii / ZONE
     """
         else:
-                lagrit_input = """
+            lagrit_input = """
     cmo / modatt / mo_all / icr1 / ioflag / l
     cmo / modatt / mo_all / isn1 / ioflag / l
     cmo / modatt / mo_all / itp1 / ioflag / l

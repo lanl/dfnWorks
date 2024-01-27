@@ -4,12 +4,13 @@
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 
 """
-import os, sys 
+import os, sys
 from shutil import copy, move
 import subprocess
 import numpy as np
 
 from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+
 
 def edit_intersection_files(self):
     """ If pruning a DFN, this function walks through the intersection files
@@ -109,18 +110,17 @@ finish
                                  quiet=True)
             os.remove(filename)
             if os.path.isfile(f"intersections_{i}_prune.inp"):
-               move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
+                move(f"intersections_{i}_prune.inp", f"intersections_{i}.inp")
             else:
-               error = "Error. intersections_{i}_prune.inp file not found.\nExitting Program"
-               sys.stderr.write(error)
-               sys.exit(1)
+                error = "Error. intersections_{i}_prune.inp file not found.\nExitting Program"
+                sys.stderr.write(error)
+                sys.exit(1)
         else:
             try:
                 copy(self.path + 'intersections/' + filename, filename)
             except:
                 pass
     os.chdir(self.jobname)
-
 
 
 def clean_up_files_after_prune(self):
@@ -230,7 +230,8 @@ def clean_up_files_after_prune(self):
 
     print("--> Editing translations.dat file")
     with open(self.path + 'dfnGen_output/translations.dat', 'r') as fin:
-        with open(self.jobname + 'dfnGen_output/translations.dat', 'w') as fout:
+        with open(self.jobname + 'dfnGen_output/translations.dat',
+                  'w') as fout:
             # copy header
             line = fin.readline()
             fout.write(line)
@@ -272,5 +273,3 @@ def clean_up_files_after_prune(self):
     self.aperture = self.aperture[keep_list - 1]
 
     print("--> Editing Fracture Files Complete")
-
-

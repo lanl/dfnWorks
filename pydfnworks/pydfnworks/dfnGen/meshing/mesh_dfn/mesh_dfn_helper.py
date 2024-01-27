@@ -34,7 +34,7 @@ def check_dudded_points(dudded, hard=False):
     """
 
     print("--> Checking that number of dudded points is correct\n")
-    with open("lagrit_logs/log_merge_all.out",encoding='latin-1') as fp:
+    with open("lagrit_logs/log_merge_all.out", encoding='latin-1') as fp:
         for line in fp.readlines():
             if 'Dudding' in line:
                 print(f'--> From LaGriT: {line}')
@@ -55,7 +55,8 @@ def check_dudded_points(dudded, hard=False):
         print('--> The correct number of points were removed. Onward!\n')
         return True
     elif diff > 0:
-        hf.print_warning('Number of points removed does not match the expected value')
+        hf.print_warning(
+            'Number of points removed does not match the expected value')
         ## compare with total number poins
         diff_ratio = 100 * (float(diff) / float(total_points))
         if diff_ratio < 0.01 and hard == False:
@@ -63,7 +64,9 @@ def check_dudded_points(dudded, hard=False):
             print("--> Proceeding\n")
             return True
         else:
-            hf.print_warning(f"Incorrect Number of points removed\nOver 0.01% of nodes removed. Value is {diff_ratio:.2f}")
+            hf.print_warning(
+                f"Incorrect Number of points removed\nOver 0.01% of nodes removed. Value is {diff_ratio:.2f}"
+            )
             return False
 
 
@@ -160,7 +163,7 @@ def create_mesh_links(self, path):
     print("--> Complete")
 
 
-def inp2gmv(self, inp_file = None):
+def inp2gmv(self, inp_file=None):
     """ Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv
 
     Parameters
@@ -184,7 +187,7 @@ def inp2gmv(self, inp_file = None):
         inp_file = self.inp_file
 
     if not inp_file:
-        hf.print_error('inp file must be specified in inp2gmv' )
+        hf.print_error('inp file must be specified in inp2gmv')
 
     gmv_file = inp_file[:-4] + '.gmv'
 
@@ -224,7 +227,7 @@ def inp2vtk_python(self):
     if self.inp_file:
         inp_file = self.inp_file
 
-    if not inp_file :
+    if not inp_file:
         hf.print_error("inp filename not provided")
 
     if self.vtk_file:
@@ -359,8 +362,8 @@ def cleanup_meshing_files():
     print("--> Cleaning up directory after meshing complete")
 
 
-
-def compute_mesh_slope_and_intercept(h, min_dist, max_dist, max_resolution_factor, uniform_mesh):
+def compute_mesh_slope_and_intercept(h, min_dist, max_dist,
+                                     max_resolution_factor, uniform_mesh):
     """ computes the slope and intercept of the meshing resolution. The mesh resolution is a piecewise constant and linear function of the distance (d) from the intersection. 
 
 
@@ -402,30 +405,45 @@ def compute_mesh_slope_and_intercept(h, min_dist, max_dist, max_resolution_facto
         print("*** Mesh resolution ***")
         print(f"\tr(d) = {0.5*h}\n")
         slope = 0
-        intercept = 0.5*h 
+        intercept = 0.5 * h
     else:
         print("--> Variable Mesh Resolution Selected")
-        print(f"*** Minimum distance [m] from intersection with constant resolution h/2 : {min_dist*h}")
-        print(f"*** Maximum distance [m] from intersection variable resolution : {max_dist*h}")
-        print(f"*** Upper bound on resolution [m] : {max_resolution_factor*h:0.2f}\n")
-        ## do some algebra to figure out the slope and intercept 
+        print(
+            f"*** Minimum distance [m] from intersection with constant resolution h/2 : {min_dist*h}"
+        )
+        print(
+            f"*** Maximum distance [m] from intersection variable resolution : {max_dist*h}"
+        )
+        print(
+            f"*** Upper bound on resolution [m] : {max_resolution_factor*h:0.2f}\n"
+        )
+        ## do some algebra to figure out the slope and intercept
         if min_dist >= max_dist:
-            hf.print_error(f"min_dist greater than or equal to max_dist.\nmin_dist : {min_dist}\nmax_dist : {max_dist}")
-        slope = h*(max_resolution_factor - 0.5) / (max_dist - min_dist)
+            hf.print_error(
+                f"min_dist greater than or equal to max_dist.\nmin_dist : {min_dist}\nmax_dist : {max_dist}"
+            )
+        slope = h * (max_resolution_factor - 0.5) / (max_dist - min_dist)
         if slope > 1:
-            hf.print_warning(f"Meshing slope too large. {slope} > 1. Resetting to 0.9")
+            hf.print_warning(
+                f"Meshing slope too large. {slope} > 1. Resetting to 0.9")
             slope = 0.9
 
-        intercept = h * ( 0.5 - slope * min_dist)
+        intercept = h * (0.5 - slope * min_dist)
 
         print("*** Meshing function : ")
-        x0 = (0.5*h - intercept)/(slope*h)
-        x1 = (max_resolution_factor*h - intercept)/(slope*h)
+        x0 = (0.5 * h - intercept) / (slope * h)
+        x1 = (max_resolution_factor * h - intercept) / (slope * h)
         print(f"\tr(d) = {0.5*h:0.2f}\t\t\tfor 0 < d < {x0:0.2f}")
         if intercept > 0:
-            print(f"\tr(d) = {slope:0.2f} * d + {intercept:0.2f}\t\tfor {x0:0.2f} <= d <= {x1:0.2f} ")
+            print(
+                f"\tr(d) = {slope:0.2f} * d + {intercept:0.2f}\t\tfor {x0:0.2f} <= d <= {x1:0.2f} "
+            )
         else:
-            print(f"\tr(d) = {slope:0.2f} * d {intercept:0.2f}\t\tfor {x0:0.2f} < d < {x1:0.2f} ")
-        print(f"\tr(d) = {max_resolution_factor*h:0.2f} \t\t\tfor d < {x1:0.2f}")
+            print(
+                f"\tr(d) = {slope:0.2f} * d {intercept:0.2f}\t\tfor {x0:0.2f} < d < {x1:0.2f} "
+            )
+        print(
+            f"\tr(d) = {max_resolution_factor*h:0.2f} \t\t\tfor {x1:0.2f} <= d"
+        )
     print("--> Computing mesh resolution function : complete \n")
-    return slope, intercept 
+    return slope, intercept

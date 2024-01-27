@@ -11,6 +11,7 @@ from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
 import subprocess
 
+
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     """Create parameteri.mlgi files used in running LaGriT Scripts
     
@@ -702,8 +703,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("Warning!\nUnkown flow solver selection: %s" %
-                  flow_solver)
+            print("Warning!\nUnkown flow solver selection: %s" % flow_solver)
         lagrit_input += """ 
 # Dump out Material ID Dat file
 cmo / modatt / mo_all / isn / ioflag / l

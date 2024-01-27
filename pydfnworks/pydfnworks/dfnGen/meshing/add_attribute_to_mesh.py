@@ -31,7 +31,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     values = genfromtxt(variable_file, skip_header=0, usecols=(-1))
     if not os.path.isfile(matid_file):
         hf.print_error(f"Cannot locate the file '{matid_file}")
-    
+
     nodes = genfromtxt(matid_file, skip_header=3).astype(int)
     value_by_node = zeros(len(nodes))
     for i, n in enumerate(nodes):
@@ -73,7 +73,7 @@ finish
 '''
 
     lagrit_file = f"add_{variable}_to_mesh.lgi"
-    with  open(lagrit_file, "w") as fp:
+    with open(lagrit_file, "w") as fp:
         fp.write(lagrit_script)
         fp.flush()
     print("--> Complete")
@@ -114,10 +114,14 @@ def add_variable_to_mesh(self,
 
     # Check input files
     if not os.path.isfile(variable_file):
-        hf.print_error(f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename.")
+        hf.print_error(
+            f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename."
+        )
 
     if not os.path.isfile(mesh_file_in):
-        hf.print_error(f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename.")
+        hf.print_error(
+            f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename."
+        )
 
     # if an output mesh file is not provided, set target mesh to be the source mesh.
     if mesh_file_out is None:

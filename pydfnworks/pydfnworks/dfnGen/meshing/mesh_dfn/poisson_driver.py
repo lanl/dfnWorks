@@ -2,6 +2,7 @@ import os
 import numpy as np
 from pydfnworks.general import helper_functions as hf
 
+
 def create_poisson_user_function_script():
 
     lagrit_script = f"""
@@ -28,13 +29,14 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
+
 def grab_z_value(fracture_id):
 
     with open(f'polys/poly_{fracture_id}.inp', 'r') as fp:
         _ = fp.readline()
         line = fp.readline().split()
         z_value = line[-1]
-    return z_value 
+    return z_value
 
 
 def create_lagrit_parameters_file(self, fracture_id, index, digits, slope,

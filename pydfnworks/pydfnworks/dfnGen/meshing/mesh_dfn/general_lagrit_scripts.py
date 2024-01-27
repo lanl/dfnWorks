@@ -33,4 +33,3 @@ def define_zones():
         lines = lines[1:]
         fzone.close()
         fall.writelines(lines)
-

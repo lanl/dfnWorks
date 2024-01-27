@@ -21,14 +21,13 @@ from pydfnworks.dfnGen.meshing.mesh_dfn import general_lagrit_scripts as lgs
 
 def mesh_network(self,
                  uniform_mesh=False,
-                 min_dist = 0.5,
-                 max_dist = 10,
-                 max_resolution_factor = 10,
-                 well = False,
-                 cleanup = True,
-                 strict = True,
-                 quiet = True
-                 ):
+                 min_dist=0.5,
+                 max_dist=10,
+                 max_resolution_factor=10,
+                 well=False,
+                 cleanup=True,
+                 strict=True,
+                 quiet=True):
     """
       Mesh fracture network using LaGriT
 
@@ -80,7 +79,9 @@ def mesh_network(self,
         if self.path:
             self.create_mesh_links(self.path)
         else:
-            hf.print_error("User requested pruning in meshing but did not provide path for main files.")
+            hf.print_error(
+                "User requested pruning in meshing but did not provide path for main files."
+            )
 
         if not self.visual_mode:
             self.edit_intersection_files()
@@ -91,14 +92,16 @@ def mesh_network(self,
     if well:
         add_well_points_to_line_of_intersection()
 
-    slope,intercept = mh.compute_mesh_slope_and_intercept(self.h, min_dist, max_dist, max_resolution_factor, uniform_mesh)
+    slope, intercept = mh.compute_mesh_slope_and_intercept(
+        self.h, min_dist, max_dist, max_resolution_factor, uniform_mesh)
     digits = len(str(self.num_frac))
-    ## Create user resolution function 
+    ## Create user resolution function
     print("--> Creating scripts for LaGriT meshing")
     lg.create_poisson_user_function_script()
-    ## make driver files for each function 
+    ## make driver files for each function
     for index, frac_id in enumerate(self.fracture_list):
-        self.create_lagrit_parameters_file(frac_id, index + 1, digits, slope, intercept, max_resolution_factor)
+        self.create_lagrit_parameters_file(frac_id, index + 1, digits, slope,
+                                           intercept, max_resolution_factor)
         ## Make viz script or regular script
         if self.visual_mode:
             lg.create_lagrit_reduced_mesh_script(frac_id, digits)
@@ -117,15 +120,17 @@ def mesh_network(self,
     # # ##### FOR SERIAL DEBUG ######
 
     # ### Parallel runs
-    # if there are more processors than fractures, 
+    # if there are more processors than fractures,
     if self.ncpu > self.num_frac:
-        hf.print_warning("More processors than fractures requested.\nResetting ncpu to num_frac")
+        hf.print_warning(
+            "More processors than fractures requested.\nResetting ncpu to num_frac"
+        )
         self.ncpu = self.num_frac
 
     if self.mesh_fractures_header(quiet):
         hf.print_error("One or more fractures failed to mesh properly.")
 
-    # ### Parallel runs 
+    # ### Parallel runs
     self.merge_network()
 
     ## checking and clean up
@@ -139,13 +144,13 @@ def mesh_network(self,
         lgs.define_zones()
 
     self.gather_mesh_information()
-    
+
     if self.prune_file:
         self.clean_up_files_after_prune()
-  
+
     if cleanup:
         mh.cleanup_meshing_files()
-        
+
     elapsed = timeit.default_timer() - tic
     time_sec = elapsed
     time_min = elapsed / 60
@@ -159,4 +164,3 @@ def mesh_network(self,
     print('=' * 80)
     print("Meshing DFN using LaGriT : Complete")
     print('=' * 80)
-
