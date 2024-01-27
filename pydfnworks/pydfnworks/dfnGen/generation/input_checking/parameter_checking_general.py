@@ -553,7 +553,8 @@ def check_polygon_boundary_general(params):
     ## Check path for
     hf.check_path('polygonBoundaryFile',
                   params['polygonBoundaryFile']['value'])
-    copy(params['polygonBoundaryFile']['value'], params.jobname)
+    ## Copy file
+    copy(params['polygonBoundaryFile']['value'], "./")
 
     ## Read in domain polygon file
     with open(params['polygonBoundaryFile']['value'], 'r') as fvertices:
