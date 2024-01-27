@@ -1,29 +1,28 @@
 #"""
-#   :synopsis: run file for TPL example 
+#   :synopsis: run file for TPL example
 #   :version: 1.0
 #   :maintainer: Jeffrey Hyman
 #.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
 #"""
 
-from pydfnworks import * 
+from pydfnworks import *
 import os
 
 jobname = os.getcwd() + "/output"
 pflotran_file = os.getcwd() + "/dfn_explicit.in"
-dfntrans = os.getcwd() + "/PTDFN_control.in"
 
-DFN = DFNWORKS(jobname,dfnFlow_file = pflotran_file,
-               ncpu=8)
+DFN = DFNWORKS(jobname, dfnFlow_file=pflotran_file, ncpu=8)
 
 DFN.params['domainSize']['value'] = [100, 200, 50]
-DFN.params['domainSizeIncrease']['value'] = [10,20,10]
+DFN.params['domainSizeIncrease']['value'] = [10, 20, 10]
 DFN.params['h']['value'] = 0.5
 DFN.params['keepOnlyLargestCluster']['value'] = True
 DFN.params['ignoreBoundaryFaces']['value'] = True
 DFN.params['seed']['value'] = 1
 
 DFN.params['polygonBoundaryFlag']['value'] = True
-DFN.params['polygonBoundaryFile']['value'] = os.getcwd() + os.sep + "vertices.dat"
+DFN.params['polygonBoundaryFile']['value'] = os.getcwd(
+) + os.sep + "vertices.dat"
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -35,7 +34,7 @@ DFN.add_fracture_family(shape="ell",
                         phi=0.0,
                         aspect=2,
                         p32=0.5,
-                        number_of_points = 16,
+                        number_of_points=16,
                         hy_variable='aperture',
                         hy_function='correlated',
                         hy_params={
@@ -44,8 +43,7 @@ DFN.add_fracture_family(shape="ell",
                         })
 
 DFN.print_domain_parameters()
-DFN.make_working_directory(delete = True)
+DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
-DFN.mesh_network(max_dist = 10, slope = 0.5)
-DFN.dfn_flow()
+DFN.mesh_network()

@@ -20,14 +20,10 @@ DFN = DFNWORKS(jobname,
 DFN.params['domainSize']['value'] = [10, 5, 5]
 DFN.params['h']['value'] = 0.1
 DFN.params['stopCondition']['value'] = 0
-DFN.params['nPoly']['value'] = 1250
-DFN.params['outputFinalRadiiPerFamily']['value'] = True
-DFN.params['outputAcceptedRadiiPerFamily']['value'] = True
-DFN.params['forceLargeFractures']['value'] = True
-DFN.params['domainSizeIncrease']['value'] = [2,2,2]
+DFN.params['nPoly']['value'] = 300
 DFN.params['ignoreBoundaryFaces']['value'] = False
-DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
-DFN.params['rejectsPerFracture']['value'] = 350
+DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
+DFN.params['seed']['value'] = 10
 
 DFN.add_fracture_family(shape="rect",
                         distribution="constant",
@@ -39,9 +35,12 @@ DFN.add_fracture_family(shape="rect",
                         theta=0.0,
                         phi=23.32,
                         constant=1,
-                        hy_variable = 'transmissivity', 
-                        hy_function='correlated', 
-                        hy_params = {"alpha":1e-13, "beta":1})
+                        hy_variable='transmissivity',
+                        hy_function='correlated',
+                        hy_params={
+                            "alpha": 1e-8,
+                            "beta": 1
+                        })
 
 DFN.add_fracture_family(shape="rect",
                         distribution="constant",
@@ -53,23 +52,16 @@ DFN.add_fracture_family(shape="rect",
                         theta=1.42,
                         phi=26.81,
                         constant=1,
-                        hy_variable = 'transmissivity', 
-                        hy_function='correlated', 
-                        hy_params = {"alpha":1e-13, "beta":1})
-
-DFN.print_family_information(1)
+                        hy_variable='transmissivity',
+                        hy_function='correlated',
+                        hy_params={
+                            "alpha": 1e-8,
+                            "beta": 1
+                        })
 
 DFN.make_working_directory(delete=True)
-
 DFN.check_input()
-
-for key in DFN.params.keys():
-    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-DFN.mesh_network(coarse_factor=10)
-
+DFN.mesh_network()
 DFN.dfn_flow()
 DFN.dfn_trans()

@@ -8,9 +8,9 @@
 from pydfnworks import *
 import os
 
-src_path = os.getcwd() 
+src_path = os.getcwd()
 jobname = src_path + "/output"
-dfnFlow_file = src_path+ '/dfn_explicit.in'
+dfnFlow_file = src_path + '/dfn_explicit.in'
 dfnTrans_file = src_path + '/PTDFN_control.dat'
 
 DFN = DFNWORKS(jobname,

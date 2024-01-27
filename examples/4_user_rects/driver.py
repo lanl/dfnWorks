@@ -8,9 +8,9 @@
 from pydfnworks import *
 import os
 
-src_path = os.getcwd() 
+src_path = os.getcwd()
 jobname = src_path + "/output"
-dfnFlow_file = src_path+ '/dfn_explicit.in'
+dfnFlow_file = src_path + '/dfn_explicit.in'
 dfnTrans_file = src_path + '/PTDFN_control.dat'
 
 DFN = DFNWORKS(jobname,
@@ -19,7 +19,7 @@ DFN = DFNWORKS(jobname,
                ncpu=4)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
-DFN.params['h']['value'] = 0.01
+DFN.params['h']['value'] = 0.1
 
 DFN.add_user_fract(shape='rect',
                    radii=0.6,

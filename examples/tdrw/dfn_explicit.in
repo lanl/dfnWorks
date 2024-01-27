@@ -7,6 +7,9 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
   /
 END
@@ -60,6 +63,7 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -71,9 +75,9 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d0 d
+  INITIAL_TIMESTEP_SIZE  1.d-1 d
   FINAL_TIME 1.d2 d
-  MAXIMUM_TIMESTEP_SIZE 1.d2 d
+  MAXIMUM_TIMESTEP_SIZE 10.d0 d
 END
 
 # REFERENCE_PRESSURE 1500000.
@@ -114,7 +118,7 @@ FLOW_CONDITION inflow
   TYPE
     LIQUID_PRESSURE dirichlet
   /
-  LIQUID_PRESSURE 1.001d6
+  LIQUID_PRESSURE 2.d6
 END
 
 #=========================== condition couplers ===============================

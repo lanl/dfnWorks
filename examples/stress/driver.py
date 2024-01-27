@@ -22,8 +22,7 @@ DFN.params['h']['value'] = 0.1
 DFN.params['stopCondition']['value'] = 0
 DFN.params['nPoly']['value'] = 200
 DFN.params['ignoreBoundaryFaces']['value'] = False
-DFN.params['boundaryFaces']['value'] = [1,1,0,0,0,0]
-
+DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -40,7 +39,10 @@ DFN.add_fracture_family(shape="ell",
                         p32=0.5,
                         hy_variable="aperture",
                         hy_function="correlated",
-                        hy_params={"alpha":2e-5, "beta":.5})
+                        hy_params={
+                            "alpha": 2e-5,
+                            "beta": .5
+                        })
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -57,7 +59,10 @@ DFN.add_fracture_family(shape="ell",
                         p32=0.5,
                         hy_variable="aperture",
                         hy_function="correlated",
-                        hy_params={"alpha":2e-5, "beta":.5})
+                        hy_params={
+                            "alpha": 2e-5,
+                            "beta": .5
+                        })
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -73,22 +78,16 @@ DFN.add_fracture_family(shape="ell",
                         max_radius=5.0,
                         hy_variable="aperture",
                         hy_function="correlated",
-                        hy_params={"alpha":2e-5, "beta":.5})
-
-
-DFN.print_family_information(1)
+                        hy_params={
+                            "alpha": 2e-5,
+                            "beta": .5
+                        })
 
 DFN.make_working_directory(delete=True)
 
 DFN.check_input()
-
-for key in DFN.params.keys():
-    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-DFN.mesh_network(coarse_factor=10)
+DFN.mesh_network(max_dist=20, max_resolution_factor=40)
 
 # create values of the stress tensor
 s1 = 5e6
@@ -97,7 +96,7 @@ s3 = 1e6
 sigma_mat = x = [[s1, 0, 0], [0, s2, 0], [0, 0, s3]]
 DFN.dump_hydraulic_values()
 DFN.add_variable_to_mesh("init_aper", "aperture.dat", "full_mesh.inp",
-                                         "stress.inp")
+                         "stress.inp")
 # modify apertures basedon the stress field
 DFN.stress_based_apertures(sigma_mat)
 # add final apertures to mesh
