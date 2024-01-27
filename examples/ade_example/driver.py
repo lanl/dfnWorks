@@ -45,7 +45,7 @@ DFN.print_domain_parameters()
 DFN.set_flow_solver("PFLOTRAN")
 DFN.create_network()
 DFN.output_report()
-DFN.mesh_network(min_dist = 0.1, max_dist = 10, slope = 0.5)
+DFN.mesh_network(min_dist = 0.1, max_dist = 10)
 
 DFN.lagrit2pflotran()
 DFN.pflotran(restart=True,restart_file=restart_file)

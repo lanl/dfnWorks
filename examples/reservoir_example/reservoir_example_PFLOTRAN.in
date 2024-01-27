@@ -108,19 +108,19 @@ END
 
 
 REGION top
-  FILE pboundary_top.ex
+  FILE boundary_top.ex
 END
 
 REGION bottom
-  FILE pboundary_bottom.ex
+  FILE boundary_bottom.ex
 END
 
 REGION right
-  FILE pboundary_right_e.ex
+  FILE boundary_right_e.ex
 END
 
 REGION left
-  FILE pboundary_left_w.ex
+  FILE boundary_left_w.ex
 END
 
 #=========================== flow conditions ==================================
