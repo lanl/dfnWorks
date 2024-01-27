@@ -92,7 +92,7 @@ def gather_mesh_information(self):
             header = header.split()
             self.num_nodes = int(header[0])
         print(
-            f"--> The reduced mesh in full_mesh.inp has {self.num_nodes} nodes and {int(header[1])} triangular elements"
+            f"--> The reduced mesh in reduced_mesh.inp has {self.num_nodes} nodes and {int(header[1])} triangular elements"
         )
     else:
         with open('full_mesh.inp', 'r') as finp:
