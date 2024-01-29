@@ -316,11 +316,10 @@ def read_boundaries(file_path):
     None
     '''
 
-    try:
+    if os.path.isfile(file_path) and os.path.getsize(file_path) > 0:
         data = np.genfromtxt(file_path)
-    except IOError:
+    else:
         data = np.array([])
-
 
     try:
         array_length = len(data)
