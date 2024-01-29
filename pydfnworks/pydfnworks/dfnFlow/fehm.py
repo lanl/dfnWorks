@@ -32,7 +32,7 @@ def correct_stor_file(self):
         sys.stderr.write(error)
         sys.exit(1)
 
-    self.dump_hydraulic_values()
+    self.dump_hydraulic_values(format = "FEHM")
 
     self.stor_file = self.inp_file[:-4] + '.stor'
     self.mat_file = self.inp_file[:-4] + '_material.zone'

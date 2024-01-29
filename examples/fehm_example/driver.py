@@ -21,7 +21,7 @@ DFN.params['tripleIntersections']['value'] = True
 DFN.params['domainSizeIncrease']['value'] = [10, 10, 10]
 DFN.params['ignoreBoundaryFaces']['value'] = False
 DFN.params['boundaryFaces']['value'] = [0, 0, 0, 0, 1, 1]
-DFN.params['seed']['value'] = 3081976507
+DFN.params['seed']['value'] = 10
 
 DFN.add_fracture_family(shape="ell",
                         distribution="constant",
@@ -37,8 +37,8 @@ DFN.add_fracture_family(shape="ell",
                         hy_variable='aperture',
                         hy_function='log-normal',
                         hy_params={
-                            "mu": 1e-5,
-                            "sigma": 1
+                            "mu": 1e-4,
+                            "sigma": 0.01
                         })
 
 DFN.add_fracture_family(shape="ell",
@@ -55,8 +55,8 @@ DFN.add_fracture_family(shape="ell",
                         hy_variable='aperture',
                         hy_function='log-normal',
                         hy_params={
-                            "mu": 1e-5,
-                            "sigma": 1
+                            "mu": 1e-3,
+                            "sigma": 0.01
                         })
 
 DFN.make_working_directory(delete=True)
@@ -64,7 +64,6 @@ DFN.check_input()
 DFN.create_network()
 DFN.set_flow_solver("FEHM")
 DFN.mesh_network(max_resolution_factor=20)
-# DFN.dump_hydraulic_values()
 
 DFN.correct_stor_file()
 DFN.fehm()

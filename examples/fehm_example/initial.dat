@@ -30,7 +30,7 @@ cond
  
 #------------------------- 
 time 
- 1.e-6  365.25e6  50000    1  2001  3     
+ 1.e-6  10.0e0  50000    1  2001  3     
  
 #----------------------- 
 ctrl 
@@ -56,17 +56,17 @@ allboundaries.zone
 flow
 -1 0 0 0 -50 -1e-1 
 
-cont
-silo 25 500
-geo
-mat
-xyc
-perm
-pressure 
-liquid
-temp
-flxz
-zfl
-end cont
+#cont
+#silo 25 500
+#geo
+#mat
+#xyc
+#perm
+#pressure 
+#liquid
+#temp
+#flxz
+#zfl
+#end cont
 stop 
 
