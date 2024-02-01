@@ -132,7 +132,7 @@ FLOW_CONDITION pinned
   TYPE
     LIQUID_PRESSURE dirichlet
   /
-  LIQUID_PRESSURE 1.01325d5
+  LIQUID_PRESSURE 1.01325d6
 END
 
 #=========================== condition couplers ===============================

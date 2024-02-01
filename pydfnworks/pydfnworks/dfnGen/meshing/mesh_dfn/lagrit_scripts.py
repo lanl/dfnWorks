@@ -12,103 +12,6 @@ from numpy import genfromtxt, sqrt, cos, arcsin
 import subprocess
 
 
-def edit_intersection_files(num_poly, fracture_list, path):
-    """ If pruning a DFN, this function walks through the intersection files
-    and removes references to files that are not included in the 
-    fractures that will remain in the network.
- 
-    Parameters
-    ---------
-        num_poly : int 
-            Number of Fractures in the original DFN
-        fracture_list :list of int
-            List of fractures to keep in the DFN
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-    1. Currently running in serial, but it could be parallelized
-    2. Assumes the pruning directory is not the original directory
-
-    """
-    # Make list of connectivity.dat
-    connectivity = []
-    fp = open("connectivity.dat", "r")
-    for i in range(num_poly):
-        tmp = []
-        line = fp.readline()
-        line = line.split()
-        for frac in line:
-            tmp.append(int(frac))
-        connectivity.append(tmp)
-    fp.close()
-
-    fractures_to_remove = list(
-        set(range(1, num_poly + 1)) - set(fracture_list))
-    cwd = os.getcwd()
-    os.chdir('intersections')
-    # clean up directory
-    #fl_list = glob.glob("*prune.inp")
-    #for fl in fl_list:
-    #   os.remove(fl)
-
-    print("Editing Intersection Files")
-    for i in fracture_list:
-        filename = 'intersections_%d.inp' % i
-        print('--> Working on: %s' % filename)
-        intersecting_fractures = connectivity[i - 1]
-        pull_list = list(
-            set(intersecting_fractures).intersection(set(fractures_to_remove)))
-        if len(pull_list) > 0:
-            # Create Symlink to origignal intersection file
-            os.symlink(path + 'intersections/' + filename, filename)
-            # Create LaGriT script to remove intersections with fractures not in prune_file
-            lagrit_script = 'read / %s / mo1' % filename
-            lagrit_script += '''
-pset / pset2remove / attribute / b_a / 1,0,0 / eq / %d
-    ''' % pull_list[0]
-            for j in pull_list[1:]:
-                lagrit_script += '''
-pset / prune / attribute / b_a / 1,0,0 / eq / %d
-pset / pset2remove / union / pset2remove, prune
-#rmpoint / pset, get, prune
-pset / prune / delete
-     ''' % j
-            lagrit_script += '''
-rmpoint / pset, get, pset2remove 
-rmpoint / compress
-    
-cmo / modatt / mo1 / imt / ioflag / l
-cmo / modatt / mo1 / itp / ioflag / l
-cmo / modatt / mo1 / isn / ioflag / l
-cmo / modatt / mo1 / icr / ioflag / l
-    
-cmo / status / brief
-dump / intersections_%d_prune.inp / mo1
-finish
-
-''' % i
-
-            lagrit_filename = 'prune_intersection.lgi'
-            f = open(lagrit_filename, 'w')
-            f.write(lagrit_script)
-            f.flush()
-            f.close()
-            subprocess.call(os.environ['LAGRIT_EXE'] + \
-                '< prune_intersection.lgi > out_%d.txt'%i,shell=True)
-            os.remove(filename)
-            move("intersections_%d_prune.inp" % i, "intersections_%d.inp" % i)
-        else:
-            try:
-                copy(path + 'intersections/' + filename, filename)
-            except:
-                pass
-    os.chdir(cwd)
-
-
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     """Create parameteri.mlgi files used in running LaGriT Scripts
     
@@ -776,6 +679,10 @@ boundary_components
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
+# New additions for dfnTrans2.0
+dump / elem_adj_node / node_connect.dat / mo_all
+dump / elem_adj_elem / elem_connect.dat / mo_all
+
 """
         if flow_solver == "PFLOTRAN":
             print("\nDumping output for %s" % flow_solver)
@@ -796,8 +703,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("WARNING!!!!!!!\nUnkown flow solver selection: %s" %
-                  flow_solver)
+            print("Warning!\nUnkown flow solver selection: %s" % flow_solver)
         lagrit_input += """ 
 # Dump out Material ID Dat file
 cmo / modatt / mo_all / isn / ioflag / l

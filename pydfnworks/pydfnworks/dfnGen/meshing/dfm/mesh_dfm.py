@@ -11,7 +11,7 @@ import shutil
 import glob 
 
 # pydfnworks Modules
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 
 def setup_mesh_dfm_directory(jobname, dirname):
     """ Setup working directory for meshing the DFM. 

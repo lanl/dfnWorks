@@ -115,11 +115,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_left_w.ex
+  FILE boundary_left_w.ex
 END
 
 REGION outflow
-  FILE pboundary_right_e.ex
+  FILE boundary_right_e.ex
 END
 
 TRANSPORT_CONDITION initial

@@ -91,11 +91,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_bottom.ex
+  FILE boundary_bottom.ex
 END
 
 REGION outflow
-  FILE pboundary_top.ex
+  FILE boundary_top.ex
 END
 
 #=========================== flow conditions ==================================

@@ -135,7 +135,7 @@ def mapdfn_perm_aniso(num_frac,
     #quick error check
     fracture_trans = np.zeros((num_frac, 3), '=f8')
     full_tensor = []
-    T_local = np.zeros((3, 3), dtype=np.float)
+    T_local = np.zeros((3, 3))
     #calculate transmissivity tensor in domain coordinates for each ellipse
     for ifrac in range(num_frac):
         # normal = ellipses[f]['normal']
