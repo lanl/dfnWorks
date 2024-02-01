@@ -88,6 +88,9 @@ suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
 https://lagrit.lanl.gov
 
+dfnWorks v2.8+ requires LaGriT v3.3. DFM meshing requires that LaGriT
+is built with exodus. 
+
 ### PFLOTRAN
 PFLOTRAN  is a massively parallel subsurface flow and reactive transport 
 code. PFLOTRAN solves a system of partial differential equations for 
