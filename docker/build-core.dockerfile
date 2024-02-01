@@ -21,6 +21,10 @@ WORKDIR $APP_PATH
 # ENV http_proxy=
 # ENV HTTPS_PROXY=
 # ENV HTTP_PROXY=
+ENV https_proxy=
+ENV http_proxy=
+ENV HTTPS_PROXY=
+ENV HTTP_PROXY=
 
 RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 # 2. Add pre-required packages
