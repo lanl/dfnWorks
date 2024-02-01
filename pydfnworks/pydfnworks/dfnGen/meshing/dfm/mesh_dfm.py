@@ -758,11 +758,10 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, cleanup = True)
 
     Parameters
     ------------------
-        self : DFN Object
         dirname : string
             name of working directory. Default : dfm_mesh
-        percentage : float
-
+        allowed_percentage : float
+            Percentage of the mesh allowed to be missing and still continue
         cleanup : bool
             Clean up working directory. If true dep files are moved into subdirectories
 
@@ -772,7 +771,7 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, cleanup = True)
 
     Notes
     --------------
-        None 
+        The final mesh is output in exodus format. This requires that LaGriT is built against exodus.  
          
     """
 

@@ -93,6 +93,7 @@
 <span class="sd">.. moduleauthor:: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -119,21 +120,20 @@
                  <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    </span>
-<span class="sd">    Mesh fracture network using LaGriT</span>
+<span class="sd">      Mesh fracture network using LaGriT</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    ------------</span>
+<span class="sd">    ----------</span>
 <span class="sd">        self : object </span>
 <span class="sd">            DFN Class</span>
 <span class="sd">        uniform_mesh : bool</span>
 <span class="sd">            toggle for uniform or variable mesh. Default : False </span>
 <span class="sd">        min_dist : float</span>
-<span class="sd">            Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist x h</span>
+<span class="sd">            Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h</span>
 <span class="sd">        max_dist : float</span>
-<span class="sd">            Defines the minimum distance from the intersections with resolution max_resolution x h. This value is the factor of h, distance = max_dist x h</span>
+<span class="sd">            Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h</span>
 <span class="sd">        max_resolution_factor : float</span>
-<span class="sd">            Maximum factor of the mesh resolultion (max_resolution x h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. </span>
+<span class="sd">            Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. </span>
 <span class="sd">        cleanup : bool</span>
 <span class="sd">            toggle to clean up directory (remove meshing files after a run). Default : True</span>
 <span class="sd">        strict : bool</span>
@@ -142,11 +142,11 @@
 <span class="sd">            Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen</span>
 
 <span class="sd">    Returns</span>
-<span class="sd">    ------------</span>
+<span class="sd">    -------</span>
 <span class="sd">        None</span>
 
 <span class="sd">    Notes</span>
-<span class="sd">    ------------</span>
+<span class="sd">    ------</span>
 <span class="sd">        1. All fractures in self.prune_file must intersect at least 1 other fracture</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
