@@ -31,7 +31,7 @@
 
           
           
-          <a href="index.html" class="icon icon-home">
+          <a href="index_docs.html" class="icon icon-home">
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
@@ -97,14 +97,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">dfnWorks</a>
+          <a href="index_docs.html">dfnWorks</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">pydfnworks: dfnFlow</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/pydfnFlow.rst.txt" rel="nofollow"> View page source</a>
@@ -181,7 +181,7 @@ False  - Does not write out vtk files for flow solutions</p></li>
 <p>functions for using pflotran in dfnworks</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.lagrit2pflotran">
-<span class="sig-name descname"><span class="pre">lagrit2pflotran</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#lagrit2pflotran"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.lagrit2pflotran" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">lagrit2pflotran</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_cell_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#lagrit2pflotran"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.lagrit2pflotran" title="Link to this definition"></a></dt>
 <dd><p>Takes output from LaGriT and processes it for use in PFLOTRAN.
 Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <dl class="field-list simple">

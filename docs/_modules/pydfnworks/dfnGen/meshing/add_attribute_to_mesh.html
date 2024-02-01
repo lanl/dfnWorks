@@ -92,7 +92,8 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn_helper</span> <span class="kn">import</span> <span class="n">run_lagrit_script</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper</span> <span class="kn">import</span> <span class="n">run_lagrit_script</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.general</span> <span class="kn">import</span> <span class="n">helper_functions</span> <span class="k">as</span> <span class="n">hf</span>
 
 
 <span class="k">def</span> <span class="nf">create_variable_file</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">variable_file</span><span class="p">,</span> <span class="n">matid_file</span><span class="o">=</span><span class="s2">&quot;materialid.dat&quot;</span><span class="p">):</span>
@@ -106,7 +107,8 @@
 <span class="sd">        variable_file : string</span>
 <span class="sd">            name of file containing variable files. Must be a single column where each line corresponds to that fracture number. </span>
 <span class="sd">        matid_file : string</span>
-<span class="sd">            name of materialid file produced by large. Normally produced by run_meshing. Can </span>
+<span class="sd">            name of materialid file produced by large. Normally produced by run_meshing.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    ----------</span>
 <span class="sd">        variable_file_by_node : string</span>
@@ -117,9 +119,8 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Making </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2"> by node file&quot;</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">genfromtxt</span><span class="p">(</span><span class="n">variable_file</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matid_file</span><span class="p">):</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ERROR!!! Cannot locate the file &#39;</span><span class="si">{</span><span class="n">matid_file</span><span class="si">}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot locate the file &#39;</span><span class="si">{</span><span class="n">matid_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="n">nodes</span> <span class="o">=</span> <span class="n">genfromtxt</span><span class="p">(</span><span class="n">matid_file</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">value_by_node</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
@@ -161,11 +162,10 @@
 <span class="s1">&#39;&#39;&#39;</span>
 
     <span class="n">lagrit_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;add_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">_to_mesh.lgi&quot;</span>
-    <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">lagrit_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
-    <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-    <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Complete&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">lagrit_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Complete&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lagrit_file</span>
 
 
@@ -205,14 +205,14 @@
 
     <span class="c1"># Check input files</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">variable_file</span><span class="p">):</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The file </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The file </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mesh_file_in</span><span class="p">):</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The mesh file </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The mesh file </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># if an output mesh file is not provided, set target mesh to be the source mesh.</span>
     <span class="k">if</span> <span class="n">mesh_file_out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

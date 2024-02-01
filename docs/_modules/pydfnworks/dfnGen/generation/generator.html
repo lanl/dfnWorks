@@ -107,8 +107,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        self : object</span>
-<span class="sd">            DFN Class object</span>
+<span class="sd">        self :</span>
+<span class="sd">            DFN object</span>
 <span class="sd">        output : bool</span>
 <span class="sd">            If True, output pdf will be created. If False, no pdf is made </span>
 <span class="sd">        visual_mode : None</span>
@@ -146,8 +146,11 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        self : object</span>
-<span class="sd">            DFN Class object</span>
+<span class="sd">        self :</span>
+<span class="sd">            DFN object</span>
+
+<span class="sd">        delete : bool</span>
+<span class="sd">            If True, deletes the existing working directory. Default = False</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -213,8 +216,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        self : object</span>
-<span class="sd">            DFN Class </span>
+<span class="sd">        self :</span>
+<span class="sd">            DFN object </span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -255,16 +258,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        num_poly: int</span>
-<span class="sd">            Number of Polygons</span>
-<span class="sd">        h: float </span>
-<span class="sd">            Meshing length scale h</span>
-<span class="sd">        dudded_points: int </span>
-<span class="sd">            Expected number of dudded points in Filter (LaGriT)</span>
-<span class="sd">        visual_mode : bool</span>
-<span class="sd">            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  </span>
-<span class="sd">        domain: dict</span>
-<span class="sd">             x,y,z domain sizes </span>
+<span class="sd">        None</span>
 <span class="sd">    </span>
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -272,6 +266,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; Parsing  params.txt&quot;</span><span class="p">)</span>
+
     <span class="n">fparams</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;params.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="c1"># Line 1 is the number of polygons</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
@@ -292,6 +287,8 @@
 
     <span class="c1">#Line 5 is the x domain length</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">r_fram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rFram&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    
     <span class="n">fparams</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
@@ -303,10 +300,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Visual mode is off&quot;</span><span class="p">)</span>
+
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Expected Number of dudded points: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dudded_points</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; X Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Y Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Z Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_max</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
 
@@ -419,11 +418,10 @@
 <span class="sd">    None</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+    <span class="k">else</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">array_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>

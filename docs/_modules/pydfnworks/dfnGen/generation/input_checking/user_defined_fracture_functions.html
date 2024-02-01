@@ -87,19 +87,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Created on Mon Aug 29 09:17:14 2022</span>
-
-<span class="sd">@author: 369984</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
 
 <span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.input_checking.helper_functions</span> <span class="kn">import</span> <span class="n">print_error</span><span class="p">,</span> <span class="n">print_warning</span>
-
 
 <span class="k">def</span> <span class="nf">check_angle_option</span><span class="p">(</span><span class="n">angle_option</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
@@ -120,7 +112,7 @@
 <span class="k">def</span> <span class="nf">print_user_fracture_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">frac_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Prints information about a user defined fracture to screen</span>
 
-<span class="sd">    Paramters</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------------</span>
 <span class="sd">        self : DFN object</span>
 
@@ -185,7 +177,7 @@
                              <span class="n">permeability</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Sets up paths for fractures defined in user input file. When inserting user fractures from file, hydraulic properties must be provided as a list of length nPolygons (number of fractures defined in the file)</span>
 
-<span class="sd">    Paramters</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------------</span>
 <span class="sd">        filename : string</span>
 <span class="sd">            path to source file</span>

@@ -99,7 +99,7 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing</span> <span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
@@ -160,7 +160,7 @@
     <span class="n">nz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="k">if</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span> <span class="o">&gt;</span> <span class="mf">1e8</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR: Number of elements &gt; 1e8. Exiting&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error: Number of elements too large (&gt; 1e8). Exiting&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -430,35 +430,35 @@
 <span class="s2">cmo / modatt / MOTET / itp / ioflag / l</span>
 <span class="s2">cmo / modatt / MOTET / isn / ioflag / l</span>
 <span class="s2">cmo / modatt / MOTET / icr / ioflag / l</span>
-<span class="s2">#</span>
+<span class="s2"># #</span>
 
 <span class="s2">define / ZONE / 1</span>
-<span class="s2">define / FOUT / pboundary_top</span>
+<span class="s2">define / FOUT / boundary_top</span>
 <span class="s2">pset / top / attribute / zic / 1 0 0 / gt / ZMAX</span>
 <span class="s2">pset / top / zone / FOUT / ascii / ZONE</span>
 
 <span class="s2">define / ZONE / 2</span>
-<span class="s2">define / FOUT / pboundary_bottom</span>
+<span class="s2">define / FOUT / boundary_bottom</span>
 <span class="s2">pset / bottom / attribute / zic / 1 0 0 / lt / ZMIN</span>
 <span class="s2">pset / bottom / zone / FOUT / ascii / ZONE</span>
 
 <span class="s2">define / ZONE / 3</span>
-<span class="s2">define / FOUT / pboundary_left_w</span>
+<span class="s2">define / FOUT / boundary_left_w</span>
 <span class="s2">pset / left_w / attribute / xic / 1 0 0 / lt / XMIN</span>
 <span class="s2">pset / left_w / zone / FOUT / ascii / ZONE</span>
 
 <span class="s2">define / ZONE / 4</span>
-<span class="s2">define / FOUT / pboundary_front_n</span>
+<span class="s2">define / FOUT / boundary_front_n</span>
 <span class="s2">pset / front_n / attribute / yic / 1 0 0 / gt / YMAX</span>
 <span class="s2">pset / front_n / zone / FOUT / ascii / ZONE</span>
 
 <span class="s2">define / ZONE / 5</span>
-<span class="s2">define / FOUT / pboundary_right_e</span>
+<span class="s2">define / FOUT / boundary_right_e</span>
 <span class="s2">pset / right_e / attribute / xic / 1 0 0 / gt / XMAX</span>
 <span class="s2">pset / right_e / zone / FOUT / ascii / ZONE</span>
 
 <span class="s2">define / ZONE / 6</span>
-<span class="s2">define / FOUT / pboundary_back_s</span>
+<span class="s2">define / FOUT / boundary_back_s</span>
 <span class="s2">pset / back_s / attribute / yic / 1 0 0 / lt / YMIN</span>
 <span class="s2">pset / back_s / zone / FOUT / ascii / ZONE</span>
 

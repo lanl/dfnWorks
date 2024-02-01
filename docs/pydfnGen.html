@@ -31,7 +31,7 @@
 
           
           
-          <a href="index.html" class="icon icon-home">
+          <a href="index_docs.html" class="icon icon-home">
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
@@ -83,27 +83,35 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#meshing-lagrit">Meshing - LaGriT</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn">Primary DFN meshing driver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_network"><code class="docutils literal notranslate"><span class="pre">mesh_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn">Primary DFN meshing driver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network"><code class="docutils literal notranslate"><span class="pre">mesh_network()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn_helper">Meshing helper methods</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.create_mesh_links"><code class="docutils literal notranslate"><span class="pre">create_mesh_links()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2gmv"><code class="docutils literal notranslate"><span class="pre">inp2gmv()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2vtk_python"><code class="docutils literal notranslate"><span class="pre">inp2vtk_python()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.run_lagrit_script"><code class="docutils literal notranslate"><span class="pre">run_lagrit_script()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper">Meshing helper methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.create_mesh_links"><code class="docutils literal notranslate"><span class="pre">create_mesh_links()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2gmv"><code class="docutils literal notranslate"><span class="pre">inp2gmv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python"><code class="docutils literal notranslate"><span class="pre">inp2vtk_python()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.run_lagrit_script"><code class="docutils literal notranslate"><span class="pre">run_lagrit_script()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.add_attribute_to_mesh.add_variable_to_mesh"><code class="docutils literal notranslate"><span class="pre">add_variable_to_mesh()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#udfm">UDFM</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.udfm.map2continuum">Creating an upscaled mesh of the DFN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.udfm.map2continuum">Creating an upscaled mesh of the DFN (UDFM)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.udfm.map2continuum.map_to_continuum"><code class="docutils literal notranslate"><span class="pre">map_to_continuum()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.udfm.upscale.upscale"><code class="docutils literal notranslate"><span class="pre">upscale()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.udfm.false_connections.check_false_connections"><code class="docutils literal notranslate"><span class="pre">check_false_connections()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">Map-DFN upscaling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm"><code class="docutils literal notranslate"><span class="pre">mapdfn_ecpm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dfm">DFM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.dfm">Creating a conforming DFM mesh DFN</a></li>
 </ul>
 </li>
 </ul>
@@ -126,14 +134,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">dfnWorks</a>
+          <a href="index_docs.html">dfnWorks</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">pydfnworks: dfnGen</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/pydfnGen.rst.txt" rel="nofollow"> View page source</a>
@@ -193,7 +201,7 @@ if ‘log-normal’ –&gt; {“mu”:value, “sigma”:value}</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>populated fracture family dictionary for specified family</p>
+<dd class="field-even"><p>Populated fracture family dictionary for specified family</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -225,8 +233,6 @@ information about parameters</p>
 </section>
 <section id="adding-user-fractures">
 <h3>Adding User Fractures<a class="headerlink" href="#adding-user-fractures" title="Link to this heading"></a></h3>
-<p>Created on Mon Aug 29 09:17:14 2022</p>
-<p>&#64;author: 369984</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_user_fract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'degree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'normal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trend_plunge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dip_strike</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permeability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aperture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/user_defined_fracture_functions.html#add_user_fract"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -276,41 +282,29 @@ ellipses and rectangles not specified by coordinate.</p>
 </section>
 <section id="adding-user-fractures-from-a-file">
 <h3>Adding User Fractures From a File<a class="headerlink" href="#adding-user-fractures-from-a-file" title="Link to this heading"></a></h3>
-<p>Created on Mon Aug 29 09:17:14 2022</p>
-<p>&#64;author: 369984</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_user_fract_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nPolygons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aperture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permeability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/user_defined_fracture_functions.html#add_user_fract_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sets up paths for fractures defined in user input file. When inserting user fractures from file, hydraulic properties must be provided as a list of length nPolygons (number of fractures defined in the file)</p>
-<section id="paramters">
-<h4>Paramters<a class="headerlink" href="#paramters" title="Link to this heading"></a></h4>
-<blockquote>
-<div><dl class="simple">
-<dt>filename<span class="classifier">string</span></dt><dd><p>path to source file</p>
-</dd>
-<dt>shape: string</dt><dd><p>The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p>
-</dd>
-<dt>by_coord<span class="classifier">boolean</span></dt><dd><p>True / False of file format for coordinate or general input</p>
-</dd>
-<dt>nPolygons<span class="classifier">int</span></dt><dd><p>The number of polygons specified in the file</p>
-</dd>
-<dt>permeability<span class="classifier">list or array</span></dt><dd><p>Permeabilities of the fractures</p>
-</dd>
-<dt>transmissivity<span class="classifier">list or array</span></dt><dd><p>Fracture Tramsmissivities</p>
-</dd>
-<dt>aperture<span class="classifier">list or array</span></dt><dd><p>Hydraulic apertures of the fracture</p>
-</dd>
-</dl>
-</div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>string</em>) – path to source file</p></li>
+<li><p><strong>shape</strong> (<em>string</em>) – The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p></li>
+<li><p><strong>by_coord</strong> (<em>boolean</em>) – True / False of file format for coordinate or general input</p></li>
+<li><p><strong>nPolygons</strong> (<em>int</em>) – The number of polygons specified in the file</p></li>
+<li><p><strong>permeability</strong> (<em>list</em><em> or </em><em>array</em>) – Permeabilities of the fractures</p></li>
+<li><p><strong>transmissivity</strong> (<em>list</em><em> or </em><em>array</em>) – Fracture Tramsmissivities</p></li>
+<li><p><strong>aperture</strong> (<em>list</em><em> or </em><em>array</em>) – Hydraulic apertures of the fracture</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p>Does not write the file, only sets up paths</p>
 <p>~/src/dfnworks-aidan/pydfnworks/pydfnworks/</p>
-</section>
 </dd></dl>
 
 <p>Example:</p>
@@ -323,31 +317,24 @@ ellipses and rectangles not specified by coordinate.</p>
 <section id="print-parameter-information">
 <h3>Print Parameter Information<a class="headerlink" href="#print-parameter-information" title="Link to this heading"></a></h3>
 <p>Note: Some of these functions are automatically called when processing the input.</p>
-<p id="module-pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions">Created on Mon Aug 29 09:17:14 2022</p>
-<p>&#64;author: 369984</p>
-<dl class="py function">
+<dl class="py function" id="module-pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions.print_user_fracture_information">
 <span class="sig-name descname"><span class="pre">print_user_fracture_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/user_defined_fracture_functions.html#print_user_fracture_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions.print_user_fracture_information" title="Link to this definition"></a></dt>
 <dd><p>Prints information about a user defined fracture to screen</p>
-<section id="id1">
-<h4>Paramters<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
-<blockquote>
-<div><p>self : DFN object</p>
-<dl class="simple">
-<dt>shape: string</dt><dd><p>The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p>
-</dd>
-<dt>fracture_number<span class="classifier">int</span></dt><dd><p>Index of fracture. If none (default), then information about all user fractures of input shape are printed to screen</p>
-</dd>
-</dl>
-</div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>) – </p></li>
+<li><p><strong>shape</strong> (<em>string</em>) – The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p></li>
+<li><p><strong>fracture_number</strong> (<em>int</em>) – Index of fracture. If none (default), then information about all user fractures of input shape are printed to screen</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p>None</p>
-</section>
 </dd></dl>
 
 <dl class="py function" id="module-pydfnworks.dfnGen.generation.input_checking">
@@ -377,7 +364,7 @@ ellipses and rectangles not specified by coordinate.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>prints fracture family parameters</p>
+<dd class="field-even"><p>Prints fracture family parameters to terminal screen</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -424,7 +411,7 @@ ellipses and rectangles not specified by coordinate.</p>
 <dd><p>Execute dfnGen</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
+<dd class="field-odd"><p><strong>self</strong> – DFN object</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -450,7 +437,7 @@ ellipses and rectangles not specified by coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class object</p></li>
+<li><p><strong>self</strong> – DFN object</p></li>
 <li><p><strong>output</strong> (<em>bool</em>) – If True, output pdf will be created. If False, no pdf is made</p></li>
 <li><p><strong>visual_mode</strong> (<em>None</em>) – If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode</p></li>
 </ul>
@@ -486,7 +473,10 @@ To access the points that define an individual polygon, call self.polygons[f’p
 <dd><p>Make working directory for dfnWorks Simulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class object</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – DFN object</p></li>
+<li><p><strong>delete</strong> (<em>bool</em>) – If True, deletes the existing working directory. Default = False</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -598,28 +588,23 @@ to account for uncertainty and variability between fractures of the same size. T
 </section>
 <section id="meshing-lagrit">
 <h2>Meshing - LaGriT<a class="headerlink" href="#meshing-lagrit" title="Link to this heading"></a></h2>
-<section id="module-pydfnworks.dfnGen.meshing.mesh_dfn">
-<span id="primary-dfn-meshing-driver"></span><h3>Primary DFN meshing driver<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn" title="Link to this heading"></a></h3>
+<section id="module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn">
+<span id="primary-dfn-meshing-driver"></span><h3>Primary DFN meshing driver<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn" title="Link to this heading"></a></h3>
 <dl class="py function" id="module-mesh_dfn.py">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_network">
-<span class="sig-name descname"><span class="pre">mesh_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">production_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coarse_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrent_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">well_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn.html#mesh_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_network" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network">
+<span class="sig-name descname"><span class="pre">mesh_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_resolution_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">well</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn.html#mesh_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network" title="Link to this definition"></a></dt>
 <dd><p>Mesh fracture network using LaGriT</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>prune</strong> (<em>bool</em>) – If prune is False, mesh entire network. If prune is True, mesh only fractures in self.prune_file</p></li>
-<li><p><strong>uniform_mesh</strong> (<em>bool</em>) – If true, mesh is uniform resolution. If False, mesh is spatially variable</p></li>
-<li><p><strong>production_mode</strong> (<em>bool</em>) – If True, all working files while meshing are cleaned up. If False, then working files will not be deleted</p></li>
-<li><p><strong>visual_mode</strong> (<em>None</em>) – If the user wants to run in a different meshing mode from what is in params.txt,
-set visual_mode = True/False on command line to override meshing mode</p></li>
-<li><p><strong>coarse_factor</strong> (<em>float</em>) – Maximum resolution of the mesh. Given as a factor of h</p></li>
-<li><p><strong>slope</strong> (<em>float</em>) – slope of variable coarsening resolution.</p></li>
-<li><p><strong>min_dist</strong> (<em>float</em>) – Range of constant min-distance around an intersection (in units of h).</p></li>
-<li><p><strong>max_dist</strong> (<em>float</em>) – Range over which the min-distance between nodes increases (in units of h)</p></li>
-<li><p><strong>concurrent_samples</strong> (<em>int</em>) – number of new candidates sampled around an accepted node at a time.</p></li>
-<li><p><strong>grid_size</strong> (<em>float</em>) – side length of the occupancy grid is given by H/occupancy_factor</p></li>
-<li><p><strong>well_flag</strong> (<em>bool</em>) – If well flag is true, higher resolution around the points in</p></li>
+<li><p><strong>uniform_mesh</strong> (<em>bool</em>) – toggle for uniform or variable mesh. Default : False</p></li>
+<li><p><strong>min_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist x h</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution max_resolution x h. This value is the factor of h, distance = max_dist x h</p></li>
+<li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolultion (max_resolution x h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – toggle to clean up directory (remove meshing files after a run). Default : True</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – Toggle if a few mesh errors are acceptable. default is true</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -628,17 +613,16 @@ set visual_mode = True/False on command line to override meshing mode</p></li>
 </dl>
 <p class="rubric">Notes</p>
 <ol class="arabic simple">
-<li><p>For uniform resolution mesh, set slope = 0</p></li>
 <li><p>All fractures in self.prune_file must intersect at least 1 other fracture</p></li>
 </ol>
 </dd></dl>
 
 </section>
-<section id="module-pydfnworks.dfnGen.meshing.mesh_dfn_helper">
-<span id="meshing-helper-methods"></span><h3>Meshing helper methods<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn_helper" title="Link to this heading"></a></h3>
+<section id="module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper">
+<span id="meshing-helper-methods"></span><h3>Meshing helper methods<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper" title="Link to this heading"></a></h3>
 <dl class="py function" id="module-mesh_dfn_helper.py">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn_helper.create_mesh_links">
-<span class="sig-name descname"><span class="pre">create_mesh_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn_helper.html#create_mesh_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.create_mesh_links" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.create_mesh_links">
+<span class="sig-name descname"><span class="pre">create_mesh_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#create_mesh_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.create_mesh_links" title="Link to this definition"></a></dt>
 <dd><p>Makes symlinks for files in path required for meshing</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -656,8 +640,8 @@ set visual_mode = True/False on command line to override meshing mode</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2gmv">
-<span class="sig-name descname"><span class="pre">inp2gmv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn_helper.html#inp2gmv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2gmv" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2gmv">
+<span class="sig-name descname"><span class="pre">inp2gmv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#inp2gmv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2gmv" title="Link to this definition"></a></dt>
 <dd><p>Convert inp file to gmv file, for general mesh viewer. Name of output file for base.inp is base.gmv</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -674,8 +658,8 @@ set visual_mode = True/False on command line to override meshing mode</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2vtk_python">
-<span class="sig-name descname"><span class="pre">inp2vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn_helper.html#inp2vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.inp2vtk_python" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python">
+<span class="sig-name descname"><span class="pre">inp2vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#inp2vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python" title="Link to this definition"></a></dt>
 <dd><p>Using Python VTK library, convert inp file to VTK file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -690,8 +674,8 @@ set visual_mode = True/False on command line to override meshing mode</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn_helper.run_lagrit_script">
-<span class="sig-name descname"><span class="pre">run_lagrit_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lagrit_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn_helper.html#run_lagrit_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn_helper.run_lagrit_script" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.run_lagrit_script">
+<span class="sig-name descname"><span class="pre">run_lagrit_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lagrit_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#run_lagrit_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.run_lagrit_script" title="Link to this definition"></a></dt>
 <dd><p>Runs LaGriT</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -745,7 +729,7 @@ if variable_file provide fracture based values</p></li>
 <section id="udfm">
 <h2>UDFM<a class="headerlink" href="#udfm" title="Link to this heading"></a></h2>
 <section id="module-pydfnworks.dfnGen.meshing.udfm.map2continuum">
-<span id="creating-an-upscaled-mesh-of-the-dfn"></span><h3>Creating an upscaled mesh of the DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.udfm.map2continuum" title="Link to this heading"></a></h3>
+<span id="creating-an-upscaled-mesh-of-the-dfn-udfm"></span><h3>Creating an upscaled mesh of the DFN (UDFM)<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.udfm.map2continuum" title="Link to this heading"></a></h3>
 <dl class="py function" id="module-map2continuum.py">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.udfm.map2continuum.map_to_continuum">
 <span class="sig-name descname"><span class="pre">map_to_continuum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'octree'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/udfm/map2continuum.html#map_to_continuum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.udfm.map2continuum.map_to_continuum" title="Link to this definition"></a></dt>
@@ -825,6 +809,62 @@ turn visualization mode on in the DFN input card.</p>
 dictionary. Thus must be run in the main job directory which contains connectivity.dat</p>
 </dd></dl>
 
+</section>
+</section>
+<section id="module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">
+<span id="map-dfn-upscaling"></span><h2>Map-DFN upscaling<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm" title="Link to this heading"></a></h2>
+<p>mapdfn2pflotran.py</p>
+<p>Call methods in mapdfn.py to take output of dfnWorks-Version2.0, create
+equivalent continuous porous medium representation, and write parameters
+(permeability, porosity, tortuosity) to files for use with PFLOTRAN.</p>
+<dl class="simple">
+<dt>Usage: Edit values for origin, nx, ny, nz, d, k_background, bulk_por,</dt><dd><p>tortuosity factor, and h5origin.
+Paths and filenames are hardwired and may also need to be checked.
+As written, they assume script is being called from a subdirectory.
+Then: python mapdfn2pflotran.py</p>
+</dd>
+<dt>Dependencies: mapdfn.py</dt><dd><p>numpy
+h5py</p>
+</dd>
+</dl>
+<p>Author:</p>
+<p>Date: 07/13/18
+SAND Number: SAND2018-7605 O</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm">
+<span class="sig-name descname"><span class="pre">mapdfn_ecpm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_perm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_porosity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tortuosity_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lump_diag_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mapdfn_ecpm'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_ecpm.html#mapdfn_ecpm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm" title="Link to this definition"></a></dt>
+<dd><p>This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>dfnWorks object</em>) – </p></li>
+<li><p><strong>cell_size</strong> (<em>float</em>) – The cell size (meters) to use for the meshing</p></li>
+<li><p><strong>correction_factor</strong> (<em>boolean</em>) – Apply stairstep correction from EDFM to  not applied to permeability</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<section id="authors">
+<h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>Emily Stein (<a class="reference external" href="mailto:ergiamb&#37;&#52;&#48;sandia&#46;gov">ergiamb<span>&#64;</span>sandia<span>&#46;</span>gov</a>)
+Applied Systems Analysis and Research, 8844
+Sandia National Laboratories</p>
+<p>Edited by Teresa Portone (<a class="reference external" href="mailto:tporton&#37;&#52;&#48;sandia&#46;gov">tporton<span>&#64;</span>sandia<span>&#46;</span>gov</a>) 11/2020 to take arguments.</p>
+<p>Rosie Leone</p>
+<p>Jeffrey Hyman 07/2023 - Integration with pydfnWorks</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="dfm">
+<h2>DFM<a class="headerlink" href="#dfm" title="Link to this heading"></a></h2>
+<section id="module-pydfnworks.dfnGen.meshing.dfm">
+<span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm" title="Link to this heading"></a></h3>
 </section>
 </section>
 </section>

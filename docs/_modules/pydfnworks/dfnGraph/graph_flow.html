@@ -96,7 +96,6 @@
 <span class="c1"># pydfnworks modules</span>
 <span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph.intersection_graph</span> <span class="kn">import</span> <span class="n">create_intersection_graph</span>
 <span class="kn">from</span> <span class="nn">pydfnworks.dfnGraph.graph_attributes</span> <span class="kn">import</span> <span class="n">add_perm</span><span class="p">,</span> <span class="n">add_area</span><span class="p">,</span> <span class="n">add_weight</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing</span> <span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
 
 
 <span class="k">def</span> <span class="nf">get_laplacian_sparse_mat</span><span class="p">(</span><span class="n">G</span><span class="p">,</span>
@@ -131,16 +130,11 @@
 <span class="sd">            Adjacency matrix of graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># A = nx.to_scipy_sparse_matrix(G,</span>
-    <span class="c1">#                               nodelist=nodelist,</span>
-    <span class="c1">#                               weight=weight,</span>
-    <span class="c1">#                               dtype=dtype,</span>
-    <span class="c1">#                               format=format)</span>
     <span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_scipy_sparse_array</span><span class="p">(</span><span class="n">G</span><span class="p">,</span>
-                                <span class="n">nodelist</span><span class="o">=</span><span class="n">nodelist</span><span class="p">,</span>
-                                <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
-                                <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-                                <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+                                  <span class="n">nodelist</span><span class="o">=</span><span class="n">nodelist</span><span class="p">,</span>
+                                  <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+                                  <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+                                  <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
 
     <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>

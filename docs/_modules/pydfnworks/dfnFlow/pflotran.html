@@ -103,7 +103,7 @@
 
 <div class="viewcode-block" id="lagrit2pflotran">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.lagrit2pflotran">[docs]</a>
-<span class="k">def</span> <span class="nf">lagrit2pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">lagrit2pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;  Takes output from LaGriT and processes it for use in PFLOTRAN.</span>
 <span class="sd">    Calls the function write_perms_and_correct_volumes_areas() and zone2ex</span>
 <span class="sd">   </span>
@@ -142,7 +142,11 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">write_perms_and_correct_volumes_areas</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">zone2ex</span><span class="p">(</span><span class="n">zone_file</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">boundary_cell_area</span><span class="p">:</span>
+        <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> 
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">zone2ex</span><span class="p">(</span><span class="n">zone_file</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="n">boundary_cell_area</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dump_h5_files</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conversion of files for PFLOTRAN complete&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
@@ -207,8 +211,7 @@
 
     <span class="c1"># loop through zone files</span>
     <span class="k">if</span> <span class="n">zone_file</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-        <span class="n">zone_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pboundary_front_n.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;pboundary_back_s.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;pboundary_left_w.zone&#39;</span><span class="p">,</span> \
-                        <span class="s1">&#39;pboundary_right_e.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;pboundary_top.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;pboundary_bottom.zone&#39;</span><span class="p">]</span>
+        <span class="n">zone_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;boundary_front_n.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;boundary_back_s.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;boundary_left_w.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;boundary_right_e.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;boundary_top.zone&#39;</span><span class="p">,</span> <span class="s1">&#39;boundary_bottom.zone&#39;</span><span class="p">]</span>
         <span class="n">face_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;south&#39;</span><span class="p">,</span> <span class="s1">&#39;west&#39;</span><span class="p">,</span> <span class="s1">&#39;east&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">zone_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
@@ -314,23 +317,23 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Correcting UGE file: Starting&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Writing Perms and Correct Volume Areas&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: inp file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error.: inp file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: uge file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. uge file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: perm file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. perm file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 

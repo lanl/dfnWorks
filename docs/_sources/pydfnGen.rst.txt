@@ -155,25 +155,25 @@ Meshing - LaGriT
 
 Primary DFN meshing driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn
+.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn
     :members: mesh_network
 
 
 Meshing helper methods
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn_helper
+.. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper
     :members: inp2gmv, inp2vtk_python, create_mesh_links, run_lagrit_script
 
 .. automodule:: pydfnworks.dfnGen.meshing.add_attribute_to_mesh
     :members: add_variable_to_mesh
 
 
+
 UDFM 
 --------
 
-
-Creating an upscaled mesh of the DFN
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Creating an upscaled mesh of the DFN (UDFM)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.meshing.udfm.map2continuum
     :members: map_to_continuum
 
@@ -182,5 +182,23 @@ Creating an upscaled mesh of the DFN
 
 .. automodule:: pydfnworks.dfnGen.meshing.udfm.false_connections
     :members: check_false_connections
+
+Map-DFN upscaling  
+--------------------------
+.. automodule:: pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm
+    :members: mapdfn_ecpm
+
+DFM 
+--------
+
+Creating a conforming DFM mesh DFN
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: pydfnworks.dfnGen.meshing.dfm
+    :members:  mesh_dfm
+
+
+
+
+
 
 

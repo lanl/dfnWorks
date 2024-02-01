@@ -24,14 +24,11 @@ To run a workflow using the dfnWorks suite, the pydfnworks package is
 highly recommended. pydfnworks calls various tools in the dfnWorks suite with 
 the aim to provide a seamless workflow for scientific applications of dfnWorks.
 
-
 Obtaining dfnWorks
 ---------------------------
-dfnWorks can be downloaded from https://hub.docker.com/r/ees16/dfnworks 
-
 dfnWorks can be downloaded from https://github.com/lanl/dfnWorks/
 
-v1.0 can be downloaded from https://github.com/dfnWorks/dfnWorks-Version1.0  
+A docker container of dfnWorks can be downloaded from https://hub.docker.com/r/ees16/dfnworks 
 
 
 Citing dfnWorks
@@ -60,6 +57,16 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 
 Versions
 -------------------
+
+v2.8 - Current 
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- New Meshing Using Poisson Disc Sampling (Requires LaGriT v3.3)
+- Conforming Discrete Fracture Matrix Meshing 
+- ECPM module using MAP DFN
+- Additional bug fixes
+- New dfnGraph model capabilities
+- TDRW matrix diffusion with finite matrix-block size 
 
 v2.7
 ^^^^^^^^^^^^^^^^^^^^^^^^
