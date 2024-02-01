@@ -111,7 +111,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dfm">DFM</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.dfm">Creating a conforming DFM mesh DFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">Creating a conforming DFM mesh DFN</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm"><code class="docutils literal notranslate"><span class="pre">mesh_dfm()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -593,15 +596,17 @@ to account for uncertainty and variability between fractures of the same size. T
 <dl class="py function" id="module-mesh_dfn.py">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network">
 <span class="sig-name descname"><span class="pre">mesh_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_resolution_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">well</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn.html#mesh_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network" title="Link to this definition"></a></dt>
-<dd><p>Mesh fracture network using LaGriT</p>
+<dd><blockquote>
+<div><p>Mesh fracture network using LaGriT</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
 <li><p><strong>uniform_mesh</strong> (<em>bool</em>) – toggle for uniform or variable mesh. Default : False</p></li>
-<li><p><strong>min_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist x h</p></li>
-<li><p><strong>max_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution max_resolution x h. This value is the factor of h, distance = max_dist x h</p></li>
-<li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolultion (max_resolution x h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
+<li><p><strong>min_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h</p></li>
+<li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolultion (max_resolution <a href="#id1"><span class="problematic" id="id2">*</span></a>h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
 <li><p><strong>cleanup</strong> (<em>bool</em>) – toggle to clean up directory (remove meshing files after a run). Default : True</p></li>
 <li><p><strong>strict</strong> (<em>bool</em>) – Toggle if a few mesh errors are acceptable. default is true</p></li>
 <li><p><strong>quiet</strong> (<em>bool</em>) – Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen</p></li>
@@ -863,8 +868,28 @@ Sandia National Laboratories</p>
 </section>
 <section id="dfm">
 <h2>DFM<a class="headerlink" href="#dfm" title="Link to this heading"></a></h2>
-<section id="module-pydfnworks.dfnGen.meshing.dfm">
-<span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm" title="Link to this heading"></a></h3>
+<section id="module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">
+<span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm" title="Link to this heading"></a></h3>
+<dl class="py function" id="module-mesh_dfm.py">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm">
+<span class="sig-name descname"><span class="pre">mesh_dfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfm_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/dfm/mesh_dfm.html#mesh_dfm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm" title="Link to this definition"></a></dt>
+<dd><p>” Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirname</strong> (<em>string</em>) – name of working directory. Default : dfm_mesh</p></li>
+<li><p><strong>allowed_percentage</strong> (<em>float</em>) – Percentage of the mesh allowed to be missing and still continue</p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – Clean up working directory. If true dep files are moved into subdirectories</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The final mesh is output in exodus format. This requires that LaGriT is built against exodus.</p>
+</dd></dl>
+
 </section>
 </section>
 </section>

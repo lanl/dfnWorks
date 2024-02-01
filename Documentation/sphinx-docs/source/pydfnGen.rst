@@ -193,12 +193,8 @@ DFM
 
 Creating a conforming DFM mesh DFN
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: pydfnworks.dfnGen.meshing.dfm
+.. automodule:: pydfnworks.dfnGen.meshing.dfm.mesh_dfm
     :members:  mesh_dfm
-
-
-
-
 
 
 
