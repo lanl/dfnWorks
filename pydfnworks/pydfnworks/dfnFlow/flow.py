@@ -120,10 +120,10 @@ def create_dfn_flow_links(self, path='../'):
     files = [
         'full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat', 'full_mesh.stor', 'full_mesh_material.zone',
-        'full_mesh.fehmn', 'allboundaries.zone', 'pboundary_bottom.zone',
-        'pboundary_top.zone', 'pboundary_back_s.zone',
-        'pboundary_front_n.zone', 'pboundary_left_w.zone',
-        'pboundary_right_e.zone', 'perm.dat', 'aperture.dat', 'params.txt'
+        'full_mesh.fehmn', 'allboundaries.zone', 'boundary_bottom.zone',
+        'boundary_top.zone', 'boundary_back_s.zone',
+        'boundary_front_n.zone', 'boundary_left_w.zone',
+        'boundary_right_e.zone', 'perm.dat', 'aperture.dat', 'params.txt'
     ]
     for f in files:
         try:

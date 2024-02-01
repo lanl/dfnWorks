@@ -32,7 +32,7 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
     output += dfnGenExtension;
-    std::cout << output << '\n';  
+    std::cout << output << '\n';
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";
     // std::string aperture = output + "/aperture.dat";
@@ -58,6 +58,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     writeRadiiFile(finalFractures, acceptedPoly, output);
     // Write rejection stats file
     writeRejectionStats(pstats, output);
+    // write out userRejetedFracture information
+    writeUserRejectedFractureInformation(pstats, output);
     // Write families to output Files
     writeShapeFams(shapeFamilies, output);
     // Write fracture translations file
@@ -931,6 +933,24 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     file.close();
 }
 
+/* writeRejectionStats() **********************************************************************/
+/*! Write rejections.dat, rejection statistics
+    Arg 1: Stats structure of program statistics
+    Arg 2: Path to output folder */
+void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
+    std::cout << "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
+    std::string fileName = output + "/userFractureRejections.dat";
+    std::ofstream file;
+    file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
+    checkIfOpen(file, fileName);
+    file << "Fracture id,User Fracture Type\n";
+    
+    for(unsigned int i = 0; i < pstats.rejectedUserFracture.size(); i++) {
+        file << pstats.rejectedUserFracture[i].id << "," << pstats.rejectedUserFracture[i].userFractureType << "\n";
+    }
+    
+    file.close();
+}
 
 /* writeShapeFams() ***************************************************************************/
 /*! Writes families.dat, Shape families definition file

@@ -57,6 +57,7 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
     
     for (unsigned int i = 0; i < nPolygonByCoord; i++) {
         Poly newPoly;
+        RejectedUserFracture rejectedUserFracture;
         // file >> familyNum;
         newPoly.familyNum = -3;
         file >> nPolyNodes;
@@ -125,6 +126,9 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
                 std::cout << newPoly.vertices[idx] << " " << newPoly.vertices[idx + 1] << " " << newPoly.vertices[idx + 2] << "\n";
             }
             
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -3;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
             delete[] newPoly.vertices;
             continue; // Go to next poly (go to next iteration of for loop)
         }
@@ -149,6 +153,9 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
             pstats.rejectedPolyCount++;
             std::cout << "\nRejected User Defined Polygon Fracture (Defined By Coordinates) " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -3;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
         }
     }
     

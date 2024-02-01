@@ -1,6 +1,8 @@
 # README
 
-For information on how to get dfnWorks up and running, please see the document dfnWorks.pdf, in this directory.
+For information on how to get dfnWorks up and running, please see the document dfnWorks.pdf, in this directory. Documentation is also available [here](https://lanl.github.io/dfnWorks/intro.html)
+
+    https://lanl.github.io/dfnWorks/intro.html
 
 ## Native build from github repository
 
@@ -10,25 +12,18 @@ machine. To setup dfnWorks using Docker instead, see the next section.
 ### Clone the dnfWorks repository
 
     $ git clone git@github.com:lanl/dfnWorks.git
-
-### Fix paths in test directory 
-
-Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script ``fix_paths.py``:
-
-    $ cd dfnWorks/pydfnworks/bin/
-    $ python fix_paths.py 
-
-Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths 
+    
+### Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths 
 
 **Before executing dfnWorks,** the following paths must be set:
 
 - dfnWorks_PATH: the dfnWorks repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
 - PFLOTRAN_EXE:  Path to PFLOTRAN executable 
-- PYTHON_EXE:  Path to python executable 
-- LAGRIT_EXE:  Path to LaGriT executable 
+- LAGRIT_EXE:  Path to LaGriT executable
+- FEHM_EXE: Path to FEHM executable
 
-    $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
+    $ vi dfnWorks/pydfnworks/pydfnworks/general/paths.py
 
 For example:
     
@@ -37,15 +32,15 @@ For example:
 Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
 
     {
-        "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
+        "dfnworks_PATH": "<your-home-directory>/src/dfnWorks/",
         "PETSC_DIR": "<your-home-directory>/src/petsc",
         "PETSC_ARCH": "arch-darwin-c-debug",
         "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
-        "PYTHON_EXE": "<your-home-directory>/anaconda3/bin/python",
         "LAGRIT_EXE": "<your-home-directory>/bin/lagrit",
         "FEHM_EXE": "<your-home-directory>//src/xfehm_v3.3.1"
     }
 
+Note that you need to set the dfnworks_path, but the others are optional if you don't want to run those executables
 
 ## Installing pydfnworks
 
@@ -54,11 +49,16 @@ Go up into the pydfnworks sub-directory:
     $ cd dfnWorks/pydfnworks/
 
 Compile The pydfnWorks Package & Install on Your Local Machine:
-    
-    $ python setup.py bdist_wheel
-    $ python -m pip install dist/pydfnworks-<CURRENT VERSION NUMBER>-py3-none-any.whl
+   
+    $ pip install -r requirements.txt
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+or  
+
+    $ pip install -r requirements.txt --user
+
+if you don't have admin privileges.
+
+**Note that the python version needs to be consistent with the current release**
 
 ## Installation Requirements for Native Build
 Tools that you will need to run the dfnWorks work flow are described in 

@@ -1,0 +1,250 @@
+#================================================
+
+SIMULATION
+  SIMULATION_TYPE SUBSURFACE
+  PROCESS_MODELS
+    SUBSURFACE_FLOW flow
+      MODE RICHARDS
+    /
+    SUBSURFACE_TRANSPORT transport
+      MODE GIRT
+      OPTIONS
+        SKIP_RESTART
+      /
+    /
+  /
+  RESTART
+    FILENAME cpm_pflotran-restart.h5
+    RESET_TO_TIME_ZERO
+  END
+END
+
+SUBSURFACE
+
+#=========================== discretization ===================================
+GRID
+  TYPE structured
+  NXYZ 50 50 50
+  DXYZ
+    20.
+    20.
+    20.
+  /
+  GRAVITY 0.d0 0.d0 0.d0
+END
+
+#=========================== fluid properties =================================
+FLUID_PROPERTY
+  DIFFUSION_COEFFICIENT 1.d-9
+END
+
+#=========================== datasets==========================================
+DATASET permX
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityX
+END
+
+DATASET permY
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityY
+END
+
+DATASET permZ
+  FILENAME anisotropic_k.h5
+  HDF5_DATASET_NAME PermeabilityZ
+END
+
+DATASET Tortuosity
+  FILENAME tortuosity.h5
+  HDF5_DATASET_NAME Tortuosity
+END
+
+DATASET Porosity
+  FILENAME porosity.h5
+  HDF5_DATASET_NAME Porosity
+END
+
+#=========================== chemistry ========================================
+CHEMISTRY
+  PRIMARY_SPECIES
+    Tracer
+  /
+  OUTPUT
+    ALL
+    TOTAL
+  /
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY soil1
+  ID 1
+  POROSITY DATASET Porosity
+  TORTUOSITY DATASET Tortuosity 
+  CHARACTERISTIC_CURVES default
+  PERMEABILITY
+    ANISOTROPIC
+    DATASET perm
+  /
+END
+
+#=========================== characteristic curves ============================
+CHARACTERISTIC_CURVES default
+  SATURATION_FUNCTION VAN_GENUCHTEN
+    M 0.5d0
+    ALPHA  1.d-4
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+    MAX_CAPILLARY_PRESSURE 1.d8
+  /
+  PERMEABILITY_FUNCTION MUALEM_VG_LIQ
+    M 0.5d0
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+  /
+END
+
+#=========================== output options ===================================
+OUTPUT
+  SNAPSHOT_FILE
+    PERIODIC TIME 0.25 y between 0. y and 1. y
+    PERIODIC TIME 0.5 y between 1. y and 5. y
+    PERIODIC TIME 1. y between 5. y and 10. y
+    PERIODIC TIME 5. y between 10. y and 30. y
+    PERIODIC TIME 10. y between 30. y and 50. y
+  /
+  FORMAT HDF5
+  VARIABLES
+    MATERIAL_ID_KLUDGE_FOR_VISIT
+    PERMEABILITY
+    POROSITY
+    LIQUID_PRESSURE
+  /
+  MASS_BALANCE_FILE
+    PERIODIC TIMESTEP 1
+  /
+END
+
+#=========================== times ============================================
+TIME
+  INITIAL_TIMESTEP_SIZE  1.d-8 y
+  FINAL_TIME 50.d0 y
+  MINIMUM_TIMESTEP_SIZE  1.d-8 y
+  MAXIMUM_TIMESTEP_SIZE 10.d0 y
+END
+
+#=========================== regions ==========================================
+REGION All
+  COORDINATES
+    -1.d20 -1.d20 -1.d20
+    1.d20 1.d20 1.d20
+  /
+END 
+
+REGION inflow
+  FACE west
+  COORDINATES
+    0.0  0.0   0.0
+    0.0  1000. 1000.
+  /
+END
+
+REGION outflow
+  FACE east
+  COORDINATES
+    1000. 0.0   0.0
+    1000. 1000. 1000.
+  /
+END
+#=========================== flow conditions ==================================
+
+FLOW_CONDITION initial
+  TYPE
+     LIQUID_PRESSURE DIRICHLET
+  /
+  LIQUID_PRESSURE 1.d6
+END
+
+FLOW_CONDITION outflow 
+  TYPE 
+     LIQUID_PRESSURE DIRICHLET
+  /
+  LIQUID_PRESSURE 1.d6
+END
+
+FLOW_CONDITION inflow
+  TYPE
+    LIQUID_PRESSURE DIRICHLET
+  /
+  LIQUID_PRESSURE 1.001d6
+END
+
+TRANSPORT_CONDITION initial
+  TYPE DIRICHLET
+  CONSTRAINT_LIST
+    0.d0 initial
+  /
+END
+
+TRANSPORT_CONDITION tracer
+  TYPE DIRICHLET
+  CONSTRAINT_LIST
+    0.d0 tracer
+  /
+END
+
+TRANSPORT_CONDITION inflow
+  TYPE ZERO_GRADIENT
+  CONSTRAINT_LIST
+    0.d0 initial
+  /
+END
+
+TRANSPORT_CONDITION outflow
+  TYPE ZERO_GRADIENT
+  CONSTRAINT_LIST
+    0.d0 initial
+  /
+END
+
+#=========================== constraints ==================================
+CONSTRAINT initial
+  CONCENTRATIONS
+    Tracer 1.d-20 T
+  /
+END
+
+CONSTRAINT tracer
+  CONCENTRATIONS
+    Tracer 1.d0 T
+  /
+END
+#=========================== condition couplers ===============================
+# initial condition
+INITIAL_CONDITION initial
+  FLOW_CONDITION initial
+  TRANSPORT_CONDITION initial
+  REGION All
+END
+
+INITIAL_CONDITION inflow
+  FLOW_CONDITION initial
+  TRANSPORT_CONDITION tracer
+  REGION inflow
+END
+
+BOUNDARY_CONDITION INFLOW
+  FLOW_CONDITION inflow
+  TRANSPORT_CONDITION inflow
+  REGION inflow
+END
+
+BOUNDARY_CONDITION OUTFLOW
+  FLOW_CONDITION outflow
+  TRANSPORT_CONDITION outflow
+  REGION outflow
+END
+
+#=========================== stratigraphy couplers ============================
+STRATA 
+  FILE materials.h5
+END
+
+END_SUBSURFACE

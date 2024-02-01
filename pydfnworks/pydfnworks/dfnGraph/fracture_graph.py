@@ -4,8 +4,7 @@ import numpy as np
 from pydfnworks.dfnGraph.graph_attributes import add_perm
 
 
-def create_fracture_graph(inflow,
-                          outflow):
+def create_fracture_graph(inflow, outflow):
     """ Create a graph based on topology of network. Fractures
     are represented as nodes and if two fractures intersect 
     there is an edge between them in the graph. 
@@ -32,7 +31,8 @@ def create_fracture_graph(inflow,
     -----
     """
     topology_file = "dfnGen_output/connectivity.dat"
-    print("--> Loading Graph based on topology in dfnGen_flow/connectivity.dat")
+    print(
+        "--> Loading Graph based on topology in dfnGen_output/connectivity.dat")
     G = nx.Graph(representation="fracture")
     with open(topology_file, "r") as infile:
         for i, line in enumerate(infile):
@@ -42,8 +42,8 @@ def create_fracture_graph(inflow,
     ## Create Source and Target and add edges
     inflow_filename = inflow + ".dat"
     outflow_filename = outflow + ".dat"
-    inflow = np.genfromtxt("dfnGen_output/"+inflow_filename).astype(int)
-    outflow = np.genfromtxt("dfnGen_output/"+outflow_filename).astype(int)
+    inflow = np.genfromtxt("dfnGen_output/" + inflow_filename).astype(int)
+    outflow = np.genfromtxt("dfnGen_output/" + outflow_filename).astype(int)
 
     try:
         if len(inflow) > 1:

@@ -160,16 +160,7 @@ def parse_params_file(self, quiet=False):
 
     Returns
     -------
-        num_poly: int
-            Number of Polygons
-        h: float 
-            Meshing length scale h
-        dudded_points: int 
-            Expected number of dudded points in Filter (LaGriT)
-        visual_mode : bool
-            If True, reduced_mesh.inp is created (not suitable for flow and transport), if False, full_mesh.inp is created  
-        domain: dict
-             x,y,z domain sizes 
+        None
     
     Notes
     -----
@@ -177,6 +168,7 @@ def parse_params_file(self, quiet=False):
     """
     if not quiet:
         print("\n--> Parsing  params.txt")
+
     fparams = open('params.txt', 'r')
     # Line 1 is the number of polygons
     self.num_frac = int(fparams.readline())
@@ -197,6 +189,8 @@ def parse_params_file(self, quiet=False):
 
     #Line 5 is the x domain length
     self.domain['z'] = (float(fparams.readline()))
+    self.r_fram = self.params['rFram']['value']
+    
     fparams.close()
 
     if not quiet:
@@ -208,6 +202,7 @@ def parse_params_file(self, quiet=False):
         else:
             self.visual_mode = False
             print("--> Visual mode is off")
+
         print(f"--> Expected Number of dudded points: {self.dudded_points}")
         print(f"--> X Domain Size {self.domain['x']} m")
         print(f"--> Y Domain Size {self.domain['y']} m")
@@ -249,6 +244,9 @@ def gather_dfn_gen_output(self):
     ## populate radius array
     self.radii = np.zeros((self.num_frac, 3))
     # First Column is x, second is y, 3rd is max
+    if self.num_frac == 1:
+        data = np.array([data])
+    
     self.radii[:, :2] = data[:, :2]
     for i in range(self.num_frac):
         self.radii[i, 2] = max(self.radii[i, 0], self.radii[i, 1])
@@ -269,7 +267,7 @@ def gather_dfn_gen_output(self):
                 line = line.split()
                 centers.append(
                     [float(line[0]),
-                     float(line[0]),
+                     float(line[1]),
                      float(line[2])])
     self.centers = np.array(centers)
 
@@ -322,11 +320,10 @@ def read_boundaries(file_path):
     None
     '''
 
-    try:
+    if os.path.isfile(file_path) and os.path.getsize(file_path) > 0:
         data = np.genfromtxt(file_path)
-    except IOError:
+    else:
         data = np.array([])
-
 
     try:
         array_length = len(data)
@@ -377,60 +374,66 @@ def assign_hydraulic_properties(self):
     if self.params['insertUserRectanglesFirst']['value'] == 0:
         print('--> Inserting User Ellipse Hydraulic Params First')
         for i in range(len(self.user_ell_params)):
-            print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_ell_params[i]['hy_prop_type']
-            value = self.user_ell_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_ell_params[i]['nPolygons']):
+                print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_ell_params[i]['hy_prop_type']
+                value = self.user_ell_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
         for i in range(len(self.user_rect_params)):
-            print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_rect_params[i]['hy_prop_type']
-            value = self.user_rect_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_rect_params[i]['nPolygons']):
+                print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_rect_params[i]['hy_prop_type']
+                value = self.user_rect_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
         for i in range(len(self.user_poly_params)):
-            print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_poly_params[i]['hy_prop_type']
-            value = self.user_poly_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_poly_params[i]['nPolygons']):
+                print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_poly_params[i]['hy_prop_type']
+                value = self.user_poly_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
     else:
         print('--> Inserting User Rectangles Hydraulic Params First')
         for i in range(len(self.user_rect_params)):
-            print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_rect_params[i]['hy_prop_type']
-            value = self.user_rect_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_rect_params[i]['nPolygons']):
+                print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_rect_params[i]['hy_prop_type']
+                value = self.user_rect_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
         for i in range(len(self.user_ell_params)):
-            print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_ell_params[i]['hy_prop_type']
-            value = self.user_ell_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_ell_params[i]['nPolygons']):
+                print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_ell_params[i]['hy_prop_type']
+                value = self.user_ell_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
         for i in range(len(self.user_poly_params)):
-            print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
-            hy_prop_type = self.user_poly_params[i]['hy_prop_type']
-            value = self.user_poly_params[i][hy_prop_type]
-            print(f'{hy_prop_type} = {value}')
-            self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
+            for j in range(self.user_poly_params[i]['nPolygons']):
+                print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+                hy_prop_type = self.user_poly_params[i]['hy_prop_type']
+                value = self.user_poly_params[i][hy_prop_type][j]
+                print(f'{hy_prop_type} = {value}')
+                self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
-            fracture_num += 1
+                fracture_num += 1
 
     # self.dump_hydraulic_values()
     print("--> Assign hydraulic properties: Complete ")
@@ -456,6 +459,10 @@ def grab_polygon_data(self):
     self.polygons = {}
 
     polygon_data = np.genfromtxt('dfnGen_output/polygons.dat', dtype = str, delimiter = 'dummy', skip_header = 1) #weird format, so read data in as strings
+    
+    if self.num_frac == 1:
+        polygon_data = np.array([polygon_data])
+
 
     for i in range(len(polygon_data)):
         poly_dat = polygon_data[i] #read in data for one polygon
@@ -470,5 +477,5 @@ def grab_polygon_data(self):
             poly.append(poly_dat[3*j+1:3*j+4])
         poly = np.array(poly)
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
-    print('Data from polygons.dat stored on class in self.polygons')
+    print('--> Data from polygons.dat stored on class in self.polygons\n')
 

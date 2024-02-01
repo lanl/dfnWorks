@@ -1,4 +1,4 @@
-def load_parameters():
+def load_parameters(self):
     """ Load dictionary of DFNGen parameters onto object
 
     Parameters
@@ -223,9 +223,21 @@ def load_parameters():
             'list':
             False,
             'value':
-            False,
+            None,
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'framOn': {
+            'type': bool,
+            'list': False,
+            'value': None,
+            'description': 'Toggle for FRAM on/off. '
+        },
+        'rFram': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'Toggle for rFRAM on/off. '
         },
         'radiiListIncrease': {
             'type':

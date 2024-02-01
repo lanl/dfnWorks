@@ -9,7 +9,7 @@ from pydfnworks import *
 import os
 
 src_path = os.getcwd()
-jobname =  f"{src_path}/output"
+jobname = f"{src_path}/output"
 dfnFlow_file = f"{src_path}/dfn_explicit.in"
 dfnTrans_file = f"{src_path}/PTDFN_control.dat"
 
@@ -20,7 +20,6 @@ DFN = DFNWORKS(jobname,
 
 DFN.params['domainSize']['value'] = [10, 10, 10]
 DFN.params['h']['value'] = 0.1
-DFN.params['rAngleOption']['value'] = 1
 DFN.params['orientationOption']['value'] = 1
 DFN.params['stopCondition']['value'] = 0
 DFN.params['nPoly']['value'] = 80
@@ -78,14 +77,14 @@ DFN.add_fracture_family(shape="rect",
                             "beta": 1
                         })
 
-
 DFN.make_working_directory(delete=True)
 DFN.print_domain_parameters()
 DFN.check_input()
 
 DFN.create_network()
 DFN.output_report()
-DFN.mesh_network()
+DFN.mesh_network(uniform_mesh=True)
+exit()
 
 DFN.dfn_flow()
 DFN.dfn_trans()

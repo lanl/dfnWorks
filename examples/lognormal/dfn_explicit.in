@@ -7,6 +7,9 @@ SIMULATION
   PROCESS_MODELS
     SUBSURFACE_FLOW flow
       MODE RICHARDS
+      OPTIONS
+        STEADY_STATE
+      /
     /
   /
 END
@@ -60,6 +63,7 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -71,7 +75,7 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d1 d 
+  INITIAL_TIMESTEP_SIZE  1.d-1 d
   FINAL_TIME 1.d2 d
   MAXIMUM_TIMESTEP_SIZE 10.d0 d
 END
@@ -87,11 +91,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_bottom.ex
+  FILE boundary_bottom.ex
 END
 
 REGION outflow
-  FILE pboundary_top.ex
+  FILE boundary_top.ex
 END
 
 #=========================== flow conditions ==================================

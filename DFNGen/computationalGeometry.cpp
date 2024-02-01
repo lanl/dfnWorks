@@ -658,20 +658,39 @@ int FRAM(IntPoints &intPts, unsigned int count, std::vector<IntPoints> &intPtsLi
             return -2;
         }
         
-        /******************* distance to edges *****************/
-        // Reject if intersection shirnks < 'shrinkLimit'
-        double shrinkLimit = 0.9 * magnitude(intPts.x1 - intPts.x2, intPts.y1 - intPts.y2, intPts.z1 - intPts.z2);
-        
-        if (checkCloseEdge(newPoly, intPts, shrinkLimit, pstats)) {
-            // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
-            pstats.rejectionReasons.closeToEdge++;
-            return -6;
-        }
-        
-        if (checkCloseEdge(poly2, intPts, shrinkLimit, pstats)) {
-            // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
-            pstats.rejectionReasons.closeToEdge++;
-            return -6;
+        if (rFram == false) {
+            /******************* distance to edges *****************/
+            // Reject if intersection shirnks < 'shrinkLimit'
+            double shrinkLimit = 0.9 * magnitude(intPts.x1 - intPts.x2, intPts.y1 - intPts.y2, intPts.z1 - intPts.z2);
+            
+            if (checkCloseEdge(newPoly, intPts, shrinkLimit, pstats)) {
+                // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
+                pstats.rejectionReasons.closeToEdge++;
+                return -6;
+            }
+            
+            if (checkCloseEdge(poly2, intPts, shrinkLimit, pstats)) {
+                // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
+                pstats.rejectionReasons.closeToEdge++;
+                return -6;
+            }
+            
+            /******* Intersection to Intersection Distance Checks ********/
+            // Check distance from new intersection to other intersections on
+            // poly2 (fracture newPoly is intersecting with)
+            
+            if (checkDistToOldIntersections(intPtsList, intPts, poly2, h)) {
+                pstats.rejectionReasons.interCloseToInter++;
+                return -5;
+            }
+            
+            // Check distance from new intersection to intersections already
+            // existing on newPoly
+            // Also checks for undetected triple points
+            if (checkDistToNewIntersections(tempIntPts, intPts, tempData, h)) {
+                pstats.rejectionReasons.interCloseToInter++;
+                return -5;
+            }
         }
         
         /*************** Triple Intersection Checks *************/
@@ -679,26 +698,9 @@ int FRAM(IntPoints &intPts, unsigned int count, std::vector<IntPoints> &intPtsLi
         // -14 <= rejCode <= -10 are for triple intersection rejections
         int rejCode = checkForTripleIntersections(intPts, count, intPtsList, newPoly, poly2, tempData, triplePoints);
         
-        if (rejCode != 0 ) {
+        if (rejCode != 0 && rFram == false) {
             pstats.rejectionReasons.triple++;
             return rejCode;
-        }
-        
-        /******* Intersection to Intersection Distance Checks ********/
-        // Check distance from new intersection to other intersections on
-        // poly2 (fracture newPoly is intersecting with)
-        
-        if (checkDistToOldIntersections(intPtsList, intPts, poly2, h)) {
-            pstats.rejectionReasons.interCloseToInter++;
-            return -5;
-        }
-        
-        // Check distance from new intersection to intersections already
-        // existing on newPoly
-        // Also checks for undetected triple points
-        if (checkDistToNewIntersections(tempIntPts, intPts, tempData, h)) {
-            pstats.rejectionReasons.interCloseToInter++;
-            return -5;
         }
         
         // Check if polys intersect on same plane

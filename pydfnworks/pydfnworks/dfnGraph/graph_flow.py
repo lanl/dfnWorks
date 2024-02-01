@@ -7,7 +7,6 @@ import h5py
 # pydfnworks modules
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
 
 
 def get_laplacian_sparse_mat(G,
@@ -42,7 +41,7 @@ def get_laplacian_sparse_mat(G,
             Adjacency matrix of graph
     """
 
-    A = nx.to_scipy_sparse_matrix(G,
+    A = nx.to_scipy_sparse_array(G,
                                   nodelist=nodelist,
                                   weight=weight,
                                   dtype=dtype,
@@ -71,8 +70,7 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
     """
 
     if G == None:
-        G = create_intersection_graph(
-            inflow, outflow)
+        G = create_intersection_graph(inflow, outflow)
 
         Gtilde = G.copy()
         # need to add aperture
@@ -82,8 +80,8 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
 
     else:
         Gtilde = G
-        add_perm(Gtilde)
-        add_area(Gtilde)
+        #add_perm(Gtilde)
+        #add_area(Gtilde)
         add_weight(Gtilde)
 
     for v in nx.nodes(Gtilde):
@@ -249,17 +247,14 @@ def compute_dQ(self, G):
         "--> Computing fracture intensity (p32) and flow channeling density indicator (dQ)"
     )
 
-    fracture_surface_area = 2 * np.genfromtxt("surface_area_Final.dat",
-                                              skip_header=1)
-    _, _, _, _, domain = mh.parse_params_file(quiet=True)
-    domain_volume = domain['x'] * domain['y'] * domain['z']
+    fracture_surface_area = 2*self.surface_area
+    domain_volume = self.domain['x'] * self.domain['y'] * self.domain['z']
 
-    num_frac = len(fracture_surface_area)
-    Qf = np.zeros(num_frac)
+    Qf = np.zeros(self.num_frac)
     ## convert to undirected
     H = G.to_undirected()
     ## walk through fractures
-    for curr_frac in range(1, num_frac + 1):
+    for curr_frac in range(1, self.num_frac + 1):
         # print(f"\nstarting on fracture {curr_frac}")
         # Gather nodes on current fracture
         current_nodes = []
@@ -288,11 +283,11 @@ def compute_dQ(self, G):
     dQ = (1.0 / domain_volume) * (top / bottom)
     print(f"--> P32: {p32:0.2e} [1/m]")
     print(f"--> dQ: {dQ:0.2e} [1/m]")
-    print(f"--> Active surrface percentage {100*dQ/p32:0.2f}")
+    print(f"--> Active surface percentage {100*dQ/p32:0.2f}")
     print(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
     print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     print("--> Complete \n")
-    return p32, dQ
+    return p32, dQ, Qf
 
 
 def dump_graph_flow_values(G):

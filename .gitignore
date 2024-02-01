@@ -10,11 +10,11 @@ pydfnworks/pydfnworks/only_gen_output.py
 pydfnworks/pydfnworks/paths.py
 
 # dfnWorks Executables
-ParticleTracking/DFNTrans
+DFNTrans/DFNTrans
 DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
 C_uge_correct/correct_uge
-C_uge_stor/correct_stor
+C_stor_correct/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
@@ -63,4 +63,4 @@ internal/Documentation/sphinx-docs/build/*
 *.nfs*
 *.swp
 
-
+examples/TPL/output_rfram/*

@@ -10,7 +10,7 @@ import sys
 import subprocess
 import shutil
 import numpy as np
-from pydfnworks.dfnGen.meshing import mesh_dfn_helper as mh
+from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 import time
 import multiprocessing as mp
 import pickle
@@ -69,7 +69,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     nz = self.domain['z'] / l + 1
 
     if nx * ny * nz > 1e8:
-        error = "ERROR: Number of elements > 1e8. Exiting"
+        error = "Error: Number of elements too large (> 1e8). Exiting"
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -87,7 +87,10 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
 
     ## gather points on polygons
     points = self.gather_points()
-    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self. normal_vectors,points)
+    if self.num_frac == 1:
+        self.normal_vectors = np.array([self.normal_vectors])
+
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points)
 
     #lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
     #              self.centers)
@@ -335,35 +338,35 @@ cmo / select / MOTET
 cmo / modatt / MOTET / itp / ioflag / l
 cmo / modatt / MOTET / isn / ioflag / l
 cmo / modatt / MOTET / icr / ioflag / l
-#
+# #
 
 define / ZONE / 1
-define / FOUT / pboundary_top
+define / FOUT / boundary_top
 pset / top / attribute / zic / 1 0 0 / gt / ZMAX
 pset / top / zone / FOUT / ascii / ZONE
 
 define / ZONE / 2
-define / FOUT / pboundary_bottom
+define / FOUT / boundary_bottom
 pset / bottom / attribute / zic / 1 0 0 / lt / ZMIN
 pset / bottom / zone / FOUT / ascii / ZONE
 
 define / ZONE / 3
-define / FOUT / pboundary_left_w
+define / FOUT / boundary_left_w
 pset / left_w / attribute / xic / 1 0 0 / lt / XMIN
 pset / left_w / zone / FOUT / ascii / ZONE
 
 define / ZONE / 4
-define / FOUT / pboundary_front_n
+define / FOUT / boundary_front_n
 pset / front_n / attribute / yic / 1 0 0 / gt / YMAX
 pset / front_n / zone / FOUT / ascii / ZONE
 
 define / ZONE / 5
-define / FOUT / pboundary_right_e
+define / FOUT / boundary_right_e
 pset / right_e / attribute / xic / 1 0 0 / gt / XMAX
 pset / right_e / zone / FOUT / ascii / ZONE
 
 define / ZONE / 6
-define / FOUT / pboundary_back_s
+define / FOUT / boundary_back_s
 pset / back_s / attribute / yic / 1 0 0 / lt / YMIN
 pset / back_s / zone / FOUT / ascii / ZONE
 

@@ -139,7 +139,7 @@ def convert(x, source, target):
         perm = (b**2) / 12
         return perm
     else:
-        error = "Error in conversion! Unknown name provided in convert. Either '{0}' or '{1}' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
+        error = "Error in conversion. Unknown name provided in convert. Either '{0}' or '{1}' is not known\nAcceptable names are aperture, permeability, and transmissivity\nExiting.\n".format(
             source, target)
         sys.stderr.write(error)
         sys.exit(1)
@@ -235,28 +235,24 @@ def correlated(params, variable, radii):
         Values are generated for the variable provided. The two remaining variables are derived using those values
     """
     print(
-        '--> Creating Perfectly Correlated {0} values based on fracture radius.'
-        .format(variable))
+        f'--> Creating Perfectly Correlated {variable} values based on fracture radius.'
+    )
     units = get_units(variable)
+
     if variable == "aperture":
-        print("b ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                             params["beta"], units))
+        print(f"\n b = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
     if variable == "permeability":
-        print("k ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                             params["beta"], units))
+        print(f"\n k = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
     if variable == "transmissivity":
-        print("T ={1:0.2e}*r^{2} {3}".format(variable, params["alpha"],
-                                             params["beta"], units))
+        print(f"\n T = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
 
     if variable == "aperture":
         b = params["alpha"] * radii**params["beta"]
-
         perm = convert(b, variable, "permeability")
         T = convert(b, variable, "transmissivity")
 
     elif variable == "permeability":
         perm = params["alpha"] * radii**params["beta"]
-
         b = convert(perm, variable, "aperture")
         T = convert(perm, variable, "transmissivity")
 
@@ -395,19 +391,20 @@ def dump_aperture(self, filename, format=None):
 
     if format is None:
         np.savetxt(filename, self.aperture)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
             fp.write('aperture\n')
             for i, b in enumerate(self.aperture):
                 fp.write(f'-{i+7:d} 0 0 {b:0.5e}\n')
-
+    else:
+        print("--> Warning. Unknown format requested.\nOptions are None and fehm/FEHM (case senstive)")
 
 def dump_perm(self, filename, format=None):
 
     if format is None:
         np.savetxt(filename, self.perm)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         # write perm file
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
@@ -420,10 +417,10 @@ def dump_perm(self, filename, format=None):
 def dump_transmissivity(self, filename, format=None):
     if format is None:
         np.savetxt(filename, self.transmissivity)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
-            fp.write('aperture\n')
+            fp.write('transmissivity\n')
             for i, trans in enumerate(self.transmissivity):
                 fp.write(f'-{i:d} 0 0 {trans:0.5e}\n')
 
@@ -443,7 +440,11 @@ def dump_fracture_info(self, filename):
     print("--> Complete")
 
 
-def dump_hydraulic_values(self, prefix=None, format = None,):
+def dump_hydraulic_values(
+    self,
+    prefix=None,
+    format=None,
+):
     """ Writes variable information to files.  
     
     Parameters

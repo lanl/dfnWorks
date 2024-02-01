@@ -8,9 +8,9 @@
 from pydfnworks import *
 import os
 
-src_path = os.getcwd() 
+src_path = os.getcwd()
 jobname = src_path + "/output"
-dfnFlow_file = src_path+ '/dfn_explicit.in'
+dfnFlow_file = src_path + '/dfn_explicit.in'
 dfnTrans_file = src_path + '/PTDFN_control.dat'
 
 DFN = DFNWORKS(jobname,
@@ -22,8 +22,7 @@ DFN.params['domainSize']['value'] = [10, 10, 10]
 DFN.params['h']['value'] = 0.1
 DFN.params['stopCondition']['value'] = 0
 DFN.params['nPoly']['value'] = 40
-DFN.params['rAngleOption']['value'] = 1
-DFN.params['boundaryFaces']['value'] = [0,0,1,1,0,0]
+DFN.params['boundaryFaces']['value'] = [0, 0, 1, 1, 0, 0]
 
 DFN.add_fracture_family(shape="rect",
                         distribution="exp",

@@ -38,7 +38,7 @@ def create_graph(self, graph_type, inflow, outflow):
     -----
 
 """
-    ## write hydraulic properties to file. 
+    ## write hydraulic properties to file.
     self.dump_hydraulic_values()
 
     if graph_type == "fracture":

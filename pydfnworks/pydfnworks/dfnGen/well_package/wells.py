@@ -2,8 +2,7 @@ import os
 import numpy as np
 import shutil
 
-from pydfnworks import *
-
+from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 
 def tag_well_in_mesh(self, wells):
     """ Identifies nodes in a DFN for nodes the intersect a well with radius r [m]\n
@@ -48,10 +47,10 @@ def tag_well_in_mesh(self, wells):
 
         # 1) convert well into polyline AVS if it doesn't exist
         if not os.path.isfile(f"well_{well['name']}_line.inp"):
-            convert_well_to_polyline_avs(well, self.h)
+            convert_well_to_polyline_avs(well)
 
         # 2) expand the polyline of the well into a volume with radius r
-        expand_well(well)
+        self.expand_well(well)
 
         # 3) find the nodes in the well that corresponds / intersect the well
         get_well_zone(well, self.inp_file)
@@ -73,10 +72,10 @@ def tag_well_in_mesh(self, wells):
 
             # 1) convert well into polyline AVS if it doesn't exist
             if not os.path.isfile(f"well_{well['name']}_line.inp"):
-                convert_well_to_polyline_avs(well, self.h)
+                convert_well_to_polyline_avs(well)
 
             # 2) expand the polyline of the well into a volume with radius r
-            expand_well(well)
+            self.expand_well(well)
 
             # 3) find the nodes in the well that corresponds / intersect the well
             get_well_zone(well, self.inp_file)
@@ -92,7 +91,7 @@ def tag_well_in_mesh(self, wells):
             print(f"--> Well creation for {well['name']} complete\n\n")
 
 
-def convert_well_to_polyline_avs(well, h = None):
+def convert_well_to_polyline_avs(well, radius):
     """  Identifies converts well coordinates into a polyline avs file. Distance between 
     point on the polyline are h/2 apart. Polyline is written into "well_{well['name']}_line.inp"
 
@@ -113,6 +112,7 @@ def convert_well_to_polyline_avs(well, h = None):
 
             well["r"] : float 
                 radius of the well
+                
         h : float
             h parameter for meshing. 
 
@@ -130,6 +130,7 @@ def convert_well_to_polyline_avs(well, h = None):
 
 
     # read in well coordinates
+    print(well['filename'])
     pts = np.genfromtxt(f"{well['filename']}")
     n, _ = np.shape(pts)
 
@@ -140,12 +141,12 @@ def convert_well_to_polyline_avs(well, h = None):
 
     for i in range(1, n):
         distance = np.linalg.norm(pts[i, :] - pts[i - 1, :])
-        if distance < h:
+        if distance < radius:
             new_pts.append(pts[i, :])
             new_idx += 1
         else:
             # discretized to less than h
-            m = int(np.ceil(distance / h))
+            m = int(np.ceil(distance / radius))
             dx = (pts[i, 0] - pts[i - 1, 0]) / m
             dy = (pts[i, 1] - pts[i - 1, 1]) / m
             dz = (pts[i, 2] - pts[i - 1, 2]) / m
@@ -181,7 +182,7 @@ def convert_well_to_polyline_avs(well, h = None):
     print(f"--> Writing polyline into avs file : {avs_filename} : Complete")
 
 
-def expand_well(well):
+def expand_well(self,well):
     """  Expands the polyline defining the well into a volume with radius r [m]. 
     A sphere of points around each point is created and then connected.
     Volume is written into the avs file well_{well["name"]}_volume.inp
@@ -583,17 +584,17 @@ def find_well_intersection_points(self, wells):
 
     # if using a single well
     if type(wells) is dict:
-        run_find_well_intersection_points(wells, self.h)
+        self.run_find_well_intersection_points(wells)
     # using a list of wells, loop over them.
     elif type(wells) is list:
         for well in wells:
-            run_find_well_intersection_points(well, self.h)
+            self.run_find_well_intersection_points(well)
 
     # Run cross check
     cross_check_pts(self.h)
 
 
-def run_find_well_intersection_points(well, h):
+def run_find_well_intersection_points(self, well):
     """ Runs the workflow for finding the point of intersection of the DFN with the well. 
 
     Parameters    
@@ -631,12 +632,12 @@ def run_find_well_intersection_points(well, h):
 
     # 1) convert well into polyline AVS
     if not os.path.isfile(f"well_{well['name']}_line.inp"):
-        convert_well_to_polyline_avs(well, h)
+        convert_well_to_polyline_avs(well, self.h)
 
     # run LaGriT scripts to dump information
     find_segments(well)
 
-    well_point_of_intersection(well)
+    self.well_point_of_intersection(well)
 
 
 def find_segments(well):
@@ -793,7 +794,7 @@ finish
                          quiet=False)
 
 
-def well_point_of_intersection(well):
+def well_point_of_intersection(self, well):
     """ Takes the well points found using find_segments and projects the points onto the fracture plane. These points are written into well_points.dat file. During meshing, these points are read in and a higher resolution mesh is created near by them. well_points.dat has the format
 
     fracture_id x y z
@@ -843,9 +844,10 @@ def well_point_of_intersection(well):
 
     if len(fracture_list) == 0:
         print(
-            f"\n--> WARNING!!! The well {well['name']} did not intersect the DFN!!!\n"
+            f"\n--> Warning. The well {well['name']} did not intersect the DFN!!!\n"
         )
 
+    points = self.gather_points()
     for elem in elems:  # Parameterize the line center of the well
         l0 = np.zeros(3)
         l0[0] = pts[elem["pt1"] - 1]["x"]
@@ -857,17 +859,18 @@ def well_point_of_intersection(well):
         l1[2] = pts[elem["pt2"] - 1]["z"]
         l = l1 - l0
 
-        f = elem["frac"]
+        fracture_id = elem["frac"]
         # get the plane on which the fracture lies
-        n = get_normal(f)
-        p0 = get_center(f)
+        n = self.normal_vectors[fracture_id - 1, :]
+        p0 = points[fracture_id - 1, :]
+        # p0 = get_center(fracture_id)
         R = rotation_matrix(n, [0, 0, 1])
 
         # find the point of intersection between the well line and the plane
         d = np.dot((p0 - l0), n) / (np.dot(l, n))
         p = l0 + l * d
         v = rotate_point(p, R)
-        fwell.write(f"{f} {v[0]} {v[1]} {v[2]}\n")
+        fwell.write(f"{fracture_id} {v[0]} {v[1]} {v[2]}\n")
     fwell.close()
 
 
@@ -974,52 +977,52 @@ def get_segments(well_line_file):
     return pts, elems, fracture_list
 
 
-def get_normal(self, fracture_id):
-    """ Returns Normal vector of a fracture
+# def get_normal(self, fracture_id):
+#     """ Returns Normal vector of a fracture
 
-    Parameters    
-    -----------
-        fracture_id : int
-            fracture number
+#     Parameters    
+#     -----------
+#         fracture_id : int
+#             fracture number
 
-    Returns
-    --------
-        normal : numpy array
-            normal vector of a fracture
+#     Returns
+#     --------
+#         normal : numpy array
+#             normal vector of a fracture
 
-    Notes
-    --------
-        None
-    """
+#     Notes
+#     --------
+#         None
+#     """
 
-    normals = self.normal_vectors #np.genfromtxt("normal_vectors.dat")
-    return normals[fracture_id - 1, :]
+#     normals = self.normal_vectors #np.genfromtxt("normal_vectors.dat")
+#     return normals[fracture_id - 1, :]
 
 
-def get_center(fracture_id):
-    """ Returns center of a fracture
+# def get_center(fracture_id):
+#     """ Returns center of a fracture
 
-    Parameters    
-    -----------
-        fracture_id : int
-            fracture number
+#     Parameters    
+#     -----------
+#         fracture_id : int
+#             fracture number
 
-    Returns
-    --------
-        points : numpy array
-            x,y,z coordinates of a fracture
+#     Returns
+#     --------
+#         points : numpy array
+#             x,y,z coordinates of a fracture
 
-    Notes
-    --------
-        None
-    """
-    with open('translations.dat') as old, open('points.dat', 'w') as new:
-        old.readline()
-        for line in old:
-            if not 'R' in line:
-                new.write(line)
-    points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
-    return points[fracture_id - 1, :]
+#     Notes
+#     --------
+#         None
+#     """
+#     with open('translations.dat') as old, open('points.dat', 'w') as new:
+#         old.readline()
+#         for line in old:
+#             if not 'R' in line:
+#                 new.write(line)
+#     points = np.genfromtxt('points.dat', skip_header=0, delimiter=' ')
+#     return points[fracture_id - 1, :]
 
 
 def rotation_matrix(normalA, normalB):
