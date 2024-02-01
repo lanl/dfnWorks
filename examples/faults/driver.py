@@ -9,7 +9,7 @@ from pydfnworks import *
 import os
 
 src_path = os.getcwd()
-jobname =  f"{src_path}/output"
+jobname = f"{src_path}/output"
 
 DFN = DFNWORKS(jobname)
 
@@ -36,10 +36,8 @@ DFN.add_user_fract(shape='ell',
                    number_of_vertices=8,
                    permeability=1e-13)
 
-
 DFN.make_working_directory(delete=True)
 
 DFN.check_input()
 DFN.create_network()
 DFN.mesh_network()
-

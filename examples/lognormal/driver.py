@@ -24,11 +24,10 @@ DFN.params['nPoly']['value'] = 100
 DFN.params['outputFinalRadiiPerFamily']['value'] = True
 DFN.params['outputAcceptedRadiiPerFamily']['value'] = True
 DFN.params['forceLargeFractures']['value'] = True
-DFN.params['domainSizeIncrease']['value'] = [5,5,5]
+DFN.params['domainSizeIncrease']['value'] = [5, 5, 5]
 DFN.params['ignoreBoundaryFaces']['value'] = False
-DFN.params['boundaryFaces']['value'] = [0,0,0,0,1,1]
+DFN.params['boundaryFaces']['value'] = [0, 0, 0, 0, 1, 1]
 DFN.params['rejectsPerFracture']['value'] = 350
-
 
 DFN.add_fracture_family(shape="rect",
                         distribution="log_normal",
@@ -39,13 +38,16 @@ DFN.add_fracture_family(shape="rect",
                         beta=0.0,
                         theta=95.47,
                         phi=23.32,
-                        log_mean = 1.38,
-                        log_std = .06, 
+                        log_mean=1.38,
+                        log_std=.06,
                         min_radius=2.0,
                         max_radius=20.0,
                         hy_variable="aperture",
                         hy_function="correlated",
-                        hy_params={"alpha":1e-7,"beta":2})
+                        hy_params={
+                            "alpha": 1e-7,
+                            "beta": 2
+                        })
 
 DFN.add_fracture_family(shape="rect",
                         distribution="log_normal",
@@ -62,21 +64,15 @@ DFN.add_fracture_family(shape="rect",
                         max_radius=20.0,
                         hy_variable="aperture",
                         hy_function="correlated",
-                        hy_params={"alpha":1e-7,"beta":2})
-
-DFN.print_family_information(1)
+                        hy_params={
+                            "alpha": 1e-7,
+                            "beta": 2
+                        })
 
 DFN.make_working_directory(delete=True)
-
 DFN.check_input()
-
-#for key in DFN.params.keys():
-#    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-DFN.mesh_network(coarse_factor=10)
+DFN.mesh_network(max_resolution_factor=10)
 
 DFN.dfn_flow()
 DFN.dfn_trans()
