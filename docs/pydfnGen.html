@@ -111,7 +111,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dfm">DFM</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.dfm">Creating a conforming DFM mesh DFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">Creating a conforming DFM mesh DFN</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm"><code class="docutils literal notranslate"><span class="pre">mesh_dfm()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -863,8 +866,29 @@ Sandia National Laboratories</p>
 </section>
 <section id="dfm">
 <h2>DFM<a class="headerlink" href="#dfm" title="Link to this heading"></a></h2>
-<section id="module-pydfnworks.dfnGen.meshing.dfm">
-<span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm" title="Link to this heading"></a></h3>
+<section id="module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">
+<span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm" title="Link to this heading"></a></h3>
+<dl class="py function" id="module-mesh_dfm.py">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm">
+<span class="sig-name descname"><span class="pre">mesh_dfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfm_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/dfm/mesh_dfm.html#mesh_dfm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm" title="Link to this definition"></a></dt>
+<dd><p>” Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN Object</em>) – </p></li>
+<li><p><strong>dirname</strong> (<em>string</em>) – name of working directory. Default : dfm_mesh</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – </p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – Clean up working directory. If true dep files are moved into subdirectories</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
 </section>
 </section>
 </section>
