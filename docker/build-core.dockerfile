@@ -13,18 +13,15 @@ MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
-#ENV https_proxy=http://proxyout.lanl.gov:8080
-#ENV http_proxy=http_proxy=http://proxyout.lanl.gov:8080
-#ENV HTTPS_PROXY=http_proxy=http://proxyout.lanl.gov:8080
-#ENV HTTP_PROXY=http_proxy=http://proxyout.lanl.gov:8080
+ENV http_proxy=http://proxyout.lanl.gov:8080
+ENV HTTP_PROXY=http://proxyout.lanl.gov:8080
+ENV https_proxy=http://proxyout.lanl.gov:8080
+ENV HTTPS_PROXY=http://proxyout.lanl.gov:8080
+
 # ENV https_proxy=
 # ENV http_proxy=
 # ENV HTTPS_PROXY=
 # ENV HTTP_PROXY=
-ENV https_proxy=
-ENV http_proxy=
-ENV HTTPS_PROXY=
-ENV HTTP_PROXY=
 
 RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 # 2. Add pre-required packages
@@ -36,7 +33,7 @@ RUN ["apt-get","install","-y","build-essential","gfortran","gfortran-10","cmake"
         "openssh-server","valgrind","nano","emacs","gcc-10","g++-10"]
 
 RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx",\
-    "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath"]
+    "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime"]
 
 RUN ["pip3","install","-U","setuptools"]
 
@@ -53,7 +50,7 @@ ENV alias gfortran="gfortran-10"
 # # 3.2 Install and configure PETSc
 RUN ["git","clone","https://gitlab.com/petsc/petsc.git","lib/petsc"]
 WORKDIR $APP_PATH/lib/petsc
-RUN ["git","checkout","v3.19.3"]
+RUN ["git","checkout","v3.20.2"]
 
 ENV PETSC_DIR=/dfnWorks/lib/petsc
 ENV PETSC_ARCH=arch-linux2-c-debug
