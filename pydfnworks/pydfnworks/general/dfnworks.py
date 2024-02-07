@@ -11,6 +11,7 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
+import numpy as np
 
 
 class DFNWORKS():
@@ -40,7 +41,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
 
     # dfnGen functions
     import pydfnworks.dfnGen

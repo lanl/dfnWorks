@@ -415,7 +415,6 @@ def dump_perm(self, filename, format=None):
 
 
 def dump_transmissivity(self, filename, format=None):
-
     if format is None:
         np.savetxt(filename, self.transmissivity)
     elif format == "fehm" or format == "FEHM":

@@ -64,3 +64,5 @@ internal/Documentation/sphinx-docs/build/*
 *.swp
 
 examples/TPL/output_rfram/*
+.vscode 
+.vscode/* 
