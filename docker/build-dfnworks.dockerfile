@@ -18,17 +18,16 @@ WORKDIR $APP_PATH
 # ENV HTTP_PROXY=
 
 COPY . .
-
-RUN ["pip3","install","mpmath"]
-RUN ["pip3","install","datetime"]
+# RUN ["pip3","install","latex"]
+#RUN ["pip3","install","datetime"]
 # RUN ["pip3","install","rich"]
 # RUN ["pip3","install","seaborn"]
 # RUN ["pip3","install","mplstereonet"]
 # RUN ["pip3","install","-U","setuptools"]
 
-
 WORKDIR $APP_PATH/pydfnworks/
-RUN ["python","setup.py","install"]
+#RUN ["python","setup.py","install"]
+RUN ["pip","install","-r","requirements.txt"]
 WORKDIR $APP_PATH
 
 WORKDIR $APP_PATH/C_stor_correct
@@ -74,5 +73,6 @@ RUN ["rm","-Rf","C_stor_correct/","C_uge_correct/","DFNGen/","DFNTrans/",\
      "DFN_Mesh_Connectivity_Test/","pydfnworks/",".git",".gitignore",\
      "internal/","docker/","scripts/","Dockerfile", "Documentation/","pysimfrac"]
 
+RUN ["apt","install","texlive-latex-extra"]
 # Run bash on container launch
 CMD ["bash"]

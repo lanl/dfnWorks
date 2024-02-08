@@ -28,12 +28,13 @@ RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 RUN ["apt-get","update","-y"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ["apt-get","install","-y","build-essential","gfortran","gfortran-10","cmake","git",\
-        "wget","libz-dev","m4","bison","python3",\
+        "wget","libz-dev","m4","bison","python3","texlive-latex-extra",\
         "python3-pip","python3-tk","vim","curl","pkg-config","openssh-client",\
         "openssh-server","valgrind","nano","emacs","gcc-10","g++-10"]
 
 RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx",\
-    "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime"]
+    "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime",\
+    "latex"]
 
 RUN ["pip3","install","-U","setuptools"]
 
@@ -62,16 +63,13 @@ RUN ./configure --CFLAGS='-O3' --CXXFLAGS='-O3' --FFLAGS='-O3' --with-debugging=
 
 RUN make
 
+#
 WORKDIR $APP_PATH
 
 # # 3.3 Install and configure PFLOTRAN
-# RUN ["git","clone","--depth","1","https://bitbucket.org/pflotran/pflotran"]
 RUN ["git","clone","--depth","1","https://bitbucket.org/pflotran/pflotran"]
 WORKDIR $APP_PATH/pflotran/src/pflotran
-RUN ["git","fetch"]
-RUN ["git", "branch"]
 
-# RUN ["git","checkout","maint/v4.0"]
 RUN ["make","pflotran"]
 WORKDIR $APP_PATH
 RUN ["mv","pflotran/src/pflotran/pflotran","bin/pflotran"]
@@ -80,25 +78,26 @@ RUN ["rm","-Rf","pflotran/"]
 WORKDIR $APP_PATH
 
 # # # # 3.0 Install FEHM
-RUN ["git","clone","--depth","1","https://github.com/lanl/FEHM.git","FEHM"]
+RUN ["rm","-Rf","FEHM/"]
+RUN ["git","clone","https://github.com/hymanjd/FEHM.git","FEHM"]
 WORKDIR $APP_PATH/FEHM/src
 RUN ["make","-f","Makefile"]
 WORKDIR $APP_PATH
-RUN ["mv","FEHM/src/xfehm_v3.3.1","bin/fehm"]
+RUN ["mv","FEHM/src/xfehm","bin/fehm"]
 RUN ["rm","-Rf","FEHM/"]
-
 WORKDIR $APP_PATH
 
 # # # 3.1 Install and configure LaGriT
+ENV RSYNC_PROXY=http://proxyout.lanl.gov:8080
+ 
 RUN ["git","clone","https://github.com/lanl/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
-RUN ["git","fetch","--all"]
-RUN ["git","branch"]
-RUN ["git","checkout","jdhdev"]
-
+#RUN ["bash","install-exodus.sh"]
+WORKDIR $APP_PATH/LaGriT
 RUN ["mkdir","build"]
 WORKDIR $APP_PATH/LaGriT/build
 RUN ["cmake",".."]
+# RUN ["cmake","..", "-DLAGRIT_BUILD_EXODUS=ON"]
 RUN ["make"]
 WORKDIR $APP_PATH
 RUN ["mv","LaGriT/build/lagrit","bin/lagrit"]
