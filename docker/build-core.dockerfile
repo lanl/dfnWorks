@@ -30,7 +30,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN ["apt-get","install","-y","build-essential","gfortran","gfortran-10","cmake","git",\
         "wget","libz-dev","m4","bison","python3","texlive-latex-extra",\
         "python3-pip","python3-tk","vim","curl","pkg-config","openssh-client",\
-        "openssh-server","valgrind","nano","emacs","gcc-10","g++-10"]
+        "openssh-server","valgrind","nano","emacs","gcc-10","g++-10", "libcurl4-openssl-dev",\
+        "texlive","texlive-fonts-recommended","dvipng","cm-super"] 
+
 
 RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx",\
     "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime",\
@@ -92,12 +94,12 @@ ENV RSYNC_PROXY=http://proxyout.lanl.gov:8080
  
 RUN ["git","clone","https://github.com/lanl/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
-#RUN ["bash","install-exodus.sh"]
+RUN ./install-exodus.sh
 WORKDIR $APP_PATH/LaGriT
 RUN ["mkdir","build"]
 WORKDIR $APP_PATH/LaGriT/build
-RUN ["cmake",".."]
-# RUN ["cmake","..", "-DLAGRIT_BUILD_EXODUS=ON"]
+# RUN ["cmake",".."]
+RUN ["cmake","..", "-DLAGRIT_BUILD_EXODUS=ON"]
 RUN ["make"]
 WORKDIR $APP_PATH
 RUN ["mv","LaGriT/build/lagrit","bin/lagrit"]
@@ -129,6 +131,9 @@ RUN echo filetype plugin indent on >> ~/.vimrc
 RUN echo set tabstop=4 >> ~/.vimrc
 RUN echo set shiftwidth=4 >> ~/.vimrc
 RUN echo set expandtab >> ~/.vimrc
+
+
+
 
 # # # Run bash on container launch
 CMD ["bash"]
