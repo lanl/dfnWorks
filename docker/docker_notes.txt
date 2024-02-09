@@ -1,0 +1,29 @@
+ 
+Docker Information
+
+If no space left on device run
+1. docker container prune
+2. docker image prune
+3. docker rmi $(docker images -q -f "dangling=true")
+4. docker rm $(docker ps -q -f 'status=exited')
+
+to build core deps
+docker build -t dfn-deps -f docker/build-core.dockerfile .
+
+docker build -t dfn-deps -f docker/build-core.dockerfile .//
+
+to build dfnWorks
+docker build -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
+
+to push to docker 
+docker login --username=hymanjd
+docker push ees16/dfnworks:latest
+
+docker tag #image_id ees16/dfnworks:<v2.*>
+
+docker run -ti -v /Users/jhyman/dfnWorks/:/dfnWorks/work ees16/dfnworks:latest
+
+build lagrit 
+
+docker build -t lagrit_exo -f build-lagrit.dockerfile .
+
