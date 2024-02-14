@@ -642,7 +642,7 @@ void ReadBoundaryNodes()
     }
     
     totalFluxIn = sum_in / density;
-    printf ("\n ** Total in-flow volumetric flux = %12.5e [m^3/s] \n", totalFluxIn);
+    printf ("\n** Total in-flow volumetric flux = %12.5e [m^3/s] \n", totalFluxIn);
     FILE *fluxin;
     sprintf(filename, "%s/inputflux_m3s", maindir);
     fluxin = OpenFile(filename, "w");
@@ -992,7 +992,7 @@ void CheckGrid()
         }
     }
     
-    printf("Grid Chec - done\n");
+    printf("Grid Check - done\n");
     return;
 }
 /////////////////////////////////////////////////////////////////////////////
