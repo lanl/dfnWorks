@@ -370,11 +370,17 @@ def assign_hydraulic_properties(self):
     ### Assign variables for user defined fractures and skip rejected fractures
     ##Logic here, loop through user defined fractures
     ## first check flag to insert
-    try:
-        reject_fracs, frac_type = np.genfromtxt('dfnGen_output/userFractureRejections.dat', delimiter = ',', skip_header = 1, unpack=True)
-        reject_fracs = np.array([reject_fracs]) #needed for case with one rejected fracture, genfromtxt reads in float otherwise
-        frac_type = np.array([frac_type])
-    except: #if no fractures are rejected
+    file_path = 'dfnGen_output/userFractureRejections.dat'
+    if os.path.isfile(file_path) and os.path.getsize(file_path) > 0:
+        try:
+            reject_fracs, frac_type = np.genfromtxt(file_path, delimiter = ',', skip_header = 1, unpack=True)
+            reject_fracs = np.array([reject_fracs]) #needed for case with one rejected fracture, genfromtxt reads in float otherwise
+            frac_type = np.array([frac_type])
+        except:
+            print('--> No Rejected User Fractures, Ignore Following Warning.')
+            reject_fracs = np.array([])
+            frac_type = np.array([])
+    else: #if no fractures are rejected
         print('--> No Rejected User Fractures, Ignore Following Warning.')
         reject_fracs = np.array([])
         frac_type = np.array([])
