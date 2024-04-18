@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Example Applications &mdash; dfnWorks 2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dfnWorks Publications" href="publications.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index_docs.html" class="icon icon-home"> dfnWorks
+          
+
+          
+            
+            <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#carbon-dioxide-sequestration">Carbon dioxide sequestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shale-energy-extraction">Shale energy extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nuclear-waste-repository">Nuclear waste repository</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Output files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index_docs.html">Docs</a> &raquo;</li>
+        
+      <li>Example Applications</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/applications.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="example-applications">
+<h1>Example Applications<a class="headerlink" href="#example-applications" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="carbon-dioxide-sequestration">
+<h2>Carbon dioxide sequestration<a class="headerlink" href="#carbon-dioxide-sequestration" title="Permalink to this headline">¶</a></h2>
+<p>dfnWorks provides the framework necessary to perform multiphase simulations (such as flow and reactive transport) at the reservoir scale. A particular application, highlighted here, is sequestering CO<sub>2</sub>  from anthropogenic sources and disposing it in geological formations such as deep saline aquifers and abandoned oil fields. Geological CO<sub>2</sub>  sequestration is one of the principal methods under consideration to reduce carbon footprint in the atmosphere due to fossil fuels (Bachu, 2002; Pacala and Socolow, 2004). For safe and sustainable long-term storage of CO<sub>2</sub>  and to prevent leaks through existing faults and fractured rock (along with the ones created during the injection process), understanding the complex physical and chemical interactions between CO<sub>2</sub> , water (or brine) and fractured rock, is vital. dfnWorks capability to study multiphase flow in a DFN can be used to study potential CO<sub>2</sub>  migration through cap-rock, a potential risk associated with proposed subsurface storage of CO<sub>2</sub>  in saline aquifers or depleted reservoirs. Moreover, using the reactive transport capabilities of PFLOTRAN coupled with cell-based transmissivity of the DFN allows one to study dynamically changing permeability fields with mineral precipitation and dissolution due to CO<sub>2</sub> –water interaction with rock.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/time_co2.png"><img alt="alternate text" src="_images/time_co2.png" style="width: 656.0px; height: 338.0px;" /></a>
+<p class="caption"><span class="caption-text"><em>Temporal evolution of supercritical |CO2|  displacing water in a meter cube DFN containing 24 fractures. The DFN is initially fully saturated with water, (top left time 0 hours) and supercritical |CO2|  is slowly injected into the system from the bottom of the domain to displace the water for a total time of 10 h. There is an initial flush through the system during the first hour of the simulation, and then the rate of displacement decreases.</em></span></p>
+</div>
+</div>
+<div class="section" id="shale-energy-extraction">
+<h2>Shale energy extraction<a class="headerlink" href="#shale-energy-extraction" title="Permalink to this headline">¶</a></h2>
+<p>Hydraulic fracturing (fracking) has provided access to hydrocarbon trapped in low-permeability media, such as tight shales. The process involves injecting water at high pressures to reactivate existing fractures and also create new fractures to increase permeability of the shale allowing hydrocarbons to be extracted. However, the fundamental physics of why fracking works and its long term ramifications are not well understood. Karra et al. (2015) used dfnWorks to generate a typical production site and simulate production. Using this physics based model, they found good agreement with production field data and determined what physical mechanisms control the decline in the production curve.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="_images/well-pressure.png"><img alt="alternate text" src="_images/well-pressure.png" style="width: 359.6px; height: 313.7px;" /></a>
+<p class="caption"><span class="caption-text"><em>Pressure in a well used for hydraulic fracturing.</em></span></p>
+</div>
+</div>
+<div class="section" id="nuclear-waste-repository">
+<h2>Nuclear waste repository<a class="headerlink" href="#nuclear-waste-repository" title="Permalink to this headline">¶</a></h2>
+<p>The Swedish Nuclear Fuel and Waste Management Company (SKB) has undertaken a detailed investigation of the fractured granite at the Forsmark, Sweden site as a potential host formation for a subsurface repository for spent nuclear fuel (SKB, 2011; Hartley and Joyce, 2013). The Forsmark area is about 120 km north of Stockholm in northern Uppland, and the repository is proposed
+to be constructed in crystalline bedrock at a depth of approximately 500 m. Based on the SKB site investigation, a statistical fracture model with multiple fracture sets was developed; detailed parameters of the Forsmark site model are in SKB (2011). We adopt a subset of the model that consist of three sets of background (non-deterministic) circular fractures whose orientations follow a Fisher distribution, fracture radii are sampled from a truncated power-law distribution, the transmissivity of the fractures is estimated using a power-law model based on the fracture radius, and the fracture aperture is related to the fracture size using the cubic law (Adler et al., 2012). Under such a formulation, the fracture apertures are uniform on each fracture, but vary among fractures. The network is generated in a cubic domain with sides of length one-kilometer. Dirichlet boundary conditions are imposed on the top (1 MPa) and bottom (2 MPa) of the domain to create a pressure gradient aligned with the vertical axis, and noflow boundary conditions are enforced along lateral boundaries.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/forsmark_trajectories.png"><img alt="alternate text" src="_images/forsmark_trajectories.png" style="width: 528.3px; height: 417.5px;" /></a>
+<p class="caption"><span class="caption-text"><em>Simulated particle trajectories in fractured granite at Forsmark, Sweden.</em></span></p>
+</div>
+<p>Sources:</p>
+<ul class="simple">
+<li>Adler, P.M., Thovert, J.-F., Mourzenko, V.V., 2012. Fractured Porous Media. Oxford University Press, Oxford, United Kingdom.</li>
+<li>Bachu, S., 2002. Sequestration of CO<sub>2</sub>  in geological media in response to climate change: road map for site selection using the transform of the geological space into the CO<sub>2</sub>  phase space. Energy Convers. Manag. 43, 87–102.</li>
+<li>Hartley, L., Joyce, S., 2013. Approaches and algorithms for groundwater flow modeling in support of site investigations and safety assessment of the Fors- mark site, Sweden. J. Hydrol. 500, 200–216.</li>
+<li>Karra, S., Makedonska, N., Viswanathan, H., Painter, S., Hyman, J., 2015. Effect of advective flow in fractures and matrix diffusion on natural gas production. Water Resour. Res., under review.</li>
+<li>Pacala, S., Socolow, R., 2004. Stabilization wedges: solving the climate problem for the next 50 years with current technologies. Science 305, 968–972.</li>
+<li>SKB, Long-Term Safety for the Final Repository for Spent Nuclear Fuel at Forsmark. Main Report of the SR-Site Project. Technical Report SKB TR-11-01, Swedish Nuclear Fuel and Waste Management Co., Stockholm, Sweden, 2011.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="publications.html" class="btn btn-neutral float-right" title="dfnWorks Publications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, LANL, LA-UR-17-22216.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

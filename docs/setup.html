@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting and Running up dfnWorks &mdash; dfnWorks 2.7 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=ab527d87"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Example Applications" href="applications.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index_docs.html" class="icon icon-home">
+            dfnWorks
+              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting and Running up dfnWorks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#docker">Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#native-build-from-github-repository">Native build from github repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#clone-the-dnfworks-repository">Clone the dnfWorks repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fix-paths-in-test-directory">Fix paths in test directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-the-lagrit-petsc-pflotran-python-and-fehm-paths">Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-pydfnworks">Installing pydfnworks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-requirements-for-native-build">Installation Requirements for Native Build</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#operating-systems">Operating Systems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lagrit">LaGriT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pflotran">PFLOTRAN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fehm">FEHM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cmake">CMake</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#paraview">Paraview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Setting and Running up dfnWorks</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/setup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-and-running-up-dfnworks">
+<span id="pydfnworks-setup"></span><h1>Setting and Running up dfnWorks<a class="headerlink" href="#setting-and-running-up-dfnworks" title="Link to this heading"></a></h1>
+<section id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Link to this heading"></a></h2>
+<p>The easiest way to get started with dfnWorks is using our docker container (<a class="reference external" href="https://hub.docker.com/r/ees16/dfnworks">https://hub.docker.com/r/ees16/dfnworks</a>).</p>
+<p>If you do not already have Docker installed on your machine,
+visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
+<p>The dfnWorks Docker image can be pulled from DockerHub using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>ees16/dfnworks:latest
+</pre></div>
+</div>
+<section id="running-the-dfnworks-container">
+<h3>Running the dfnWorks container<a class="headerlink" href="#running-the-dfnworks-container" title="Link to this heading"></a></h3>
+<p>The base command for running the dfnWorks container is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>ees16/dfnworks:latest
+</pre></div>
+</div>
+<p>However, to exchange files between the host and container, we will need to mount
+a volume.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">LOCAL_FOLDER:/dfnWorks/work</span></code> will allow all files present in the
+container folder <code class="docutils literal notranslate"><span class="pre">dfnWorks/work</span></code> to be exposed to <code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code> is the absolute path to a folder on your machine.</p>
+<p>With this is place, the final command for running the Docker container is:</p>
+<p><strong>On macOS:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>-v<span class="w"> </span>&lt;LOCAL_FOLDER&gt;:/dfnWorks/work<span class="w"> </span>ees16/dfnworks:latest
+</pre></div>
+</div>
+</section>
+</section>
+<section id="native-build-from-github-repository">
+<h2>Native build from github repository<a class="headerlink" href="#native-build-from-github-repository" title="Link to this heading"></a></h2>
+<p>This document contains instructions for setting up dfnWorks natively on your
+machine. To setup dfnWorks using Docker instead, see the next section.</p>
+<section id="clone-the-dnfworks-repository">
+<h3>Clone the dnfWorks repository<a class="headerlink" href="#clone-the-dnfworks-repository" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/lanl/dfnWorks.git
+</pre></div>
+</div>
+</section>
+<section id="fix-paths-in-test-directory">
+<h3>Fix paths in test directory<a class="headerlink" href="#fix-paths-in-test-directory" title="Link to this heading"></a></h3>
+<p>Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script <code class="docutils literal notranslate"><span class="pre">fix_paths.py</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>dfnWorks/pydfnworks/bin/
+$<span class="w"> </span>python<span class="w"> </span>fix_paths.py
+</pre></div>
+</div>
+</section>
+<section id="set-the-lagrit-petsc-pflotran-python-and-fehm-paths">
+<h3>Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths<a class="headerlink" href="#set-the-lagrit-petsc-pflotran-python-and-fehm-paths" title="Link to this heading"></a></h3>
+<p><strong>Before executing dfnWorks,</strong> the following paths must be set:</p>
+<ul class="simple">
+<li><p>dfnWorks_PATH: the dfnWorks repository folder</p></li>
+<li><p>PETSC_DIR and PETSC_ARCH: PETSC environmental variables</p></li>
+<li><p>PFLOTRAN_EXE:  Path to PFLOTRAN executable</p></li>
+<li><p>PYTHON_EXE:  Path to python executable</p></li>
+<li><p>LAGRIT_EXE:  Path to LaGriT executable</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>vi<span class="w"> </span>dfnWorks/pydfnworks/pydfnworks/paths.py
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;dfnWorks_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/home/username/dfnWorks/&#39;</span>
+</pre></div>
+</div>
+<p>Alternatively, you can create a <code class="docutils literal notranslate"><span class="pre">.dfnworksrc</span></code> file in your home directory with the following format</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;dfnworks_PATH&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;/src/dfnworks-main/&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;PETSC_DIR&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;/src/petsc&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;PETSC_ARCH&quot;</span>:<span class="w"> </span><span class="s2">&quot;arch-darwin-c-debug&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;PFLOTRAN_EXE&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;/src/pflotran/src/pflotran/pflotran&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;PYTHON_EXE&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;/anaconda3/bin/python&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;LAGRIT_EXE&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;/bin/lagrit&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;FEHM_EXE&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;your-home-directory&gt;//src/xfehm_v3.3.1&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="installing-pydfnworks">
+<h3>Installing pydfnworks<a class="headerlink" href="#installing-pydfnworks" title="Link to this heading"></a></h3>
+<p>Go up into the pydfnworks sub-directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>dfnWorks/pydfnworks/
+</pre></div>
+</div>
+<p>Complie The pydfnWorks Package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>bdist_wheel
+</pre></div>
+</div>
+<p>Install on Your Local Machine:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dist/pydfnworks-2.6-py3-none-any.whl
+</pre></div>
+</div>
+<p><strong>Note that the python version in dist/ needs to be consistent with the current release</strong></p>
+</section>
+<section id="installation-requirements-for-native-build">
+<h3>Installation Requirements for Native Build<a class="headerlink" href="#installation-requirements-for-native-build" title="Link to this heading"></a></h3>
+<p>Tools that you will need to run the dfnWorks work flow are described in
+this section. VisIt and ParaView, which enable visualization of desired
+quantities on the DFNs, are optional, but at least one of them is highly
+recommended for visualization. CMake is also optional but allows faster IO
+processing using C++.</p>
+<section id="operating-systems">
+<h4>Operating Systems<a class="headerlink" href="#operating-systems" title="Link to this heading"></a></h4>
+<p>dfnWorks currently runs on Macs and Unix machine running Ubuntu.</p>
+</section>
+<section id="python">
+<h4>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h4>
+<p>pydfnworks uses Python 3. We recommend using
+the Anaconda 3 distribution of Python, available at <a class="reference external" href="https://www.continuum.io/">https://www.continuum.io/</a>.
+pydfnworks requires the following python modules: <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">h5py</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>,  <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>, <code class="docutils literal notranslate"><span class="pre">argparse</span></code>, <code class="docutils literal notranslate"><span class="pre">shutil</span></code>, <code class="docutils literal notranslate"><span class="pre">os</span></code>, <code class="docutils literal notranslate"><span class="pre">sys</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">subprocess</span></code>, <code class="docutils literal notranslate"><span class="pre">glob</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">fpdf</span></code>, and <code class="docutils literal notranslate"><span class="pre">re</span></code>.</p>
+</section>
+<section id="lagrit">
+<h4>LaGriT<a class="headerlink" href="#lagrit" title="Link to this heading"></a></h4>
+<p>The <a class="reference external" href="https://lagrit.lanl.gov">LaGriT</a> meshing toolbox is used to create a high resolution computational
+mesh representation of the DFN in parallel. An algorithm for conforming
+Delaunay triangulation is implemented so that fracture intersections are
+coincident with triangle edges in the mesh and Voronoi control volumes are
+suitable for finite volume flow solvers such as FEHM and PFLOTRAN.</p>
+</section>
+<section id="pflotran">
+<h4>PFLOTRAN<a class="headerlink" href="#pflotran" title="Link to this heading"></a></h4>
+<p><a class="reference external" href="http://pflotran.org">PFLOTRAN</a>  is a massively parallel subsurface flow and reactive transport
+code. PFLOTRAN solves a system of partial differential equations for
+multiphase, multicomponent and multi-scale reactive flow and transport in
+porous media. The code is designed to run on leadership-class supercomputers
+as well as workstations and laptops.</p>
+</section>
+<section id="fehm">
+<h4>FEHM<a class="headerlink" href="#fehm" title="Link to this heading"></a></h4>
+<p><a class="reference external" href="https://fehm.lanl.gov">FEHM</a> is a subsurface multiphase flow code developed at Los Alamos National
+Laboratory.</p>
+</section>
+<section id="cmake">
+<h4>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h4>
+<p><a class="reference external" href="https://cmake.org">CMake</a> is an open-source, cross-platform family of tools designed to build,
+test and package software. It is needed to use C++ for processing files at a
+bottleneck IO step of dfnWorks. Using C++ for this file processing optional
+but can greatly increase the speed of dfnWorks for large fracture networks.
+Details on how to use C++ for file processing are in the scripts section of
+this documentation.</p>
+</section>
+<section id="paraview">
+<h4>Paraview<a class="headerlink" href="#paraview" title="Link to this heading"></a></h4>
+<p><a class="reference external" href="http://www.paraview.org">Paraview</a> is a parallel, open-source visualisation software. PFLOTRAN can
+output in <code class="docutils literal notranslate"><span class="pre">.xmf</span></code> and <code class="docutils literal notranslate"><span class="pre">.vtk</span></code> format. These can be imported in Paraview
+for visualization. While not required for running dfnWorks, Paraview is
+very helpful for visualizing dfnWorks simulations.</p>
+<p>Instructions for downloading and installing <a class="reference external" href="http://www.paraview.org">Paraview</a> can be found at
+<a class="reference external" href="http://www.paraview.org/download/">http://www.paraview.org/download/</a></p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="applications.html" class="btn btn-neutral float-left" title="Example Applications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

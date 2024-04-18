@@ -186,13 +186,13 @@ def print_family_information(self, family_number):
 
         Parameters
         --------------
-        self : DFN object
+            self : DFN object
 
-        family_number : the id of the fracture family information to be returned
+            family_number : the id of the fracture family information to be returned
         
         Returns
         --------
-        prints fracture family parameters
+            Prints fracture family parameters to terminal screen
 
         Notes
         ---------
@@ -312,7 +312,7 @@ def add_fracture_family(self,
         
         Returns
         --------
-        populated fracture family dictionary for specified family
+            Populated fracture family dictionary for specified family
 
         Notes
         ---------

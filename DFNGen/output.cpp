@@ -938,18 +938,20 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     Arg 1: Stats structure of program statistics
     Arg 2: Path to output folder */
 void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
-    std::cout << "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
-    std::string fileName = output + "/userFractureRejections.dat";
-    std::ofstream file;
-    file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
-    checkIfOpen(file, fileName);
-    file << "Fracture id,User Fracture Type\n";
-    
-    for(unsigned int i = 0; i < pstats.rejectedUserFracture.size(); i++) {
-        file << pstats.rejectedUserFracture[i].id << "," << pstats.rejectedUserFracture[i].userFractureType << "\n";
+    if (pstats.rejectedUserFracture.size() > 0) {
+        std::cout << "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
+        std::string fileName = output + "/userFractureRejections.dat";
+        std::ofstream file;
+        file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
+        checkIfOpen(file, fileName);
+        file << "Fracture id,User Fracture Type\n";
+        
+        for(unsigned int i = 0; i < pstats.rejectedUserFracture.size(); i++) {
+            file << pstats.rejectedUserFracture[i].id << "," << pstats.rejectedUserFracture[i].userFractureType << "\n";
+        }
+        
+        file.close();
     }
-    
-    file.close();
 }
 
 /* writeShapeFams() ***************************************************************************/

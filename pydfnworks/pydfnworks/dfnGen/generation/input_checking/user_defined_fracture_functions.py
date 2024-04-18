@@ -1,16 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 29 09:17:14 2022
-
-@author: 369984
-"""
-
 import sys
 import os
 from numpy import pi
 
 from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
-
 
 def check_angle_option(angle_option, array):
     for val in array:
@@ -29,7 +21,7 @@ def check_angle_option(angle_option, array):
 def print_user_fracture_information(self, shape, frac_number=None):
     """ Prints information about a user defined fracture to screen
 
-    Paramters
+    Parameters
     ----------------
         self : DFN object
 
@@ -91,7 +83,7 @@ def add_user_fract_from_file(self,
                              permeability=None):
     """ Sets up paths for fractures defined in user input file. When inserting user fractures from file, hydraulic properties must be provided as a list of length nPolygons (number of fractures defined in the file)
 
-    Paramters
+    Parameters
     ----------------
         filename : string
             path to source file
