@@ -33,21 +33,21 @@ The memory is allocated for data structures: NODE, CELL, FRACTURE */
     /********************** opening an inp file ***************************/
     int nn,  j;
     inputfile = Control_File("inp:", 4);
-    printf("\n OPEN AND READ AVS FILE: %s \n \n", inputfile.filename);
+    printf("\n* Reading avs file: %s \n \n", inputfile.filename);
     FILE *fp = OpenFile (inputfile.filename, "r");
     
     if (fscanf(fp, "%d %d %d %d %d\n", &nnodes, &ncells, &nn, &nn, &nn ) != 5) {
-        printf("Error");
+        printf("Error reading avs file header. Incorrect formatting found.\n");
     }
     
-    printf(" Total number of nodes: %d, Total number of elements (triangles): %d\n", nnodes, ncells);
+    printf("--> Total number of nodes: %d, Total number of elements (triangles): %d\n", nnodes, ncells);
     fclose(fp);
     /******************* open and read stor file *******************************/
     unsigned  int nedges;
     unsigned  int snode_edge;
     int area_coef;
     inputfile = Control_File("stor:", 5 );
-    printf("\n OPEN AND READ STOR FILE: %s\n \n", inputfile.filename);
+    printf("\n** OPEN AND READ STOR FILE: %s\n \n", inputfile.filename);
     FILE *fps = OpenFile (inputfile.filename, "r");
     
     /* Read the head of the file */
@@ -60,13 +60,14 @@ The memory is allocated for data structures: NODE, CELL, FRACTURE */
     int node1;
     
     if (fscanf (fps, " %d %d %d %d %d \n", &nedges, &node1, &snode_edge, &area_coef, &max_neighb ) != 5) {
-        printf("Error");
+        printf("Error reading inp file\n");
     }
     
     printf (" Total number of edges in Voronoy polygons = %d, total number of nodes = %d \n", nedges, node1);
     
     if (node1 != nnodes) {
-        printf("the number of nodes in inp is not equal to number of nodes in stor file! \n");
+        printf("The number of nodes in inp file is not equal to number of nodes in stor file. \n");
+        return 1;
     }
     
     fclose(fps);
@@ -108,7 +109,7 @@ The memory is allocated for data structures: NODE, CELL, FRACTURE */
         printf("Allocation memory problem - fracture\n");
     }
     
-    printf("\n Memory allocation is done successfully \n");
+    printf("\n** Memory allocation successfully \n");
     /*****************reading the orientation angle and norm components
      of every fracture from params.txt file*************************/
     inputfile = Control_File_Optional("poly:", 5);
@@ -626,8 +627,8 @@ void ReadBoundaryNodes()
         exit(1);
     }
     
-    printf("\n Number of nodes %d in flow-in zone.  \n", nzone_in);
-    printf("\n Number of nodes %d in flow-out  zone.  \n", nzone_out);
+    printf("\n** Number of nodes %d in flow-in zone.  \n", nzone_in);
+    printf("\n** Number of nodes %d in flow-out  zone.  \n", nzone_out);
     fclose(fpc);
     /*** calculate the sum of mass fluxes on in-flow boundary and on out-flow boundary
      ***/
@@ -641,7 +642,7 @@ void ReadBoundaryNodes()
     }
     
     totalFluxIn = sum_in / density;
-    printf ("Total in-flow volumetric flux = %12.5e [m^3/s] \n", totalFluxIn);
+    printf ("\n** Total in-flow volumetric flux = %12.5e [m^3/s] \n", totalFluxIn);
     FILE *fluxin;
     sprintf(filename, "%s/inputflux_m3s", maindir);
     fluxin = OpenFile(filename, "w");
@@ -655,7 +656,7 @@ void ReadBoundaryNodes()
     }
     
     sum_out = sum_out / density;
-    printf ("Total out-flow volumetric flux = %12.5e [m^3/s]\n", sum_out);
+    printf ("** Total out-flow volumetric flux = %12.5e [m^3/s]\n\n", sum_out);
     /***************************/
     return;
 }
@@ -968,7 +969,7 @@ void CheckGrid()
  and should be defined as interface nodes */
 {
     int i, j, k, r = 0;
-    printf("  GRID CHECK starts \n");
+    printf("\nGrid Check\n");
     
     for (i = 0; i < nnodes; i++) {
         if ((node[i].typeN == 0) || (node[i].typeN == 10)) {
@@ -991,7 +992,7 @@ void CheckGrid()
         }
     }
     
-    printf("  GRID CHECK is done \n");
+    printf("Grid Check - done\n");
     return;
 }
 /////////////////////////////////////////////////////////////////////////////

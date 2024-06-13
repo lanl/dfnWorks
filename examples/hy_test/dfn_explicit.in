@@ -76,7 +76,7 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d0 d 
+  INITIAL_TIMESTEP_SIZE  1.d-1 d
   FINAL_TIME 1.d2 d
   MAXIMUM_TIMESTEP_SIZE 10.d0 d
 END
@@ -92,11 +92,11 @@ REGION All
 END 
 
 REGION inflow
-  FILE pboundary_front_n.ex
+  FILE boundary_front_n.ex
 END
 
 REGION outflow
-  FILE pboundary_back_s.ex
+  FILE boundary_back_s.ex
 END
 
 #=========================== flow conditions ==================================

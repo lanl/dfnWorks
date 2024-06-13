@@ -23,6 +23,7 @@ void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints
     
     for (unsigned int i = 0; i < nEllByCoord; i++) {
         Poly newPoly;
+        RejectedUserFracture rejectedUserFracture;
         newPoly.familyNum = -1; // Using -1 for all user specified ellipses
         newPoly.vertices = new double[3 * nEllNodes]; // 3 * number of nodes
         // Set number of nodes  - needed for rotations
@@ -78,6 +79,9 @@ void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
             std::cout << "\nUser Ellipse (defined by coordinates) " << i + 1 << " was rejected for being outside the defined domain.\n";
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -1;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
             continue; // Go to next poly (go to next iteration of for loop)
         }
         
@@ -105,6 +109,9 @@ void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints
             pstats.rejectedPolyCount++;
             std::cout << "\nRejected Eser Defined Elliptical Fracture (Defined By Coordinates) " << i + 1 << "\n";
             printRejectReason(rejectCode, newPoly);
+            rejectedUserFracture.id = i + 1;
+            rejectedUserFracture.userFractureType  = -1;
+            pstats.rejectedUserFracture.push_back(rejectedUserFracture);
         }
     } // End loop
     

@@ -391,19 +391,20 @@ def dump_aperture(self, filename, format=None):
 
     if format is None:
         np.savetxt(filename, self.aperture)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
             fp.write('aperture\n')
             for i, b in enumerate(self.aperture):
                 fp.write(f'-{i+7:d} 0 0 {b:0.5e}\n')
-
+    else:
+        print("--> Warning. Unknown format requested.\nOptions are None and fehm/FEHM (case senstive)")
 
 def dump_perm(self, filename, format=None):
 
     if format is None:
         np.savetxt(filename, self.perm)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         # write perm file
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
@@ -414,13 +415,12 @@ def dump_perm(self, filename, format=None):
 
 
 def dump_transmissivity(self, filename, format=None):
-
     if format is None:
         np.savetxt(filename, self.transmissivity)
-    elif format == "fehm":
+    elif format == "fehm" or format == "FEHM":
         print(f"--> Writing {filename}")
         with open(filename, 'w+') as fp:
-            fp.write('aperture\n')
+            fp.write('transmissivity\n')
             for i, trans in enumerate(self.transmissivity):
                 fp.write(f'-{i:d} 0 0 {trans:0.5e}\n')
 

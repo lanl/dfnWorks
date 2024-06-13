@@ -197,7 +197,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
         filename = f"{partime_file}.dat"
         print(f"--> Writing Data to files: {filename}")
         # Write Header
-        header = "Advective time [s],Matrix Diffusion time [s],Total travel time [s],Pathline length [m],Beta (s/m)"
+        header = "Advective time [s],Matrix Diffusion time [s],Total travel time [s],Pathline length [m],Beta (s m^-1)"
         np.savetxt(filename,
                    np.c_[adv_times, md_times, total_times, length, beta],
                    delimiter=",",
@@ -228,7 +228,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
             dataset_name = "Pathline length [m]"
             h5dset = f5file.create_dataset(dataset_name, data=length)
 
-            dataset_name = "Beta [s/m]"
+            dataset_name = "Beta [s m^-1]"
             h5dset = f5file.create_dataset(dataset_name, data=beta)
 
         if frac_id_file:

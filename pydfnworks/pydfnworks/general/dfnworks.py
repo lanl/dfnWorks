@@ -1,9 +1,9 @@
-__author__ = "Jeffrey Hyman, Satish Karra"
-__version__ = "2.7"
+__author__ = "Jeffrey Hyman"
+__version__ = "2.8"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
-DFN class. 
+DFN object. 
 """
 
 import os
@@ -11,6 +11,7 @@ import sys
 import ntpath
 from datetime import datetime
 from time import time
+import numpy as np
 
 
 class DFNWORKS():
@@ -40,7 +41,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -55,15 +56,34 @@ class DFNWORKS():
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
     from pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions import add_user_fract, add_user_fract_from_file, write_user_fractures_to_file, print_user_fracture_information
 
-    from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
+    ## Functions from mesh_dfn dir
+    from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn import mesh_network
+    from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
+    from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
+    from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
+    from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
+    from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
+    # udfm meshing functions 
     from pydfnworks.dfnGen.meshing.udfm.map2continuum import map_to_continuum
     from pydfnworks.dfnGen.meshing.udfm.map2continuum_helper import in_domain, gather_points
     from pydfnworks.dfnGen.meshing.udfm.upscale import upscale
     from pydfnworks.dfnGen.meshing.udfm.false_connections import check_false_connections
-    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, get_normal
+
+    # meshing well package 
+    from pydfnworks.dfnGen.well_package.wells import tag_well_in_mesh, find_well_intersection_points, combine_well_boundary_zones, cleanup_wells, run_find_well_intersection_points, convert_well_to_polyline_avs, well_point_of_intersection, expand_well
+
+    # mapdfn ECPM functions
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm import mapdfn_ecpm 
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells import mapdfn_tag_cells
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_upscale
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm import mapdfn_effective_perm
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm import mapdfn_ecpm 
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells import mapdfn_tag_cells
+    from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_upscale
+
+    from pydfnworks.dfnGen.meshing.dfm.mesh_dfm import mesh_dfm
 
     # dfnFlow
     import pydfnworks.dfnFlow
@@ -76,7 +96,6 @@ class DFNWORKS():
     import pydfnworks.dfnTrans
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
 
-    # dfnGraph
     # dfnGraph
     import pydfnworks.dfnGraph
     from pydfnworks.dfnGraph.dfn2graph import create_graph, dump_json_graph, load_json_graph, plot_graph, dump_fractures, add_fracture_source, add_fracture_target
@@ -99,16 +118,15 @@ class DFNWORKS():
                  stor_file=None,
                  vtk_file=None,
                  num_nodes=None,
-                 mesh_type='dfn',
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None):
+        ## initialize variables 
         self.num_frac = int
         self.h = float
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
-
 
         self.aper_cell_file = 'aper_node.dat'
         self.perm_cell_file = 'perm_node.dat'
@@ -219,7 +237,6 @@ class DFNWORKS():
 
 # '''
 #         print(output)
-
 
 def commandline_options():
     """Read command lines for use in dfnWorks.

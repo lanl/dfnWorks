@@ -9,15 +9,9 @@ from pydfnworks import *
 import os
 
 jobname = os.getcwd() + "/output"
-dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
-dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
+dfnFlow_file = os.getcwd() + '/fehmn.files'
 
-DFN = DFNWORKS(jobname,
-               dfnFlow_file=dfnFlow_file,
-               dfnTrans_file=dfnTrans_file,
-               ncpu=8)
-
-
+DFN = DFNWORKS(jobname, dfnFlow_file=dfnFlow_file, ncpu=8)
 
 DFN.params['domainSize']['value'] = [100, 100, 100]
 DFN.params['h']['value'] = 1.0
@@ -26,8 +20,8 @@ DFN.params['nPoly']['value'] = 100
 DFN.params['tripleIntersections']['value'] = True
 DFN.params['domainSizeIncrease']['value'] = [10, 10, 10]
 DFN.params['ignoreBoundaryFaces']['value'] = False
-DFN.params['boundaryFaces']['value'] = [0,0,0,0,1,1]
-DFN.params['seed']['value'] = 3081976507
+DFN.params['boundaryFaces']['value'] = [0, 0, 0, 0, 1, 1]
+DFN.params['seed']['value'] = 10
 
 DFN.add_fracture_family(shape="ell",
                         distribution="constant",
@@ -38,11 +32,14 @@ DFN.add_fracture_family(shape="ell",
                         beta=0.0,
                         theta=0.0,
                         phi=90.0,
-                        constant = 25,
-                        number_of_points = 12,
-                        hy_variable = 'aperture',
-                        hy_function = 'log-normal',
-                        hy_params = {"mu":1e-5,"sigma":1})
+                        constant=25,
+                        number_of_points=12,
+                        hy_variable='aperture',
+                        hy_function='log-normal',
+                        hy_params={
+                            "mu": 1e-4,
+                            "sigma": 0.01
+                        })
 
 DFN.add_fracture_family(shape="ell",
                         distribution="constant",
@@ -54,30 +51,19 @@ DFN.add_fracture_family(shape="ell",
                         theta=90.0,
                         phi=0.0,
                         constant=25,
-                        number_of_points = 12,
-                        hy_variable = 'aperture',
-                        hy_function = 'log-normal',
-                        hy_params = {"mu":1e-5,"sigma":1})
-
-DFN.print_family_information(1)
+                        number_of_points=12,
+                        hy_variable='aperture',
+                        hy_function='log-normal',
+                        hy_params={
+                            "mu": 1e-3,
+                            "sigma": 0.01
+                        })
 
 DFN.make_working_directory(delete=True)
-
 DFN.check_input()
-
-for key in DFN.params.keys():
-    print(key, DFN.params[key]['value'])
-
-# define_paths()
 DFN.create_network()
-# DFN.output_report()
-DFN.mesh_network(coarse_factor=10)
-
 DFN.set_flow_solver("FEHM")
+DFN.mesh_network(max_resolution_factor=20)
+
 DFN.correct_stor_file()
 DFN.fehm()
-
-
-print("*"*80)
-print(DFN.jobname+' complete')
-print("Thank you for using dfnWorks")

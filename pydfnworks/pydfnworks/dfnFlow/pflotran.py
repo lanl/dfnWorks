@@ -12,7 +12,7 @@ from time import time
 import numpy as np
 
 
-def lagrit2pflotran(self):
+def lagrit2pflotran(self, boundary_cell_area = None):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
     Calls the function write_perms_and_correct_volumes_areas() and zone2ex
    
@@ -51,7 +51,11 @@ def lagrit2pflotran(self):
         sys.exit(1)
 
     self.write_perms_and_correct_volumes_areas()
-    self.zone2ex(zone_file='all')
+    
+    if not boundary_cell_area:
+        boundary_cell_area = 1/self.h 
+
+    self.zone2ex(zone_file='all', boundary_cell_area = boundary_cell_area)
     self.dump_h5_files()
     print("Conversion of files for PFLOTRAN complete")
     print('=' * 80)
@@ -113,8 +117,7 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
 
     # loop through zone files
     if zone_file == 'all':
-        zone_files = ['pboundary_front_n.zone', 'pboundary_back_s.zone', 'pboundary_left_w.zone', \
-                        'pboundary_right_e.zone', 'pboundary_top.zone', 'pboundary_bottom.zone']
+        zone_files = ['boundary_front_n.zone', 'boundary_back_s.zone', 'boundary_left_w.zone', 'boundary_right_e.zone', 'boundary_top.zone', 'boundary_bottom.zone']
         face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else:
         if zone_file == '':
@@ -217,23 +220,23 @@ def write_perms_and_correct_volumes_areas(self):
     print('*' * 80)
     print("--> Correcting UGE file: Starting")
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
+        error = "Error. Wrong flow solver requested\n"
         sys.stderr.write(error)
         sys.exit(1)
 
     print("--> Writing Perms and Correct Volume Areas")
     if self.inp_file == '':
-        error = 'ERROR: inp file must be specified!\n'
+        error = 'Error.: inp file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     if self.uge_file == '':
-        error = 'ERROR: uge file must be specified!\n'
+        error = 'Error. uge file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
     if self.perm_file == '' and self.perm_cell_file == '':
-        error = 'ERROR: perm file must be specified!\n'
+        error = 'Error. perm file must be specified!\n'
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -303,8 +306,11 @@ def dump_h5_files(self):
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
         print('--> Creating permeability array')
         print('--> Note: This script assumes isotropic permeability')
-        for i in range(self.num_nodes):
-            self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
+        if self.cell_based_aperture: 
+            self.perm_cell = np.genfromtxt(self.perm_cell_file, skip_header = 1)[:,1]
+        else: 
+            for i in range(self.num_nodes):
+                self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
         print('--> Writting Permeability')
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)

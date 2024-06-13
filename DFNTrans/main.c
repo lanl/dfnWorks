@@ -96,7 +96,7 @@ int main (int argc, char* controlf[]) {
     char* c_time_string;
     current_time = time(NULL);
     c_time_string = ctime(&current_time);
-    printf("\n PROGRAM STARTS. current time: %s\n", c_time_string);
+    printf("\nStarting DFNTrans at: %s\n", c_time_string);
     /**** open control file to read main parameters **************************/
     int res;
     unsigned int seed;
@@ -154,18 +154,18 @@ int main (int argc, char* controlf[]) {
         }
     }
     
-    printf(" \n Particles velocities are calculated in [m/%s]. \n", inputfile.filename);
+    printf("\n** Particles velocities are calculated in [m/%s]. \n", inputfile.filename);
     inputfile = Control_File("out_dir:", 8 );
     strcpy(maindir, inputfile.filename);
     mkdir(maindir, 0777);
-    printf("\n All output files will be written in %s/ \n", maindir);
+    printf("\n** All output files will be written in %s/ \n", maindir);
     /***** open files and read values of global variables, such as total number of
      nodes, cells, fractures. Memory allocation.******/
     printf("---------------------GRID DATA READING--------------------------\n");
     ReadInit();
     /**** open files and read GRID data FLOW SOLUTION data into structures ****/
     ReadDataFiles ();
-    printf("\n Data Reading is Done\n");
+    printf("\n** Data reading - done\n");
     /*** Read nodes with Dirichlet BC **********************/
     printf("\n---------------------BOUNDARY CONDITIONS----------------------\n");
     ReadBoundaryNodes();
@@ -193,7 +193,8 @@ int main (int argc, char* controlf[]) {
     if(res == 0) {
         WritingInit();
     }
-    
+    printf("\n** Velocity reconstruction - done\n");
+ 
     printf("\n------------------PARTICLE TRACKING---------------------------\n");
     ParticleTrack ();
     /****   free memory that was allocated for data structures *****/

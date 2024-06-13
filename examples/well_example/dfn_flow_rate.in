@@ -1,5 +1,6 @@
-# Jan 13, 2014
-# Nataliia Makedonska, Satish Karra, LANL
+# 11 July 2023 
+# Jeffrey Hyman
+# jhyman@lanl.gov  
 #================================================
 
 SIMULATION
@@ -40,7 +41,6 @@ MATERIAL_PROPERTY soil1
     /
 END
 
-
 #=========================== characteristic curves ============================
 CHARACTERISTIC_CURVES default
   SATURATION_FUNCTION VAN_GENUCHTEN
@@ -59,6 +59,7 @@ END
 OUTPUT
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
+  ACKNOWLEDGE_VTK_FLAW
   FORMAT VTK
   MASS_FLOWRATE
   MASS_BALANCE
@@ -131,7 +132,7 @@ FLOW_CONDITION pinned
   TYPE
     LIQUID_PRESSURE dirichlet
   /
-  LIQUID_PRESSURE 1.01325d5
+  LIQUID_PRESSURE 1.01325d6
 END
 
 #=========================== condition couplers ===============================
