@@ -104,16 +104,39 @@ class Particle():
             self.exit_flag = True
 
         else:
-            ## complete mixing to select outflowing node
-            self.next_node = np.random.choice(
-                nbrs_dict[self.curr_node]['child'],
-                p=nbrs_dict[self.curr_node]['prob'])
+            ## This is a modification to stop cycles in the FTP. 
+            # when are particle is at an intersection, we try to 
+            # pick it's next edge that on different fracture. 
+            # With out this check, a particle can loop on a single fracture 
+            # indefineitly. 
+            new_fracture = False 
+            cnt = 0
+            while not new_fracture:
+                ## complete mixing to select outflowing node
+                self.next_node = np.random.choice(
+                    nbrs_dict[self.curr_node]['child'],
+                    p=nbrs_dict[self.curr_node]['prob'])
+                # check if the next edge is on another fracture
+                next_frac = G.edges[self.curr_node, self.next_node]['frac']
+                new_fracture = True
+                if next_frac != self.frac:
+                    new_fracture = True
+                    break
+                # if not resample until you have tried 2 times the number of outflowing edges, just to be sure.
+                cnt+=1
+                if cnt > 2*len(nbrs_dict[self.curr_node]['prob']): 
+                    print("maxed out")
+                    new_fracture = True 
+                    break
+                #else:
+                #    print("resample")
+
 
             self.frac = G.edges[self.curr_node, self.next_node]['frac']
             self.frac_seq.append(self.frac)
 
             self.delta_t = G.edges[self.curr_node, self.next_node]['time']
-            self.delat_l = G.edges[self.curr_node, self.next_node]['length']
+            self.delta_l = G.edges[self.curr_node, self.next_node]['length']
             self.delta_beta = (
                 2.0 * G.edges[self.curr_node, self.next_node]['length']) / (
                     G.edges[self.curr_node, self.next_node]['b'] *
@@ -184,13 +207,13 @@ class Particle():
         self.advect_time += self.delta_t
         self.matrix_diffusion_time += self.delta_t_md
         self.total_time += self.delta_t + self.delta_t_md
-        self.length += self.delat_l
+        self.length += self.delta_l
         self.beta += self.delta_beta
         self.frac_seq.append(self.frac)
         self.curr_node = self.next_node
 
         self.velocity.append(self.curr_velocity)
-        self.lengths.append(self.delat_l)
+        self.lengths.append(self.delta_l)
         self.times.append(self.delta_t)
         self.coords.append(self.curr_coords)
         # self.fracs.append(self.frac)

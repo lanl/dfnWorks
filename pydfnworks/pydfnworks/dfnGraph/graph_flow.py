@@ -216,6 +216,8 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
             H.edges[upstream,
                     downstream]['time'] = H.edges[upstream, downstream][
                         'length'] / (H.edges[upstream, downstream]['velocity'])
+        else:
+            print(f"no gradient:  {upstream}, {downstream}") 
 
     print("--> Graph flow complete")
     return H
