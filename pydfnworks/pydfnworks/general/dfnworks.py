@@ -41,7 +41,9 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.logging import initialize_log_file, print_log
+
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -120,7 +122,8 @@ class DFNWORKS():
                  num_nodes=None,
                  cell_based_aperture=False,
                  store_polygon_data=True,
-                 pickle_file=None):
+                 pickle_file=None,
+                 log_filename = 'dfnWorks.log'):
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -156,9 +159,19 @@ class DFNWORKS():
         self.logging = False
         self.store_polygon_data = store_polygon_data
 
+        if jobname:
+            self.jobname = jobname
+            self.local_jobname = ntpath.basename(self.jobname)
+            self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            self.initialize_log_file()
+
+        else:
+            self.jobname = os.getcwd() + os.sep + "output"
+            self.local_jobname = "output"
+
+
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-
             self.define_paths()
             self.legal()
 
@@ -169,18 +182,11 @@ class DFNWORKS():
         # except:
         #     print("Creating New Log File (dfnWorks.log)")
         #     print("")
-        print("\n--> Creating DFN Object: Starting")
 
         if pickle_file:
             print(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
 
-        if jobname:
-            self.jobname = jobname
-            self.local_jobname = ntpath.basename(self.jobname)
-        else:
-            self.jobname = os.getcwd() + os.sep + "output"
-            self.local_jobname = "output"
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -214,6 +220,7 @@ class DFNWORKS():
         #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
         #             format="%(asctime)s %(message)s")
 
+        self.print_log("\n--> Creating DFN Object: Starting")
         self.start_time = time()
         self.print_parameters()
         print("\n--> Creating DFN Object: Complete")
