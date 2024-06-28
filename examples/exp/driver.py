@@ -21,7 +21,7 @@ DFN = DFNWORKS(jobname,
 DFN.params['domainSize']['value'] = [10, 10, 10]
 DFN.params['h']['value'] = 0.1
 DFN.params['stopCondition']['value'] = 0
-DFN.params['nPoly']['value'] = 40
+DFN.params['nPoly']['value'] = 30
 DFN.params['seed']['value'] = 1
 DFN.params['boundaryFaces']['value'] = [0, 0, 1, 1, 0, 0]
 
