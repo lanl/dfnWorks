@@ -75,7 +75,7 @@ def make_working_directory(self, delete=False):
             os.mkdir(self.jobname)
         except OSError:
             if os.path.isdir(self.jobname):
-                self.print_log('\nFolder ', self.jobname, ' exists')
+                self.print_log(f'Folder {self.jobname} exists')
                 keep = input('Do you want to delete it? [yes/no] \n')
                 if keep == 'yes' or keep == 'y':
                     self.print_log('Deleting', self.jobname)
@@ -144,7 +144,12 @@ def create_network(self):
 
     self.print_log(f"Running: >> {cmd}")
     subprocess.call(cmd, shell=True)
-    # self.call_executable(cmd)
+
+    self.print_log("-->Opening dfnGen LogFile...\n")
+    with open('dfngen_logfile.txt', 'r') as f:
+        self.print_log(f.read())
+
+
 
     if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
@@ -527,4 +532,3 @@ def grab_polygon_data(self):
         poly = np.array(poly)
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
     self.print_log('--> Data from polygons.dat stored on class in self.polygons\n')
-
