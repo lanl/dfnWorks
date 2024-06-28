@@ -37,11 +37,11 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
-    from pydfnworks.general.paths import define_paths, print_paths, valid
+    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle, call_executable
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
