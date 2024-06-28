@@ -104,4 +104,5 @@ pydfnworks/general/general_functions.py
 pydfnworks/general/helper_functions.py
 pydfnworks/general/images.py
 pydfnworks/general/legal.py
+pydfnworks/general/logging.py
 pydfnworks/general/paths.py

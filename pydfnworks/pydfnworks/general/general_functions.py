@@ -2,6 +2,15 @@ import os
 import sys
 from datetime import datetime
 from time import time
+import subprocess
+
+
+def call_executable(self, command):
+
+    cmd = subprocess.run(command, capture_output=True)
+    self.print_log(cmd.stdout.decode())
+    self.print_log(cmd.stderr.decode())
+
 
 
 def print_parameters(self):
