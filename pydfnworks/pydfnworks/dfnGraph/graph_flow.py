@@ -290,7 +290,27 @@ def compute_dQ(self, G):
     return p32, dQ, Qf
 
 
-def dump_graph_flow_values(G):
+def dump_graph_flow_values(G,graph_flow_filename):
+    """
+    Writes graph flow information to an h5 file named graph_flow_name.
+
+    Parameters
+    --------------------
+        G : NetworkX graph
+            graph with flow variables attached
+
+        graph_flow_filename : string
+            name of output file
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    ---------------
+        name of graph_flow_filename is set in run_graph_flow for primary workflow. Default is graph_flow.hdf5 
+    
+    """
 
     num_edges = G.number_of_edges()
     velocity = np.zeros(num_edges)
@@ -309,7 +329,8 @@ def dump_graph_flow_values(G):
         aperture[i] = d['b']
         volume[i] = area[i] * aperture[i]
 
-    with h5py.File(f"graph_flow.hdf5", "w") as f5file:
+    print(f"--> Writting flow solution to filename: {graph_flow_filename}")
+    with h5py.File(graph_flow_filename, "w") as f5file:
         h5dset = f5file.create_dataset('velocity', data=velocity)
         h5dset = f5file.create_dataset('length', data=lengths)
         h5dset = f5file.create_dataset('vol_flow_rate', data=vol_flow_rate)
@@ -326,7 +347,8 @@ def run_graph_flow(self,
                    pressure_out,
                    fluid_viscosity=8.9e-4,
                    phi=1,
-                   G=None):
+                   G=None,
+                   graph_flow_name = "graph_flow.hdf5"):
     """ Solve for pressure driven steady state flow on a graph representation of the DFN. 
 
     Parameters
@@ -367,5 +389,5 @@ def run_graph_flow(self,
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
 
-    dump_graph_flow_values(Gtilde)
+    dump_graph_flow_values(Gtilde, graph_flow_name)
     return Gtilde
