@@ -37,7 +37,7 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
-    from pydfnworks.general.paths import define_paths, print_paths
+    from pydfnworks.general.paths import define_paths, print_paths, valid
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
@@ -172,8 +172,8 @@ class DFNWORKS():
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-            self.define_paths()
             self.legal()
+            self.define_paths()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
@@ -184,7 +184,7 @@ class DFNWORKS():
         #     print("")
 
         if pickle_file:
-            print(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
 
 
@@ -223,7 +223,7 @@ class DFNWORKS():
         self.print_log("\n--> Creating DFN Object: Starting")
         self.start_time = time()
         self.print_parameters()
-        print("\n--> Creating DFN Object: Complete")
+        self.print_log("\n--> Creating DFN Object: Complete")
 
 
 #     def __del__(self):
