@@ -2,7 +2,10 @@ import os
 import sys
 from datetime import datetime
 from time import time
+<<<<<<< HEAD
 import subprocess
+=======
+>>>>>>> 55ded3ab (added log file to class)
 
 import io
 import logging
