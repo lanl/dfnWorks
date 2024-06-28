@@ -85,7 +85,11 @@ def print_paths(self):
         None
 
     """
+<<<<<<< HEAD
     self.print_log("dfnWorks paths:")
+=======
+    self.print_log("\ndfnWorks paths:")
+>>>>>>> e6c92dcf (added print_log to paths)
     self.print_log("---------------")
     self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
     self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
@@ -181,25 +185,41 @@ def define_paths(self):
     # Directories
     os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
+<<<<<<< HEAD
         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+=======
+        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+>>>>>>> e6c92dcf (added print_log to paths)
         self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
     os.environ[
         'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+=======
+        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+>>>>>>> e6c92dcf (added print_log to paths)
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
     os.environ['CORRECT_UGE_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+=======
+        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+>>>>>>> e6c92dcf (added print_log to paths)
     self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
     os.environ['CORRECT_STOR_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
     if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+=======
+        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+>>>>>>> e6c92dcf (added print_log to paths)
     self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[

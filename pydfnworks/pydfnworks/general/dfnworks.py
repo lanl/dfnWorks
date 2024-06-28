@@ -37,7 +37,11 @@ class DFNWORKS():
         * h : FRAM length scale 
     '''
 
+<<<<<<< HEAD
     from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
+=======
+    from pydfnworks.general.paths import define_paths, print_paths, valid
+>>>>>>> e6c92dcf (added print_log to paths)
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
@@ -207,10 +211,14 @@ class DFNWORKS():
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
+<<<<<<< HEAD
             self.define_paths()
 >>>>>>> 55ded3ab (added log file to class)
             self.legal()
             self.print_log("--> Creating DFN Object: Starting")
+=======
+            self.legal()
+>>>>>>> e6c92dcf (added print_log to paths)
             self.define_paths()
 
         # try:
@@ -264,7 +272,11 @@ class DFNWORKS():
         self.start_time = time()
 >>>>>>> 55ded3ab (added log file to class)
         self.print_parameters()
+<<<<<<< HEAD
         self.print_log("--> Creating DFN Object: Complete")
+=======
+        self.print_log("\n--> Creating DFN Object: Complete")
+>>>>>>> e6c92dcf (added print_log to paths)
 
 
     def __del__(self):
