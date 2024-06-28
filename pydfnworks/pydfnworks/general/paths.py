@@ -1,7 +1,6 @@
 from shutil import move
 import os
 import sys
-import subprocess
 import json
 
 DFNPARAMS = '~/.dfnworksrc'
@@ -47,7 +46,7 @@ def valid(self, name, path, path_type):
             sys.exit(1)
 
 
-def compile_dfn_exe(path):
+def compile_dfn_exe(self,path):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
     Parameters
     ----------
@@ -62,12 +61,12 @@ def compile_dfn_exe(path):
         This function is only called if an executable is not found. 
 """
 
-    print(f"Compiling {path}")
+    self.print_log(f"Compiling {path}")
     cwd = os.getcwd()
     os.chdir(path)
-    subprocess.call("make", shell=True)
+    self.call_executable("make")
     os.chdir(cwd)
-    print("Complete")
+    self.print_log("Complete")
 
 
 def print_paths(self):
@@ -182,31 +181,31 @@ def define_paths(self):
     # Directories
     os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+        self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
         self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
     os.environ[
         'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
     os.environ['CORRECT_UGE_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
     self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
     os.environ['CORRECT_STOR_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
     if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
     self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[
         'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
     if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
-        compile_dfn_exe(os.environ['dfnworks_PATH'] +
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] +
                         'DFN_Mesh_Connectivity_Test/')
     self.valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
 
