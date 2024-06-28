@@ -32,6 +32,9 @@ def dfn_gen(self, output=True):
         Details of each portion of the routine are in those sections
 
     '''
+    self.print_log('=' * 80)
+    self.print_log('dfnGen Starting')
+    self.print_log('=' * 80) 
     # Create Working directory
     self.make_working_directory()
     # Check input file
@@ -42,9 +45,9 @@ def dfn_gen(self, output=True):
         self.output_report()
     # Mesh Network
     self.mesh_network()
-    print('=' * 80)
-    print('dfnGen Complete')
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log('dfnGen Complete')
+    self.print_log('=' * 80)
 
 
 def make_working_directory(self, delete=False):
@@ -72,24 +75,24 @@ def make_working_directory(self, delete=False):
             os.mkdir(self.jobname)
         except OSError:
             if os.path.isdir(self.jobname):
-                print('\nFolder ', self.jobname, ' exists')
+                self.print_log('\nFolder ', self.jobname, ' exists')
                 keep = input('Do you want to delete it? [yes/no] \n')
                 if keep == 'yes' or keep == 'y':
-                    print('Deleting', self.jobname)
+                    self.print_log('Deleting', self.jobname)
                     shutil.rmtree(self.jobname)
-                    print('Creating', self.jobname)
+                    self.print_log('Creating', self.jobname)
                     os.mkdir(self.jobname)
                 elif keep == 'no' or 'n':
                     error = "Not deleting folder. Exiting Program\n"
-                    sys.stderr.write(error)
+                    self.print_log(error, 'error')
                     sys.exit(1)
                 else:
                     error = "Unknown Response. Exiting Program\n"
-                    sys.stderr.write(error)
+                    self.print_log(error, 'error')
                     sys.exit(1)
             else:
                 error = f"Unable to create working directory {self.jobname}\n. Please check the provided path.\nExiting\n"
-                sys.stderr.write(error)
+                self.print_log(error, 'error')
                 sys.exit(1)
     else:
         if not os.path.isdir(self.jobname):
@@ -97,21 +100,24 @@ def make_working_directory(self, delete=False):
         else:
             try:
                 shutil.rmtree(self.jobname)
-                print('--> Creating ', self.jobname)
+                self.print_log(f'--> Creating directory {self.jobname}')
                 os.mkdir(self.jobname)
             except:
-                error = "ERROR deleting and creating directory.\nExiting\n"
+                error = "Error. deleting and creating directory.\nExiting\n"
+                self.print_log(error, 'error')
                 sys.stderr.write(error)
                 sys.exit(1)
 
-    os.mkdir(self.jobname + '/dfnGen_output')
-    os.mkdir(self.jobname + '/dfnGen_output/radii')
-    os.mkdir(self.jobname + '/intersections')
-    os.mkdir(self.jobname + '/polys')
+    subdirs = ['dfnGen_output', 'dfnGen_output/radii', 'intersections','polys']
+    for subdir in subdirs:
+        self.print_log(f"Making subdirectory: {subdir}")
+        try:
+            os.mkdir(self.jobname + os.sep + subdir)
+        except:
+            self.print_log(f"Error making subdirectory: {subdir}", 'error')
     os.chdir(self.jobname)
-
-    print(f"Current directory is now: {os.getcwd()}")
-    print(f"Jobname is {self.jobname}")
+    self.print_log(f"Current directory is now: {os.getcwd()}")
+    self.print_log(f"Jobname is {self.jobname}")
 
 
 def create_network(self):
@@ -130,24 +136,25 @@ def create_network(self):
     -----
     After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. 
     '''
-    print('--> Running DFNGEN')
+    self.print_log('--> Running DFNGEN')
     os.chdir(self.jobname)
     cmd = os.environ[
         'DFNGEN_EXE'] + ' ' + 'dfnGen_output/' + self.local_dfnGen_file[:
                                                      -4] + '_clean.dat' + ' ' + self.jobname
 
-    print(f"Running:\n>>{cmd}")
-    subprocess.call(cmd, shell=True)
+    self.print_log(f"Running: >> {cmd}")
+    # subprocess.call(cmd, shell=True)
+    self.call_executable(cmd)
 
     if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
         self.assign_hydraulic_properties()
-        print('-' * 80)
-        print("Generation Succeeded")
-        print('-' * 80)
+        self.print_log('-' * 80)
+        self.print_log("Generation Succeeded")
+        self.print_log('-' * 80)
     else:
         error = f"Error. Unable to find 'params.txt' in current directory {os.getcwd}.\n"
-        sys.stderr.write(error)
+        self.print_log(error, 'error')
         sys.exit(1)
 
 def parse_params_file(self, quiet=False):
@@ -167,7 +174,7 @@ def parse_params_file(self, quiet=False):
         None
     """
     if not quiet:
-        print("\n--> Parsing  params.txt")
+        self.print_log("--> Parsing params.txt file")
 
     fparams = open('params.txt', 'r')
     # Line 1 is the number of polygons
@@ -194,19 +201,19 @@ def parse_params_file(self, quiet=False):
     fparams.close()
 
     if not quiet:
-        print("--> Number of Fractures: %d" % self.num_frac)
-        print(f"--> h: {self.h:0.2e} m")
+        self.print_log("--> Number of Fractures: %d" % self.num_frac)
+        self.print_log(f"--> h: {self.h:0.2e} m")
         if self.visual_mode > 0:
             self.visual_mode = True
-            print("--> Visual mode is on")
+            self.print_log("--> Visual mode is on")
         else:
             self.visual_mode = False
-            print("--> Visual mode is off")
+            self.print_log("--> Visual mode is off")
 
-        print(f"--> Expected Number of dudded points: {self.dudded_points}")
-        print(f"--> X Domain Size {self.domain['x']} m")
-        print(f"--> Y Domain Size {self.domain['y']} m")
-        print(f"--> Z Domain Size {self.domain['z']} m")
+        self.print_log(f"--> Expected Number of dudded points: {self.dudded_points}")
+        self.print_log(f"--> X Domain Size {self.domain['x']} m")
+        self.print_log(f"--> Y Domain Size {self.domain['y']} m")
+        self.print_log(f"--> Z Domain Size {self.domain['z']} m")
         
         self.x_min = -0.5*self.domain['x']
         self.x_max = 0.5*self.domain['x']
@@ -217,7 +224,7 @@ def parse_params_file(self, quiet=False):
         self.z_max = 0.5*self.domain['z']
         self.z_min = -0.5*self.domain['z']
 
-        print("--> Parsing params.txt complete\n")
+        self.print_log("--> Parsing params.txt complete\n")
 
 
 def gather_dfn_gen_output(self):
@@ -236,7 +243,7 @@ def gather_dfn_gen_output(self):
         Both fractures in the final network and those removed due to being isolated are included in the list. 
 
     """
-    print("--> Parsing dfnWorks output and adding to object")
+    self.print_log("--> Parsing dfnWorks output and adding to object")
     self.parse_params_file(quiet=False)
 
     ## load radii
@@ -349,9 +356,9 @@ def assign_hydraulic_properties(self):
         None
     '''
 
-    print("--> Assign hydraulic properties: Starting ")
+    self.print_log("--> Assign hydraulic properties: Starting ")
     ### Assign variables for fracture families
-    print("--> Assign hydraulic properties to fracture families : Starting ")
+    self.print_log("--> Assign hydraulic properties to fracture families : Starting ")
     for i in range(self.params['nFracFam']['value']):
         hy_variable = self.fracture_families[i]['hydraulic_properties'][
             'variable']['value']
@@ -365,7 +372,7 @@ def assign_hydraulic_properties(self):
                                            hy_function,
                                            hy_params,
                                            family_id=i + 1)
-    print("--> Assign hydraulic properties to fracture families : Complete ")
+    self.print_log("--> Assign hydraulic properties to fracture families : Complete ")
 
     ### Assign variables for user defined fractures and skip rejected fractures
     ##Logic here, loop through user defined fractures
@@ -377,11 +384,11 @@ def assign_hydraulic_properties(self):
             reject_fracs = np.array([reject_fracs]) #needed for case with one rejected fracture, genfromtxt reads in float otherwise
             frac_type = np.array([frac_type])
         except:
-            print('--> No Rejected User Fractures, Ignore Following Warning.')
+            self.print_log('--> No Rejected User Fractures, Ignore Following Warning.')
             reject_fracs = np.array([])
             frac_type = np.array([])
     else: #if no fractures are rejected
-        print('--> No Rejected User Fractures, Ignore Following Warning.')
+        self.print_log('--> No Rejected User Fractures, Ignore Following Warning.')
         reject_fracs = np.array([])
         frac_type = np.array([])
 
@@ -395,14 +402,14 @@ def assign_hydraulic_properties(self):
     frac_poly_num = 1
 
     if self.params['insertUserRectanglesFirst']['value'] == 0:
-        print('--> Inserting User Ellipse Hydraulic Params First')
+        self.print_log('--> Inserting User Ellipse Hydraulic Params First')
         for i in range(len(self.user_ell_params)):
             for j in range(self.user_ell_params[i]['nPolygons']):
                 if frac_ell_num not in ell_reject:
-                    print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_ell_params[i]['hy_prop_type']
                     value = self.user_ell_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
                     fracture_num += 1
@@ -412,10 +419,10 @@ def assign_hydraulic_properties(self):
         for i in range(len(self.user_rect_params)):
             for j in range(self.user_rect_params[i]['nPolygons']):
                 if frac_rect_num not in rect_reject:
-                    print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_rect_params[i]['hy_prop_type']
                     value = self.user_rect_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
                     fracture_num += 1
@@ -425,10 +432,10 @@ def assign_hydraulic_properties(self):
         for i in range(len(self.user_poly_params)):
             for j in range(self.user_poly_params[i]['nPolygons']):
                 if frac_poly_num not in poly_reject:
-                    print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_poly_params[i]['hy_prop_type']
                     value = self.user_poly_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
                     fracture_num += 1
@@ -436,14 +443,14 @@ def assign_hydraulic_properties(self):
                 frac_poly_num += 1
 
     else:
-        print('--> Inserting User Rectangle Hydraulic Params First')
+        self.print_log('--> Inserting User Rectangle Hydraulic Params First')
         for i in range(len(self.user_rect_params)):
             for j in range(self.user_rect_params[i]['nPolygons']):
                 if frac_rect_num not in rect_reject:
-                    print(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Rect Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_rect_params[i]['hy_prop_type']
                     value = self.user_rect_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
                     fracture_num += 1
@@ -453,10 +460,10 @@ def assign_hydraulic_properties(self):
         for i in range(len(self.user_ell_params)):
             for j in range(self.user_ell_params[i]['nPolygons']): 
                 if frac_ell_num not in ell_reject:
-                    print(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Ell Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_ell_params[i]['hy_prop_type']
                     value = self.user_ell_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
         
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
@@ -467,10 +474,10 @@ def assign_hydraulic_properties(self):
         for i in range(len(self.user_poly_params)):
             for j in range(self.user_poly_params[i]['nPolygons']):
                 if frac_poly_num not in poly_reject:
-                    print(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
+                    self.print_log(f'--> Inserting User Poly Hydraulic Params {fracture_num}')
                     hy_prop_type = self.user_poly_params[i]['hy_prop_type']
                     value = self.user_poly_params[i][hy_prop_type][j]
-                    print(f'{hy_prop_type} = {value}')
+                    self.print_log(f'{hy_prop_type} = {value}')
                     self.set_fracture_hydraulic_values(hy_prop_type, [fracture_num],
                                                [value])
                     fracture_num += 1
@@ -478,7 +485,7 @@ def assign_hydraulic_properties(self):
                 frac_poly_num += 1
 
     # self.dump_hydraulic_values()
-    print("--> Assign hydraulic properties: Complete ")
+    self.print_log("--> Assign hydraulic properties: Complete ")
 
 def grab_polygon_data(self):
     '''If flag self.store_polygon_data is set to True, the information stored in polygon.dat is written to a dictionary self.polygons. 
@@ -497,7 +504,7 @@ def grab_polygon_data(self):
         None
         '''
 
-    print("--> Loading Polygon information onto DFN object")
+    self.print_log("--> Loading Polygon information onto DFN object")
     self.polygons = {}
 
     polygon_data = np.genfromtxt('dfnGen_output/polygons.dat', dtype = str, delimiter = 'dummy', skip_header = 1) #weird format, so read data in as strings
@@ -519,5 +526,5 @@ def grab_polygon_data(self):
             poly.append(poly_dat[3*j+1:3*j+4])
         poly = np.array(poly)
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
-    print('--> Data from polygons.dat stored on class in self.polygons\n')
+    self.print_log('--> Data from polygons.dat stored on class in self.polygons\n')
 
