@@ -7,7 +7,7 @@
 *DS_Store
 
 pydfnworks/pydfnworks/only_gen_output.py
-pydfnworks/pydfnworks/paths.py
+pydfnworks/pydfnworks.egg-info
 
 # dfnWorks Executables
 DFNTrans/DFNTrans
