@@ -1,4 +1,5 @@
 from pydfnworks import *
+import datetime
 
 
 def legal(self):
@@ -30,11 +31,8 @@ def legal(self):
 ============================================================  \/
 ===================================================================
 
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~ Program: DFNWorks V{pydfnworks.__version__}  ~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Program: pydfnWorks v{pydfnworks.__version__} 
+Run time : {datetime.datetime.now()}
 
 This program was prepared at Los Alamos National Laboratory (LANL),
 Earth and Environmental Sciences Division, Computational Earth
