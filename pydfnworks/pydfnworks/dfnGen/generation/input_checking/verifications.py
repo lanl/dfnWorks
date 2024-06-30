@@ -6,7 +6,6 @@ from pydfnworks.dfnGen.generation.input_checking.parameter_checking_general impo
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_fractures import check_fracture_params, cross_check, convert_angleOption_value
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_h import check_h, check_shape
 
-
 def verify_params(params):
     """ Verify all of the parameters in the input file.
 

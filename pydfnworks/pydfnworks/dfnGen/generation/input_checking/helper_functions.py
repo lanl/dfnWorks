@@ -1,7 +1,7 @@
 import re
 import sys
 import os
-
+from pydfnworks.general.logging import local_print_log
 
 def print_error(error_string):
     """ print an error
@@ -10,18 +10,17 @@ def print_error(error_string):
         errString (str): a string describing the error
     """
     error = f"\nError while parsing input\n\n{error_string}\n\nProgram terminated.\n"
-    sys.stderr.write(error)
-    sys.exit(1)
+    local_print_log(error,'error')
 
 
-def print_warning(warnString):
+def print_warning(warning_string):
     """ print warning
     
     Args:
         warnStinrg (str): a string with the warning
     """
-    print("WARNING --- " + warnString)
-
+    warning_string = f"--> Warning while parsing input\n\n{warning_string}\nBe Careful out there\n"
+    local_print_log(warning_string,'warning')
 
 def curly_to_list(curly_list):
     """ Converts a list with curly brackets used in input files into a python list.  '{1,2,3}' --> [1,2,3]

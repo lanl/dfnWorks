@@ -390,9 +390,9 @@ def reorder_fracture_families(self):
     self.fracture_families = final_list
 
     if original_order == final_order:
-        print("Fracture Family order was not changed")
+        self.print_log("Fracture Family order was not changed")
 
     else:
-        print("Fracture Families have been reordered")
-        print("Original order = ", original_order)
-        print("Final order = ", final_order)
+        self.print_log("Fracture Families have been reordered")
+        self.print_log("Original order = ", original_order)
+        self.print_log("Final order = ", final_order)
