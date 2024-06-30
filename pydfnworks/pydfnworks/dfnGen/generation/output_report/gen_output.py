@@ -25,6 +25,7 @@ from pydfnworks.dfnGen.generation.output_report.plot_intersection_lengths import
 from pydfnworks.dfnGen.generation.output_report.make_pdf import make_pdf
 
 
+
 def setup_output_directory(params):
     """ Create working dictionary for plots. There is one directory for the entire network information and one for each family.
 
