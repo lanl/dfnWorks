@@ -25,7 +25,6 @@ from pydfnworks.dfnGen.generation.output_report.plot_intersection_lengths import
 from pydfnworks.dfnGen.generation.output_report.make_pdf import make_pdf
 
 
-
 def setup_output_directory(params):
     """ Create working dictionary for plots. There is one directory for the entire network information and one for each family.
 
@@ -99,7 +98,7 @@ def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
 
     # Create Plots
     if len(families) > 0:
-        print('--> Plotting Information')
+        self.print_log('--> Plotting Information')
         plot_fracture_centers(params, families, fractures)
         plot_fracture_radii(params, families, fractures)
         plot_fracture_orientations(params, families, fractures)
