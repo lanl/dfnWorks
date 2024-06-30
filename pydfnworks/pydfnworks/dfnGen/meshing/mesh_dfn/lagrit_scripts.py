@@ -10,6 +10,7 @@ import glob
 from shutil import copy, rmtree, move
 from numpy import genfromtxt, sqrt, cos, arcsin
 import subprocess
+from pydfnworks.general.logging import local_print_log 
 
 
 def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
@@ -35,7 +36,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     Set slope = 0 for uniform mesh
     """
 
-    print("\n--> Creating parameter*.mlgi files")
+    local_print_log("\n--> Creating parameter*.mlgi files")
     try:
         os.mkdir('parameters')
     except OSError:
@@ -123,7 +124,7 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
         f.write('finish \n')
         f.flush()
         f.close()
-    print("--> Creating parameter*.mlgi files: Complete\n")
+    local_print_log("--> Creating parameter*.mlgi files: Complete\n")
 
 
 def create_lagrit_scripts(visual_mode,
@@ -160,7 +161,7 @@ def create_lagrit_scripts(visual_mode,
     #the network structure instead of outputing the appropriate values
     #for computation
 
-    print("--> Writing LaGriT Control Files")
+    local_print_log("--> Writing LaGriT Control Files")
     #Go through the list and write out parameter file for each polygon
     #to be an input file for LaGriT
 
@@ -505,7 +506,7 @@ finish
         f.write(lagrit_input % parameters)
         f.flush()
         f.close()
-    print('--> Writing LaGriT Control Files: Complete')
+    local_print_log('--> Writing LaGriT Control Files: Complete')
 
 
 def create_user_functions():
@@ -581,7 +582,7 @@ def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode,
     1. Fracture mesh objects are read into different part_*.lg files. This allows for merging of the mesh to be performed in batches.  
     """
 
-    print("--> Writing : merge_poly.lgi")
+    local_print_log("--> Writing : merge_poly.lgi")
     part_size = int(num_poly / ncpu) + 1  ###v number of fractures in each part
     endis = []
     ii = 0
@@ -685,13 +686,13 @@ dump / elem_adj_elem / elem_connect.dat / mo_all
 
 """
         if flow_solver == "PFLOTRAN":
-            print("\nDumping output for %s" % flow_solver)
+            local_print_log(f"Dumping output for {flow_solver}")
             lagrit_input += """
 dump / pflotran / full_mesh / mo_all / nofilter_zero
 dump / stor / full_mesh / mo_all / ascii
     """
         elif flow_solver == "FEHM":
-            print("\nDumping output for %s" % flow_solver)
+            local_print_log(f"Dumping output for {flow_solver}")
             lagrit_input += """
 dump / stor / full_mesh / mo_all / ascii
 dump / coord / full_mesh / mo_all 
@@ -703,7 +704,7 @@ dump / zone_imt / full_mesh / mo_all
 math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
 """
         else:
-            print("Warning!\nUnkown flow solver selection: %s" % flow_solver)
+            local_print_log("Warning!\nUnkown flow solver selection: %s" % flow_solver, 'warning')
         lagrit_input += """ 
 # Dump out Material ID Dat file
 cmo / modatt / mo_all / isn / ioflag / l
