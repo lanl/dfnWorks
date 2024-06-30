@@ -66,12 +66,12 @@ def edit_intersection_files(self):
     #   os.remove(fl)
     ## DEBUGGING ##
 
-    print("--> Editing Intersection Files")
+    self.print_log("--> Editing Intersection Files")
     connectivity = load_connectivity_file(self.path)
     ## Note this could be easily changed to run in parallel if needed. Just use cf
     for ifrac in self.fracture_list:
         filename = f'intersections_{ifrac}.inp'
-        print(f'--> Working on: {filename}')
+        self.print_log(f'--> Working on: {filename}')
         intersecting_fractures = connectivity[ifrac - 1]
         pull_list = list(
             set(intersecting_fractures).intersection(set(fractures_to_remove)))
@@ -117,8 +117,7 @@ finish
                      f"intersections_{ifrac}.inp")
             else:
                 error = f"Error. intersections_{ifrac}_prune.inp file not found.\nExitting Program"
-                sys.stderr.write(error)
-                sys.exit(1)
+                self.print_log(error, 'error')
         else:
             try:
                 copy(self.path + 'intersections/' + filename, filename)
@@ -127,7 +126,7 @@ finish
 
     os.chdir(self.jobname)
     self.num_frac = len(self.fracture_list)
-    print("--> Done editting intersection files")
+    self.print_log("--> Done editting intersection files")
 
 
 def clean_up_files_after_prune(self, dump_files=True):
@@ -147,7 +146,11 @@ def clean_up_files_after_prune(self, dump_files=True):
  
    '''
 
+<<<<<<< HEAD
     print(f"--> Modifying DFN properties based on fractures in {self.prune_file}")
+=======
+    self.print_log(f"--> Editing DFN file based on fractures in {self.prune_file}")
+>>>>>>> e67ae8f6 (added log file to DFN meshing)
     keep_list = np.sort(np.genfromtxt(self.prune_file).astype(int))
     self.poly_info = self.poly_info[keep_list - 1, :]
     self.families = self.families[keep_list - 1]
@@ -163,9 +166,14 @@ def clean_up_files_after_prune(self, dump_files=True):
 
 
     if dump_files:
+<<<<<<< HEAD
         print(f"--> Modifying files based on fractures in {self.prune_file}")
 
         print("--> Editing params.txt file")
+=======
+        ## this is probably broken, but everything else is in memory now so....
+        self.print_log("--> Editing params.txt file")
+>>>>>>> e67ae8f6 (added log file to DFN meshing)
         fin = open(self.path + '/params.txt')
         try:
             os.unlink('params.txt')
@@ -179,9 +187,9 @@ def clean_up_files_after_prune(self, dump_files=True):
             fout.write(line)
         fin.close()
         fout.close()
-        print("--> Complete")
+        self.print_log("--> Complete")
 
-        print("--> Editing poly_info.dat file")
+        self.print_log("--> Editing poly_info.dat file")
         try:
             os.unlink('poly_info.dat')
         except:
@@ -194,9 +202,9 @@ def clean_up_files_after_prune(self, dump_files=True):
                           self.poly_info[i, 3], self.poly_info[i, 4],
                           self.poly_info[i, 5], self.poly_info[i, 6],
                           self.poly_info[i, 7], self.poly_info[i, 8]))
-        print("--> Complete")
+        self.print_log("--> Complete")
 
-        print("--> Editing radii_Final.dat file")
+        self.print_log("--> Editing radii_Final.dat file")
         fin = open(self.path + 'dfnGen_output/radii_Final.dat')
         fout = open(self.jobname + 'dfnGen_output/radii_Final.dat', 'w')
         # copy header
@@ -211,9 +219,9 @@ def clean_up_files_after_prune(self, dump_files=True):
             fout.write('%f %f %d\n' %
                        (self.radii[i, 0], self.radii[i, 1], self.radii[i, 2]))
         fout.close()
-        print("--> Complete")
+        self.print_log("--> Complete")
 
-        print("--> Editing normal_vectors.dat file")
+        self.print_log("--> Editing normal_vectors.dat file")
         fin = open(self.path + 'dfnGen_output/normal_vectors.dat')
         fout = open(self.jobname + 'dfnGen_output/normal_vectors.dat', 'w')
         # copy header
@@ -223,9 +231,9 @@ def clean_up_files_after_prune(self, dump_files=True):
                        (self.normal_vect[i, 0], self.normal_vect[i, 1],
                         self.normal_vect[i, 2]))
         fout.close()
-        print("--> Complete")
+        self.print_log("--> Complete")
 
-        print("--> Editing translations.dat file")
+        self.print_log("--> Editing translations.dat file")
         fin = open(self.path + 'dfnGen_output/translations.dat', 'r')
         fout = open(self.jobname + 'dfnGen_output/translations.dat', 'w')
         # copy header
@@ -241,8 +249,9 @@ def clean_up_files_after_prune(self, dump_files=True):
             fout.write('%f %f %f\n' %
                        (points[i, 0], points[i, 1], points[i, 2]))
         fout.close()
-        print("--> Complete")
+        self.print_log("--> Complete")
 
+<<<<<<< HEAD
         # print("--> Editing translations.dat file")
         # with open(self.path + 'dfnGen_output/translations.dat', 'r') as fin:
         #     with open(self.jobname + 'dfnGen_output/translations.dat',
@@ -261,6 +270,26 @@ def clean_up_files_after_prune(self, dump_files=True):
         #         for i in range(self.num_frac):
         #             fout.write('%f %f %f\n' %
         #                        (points[i, 0], points[i, 1], points[i, 2]))
+=======
+        self.print_log("--> Editing translations.dat file")
+        with open(self.path + 'dfnGen_output/translations.dat', 'r') as fin:
+            with open(self.jobname + 'dfnGen_output/translations.dat',
+                      'w') as fout:
+                # copy header
+                line = fin.readline()
+                fout.write(line)
+                points = []
+                for line in fin.readlines():
+                    tmp = line.split(' ')
+                    if tmp[-1] != 'R':
+                        points.append(
+                            (float(tmp[0]), float(tmp[1]), float(tmp[2])))
+                points = np.asarray(points)
+                points = points[keep_list - 1, :]
+                for i in range(self.num_frac):
+                    fout.write('%f %f %f\n' %
+                               (points[i, 0], points[i, 1], points[i, 2]))
+>>>>>>> e67ae8f6 (added log file to DFN meshing)
 
         fout = open(self.jobname + 'dfnGen_output/surface_area_Final.dat', 'w')
         fout.write(
@@ -270,9 +299,9 @@ def clean_up_files_after_prune(self, dump_files=True):
         for i in range(self.num_frac):
             fout.write(f'{self.surface_area[i]}\n')
         fout.close()
-        print("--> Complete")
+        self.print_log("--> Complete")
 
-        print("--> Editing polygons.dat file")
+        self.print_log("--> Editing polygons.dat file")
         with open(self.path + 'dfnGen_output/polygons.dat', 'r') as fin:
             header = fin.readline()
             data = fin.read().strip()
@@ -283,6 +312,10 @@ def clean_up_files_after_prune(self, dump_files=True):
                     if fracture - 1 in keep_list:
                         fout.write(line + "\n")
 
+<<<<<<< HEAD
         print(f"--> Modifying files based on fractures in {self.prune_file} : Complete")
 
     print("--> Editing Fracture Files Complete")
+=======
+    self.print_log("--> Editing Fracture Files Complete")
+>>>>>>> e67ae8f6 (added log file to DFN meshing)
