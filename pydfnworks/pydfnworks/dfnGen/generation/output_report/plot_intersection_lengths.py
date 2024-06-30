@@ -10,6 +10,7 @@ import matplotlib.pylab as plt
 import seaborn as sns
 import numpy as np
 
+from pydfnworks.general.logging import local_print_log
 
 def plot_intersection_lengths(params, families):
     """ Creates PDF plots of fracture intersection lengths in the domain. First all fractures are plotted, then by family.
@@ -38,7 +39,7 @@ def plot_intersection_lengths(params, families):
         Information about intersection modification during generation has not been include yet, but it should be. 
     """
 
-    print("--> Plotting Intersection Distributions")
+    local_print_log("--> Plotting Intersection Distributions")
 
     # intersection_params = ["    Number of Intersections","    Intersections Shortened",
     # "    Original Intersection (Before Intersection Shrinking) Length",
@@ -52,7 +53,7 @@ def plot_intersection_lengths(params, families):
     f2 = f2.astype(int)
     num_intersections = len(f1)
     if params["verbose"]:
-        print(f"There are {num_intersections} intersections")
+        local_print_log(f"There are {num_intersections} intersections")
     fig, axs = plt.subplots(figsize=(10, 7))
     sns.kdeplot(intersection_lengths, color="k")
     labs = ["Entire Network"]
@@ -61,7 +62,7 @@ def plot_intersection_lengths(params, families):
     idx = []
     for i in range(num_intersections):
         if params["verbose"] and i % 1000 == 0:
-            print(f"--> Intersection number {i}")
+            local_print_log(f"--> Intersection number {i}")
         i1 = 0
         i2 = 0
         for fam in families:
@@ -77,7 +78,7 @@ def plot_intersection_lengths(params, families):
 
     for fam in families:
         if params["verbose"]:
-            print(f"--> Working on family {fam['Global Family']}")
+            local_print_log(f"--> Working on family {fam['Global Family']}")
         family_lengths = []
         for i in range(num_intersections):
             if idx[i][0] == fam['Global Family'] or idx[i][1] == fam[
@@ -98,14 +99,14 @@ def plot_intersection_lengths(params, families):
     plt.close()
 
     if params["verbose"]:
-        print(f"--> Individual Family Plots")
+        local_print_log(f"--> Individual Family Plots")
 
     # individual family plots
     for fam in families:
         fig, axs = plt.subplots(figsize=(10, 7))
 
         if params["verbose"]:
-            print(f"--> Working on family {fam['Global Family']}")
+            local_print_log(f"--> Working on family {fam['Global Family']}")
         family_lengths = []
         for i in range(num_intersections):
             if idx[i][0] == fam['Global Family'] or idx[i][1] == fam[
