@@ -171,13 +171,21 @@ dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
 """
             if self.flow_solver == "PFLOTRAN":
+<<<<<<< HEAD
                 self.print_log(f"--> Dumping output for {self.flow_solver}")
+=======
+                self.print_log(f"\n--> Dumping output for {self.flow_solver}")
+>>>>>>> 02d28942 (added log file to DFN meshing)
                 lagrit_input += """
     dump / pflotran / full_mesh / mo_all / nofilter_zero
     dump / stor / full_mesh / mo_all / ascii
         """
             elif self.flow_solver == "FEHM":
+<<<<<<< HEAD
                 self.print_log(f"--> Dumping output for {self.flow_solver}")
+=======
+                self.print_log(f"\n--> Dumping output for {self.flow_solver}")
+>>>>>>> 02d28942 (added log file to DFN meshing)
                 lagrit_input += """
     dump / stor / full_mesh / mo_all / ascii
     dump / coord / full_mesh / mo_all 
