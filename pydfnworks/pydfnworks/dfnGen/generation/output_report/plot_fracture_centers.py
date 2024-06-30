@@ -7,6 +7,7 @@
 """
 
 import matplotlib.pylab as plt
+from pydfnworks.general.logging import local_print_log 
 
 
 def plot_fracture_centers(params, families, fractures):
@@ -32,19 +33,19 @@ def plot_fracture_centers(params, families, fractures):
         PDF files are dumped into dfnGen_output_report/figures. There is one figure for all fractures (all_fracture_centers.pdf) and one per family family_{family_id}_fracture_centers.pdf. 
     """
 
-    print("--> Plotting Fracture Locations")
+    local_print_log("--> Plotting Fracture Locations")
 
     for fam in families:
         family_id = fam["Global Family"]
         if params["verbose"]:
-            print(f"--> Working on fracture family {family_id}")
+            local_print_log(f"--> Working on fracture family {family_id}")
         fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 7))
 
         for coord in ["x", "y", "z"]:
             values_all = []
             values_accepted = []
             if params["verbose"]:
-                print(f"--> Working on {coord} coordinates ")
+                local_print_log(f"--> Working on {coord} coordinates ")
 
             for i in fam["fracture list - all"]:
                 values_all.append(fractures[i]["center"][coord])
@@ -143,19 +144,19 @@ def plot_fracture_centers(params, families, fractures):
             fileout = f"family_{tmp}_centers.png"
 
         if params["verbose"]:
-            print(f"--> Saving File {fileout}")
+            local_print_log(f"--> Saving File {fileout}")
         plt.savefig(f"{params['output_dir']}/family_{family_id}/{fileout}")
         plt.clf()
         plt.close()
 
         if params["verbose"]:
-            print("--> Complete")
+            local_print_log("--> Complete")
 
     # Make plots of all fractures
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 7))
     for coord in ["x", "y", "z"]:
         if params["verbose"]:
-            print(f"--> Working on {coord} coordinates ")
+            local_print_log(f"--> Working on {coord} coordinates ")
 
         for fam in families:
             values_all = []
@@ -235,10 +236,10 @@ def plot_fracture_centers(params, families, fractures):
     fileout = f"all_fracture_centers.png"
 
     if params["verbose"]:
-        print(f"--> Saving File {fileout}")
+        local_print_log(f"--> Saving File {fileout}")
     plt.savefig(f"{params['output_dir']}/network/{fileout}")
     plt.clf()
     plt.close()
 
     if params["verbose"]:
-        print("--> Complete")
+        local_print_log("--> Complete")
