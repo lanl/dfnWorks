@@ -1,10 +1,10 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
-
+from pydfnworks.general.logging import local_print_log
 
 def dump_params(params, output_file):
     """ Write the parameters from the verbose input file back to a simplified input file.
     """
-    print(f"--> Writing parameters to file {output_file}")
+    local_print_log(f"--> Writing parameters to file {output_file}")
     try:
         writer = open(output_file, 'w')
     except:

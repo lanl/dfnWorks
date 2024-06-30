@@ -1,8 +1,11 @@
+from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
+from pydfnworks.general.logging import local_print_log
+
+
 import sys
 import os
 from numpy import pi
 
-from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
 
 def check_angle_option(angle_option, array):
     for val in array:
@@ -429,8 +432,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -447,8 +449,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -465,8 +466,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -514,7 +514,6 @@ def write_user_fractures_to_file(self):
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
                                 self.print_log(error, 'error')
-                                sys.exit(1)
 
                         rect_file.write('\n')
 
@@ -532,7 +531,6 @@ def write_user_fractures_to_file(self):
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
                                 self.print_log(error, 'error')
-                                sys.exit(1)
 
                         rect_file.write('\n')
 
@@ -550,7 +548,6 @@ def write_user_fractures_to_file(self):
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
                                 sys.stderr.write(error)
-                                sys.exit(1)
 
                         rect_file.write('\n')
 
@@ -595,23 +592,20 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
 
     if transmissivity is not None:
         if hy_prop_type != None:
-            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = "Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            local_print_log(error, 'error')
         else:
             hy_prop_type = 'transmissivity'
 
     if permeability is not None:
         if hy_prop_type != None:
-            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = "Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            local_print_log(error, 'error')
         else:
             hy_prop_type = 'permeability'
 
     if hy_prop_type == None:
         error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     return hy_prop_type

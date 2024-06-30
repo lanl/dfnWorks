@@ -201,19 +201,17 @@ def print_family_information(self, family_number):
 
     if len(self.fracture_families) > 0:
         family = self.fracture_families[family_number - 1]
-        print(f"--> Family information for family # {family_number}")
+        self.print_log(f"--> Family information for family # {family_number}")
         for key in family.keys():
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():
-                    print(
+                    self.print_log(
                         f"Name: {key} : {sub_key} : {family[key][sub_key]['value']}"
                     )
             else:
-                print(f"Name: {key:40s}Value: {family[key]['value']}")
-        print()
+                self.print_log(f"Name: {key:40s}Value: {family[key]['value']}")
     else:
-        print("No Defined Fracture Families")
-        print()
+        self.print_log("No Defined Fracture Families")
 
 
 def add_fracture_family(self,
@@ -320,7 +318,7 @@ def add_fracture_family(self,
         information about parameters
     """
 
-    print("--> Adding new facture family")
+    self.print_log("--> Adding new facture family")
 
     family = fracture_family_dictionary()
     if shape == "rect":
@@ -331,8 +329,7 @@ def add_fracture_family(self,
         family['number_of_points']['value'] = number_of_points
     else:
         error = f"Unknown Fracture Type {shape}. Acceptable values are rect & ell. Exiting.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'error')
 
     family['layer']['value'] = layer
     family['region']['value'] = region
@@ -344,8 +341,7 @@ def add_fracture_family(self,
         family['probability']['value'] = probability
     else:
         error = f"A value for p32 or probability must be provided. Exiting.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'error')
 
     family['aspect']['value'] = aspect
 
@@ -366,30 +362,27 @@ def add_fracture_family(self,
     # orientationOption = 2 --> stirke/dip
     if theta != None and phi != None:
         if self.params['orientationOption']['value'] == None:
-            print('Setting orientationOption = 0 (theta/phi)')
+            self.print_log('Setting orientationOption = 0 (theta/phi)')
             self.params['orientationOption']['value'] = 0
         if self.params['orientationOption']['value'] != 0:
-            error = f"0Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f"0 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
     if trend != None and plunge != None:
         if self.params['orientationOption']['value'] == None:
-            print('Setting orientationOption = 1 (trend/plunge)')
+            self.print_log('Setting orientationOption = 1 (trend/plunge)')
             self.params['orientationOption']['value'] = 1
         if self.params['orientationOption']['value'] != 1:
-            error = f"1Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f"1 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
     if strike != None and dip != None:
         if self.params['orientationOption']['value'] == None:
-            print('Setting orientationOption = 2 (strike/dip)')
+            self.print_log('Setting orientationOption = 2 (strike/dip)')
             self.params['orientationOption']['value'] = 2
         if self.params['orientationOption']['value'] != 2:
-            error = f"2Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f"2 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
     ## Radius Distribution
     if distribution == "tpl":
@@ -398,22 +391,20 @@ def add_fracture_family(self,
             family['tpl']['value']['alpha'] = alpha
         else:
             error = f"Error. A value for alpha must be provided if family is tpl distribution. Exiting.\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
+    
     elif distribution == "log_normal":
         family['distribution']['value']['log_normal'] = True
         if log_mean != None:
             family['log_normal']['value']['mean'] = log_mean
         else:
             error = f"Error. A value for log_mean must be provided if family is log_normal distribution. Exiting. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
         if log_std != None:
             family['log_normal']['value']['std'] = log_std
         else:
             error = f"Error. A value for log_std must be provided if family is log_normal distribution. Exiting. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
 
     elif distribution == "exp":
         family['distribution']['value']['exp'] = True
@@ -421,26 +412,24 @@ def add_fracture_family(self,
             family['exp']['value']['mean'] = exp_mean
         else:
             error = f"Error. A value for exp_mean must be provided if family is exp distribution. Exiting. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
+    
     elif distribution == "constant":
         family['distribution']['value']['constant'] = True
         if constant != None:
             family['constant']['value'] = constant
         else:
             error = f"Error. A value for constant must be provided if family is constant distribution. Exiting. \n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
+    
     else:
         error = f"Error. Unknown Fracture Distribution {distribution}. Acceptable values are 'tpl', 'exp', 'log_normal',  & 'constant'. Exiting.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error,'error')
 
     if distribution != "constant":
         if not min_radius or not max_radius:
             error = f"Error. Minimum and Maximum radius must be provided unless using constant distribution. Exiting.\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error,'error')
 
     family['min_radius']['value'] = min_radius
     family['max_radius']['value'] = max_radius
