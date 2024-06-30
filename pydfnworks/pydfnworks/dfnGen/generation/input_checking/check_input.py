@@ -33,7 +33,7 @@ def print_domain_parameters(self, print_all=False):
     for key in self.params.keys():
         value = self.params[key]['value']
         if print_all:
-            self.print_log(f"{key:34s}{value}")
+            self.print_log(f"{key:34s}\t{value}")
         else:
             if value:
                 self.print_log(f"Name: {key:34s}Value: {value}")
@@ -77,11 +77,10 @@ def check_input(self, from_file=False):
             except:
                 error = f"Unable to copy dfnGen input file to working directory \n{self.dfnGen_file}\n Exiting"
                 self.print_log(error, 'error')
-                sys.exit(1)
         else:
             error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
             self.print_log(error, 'error')
-            sys.exit(1)
+        
         input_file = self.local_dfnGen_file
         output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         self.print_log(f"--> Reading input file: {input_file}")
@@ -94,5 +93,5 @@ def check_input(self, from_file=False):
     self.print_log(f"--> Clean output file name: {output_file}")
     verify_params(self.params)
     dump_params(self.params, output_file)
-    self.print_log("\nChecking Input File Complete")
+    self.print_log("Checking Input File Complete")
     self.print_log('=' * 80)
