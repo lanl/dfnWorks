@@ -143,8 +143,8 @@ def create_network(self):
                                                      -4] + '_clean.dat' + ' ' + self.jobname
 
     self.print_log(f"Running: >> {cmd}")
-    # subprocess.call(cmd, shell=True)
-    self.call_executable(cmd)
+    subprocess.call(cmd, shell=True)
+    # self.call_executable(cmd)
 
     if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
