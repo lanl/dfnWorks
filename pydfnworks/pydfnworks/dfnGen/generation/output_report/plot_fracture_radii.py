@@ -11,7 +11,6 @@ import matplotlib.pylab as plt
 
 from pydfnworks.dfnGen.generation.output_report.distributions import create_ecdf, tpl, lognormal, exponential
 
-
 def plot_fracture_radii(params, families, fractures, num_bins=20):
     """ Creates histogram plots of fracture centers in the domain. First all fractures are plotted, then by family.
 
@@ -34,19 +33,20 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
     -------
         PDF files are dumped into family/figures. There is one figure for all fractures dfnGen_output_report/networks/all_fracture_centers.pdf and one per family dfnGen_output_report/family_{family_id}/family_{family_id}_fracture_centers.pdf. 
     """
+    from pydfnworks.general.logging import local_print_log 
 
     # This keep track of the max/min radius in the entire network
     min_radius = None
     max_radius = None
 
-    print("--> Plotting Fracture Radii Distributions")
+    local_print_log("--> Plotting Fracture Radii Distributions")
 
     for fam in families:
         if fam["Distribution"] != "Constant" and fam["Global Family"] > 0:
             family_id = fam["Global Family"]
             dist = fam["Distribution"]
             if params["verbose"]:
-                print(
+                local_print_log:(
                     f"--> Working on family {family_id} which has a {dist} distribution of radii."
                 )
 
@@ -73,7 +73,7 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
             for i in fam["fracture list - final"]:
                 radii_accepted.append(fractures[i]["x-radius"])
 
-            #print(f"Mean: {np.mean(radii_all)}, Variance: {np.var(radii_all)}")
+            #local_print_log(f"Mean: {np.mean(radii_all)}, Variance: {np.var(radii_all)}")
             min_val = min(min(radii_all), min(radii_accepted))
             max_val = max(max(radii_all), max(radii_accepted))
             # Get global min/max radius
@@ -225,7 +225,7 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
                 fileout = f"family_{tmp}_radii.png"
 
             if params["verbose"]:
-                print(f"--> Saving File {fileout}")
+                local_print_log(f"--> Saving File {fileout}")
             plt.savefig(f"{params['output_dir']}/family_{family_id}/{fileout}")
             plt.clf()
             plt.close()

@@ -11,6 +11,7 @@ import math as m
 import mplstereonet
 import matplotlib.pyplot as plt
 import random
+from pydfnworks.general.logging import local_print_log 
 
 
 def convert_to_trend_and_plunge(normal_vectors):
@@ -79,7 +80,7 @@ def plot_fracture_orientations(params, families, fractures):
         PDF files are dumped into dfnGen_output_report/figures. There is one figure for all fractures (all_fracture_centers.pdf) and one per family family_{family_id}_fracture_centers.pdf. 
     """
 
-    print("--> Plotting Rose Diagrams and Stereonets")
+    local_print_log("--> Plotting Rose Diagrams and Stereonets")
 
     # plot all families
     # build stereonets
@@ -89,7 +90,7 @@ def plot_fracture_orientations(params, families, fractures):
     ax2 = fig.add_subplot(122, projection='polar')
 
     if params["verbose"]:
-        print("--> Plotting Entire Network Stereonet")
+        local_print_log("--> Plotting Entire Network Stereonet")
     for fam in families:
         family_id = fam["Global Family"]
         # Gather Fracture information
@@ -116,7 +117,7 @@ def plot_fracture_orientations(params, families, fractures):
                  label=f"Family \# {family_id}")
 
         if len(plunges) > 500:
-            print("Too Many Fractures")
+            local_print_log("Too Many Fractures, plotting a subset", 'warning')
             idx = random.choices(range(len(plunges)), k=500)
             ax1.line(plunges[idx],
                      trends[idx],
@@ -132,7 +133,7 @@ def plot_fracture_orientations(params, families, fractures):
                      markersize=5,
                      alpha=0.5)
     if params["verbose"]:
-        print("--> Plotting Densities")
+        local_print_log("--> Plotting Densities")
 
     total_fractures = 0
     for fam in families:
@@ -156,7 +157,7 @@ def plot_fracture_orientations(params, families, fractures):
     # plot all families
     # build Rose Diagrams
     if params["verbose"]:
-        print("--> Plotting Entire Network Rose Diagram")
+        local_print_log("--> Plotting Entire Network Rose Diagram")
     for fam in families:
         family_id = fam["Global Family"]
         # Gather Fracture information
@@ -184,7 +185,7 @@ def plot_fracture_orientations(params, families, fractures):
 
     fileout = f"network_orientations.png"
     if params["verbose"]:
-        print(f"--> Saving File {fileout}")
+        local_print_log(f"--> Saving File {fileout}")
 
     plt.savefig(f"{params['output_dir']}/network/{fileout}")
     plt.clf()
@@ -194,7 +195,7 @@ def plot_fracture_orientations(params, families, fractures):
     for fam in families:
         family_id = fam["Global Family"]
         if params["verbose"]:
-            print(f"--> Working on fracture family {family_id}")
+            local_print_log(f"--> Working on fracture family {family_id}")
 
         # Gather Fracture information
         normal_vectors = np.zeros((fam["final_number_of_fractures"], 3))
@@ -248,7 +249,7 @@ def plot_fracture_orientations(params, families, fractures):
             fileout = f"family_{family_id}_orienations.png"
 
         if params["verbose"]:
-            print(f"--> Saving File {fileout}")
+            local_print_log(f"--> Saving File {fileout}")
 
         plt.savefig(f"{params['output_dir']}/family_{family_id}/{fileout}")
         plt.clf()
