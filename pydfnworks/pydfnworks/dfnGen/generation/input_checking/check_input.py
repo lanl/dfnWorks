@@ -33,7 +33,7 @@ def print_domain_parameters(self, print_all=False):
     for key in self.params.keys():
         value = self.params[key]['value']
         if print_all:
-            self.print_log(f"{key:34s}{value}")
+            self.print_log(f"{key:34s}\t{value}")
         else:
             if value:
                 self.print_log(f"Name: {key:34s}Value: {value}")
