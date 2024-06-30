@@ -5,6 +5,7 @@ import os
 
 from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import run_lagrit_script
 from pydfnworks.general import helper_functions as hf
+from pydfnworks.general.logging import local_print_log 
 
 
 def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
@@ -27,7 +28,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
 
     """
 
-    print(f"--> Making {variable} by node file")
+    local_print_log(f"--> Making {variable} by node file")
     values = genfromtxt(variable_file, skip_header=0, usecols=(-1))
     if not os.path.isfile(matid_file):
         hf.print_error(f"Cannot locate the file '{matid_file}")
@@ -38,7 +39,7 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
         value_by_node[i] = values[n - 1]
     variable_file_by_node = f"{variable}_by_node.dat"
     savetxt(variable_file_by_node, value_by_node)
-    print("--> Complete")
+    local_print_log("--> Complete")
     return variable_file_by_node
 
 
@@ -62,7 +63,7 @@ def create_lagrit_append_script(variable, variable_file, mesh_file_in,
         lagrit_file : string
             Name of LaGriT output file
     """
-    print("--> Making LaGriT script")
+    local_print_log("--> Making LaGriT script")
     lagrit_script = f'''
 read / {mesh_file_in} / mo1
 cmo / addatt / mo1 / {variable} / vdouble / scalar / nnodes
@@ -76,7 +77,7 @@ finish
     with open(lagrit_file, "w") as fp:
         fp.write(lagrit_script)
         fp.flush()
-    print("--> Complete")
+    local_print_log("--> Complete")
     return lagrit_file
 
 
@@ -127,12 +128,12 @@ def add_variable_to_mesh(self,
     if mesh_file_out is None:
         mesh_file_out = mesh_file_in
 
-    print(
+    self.print_log(
         f"--> Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}"
     )
 
     if node_based:
-        print(f"--> Expecting node-based values")
+        self.print_log(f"--> Expecting node-based values")
         lagrit_file = create_lagrit_append_script(variable, variable_file,
                                                   mesh_file_in, mesh_file_out)
     else:
@@ -143,6 +144,6 @@ def add_variable_to_mesh(self,
 
     run_lagrit_script(lagrit_file)
 
-    print(
+    self.print_log(
         f"--> Complete: Adding attribute in {variable_file} to mesh file {mesh_file_in}.\n--> Output writting into {mesh_file_out}"
     )
