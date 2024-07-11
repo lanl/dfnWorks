@@ -3,7 +3,7 @@ import numpy as np
 from itertools import islice
 
 from pydfnworks.dfnGraph.intersection_graph import boundary_index
-
+from pydfnworks.general.logging import local_print_log
 
 def create_bipartite_graph(
         inflow,
@@ -34,7 +34,7 @@ def create_bipartite_graph(
     See Hyman et al. 2018 "Identifying Backbones in Three-Dimensional Discrete Fracture Networks: A Bipartite Graph-Based Approach" SIAM Multiscale Modeling and Simulation for more details 
 """
 
-    print("--> Creating Bipartite Graph")
+    local_print_log("--> Creating Bipartite Graph")
 
     # generate sequential letter sequence as ids for fractures
     # e..g aaaaa aaaaab aaaaac
@@ -100,6 +100,6 @@ def create_bipartite_graph(
             B.nodes[fracture]['perm'] = float(perm)
             B.nodes[fracture]['aperture'] = float(aperture)
 
-    print("--> Complete")
+    local_print_log("--> Complete")
 
     return B

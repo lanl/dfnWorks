@@ -13,7 +13,7 @@ import matplotlib.pylab as plt
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.fracture_graph import create_fracture_graph
 from pydfnworks.dfnGraph.bipartite_graph import create_bipartite_graph
-
+from pydfnworks.general.logging import local_print_log
 
 def create_graph(self, graph_type, inflow, outflow):
     """ Header function to create a graph based on a DFN. Particular algorithms are in files.
@@ -40,7 +40,6 @@ def create_graph(self, graph_type, inflow, outflow):
 """
     ## write hydraulic properties to file.
     self.dump_hydraulic_values()
-
     if graph_type == "fracture":
         G = create_fracture_graph(inflow, outflow)
     elif graph_type == "intersection":
@@ -48,9 +47,9 @@ def create_graph(self, graph_type, inflow, outflow):
     elif graph_type == "bipartite":
         G = create_bipartite_graph(inflow, outflow)
     else:
-        print(
-            f"Error. Unknown graph type.\nType provided: {graph_type}.\nAccetable names: fracture, intersection, bipartite.\nReturning empty graph."
-        )
+        self.print_log(
+            f"Warning. Unknown graph type.\nType provided: {graph_type}.\nAccetable names: fracture, intersection, bipartite.\nReturning empty graph."
+        , 'warning')
         return nx.Graph()
     return G
 
@@ -89,9 +88,7 @@ def boundary_index(bc_name):
         return bc_dict[bc_name]
     except:
         error = f"Error. Unknown boundary condition: {bc_name} \nExiting\n"
-        sys.stderr.write(error)
-        sys.exit(1)
-
+        local_print_log(error, 'error')
 
 def add_fracture_source(self, G, source):
     """  
@@ -118,8 +115,8 @@ def add_fracture_source(self, G, source):
     if not type(source) == list:
         source = [source]
 
-    print("--> Adding new source connections")
-    print("--> Warning old source will be removed!!!")
+    self.print_log("--> Adding new source connections")
+    self.print_log("--> Warning old source will be removed!!!")
 
     if G.graph['representation'] == "fracture":
         # removing old source term and all connections
@@ -143,7 +140,7 @@ def add_fracture_source(self, G, source):
                 if f2 == 's':
                     nodes_to_remove.append(u)
 
-        print("--> Removing nodes: ", nodes_to_remove)
+        self.print_log("--> Removing nodes: ", nodes_to_remove)
         G.remove_nodes_from(nodes_to_remove)
 
         # add new source node
@@ -153,19 +150,19 @@ def add_fracture_source(self, G, source):
                 f1 = d["frac"][0]
                 f2 = d["frac"][1]
                 if f1 in source:
-                    print(
+                    self.print_log(
                         "--> Adding edge between {0} and new source / fracture {1}"
                         .format(u, f1))
                     G.add_edge(u, 's', frac=f1, length=0., perm=1., iperm=1.)
                 elif f2 in source:
-                    print(
+                    self.print_log(
                         "--> Adding edge between {0} and new source / fracture {1}"
                         .format(u, f2))
                     G.add_edge(u, 's', frac=f2, length=0., perm=1., iperm=1.)
 
     elif G.graph['representation'] == "bipartite":
-        print("--> Not supported for bipartite graph")
-        print("--> Returning unchanged graph")
+        self.print_log("--> Not supported for bipartite graph", 'warning')
+        self.print_log("--> Returning unchanged graph", 'warning')
     return G
 
 
@@ -191,8 +188,8 @@ def add_fracture_target(self, G, target):
     if not type(target) == list:
         source = [target]
 
-    print("--> Adding new target connections")
-    print("--> Warning old target will be removed!!!")
+    self.print_log("--> Adding new target connections")
+    self.print_log("--> Warning old target will be removed!!!")
 
     if G.graph['representation'] == "fracture":
         # removing old target term and all connections
@@ -216,7 +213,7 @@ def add_fracture_target(self, G, target):
                 if f2 == 't':
                     nodes_to_remove.append(u)
 
-        print("--> Removing nodes: ", nodes_to_remove)
+        self.print_log("--> Removing nodes: ", nodes_to_remove)
         G.remove_nodes_from(nodes_to_remove)
 
         # add new target node
@@ -226,19 +223,20 @@ def add_fracture_target(self, G, target):
                 f1 = d["frac"][0]
                 f2 = d["frac"][1]
                 if f1 in target:
-                    print(
+                    self.print_log(
                         "--> Adding edge between {0} and new target / fracture {1}"
                         .format(u, f1))
                     G.add_edge(u, 't', frac=f1, length=0., perm=1., iperm=1.)
                 elif f2 in target:
-                    print(
+                    self.print_log(
                         "--> Adding edge between {0} and new target / fracture {1}"
                         .format(u, f2))
                     G.add_edge(u, 't', frac=f2, length=0., perm=1., iperm=1.)
 
     elif G.graph['representation'] == "bipartite":
-        print("--> Not supported for bipartite graph")
-        print("--> Returning unchanged graph")
+        self.print_log("--> Not supported for bipartite graph", 'warning')
+        self.print_log("--> Returning unchanged graph", 'warning')
+
     return G
 
 
@@ -305,7 +303,7 @@ def dump_fractures(self, G, filename):
     nodes = pull_source_and_target(nodes)
     fractures = [int(i) for i in nodes]
     fractures = sorted(fractures)
-    print("--> Dumping %s" % filename)
+    local_print_log(f"--> Dumping {filename}")
     np.savetxt(filename, fractures, fmt="%d")
 
 
@@ -331,8 +329,9 @@ def plot_graph(self, G, source='s', target='t', output_name="dfn_graph"):
     Image is written to output_name.png
 
     """
-    print("\n--> Plotting Graph")
-    print("--> Output file: %s.png" % output_name)
+    self.print_log("--> Plotting Graph")
+    filename = f"{output_name}.png"
+    self.print_log(f"--> Output file: {filename}" )
     # get positions for all nodes
     pos = nx.spring_layout(G)
     nodes = list(G.nodes)
@@ -359,9 +358,9 @@ def plot_graph(self, G, source='s', target='t', output_name="dfn_graph"):
     nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
     plt.axis('off')
     plt.tight_layout()
-    plt.savefig(output_name + ".png")
+    plt.savefig(filename)
     plt.clf()
-    print("--> Plotting Graph Complete\n")
+    self.print_log("--> Plotting Graph Complete")
 
 
 def dump_json_graph(self, G, name):
@@ -383,14 +382,15 @@ def dump_json_graph(self, G, name):
     -----
 
 """
-    print("--> Dumping Graph into file: " + name + ".json")
+    filename = f"{name}.json"
+    self.print_log(f"--> Dumping Graph into file: {filename} ")
     jsondata = json_graph.node_link_data(G)
     with open(name + '.json', 'w') as fp:
         json.dump(jsondata, fp)
-    print("--> Complete")
+    self.print_log("--> Complete")
 
 
-def load_json_graph(self, name):
+def load_json_graph(self, filename):
     """ Read in graph from json format
 
     Parameters
@@ -405,9 +405,13 @@ def load_json_graph(self, name):
         G :networkX graph
             NetworkX Graph based on the DFN
 """
-
-    print(f"Loading Graph in file: {name}.json")
-    fp = open(name + '.json')
+    self.print_log(f"Loading Graph in file: {filename}")
+    try:
+        fp = open(filename)
+    except:
+        self.print_log(f"Unable to open file {filename}. Returning empty Graph", "warning")
+        return nx.Graph() 
+    
     G = json_graph.node_link_graph(json.load(fp))
-    print("Complete")
+    self.print_log("Complete")
     return G
