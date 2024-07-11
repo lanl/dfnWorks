@@ -201,11 +201,11 @@ def call_executable(self, command):
     # #         # sys.stdout.flush()
     # #         self.print_log(p.stdout.decode())
 
-    # print(f"Executing {command}")
-    line = command.split(" ")
-    # cmd = subprocess.run(line, capture_output=True)
-    # self.print_log(cmd.stdout.decode())
-    # self.print_log(cmd.stderr.decode())
+    # # print(f"Executing {command}")
+
+    # # cmd = subprocess.run(line, capture_output=True)
+    # self.print_log(p.stdout.decode())
+    # self.print_log(p.stderr.decode())
 
     print(f"Executing {command}")
 
