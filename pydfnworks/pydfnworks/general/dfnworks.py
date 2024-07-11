@@ -123,7 +123,8 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-                 log_filename = 'dfnWorks.log'):
+                 log_filename =  None,
+                 log_time = False):
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -162,8 +163,11 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-            self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
-            self.initialize_log_file()
+            if not log_filename:
+                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            else:
+                self.log_filename = os.getcwd() + os.sep + log_filename
+            self.initialize_log_file(time = log_time)
 
         else:
             self.jobname = os.getcwd() + os.sep + "output"
