@@ -10,6 +10,8 @@ import select
 import subprocess
 import sys
 
+from pydfnworks.general.logging import local_print_log
+
 
 class MagicPopen(subprocess.Popen):
     """A subprocess.Popen with superpowers
@@ -95,12 +97,14 @@ def magicrun(
                 line = process.stdout.readline()  # type: ignore
                 stdoutbuf.write(line)
                 if print_output:
-                    sys.stdout.write(line)
+                    # sys.stdout.write(line)
+                    local_print_log(line.rstrip("\n"))
             elif stream.fileno() == stderr_fileno:
                 line = process.stderr.readline()  # type: ignore
                 stderrbuf.write(line)
                 if print_output:
-                    sys.stderr.write(line)
+                    local_print_log(line.rstrip("\n"))
+                    # sys.stderr.write(line)
             else:
                 raise Exception(
                     f"Unknown file descriptor in select result. Fileno: {stream.fileno()}"
@@ -128,11 +132,14 @@ def magicrun(
             if stream.fileno() == stdout_fileno:
                 stdoutbuf.write(line)
                 if print_output:
-                    sys.stdout.write(line)
+                    # sys.stdout.write(line)
+                    local_print_log(line.rstrip("\n"))
+
             elif stream.fileno() == stderr_fileno:
                 stderrbuf.write(line)
                 if print_output:
-                    sys.stderr.write(line)
+                    # sys.stderr.write(line)
+                    local_print_log(line.rstrip("\n"))
 
     # We'd like to just seek(0) on the stdout/stderr buffers, but "underlying stream is not seekable",
     # So we create new buffers above, write to them line by line, and replace the old ones with these.
@@ -182,12 +189,25 @@ def call_executable(self, command):
         None
     
     '''
+    # line = command.split(" ")
+    # p = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE, text = True)
+    # print(p)
+    # # ## But do not wait till netstat finish, start displaying output immediately ##
+    # # while True:
+    # #     out = p.stderr.read(1)
+    # #     if out == '' and p.poll() != None:
+    # #         break
+    # #     if out != '':
+    # #         # sys.stdout.write(out)
+    # #         # sys.stdout.flush()
+    # #         self.print_log(p.stdout.decode())
+            
 
-    # print(f"Executing {command}")
-    line = command.split(" ")
-    # cmd = subprocess.run(line, capture_output=True)
-    # self.print_log(cmd.stdout.decode())
-    # self.print_log(cmd.stderr.decode())
+    # # print(f"Executing {command}")
+
+    # # cmd = subprocess.run(line, capture_output=True)
+    # self.print_log(p.stdout.decode())
+    # self.print_log(p.stderr.decode())
 
     magicrun(command, log_output=True)
 
