@@ -3,6 +3,7 @@ import numpy as np
 import shutil
 
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
+from pydfnworks.general.logging import local_print_log
 
 def tag_well_in_mesh(self, wells):
     """ Identifies nodes in a DFN for nodes the intersect a well with radius r [m]\n
@@ -41,8 +42,8 @@ def tag_well_in_mesh(self, wells):
 
     if type(wells) is dict:
         well = wells
-        print(
-            f"\n\n--> Identifying nodes in the DFN intersecting with a vertical well named {well['name']}."
+        self.print_log(
+            f"--> Identifying nodes in the DFN intersecting with a vertical well named {well['name']}."
         )
 
         # 1) convert well into polyline AVS if it doesn't exist
@@ -60,14 +61,14 @@ def tag_well_in_mesh(self, wells):
             self.zone2ex(zone_file=f"well_{well['name']}.zone", face='well')
 
         if self.flow_solver == "FEHM":
-            print(f"--> Well nodes are in well_{well['name']}.zone")
+            self.print_log(f"--> Well nodes are in well_{well['name']}.zone")
 
-            print(f"--> Well creation for {well['name']} complete\n\n")
+            self.print_log(f"--> Well creation for {well['name']} complete")
 
     if type(wells) is list:
         for well in wells:
-            print(
-                f"\n\n--> Identifying nodes in the DFN intersecting with a vertical well named {well['name']}."
+            self.print_log(
+                f"--> Identifying nodes in the DFN intersecting with a vertical well named {well['name']}."
             )
 
             # 1) convert well into polyline AVS if it doesn't exist
@@ -86,9 +87,9 @@ def tag_well_in_mesh(self, wells):
                              face='well')
 
             if self.flow_solver == "FEHM":
-                print(f"--> Well nodes are in well_{well['name']}.zone")
+                self.print_log(f"--> Well nodes are in well_{well['name']}.zone")
 
-            print(f"--> Well creation for {well['name']} complete\n\n")
+            self.print_log(f"--> Well creation for {well['name']} complete\n\n")
 
 
 def convert_well_to_polyline_avs(well, radius):
@@ -126,11 +127,11 @@ def convert_well_to_polyline_avs(well, radius):
         an ex file. 
 
     """
-    print("--> Interpolating well coordinates into a polyline")
+    local_print_log("--> Interpolating well coordinates into a polyline")
 
 
     # read in well coordinates
-    print(well['filename'])
+    local_print_log(f"well filename {well['filename']}")
     pts = np.genfromtxt(f"{well['filename']}")
     n, _ = np.shape(pts)
 
@@ -159,10 +160,10 @@ def convert_well_to_polyline_avs(well, radius):
                 del interp
                 new_idx += 1
 
-    print("--> Interpolating well coordinates into a polyline: Complete")
+    local_print_log("--> Interpolating well coordinates into a polyline: Complete")
     # Write interpolated polyline into an AVS file
     avs_filename = f"well_{well['name']}_line.inp"
-    print(f"--> Writing polyline into avs file : {avs_filename}")
+    local_print_log(f"--> Writing polyline into avs file : {avs_filename}")
 
     num_pts = new_idx + 1
     pt_digits = len(str(num_pts))
@@ -179,7 +180,7 @@ def convert_well_to_polyline_avs(well, radius):
     for i in range(num_elem):
         favs.write(f"{i+1} 1 line {i+1} {i+2}\n")
     favs.close()
-    print(f"--> Writing polyline into avs file : {avs_filename} : Complete")
+    local_print_log(f"--> Writing polyline into avs file : {avs_filename} : Complete")
 
 
 def expand_well(self,well):
@@ -216,7 +217,7 @@ def expand_well(self,well):
 
     """
 
-    print("--> Expanding well into a volume.")
+    self.print_log("--> Expanding well into a volume.")
 
     r = well["r"]
 
@@ -448,7 +449,7 @@ def expand_well(self,well):
                          output_file=f"expand_well_{well['name']}",
                          quiet=False)
 
-    print("--> Expanding well complete.")
+    self.print_log("--> Expanding well complete.")
 
 
 def get_well_zone(well, inp_file):
@@ -533,9 +534,9 @@ finish
     with open(f"well_{well['name']}.zone", "r") as fp:
         number_of_nodes = int(fp.readlines()[3])
         if number_of_nodes > 0:
-            print(f"--> There are {number_of_nodes} nodes in the well zone")
+            local_print_log(f"--> There are {number_of_nodes} nodes in the well zone")
         else:
-            print("--> WARNING!!! The well did not intersect the DFN!!!")
+            local_print_log("--> Warning. The well did not intersect the DFN.", "warning")
 
 
 def find_well_intersection_points(self, wells):
@@ -575,12 +576,12 @@ def find_well_intersection_points(self, wells):
 
     """
     # check for reduced mesh, if it doesn't exists, make it
-    print("--> Checking for reduced_mesh.inp")
+    self.print_log("--> Checking for reduced_mesh.inp")
     if not os.path.isfile("reduced_mesh.inp"):
-        print("--> reduced_mesh.inp not found. Creating it now.")
+        self.print_log("--> reduced_mesh.inp not found. Creating it now.")
         self.mesh_network()
     else:
-        print("--> reduced_mesh.inp found. Moving on.")
+        self.print_log("--> reduced_mesh.inp found. Moving on.")
 
     # if using a single well
     if type(wells) is dict:
@@ -628,7 +629,7 @@ def run_find_well_intersection_points(self, well):
         within find_well_intersection_points()
     """
 
-    print(f"\n\n--> Working on well {well['name']}")
+    self.print_log(f"--> Working on well {well['name']}")
 
     # 1) convert well into polyline AVS
     if not os.path.isfile(f"well_{well['name']}_line.inp"):
@@ -830,7 +831,7 @@ def well_point_of_intersection(self, well):
 
     """
 
-    print(f"--> Finding well points on DFN for {well['name']}")
+    self.print_log(f"--> Finding well points on DFN for {well['name']}")
     # create file to keep well points if it doesn't exist. Otherwise set to append.
     if not os.path.isfile("well_points.dat"):
         fwell = open("well_points.dat", "w")
@@ -843,7 +844,7 @@ def well_point_of_intersection(self, well):
     pts, elems, fracture_list = get_segments(well_line_file)
 
     if len(fracture_list) == 0:
-        print(
+        self.print_log(
             f"\n--> Warning. The well {well['name']} did not intersect the DFN!!!\n"
         )
 
@@ -892,7 +893,7 @@ def cross_check_pts(h):
         None
     """
 
-    print("\n--> Cross Checking well points")
+    local_print_log("\n--> Cross Checking well points")
     pts = np.genfromtxt("well_points.dat", skip_header=1)
     num_pts, _ = np.shape(pts)
 
@@ -922,7 +923,7 @@ def cross_check_pts(h):
         fwell.write("fracture_id x y z\n")
         for i in range(num_pts):
             fwell.write(f"{int(pts[i,0])} {pts[i,1]} {pts[i,2]} {pts[i,3]}\n")
-    print("--> Cross Checking Complete")
+    local_print_log("--> Cross Checking Complete")
 
 
 def get_segments(well_line_file):
@@ -1155,7 +1156,7 @@ def cleanup_wells(self, wells):
     --------
         Wells can be a list of well dictionaries
     """
-    print("--> Cleaning up well files: Starting")
+    self.print_log("--> Cleaning up well files: Starting")
 
     if not os.path.isdir("well_data"):
         os.mkdir("well_data")
@@ -1173,7 +1174,7 @@ def cleanup_wells(self, wells):
                 shutil.move(file.format(well['name']),
                         "well_data/" + file.format(well['name']))
             except:
-                print("Error moving " + file.format(well['name']))
+                local_print_log("unable to mobe " + file.format(well['name']), 'warning')
                 pass
 
 
@@ -1184,9 +1185,9 @@ def cleanup_wells(self, wells):
                     shutil.move(file.format(well['name']),
                                 "well_data/" + file.format(well['name']))
                 except:
-                    print("Error moving " + file.format(well['name']))
+                    local_print_log("unable to mobe " + file.format(well['name']), 'warning')
                     pass
-    print("--> Cleaning up well files: Complete")
+    self.print_log("--> Cleaning up well files: Complete")
 
 def combine_well_boundary_zones(self, wells):
     """ Processes zone files for particle tracking. All zone files are combined into allboundaries.zone 
@@ -1212,13 +1213,13 @@ def combine_well_boundary_zones(self, wells):
         fall = open("well_nodes.zone", "w")
         for index, well in enumerate(wells):
             if index == 0:
-                print(f"Working on well {well['name']}")
+                self.print_log(f"Working on well {well['name']}")
                 fzone = open(f"well_{well['name']}.zone", "r")
                 lines = fzone.readlines()
                 lines = lines[:-2]
                 fall.writelines(lines)
             if index > 0 and index < number_of_wells - 1:
-                print(f"Working on well {well['name']}")
+                self.print_log(f"Working on well {well['name']}")
                 fzone = open(f"well_{well['name']}.zone", "r")
                 lines = fzone.readlines()
                 lines = lines[1:-2]
@@ -1226,7 +1227,7 @@ def combine_well_boundary_zones(self, wells):
                 fzone.close()
                 fall.writelines(lines)
             if index == number_of_wells - 1:
-                print(f"Working on well {well['name']}")
+                self.print_log(f"Working on well {well['name']}")
                 fzone = open(f"well_{well['name']}.zone", "r")
                 lines = fzone.readlines()
                 lines = lines[1:]
