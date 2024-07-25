@@ -304,7 +304,7 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
         hf.print_error(f"LaGriT script {lagrit_file} failed to run properly")
     else:
         if not quiet:
-            print(f"--> LaGriT script {lagrit_file}  was run successful")
+            print(f"--> LaGriT script {lagrit_file} ran successfully")
         return failure
 
 
