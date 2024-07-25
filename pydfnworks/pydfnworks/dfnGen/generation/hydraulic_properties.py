@@ -167,10 +167,10 @@ def log_normal(params, variable, number_of_fractures):
     ----------
         values are generated for the variable provided. The two remaining variables are derived using those values
     """
-    local_print_log('--> Creating uncorrelated lognormal {variable} values.'.format())
+    local_print_log(f'--> Creating uncorrelated lognormal {variable} values.')
     units = get_units(variable)
-    local_print_log("--> Mean: {0} {1}".format(params["mu"], units))
-    local_print_log("--> Log Variance: {0}".format(params["sigma"]))
+    local_print_log(f"--> Mean: {params['mu']} {units}")
+    local_print_log(f"--> Log Variance: {params['sigma']}")
 
     if variable == "aperture":
         b = np.log(params["mu"]) * np.ones(number_of_fractures)

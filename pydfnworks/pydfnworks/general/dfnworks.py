@@ -168,11 +168,23 @@ class DFNWORKS():
             else:
                 self.log_filename = os.getcwd() + os.sep + log_filename
             self.initialize_log_file(time = log_time)
-
+            now = datetime.now()
+            self.start_time = now
+            statement = f"Starting at {now}"
+            self.print_log(statement)
+            
         else:
-            self.jobname = os.getcwd() + os.sep + "output"
-            self.local_jobname = "output"
-
+            self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
+            self.local_jobname = "dfnWorks_output"
+            if not log_filename:
+                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            else:
+                self.log_filename = os.getcwd() + os.sep + log_filename
+            self.initialize_log_file(time = log_time)
+            now = datetime.now()
+            self.start_time = now
+            statement = f"Starting at {now}"
+            self.print_log(statement) 
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
@@ -218,36 +230,28 @@ class DFNWORKS():
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
 
-        # if logging:
-        #     print("--> Writting output to log file.")
-        #     import logging
-        #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
-        #             format="%(asctime)s %(message)s")
-
         self.print_log("\n--> Creating DFN Object: Starting")
         self.start_time = time()
         self.print_parameters()
         self.print_log("\n--> Creating DFN Object: Complete")
 
 
-#     def __del__(self):
-#         print("=" * 80)
-#         print(f"--> {self.local_jobname} completed/exited at {now}")
+
+    def __del__(self):
+        print(f"--> {self.local_jobname} completed/exited ")
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
 #         time_min = elapsed / 60
 #         time_hrs = elapsed / 3600
-
-#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         self.print_log(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
 #         output = '''
 # \t\t\t*********************************************
 # \t\t\t*   Thank you for using dfnWorks            *
 # \t\t\t*   Learn more at https://dfnworks.lanl.gov *
 # \t\t\t*   Contact us at dfnworks@lanl.gov         *
 # \t\t\t*********************************************
-
 # '''
-#         print(output)
+#         self.print_log(output)
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
