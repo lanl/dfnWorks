@@ -234,7 +234,6 @@ class DFNWORKS():
         self.print_log("--> Creating DFN Object: Complete")
 
 
-
     def __del__(self):
         print(f"--> {self.local_jobname} completed/exited ")
 #         elapsed = time() - self.start_time
