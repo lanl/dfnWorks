@@ -13,10 +13,10 @@ MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
-ENV http_proxy=http://proxyout.lanl.gov:8080
-ENV HTTP_PROXY=http://proxyout.lanl.gov:8080
-ENV https_proxy=http://proxyout.lanl.gov:8080
-ENV HTTPS_PROXY=http://proxyout.lanl.gov:8080
+# ENV http_proxy=http://proxyout.lanl.gov:8080
+# ENV HTTP_PROXY=http://proxyout.lanl.gov:8080
+# ENV https_proxy=http://proxyout.lanl.gov:8080
+# ENV HTTPS_PROXY=http://proxyout.lanl.gov:8080
 
 # ENV https_proxy=
 # ENV http_proxy=
@@ -27,18 +27,36 @@ RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 # 2. Add pre-required packages
 RUN ["apt-get","update","-y"]
 ENV DEBIAN_FRONTEND=noninteractive
-RUN ["apt-get","install","-y","build-essential","gfortran","gfortran-10","cmake","git",\
-        "wget","libz-dev","m4","bison","python3","texlive-latex-extra",\
+RUN ["apt-get","install","-y","build-essential","python3.10","gfortran","gfortran-10","cmake","git",\
+        "wget","libz-dev","m4","bison","python3.10","texlive-latex-extra",\
         "python3-pip","python3-tk","vim","curl","pkg-config","openssh-client",\
         "openssh-server","valgrind","nano","emacs","gcc-10","g++-10", "libcurl4-openssl-dev",\
-        "texlive","texlive-fonts-recommended","dvipng","cm-super"] 
+        "texlive","texlive-fonts-recommended","dvipng","cm-super","texlive-latex-extra","python3-numpy"] 
 
 
-RUN ["pip3","install","setuptools","numpy","h5py","matplotlib","scipy","networkx",\
-    "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime",\
-    "latex"]
+RUN ["apt-get","install","-y","python3-setuptools","python3-numpy","python3-h5py",\
+    "python3-matplotlib","python3-scipy","python3-networkx",\
+    "python3-rich","python3-fpdf","python3-rich","python3-seaborn",\
+    "python3-mpmath"]
 
-RUN ["pip3","install","-U","setuptools"]
+RUN ["pip","install","--break-system-packages","mplstereonet"]
+RUN ["pip","install","--break-system-packages","pyvtk"]
+RUN ["pip","install","--break-system-packages","datetime"]
+RUN ["pip","install","--break-system-packages","latex"]
+RUN ["pip","install","--break-system-packages","matplotlib"]
+
+
+# RUN ["apt-get","install","-y","python3-setuptools","python3-numpy","python3-h5py",\
+# "python3-matplotlib","python3-scipy","python3-networkx",\
+# "python3-rich","python3-pyvtk","python3-fpdf","python3-rich","python3-seaborn",\
+# "python3-mplstereonet","python3-mpmath", "python3-datetime",\
+# "python3-latex"]
+
+# RUN ["pipx","install","setuptools","numpy","h5py","matplotlib","scipy","networkx",\
+#     "rich","pyvtk","fpdf","rich","seaborn","mplstereonet","mpmath", "datetime",\
+#     "latex"]
+
+# RUN ["pip3","install","-U","setuptools"]
 
 RUN ["mkdir","lib","bin"]
 
@@ -91,8 +109,8 @@ WORKDIR $APP_PATH
 
 # # # 3.1 Install and configure LaGriT
 ENV RSYNC_PROXY=http://proxyout.lanl.gov:8080
- 
-RUN ["git","clone","https://github.com/lanl/LaGriT.git"]
+RUN ["rm","-Rf","LaGriT/"] 
+RUN ["git","clone","https://github.com/hymanjd/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
 RUN ./install-exodus.sh
 WORKDIR $APP_PATH/LaGriT
