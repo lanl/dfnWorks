@@ -52,6 +52,38 @@ def setup_mesh_dfm_directory(jobname, dirname):
 
     print("--> Setting up DFM meshing directory complete")
 
+
+
+def translate_mesh(x1, x2):
+    """
+    Moves reduced_mesh.inp from center at x1 to x2 
+
+    Parameters
+    ---------------
+        x1 : list
+            floats x-0, y-1, z-2 - current center
+
+        x2 : list
+            floats x-0, y-1, z-2 - requisted center 
+    Returns
+    --------------
+        None 
+
+    """
+
+    lagrit_script = f"""
+read / avs / full_mesh.inp / MODFN
+trans / 1 0 0 / {x1[0]} {x1[1]} {x1[2]} / {x2[0]} {x2[1]} {x2[2]}
+cmo / printatt / MODFN / -xyz- / minmax
+dump / full_mesh.inp / MODFN
+finish
+"""
+    with open('translate_mesh.lgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+    mh.run_lagrit_script("translate_mesh.lgi")
+
+
 def create_domain(domain, h):
     """ Gather domain information. 
 
@@ -1034,6 +1066,8 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
 
     setup_mesh_dfm_directory(self.jobname, dirname)
 
+    center = [self.params['domainCenter']['value'][0],self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
+    translate_mesh(center,[0,0,0])
     box_domain, num_points_x, num_points_y, num_points_z  = create_domain(self.domain, self.h)
     dfm_driver(num_points_x, num_points_y, num_points_z , self.num_frac, self.h, box_domain, psets)
     dfm_box(box_domain)    
@@ -1044,6 +1078,8 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
     create_dfm()
 
     check_dfm_mesh(allowed_percentage)
+
+    translate_mesh([0,0,0], center)
 
     if cleanup:
         cleanup_mesh_dfm_directory()
