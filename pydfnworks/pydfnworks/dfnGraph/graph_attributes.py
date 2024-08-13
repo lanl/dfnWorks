@@ -3,6 +3,7 @@ import networkx as nx
 import sys
 
 
+
 def add_perm(G):
     """ Add fracture permeability to Graph. If Graph representation is
     fracture, then permeability is a node attribute. If graph representation 

@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 
 from pydfnworks.dfnGraph.graph_attributes import add_perm
+from pydfnworks.general.logging import local_print_log
 
 
 def create_fracture_graph(inflow, outflow):
@@ -31,7 +32,7 @@ def create_fracture_graph(inflow, outflow):
     -----
     """
     topology_file = "dfnGen_output/connectivity.dat"
-    print(
+    local_print_log(
         "--> Loading Graph based on topology in dfnGen_output/connectivity.dat")
     G = nx.Graph(representation="fracture")
     with open(topology_file, "r") as infile:
@@ -62,5 +63,5 @@ def create_fracture_graph(inflow, outflow):
     G.add_edges_from(zip(['s'] * (len(inflow)), inflow))
     G.add_edges_from(zip(outflow, ['t'] * (len(outflow))))
     add_perm(G)
-    print("--> Graph loaded")
+    local_print_log("--> Graph loaded")
     return G

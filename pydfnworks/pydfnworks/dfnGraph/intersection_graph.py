@@ -5,6 +5,7 @@ import sys
 from itertools import combinations
 
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area
+from pydfnworks.general.logging import local_print_log
 
 
 def boundary_index(bc_name):
@@ -40,9 +41,9 @@ def boundary_index(bc_name):
     try:
         return bc_dict[bc_name]
     except:
+
         error = f"Error. Unknown boundary condition: {bc_name} \nExiting\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error,'error')
 
 
 def create_intersection_graph(
@@ -77,8 +78,8 @@ def create_intersection_graph(
     Aperture and Perm on edges can be added using add_app and add_perm functions
     """
 
-    print("--> Creating Graph Based on DFN")
-    print("--> Intersections being mapped to nodes and fractures to edges")
+    local_print_log("--> Creating Graph Based on DFN")
+    local_print_log("--> Intersections being mapped to nodes and fractures to edges")
     inflow_index = boundary_index(inflow)
     outflow_index = boundary_index(outflow)
 
@@ -103,9 +104,9 @@ def create_intersection_graph(
     frac_list.append('s')
     frac_list.append('t')
     fracture_node_dict = dict(zip(frac_list, ([] for _ in frac_list)))
-    print(f"--> There are {max_frac_index} fractures")
+    local_print_log(f"--> There are {max_frac_index} fractures")
     num_edges = len(edges_to_keep)
-    print("--> Adding Nodes to Graph")
+    local_print_log("--> Adding Nodes to Graph")
     # Add Sink and Source nodes
     G.add_node('s', frac=('s', 's'))
     G.add_node('t', frac=('t', 't'))
@@ -135,9 +136,9 @@ def create_intersection_graph(
             G.add_edge(i, 's', frac='s', length=0.0, perm=1, iperm=1)
         if frac_2 == 't':
             G.add_edge(i, 't', frac='t', length=0.0, perm=1, iperm=1)
-    print("--> Adding nodes to Graph Complete")
+    local_print_log("--> Adding nodes to Graph Complete")
 
-    print("--> Adding edges to Graph: Starting")
+    local_print_log("--> Adding edges to Graph: Starting")
     nodes = list(nx.nodes(G))
     fractures = nx.get_node_attributes(G, 'frac')
     nodes.remove('s')
@@ -180,8 +181,8 @@ def create_intersection_graph(
     #                            (G.nodes[u]['z'] - G.nodes[v]['z'])**2)
     #         G.add_edge(u, v, frac=frac, length=distance)
 
-    print("--> Adding edges to Graph: Complete")
+    local_print_log("--> Adding edges to Graph: Complete")
     add_perm(G)
     add_area(G)
-    print("--> Intersection Graph Construction Complete")
+    local_print_log("--> Intersection Graph Construction Complete")
     return G
