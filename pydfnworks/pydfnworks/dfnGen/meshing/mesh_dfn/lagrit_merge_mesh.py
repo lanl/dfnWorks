@@ -121,6 +121,7 @@ sort / mo_all / index / ascending / ikey / imt xic yic zic
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
 resetpts / itp 
+
 boundary_components 
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
@@ -215,11 +216,14 @@ dump / lagrit / full_mesh.lg / mo_all
     pset / back_s / zone / FOUT/ ascii / ZONE
     """
         else:
-            lagrit_input = """
+            lagrit_input = f"""
     cmo / modatt / mo_all / icr1 / ioflag / l
     cmo / modatt / mo_all / isn1 / ioflag / l
     cmo / modatt / mo_all / itp1 / ioflag / l
-    #dump / reduced_mesh.gmv / mo_all 
+    ## shift mesh
+
+    trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
+    
     dump / reduced_mesh.inp / mo_all
     """
         lagrit_input += """
