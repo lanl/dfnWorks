@@ -24,6 +24,8 @@ internal/Documentation/sphinx-docs/build/*
 */dist/*
 *.egg
 
+pydfnworks/pydfnworks.egg-info/*
+
 *.pdf
 !dfnWorks.pdf
 
