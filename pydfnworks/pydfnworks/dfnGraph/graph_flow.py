@@ -308,7 +308,7 @@ def dump_graph_flow_values(G,graph_flow_filename):
     
     """
 
-    local_print_log('Writting flow variables into h5df file: graph_flow.hdf5 - Starting ')
+    local_print_log(f'Writting flow variables into h5df file: {graph_flow_filename} - Starting ')
     num_edges = G.number_of_edges()
     velocity = np.zeros(num_edges)
     lengths = np.zeros_like(velocity)
@@ -335,7 +335,7 @@ def dump_graph_flow_values(G,graph_flow_filename):
         h5dset = f5file.create_dataset('aperture', data=aperture)
         h5dset = f5file.create_dataset('volume', data=volume)
     f5file.close()
-    local_print_log('Writting flow variables into h5df file: graph_flow.hdf5 - Complete')
+    local_print_log(f'Writting flow variables into h5df file: {graph_flow_filename} - Complete')
 
 
 def run_graph_flow(self,
