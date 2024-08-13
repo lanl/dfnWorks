@@ -122,6 +122,49 @@ reorder / mo_all / ikey
 cmo / DELATT / mo_all / ikey
 resetpts / itp 
 
+
+
+
+# Dump out zone files
+define / XMAX / {0.5*self.domain['x'] - eps:0.12e}
+define / XMIN / {-0.5*self.domain['x'] + eps:0.12e} 
+define / YMAX / {0.5*self.domain['y'] - eps:0.12e} 
+define / YMIN / {-0.5*self.domain['y'] + eps:0.12e}
+define / ZMAX / {0.5*self.domain['z'] - eps:0.12e}
+define / ZMIN / {-0.5*self.domain['z'] + eps:0.12e}
+
+define / ZONE / 1
+define / FOUT / boundary_top
+pset / top / attribute / zic / 1,0,0/ gt / ZMAX
+pset / top / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / boundary_bottom
+pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
+pset / bottom / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / boundary_left_w
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / left_w / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / boundary_front_n
+pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
+pset / front_n / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / boundary_right_e
+pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
+pset / right_e / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / boundary_back_s
+pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
+pset / back_s / zone / FOUT/ ascii / ZONE
+
+trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
+
 boundary_components 
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
@@ -177,43 +220,6 @@ dump / lagrit / full_mesh.lg / mo_all
     # Dump mesh with no attributes for viz
     # dump / full_mesh_viz.inp / mo_all
 
-    # Dump out zone files
-    define / XMAX / {0.5*self.domain['x'] - eps:0.12e}
-    define / XMIN / {-0.5*self.domain['x'] + eps:0.12e} 
-    define / YMAX / {0.5*self.domain['y'] - eps:0.12e} 
-    define / YMIN / {-0.5*self.domain['y'] + eps:0.12e}
-    define / ZMAX / {0.5*self.domain['z'] - eps:0.12e}
-    define / ZMIN / {-0.5*self.domain['z'] + eps:0.12e}
-
-    define / ZONE / 1
-    define / FOUT / boundary_top
-    pset / top / attribute / zic / 1,0,0/ gt / ZMAX
-    pset / top / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 2
-    define / FOUT / boundary_bottom
-    pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
-    pset / bottom / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 3
-    define / FOUT / boundary_left_w
-    pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
-    pset / left_w / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 4
-    define / FOUT / boundary_front_n
-    pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
-    pset / front_n / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 5
-    define / FOUT / boundary_right_e
-    pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
-    pset / right_e / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 6
-    define / FOUT / boundary_back_s
-    pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
-    pset / back_s / zone / FOUT/ ascii / ZONE
     """
         else:
             lagrit_input = f"""
