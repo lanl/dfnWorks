@@ -90,7 +90,12 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     if self.num_frac == 1:
         self.normal_vectors = np.array([self.normal_vectors])
 
-    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points)
+
+
+    center = [self.params['domainCenter']['value'][0],self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
+    translate_mesh_to_origin(center)
+
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points, center)
 
     #lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
     #              self.centers)
@@ -109,7 +114,25 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     ## set object variable name
     self.inp_file = "octree_dfn.inp" 
 
-def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
+def translate_mesh_to_origin(center):
+    """
+    Moves reduced_mesh.inp to the origin in case it's not there
+    
+    
+    """
+
+    lagrit_script = f"""
+read / avs / reduced_mesh.inp / MODFN
+trans / 1 0 0 / {center[0]} {center[1]} {center[2]} / 0 0 0
+dump / reduced_mesh.inp / MODFN
+finish
+"""
+    with open('translate_to_origin.lgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+    mh.run_lagrit_script("translate_to_origin.lgi")
+
+def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points, center):
     """ This function creates the main lagrit driver script, which calls all 
     lagrit scripts.
 
@@ -242,7 +265,7 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
 
     f_name = f'{dir_name}/driver_octree_start.lgi'
     f = open(f_name, 'w')
-    fin = ("""# 
+    fin = (f"""# 
 # LaGriT control files to build an octree refined hex mesh with refinement
 # based on intersection of hex mesh with a DFN triangulation mesh
 #
@@ -370,6 +393,10 @@ define / FOUT / boundary_back_s
 pset / back_s / attribute / yic / 1 0 0 / lt / YMIN
 pset / back_s / zone / FOUT / ascii / ZONE
 
+           
+trans / 1 0 0 / 0. 0. 0. / {center[0]}, {center[1]}, {center[2]} 
+
+           
 dump / pflotran / full_mesh / MOTET / nofilter_zero
 dump / avs2 /         octree_dfn.inp / MOTET
 dump / coord  /       octree_dfn     / MOTET
