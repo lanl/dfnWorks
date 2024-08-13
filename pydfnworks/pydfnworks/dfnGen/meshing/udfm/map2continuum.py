@@ -93,7 +93,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
 
 
     center = [self.params['domainCenter']['value'][0],self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
-    translate_mesh_to_origin(center)
+    translate_mesh(center,[0,0,0])
 
     lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points, center)
 
@@ -113,24 +113,36 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     dir_cleanup()
     ## set object variable name
     self.inp_file = "octree_dfn.inp" 
+    translate_mesh([0,0,0], center)
 
-def translate_mesh_to_origin(center):
+
+def translate_mesh(x1, x2):
     """
-    Moves reduced_mesh.inp to the origin in case it's not there
-    
-    
+    Moves reduced_mesh.inp from center at x1 to x2 
+
+    Parameters
+    ---------------
+        x1 : list
+            floats x-0, y-1, z-2 - current center
+
+        x2 : list
+            floats x-0, y-1, z-2 - requisted center 
+    Returns
+    --------------
+        None 
+
     """
 
     lagrit_script = f"""
 read / avs / reduced_mesh.inp / MODFN
-trans / 1 0 0 / {center[0]} {center[1]} {center[2]} / 0 0 0
+trans / 1 0 0 / {x1[0]} {x1[1]} {x1[2]} / {x2[0]} {x2[1]} {x2[2]}
 dump / reduced_mesh.inp / MODFN
 finish
 """
-    with open('translate_to_origin.lgi', 'w') as fp:
+    with open('translate_mesh.lgi', 'w') as fp:
         fp.write(lagrit_script)
         fp.flush()
-    mh.run_lagrit_script("translate_to_origin.lgi")
+    mh.run_lagrit_script("translate_mesh.lgi")
 
 def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points, center):
     """ This function creates the main lagrit driver script, which calls all 
