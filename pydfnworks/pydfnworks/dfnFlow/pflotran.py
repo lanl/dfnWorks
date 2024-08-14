@@ -3,7 +3,6 @@ functions for using pflotran in dfnworks
 """
 import os
 import subprocess
-import sys
 import h5py
 import glob
 import shutil
@@ -85,12 +84,10 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     self.print_log('--> Converting zone files to ex')
 
     if self.uge_file == '':
-        error = 'Error: uge filename not assigned to object yet\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
+        error = 'Error: uge filename not assigned to object yet'
+        self.print_log(error, 'error')
     # Opening uge file
-    self.print_log('\n--> Opening uge file')
+    self.print_log('--> Opening uge file')
     with open(self.uge_file, 'r') as fuge:
         # Reading cell ids, cells centers and cell volumes
         line = fuge.readline()
@@ -117,13 +114,11 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else:
         if zone_file == '':
-            error = 'ERROR: Please provide boundary zone filename!\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = 'Error: Please provide boundary zone filename!\n'
+            self.print_log(error, 'error')
         if face == '':
-            error = 'ERROR: Please provide face name among: top, bottom, north, south, east, west !\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = 'Error: Please provide face name among: top, bottom, north, south, east, west !\n'
+            self.print_log(error, 'error')
         zone_files = [zone_file]
         face_names = [face]
 
@@ -133,7 +128,7 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         ex_file = zone_file.strip('zone') + 'ex'
 
         # Opening the input file
-        self.print_log('--> Opening zone file: ', zone_file)
+        self.print_log(f'--> Opening zone file: {zone_file}')
         with open(zone_file, 'r') as fzone:
             self.print_log('--> Reading boundary node ids')
             node_array = fzone.read()
@@ -178,9 +173,8 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
             boundary_cell_coord = [[cell[0], cell[1], cell[2]]
                                    for cell in boundary_cell_coord]
         else:
-            error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f'Error: Unknown face provided: {face}. Select one of: top, bottom, east, west, north, south, none'
+            self.print_log(error, 'error')
         ## Write out ex files
         with open(ex_file, 'w') as f:
             f.write('CONNECTIONS\t%i\n' % node_array.size)
@@ -220,7 +214,7 @@ def write_perms_and_correct_volumes_areas(self):
 
     self.print_log("--> Writing Perms and Correct Volume Areas")
     if self.inp_file == '':
-        error = 'Error.: inp file must be specified.\n'
+        error = 'Error. inp file must be specified.\n'
         self.print_log(error,'error')
 
     if self.uge_file == '':

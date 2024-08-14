@@ -335,7 +335,7 @@ def cleanup_meshing_files():
     -----
     Only runs if cleanup is true
     """
-    local_print_log("\n--> Cleaning up directory after meshing")
+    local_print_log("--> Cleaning up directory after meshing")
     batch_files_to_remove = [
         'part*', 'log_merge*', 'merge*', 'mesh_poly_CPU*', 'mesh*inp',
         'mesh*lg'
