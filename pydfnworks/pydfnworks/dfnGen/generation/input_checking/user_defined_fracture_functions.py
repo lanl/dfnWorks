@@ -42,7 +42,7 @@ def print_user_fracture_information(self, shape, frac_number=None):
     --------------
         None
     """
-    self.print_log(f"\n--> User Fracture information")
+    self.print_log(f"--> User Fracture information")
     if shape == 'rect':
         if frac_number:
             fracture_dictionary = self.user_rect_params[frac_number]
@@ -73,7 +73,6 @@ def print_user_fracture_information(self, shape, frac_number=None):
                                      "---------------"))
             for key in fracture_dictionary.keys():
                 self.print_log(f"{key:40s} {fracture_dictionary[key]}")
-            self.print_log("\n")
 
 
 def add_user_fract_from_file(self,

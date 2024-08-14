@@ -172,7 +172,6 @@ class DFNWORKS():
             self.start_time = now
             statement = f"Starting at {now}"
             self.print_log(statement)
-            
         else:
             self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
             self.local_jobname = "dfnWorks_output"
@@ -189,6 +188,7 @@ class DFNWORKS():
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
             self.legal()
+            self.print_log("--> Creating DFN Object: Starting")
             self.define_paths()
 
         # try:
@@ -230,10 +230,8 @@ class DFNWORKS():
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
 
-        self.print_log("\n--> Creating DFN Object: Starting")
-        self.start_time = time()
         self.print_parameters()
-        self.print_log("\n--> Creating DFN Object: Complete")
+        self.print_log("--> Creating DFN Object: Complete")
 
 
 

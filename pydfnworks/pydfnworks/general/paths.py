@@ -85,7 +85,7 @@ def print_paths(self):
         None
 
     """
-    self.print_log("\ndfnWorks paths:")
+    self.print_log("dfnWorks paths:")
     self.print_log("---------------")
     self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
     self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
