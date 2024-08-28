@@ -77,25 +77,9 @@ def check_input(self, from_file=False):
             except:
                 error = f"Unable to copy dfnGen input file to working directory \n{self.dfnGen_file}\n Exiting"
                 self.print_log(error, 'error')
-<<<<<<< HEAD
-<<<<<<< HEAD
         else:
             error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
             self.print_log(error, 'error')
-        
-=======
-                sys.exit(1)
-        else:
-            error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
-            self.print_log(error, 'error')
-            sys.exit(1)
->>>>>>> 9e62c8da (working on log file in generaator, lots to do in checking input)
-=======
-        else:
-            error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
-            self.print_log(error, 'error')
-        
->>>>>>> 14082881 (log file added to input checking)
         input_file = self.local_dfnGen_file
         output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         self.print_log(f"--> Reading input file: {input_file}")
@@ -108,13 +92,5 @@ def check_input(self, from_file=False):
     self.print_log(f"--> Clean output file name: {output_file}")
     verify_params(self.params)
     dump_params(self.params, output_file)
-<<<<<<< HEAD
-<<<<<<< HEAD
     self.print_log("Checking Input File Complete")
-=======
-    self.print_log("\nChecking Input File Complete")
->>>>>>> 9e62c8da (working on log file in generaator, lots to do in checking input)
-=======
-    self.print_log("Checking Input File Complete")
->>>>>>> 14082881 (log file added to input checking)
     self.print_log('=' * 80)
