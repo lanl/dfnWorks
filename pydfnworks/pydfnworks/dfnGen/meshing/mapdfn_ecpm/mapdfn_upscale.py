@@ -40,7 +40,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
             for ifrac in fractures:
-                porosity[cell_id] += aperture[ifrac] / cell_size
+                porosity[cell_id] += aperture[ifrac] / cell_size  
         else:
             porosity[cell_id] = matrix_porosity
     return porosity
@@ -78,7 +78,7 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, cell_size,
         The units of T are m^3. 
     """
 
-    print(f'--> Computing isotropic Permeability')
+    print(f'--> Computing Isotropic Permeability')
     k_iso = np.full(num_cells, matrix_perm, '=f8')
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
