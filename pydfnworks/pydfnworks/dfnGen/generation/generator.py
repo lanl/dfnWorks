@@ -75,7 +75,7 @@ def make_working_directory(self, delete=False):
             os.mkdir(self.jobname)
         except OSError:
             if os.path.isdir(self.jobname):
-                self.print_log('\nFolder ', self.jobname, ' exists')
+                self.print_log(f'Folder {self.jobname} exists')
                 keep = input('Do you want to delete it? [yes/no] \n')
                 if keep == 'yes' or keep == 'y':
                     self.print_log('Deleting', self.jobname)
