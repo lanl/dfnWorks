@@ -5,78 +5,15 @@ import numpy as np
 from pydfnworks.dfnGen.generation.hydraulic_properties import convert
 
 
-def stress_based_apertures(self,
-                           sigma_mat,
+def original_model(self, sigma_mat, params, 
                            friction_angle=25.0,
                            dilation_angle=5,
                            critical_shear_displacement=0.003,
                            shear_modulus=10.e9,
                            min_b=1e-10,
                            shear_stiffness=400.e9):
-    """ Takes stress tensor as input (defined in dfn run file) and calculates new apertures based on Bandis equations. New aperture and permeability values are written to files.
 
 
-    Parameters
-    ----------------------
-        sigma_mat : array
-            3 x 3 stress tensor (units in Pa)
-        friction_angle : float
-            Friction angle (Degrees)
-        dilation_angle : float
-            Dilation angle (Degrees)
-        critical_shear_displacement : float
-            Critical shear displacement
-        shear_modulus : float 
-            Shear modulus (Pa)
-        min_b : float
-             Minimum aperture (m)
-        shear_stiffness : float 
-            Shear stiffness (Pa/m)
-
-    Returns
-    ----------------------
-        None
-
-    Notes
-    ----------------------
-
-        For details of implementation see 
-        
-        "Sweeney, Matthew Ryan, and J. D. Hyman. "Stress effects on flow and transport in three‐dimensional fracture networks." Journal of Geophysical Research: Solid Earth 125.8 (2020): e2020JB019754."
-
-        and 
-
-        Baghbanan, Alireza, and Lanru Jing. "Stress effects on permeability in a fractured rock mass with correlated fracture length and aperture." International journal of rock mechanics and mining sciences 45.8 (2008): 1320-1334.
-
-        and
-
-        Zhao, Zhihong, et al. "Impact of stress on solute transport in a fracture network: A comparison study." Journal of Rock Mechanics and Geotechnical Engineering 5.2 (2013): 110-123.
-
-    """
-    print("--> Computing aperture based on stress tensor")
-    print("\n--> Stress Tensor (Pa):\n")
-    print(
-        f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
-    )
-    print(
-        f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
-    )
-    print(
-        f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
-    )
-    print()
-
-    # write stress to file.
-    with open("stress.dat", "w") as fstress:
-        fstress.write(
-            f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
-        )
-        fstress.write(
-            f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
-        )
-        fstress.write(
-            f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
-        )
 
     # read fracture data:
     initial_aperture = self.aperture
@@ -148,5 +85,91 @@ def stress_based_apertures(self,
     self.transmissivity = convert(b, 'aperture', 'transmissivity')
     self.aperture = b
     # self.dump_hydraulic_values()
+
+
+def new_model(self, sigma_mat, params):
+
+
+
+def compute_normal_projection(self, sigma_mat):
+
+
+
+
+def stress_based_apertures(self,
+                           sigma_mat,
+                           model_name,
+                           params):
+    
+    """ Takes stress tensor as input (defined in dfn run file) and calculates new apertures based on Bandis equations. New aperture and permeability values are written to files.
+
+
+    Parameters
+    ----------------------
+        sigma_mat : array
+            3 x 3 stress tensor (units in Pa)
+        friction_angle : float
+            Friction angle (Degrees)
+        dilation_angle : float
+            Dilation angle (Degrees)
+        critical_shear_displacement : float
+            Critical shear displacement
+        shear_modulus : float 
+            Shear modulus (Pa)
+        min_b : float
+             Minimum aperture (m)
+        shear_stiffness : float 
+            Shear stiffness (Pa/m)
+
+    Returns
+    ----------------------
+        None
+
+    Notes
+    ----------------------
+
+        For details of implementation see 
+        
+        "Sweeney, Matthew Ryan, and J. D. Hyman. "Stress effects on flow and transport in three‐dimensional fracture networks." Journal of Geophysical Research: Solid Earth 125.8 (2020): e2020JB019754."
+
+        and 
+
+        Baghbanan, Alireza, and Lanru Jing. "Stress effects on permeability in a fractured rock mass with correlated fracture length and aperture." International journal of rock mechanics and mining sciences 45.8 (2008): 1320-1334.
+
+        and
+
+        Zhao, Zhihong, et al. "Impact of stress on solute transport in a fracture network: A comparison study." Journal of Rock Mechanics and Geotechnical Engineering 5.2 (2013): 110-123.
+
+    """
+    print("--> Computing aperture based on stress tensor")
+    print("\n--> Stress Tensor (Pa):\n")
+    print(
+        f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+    )
+    print(
+        f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+    )
+    print(
+        f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+    )
+    print()
+
+    # write stress to file.
+    with open("stress.dat", "w") as fstress:
+        fstress.write(
+            f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
+        )
+        fstress.write(
+            f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
+        )
+
+    if model_name == "original":
+        self.original_model(sigma_mat, params)
+    elif model_name == "new":
+        self.new_model(sigma_mat, params)
+        
 
     print("--> Computing aperture based on stress field complete ")
