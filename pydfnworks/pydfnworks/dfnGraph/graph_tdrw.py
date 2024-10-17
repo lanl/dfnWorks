@@ -24,28 +24,26 @@ def limited_matrix_diffusion(self):
     """
 
 
-    # print("\nlimited sampling")
+    #print("\nlimited sampling")
     eps = 10**-2
-
     # print(self.beta, self.advect_time)
     b_eff = (2*self.advect_time) / self.beta
     # b = G.edges[self.curr_node, self.next_node]['b']
-    # print(f"b: {b_eff}")
+    #print(f"b: {b_eff}")
     # traping rate 
     gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b_eff * eps)
-    # print(f"gamma: {b}")
+    #print(f"gamma: {gamma}")
     # average number of trapping events in gamma * advective time
-    average_number_of_trapping_events = self.delta_t * gamma
-    # print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
+    average_number_of_trapping_events = self.advect_time * gamma
+    #print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
     # number of trapping events in sampled from a poisson distribution
     n = np.random.poisson(average_number_of_trapping_events)
-    # print(f"n: {n}")
+    #print(f"n: {n}")
     self.matrix_diffusion_time = 0
-    for i in range(n):
-        xi = np.random.uniform()
-        tmp = self.tau_D * self.iCDFspl(xi)
-        # print(tmp)
-        self.matrix_diffusion_time += tmp
+    xi = np.random.uniform(size = n)
+    # print(xi)
+    tmp = self.tau_D * self.iCDFspl(xi)
+    self.matrix_diffusion_time = tmp.sum() 
     #print("\n")
     self.total_time = self.advect_time + self.matrix_diffusion_time
     #print(self.total_time,self.advect_time,self.matrix_diffusion_time)

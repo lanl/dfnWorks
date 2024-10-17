@@ -243,7 +243,7 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
-                # print("particle exit")
+
                 self.limited_matrix_diffusion()
                 # self.update()
                 self.cleanup_frac_seq()
