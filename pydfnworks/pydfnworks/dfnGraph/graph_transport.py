@@ -18,7 +18,7 @@ from pydfnworks.dfnGraph.particle_class import Particle
 from pydfnworks.general.logging import local_print_log
 
 
-def track_particle(data, verbose=False):
+def track_particle(data, verbose=True):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 

@@ -6,7 +6,7 @@ import mpmath as mp
 
 from pydfnworks.general.logging import local_print_log
 
-def limited_matrix_diffusion(self, G):
+def limited_matrix_diffusion(self):
     """ Matrix diffusion with limited block size
 
     Parameters
@@ -23,12 +23,16 @@ def limited_matrix_diffusion(self, G):
         All parameters are attached to the particle class 
     """
 
+
     # print("\nlimited sampling")
     eps = 10**-2
-    b = G.edges[self.curr_node, self.next_node]['b']
-    # print(f"b: {b}")
+
+    # print(self.beta, self.advect_time)
+    b_eff = (2*self.advect_time) / self.beta
+    # b = G.edges[self.curr_node, self.next_node]['b']
+    # print(f"b: {b_eff}")
     # traping rate 
-    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b * eps)
+    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b_eff * eps)
     # print(f"gamma: {b}")
     # average number of trapping events in gamma * advective time
     average_number_of_trapping_events = self.delta_t * gamma
@@ -36,13 +40,15 @@ def limited_matrix_diffusion(self, G):
     # number of trapping events in sampled from a poisson distribution
     n = np.random.poisson(average_number_of_trapping_events)
     # print(f"n: {n}")
-    self.delta_t_md = 0
+    self.matrix_diffusion_time = 0
     for i in range(n):
         xi = np.random.uniform()
-        tmp = self.iCDFspl(xi)
+        tmp = self.tau_D * self.iCDFspl(xi)
         # print(tmp)
-        self.delta_t_md += tmp
-    # print("\n")
+        self.matrix_diffusion_time += tmp
+    #print("\n")
+    self.total_time = self.advect_time + self.matrix_diffusion_time
+    #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
 
 def get_fracture_segments(transfer_time,
                           fracture_length,

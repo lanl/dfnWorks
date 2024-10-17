@@ -61,10 +61,8 @@ class Particle():
     def initalize(self,G):
         self.frac = (G.nodes[self.curr_node]['frac'][1])
 
-    
         times = np.logspace(-6, 0, 100)
         eps = 10**-2
-
     #    laplace_trans_prob_function = lambda s: mp.cosh((1-eps)*mp.sqrt(s))/mp.cosh(mp.sqrt(s))/s
         laplace_trans_prob_function = lambda s: (mp.cosh(eps*mp.sqrt(s))-mp.sinh(eps*mp.sqrt(s))*mp.tanh(mp.sqrt(s)))/s
 
@@ -77,8 +75,10 @@ class Particle():
                                         degree=36)
 
 
-
+        tau_D = ( self.fracture_spacing / 2 ) / self.matrix_diffusivity
+        
         self.iCDFspl = BSpline(cdf, times, 0)    
+        self.tau_D = tau_D 
 
 
     def interpolate_time(self, x0, t1, t2, x1, x2):
@@ -243,6 +243,8 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
+                # print("particle exit")
+                self.limited_matrix_diffusion()
                 # self.update()
                 self.cleanup_frac_seq()
                 break
@@ -250,8 +252,8 @@ class Particle():
             if self.tdrw_flag:
                 if self.fracture_spacing is None:
                     self.unlimited_matrix_diffusion(G)
-                else:
-                    self.limited_matrix_diffusion(G)
+                # else:
+                #     self.limited_matrix_diffusion(G)
 
             if self.cp_flag:
                 self.cross_control_plane(G)
