@@ -1,8 +1,48 @@
 import numpy as np
 from scipy import special
+from scipy.interpolate import BSpline
+
 import mpmath as mp
 
 from pydfnworks.general.logging import local_print_log
+
+def limited_matrix_diffusion(self, G):
+    """ Matrix diffusion with limited block size
+
+    Parameters
+    ----------
+        G : NetworkX graph
+            graph obtained from graph_flow
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----------
+        All parameters are attached to the particle class 
+    """
+
+    # print("\nlimited sampling")
+    eps = 10**-2
+    b = G.edges[self.curr_node, self.next_node]['b']
+    # print(f"b: {b}")
+    # traping rate 
+    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b * eps)
+    # print(f"gamma: {b}")
+    # average number of trapping events in gamma * advective time
+    average_number_of_trapping_events = self.delta_t * gamma
+    # print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
+    # number of trapping events in sampled from a poisson distribution
+    n = np.random.poisson(average_number_of_trapping_events)
+    # print(f"n: {n}")
+    self.delta_t_md = 0
+    for i in range(n):
+        xi = np.random.uniform()
+        tmp = self.iCDFspl(xi)
+        # print(tmp)
+        self.delta_t_md += tmp
+    # print("\n")
 
 def get_fracture_segments(transfer_time,
                           fracture_length,
@@ -464,36 +504,36 @@ def set_up_limited_matrix_diffusion(G,
     return trans_prob
 
 
-def limited_matrix_diffusion(self, G):
-    """ Matrix diffusion with limited block size
+# def limited_matrix_diffusion(self, G):
+#     """ Matrix diffusion with limited block size
 
-    Parameters
-    ----------
-        G : NetworkX graph
-            graph obtained from graph_flow
+#     Parameters
+#     ----------
+#         G : NetworkX graph
+#             graph obtained from graph_flow
 
-    Returns
-    -------
-        None
+#     Returns
+#     -------
+#         None
 
-    Notes
-    -----------
-        All parameters are attached to the particle class 
-    """
+#     Notes
+#     -----------
+#         All parameters are attached to the particle class 
+#     """
 
-    frac_length = G.edges[self.curr_node, self.next_node]['length']
-    b = G.edges[self.curr_node, self.next_node]['b']
-    velocity = G.edges[self.curr_node, self.next_node]['velocity']
+#     frac_length = G.edges[self.curr_node, self.next_node]['length']
+#     b = G.edges[self.curr_node, self.next_node]['b']
+#     velocity = G.edges[self.curr_node, self.next_node]['velocity']
 
-    segment_length, num_segments = get_fracture_segments(
-        self.transfer_time, frac_length, b, velocity, self.matrix_diffusivity,
-        self.matrix_porosity)
+#     segment_length, num_segments = get_fracture_segments(
+#         self.transfer_time, frac_length, b, velocity, self.matrix_diffusivity,
+#         self.matrix_porosity)
 
-    self.delta_t_md = segment_matrix_diffusion(self.trans_prob,
-                                               self.matrix_porosity,
-                                               self.matrix_diffusivity, b,
-                                               velocity, segment_length,
-                                               num_segments)
+#     self.delta_t_md = segment_matrix_diffusion(self.trans_prob,
+#                                                self.matrix_porosity,
+#                                                self.matrix_diffusivity, b,
+#                                                velocity, segment_length,
+#                                                num_segments)
 
 
 def unlimited_matrix_diffusion(self, G):
