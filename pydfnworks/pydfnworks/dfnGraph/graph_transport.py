@@ -13,7 +13,8 @@ import multiprocessing as mp
 
 # pydfnworks graph modules modules
 import pydfnworks.dfnGraph.particle_io as io
-from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion, set_up_limited_matrix_diffusion_v2
+from pydfnworks.dfnGraph.graph_tdrw_cortado import set_up_limited_matrix_diffusion_cortado
+from pydfnworks.dfnGraph.graph_tdrw_roubinet import set_up_limited_matrix_diffusion_roubinet
 from pydfnworks.dfnGraph.particle_class import Particle
 from pydfnworks.general.logging import local_print_log
 
@@ -45,12 +46,18 @@ def track_particle(data, verbose=False):
             f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
         )
 
-    particle = Particle(data["particle_number"], data["initial_position"],
-                        data["tdrw_flag"], data["matrix_porosity"],
-                        data["matrix_diffusivity"], data["fracture_spacing"],
-                        data["trans_prob"], data["transfer_time"],
-                        data["cp_flag"], data["control_planes"],
-                        data["direction"])
+    particle = Particle(particle_number =  data["particle_number"], 
+        ip = data["initial_position"],
+        tdrw_flag = data["tdrw_flag"], 
+        tdrw_method = data["tdrw_method"],
+        matrix_porosity = data["matrix_porosity"],
+        matrix_diffusivity = data["matrix_diffusivity"], 
+        fracture_spacing = data["fracture_spacing"],
+        trans_prob = data["trans_prob"], 
+        transfer_time = data["transfer_time"],
+        cp_flag = data["cp_flag"], 
+        control_planes = data["control_planes"],
+        direction = data["direction"])
 
     # # get current process information
     global nbrs_dict
@@ -255,6 +262,7 @@ def run_graph_transport(self,
                         initial_positions="uniform",
                         dump_traj=False,
                         tdrw_flag=False,
+                        tdrw_method=None,
                         matrix_porosity=None,
                         matrix_diffusivity=None,
                         fracture_spacing=None,
@@ -357,13 +365,21 @@ def run_graph_transport(self,
     if fracture_spacing is not None:
         self.print_log(f"--> Using limited matrix block size for TDRW")
         self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-        # trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
-        #                                               matrix_porosity,
-        #                                               matrix_diffusivity)
-        # transfer_time = (fracture_spacing/2)**2 / matrix_diffusivity
 
-        trans_prob, transfer_time = set_up_limited_matrix_diffusion_v2(fracture_spacing,matrix_diffusivity)
-        np.savetxt('cdf.dat', np.c_[transfer_time,trans_prob])
+        if tdrw_method == "cortado":
+            self.print_log("--> Using the Cortado Method")
+            transfer_time, trans_prob = set_up_limited_matrix_diffusion_cortado(fracture_spacing,matrix_diffusivity)
+
+        elif tdrw_method == "roubinet":
+            self.print_log("--> Using the Roubinet Method")
+
+            trans_prob = set_up_limited_matrix_diffusion_roubinet(G, fracture_spacing,
+                                                        matrix_porosity,
+                                                        matrix_diffusivity)
+            transfer_time = (fracture_spacing/2)**2 / matrix_diffusivity
+        else:
+            self.print_log("Unknown TDRW method fo finite block size", 'error')
+
     else:
         trans_prob = None
         transfer_time = None
@@ -374,10 +390,20 @@ def run_graph_transport(self,
         for i in range(nparticles):
             if i % 1000 == 0:
                 self.print_log(f"--> Starting particle {i} out of {nparticles}")
-            particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
-                                matrix_diffusivity, fracture_spacing,
-                                trans_prob, transfer_time, control_plane_flag,
-                                control_planes, direction)
+
+            particle = Particle(particle_number = i, 
+                ip = ip[i], 
+                tdrw_flag = tdrw_flag, 
+                tdrw_method = tdrw_method, 
+                matrix_porosity = matrix_porosity,
+                matrix_diffusivity = matrix_diffusivity,
+                fracture_spacing = fracture_spacing,
+                trans_prob = trans_prob,
+                transfer_time   =transfer_time, 
+                cp_flag = control_plane_flag,
+                control_planes = control_planes, 
+                direction = direction) 
+
             particle.track(G, nbrs_dict)
             particles.append(particle)
 
@@ -412,6 +438,7 @@ def run_graph_transport(self,
             data["particle_number"] = i
             data["initial_position"] = ip[i]
             data["tdrw_flag"] = tdrw_flag
+            data["tdrw_method"] = tdrw_method
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             data["fracture_spacing"] = fracture_spacing

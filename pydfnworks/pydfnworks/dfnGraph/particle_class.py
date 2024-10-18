@@ -16,9 +16,12 @@ class Particle():
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
 
-    from pydfnworks.dfnGraph.graph_tdrw import unlimited_matrix_diffusion, limited_matrix_diffusion
+    from pydfnworks.dfnGraph.graph_tdrw_unlimited import unlimited_matrix_diffusion
+    from pydfnworks.dfnGraph.graph_tdrw_cortado import limited_matrix_diffusion_cortado
+    from pydfnworks.dfnGraph.graph_tdrw_roubinet import limited_matrix_diffusion_roubinet
 
-    def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
+
+    def __init__(self, particle_number, ip, tdrw_flag, tdrw_method, matrix_porosity,
                  matrix_diffusivity, fracture_spacing, trans_prob,
                  transfer_time, cp_flag, control_planes, direction):
         self.particle_number = particle_number
@@ -37,6 +40,7 @@ class Particle():
         self.beta = 0
         self.delta_beta = 0
         self.tdrw_flag = tdrw_flag
+        self.tdrw_method = tdrw_method
         self.matrix_porosity = matrix_porosity
         self.matrix_diffusivity = matrix_diffusivity
         self.fracture_spacing = fracture_spacing
@@ -59,27 +63,6 @@ class Particle():
 
     def initalize(self,G):
         self.frac = (G.nodes[self.curr_node]['frac'][1])
-
-#         times = np.logspace(-6, 0, 100)
-#         eps = 10**-2
-#     #    laplace_trans_prob_function = lambda s: mp.cosh((1-eps)*mp.sqrt(s))/mp.cosh(mp.sqrt(s))/s
-#         laplace_trans_prob_function = lambda s: (mp.cosh(eps*mp.sqrt(s))-mp.sinh(eps*mp.sqrt(s))*mp.tanh(mp.sqrt(s)))/s
-
-#         cdf = np.zeros_like(times)
-#         for i, t in enumerate(times):
-#             cdf[i] = mp.invertlaplace(laplace_trans_prob_function,
-#                                         t,
-#                                         method='talbot',
-#                                         dps=16,
-#                                         degree=36)
-
-
-#         self.limited_times = times
-#         self.limited_cdf = cdf 
-#         tau_D = ( self.fracture_spacing / 2 )**2 / self.matrix_diffusivity
-# #        self.iCDFspl = BSpline(cdf, times, 0)    
-#         self.tau_D = tau_D 
-
 
     def interpolate_time(self, x0, t1, t2, x1, x2):
         """ interpolates time between t1 and t2 at location x0 which is between x1 and x2
@@ -243,10 +226,7 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
-                # if self.tdrw_flag:
-                #     if self.fracture_spacing is not None:
-                #         self.limited_matrix_diffusion(G)
-                # self.update()
+                self.update()
                 self.cleanup_frac_seq()
                 break
 
@@ -254,7 +234,12 @@ class Particle():
                 if self.fracture_spacing is None:
                     self.unlimited_matrix_diffusion(G)
                 else:
-                    self.limited_matrix_diffusion(G)
+                    if self.tdrw_method == "cortado":
+                        self.limited_matrix_diffusion_cortado(G)
+                    elif self.tdrw_method == "roubinet":
+                        self.limited_matrix_diffusion_roubinet(G)
+                    else:
+                        print("unknown method")
 
             if self.cp_flag:
                 self.cross_control_plane(G)
