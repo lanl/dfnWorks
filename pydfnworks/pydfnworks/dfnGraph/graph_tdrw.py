@@ -48,11 +48,11 @@ def limited_matrix_diffusion(self, G):
     # self.matrix_diffusion_time = tmp.sum() 
     # #print("\n")
     # self.total_time = self.advect_time + self.matrix_diffusion_time
-    # #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
 
 
+    # print(self.total_time,self.advect_time,self.matrix_diffusion_time)
     # print("\nsegment limited sampling")
-    eps = 10**-2
+    eps = (10**-4)/2
     # print(self.beta, self.advect_time)
     # b_eff = (2*self.delta_t) / self.beta
     b = G.edges[self.curr_node, self.next_node]['b']
@@ -66,13 +66,17 @@ def limited_matrix_diffusion(self, G):
     # number of trapping events in sampled from a poisson distribution
     n = np.random.poisson(average_number_of_trapping_events)
     #print(f"n: {n}")
-    self.matrix_diffusion_time = 0
     xi = np.random.uniform(size = n)
     # print(xi)
-
-    tmp = self.tau_D * np.interp(xi, self.limited_times, self.limited_cdf)
+    tmp = np.interp(xi, self.trans_prob, self.transfer_time)
+    # print("*")
+    # print(self.transfer_time)
+    # print(self.trans_prob)
+    # print(tmp)
+    # exit(1) 
     # tmp = self.tau_D * self.iCDFspl(xi)
     self.delta_t_md = tmp.sum() 
+    # print(self.delta_t_md)
     #print("\n")
     # self.total_time = self.advect_time + self.matrix_diffusion_time
     #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
@@ -484,6 +488,26 @@ def get_aperture_and_time_limits(G):
     local_print_log(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
     local_print_log(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
     return b_min, b_max, t_min, t_max
+
+
+def set_up_limited_matrix_diffusion_v2(fracture_spacing, matrix_diffusivity):
+
+    times = np.logspace(-10, 0, 100)
+    eps = 10**-4
+#    laplace_trans_prob_function = lambda s: mp.cosh((1-eps)*mp.sqrt(s))/mp.cosh(mp.sqrt(s))/s
+    laplace_trans_prob_function = lambda s: (mp.cosh(eps*mp.sqrt(s))-mp.sinh(eps*mp.sqrt(s))*mp.tanh(mp.sqrt(s)))/s
+
+    cdf = np.zeros_like(times)
+    for i, t in enumerate(times):
+        cdf[i] = mp.invertlaplace(laplace_trans_prob_function,
+                                    t,
+                                    method='talbot',
+                                    dps=16,
+                                    degree=36)
+
+    tau_D = ( fracture_spacing / 2 )**2 / matrix_diffusivity
+    times = tau_D * times
+    return cdf, times 
 
 
 def set_up_limited_matrix_diffusion(G,

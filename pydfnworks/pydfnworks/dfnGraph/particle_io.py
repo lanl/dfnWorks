@@ -193,6 +193,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
     adv_times, md_times, total_times, length, beta, stuck_cnt = gather_particle_info(
         particles)
 
+
     if format == 'ascii':
         filename = f"{partime_file}.dat"
         local_print_log(f"--> Writing Data to files: {filename}")

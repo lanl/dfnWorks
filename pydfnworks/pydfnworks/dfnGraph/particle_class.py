@@ -1,7 +1,6 @@
 import sys
 import numpy as np
-from scipy.interpolate import BSpline
-import mpmath as mp
+
 
 from pydfnworks.general.logging import local_print_log
 
@@ -61,25 +60,25 @@ class Particle():
     def initalize(self,G):
         self.frac = (G.nodes[self.curr_node]['frac'][1])
 
-        times = np.logspace(-6, 0, 100)
-        eps = 10**-2
-    #    laplace_trans_prob_function = lambda s: mp.cosh((1-eps)*mp.sqrt(s))/mp.cosh(mp.sqrt(s))/s
-        laplace_trans_prob_function = lambda s: (mp.cosh(eps*mp.sqrt(s))-mp.sinh(eps*mp.sqrt(s))*mp.tanh(mp.sqrt(s)))/s
+#         times = np.logspace(-6, 0, 100)
+#         eps = 10**-2
+#     #    laplace_trans_prob_function = lambda s: mp.cosh((1-eps)*mp.sqrt(s))/mp.cosh(mp.sqrt(s))/s
+#         laplace_trans_prob_function = lambda s: (mp.cosh(eps*mp.sqrt(s))-mp.sinh(eps*mp.sqrt(s))*mp.tanh(mp.sqrt(s)))/s
 
-        cdf = np.zeros_like(times)
-        for i, t in enumerate(times):
-            cdf[i] = mp.invertlaplace(laplace_trans_prob_function,
-                                        t,
-                                        method='talbot',
-                                        dps=16,
-                                        degree=36)
+#         cdf = np.zeros_like(times)
+#         for i, t in enumerate(times):
+#             cdf[i] = mp.invertlaplace(laplace_trans_prob_function,
+#                                         t,
+#                                         method='talbot',
+#                                         dps=16,
+#                                         degree=36)
 
 
-        self.limited_times = times
-        self.limited_cdf = cdf 
-        tau_D = ( self.fracture_spacing / 2 )**2 / self.matrix_diffusivity
-#        self.iCDFspl = BSpline(cdf, times, 0)    
-        self.tau_D = tau_D 
+#         self.limited_times = times
+#         self.limited_cdf = cdf 
+#         tau_D = ( self.fracture_spacing / 2 )**2 / self.matrix_diffusivity
+# #        self.iCDFspl = BSpline(cdf, times, 0)    
+#         self.tau_D = tau_D 
 
 
     def interpolate_time(self, x0, t1, t2, x1, x2):

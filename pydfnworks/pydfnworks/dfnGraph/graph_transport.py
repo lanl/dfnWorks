@@ -13,7 +13,7 @@ import multiprocessing as mp
 
 # pydfnworks graph modules modules
 import pydfnworks.dfnGraph.particle_io as io
-from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
+from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion, set_up_limited_matrix_diffusion_v2
 from pydfnworks.dfnGraph.particle_class import Particle
 from pydfnworks.general.logging import local_print_log
 
@@ -57,19 +57,18 @@ def track_particle(data, verbose=False):
     global G_global
     particle.track(G_global, nbrs_dict)
 
-
     if verbose:
         local_print_log(
-            f"--> Particle {data['particle_number']} is complete"
+            f"--> Particle {data['particle_number']} is complete on worker {cpu_id}"
         )
 
-
-    if data["particle_number"] % 100 == 0:
+    percentage = np.round(100*data['particle_number']/data['nparticles'])
+    if data["particle_number"] % 1000 == 0:
         local_print_log(
-            f"--> Particle {data['particle_number']} is complete"
+            f"--> Particle {data['particle_number']} out of {data['nparticles']} is complete: {percentage:0.2f} %"
         )
 
-    return particles
+    return particle
 
 
 def get_initial_posititions(G, initial_positions, nparticles):
@@ -358,12 +357,13 @@ def run_graph_transport(self,
     if fracture_spacing is not None:
         self.print_log(f"--> Using limited matrix block size for TDRW")
         self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-        trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
-                                                     matrix_porosity,
-                                                     matrix_diffusivity)
-        # This doesn't change for the system.
-        # Transfer time diffusing between fracture blocks
-        transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
+        # trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
+        #                                               matrix_porosity,
+        #                                               matrix_diffusivity)
+        # transfer_time = (fracture_spacing/2)**2 / matrix_diffusivity
+
+        trans_prob, transfer_time = set_up_limited_matrix_diffusion_v2(fracture_spacing,matrix_diffusivity)
+        np.savetxt('cdf.dat', np.c_[transfer_time,trans_prob])
     else:
         trans_prob = None
         transfer_time = None
@@ -420,6 +420,7 @@ def run_graph_transport(self,
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
+            data["nparticles"] = nparticles        
             pool.apply_async(track_particle,
                              args=(data, ),
                              callback=gather_output)
