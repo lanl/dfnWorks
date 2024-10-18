@@ -75,9 +75,10 @@ class Particle():
                                         degree=36)
 
 
-        tau_D = ( self.fracture_spacing / 2 ) / self.matrix_diffusivity
-        
-        self.iCDFspl = BSpline(cdf, times, 0)    
+        self.limited_times = times
+        self.limited_cdf = cdf 
+        tau_D = ( self.fracture_spacing / 2 )**2 / self.matrix_diffusivity
+#        self.iCDFspl = BSpline(cdf, times, 0)    
         self.tau_D = tau_D 
 
 
@@ -243,8 +244,9 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
-
-                self.limited_matrix_diffusion()
+                # if self.tdrw_flag:
+                #     if self.fracture_spacing is not None:
+                #         self.limited_matrix_diffusion(G)
                 # self.update()
                 self.cleanup_frac_seq()
                 break
@@ -252,8 +254,8 @@ class Particle():
             if self.tdrw_flag:
                 if self.fracture_spacing is None:
                     self.unlimited_matrix_diffusion(G)
-                # else:
-                #     self.limited_matrix_diffusion(G)
+                else:
+                    self.limited_matrix_diffusion(G)
 
             if self.cp_flag:
                 self.cross_control_plane(G)

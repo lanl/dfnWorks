@@ -6,7 +6,7 @@ import mpmath as mp
 
 from pydfnworks.general.logging import local_print_log
 
-def limited_matrix_diffusion(self):
+def limited_matrix_diffusion(self, G):
     """ Matrix diffusion with limited block size
 
     Parameters
@@ -24,17 +24,44 @@ def limited_matrix_diffusion(self):
     """
 
 
-    #print("\nlimited sampling")
+    # # print("\nlimited sampling")
+    # eps = 10**-2
+    # # print(self.beta, self.advect_time)
+    # b_eff = (2*self.advect_time) / self.beta
+    # # b = G.edges[self.curr_node, self.next_node]['b']
+    # #print(f"b: {b_eff}")
+    # # traping rate 
+    # gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b_eff * eps)
+    # #print(f"gamma: {gamma}")
+    # # average number of trapping events in gamma * advective time
+    # average_number_of_trapping_events = self.advect_time * gamma
+    # #print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
+    # # number of trapping events in sampled from a poisson distribution
+    # n = np.random.poisson(average_number_of_trapping_events)
+    # #print(f"n: {n}")
+    # self.matrix_diffusion_time = 0
+    # xi = np.random.uniform(size = n)
+    # # print(xi)
+
+    # tmp = self.tau_D * np.interp(xi, self.limited_times, self.limited_cdf)
+    # # tmp = self.tau_D * self.iCDFspl(xi)
+    # self.matrix_diffusion_time = tmp.sum() 
+    # #print("\n")
+    # self.total_time = self.advect_time + self.matrix_diffusion_time
+    # #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
+
+
+    # print("\nsegment limited sampling")
     eps = 10**-2
     # print(self.beta, self.advect_time)
-    b_eff = (2*self.advect_time) / self.beta
-    # b = G.edges[self.curr_node, self.next_node]['b']
+    # b_eff = (2*self.delta_t) / self.beta
+    b = G.edges[self.curr_node, self.next_node]['b']
     #print(f"b: {b_eff}")
     # traping rate 
-    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b_eff * eps)
+    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b * eps)
     #print(f"gamma: {gamma}")
     # average number of trapping events in gamma * advective time
-    average_number_of_trapping_events = self.advect_time * gamma
+    average_number_of_trapping_events = self.delta_t * gamma
     #print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
     # number of trapping events in sampled from a poisson distribution
     n = np.random.poisson(average_number_of_trapping_events)
@@ -42,10 +69,12 @@ def limited_matrix_diffusion(self):
     self.matrix_diffusion_time = 0
     xi = np.random.uniform(size = n)
     # print(xi)
-    tmp = self.tau_D * self.iCDFspl(xi)
-    self.matrix_diffusion_time = tmp.sum() 
+
+    tmp = self.tau_D * np.interp(xi, self.limited_times, self.limited_cdf)
+    # tmp = self.tau_D * self.iCDFspl(xi)
+    self.delta_t_md = tmp.sum() 
     #print("\n")
-    self.total_time = self.advect_time + self.matrix_diffusion_time
+    # self.total_time = self.advect_time + self.matrix_diffusion_time
     #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
 
 def get_fracture_segments(transfer_time,

@@ -18,7 +18,7 @@ from pydfnworks.dfnGraph.particle_class import Particle
 from pydfnworks.general.logging import local_print_log
 
 
-def track_particle(data, verbose=True):
+def track_particle(data, verbose=False):
     """ Tracks a single particle through the graph
 
         all input parameters are in the dictionary named data 
@@ -36,6 +36,7 @@ def track_particle(data, verbose=True):
                 Particle will full trajectory
 
     """
+
     if verbose:
         p = mp.current_process()
         _, cpu_id = p.name.split("-")
@@ -55,11 +56,20 @@ def track_particle(data, verbose=True):
     global nbrs_dict
     global G_global
     particle.track(G_global, nbrs_dict)
+
+
     if verbose:
         local_print_log(
-            f"--> Particle {data['particle_number']} is complete on worker {cpu_id}"
+            f"--> Particle {data['particle_number']} is complete"
         )
-    return particle
+
+
+    if data["particle_number"] % 100 == 0:
+        local_print_log(
+            f"--> Particle {data['particle_number']} is complete"
+        )
+
+    return particles
 
 
 def get_initial_posititions(G, initial_positions, nparticles):
