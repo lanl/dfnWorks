@@ -127,7 +127,8 @@ def fehm(self):
     correct_perm_for_fehm()
     tic = time()
     cmd = os.environ["FEHM_EXE"] + " " + self.local_dfnFlow_file
-    self.call_executable(cmd)
+    # self.call_executable(cmd)
+    subprocess.call(cmd, shell = True)
     self.print_log('=' * 80)
     self.print_log("FEHM Complete")
     elapsed = time() - tic
