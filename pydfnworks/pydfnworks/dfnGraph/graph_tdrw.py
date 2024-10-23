@@ -352,6 +352,7 @@ def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
                 t_diff_seg = np.interp(xi, trans_prob['cdf'],
                                        trans_prob['times'])
 
+
         t_diff += t_diff_seg
     return t_diff
 
