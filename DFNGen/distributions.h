@@ -3,6 +3,9 @@
 #include "expDist.h"
 #include <random>
 #include "structures.h"
+#include "logFile.h"
+
+extern Logger logger;
 
 /*! The Distributions class is used to hold all the custom distribution classes
     that are used by DFNgen. As of now, the only distribution we have completely customized
