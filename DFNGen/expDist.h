@@ -1,6 +1,9 @@
 #ifndef _expDist_h_
 #define _expDist_h_
 #include <random>
+#include "logFile.h"
+
+extern Logger logger;
 
 /*! Exponentail Distribution Class
 
