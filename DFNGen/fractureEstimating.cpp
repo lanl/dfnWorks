@@ -6,6 +6,7 @@
 #include "insertShape.h"
 #include "mathFunctions.h"
 #include "domain.h"
+#include "logFile.h"
 
 /**********************************************************************/
 /****************  Sort Families Radii Lists  *************************/
@@ -29,7 +30,8 @@ void sortRadii(std::vector<Shape> &shapeFam) {
     Arg 3: Random number generator, see std <random> library
     Arg 4: Reference to Distributions class (used for exponential distribution) */
 void generateRadiiLists_nPolyOption(std::vector<Shape> &shapeFamilies, float *famProb, std::mt19937_64 &generator, Distributions &distributions) {
-    std::cout << "\nBuilding radii lists for nPoly option...\n";
+    std::string logString = "Building radii lists for nPoly option...\n";
+    logger.writeLogFile(INFO,  logString);
     
     if (forceLargeFractures == true) {
         for (unsigned int i = 0; i < shapeFamilies.size(); i++) {
@@ -51,7 +53,8 @@ void generateRadiiLists_nPolyOption(std::vector<Shape> &shapeFamilies, float *fa
                  generator, distributions);
     }
     
-    std::cout << "\nBuilding radii lists for nPoly option Complete";
+    logString = "Building radii lists for nPoly option Complete";
+    logger.writeLogFile(INFO,  logString);
 }
 
 
@@ -63,11 +66,8 @@ void generateRadiiLists_nPolyOption(std::vector<Shape> &shapeFamilies, float *fa
     Arg 1: Index to the family in vecotr<Shape> array the warning is refering to
     Arg 2: Shape structure the warning is refering to */
 void printGeneratingFracturesLessThanHWarning(int famIndex, Shape &shapeFam) {
-    std::cout << "\nWARNING: " << shapeType(shapeFam) << " Family "
-              << getFamilyNumber(famIndex, shapeFam.shapeFamily)
-              << " is attepting to populate fracture radii lists, however "
-              << "many fractures are being generated with radii less than 3*h (Minimum radius). "
-              << "Consider adjusting distribution parameters.\n";
+    std::string logString = "WARNING: " + shapeType(shapeFam) + " Family " + to_string(getFamilyNumber(famIndex, shapeFam.shapeFamily)) + " is attepting to populate fracture radii lists, however many fractures are being generated with radii less than 3*h (Minimum radius). Consider adjusting distribution parameters.\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 
@@ -181,7 +181,8 @@ void addRadii(int amountToAdd, int famIdx, Shape &shapeFam, std::mt19937_64 &gen
     Arg 3: Random number generator (see std <random> library)
     Arg 4: Distributions class (currently only used for exponential dist) */
 void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64 &generator, Distributions &distributions) {
-    std::cout << "\nEstimating number of fractures per family for defined fracture intensities (P32)...\n";
+    std::string logString = "Estimating number of fractures per family for defined fracture intensities (P32)...\n";
+    logger.writeLogFile(INFO,  logString);
     float domVol = domainSize[0] * domainSize[1] * domainSize[2];
     int totalFamilies = shapeFamilies.size();
     int cdfSize = totalFamilies; // This variable shrinks along with CDF when used with fracture intensity (P32) option

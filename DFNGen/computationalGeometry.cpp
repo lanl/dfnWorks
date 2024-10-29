@@ -12,6 +12,7 @@
 #include <random>
 #include "testing.h"
 #include "clusterGroups.h"
+#include "logFile.h"
 
 /**********************************************************************/
 /*********************** 2D rotation matrix ***************************/
@@ -397,10 +398,14 @@ void createBoundingBox(struct Poly &newPoly) {
 /*! Bounding box print out to std out.
     Arg 1: Poly whos bounding box to print to screen. */
 void printBoundingBox(struct Poly &newPoly) {
-    std::cout << "\nBounding Box:\n";
-    std::cout << "MinX = " << newPoly.boundingBox[0] << "    MaxX = " << newPoly.boundingBox[1] << "\n";
-    std::cout << "MinY = " << newPoly.boundingBox[2] << "    MaxY = " << newPoly.boundingBox[3] << "\n";
-    std::cout << "MinZ = " << newPoly.boundingBox[4] << "    MaxZ = " << newPoly.boundingBox[5] << "\n";
+    std::string logString = "Bounding Box:\n";
+    logger.writeLogFile(INFO,  logString);
+    logString = "MinX = " + to_string(newPoly.boundingBox[0]) + "    MaxX = " + to_string(newPoly.boundingBox[1]);
+    logger.writeLogFile(INFO,  logString);
+    logString = "MinY = " + to_string(newPoly.boundingBox[2]) + "    MaxY = " + to_string(newPoly.boundingBox[3]);
+    logger.writeLogFile(INFO,  logString);
+    logString = "MinZ = " + to_string(newPoly.boundingBox[4]) + "    MaxZ = " + to_string(newPoly.boundingBox[5]);
+    logger.writeLogFile(INFO,  logString);
 }
 
 
@@ -586,7 +591,8 @@ struct IntPoints findIntersections(short &flag, Poly &poly1, Poly &poly2) {
         flag = 0;
     } else { // Intersection points exist
         if (count > 2) {
-            std::cout << "Error in findIntersections()\n";
+            std::string logString = "Error in findIntersections()\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         
         // Use delete[] on 'stdev', created dynamically
@@ -653,7 +659,7 @@ int FRAM(IntPoints &intPts, unsigned int count, std::vector<IntPoints> &intPtsLi
     if (disableFram == false) {
         /******* Check for intersection of length less than h *******/
         if (magnitude(intPts.x1 - intPts.x2, intPts.y1 - intPts.y2, intPts.z1 - intPts.z2) < h) {
-            //std::cout<<"\nrejectCode = -2: Intersection of length <= h.\n";
+            //std::cout+"\nrejectCode = -2: Intersection of length <= h.\n";
             pstats.rejectionReasons.shortIntersection++;
             return -2;
         }
@@ -664,13 +670,13 @@ int FRAM(IntPoints &intPts, unsigned int count, std::vector<IntPoints> &intPtsLi
             double shrinkLimit = 0.9 * magnitude(intPts.x1 - intPts.x2, intPts.y1 - intPts.y2, intPts.z1 - intPts.z2);
             
             if (checkCloseEdge(newPoly, intPts, shrinkLimit, pstats)) {
-                // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
+                // std::cout+"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
                 pstats.rejectionReasons.closeToEdge++;
                 return -6;
             }
             
             if (checkCloseEdge(poly2, intPts, shrinkLimit, pstats)) {
-                // std::cout<<"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
+                // std::cout+"\nrejectCode = -6: Fracture too close to another fracture's edge.\n";
                 pstats.rejectionReasons.closeToEdge++;
                 return -6;
             }
