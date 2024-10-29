@@ -20,7 +20,7 @@
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
 void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints) {
-    std::string logString = nUserEll + " User Ellipses Defined\n\n";
+    std::string logString = to_string(nUserEll) + " User Ellipses Defined\n\n";
     logger.writeLogFile(INFO,  logString);
     
     for (int i = 0; i < nUserEll; i++) {
