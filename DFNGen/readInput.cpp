@@ -1558,7 +1558,7 @@ void printInputVars() {
         printAry(uenumPoints, "uenumPoints", nUserEll);
     }
     
-    logString = "userRectanglesOnOff = " + userRectanglesOnOff;
+    logString = "userRectanglesOnOff = " + to_string(userRectanglesOnOff);
     logger.writeLogFile(INFO,  logString);
     
     if (userRectanglesOnOff != 0) {
