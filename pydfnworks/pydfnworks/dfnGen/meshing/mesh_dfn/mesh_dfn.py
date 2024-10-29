@@ -142,10 +142,10 @@ def mesh_network(self,
     if not self.visual_mode:
         lgs.define_zones()
 
-    self.gather_mesh_information()
-
     if self.prune_file:
         self.clean_up_files_after_prune()
+
+    self.gather_mesh_information()
 
     if cleanup:
         mh.cleanup_meshing_files()
