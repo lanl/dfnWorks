@@ -21,7 +21,7 @@
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
 void insertUserRectsByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints) {
-    std::string logString = nRectByCoord + " User Rectangles By Coordinates Defined\n\n";
+    std::string logString = to_string(nRectByCoord) + " User Rectangles By Coordinates Defined\n\n";
     logger.writeLogFile(INFO,  logString);
     
     for (unsigned int i = 0; i < nRectByCoord; i++) {
