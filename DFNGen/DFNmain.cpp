@@ -909,7 +909,7 @@ int main (int argc, char **argv) {
             } else {
                 logString =  shapeType(shapeFamilies[i]) + " Family "+ to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n"+ "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
                 logger.writeLogFile(INFO,  logString);
-                logString =  "Actual:    " + pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i];
+                logString =  "Actual:    " + to_string(pstats.acceptedFromFam[i]) + to_string(pstats.rejectedFromFam[i]);
                 logger.writeLogFile(INFO,  logString);
                 file << shapeType(shapeFamilies[i]) << " Family "
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"

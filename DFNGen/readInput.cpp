@@ -1192,7 +1192,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         //
         searchVar(uEllFile, "userOrientationOption:");
         uEllFile >> userEllOrientationOption;
-        logString = "userOrientationOption " + userEllOrientationOption;
+        logString = "userOrientationOption " + to_string(userEllOrientationOption);
         logger.writeLogFile(INFO,  logString);
         
         if (userEllOrientationOption == 0) {
@@ -1476,24 +1476,24 @@ void printInputVars() {
     logger.writeLogFile(INFO,  logString);
     logString = "h = " + to_string(h);
     logger.writeLogFile(INFO,  logString);
-    logString = "visualizationMode = " + visualizationMode;
+    logString = "visualizationMode = " + to_string(visualizationMode);
     logger.writeLogFile(INFO,  logString);
     logString = "seed = " + to_string(seed);
     logger.writeLogFile(INFO,  logString);
-    logString = "keepOnlyLargestCluster = " + keepOnlyLargestCluster;
+    logString = "keepOnlyLargestCluster = " + to_string(keepOnlyLargestCluster);
     logger.writeLogFile(INFO,  logString);
     logString = "domainSizeIncrease = {" + to_string(domainSizeIncrease[0]) + "," + to_string(domainSizeIncrease[1]) + "," + to_string(domainSizeIncrease[2]) + "}\n";
     logger.writeLogFile(INFO,  logString);
     logString = "boundaryFaces = {" + to_string(boundaryFaces[0]) + "," + to_string(boundaryFaces[1]) + "," + to_string(boundaryFaces[2]) + "," + to_string(boundaryFaces[3]) + "," + to_string(boundaryFaces[4]) + "," + to_string(boundaryFaces[5]) + "}\n";
     logger.writeLogFile(INFO,  logString);
-    logString = "nFamRect = " + nFamRect;
+    logString = "nFamRect = " + to_string(nFamRect);
     logger.writeLogFile(INFO,  logString);
-    logString = "nFamEll = " + nFamEll;
+    logString = "nFamEll = " + to_string(nFamEll);
     logger.writeLogFile(INFO,  logString);
     printAry(famProb, "famProb", (nFamEll + nFamRect));
     printAry(edistr, "edistr", nFamEll);
     printAry(enumPoints, "enumPoints", nFamEll);
-    logString = "eAngleOption = " + eAngleOption;
+    logString = "eAngleOption = " + to_string(eAngleOption);
     logger.writeLogFile(INFO,  logString);
     printAry(easpect, "easpect", nFamEll);
     
@@ -1519,7 +1519,7 @@ void printInputVars() {
     printAry(ealpha, "ealpha", nFamEll);
     printAry(rdistr, "rdistr", nFamRect);
     printAry(raspect, "raspect", nFamRect);
-    logString = "rAngleOption = " + rAngleOption;
+    logString = "rAngleOption = " + to_string(rAngleOption);
     logger.writeLogFile(INFO,  logString);
     
     if (orientationOption == 0) {
@@ -1542,14 +1542,14 @@ void printInputVars() {
     printAry(rkappa, "rkappa", nFamRect);
     printAry(rExpMean, "rExpMean", nFamRect);
     printAry(rconst, "rconst", nFamRect);
-    logString = "userEllipsesOnOff = " + userEllipsesOnOff;
+    logString = "userEllipsesOnOff = " + to_string(userEllipsesOnOff);
     logger.writeLogFile(INFO,  logString);
     
     if (userEllipsesOnOff != 0) {
         logString = "nUserEll = " + to_string(nUserEll) + "\n";
         logger.writeLogFile(INFO,  logString);
         printAry(ueRadii, "ueRadii", nUserEll);
-        logString = "urAngleOption = " + ueAngleOption;
+        logString = "urAngleOption = " + to_string(ueAngleOption);
         logger.writeLogFile(INFO,  logString);
         printAry(ueBeta, "ueBeta", nUserEll);
         printAry(ueaspect, "ueaspect", nUserEll);
@@ -1565,7 +1565,7 @@ void printInputVars() {
         logString = "nUserRect = " + to_string(nUserRect) + "\n";
         logger.writeLogFile(INFO,  logString);
         printAry(urRadii, "urRadii", nUserRect);
-        logString = "urAngleOption = " + urAngleOption;
+        logString = "urAngleOption = " + to_string(urAngleOption);
         logger.writeLogFile(INFO,  logString);
         printAry(urBeta, "urBeta", nUserRect);
         printAry(urRadii, "urRadii", nUserRect);
@@ -1574,11 +1574,11 @@ void printInputVars() {
         print2dAry(urnormal, "urnormal", nUserRect);
     }
     
-    logString = "userRecByCoord = " + userRecByCoord;
+    logString = "userRecByCoord = " + to_string(userRecByCoord);
     logger.writeLogFile(INFO,  logString);
     
     if (userRecByCoord != 0) {
-        logString = "nRectByCoord = " + nRectByCoord;
+        logString = "nRectByCoord = " + to_string(nRectByCoord);
         logger.writeLogFile(INFO,  logString);
         printRectCoords(userRectCoordVertices, "userRectCoordVertices", nRectByCoord);
     }
