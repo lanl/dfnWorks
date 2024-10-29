@@ -4,6 +4,7 @@
 #include "structures.h"
 #include "input.h"
 #include "mathFunctions.h"
+#include "logFile.h"
 
 /*  This code goes through all the polygons accepted into the domain and returns the indexes to those polygons
     which match the users boundary faces option.
@@ -47,9 +48,12 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
     std::vector<unsigned int> matchingGroups;
     std::vector<unsigned int> finalPolyList;
     //int keepIsolated = 1;
-    std::cout << "In cluster groups\n";
-    std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
-    std::cout << "Number of groups: " << pstats.groupData.size() << "\n";
+    std::string logString = "In cluster groups\n";
+    logger.writeLogFile(INFO,  logString);
+    logString = "Number of fractures: " + to_string(pstats.acceptedPolyCount);
+    logger.writeLogFile(INFO,  logString);
+    logString = "Number of groups: " + to_string(pstats.groupData.size());
+    logger.writeLogFile(INFO,  logString);
     
     if (keepIsolatedFractures == 0) {
         // NOTE: (groupNumber-1) = corresponding groupData structures' index of the arary
@@ -101,7 +105,8 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
             }
         }
     } else {
-        std::cout << "Number of fractures: " << pstats.acceptedPolyCount << "\n";
+        logString = "Number of fractures: " + to_string(pstats.acceptedPolyCount);
+        logger.writeLogFile(INFO,  logString);
         
         for (unsigned int i = 0; i < pstats.acceptedPolyCount; i++) {
             finalPolyList.push_back(i);
@@ -216,7 +221,8 @@ void updateGroups(Poly &newPoly, std::vector<Poly> &acceptedPoly, std::vector<un
         
         // Error check
         if (i == pstats.fractGroup.size() && pstats.fractGroup[i].groupNum != newPoly.groupNum ) {
-            std::cout << "ERROR: Group not found (computationalGeometry.cpp)\n";
+            std::string logString = "ERROR: Group not found (computationalGeometry.cpp)\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         
         // Add newPoly to fracture/cluster group

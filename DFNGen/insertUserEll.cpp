@@ -8,6 +8,7 @@
 #include "generatingPoints.h"
 #include "domain.h"
 #include "testing.h"
+#include "logFile.h"
 
 /***********************************************************************/
 /*********************  Insert User Ellipse  ***************************/
@@ -19,7 +20,8 @@
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
 void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints) {
-    std::cout << "\n" << nUserEll << " User Ellipses Defined\n\n";
+    std::string logString = nUserEll + " User Ellipses Defined\n\n";
+    logger.writeLogFile(INFO,  logString);
     
     for (int i = 0; i < nUserEll; i++) {
         int index = i * 3; // Index to start of vertices/nodes
@@ -72,7 +74,8 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
             delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
-            std::cout << "\nUser Ellipse " << i + 1 << " was rejected for being outside the defined domain.\n";
+            logString = "User Ellipse " + to_string(i + 1) + " was rejected for being outside the defined domain.\n";
+            logger.writeLogFile(ERROR,  logString);
             rejectedUserFracture.id = i + 1;
             rejectedUserFracture.userFractureType  = -1;
             pstats.rejectedUserFracture.push_back(rejectedUserFracture);
@@ -94,13 +97,15 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
             newPoly.area = getArea(newPoly);
             // Add new rejectsPerAttempt counter
             pstats.rejectsPerAttempt.push_back(0);
-            std::cout << "User Defined Elliptical Fracture " << (i + 1) << " Accepted\n";
+            logString = "User Defined Elliptical Fracture " + to_string((i + 1)) + " Accepted\n";
+            logger.writeLogFile(INFO,  logString);
             acceptedPoly.push_back(newPoly); // Save newPoly to accepted polys list
         } else {
             delete[] newPoly.vertices; // Need to delete manually, created with new[]
             pstats.rejectsPerAttempt[pstats.acceptedPolyCount]++;
             pstats.rejectedPolyCount++;
-            std::cout << "\nRejected User Defined Elliptical Fracture " << i + 1 << "\n";
+            logString = "Rejected User Defined Elliptical Fracture " + to_string(i + 1) + "\n";
+            logger.writeLogFile(ERROR,  logString);
             printRejectReason(rejectCode, newPoly);
             rejectedUserFracture.id = i + 1;
             rejectedUserFracture.userFractureType  = -1;
@@ -110,7 +115,8 @@ void insertUserEll(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intp
 #endif
         }
         
-        std::cout << "\n\n";
+        logString = "\n\n";
+        logger.writeLogFile(INFO,  logString);
     } // End loops
     
     delete[] ueRadii;

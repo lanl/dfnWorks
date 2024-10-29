@@ -2,6 +2,7 @@
 #include "computationalGeometry.h"
 #include "structures.h"
 #include "input.h"
+#include "logFile.h"
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -11,6 +12,7 @@
 
 using std::cout;
 using std::endl;
+using std::string;
 
 bool inPolygonBoundary(double x, double y) {
     /*! Checks if a point is within the polygon domain using a ray casting algorithm.
@@ -131,11 +133,13 @@ void polygonBoundary(std::vector<Poly> &acceptedPolys, std::vector<IntPoints> &i
             // SAVING POLYGON (intersection and triple points saved witchin intersectionChecking())
             finalPolyList.push_back(newPoly); // SAVE newPoly to accepted polys list
         } else { // Poly rejected
-            std::cout << "\nError rebuilding dfn, previously accepted fracture was rejected during DFN rebuild.\n";
+            std::string logString = "Error rebuilding dfn, previously accepted fracture was rejected during DFN rebuild.\n";
+            logger.writeLogFile(ERROR,  logString);
         }
     }
     
-    std::cout << "Rebuilding DFN complete.\n";
+    std::string logString = "Rebuilding DFN complete.\n";
+    logger.writeLogFile(INFO,  logString);
     acceptedPolys.clear();
     acceptedPolys = finalPolyList;
 }

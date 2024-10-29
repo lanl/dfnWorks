@@ -8,6 +8,7 @@
 #include "input.h"
 #include "domain.h"
 #include "testing.h"
+#include "logFile.h"
 
 
 /***********************************************************************/
@@ -20,7 +21,8 @@
     Arg 3: Program statistics structure
     Arg 4: Array of all triple intersection points */
 void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &intpts, struct Stats &pstats, std::vector<Point> &triplePoints)  {
-    std::cout << "\n" << nUserRect << " User Rectangles Defined\n";
+    std::string logString = to_string(nUserRect) + " User Rectangles Defined\n";
+    logger.writeLogFile(INFO,  logString);
     
     for (int i = 0; i < nUserRect; i++) {
         Poly newPoly;
@@ -65,7 +67,8 @@ void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &in
             delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
-            std::cout << "\nUser Rectangle " << i + 1 << " was rejected for being outside the defined domain.\n";
+            logString = "User Rectangle " + to_string( i + 1) + " was rejected for being outside the defined domain.\n";
+            logger.writeLogFile(ERROR,  logString);
             rejectedUserFracture.id = i + 1;
             rejectedUserFracture.userFractureType  = -2;
             pstats.rejectedUserFracture.push_back(rejectedUserFracture);
@@ -88,13 +91,15 @@ void insertUserRects(std::vector<Poly>& acceptedPoly, std::vector<IntPoints> &in
             newPoly.area = getArea(newPoly);
             // Add new rejectsPerAttempt counter
             pstats.rejectsPerAttempt.push_back(0);
-            std::cout << "\nUser Defined Rectangular Fracture " << (i + 1) << " Accepted\n";
+            logString = "User Defined Rectangular Fracture " + to_string(i + 1) + " Accepted\n";
+            logger.writeLogFile(INFO,  logString);
             acceptedPoly.push_back(newPoly); // Save newPoly to accepted polys list
         } else {
             delete[] newPoly.vertices; // Delete manually, created with new[]
             pstats.rejectedPolyCount++;
             pstats.rejectsPerAttempt[pstats.acceptedPolyCount]++;
-            std::cout << "\nRejected user defined rectangular fracture " << i + 1 << "\n";
+            logString = "Rejected user defined rectangular fracture " + to_string(i + 1) + "\n";
+            logger.writeLogFile(ERROR,  logString);
             printRejectReason(rejectCode, newPoly);
             rejectedUserFracture.id = i + 1;
             rejectedUserFracture.userFractureType  = -2;

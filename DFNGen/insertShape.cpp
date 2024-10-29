@@ -7,6 +7,7 @@
 #include "input.h"
 #include "vectorFunctions.h"
 #include <string>
+#include "logFile.h"
 
 
 /**************************************************************************/
@@ -50,11 +51,10 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
                 radius = logDistribution(generator);
                 
                 if (count % 1000 == 0) {
-                    std::cout << "\nWarning: Lognormal distribution for " << shapeType(shapeFam)
-                              << " family " << getFamilyNumber(familyIndex, shapeFam.shapeFamily)
-                              << " has been  unable to generate a fracture with radius within set parameters after "
-                              << count << " consecutive tries.\n";
-                    std::cout << "Consider adjusting the lognormal paramerters for this family in the input file.\n";
+                    std::string logString = "Warning: Lognormal distribution for " + shapeType(shapeFam) + " family " + to_string(getFamilyNumber(familyIndex, shapeFam.shapeFamily)) + " has been  unable to generate a fracture with radius within set parameters after " + to_string(count) + " consecutive tries.\n";
+                    logger.writeLogFile(WARNING,  logString);
+                    logString = "Consider adjusting the lognormal paramerters for this family in the input file.\n";
+                    logger.writeLogFile(WARNING,  logString);
                     break;
                 }
                 
@@ -106,11 +106,10 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
                 radius = distributions.expDist->getValue(shapeFam.expLambda, shapeFam.minDistInput, shapeFam.maxDistInput);
                 
                 if (count % 1000 == 0) {
-                    std::cout << "\nWARNING: Exponential distribution for " << shapeType(shapeFam)
-                              << " family " << getFamilyNumber(familyIndex, shapeFam.shapeFamily)
-                              << " has been  unable to generate a fracture with radius within set parameters after "
-                              << count << " consecutive tries.\n";
-                    std::cout << "Consider adjusting the exponential parameters for this family in the input file.\n";
+                    string logString = "WARNING: Exponential distribution for " + shapeType(shapeFam) + " family " + to_string(getFamilyNumber(familyIndex, shapeFam.shapeFamily)) + " has been  unable to generate a fracture with radius within set parameters after " + to_string(count) + " consecutive tries.\n";
+                    logger.writeLogFile(WARNING,  logString);
+                    logString = "Consider adjusting the exponential parameters for this family in the input file.\n";
+                    logger.writeLogFile(WARNING,  logString);
                     break;
                 }
                 
@@ -192,10 +191,12 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
         int regionIdx = (shapeFam.region - 1) * 6;
         // Layers only apply to z coordinates
         t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
-        //std::cout << "Translation "<< t[0] << " " << t[1] << " " << t[2]<<"\n";
+        //logString = "Translation "+ t[0] + " " + t[1] + " " + t[2]+"\n";
+        //logger.writeLogFile(INFO,  logString);
     } else {
         t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
-        std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        std::string logString = "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
     
@@ -291,7 +292,8 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
         // Layers only apply to z coordinates
         t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
     } else {
-        std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        std::string logString = "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
     
@@ -480,7 +482,8 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
         } else {
             // you should never get here
             t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
-            std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            std::string logString = "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
         
@@ -569,7 +572,8 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
             t = randomTranslation(generator, regions[regionIdx], regions[regionIdx + 1], regions[regionIdx + 2], regions[regionIdx + 3], regions[regionIdx + 4], regions[regionIdx + 5]);
         } else {
             t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
-            std::cout << "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            std::string logString = "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+            logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
         
@@ -613,56 +617,61 @@ bool p32Complete(int size) {
     Arg 1: Rejection code
     Arg 2: Poly which was rejected */
 void printRejectReason(int rejectCode, struct Poly newPoly) {
+    std::string logString;
     if (newPoly.familyNum >= 0 ) {
-        std::cout << "\nAttempted fracture from family "
-                  <<  newPoly.familyNum << " was rejected:\n";
+        logString = "Attempted fracture from family " +  to_string(newPoly.familyNum) + " was rejected:\n";
+        logger.writeLogFile(ERROR,  logString);
     }
     
     switch (rejectCode) {
     case -2:
-        std::cout << "\trejectCode = -2: Intersection of length < h.\n";
+        logString = "rejectCode = -2: Intersection of length < h.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -1:
-        std::cout << "\trejectCode = -1: Fracture too close to a node.\n";
+        logString = "rejectCode = -1: Fracture too close to a node.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -6:
-        std::cout << "\trejectCode = -6: Fracture too close "
-                  << "to another fracture's edge.\n";
+        logString = "\trejectCode = -6: Fracture too close to another fracture's edge.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -7:
-        std::cout << "\trejectCode = -7: Fractures intersecting on same plane\n";
+        logString = "\trejectCode = -7: Fractures intersecting on same plane\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -10:
-        std::cout << "\trejectCode = -10: Rejected triple intersection "
-                  << "due to triple intersections being turned off in input file.\n";
+        logString = "\trejectCode = -10: Rejected triple intersection due to triple intersections being turned off in input file.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -11:
-        std::cout << "\trejectCode = -11: Fracture's intersection "
-                  << "landed too close to a previous intersection.\n";
+        logString = "\trejectCode = -11: Fracture's intersection landed too close to a previous intersection.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -12:
-        std::cout << "\trejectCode = -12: Fracture created a triple "
-                  << "intersection with an angle too small.\n";
+        logString = "\trejectCode = -12: Fracture created a triple intersection with an angle too small.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -13:
-        std::cout << "\trejectCode = -13: Fracture created a triple intersection "
-                  << "with the triple intersection point too close to an intersection's endpoint.\n";
+        logString = "\trejectCode = -13: Fracture created a triple intersection with the triple intersection point too close to an intersection's endpoint.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     case -14:
-        std::cout << "\trejectCode = -14: Fracture created a triple intersection with "
-                  << "the triple intersection point too close to another triple intersection point.\n";
+        logString = "\trejectCode = -14: Fracture created a triple intersection with the triple intersection point too close to another triple intersection point.\n";
+        logger.writeLogFile(ERROR,  logString);
         break;
         
     default:
-        std::cout << "\trejectCode = " << rejectCode << "\n";
+        logString = "\trejectCode = " + to_string(rejectCode);
+        logger.writeLogFile(ERROR,  logString);
         break;
     }
 }
