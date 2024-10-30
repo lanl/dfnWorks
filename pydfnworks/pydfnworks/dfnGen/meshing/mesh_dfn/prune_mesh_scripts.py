@@ -278,7 +278,7 @@ def clean_up_files_after_prune(self, dump_files=True):
             data = fin.read().strip()
             with open('dfnGen_output/polygons.dat', 'w') as fout:
                 # new header
-                fout.write(f'nPolygons: {self.num_frac}')
+                fout.write(f'nPolygons: {self.num_frac}\n')
                 for fracture, line in enumerate(data.split('\n')):
                     if fracture - 1 in keep_list:
                         fout.write(line + "\n")
