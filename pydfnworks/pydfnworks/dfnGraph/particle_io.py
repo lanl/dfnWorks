@@ -304,9 +304,11 @@ def dump_control_planes(particles, control_planes, filename, format):
     num_particles = len(particles)
     adv_times = np.zeros((num_cp, num_particles))
     total_times = np.zeros((num_cp, num_particles))
+    pathline_length = np.zeros((num_cp, num_particles))
     for i, particle in enumerate(particles):
         adv_times[:, i] = particle.cp_adv_time
         total_times[:, i] = particle.cp_tdrw_time
+        pathline_length[:, i] = particle.cp_pathline_length
 
     if format == "ascii":
         print(
@@ -324,6 +326,11 @@ def dump_control_planes(particles, control_planes, filename, format):
                    total_times,
                    delimiter=",",
                    header=header)
+        np.savetxt(f"{filename}_pathline_length.dat",
+                   pathline_length,
+                   delimiter=",",
+                   header=header)
+
 
     elif format == "hdf5":
         print(f'--> Writting travel times at control planes to {filename}.h5')
@@ -334,7 +341,6 @@ def dump_control_planes(particles, control_planes, filename, format):
                 cp_subgroup = f5file.create_group(f'cp_{it}')
                 dataset_name = 'adv_times'
                 adv_cp = adv_times[it, :]
-
                 h5dset = cp_subgroup.create_dataset(dataset_name,
                                                     data=adv_cp,
                                                     dtype='float64')
@@ -345,4 +351,10 @@ def dump_control_planes(particles, control_planes, filename, format):
                                                     data=total_cp,
                                                     dtype='float64')
 
+                dataset_name = 'pathline_length'
+                pathline_cp = pathline_length[it, :]
+                h5dset = cp_subgroup.create_dataset(dataset_name,
+                                                    data=pathline_cp,
+                                                    dtype='float64')
+                                                    
         f5file.close()
