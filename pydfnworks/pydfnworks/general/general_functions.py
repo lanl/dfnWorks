@@ -171,7 +171,6 @@ def magicrun(
     # Now that we've set stdout/err to StringIO objects,
     # we can return the Popen object as a MagicPopen object.
     magic_process: MagicPopen = process
-
     return magic_process
 
     
@@ -208,8 +207,9 @@ def call_executable(self, command):
     # # cmd = subprocess.run(line, capture_output=True)
     # self.print_log(p.stdout.decode())
     # self.print_log(p.stderr.decode())
+    print_out(self)
 
-    magicrun(command, log_output=True)
+    magicrun(command, log_output=False)
 
 def print_parameters(self):
     self.print_log("=" * 80 + "\n")
@@ -228,6 +228,11 @@ def print_parameters(self):
         self.print_log(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
     self.print_log("=" * 80 + "\n")
 
+def print_out(self):
+
+    self.print_log("-->Opening dfnGen LogFile...\n")
+    with open('dfngen_logfile.txt', 'r') as f:
+        self.print_log(f.read()) 
 
 def go_home(self):
     os.chdir(self.jobname)
@@ -334,22 +339,22 @@ def to_pickle(self, filename=None):
         pickle_filename = f'{filename}.pkl'
     else:
         pickle_filename = f'{self.local_jobname}.pkl'
-    print(f'--> Pickling DFN object to {pickle_filename}')
+    print_log(f'--> Pickling DFN object to {pickle_filename}')
     if os.path.isfile(pickle_filename):
         response = input(
             f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: "
         )
         if response == 'yes' or response == 'y':
-            print('--> Overwritting file')
+            print_log('--> Overwritting file')
             pickle.dump(self, open(pickle_filename, "wb"))
-            print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+            print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
         elif response == 'no' or 'n':
-            print("--> Not writting file.")
+            print_log("--> Not writting file.")
         else:
-            print("Unknown Response. {response}.\nNot writting file.")
+            print_log("Unknown Response. {response}.\nNot writting file.")
     else:
         pickle.dump(self, open(pickle_filename, "wb"))
-        print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+        print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
 
 
 def from_pickle(self, filename):
@@ -370,7 +375,7 @@ def from_pickle(self, filename):
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle
-    print(f"--> Loading DFN from {filename}")
+    print_log(f"--> Loading DFN from {filename}")
     if os.path.isfile(filename):
         tmp = pickle.load(open(filename, "rb"))
         self.__dict__ = tmp.__dict__.copy()

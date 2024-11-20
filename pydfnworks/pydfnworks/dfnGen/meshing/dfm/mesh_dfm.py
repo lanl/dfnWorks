@@ -41,7 +41,7 @@ def setup_mesh_dfm_directory(jobname, dirname):
         os.chdir(path)
 
 
-    print(f"--> Working directory is now {os.getcwd()}")
+    print_log(f"--> Working directory is now {os.getcwd()}")
     # Make symbolic links to required files
     try:
         os.symlink(jobname + os.sep + "full_mesh.inp", "full_mesh.inp")
@@ -50,7 +50,7 @@ def setup_mesh_dfm_directory(jobname, dirname):
         sys.stderr.write(error)
         sys.exit(1)
 
-    print("--> Setting up DFM meshing directory complete")
+    print_log("--> Setting up DFM meshing directory complete")
 
 
 
@@ -594,7 +594,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
+    print_log("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
 
 def dfm_box(box_domain):    
     """ This function creates the dfm_box_dimensions.mlgi lagrit script.
@@ -630,7 +630,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_box_dimensions.mlgi file: Complete\n")
+    print_log("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
 def dfm_build():
     """ Create the dfm_build_background_mesh.mlgi lagrit script.
@@ -662,7 +662,7 @@ finish
     with open('dfm_build_background_mesh.mlgi', 'w') as fp: 
         fp.write(lagrit_script)
         fp.flush()
-    print("Creating dfm_box_dimensions.mlgi file: Complete\n")
+    print_log("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
 def dfm_fracture_facets(num_frac):
     """ This function creates the dfm_extract_fracture_facets.mlgi lagrit script.
@@ -724,7 +724,7 @@ finish
     with open('dfm_extract_fracture_facets.mlgi', 'w') as fp:
         fp.write(lagrit_script)
         fp.flush()
-    print("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
+    print_log("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
 
 def dfm_facets():
     """ This function creates the dfm_extract_facets.mlgi lagrit script.
@@ -802,7 +802,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_extract_facets.mlgi file: Complete\n")
+    print_log("Creating dfm_extract_facets.mlgi file: Complete\n")
 
 
 def dfm_diagnostics(h):
@@ -902,7 +902,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_diagonstics.mlgi file: Complete\n")
+    print_log("Creating dfm_diagonstics.mlgi file: Complete\n")
 
 
 def create_dfm():
@@ -944,7 +944,7 @@ def cleanup_mesh_dfm_directory():
         None
 
     """
-    print("--> Cleaning up working directory")
+    print_log("--> Cleaning up working directory")
     # clean up LaGrit Scripts
     lagrit_script_dir = "dfm_lagrit_files" 
     try:
@@ -988,7 +988,7 @@ def cleanup_mesh_dfm_directory():
         os.remove(filename)
 
 
-    print("--> Cleaning up working directory: Complete")
+    print_log("--> Cleaning up working directory: Complete")
 
 
 def check_dfm_mesh(allowed_percentage):
@@ -1009,10 +1009,10 @@ def check_dfm_mesh(allowed_percentage):
     
     """
 
-    print("--> Checking for missing elements")
+    print_log("--> Checking for missing elements")
     if os.path.isfile('missed_cells_full_mesh.inp'):
-        print("--> Missing elements have been found.")
-        print(f"--> Missing elements are in the file 'missed_cells_full_mesh.inp' if you want to see them.")
+        print_log("--> Missing elements have been found.")
+        print_log(f"--> Missing elements are in the file 'missed_cells_full_mesh.inp' if you want to see them.")
         # get number of missed elements in the 
         with open('missed_cells_full_mesh.inp', 'r') as fp:
             line = fp.readline().split()
@@ -1024,19 +1024,19 @@ def check_dfm_mesh(allowed_percentage):
             total_num_elems = int(line[1])
         # Compute percentage and compare
         missing_percent = 100*(missing_num_elems/total_num_elems)
-        print(f"--> Out of {total_num_elems} elements in the DFN there are {missing_num_elems} missing from the DFM.")
-        print(f"--> That's {missing_percent:0.2f} percent of the mesh.")
+        print_log(f"--> Out of {total_num_elems} elements in the DFN there are {missing_num_elems} missing from the DFM.")
+        print_log(f"--> That's {missing_percent:0.2f} percent of the mesh.")
 
         if  missing_percent > allowed_percentage:
             error = f"*** Error. Missing percent of mesh is larger than tolerance {allowed_percentage} ***\n*** Exitting ***\n "
             sys.stderr.write(error)
             sys.exit(1)
         else:
-            print("--> Doesn't seem to bad. Keep Calm and Carry on.")
+            print_log("--> Doesn't seem to bad. Keep Calm and Carry on.")
 
     # if the file 'missed_cells_full_mesh.inp' does not exists, this means no elements were missed.  
     else:
-        print("--> No missinng elements found. ")
+        print_log("--> No missinng elements found. ")
 
 def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, cleanup = True):
     """" Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))
@@ -1060,9 +1060,9 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
          
     """
 
-    print('=' * 80)
-    print("Creating conforming DFM mesh using LaGriT : Starting")
-    print('=' * 80)
+    print_log('=' * 80)
+    print_log("Creating conforming DFM mesh using LaGriT : Starting")
+    print_log('=' * 80)
 
     setup_mesh_dfm_directory(self.jobname, dirname)
 
@@ -1084,7 +1084,7 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
     if cleanup:
         cleanup_mesh_dfm_directory()
 
-    print('=' * 80)
-    print("Creating conforming DFM mesh using LaGriT : Complete")
-    print('=' * 80)
+    print_log('=' * 80)
+    print_log("Creating conforming DFM mesh using LaGriT : Complete")
+    print_log('=' * 80)
 

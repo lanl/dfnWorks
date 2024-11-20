@@ -41,7 +41,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle, call_executable
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle, print_out, call_executable
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
@@ -123,8 +123,10 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-                 log_filename =  None,
-                 log_time = False):
+                 log_filename="dfnWorks",
+                 log_time=True):
+                 #log_filename=None,
+                 #log_time=False):
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -157,7 +159,7 @@ class DFNWORKS():
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
-        self.logging = False
+        self.logging = True
         self.store_polygon_data = store_polygon_data
 
         if jobname:
@@ -192,12 +194,12 @@ class DFNWORKS():
             self.define_paths()
 
         # try:
-        #     os.remove('dfnWorks.log') #Remove the old log file
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
+        #     os.remove("dfnWorks.log") #Remove the old log file
+        #     self.print_log(f"Creating New Log File {log_filename}")
+        #     self.print_log("")
         # except:
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
+        #     self.print_log(f"Creating New Log File {log_filename}")
+        #     self.print_log("")
 
         if pickle_file:
             self.print_log(f"--> Loading DFN from pickled object file {pickle_file}")
@@ -233,9 +235,13 @@ class DFNWORKS():
         self.print_parameters()
         self.print_log("--> Creating DFN Object: Complete")
 
+        self.print_log(f"--> Printing {self.local_jobname} log file.")
 
     def __del__(self):
-        print(f"--> {self.local_jobname} completed/exited ")
+
+        self.print_log(f"--> {self.local_jobname} completed/exited ")
+        # Read the file line by line
+
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
 #         time_min = elapsed / 60
@@ -339,8 +345,8 @@ def create_dfn():
     '''
 
     options = commandline_options()
-    print("Command Line Inputs:")
-    print(options)
+    self.print_log("Command Line Inputs:")
+    self.print_log(options)
 
     now = datetime.now()
 
@@ -349,12 +355,12 @@ def create_dfn():
         sys.stderr.write(error)
         sys.exit(1)
     else:
-        print("--> Reading Input from " + options.input_file)
+        self.print_log("--> Reading Input from " + options.input_file)
 
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    print(f"--> Reading run files from {options.input_file}")
+    self.print_log(f"--> Reading run files from {options.input_file}")
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -362,13 +368,13 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
-                    print('--> dfnGen input file: ', dfnGen_file)
+                    self.print_log('--> dfnGen input file: ', dfnGen_file)
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
-                    print('--> dfnFlow input file: ', dfnFlow_file)
+                    self.print_log('--> dfnFlow input file: ', dfnFlow_file)
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
-                    print('--> dfnTrans input file: ', dfnTrans_file)
+                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
             except:
                 error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error)
@@ -377,7 +383,6 @@ def create_dfn():
     if not options.path:
         if not options.path.endswith('/'):
             options.path += os.sep
-
     DFN = DFNWORKS(jobname=options.jobname,
                    ncpu=options.ncpu,
                    dfnGen_file=dfnGen_file,

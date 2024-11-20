@@ -19,7 +19,7 @@ def initialize_log_file(self, time = False):
     '''
 
 
-    # logging.getLogger(__name__)
+    logging.getLogger(__name__)
     if time:
         logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
                             , format="%(asctime)s %(levelname)s %(message)s" )
