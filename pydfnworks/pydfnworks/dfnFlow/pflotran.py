@@ -447,7 +447,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     --------
     If DFN class does not have a vtk file, inp2vtk_python is called
     """
-    print('--> Parsing PFLOTRAN output with Python')
+    self.print_log('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
         error = "Error. Wrong flow solver requested\n"

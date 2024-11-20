@@ -251,7 +251,7 @@ def check_dfn_trans_run_files(self):
             sys.stderr.write(error)
             sys.exit(1)
 
-    print(
+    self.print_log(
         "--> All files required for dfnTrans have been found in current directory\n\n"
     )
 
@@ -270,7 +270,7 @@ def check_dfn_trans_run_files(self):
 
     # Check Initial conditions, make sure only 1 Initial condition is selected and that
     # required parameters have been defined
-    print("--> Checking Initial Conditions")
+    self.print_log("--> Checking Initial Conditions")
     initial_conditions = [
         ("init_nf:", "init_partn:"), ("init_eqd:", "init_npart:"),
         ("init_fluxw:", "init_totalnumber:"), ("init_random:", "in_randpart:"),
@@ -293,9 +293,9 @@ def check_dfn_trans_run_files(self):
     if len(ic_selected) > 1:
         error = "Error. More than one initial condition defined\nExiting\n"
         self.print_log(error, 'error')
-        print("Selected Initial Conditions:\n:")
+        self.print_log("Selected Initial Conditions:\n:")
         for ic in ic_selected:
-            print(ic)
+            self.print_log(ic)
         sys.exit(1)
     elif len(ic_selected) == 0:
         error = "Error. No initial condition defined\nExiting\n"
