@@ -31,7 +31,8 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     local_print_log(f"--> Making {variable} by node file")
     values = genfromtxt(variable_file, skip_header=0, usecols=(-1))
     if not os.path.isfile(matid_file):
-        hf.print_error(f"Cannot locate the file '{matid_file}")
+        local_print_log(f"Cannot locate the file '{matid_file}",'error')
+
 
     nodes = genfromtxt(matid_file, skip_header=3).astype(int)
     value_by_node = zeros(len(nodes))
@@ -115,13 +116,12 @@ def add_variable_to_mesh(self,
 
     # Check input files
     if not os.path.isfile(variable_file):
-        hf.print_error(
-            f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename."
-        )
+        self.print_log(f"Error -- in function 'add_variable_to_mesh'. The file {variable_file} is not in current directory.  Please check the filename.",'error')
+
 
     if not os.path.isfile(mesh_file_in):
-        hf.print_error(
-            f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename."
+        self.print_log(
+            f"Error -- in function 'add_variable_to_mesh'. The mesh file {mesh_file_in} is not in current directory.  Please check the filename.", "error"
         )
 
     # if an output mesh file is not provided, set target mesh to be the source mesh.

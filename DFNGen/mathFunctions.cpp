@@ -6,6 +6,7 @@
 #include "structures.h"
 #include "vectorFunctions.h"
 #include <iomanip>
+#include "logFile.h"
 
 /****************************************************************************/
 /****************************************************************************/
@@ -54,7 +55,7 @@ double *sumDevAry3(double *v) {
     result[0] = sumDeviation(x, 4);
     result[1] = sumDeviation(y, 4);
     result[2] = sumDeviation(z, 4);
-    return result;	// MUST DELETE RETURN MANUALLY
+    return result;  // MUST DELETE RETURN MANUALLY
 }
 
 /******************************************************************/
@@ -199,7 +200,8 @@ int indexFromProb_and_P32Status(float *CDF, double roll, int famSize, int cdfSiz
         }
     }
     
-    std::cout << "ERROR: see indexFromProb_and_P32Status(), funct did not return anything\n";
+    std::string logString = "ERROR: see indexFromProb_and_P32Status(), funct did not return anything\n";
+    logger.writeLogFile(ERROR,  logString);
     return famSize - 1;
 }
 
@@ -244,8 +246,8 @@ float *createCDF(float *famProb, int size) {
     }
     
     if ((CDF[size - 1] < 0.999) || (CDF[size - 1] > 1.001)) {
-        std::cout << "\nWARNING: Familiy probabilities (famProb in input file) do not sum to 1 \nsum = "
-                  << std::setprecision(17) << CDF[size - 1] << "\nPlease check input file.\n\n";
+        std::string logString = "WARNING: Familiy probabilities (famProb in input file) do not sum to 1 \nsum = " + to_string(CDF[size - 1]) + "\nPlease check input file.\n\n";
+        logger.writeLogFile(WARNING,  logString);
     }
     
     return CDF;

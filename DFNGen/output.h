@@ -5,8 +5,6 @@
 #include <fstream>
 #include <string>
 
-
-
 void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output);
 void writeNormalVectors(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output);
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts,

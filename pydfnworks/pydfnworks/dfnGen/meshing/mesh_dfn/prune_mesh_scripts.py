@@ -129,7 +129,7 @@ finish
     self.print_log("--> Done editting intersection files")
 
 
-def clean_up_files_after_prune(self, dump_files=False):
+def clean_up_files_after_prune(self, dump_files=True):
     ''' After pruning a DFN to only include the fractures in prune_file this function removes references to those fractures from params.txt, perm.dat, aperature.dat, and poly_info.dat 
     
     Parameters
@@ -157,6 +157,9 @@ def clean_up_files_after_prune(self, dump_files=False):
     self.normal_vect = self.normal_vectors[keep_list - 1, :]
     self.centers = self.centers[keep_list - 1, :]
     self.surface_area = self.surface_area[keep_list - 1]
+
+    print(f"--> Modifying DFN properties based on fractures in {self.prune_file}: Complete")
+
 
     if dump_files:
         ## this is probably broken, but everything else is in memory now so....
@@ -217,24 +220,6 @@ def clean_up_files_after_prune(self, dump_files=False):
             fout.write('%f %f %f\n' %
                        (self.normal_vect[i, 0], self.normal_vect[i, 1],
                         self.normal_vect[i, 2]))
-        fout.close()
-        self.print_log("--> Complete")
-
-        self.print_log("--> Editing translations.dat file")
-        fin = open(self.path + 'dfnGen_output/translations.dat', 'r')
-        fout = open(self.jobname + 'dfnGen_output/translations.dat', 'w')
-        # copy header
-        line = fin.readline()
-        fout.write(line)
-        points = []
-        for line in fin.readlines():
-            tmp = line.split(' ')
-            if tmp[-1] != 'R':
-                points.append((float(tmp[0]), float(tmp[1]), float(tmp[2])))
-        points = np.asarray(points)
-        for i in range(self.num_frac):
-            fout.write('%f %f %f\n' %
-                       (points[i, 0], points[i, 1], points[i, 2]))
         fout.close()
         self.print_log("--> Complete")
 
