@@ -272,17 +272,20 @@ def clean_up_files_after_prune(self, dump_files=True):
         fout.close()
         print("--> Complete")
 
+        retained_fractures = []
         print("--> Editing polygons.dat file")
         with open(self.path + 'dfnGen_output/polygons.dat', 'r') as fin:
             header = fin.readline()
             data = fin.read().strip()
             with open('dfnGen_output/polygons.dat', 'w') as fout:
                 # new header
-                fout.write(f'nPolygons: {self.num_frac}')
+                fout.write(f'nPolygons: {self.num_frac}\n')
                 for fracture, line in enumerate(data.split('\n')):
-                    if fracture - 1 in keep_list:
+                    if (fracture+1) in keep_list:
+                        retained_fractures.append(fracture + 1)
                         fout.write(line + "\n")
-
+        print(retained_fractures)
+        print(keep_list)
         print(f"--> Modifying files based on fractures in {self.prune_file} : Complete")
 
     print("--> Editing Fracture Files Complete")
