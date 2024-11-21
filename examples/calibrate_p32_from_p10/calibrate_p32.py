@@ -100,5 +100,5 @@ def get_p10(p32):
 global desired_p10
 desired_p10 = 0.76
 sol = minimize_scalar(get_p10, method='bounded', bounds=[0.5,2])
-print(sol.x)
+print(sol)
 print(f'Calibrated p32 value {sol.x}')

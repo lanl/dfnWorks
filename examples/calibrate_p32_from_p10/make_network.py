@@ -12,16 +12,12 @@ from pydfnworks import *
 import os
 from scipy.optimize import minimize_scalar
 
-p32 = 1.4568217933106986
+p32 = 1.4568217933106986 ## calibrated value
 
 src_path = os.getcwd()
 jobname = f"{src_path}/output"
-dfnFlow_file = f"{src_path}/dfn_explicit.in"
-dfnTrans_file = f"{src_path}/PTDFN_control.dat"
 
 DFN = DFNWORKS(jobname,
-            dfnFlow_file=dfnFlow_file,
-            dfnTrans_file=dfnTrans_file,
             ncpu=8)
 
 DFN.params['domainSize']['value'] = [50, 50, 50]
@@ -78,21 +74,16 @@ DFN.add_fracture_family(shape="rect",
 
 
 DFN.make_working_directory(delete=True)
-# DFN.print_domain_parameters()
 DFN.check_input()
-
 DFN.create_network()
 DFN.dump_hydraulic_values()
 
 G = DFN.create_graph('fracture', 'top', 'bottom')
-
 well_intersections = len([n for n in G.neighbors(1)])
 p10 = well_intersections / DFN.params['domainSize']['value'][2]
 
 
-
 DFN.output_report()
-# DFN.dump_hydraulic_values()
-
 DFN.mesh_network()
-exit() 
+
+print(p10)
