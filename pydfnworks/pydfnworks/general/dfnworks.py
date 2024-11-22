@@ -127,6 +127,7 @@ class DFNWORKS():
                  log_time=True):
                  #log_filename=None,
                  #log_time=False):
+        
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -173,7 +174,7 @@ class DFNWORKS():
             now = datetime.now()
             self.start_time = now
             statement = f"Starting at {now}"
-            self.print_log(statement)
+            self.print_log(statement )
         else:
             self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
             self.local_jobname = "dfnWorks_output"
@@ -185,26 +186,17 @@ class DFNWORKS():
             now = datetime.now()
             self.start_time = now
             statement = f"Starting at {now}"
-            self.print_log(statement) 
+            self.print_log(statement ) 
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
             self.legal()
-            self.print_log("--> Creating DFN Object: Starting")
+            self.print_log("--> Creating DFN Object: Starting" )
             self.define_paths()
 
-        # try:
-        #     os.remove("dfnWorks.log") #Remove the old log file
-        #     self.print_log(f"Creating New Log File {log_filename}")
-        #     self.print_log("")
-        # except:
-        #     self.print_log(f"Creating New Log File {log_filename}")
-        #     self.print_log("")
-
         if pickle_file:
-            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
             self.from_pickle(pickle_file)
-
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -233,14 +225,12 @@ class DFNWORKS():
         self.params, self.mandatory_params = self.load_parameters()
 
         self.print_parameters()
-        self.print_log("--> Creating DFN Object: Complete")
+        self.print_log("--> Creating DFN Object: Complete" )
 
-        self.print_log(f"--> Printing {self.local_jobname} log file.")
+        self.print_log(f"--> Printing {self.local_jobname} log file." )
 
     def __del__(self):
-
-        self.print_log(f"--> {self.local_jobname} completed/exited ")
-        # Read the file line by line
+        self.print_log(f"--> {self.local_jobname} completed/exited " )
 
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
@@ -323,6 +313,7 @@ def commandline_options():
     if options.jobname == "":
         error = "Error: Jobname is required. Exiting.\n"
         sys.stderr.write(error)
+        self.print_log(error, "critical")
         sys.exit(1)
     return options
 
@@ -345,22 +336,23 @@ def create_dfn():
     '''
 
     options = commandline_options()
-    self.print_log("Command Line Inputs:")
-    self.print_log(options)
+    self.print_log("Command Line Inputs:" )
+    self.print_log(options )
 
     now = datetime.now()
 
     if options.input_file == "":
         error = "ERROR!!! Input file must be provided.\n"
         sys.stderr.write(error)
+        self.print_log(error, "error")
         sys.exit(1)
     else:
-        self.print_log("--> Reading Input from " + options.input_file)
+        self.print_log(f"--> Reading Input from {options.input_file}" )
 
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    self.print_log(f"--> Reading run files from {options.input_file}")
+    self.print_log(f"--> Reading run files from {options.input_file}" )
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -368,16 +360,16 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
-                    self.print_log('--> dfnGen input file: ', dfnGen_file)
+                    self.print_log(f'--> dfnGen input file: {dfnGen_file}' )
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
-                    self.print_log('--> dfnFlow input file: ', dfnFlow_file)
+                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
-                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
+                    self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
             except:
                 error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
-                sys.stderr.write(error)
+                sys.stderr.write(error, "error")
                 sys.exit(1)
 
     if not options.path:

@@ -173,11 +173,11 @@ def magicrun(
     magic_process: MagicPopen = process
     return magic_process
 
-    
+
 
 def call_executable(self, command):
-    ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.  
-    
+    ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.
+
     Parameters
     -----------------
         command : string
@@ -186,7 +186,7 @@ def call_executable(self, command):
     Returns
     -------------
         None
-    
+
     '''
     # line = command.split(" ")
     # p = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE, text = True)
@@ -200,7 +200,7 @@ def call_executable(self, command):
     # #         # sys.stdout.write(out)
     # #         # sys.stdout.flush()
     # #         self.print_log(p.stdout.decode())
-            
+
 
     # # print(f"Executing {command}")
 
@@ -232,7 +232,7 @@ def print_out(self):
 
     self.print_log("-->Opening dfnGen LogFile...\n")
     with open('dfngen_logfile.txt', 'r') as f:
-        self.print_log(f.read()) 
+        self.print_log(f.read())
 
 def go_home(self):
     os.chdir(self.jobname)
@@ -240,12 +240,12 @@ def go_home(self):
 
 
 def dump_time(self, function_name, time):
-    '''Write run time for a funcion to the jobname_run_time.txt file 
+    '''Write run time for a funcion to the jobname_run_time.txt file
 
     Parameters
     ----------
         self : object
-            DFN Class 
+            DFN Class
         function_name : string
             Name of function that was timed
         time : float
@@ -254,9 +254,9 @@ def dump_time(self, function_name, time):
     Returns
     ----------
         None
-    
+
     Notes
-    --------- 
+    ---------
     While this function is working, the current formulation is not robust through the entire workflow
     '''
     run_time_file = self.jobname + os.sep + self.local_jobname + "_run_time.txt"
@@ -364,11 +364,11 @@ def from_pickle(self, filename):
     --------------
         self : DFN Object
         filename : string
-            name of pickle DFN object 
+            name of pickle DFN object
 
     Returns
     ------------
-        DFN object 
+        DFN object
 
     Notes
     ------------
