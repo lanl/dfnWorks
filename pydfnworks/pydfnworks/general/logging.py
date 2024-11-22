@@ -1,9 +1,10 @@
-
 import logging
-import sys 
+import sys
+
+from pydfnworks.general.images import failure, success
 
 def initialize_log_file(self, time = False):
-    ''' Create Log file 
+    ''' Create Log file
 
     Parameters
     ---------
@@ -20,18 +21,19 @@ def initialize_log_file(self, time = False):
 
 
     logging.getLogger(__name__)
+    self.log_filename = self.log_filename+".log"
     if time:
         logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
                             , format="%(asctime)s %(levelname)s %(message)s" )
     else:
         logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
-                            , format="%(levelname)s %(message)s" )     
+                            , format="%(levelname)s %(message)s" )
     statement = f"Initializing logfile: {self.log_filename}"
     self.print_log(statement)
-    
+
 
 def print_log(self, statement, level = 'info'):
-    '''print and log statments to a file 
+    '''print and log statments to a file
 
     Parameters
     ---------
@@ -61,7 +63,7 @@ def print_log(self, statement, level = 'info'):
         sys.stderr.write(statement)
         sys.exit(1)
     elif level == 'critical':
-        logging.critical(statement)
+        logging.critical(self.failure())
         sys.stderr.write(statement)
         sys.exit(1)
     else:
@@ -111,4 +113,3 @@ def local_print_log(statement, level = 'info'):
         print(statement)
         logging.warning(tmp_statement)
         logging.warning(statement)
-
