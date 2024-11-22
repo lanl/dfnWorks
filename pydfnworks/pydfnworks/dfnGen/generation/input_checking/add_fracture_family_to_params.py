@@ -1,4 +1,6 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
+from pydfnworks.general.logging import initialize_log_file, print_log
+
 
 
 def write_fracture_families(self):
@@ -154,7 +156,7 @@ def determine_type(fracture_family):
 
     else:
 
-        hf.print_error('Fracture family type is not specified')
+        self.print_log('Fracture family type is not specified', 'error')
 
     return fracture_type_prefix
 
@@ -196,8 +198,8 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 'Exactly one distribution value must be True for a fracture family'
             )
     if distribution_type == None:
-        hf.print_error(
-            'Exactly one distribution value must be True for a fracture family'
+        self.print_log(
+            'Exactly one distribution value must be True for a fracture family', 'error'
         )
 
     #Populate the parameter dictionary with values from the fracture family dictionary
@@ -379,7 +381,7 @@ def reorder_fracture_families(self):
             rect_index.append(i)
 
         else:
-            hf.print_error('Fracture family type is not specified')
+            self.print_log('Fracture family type is not specified', 'error')
 
     ellipse_index.extend(rect_index)
     final_order = ellipse_index

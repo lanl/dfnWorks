@@ -55,7 +55,7 @@ def copy_dfn_trans_files(self):
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except:
         error = f"--> Error: Problem copying {self.dfnTrans_file} file\n" "Unable to replace. Exiting Program\n"
-        self.print_log(error, 'error')
+        self.print_log(error, 'critical')
         sys.exit(1)
 
 
@@ -248,6 +248,7 @@ def check_dfn_trans_run_files(self):
         elif not os.path.isfile(params[key]):
             error = "Error\nRequired file %s is not in the current directory.\nPlease check required files\nExiting Program\n" % params[
                 key]
+            self.print_log(error, 'error')
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -299,6 +300,7 @@ def check_dfn_trans_run_files(self):
         sys.exit(1)
     elif len(ic_selected) == 0:
         error = "Error. No initial condition defined\nExiting\n"
+        self.print_log(error, 'error')
         sys.stderr.write(error)
         sys.exit(1)
 

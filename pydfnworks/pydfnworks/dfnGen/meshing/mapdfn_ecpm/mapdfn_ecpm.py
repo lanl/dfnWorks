@@ -26,6 +26,7 @@ import time
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_porosity, mapdfn_perm_iso, mapdfn_perm_aniso
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_io import write_h5_files
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_helper_functions import setup_output_dir, setup_domain
+from pydfnworks.general.logging import initialize_log_file, print_log
 
 
 def mapdfn_ecpm(self,
@@ -71,10 +72,10 @@ def mapdfn_ecpm(self,
 
 
     """
-    print("\n")
-    print('=' * 80)
-    print("* Starting MAPDFN - ECPM")
-    print('=' * 80)
+    self.print_log("\n")
+    self.print_log('=' * 80)
+    self.print_log("* Starting MAPDFN - ECPM")
+    self.print_log('=' * 80)
 
     # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
@@ -94,7 +95,7 @@ def mapdfn_ecpm(self,
     write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
                    k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on)
 
-    print('=' * 80)
-    print("* MAPDFN Complete")
-    print('=' * 80)
-    print("\n")
+    self.print_log('=' * 80)
+    self.print_log("* MAPDFN Complete")
+    self.print_log('=' * 80)
+    self.print_log("\n")

@@ -5,7 +5,7 @@ import os
 
 from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import run_lagrit_script
 from pydfnworks.general import helper_functions as hf
-from pydfnworks.general.logging import local_print_log 
+from pydfnworks.general.logging import local_print_log, print_log 
 
 
 def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
