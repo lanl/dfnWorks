@@ -14,7 +14,7 @@ def check_aspect(params, prefix):
         params : dict
             parameter dictionary
         prefix : string
-        	either 'e' or 'r' for ellipse or rectangle
+            either 'e' or 'r' for ellipse or rectangle
 
     Returns
     ---------

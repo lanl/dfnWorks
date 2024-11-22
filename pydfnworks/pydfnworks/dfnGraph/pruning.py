@@ -167,7 +167,7 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None', k=''):
     if G.graph['representation'] != "intersection":
         self.print_log(
             "Warning/ Wrong type of DFN graph representation\nRepresentation must be intersection\nReturning Empty Graph\n"
-            "warning")
+            "warning", 'warning')
         return nx.Graph()
     Gprime = G.copy()
     Hprime = nx.Graph()

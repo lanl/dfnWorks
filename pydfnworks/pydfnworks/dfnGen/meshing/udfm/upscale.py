@@ -46,13 +46,14 @@ def upscale(self, mat_perm, mat_por, path='../'):
 
     """
 
-    print('=' * 80)
-    print("Generating permeability and porosity for octree mesh: Starting")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Generating permeability and porosity for octree mesh: Starting")
+    self.print_log('=' * 80)
 
     # Check values of porosity and permeability
     if mat_por < 0 or mat_por > 1:
         error = "Matrix porosity must be between 0 and 1. Exiting\n"
+        self.print_log(error, 'error')
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -255,9 +256,9 @@ def upscale(self, mat_perm, mat_por, path='../'):
     elif self.flow_solver == "FEHM":
         self.uge_file = "full_mesh.stor"
 
-    print('=' * 80)
-    print("Generating permeability and porosity for octree mesh: Finished")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Generating permeability and porosity for octree mesh: Finished")
+    self.print_log('=' * 80)
 
 
 #def upscale_cleanup():

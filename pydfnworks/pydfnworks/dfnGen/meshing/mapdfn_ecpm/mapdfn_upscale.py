@@ -2,6 +2,7 @@ import math as m
 import numpy as np
 import time
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
+from pydfnworks.general.logging import local_print_log, print_log
 
 
 def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
@@ -35,7 +36,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
         None
     """
 
-    print(f'--> Upscaling porosity')
+    local_print_log(f'--> Upscaling porosity')
     porosity = np.zeros(num_cells, '=f8')
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
@@ -78,7 +79,7 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, cell_size,
         The units of T are m^3. 
     """
 
-    print(f'--> Computing Isotropic Permeability')
+    local_print_log(f'--> Computing Isotropic Permeability')
     k_iso = np.full(num_cells, matrix_perm, '=f8')
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
@@ -130,7 +131,7 @@ def mapdfn_perm_aniso(num_frac,
         None
 
     """
-    print(f'--> Computing anisotropic permeability')
+    local_print_log(f'--> Computing anisotropic permeability')
 
     #quick error check
     fracture_trans = np.zeros((num_frac, 3), '=f8')
@@ -228,7 +229,7 @@ def mapdfn_upscale(self, num_cells, cell_fracture_id, cell_size,
                    matrix_porosity, matrix_perm, lump_diag_terms,
                    correction_factor):
 
-    print("\n** Starting upscaling **")
+    self.print_log("\n** Starting upscaling **")
     t0 = time.time()
     # compute the porosities of the cells
     porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture,
@@ -242,6 +243,6 @@ def mapdfn_upscale(self, num_cells, cell_fracture_id, cell_size,
                                 matrix_perm, lump_diag_terms,
                                 correction_factor)
     t1 = time.time()
-    print(
+    self.print_log(
         f"** Upscaling Complete. Time required : {t1 - t0:0.2f} seconds **\n")
     return porosity, k_iso, k_aniso

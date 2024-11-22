@@ -7,7 +7,7 @@ import h5py
 # pydfnworks modules
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
-from pydfnworks.general.logging import local_print_log
+from pydfnworks.general.logging import local_print_log, print_log
 
 def get_laplacian_sparse_mat(G,
                              nodelist=None,
@@ -326,7 +326,7 @@ def dump_graph_flow_values(G,graph_flow_filename):
         aperture[i] = d['b']
         volume[i] = area[i] * aperture[i]
 
-    self.print_log(f"--> Writting flow solution to filename: {graph_flow_filename}")
+    local_print_log(f"--> Writting flow solution to filename: {graph_flow_filename}")
     with h5py.File(graph_flow_filename, "w") as f5file:
         h5dset = f5file.create_dataset('velocity', data=velocity)
         h5dset = f5file.create_dataset('length', data=lengths)

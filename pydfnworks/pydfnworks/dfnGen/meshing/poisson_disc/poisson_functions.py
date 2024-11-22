@@ -1,5 +1,6 @@
 # func.py
 from pydfnworks.dfnGen.meshing.poisson_disc import poisson_class as pc
+from pydfnworks.general.logging import local_print_log, print_log
 
 from numpy import arange, array, ogrid, nonzero, zeros, append
 from random import random, shuffle
@@ -1309,7 +1310,7 @@ def occupancy_undersampled(c):
         try:
             boundary_cell = occupancy_cell(c, upper_boundary(c, points))
         except BaseException:
-            print("error", points)
+            local_print_log(f"error {points}", 'error')
         if boundary_cell[0] < c.no_horizontal_occupancy_cells:
             # for every x-value find the two boundary-cells and mark
             # everything above/below, i.w. outside of the domain as
@@ -1603,27 +1604,27 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
         grid_size = occupancy_factor
 
     """
-    print("--> Writing Poisson Disc Parameters")
+    local_print_log("--> Writing Poisson Disc Parameters")
     # Check parameter ranges
     if 0 <= slope < 1:
         pass
     else:
-        print(f"--> Slope Parameter is outside correct range [0,1)")
-        print(f"--> Value provided: {slope}")
-        print("--> Setting to default: 0.1")
+        local_print_log(f"--> Slope Parameter is outside correct range [0,1)")
+        local_print_log(f"--> Value provided: {slope}")
+        local_print_log("--> Setting to default: 0.1")
         slope = 0.1
 
     if min_dist < 0:
-        print("--> Warning: Provided min_dist greater 0")
-        print(f"--> min_dist provided: {min_dist}")
-        print("--> Setting to default: 1")
+        local_print_log("--> Warning: Provided min_dist greater 0")
+        local_print_log(f"--> min_dist provided: {min_dist}")
+        local_print_log("--> Setting to default: 1")
         min_dist = 1
 
     if min_dist > max_dist:
-        print("--> Warning: Provided min_dist greater than max_dist")
-        print(f"--> min_dist provided: {min_dist}")
-        print(f"--> max_dist provided: {max_dist}")
-        print("Setting to default: min_dist=1, max_dist=40")
+        local_print_log("--> Warning: Provided min_dist greater than max_dist")
+        local_print_log(f"--> min_dist provided: {min_dist}")
+        local_print_log(f"--> max_dist provided: {max_dist}")
+        local_print_log("Setting to default: min_dist=1, max_dist=40")
         min_dist = 1
         max_dist = 40
 
@@ -1632,15 +1633,15 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
         max_dist = (coarse_factor - 1) / (2 * slope)
 
     ## Write information to screen about meshing parameters
-    print("--> Poisson Sampling Parameters:")
-    print(f"--> h: {h}")
-    print(f"--> coarse_factor: {coarse_factor}")
-    print(f"--> min_dist: {min_dist}")
-    print(f"--> max_dist: {max_dist}")
-    print(f"--> concurrent_samples: {concurrent_samples}")
-    print(f"--> grid_size: {grid_size}\n")
-    print(f"--> Lower bound on mesh size: {h/2:0.2e}")
-    print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
+    local_print_log("--> Poisson Sampling Parameters:")
+    local_print_log(f"--> h: {h}")
+    local_print_log(f"--> coarse_factor: {coarse_factor}")
+    local_print_log(f"--> min_dist: {min_dist}")
+    local_print_log(f"--> max_dist: {max_dist}")
+    local_print_log(f"--> concurrent_samples: {concurrent_samples}")
+    local_print_log(f"--> grid_size: {grid_size}\n")
+    local_print_log(f"--> Lower bound on mesh size: {h/2:0.2e}")
+    local_print_log(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
 
     params = {"h":h,"R":max_dist,"A":slope,"F":min_dist,\
         "concurrent_samples":concurrent_samples,"grid_size":grid_size,"well_flag": well_flag}
@@ -1672,7 +1673,7 @@ def single_fracture_poisson(fracture_id):
 
         """
 
-    print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
+    local_print_log(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
     c = pc.Poisson_Variables(fracture_id, f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \
@@ -1706,6 +1707,6 @@ def single_fracture_poisson(fracture_id):
     dump_coordinates(c, f'points/points_{fracture_id}.xyz')
 
     runtime = timeit.default_timer() - start
-    print(
+    local_print_log(
         f"--> Poisson sampling for fracture {fracture_id} took {runtime:0.2f} seconds"
     )
