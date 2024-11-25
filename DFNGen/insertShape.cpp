@@ -618,6 +618,7 @@ bool p32Complete(int size) {
     Arg 2: Poly which was rejected */
 void printRejectReason(int rejectCode, struct Poly newPoly) {
     std::string logString;
+    
     if (newPoly.familyNum >= 0 ) {
         logString = "Attempted fracture from family " +  to_string(newPoly.familyNum) + " was rejected:\n";
         logger.writeLogFile(ERROR,  logString);

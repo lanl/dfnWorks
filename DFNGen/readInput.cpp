@@ -603,7 +603,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     std::string tempstring;
     char ch;
     std::ifstream inputFile;
-    std::string logString = "DFN Generator Input File: " + std::string(input) +"\n\n";
+    std::string logString = "DFN Generator Input File: " + std::string(input) + "\n\n";
     logger.writeLogFile(INFO,  logString);
     // Open input file and initialize variables
     inputFile.open(input, std::ifstream::in);
@@ -1258,7 +1258,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         std::ifstream uRectFile;
         uRectFile.open(tempstring.c_str(), std::ifstream::in);
         checkIfOpen(uRectFile, tempstring);
-        logString = "User Defined Rectangles File: " + tempstring;
+        logString = "User Defined Rectangles File: " + tempstring + "\n";
         logger.writeLogFile(INFO,  logString);
         searchVar(uRectFile, "nUserRect:");
         uRectFile >> nUserRect;
@@ -1360,7 +1360,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         std::ifstream file;
         file.open(tempstring.c_str(), std::ifstream::in);
         checkIfOpen(file, tempstring);
-        logString = "User Defined Ellipses by Coordinates File: " + tempstring;
+        logString = "User Defined Ellipses by Coordinates File: " + tempstring + "\n";
         logger.writeLogFile(INFO,  logString);
         searchVar(file, "nEllipses:");
         file >> nEllByCoord;
@@ -1378,7 +1378,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         std::ifstream uCoordFile;
         uCoordFile.open(tempstring.c_str(), std::ifstream::in);
         checkIfOpen(uCoordFile, tempstring);
-        logString = "User Defined Rectangles by Coordinates File: " + tempstring;
+        logString = "User Defined Rectangles by Coordinates File: " + tempstring + "\n";
         logger.writeLogFile(INFO,  logString);
         searchVar(uCoordFile, "nRectangles:");
         uCoordFile >> nRectByCoord;
@@ -1421,12 +1421,12 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     
     // Error check on stopping parameter
     if (nFamEll + nFamRect == 0 && stopCondition != 0) { // If no stochastic shapes, use nPoly option with npoly = number of user polygons
-        logString = "WARNING: You have defined stopCondition = 1 (P32 program stopping condition) but have no stochastic shape families defined. Automatically setting stopCondition to 0 for use with user defined polygons and nPoly.\n\n";
+        logString = "Warning: You have defined stopCondition = 1 (P32 program stopping condition) but have no stochastic shape families defined. Automatically setting stopCondition to 0 for use with user defined polygons and nPoly.\n\n";
         logger.writeLogFile(WARNING,  logString);
         stopCondition = 0;
         
         if (userEllipsesOnOff == 0 && userRectanglesOnOff == 0 && userRecByCoord == 0 ) {
-            logString = "ERROR: All polygon generating options are off or undefined, please check input file for errors.\n\n";
+            logString = "Error: All polygon generating options are off or undefined, please check input file for errors.\n\n";
             logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
@@ -1470,13 +1470,13 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
 void printInputVars() {
     std::string logString = "npoly = " + to_string(nPoly);
     logger.writeLogFile(INFO,  logString);
-    logString = "tripleIntersections = " + to_string(tripleIntersections);
+    logString = "tripleIntersections = " + to_string(tripleIntersections) + "\n";
     logger.writeLogFile(INFO,  logString);
     logString = "domainsize = {" + to_string(domainSize[0]) + ", " + to_string(domainSize[1]) + ", " + to_string(domainSize[2]) + "}\n";
     logger.writeLogFile(INFO,  logString);
     logString = "h = " + to_string(h);
     logger.writeLogFile(INFO,  logString);
-    logString = "visualizationMode = " + to_string(visualizationMode);
+    logString = "visualizationMode = " + to_string(visualizationMode) + "\n";
     logger.writeLogFile(INFO,  logString);
     logString = "seed = " + to_string(seed);
     logger.writeLogFile(INFO,  logString);
@@ -1486,14 +1486,14 @@ void printInputVars() {
     logger.writeLogFile(INFO,  logString);
     logString = "boundaryFaces = {" + to_string(boundaryFaces[0]) + "," + to_string(boundaryFaces[1]) + "," + to_string(boundaryFaces[2]) + "," + to_string(boundaryFaces[3]) + "," + to_string(boundaryFaces[4]) + "," + to_string(boundaryFaces[5]) + "}\n";
     logger.writeLogFile(INFO,  logString);
-    logString = "nFamRect = " + to_string(nFamRect);
+    logString = "nFamRect = " + to_string(nFamRect) + "\n";
     logger.writeLogFile(INFO,  logString);
-    logString = "nFamEll = " + to_string(nFamEll);
+    logString = "nFamEll = " + to_string(nFamEll) + "\n";
     logger.writeLogFile(INFO,  logString);
     printAry(famProb, "famProb", (nFamEll + nFamRect));
     printAry(edistr, "edistr", nFamEll);
     printAry(enumPoints, "enumPoints", nFamEll);
-    logString = "eAngleOption = " + to_string(eAngleOption);
+    logString = "eAngleOption = " + to_string(eAngleOption) + "\n";
     logger.writeLogFile(INFO,  logString);
     printAry(easpect, "easpect", nFamEll);
     

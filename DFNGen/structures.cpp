@@ -10,6 +10,7 @@ IntPoints::IntPoints() {
     fract2 = -1;
     intersectionShortened = false;
 }
+
 // Constructor
 /*! Zeros id & User Frature Type */
 RejectedUserFracture::RejectedUserFracture() {

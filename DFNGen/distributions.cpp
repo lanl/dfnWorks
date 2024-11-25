@@ -93,6 +93,7 @@ double Distributions::getMaxDecimalForDouble() {
     Arg 1: Array of all stochastic fracture families */
 void Distributions::checkDistributionUserInput(std::vector<Shape> &shapeFamilies) {
     std::string logString;
+    
     for (unsigned int i = 0; i < shapeFamilies.size(); i++) {
         switch (shapeFamilies[i].distributionType) {
             double input;
@@ -135,7 +136,7 @@ void Distributions::checkDistributionUserInput(std::vector<Shape> &shapeFamilies
                 
                 //check that the max is not less or equal to the min
                 if (max <= shapeFamilies[i].expMin) {
-                    logString = "ERROR: The maximum exponetnial distribution radius possible for " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) +" is less than or equal to the minimum exponential distribution radius.\n";
+                    logString = "ERROR: The maximum exponetnial distribution radius possible for " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + " is less than or equal to the minimum exponential distribution radius.\n";
                     logger.writeLogFile(ERROR,  logString);
                     logString = "Please adjust the exponential distribution parameters in " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) ;
                     logger.writeLogFile(ERROR,  logString);

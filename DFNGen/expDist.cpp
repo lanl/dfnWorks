@@ -48,6 +48,7 @@ double ExpDist::unifRandom(double min, double max) {
     Return: Random number from exponential distribution described by 'lambda' */
 double ExpDist::getValue(double lambda, double rv) {
     std::string logString;
+    
     if (rv > 1) {
         logString = "ERROR: Attempted to input random value of greater than 1 to the exponential distribution class's getValue() function. Input must be on [0,1] interval.\n";
         logger.writeLogFile(ERROR,  logString);
@@ -82,6 +83,7 @@ double ExpDist::getValue(double lambda, double rv) {
             and sampled with random variable between minInput and maxVal */
 double ExpDist::getValue(double lambda, double minVal, double maxVal) {
     std::string logString;
+    
     // Uniform distrubution on [minVal, maxVal)
     if ( maxVal > 1 || minVal > 1) {
         // Passing 1 into exp. distribution will reuturn inf
