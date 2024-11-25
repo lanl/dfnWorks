@@ -53,7 +53,7 @@ using std::string;
 int main (int argc, char **argv) {
     std::string logString =  "Starting DFNGen";
     logger.writeLogFile(INFO,  logString);
-
+    
     // Error check on cmd line input:
     // 1st argument = input file path
     // 2nd argument = output folder path
@@ -137,7 +137,7 @@ int main (int argc, char **argv) {
                     logString =  std::string(shapeType(shapeFamilies[j])) + " family " + to_string(getFamilyNumber(j, shapeFamilies[j].shapeFamily)) + " using constant size\n";
                     logger.writeLogFile(INFO,  logString);
                 } else {
-                    logString =  "Estimated " + to_string(shapeFamilies[j].radiiList.size())+ " fractures for " +  shapeType(shapeFamilies[j])+ " family " + to_string(getFamilyNumber(j, shapeFamilies[j].shapeFamily))+ "\n";
+                    logString =  "Estimated " + to_string(shapeFamilies[j].radiiList.size()) + " fractures for " +  shapeType(shapeFamilies[j]) + " family " + to_string(getFamilyNumber(j, shapeFamilies[j].shapeFamily)) + "\n";
                     logger.writeLogFile(INFO,  logString);
                 }
             }
@@ -386,10 +386,10 @@ int main (int argc, char **argv) {
                         
                         for (int i = 0; i < totalFamilies; i++) {
                             if (stopCondition == 0) {
-                                logString =  shapeType(shapeFamilies[i]) + " family "+ std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)))+ " Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32));
+                                logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
                                 logger.writeLogFile(INFO,  logString);
                             } else {
-                                logString =  shapeType(shapeFamilies[i]) + " family "+ std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)))+ " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target))+ ", Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32));
+                                logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target)) + ", Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) +  "\n";
                                 logger.writeLogFile(INFO,  logString);
                             }
                             
@@ -477,11 +477,11 @@ int main (int argc, char **argv) {
     file << "Version of DFNGen: 2.2\n";
     std::time_t result = std::time(nullptr);
     file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
-    logString =  "========================================================";
+    logString =  "========================================================\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "            Network Generation Complete\n";
     logger.writeLogFile(INFO,  logString);
-    logString =  "========================================================";
+    logString =  "========================================================\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Version of DFNGen: 2.2\n";
     logger.writeLogFile(INFO,  logString);
@@ -494,8 +494,8 @@ int main (int argc, char **argv) {
         
         for (int i = 0; i < totalFamilies; i++) {
             logString =  "Family " + std::string(to_string(i + 1)) + " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target))
-                      + ", Final P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
-                      logger.writeLogFile(INFO,  logString);
+                         + ", Final P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
+            logger.writeLogFile(INFO,  logString);
             file << "Family " << i + 1 << " target P32 = " << shapeFamilies[i].p32Target
                  << ", " << "Final P32 = " << shapeFamilies[i].currentP32 << "\n";
         }
@@ -657,7 +657,7 @@ int main (int argc, char **argv) {
     
     if (finalFractures.size() == 0) {
         logString =  "Error: DFN Generation has finished, however there are no intersecting fractures. Please adjust input parameters.\n";
-                  logger.writeLogFile(ERROR,  logString);
+        logger.writeLogFile(ERROR,  logString);
         logString =  "Try increasing the fracture density, or shrinking the domain.\n";
         logger.writeLogFile(ERROR,  logString);
         file << "\nError: DFN Generation has finished, however"
@@ -824,9 +824,9 @@ int main (int argc, char **argv) {
     
     if (printConnectivityError == 1) {
         logString =  "ERROR: DFN generation has finished but the formed\nfracture network does not make a connection between\nthe user's specified boundary faces.\n";
-                  logger.writeLogFile(ERROR,  logString);
+        logger.writeLogFile(ERROR,  logString);
         logString =  "Try increasing the fracture density, shrinking the domain\nor consider using the 'ignoreBoundaryFaces' option.\n";
-                  logger.writeLogFile(ERROR,  logString);
+        logger.writeLogFile(ERROR,  logString);
         file << "\nERROR: DFN generation has finished but the formed\n"
              << "fracture network does not make a connection between\n"
              << "the user's specified boundary faces.\n";
@@ -893,7 +893,7 @@ int main (int argc, char **argv) {
         logger.writeLogFile(INFO,  logString);
         file << "Fracture Estimation statistics:\n";
         logString =  "NOTE: If estimation and actual are very different, \nexpected family distributions might not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option in the input file.\n\n";
-                  logger.writeLogFile(INFO,  logString);
+        logger.writeLogFile(INFO,  logString);
         file << "NOTE: If estimation and actual are very different, \nexpected family distributions might "
              << "not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option "
              << "in the input file.\n\n";
@@ -901,13 +901,13 @@ int main (int argc, char **argv) {
         // Compare expected radii/poly size and actual
         for (int i = 0; i < totalFamilies; i++) {
             if (shapeFamilies[i].distributionType == 4) { // Constant
-                logString =  shapeType(shapeFamilies[i]) + " Family "+ to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n"+ "Using constant size\n\n";
+                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n" + "Using constant size\n\n";
                 logger.writeLogFile(INFO,  logString);
                 file << shapeType(shapeFamilies[i]) << " Family "
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Using constant size\n\n";
             } else {
-                logString =  shapeType(shapeFamilies[i]) + " Family "+ to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n"+ "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
+                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n" + "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
                 logger.writeLogFile(INFO,  logString);
                 logString =  "Actual:    " + to_string(pstats.acceptedFromFam[i]) + to_string(pstats.rejectedFromFam[i]);
                 logger.writeLogFile(INFO,  logString);
@@ -923,7 +923,7 @@ int main (int argc, char **argv) {
         file << "\n________________________________________________________\n\n";
     }
     
-    logString = "Seed: " + to_string(seed);
+    logString = "Seed: " + to_string(seed) + "\n";
     logger.writeLogFile(INFO,  logString);
     file << "Seed: " << seed << "\n";
     // Write all output files
@@ -932,16 +932,16 @@ int main (int argc, char **argv) {
     // duplicate node prints
     // Print number of duplicate nodes (pstats.intersectionsNodeCount is set in writeOutpu() )
     logString =  "Lagrit Should Remove "
-              + to_string(pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount)
-              + " Nodes (" + to_string(pstats.intersectionNodeCount) + "/2 - "
-              + to_string(pstats.tripleNodeCount) + ")\n";
-              logger.writeLogFile(INFO,  logString);
+                 + to_string(pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount)
+                 + " Nodes (" + to_string(pstats.intersectionNodeCount) + "/2 - "
+                 + to_string(pstats.tripleNodeCount) + ")\n";
+    logger.writeLogFile(INFO,  logString);
     file << "\nLagrit Should Remove "
          << pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount
          << " Nodes (" << pstats.intersectionNodeCount << "/2 - "
          << pstats.tripleNodeCount << ")\n";
     file.close();
-    logString =  "DFNGen - Complete";
+    logString =  "DFNGen - Complete\n";
     logger.writeLogFile(INFO,  logString);
     return 0;
 }

@@ -298,6 +298,7 @@ bool domainTruncation(Poly &newPoly, double *domainSize) {
 // Arg 1: Vector<Point> array
 void printPoints(std::vector<double> &point) {
     std::string logString;
+    
     for (unsigned int i = 0; i < point.size(); i++) {
         if (i != 0 && i % 3 == 0) {
             logString = "\n";

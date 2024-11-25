@@ -48,7 +48,7 @@ void printIntersectionData(std::vector<IntPoints> &intPts) {
         logger.writeLogFile(INFO,  logString);
         logString = "Triple Pts Index: ";
         logger.writeLogFile(INFO,  logString);
-
+        
         for (unsigned int k = 0; k < intPts[i].triplePointsIdx.size(); k++) {
             logString = to_string(intPts[i].triplePointsIdx[k]) + " ";
             logger.writeLogFile(INFO,  logString);
@@ -65,6 +65,7 @@ void printIntersectionData(std::vector<IntPoints> &intPts) {
     Arg 2: std vector array of Poly, all accepted fractures */
 void printGroupData(Stats &pstats, std::vector<Poly> &fractList) {
     std::string logString;
+    
     //group number debug
     for (unsigned int i = 0; i < pstats.fractGroup.size(); i++) {
         logString = "fracture group[" + to_string(i) + "]:\n";
@@ -115,7 +116,7 @@ void printPolyData(struct Poly &poly) {
     logger.writeLogFile(INFO,  logString);
     logString = "familyNum = " + to_string(poly.familyNum)  ;
     logger.writeLogFile(INFO,  logString);
-    logString = "Faces = {" + to_string(poly.faces[0]) + "," + to_string(poly.faces[1]) + "," + to_string(poly.faces[2] )+ "," + to_string(poly.faces[3]) + "," + to_string(poly.faces[4]) + "," + to_string(poly.faces[5]) + "}\n";
+    logString = "Faces = {" + to_string(poly.faces[0]) + "," + to_string(poly.faces[1]) + "," + to_string(poly.faces[2] ) + "," + to_string(poly.faces[3]) + "," + to_string(poly.faces[4]) + "," + to_string(poly.faces[5]) + "}\n";
     logger.writeLogFile(INFO,  logString);
     logString = "area = " + to_string(poly.area)  ;
     logger.writeLogFile(INFO,  logString);
@@ -153,7 +154,7 @@ void printPolyData(struct Poly &poly) {
     
     for (int i = 0; i < poly.numberOfNodes; i++) {
         int idx = i * 3;
-        logString = "{" + to_string(poly.vertices[idx]) + "," + to_string(poly.vertices[idx + 1]) + "," + to_string(poly.vertices[idx + 2])+ "}\n";
+        logString = "{" + to_string(poly.vertices[idx]) + "," + to_string(poly.vertices[idx + 1]) + "," + to_string(poly.vertices[idx + 2]) + "}\n";
         logger.writeLogFile(INFO,  logString);
     }
 }
@@ -172,7 +173,7 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
         //name(rect or ell) and number of family
         logString = shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + ":\n";
         logger.writeLogFile(INFO,  logString);
-             
+        
         // Print vertice number
         if (shapeFamilies[i].shapeFamily == 0) {  // If ellipse family
             logString = "Number of Vertices: " + to_string(shapeFamilies[i].numPoints)  ;
@@ -197,7 +198,7 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
             logString = "Beta Distribution (Rotation Around Normal Vector): [0, 2PI)"  ;
             logger.writeLogFile(INFO,  logString);
         } else {
-            logString = "Beta (Rotation Around Normal Vector): " + to_string(shapeFamilies[i].beta) + " rad, " + to_string(shapeFamilies[i].beta * radToDeg )+ " deg"  ;
+            logString = "Beta (Rotation Around Normal Vector): " + to_string(shapeFamilies[i].beta) + " rad, " + to_string(shapeFamilies[i].beta * radToDeg ) + " deg"  ;
             logger.writeLogFile(INFO,  logString);
         }
         
@@ -258,7 +259,7 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
             logger.writeLogFile(INFO,  logString);
             logString = "Minimum Radius: " + to_string(shapeFamilies[i].logMin) + "m"  ;
             logger.writeLogFile(INFO,  logString);
-            logString = "Maximum Radius: " + to_string(shapeFamilies[i].logMax )+ "m"  ;
+            logString = "Maximum Radius: " + to_string(shapeFamilies[i].logMax ) + "m"  ;
             logger.writeLogFile(INFO,  logString);
             break;
             
@@ -280,9 +281,9 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
             logger.writeLogFile(INFO,  logString);
             logString = "Lambda: " + to_string(shapeFamilies[i].expLambda ) ;
             logger.writeLogFile(INFO,  logString);
-            logString = "Minimum Radius: " + to_string(shapeFamilies[i].expMin )+ "m"  ;
+            logString = "Minimum Radius: " + to_string(shapeFamilies[i].expMin ) + "m"  ;
             logger.writeLogFile(INFO,  logString);
-            logString = "Maximum Radius: " + to_string(shapeFamilies[i].expMax )+ "m"  ;
+            logString = "Maximum Radius: " + to_string(shapeFamilies[i].expMax ) + "m"  ;
             logger.writeLogFile(INFO,  logString);
             break;
             

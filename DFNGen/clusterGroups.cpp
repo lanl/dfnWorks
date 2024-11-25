@@ -50,9 +50,9 @@ std::vector<unsigned int> getCluster(Stats &pstats) {
     //int keepIsolated = 1;
     std::string logString = "In cluster groups\n";
     logger.writeLogFile(INFO,  logString);
-    logString = "Number of fractures: " + to_string(pstats.acceptedPolyCount);
+    logString = "Number of fractures: " + to_string(pstats.acceptedPolyCount) +  "\n";
     logger.writeLogFile(INFO,  logString);
-    logString = "Number of groups: " + to_string(pstats.groupData.size());
+    logString = "Number of groups: " + to_string(pstats.groupData.size()) +  "\n";
     logger.writeLogFile(INFO,  logString);
     
     if (keepIsolatedFractures == 0) {

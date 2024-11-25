@@ -97,6 +97,7 @@ int* sortedIndex(const double *v, int n) {
     std::sort(idx, idx + n, [v](size_t i1, size_t i2) {
         return v[i1] < v[i2];
     });
+    
     return idx;
 }
 

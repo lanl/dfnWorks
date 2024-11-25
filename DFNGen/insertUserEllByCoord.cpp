@@ -80,7 +80,7 @@ void insertUserEllByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPoints
             delete[] newPoly.vertices;
             pstats.rejectionReasons.outside++;
             pstats.rejectedPolyCount++;
-            logString = "User Ellipse (defined by coordinates) " + to_string(i + 1) +" was rejected for being outside the defined domain.\n";
+            logString = "User Ellipse (defined by coordinates) " + to_string(i + 1) + " was rejected for being outside the defined domain.\n";
             logger.writeLogFile(ERROR,  logString);
             rejectedUserFracture.id = i + 1;
             rejectedUserFracture.userFractureType  = -1;

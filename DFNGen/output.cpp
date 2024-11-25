@@ -1111,6 +1111,7 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     Arg 1: Path to directory to be created */
 void makeDIR(const char *dir) {
     std::string logString;
+    
     // If dir already exists, remove it
     if (DIR_exists(dir)) {
         std::string tempStr = "rm -r ";
@@ -1252,6 +1253,7 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
     
     file.close();
 }
+
 /* writeNormalVectors() ******************************************************************************/
 /*! Writes normal_vectors.dat
     Writes fracture rotation data. Also includes shape families each fracture belongs to.
@@ -1471,6 +1473,7 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     intFile.close();
     fractFile.close();
 }
+
 /* writeMidPoint() ******************************************************************/
 /*! Writes mid point and length of line defined by x1,y1,z1 and x2,y2,z2 into file fp
     Arg 1: std::ofstream file to write informatino into
