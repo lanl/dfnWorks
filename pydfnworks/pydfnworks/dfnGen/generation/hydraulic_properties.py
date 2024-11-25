@@ -236,11 +236,11 @@ def correlated(params, variable, radii):
     units = get_units(variable)
 
     if variable == "aperture":
-        local_print_log(f"\n b = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
+        local_print_log(f"b = {params['alpha']:0.2e} * r^{params['beta']} {units}")
     if variable == "permeability":
-        local_print_log(f"\n k = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
+        local_print_log(f"k = {params['alpha']:0.2e} * r^{params['beta']} {units}")
     if variable == "transmissivity":
-        local_print_log(f"\n T = {params['alpha']:0.2e} * r^{params['beta']} {units}\n")
+        local_print_log(f"T = {params['alpha']:0.2e} * r^{params['beta']} {units}")
 
     if variable == "aperture":
         b = params["alpha"] * radii**params["beta"]

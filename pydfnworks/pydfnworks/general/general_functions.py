@@ -206,7 +206,9 @@ def call_executable(self, command):
     # # cmd = subprocess.run(line, capture_output=True)
     # self.print_log(p.stdout.decode())
     # self.print_log(p.stderr.decode())
-    print_out(self)
+    # print_out(self)
+    
+    subprocess.call(command, shell = True)
 
     print(f"Executing {command}")
 
