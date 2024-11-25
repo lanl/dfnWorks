@@ -12,7 +12,7 @@ import glob
 
 # pydfnworks Modules
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
-from pydfnworks.general.logging import initialize_log_file, print_log
+from pydfnworks.general.logging import local_print_log 
 
 def setup_mesh_dfm_directory(jobname, dirname):
     """ Setup working directory for meshing the DFM. 

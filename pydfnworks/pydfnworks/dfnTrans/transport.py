@@ -132,7 +132,7 @@ def check_dfn_trans_run_files(self):
     """
     cwd = os.getcwd()
     self.print_log(
-        "\nChecking that all files required for dfnTrans are in the current directory"
+        "Checking that all files required for dfnTrans are in the current directory"
     )
     self.print_log(f"--> Current Working Directory: {cwd}")
     self.print_log(f"--> dfnTrans is running from: {self.local_dfnTrans_file}")
@@ -251,6 +251,11 @@ def check_dfn_trans_run_files(self):
             self.print_log(error, 'error')
             sys.stderr.write(error)
             sys.exit(1)
+        elif os.stat(params[key]).st_size == 0:
+            error = f"File {params[key]} is empty. Exiting Program." 
+            self.print_log(error, 'error')
+            sys.stderr.write(error)
+            sys.exit(1)       
 
     self.print_log(
         "--> All files required for dfnTrans have been found in current directory\n\n"
