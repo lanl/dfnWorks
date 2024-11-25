@@ -51,7 +51,7 @@ using std::string;
 
 // SEE STRUCTURES.H FOR ALL STRUCTURE DEFINITIONS
 int main (int argc, char **argv) {
-    std::string logString =  "Starting DFNGen";
+    std::string logString =  "Starting DFNGen\n";
     logger.writeLogFile(INFO,  logString);
     
     // Error check on cmd line input:
@@ -489,7 +489,7 @@ int main (int argc, char **argv) {
     logger.writeLogFile(INFO,  logString);
     
     if (stopCondition == 1 ) {
-        logString =  "\nFinal p32 values per family:\n";
+        logString =  "Final p32 values per family:\n";
         logger.writeLogFile(INFO,  logString);
         
         for (int i = 0; i < totalFamilies; i++) {
@@ -884,19 +884,19 @@ int main (int argc, char **argv) {
     file << "    " << pstats.rejectionReasons.outside << " Outside of Domain\n";
     file << "    " << pstats.rejectionReasons.triple << " Triple intersection Rejections\n";
     file << "    " << pstats.rejectionReasons.interCloseToInter << " Intersections Close to Other Intersections\n\n";
-    logString =  "________________________________________________________\n\n";
+    logString =  "________________________________________________________\n";
     logger.writeLogFile(INFO,  logString);
-    file << "\n________________________________________________________\n\n";
+    file << "\n________________________________________________________\n";
     
     if (totalFamilies > 0) {
         logString =  "Fracture Estimation statistics:\n";
         logger.writeLogFile(INFO,  logString);
         file << "Fracture Estimation statistics:\n";
-        logString =  "NOTE: If estimation and actual are very different, \nexpected family distributions might not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option in the input file.\n\n";
+        logString =  "NOTE: If estimation and actual are very different, expected family distributions might not be accurate. If this is the case, try increasing or decreasing the 'radiiListIncrease' option in the input file.\n";
         logger.writeLogFile(INFO,  logString);
-        file << "NOTE: If estimation and actual are very different, \nexpected family distributions might "
-             << "not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option "
-             << "in the input file.\n\n";
+        file << "NOTE: If estimation and actual are very different, expected family distributions might "
+             << "not be accurate. If this is the case, try increasing or decreasing the 'radiiListIncrease' option "
+             << "in the input file.\n";
              
         // Compare expected radii/poly size and actual
         for (int i = 0; i < totalFamilies; i++) {
@@ -907,14 +907,15 @@ int main (int argc, char **argv) {
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Using constant size\n\n";
             } else {
-                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n" + "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
+                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n";
                 logger.writeLogFile(INFO,  logString);
-                logString =  "Actual:    " + to_string(pstats.acceptedFromFam[i]) + to_string(pstats.rejectedFromFam[i]);
+                logString =  "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
+                logString =  "Actual:    " + to_string(pstats.acceptedFromFam[i]) + to_string(pstats.rejectedFromFam[i]) + "\n";
                 logger.writeLogFile(INFO,  logString);
                 file << shapeType(shapeFamilies[i]) << " Family "
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Estimated: " << pstats.expectedFromFam[i] << "\n";
-                file << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n\n";
+                file << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n";
             }
         }
         

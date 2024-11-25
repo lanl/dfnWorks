@@ -33,7 +33,7 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
     output += dfnGenExtension;
-    std::string logString = output;
+    std::string logString = output + "\n";
     logger.writeLogFile(INFO,  logString);
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";

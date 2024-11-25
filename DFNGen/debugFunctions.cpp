@@ -11,7 +11,7 @@ using std::string;
     Arg 1: std vector array of Poly */
 void printAllPolys(std::vector<Poly> &acceptedPoly) {
     for (unsigned int i = 0; i < acceptedPoly.size(); i++) {
-        std::string logString = "Poly " + to_string(i);
+        std::string logString = "Poly " + to_string(i) + "\n";
         logger.writeLogFile(INFO,  logString);
         printPolyData(acceptedPoly[i]);
     }
@@ -40,22 +40,22 @@ void printIntersectionData(std::vector<IntPoints> &intPts) {
     logger.writeLogFile(INFO,  logString);
     
     for (unsigned int i = 0; i < intPts.size(); i++) {
-        logString = "Fractures: " + to_string(intPts[i].fract1 + 1) + ", " + to_string(intPts[i].fract2 + 1);
+        logString = "Fractures: " + to_string(intPts[i].fract1 + 1) + ", " + to_string(intPts[i].fract2 + 1)+ "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "Line: {" + to_string(intPts[i].x1) + "," + to_string(intPts[i].y1) + "," + to_string(intPts[i].z1) + "} {" + to_string(intPts[i].x2) + "," + to_string(intPts[i].y2) + "," + to_string(intPts[i].z2) + "}\n";
         logger.writeLogFile(INFO,  logString);
-        logString = "Trip pts size = " + to_string(intPts[i].triplePointsIdx.size());
+        logString = "Trip pts size = " + to_string(intPts[i].triplePointsIdx.size())+ "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "Triple Pts Index: ";
         logger.writeLogFile(INFO,  logString);
         
         for (unsigned int k = 0; k < intPts[i].triplePointsIdx.size(); k++) {
-            logString = to_string(intPts[i].triplePointsIdx[k]) + " ";
+            logString = to_string(intPts[i].triplePointsIdx[k]) + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
-        logString = "\n\n";
-        logger.writeLogFile(INFO,  logString);
+        // logString = "\n\n";
+        // logger.writeLogFile(INFO,  logString);
     }
 }
 
@@ -70,21 +70,21 @@ void printGroupData(Stats &pstats, std::vector<Poly> &fractList) {
     for (unsigned int i = 0; i < pstats.fractGroup.size(); i++) {
         logString = "fracture group[" + to_string(i) + "]:\n";
         logger.writeLogFile(INFO,  logString);
-        logString = "Group number = " + to_string(pstats.fractGroup[i].groupNum);
+        logString = "Group number = " + to_string(pstats.fractGroup[i].groupNum)+ "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "List of Polys:\n";
         logger.writeLogFile(INFO,  logString);
         
         for(unsigned int k = 0; k < pstats.fractGroup[i].polyList.size(); k++) {
-            logString = to_string(pstats.fractGroup[i].polyList[k]);
+            logString = to_string(pstats.fractGroup[i].polyList[k])+ "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
-        logString = "intersections on poly:\n";
+        logString = "intersections on polygon:\n";
         logger.writeLogFile(INFO,  logString);
         
         for (unsigned int k = 0; k < pstats.fractGroup[i].polyList.size(); k++) {
-            logString = to_string(fractList[pstats.fractGroup[i].polyList[k]].intersectionIndex.size()) + ", ";
+            logString = to_string(fractList[pstats.fractGroup[i].polyList[k]].intersectionIndex.size()) + ", " + "\n";
             logger.writeLogFile(INFO,  logString);
         }
     }
@@ -176,65 +176,65 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
         
         // Print vertice number
         if (shapeFamilies[i].shapeFamily == 0) {  // If ellipse family
-            logString = "Number of Vertices: " + to_string(shapeFamilies[i].numPoints)  ;
+            logString = "Number of Vertices: " + to_string(shapeFamilies[i].numPoints)  + "\n";
             logger.writeLogFile(INFO,  logString);
         } else {
-            logString = "Number of Vertices: 4"  ;
+            logString = "Number of Vertices: 4\n";
             logger.writeLogFile(INFO,  logString);
         }
         
         // aspect ratio
-        logString = "Aspect Ratio: " + to_string(shapeFamilies[i].aspectRatio ) ;
+        logString = "Aspect Ratio: " + to_string(shapeFamilies[i].aspectRatio )  + "\n";
         logger.writeLogFile(INFO,  logString);
         
         // p32 target
         if (stopCondition == 1) {
-            logString = "P32 (Fracture Intensity) Target: " + to_string(shapeFamilies[i].p32Target)  ;
+            logString = "P32 (Fracture Intensity) Target: " + to_string(shapeFamilies[i].p32Target)   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
         // beta distribution, rotation around normal vector
         if (shapeFamilies[i].betaDistribution == 0) {
-            logString = "Beta Distribution (Rotation Around Normal Vector): [0, 2PI)"  ;
+            logString = "Beta Distribution (Rotation Around Normal Vector): [0, 2PI)\n";
             logger.writeLogFile(INFO,  logString);
         } else {
-            logString = "Beta (Rotation Around Normal Vector): " + to_string(shapeFamilies[i].beta) + " rad, " + to_string(shapeFamilies[i].beta * radToDeg ) + " deg"  ;
+            logString = "Beta (Rotation Around Normal Vector): " + to_string(shapeFamilies[i].beta) + " rad, " + to_string(shapeFamilies[i].beta * radToDeg ) + " deg"   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
         if (orientationOption == 0) {
-            logString = "Theta: " + to_string(shapeFamilies[i].angleOne) + " rad, " + to_string(shapeFamilies[i].angleOne * radToDeg) + " deg"  ;
+            logString = "Theta: " + to_string(shapeFamilies[i].angleOne) + " rad, " + to_string(shapeFamilies[i].angleOne * radToDeg) + " deg"   + "\n";
             logger.writeLogFile(INFO,  logString);
             // Phi (angle the projection of normal onto x-y plane  makes with +x axis
-            logString = "Phi: " + to_string(shapeFamilies[i].angleTwo) + " rad, " + to_string(shapeFamilies[i].angleTwo * radToDeg) + " deg "  ;
+            logString = "Phi: " + to_string(shapeFamilies[i].angleTwo) + " rad, " + to_string(shapeFamilies[i].angleTwo * radToDeg) + " deg "   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         // Theta (angle normal makes with z axis
         else if (orientationOption == 1) {
-            logString = "Trend: " + to_string(shapeFamilies[i].angleOne) + " rad, " + to_string(shapeFamilies[i].angleOne * radToDeg) + " deg"  ;
+            logString = "Trend: " + to_string(shapeFamilies[i].angleOne) + " rad, " + to_string(shapeFamilies[i].angleOne * radToDeg) + " deg"   + "\n";
             logger.writeLogFile(INFO,  logString);
             // Phi (angle the projection of normal onto x-y plane  makes with +x axis
-            logString = "Plunge: " + to_string(shapeFamilies[i].angleTwo) + " rad, " + to_string(shapeFamilies[i].angleTwo * radToDeg) + " deg "  ;
+            logString = "Plunge: " + to_string(shapeFamilies[i].angleTwo) + " rad, " + to_string(shapeFamilies[i].angleTwo * radToDeg) + " deg "   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
         // kappa
-        logString = "Kappa: " + to_string(shapeFamilies[i].kappa ) ;
+        logString = "Kappa: " + to_string(shapeFamilies[i].kappa )  + "\n";
         logger.writeLogFile(INFO,  logString);
         
         // Print layer family belongs to
         if (shapeFamilies[i].layer == 0) {
-            logString = "Layer: Entire domain"  ;
+            logString = "Layer: Entire domain\n";
             logger.writeLogFile(INFO,  logString);
         } else {
             int idx = (shapeFamilies[i].layer - 1) * 2;
-            logString = "Layer: " + to_string(shapeFamilies[i].layer) + " {" + to_string(layers[idx]) + ", " + to_string(layers[idx + 1]) + "}"  ;
+            logString = "Layer: " + to_string(shapeFamilies[i].layer) + " {" + to_string(layers[idx]) + ", " + to_string(layers[idx + 1]) + "}"   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
         // Print layer family belongs to
         if (shapeFamilies[i].region == 0) {
-            logString = "Region: Entire domain"  ;
+            logString = "Region: Entire domain\n";
             logger.writeLogFile(INFO,  logString);
         } else {
             int idx = (shapeFamilies[i].region - 1) * 6;
@@ -253,48 +253,48 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
         case 1: // lognormal
             logString = "Distrubution: Lognormal\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Mean: " + to_string(shapeFamilies[i].mean)  ;
+            logString = "Mean: " + to_string(shapeFamilies[i].mean)   + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Standard Deviation: " + to_string(shapeFamilies[i].sd);
+            logString = "Standard Deviation: " + to_string(shapeFamilies[i].sd) + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Minimum Radius: " + to_string(shapeFamilies[i].logMin) + "m"  ;
+            logString = "Minimum Radius: " + to_string(shapeFamilies[i].logMin) + "m"   + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Maximum Radius: " + to_string(shapeFamilies[i].logMax ) + "m"  ;
+            logString = "Maximum Radius: " + to_string(shapeFamilies[i].logMax ) + "m"   + "\n";
             logger.writeLogFile(INFO,  logString);
             break;
             
         case 2: // power-law
             logString = "Distribution: Truncated Power-Law\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Alpha: " + to_string(shapeFamilies[i].alpha)  ;
+            logString = "Alpha: " + to_string(shapeFamilies[i].alpha)  + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Minimum Radius: " + to_string(shapeFamilies[i].min) + "m"  ;
+            logString = "Minimum Radius: " + to_string(shapeFamilies[i].min) + "m"  + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Maximum Radius: " + to_string(shapeFamilies[i].max) + "m"  ;
+            logString = "Maximum Radius: " + to_string(shapeFamilies[i].max) + "m"  + "\n";
             logger.writeLogFile(INFO,  logString);
             break;
             
         case 3: // exponential
             logString = "Distribution: Exponential\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Mean: " + to_string(shapeFamilies[i].expMean)  ;
+            logString = "Mean: " + to_string(shapeFamilies[i].expMean)   + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Lambda: " + to_string(shapeFamilies[i].expLambda ) ;
+            logString = "Lambda: " + to_string(shapeFamilies[i].expLambda )  + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Minimum Radius: " + to_string(shapeFamilies[i].expMin ) + "m"  ;
+            logString = "Minimum Radius: " + to_string(shapeFamilies[i].expMin ) + "m"   + "\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Maximum Radius: " + to_string(shapeFamilies[i].expMax ) + "m"  ;
+            logString = "Maximum Radius: " + to_string(shapeFamilies[i].expMax ) + "m"   + "\n";
             logger.writeLogFile(INFO,  logString);
             break;
             
         case 4: // constant
             logString = "Distribution: Constant\n";
             logger.writeLogFile(INFO,  logString);
-            logString = "Radius: " +  to_string(shapeFamilies[i].constRadi) + "m"  ;
+            logString = "Radius: " +  to_string(shapeFamilies[i].constRadi) + "m"   + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
-        logString = "Family Insertion Probability: " + to_string(famProb[i]);
+        logString = "Family Insertion Probability: " + to_string(famProb[i]) + "\n";
         logger.writeLogFile(INFO,  logString);
     }
 }
