@@ -86,5 +86,9 @@ class Logger {
             return "UNKNOWN";
         }
     }
+<<<<<<< HEAD
+};
+=======
 }; 
  
+>>>>>>> 2e35296b063cc17c77ee6d844293ebe0fdb84cba
