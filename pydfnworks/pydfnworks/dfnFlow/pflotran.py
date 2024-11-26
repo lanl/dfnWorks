@@ -129,7 +129,6 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
 
         # Opening the input file
         self.print_log(f'--> Opening zone file: {zone_file}')
-
         with open(zone_file, 'r') as fzone:
             self.print_log('--> Reading boundary node ids')
             node_array = fzone.read()

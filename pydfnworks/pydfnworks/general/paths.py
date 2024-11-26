@@ -85,7 +85,10 @@ def print_paths(self):
         None
 
     """
+<<<<<<< HEAD
 
+=======
+>>>>>>> 865b18f6 (pring log formatting)
     self.print_log("dfnWorks paths:")
     self.print_log("---------------")
     self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
