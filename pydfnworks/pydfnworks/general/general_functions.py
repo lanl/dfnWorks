@@ -18,6 +18,8 @@ import select
 import subprocess
 import sys
 
+from pydfnworks.general.logging import local_print_log
+
 
 
 def call_executable(self, command):
@@ -33,7 +35,6 @@ def call_executable(self, command):
         None
 
     '''
-
     print(f"Executing {command}")
     subprocess.call(command, shell = True)
 
