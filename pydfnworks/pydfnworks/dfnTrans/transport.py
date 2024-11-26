@@ -55,7 +55,7 @@ def copy_dfn_trans_files(self):
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except:
         error = f"--> Error: Problem copying {self.dfnTrans_file} file\n" "Unable to replace. Exiting Program\n"
-        self.print_log(error, 'error')
+        self.print_log(error, 'critical')
 
 
 def run_dfn_trans(self):

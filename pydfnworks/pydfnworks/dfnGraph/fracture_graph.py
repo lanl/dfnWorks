@@ -2,7 +2,7 @@ import networkx as nx
 import numpy as np
 
 from pydfnworks.dfnGraph.graph_attributes import add_perm
-from pydfnworks.general.logging import local_print_log
+from pydfnworks.general.logging import local_print_log, print_log
 
 from pydfnworks.general.logging import local_print_log
 

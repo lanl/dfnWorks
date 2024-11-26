@@ -157,11 +157,11 @@ class Particle():
             # print(f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}")
             if tau < 0:
 
-                local_print_log(
+                self.print_log(
                     f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}"
                 )
                 error = "Error. Interpolated negative travel time."
-                local_print_log(error,'error')
+                self.print_log(error,'error')
             # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
             self.cp_adv_time.append(tau)
             self.cp_pathline_length.append(self.length)
