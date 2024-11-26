@@ -65,6 +65,11 @@ pydfnworks/pydfnworks.egg-info/*
 *.nfs*
 *.swp
 
+# Log Files
+*.log
+
+
 examples/TPL/output_rfram/*
 .vscode 
 .vscode/* 
+
