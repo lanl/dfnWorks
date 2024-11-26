@@ -40,11 +40,11 @@ void printIntersectionData(std::vector<IntPoints> &intPts) {
     logger.writeLogFile(INFO,  logString);
     
     for (unsigned int i = 0; i < intPts.size(); i++) {
-        logString = "Fractures: " + to_string(intPts[i].fract1 + 1) + ", " + to_string(intPts[i].fract2 + 1)+ "\n";
+        logString = "Fractures: " + to_string(intPts[i].fract1 + 1) + ", " + to_string(intPts[i].fract2 + 1) + "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "Line: {" + to_string(intPts[i].x1) + "," + to_string(intPts[i].y1) + "," + to_string(intPts[i].z1) + "} {" + to_string(intPts[i].x2) + "," + to_string(intPts[i].y2) + "," + to_string(intPts[i].z2) + "}\n";
         logger.writeLogFile(INFO,  logString);
-        logString = "Trip pts size = " + to_string(intPts[i].triplePointsIdx.size())+ "\n";
+        logString = "Trip pts size = " + to_string(intPts[i].triplePointsIdx.size()) + "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "Triple Pts Index: ";
         logger.writeLogFile(INFO,  logString);
@@ -70,13 +70,13 @@ void printGroupData(Stats &pstats, std::vector<Poly> &fractList) {
     for (unsigned int i = 0; i < pstats.fractGroup.size(); i++) {
         logString = "fracture group[" + to_string(i) + "]:\n";
         logger.writeLogFile(INFO,  logString);
-        logString = "Group number = " + to_string(pstats.fractGroup[i].groupNum)+ "\n";
+        logString = "Group number = " + to_string(pstats.fractGroup[i].groupNum) + "\n";
         logger.writeLogFile(INFO,  logString);
         logString = "List of Polys:\n";
         logger.writeLogFile(INFO,  logString);
         
         for(unsigned int k = 0; k < pstats.fractGroup[i].polyList.size(); k++) {
-            logString = to_string(pstats.fractGroup[i].polyList[k])+ "\n";
+            logString = to_string(pstats.fractGroup[i].polyList[k]) + "\n";
             logger.writeLogFile(INFO,  logString);
         }
         
