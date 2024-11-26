@@ -3,7 +3,7 @@ import numpy as np
 from itertools import islice
 
 from pydfnworks.dfnGraph.intersection_graph import boundary_index
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 
 def create_bipartite_graph(
         inflow,

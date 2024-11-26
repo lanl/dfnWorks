@@ -128,7 +128,7 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     secondary = list(set(nodes) - set(path_nodes))
     for n in secondary:
         H.remove_node(n)
-    self.print_log("--> Complete\n")
+    self.print_log("--> Complete")
     return H
 
 
@@ -167,7 +167,7 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None', k=''):
     if G.graph['representation'] != "intersection":
         self.print_log(
             "Warning/ Wrong type of DFN graph representation\nRepresentation must be intersection\nReturning Empty Graph\n"
-            "warning", 'warning')
+            "warning")
         return nx.Graph()
     Gprime = G.copy()
     Hprime = nx.Graph()

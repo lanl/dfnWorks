@@ -13,7 +13,7 @@ import matplotlib.pylab as plt
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.fracture_graph import create_fracture_graph
 from pydfnworks.dfnGraph.bipartite_graph import create_bipartite_graph
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 
 def create_graph(self, graph_type, inflow, outflow):
     """ Header function to create a graph based on a DFN. Particular algorithms are in files.
@@ -49,7 +49,7 @@ def create_graph(self, graph_type, inflow, outflow):
     else:
         self.print_log(
             f"Warning. Unknown graph type.\nType provided: {graph_type}.\nAccetable names: fracture, intersection, bipartite.\nReturning empty graph."
-        , 'warning', 'warning')
+        , 'warning')
         return nx.Graph()
     return G
 
@@ -303,7 +303,7 @@ def dump_fractures(self, G, filename):
     nodes = pull_source_and_target(nodes)
     fractures = [int(i) for i in nodes]
     fractures = sorted(fractures)
-    self.print_log(f"--> Dumping {filename}")
+    local_print_log(f"--> Dumping {filename}")
     np.savetxt(filename, fractures, fmt="%d")
 
 

@@ -7,7 +7,7 @@ import h5py
 # pydfnworks modules
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 
 def get_laplacian_sparse_mat(G,
                              nodelist=None,
