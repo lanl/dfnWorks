@@ -296,12 +296,12 @@ def check_dfn_trans_run_files(self):
                     self.print_log(error, 'error')
                     sys.exit(1)
     if len(ic_selected) > 1:
-        error = "Error. More than one initial condition defined\nExiting\n"
-        self.print_log(error, 'error')
         self.print_log("Selected Initial Conditions:\n:")
         for ic in ic_selected:
             self.print_log(ic)
-        sys.exit(1)
+
+        error = "Error. More than one initial condition defined\nExiting\n"
+        self.print_log(error, 'error')
     elif len(ic_selected) == 0:
         error = "Error. No initial condition defined\nExiting\n"
         self.print_log(error, 'error')
