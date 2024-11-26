@@ -224,8 +224,6 @@ class DFNWORKS():
         self.print_parameters()
         self.print_log("--> Creating DFN Object: Complete" )
 
-        self.print_log(f"--> Printing {self.local_jobname} log file." )
-
     def __del__(self):
         self.print_log(f"--> {self.local_jobname} completed/exited " )
 
