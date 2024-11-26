@@ -151,6 +151,10 @@ def create_network(self):
 
 
 
+    self.print_log("-->Opening dfnGen LogFile...\n")
+    with open('dfngen_logfile.txt', 'r') as f:
+        self.print_log(f.read())
+
     if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
         self.assign_hydraulic_properties()

@@ -56,7 +56,6 @@ def copy_dfn_trans_files(self):
     except:
         error = f"--> Error: Problem copying {self.dfnTrans_file} file\n" "Unable to replace. Exiting Program\n"
         self.print_log(error, 'critical')
-        sys.exit(1)
 
 
 def run_dfn_trans(self):
@@ -297,53 +296,45 @@ def check_dfn_trans_run_files(self):
                     self.print_log(error, 'error')
                     sys.exit(1)
     if len(ic_selected) > 1:
-        error = "Error. More than one initial condition defined\nExiting\n"
-        self.print_log(error, 'error')
         self.print_log("Selected Initial Conditions:\n:")
         for ic in ic_selected:
             self.print_log(ic)
-        sys.exit(1)
+
+        error = "Error. More than one initial condition defined\nExiting\n"
+        self.print_log(error, 'error')
     elif len(ic_selected) == 0:
         error = "Error. No initial condition defined\nExiting\n"
         self.print_log(error, 'error')
-        sys.stderr.write(error)
-        sys.exit(1)
 
     if params["ControlPlane:"] != None:
         for required in ["control_out:", "delta_Control:", "flowdir:"]:
             if params[required] == None:
                 error = f"Parameter {required} required for ControlPlane\n"
                 self.print_log(error, 'error')
-                sys.exit(1)
 
     if params["tdrw:"] == "yes":
         if params["time_units:"] != "seconds":
             error = "Error. You must use seconds for the time_units to run TDRW"
             self.print_log(error, 'error')
-            sys.exit(1)
 
         for required in ["tdrw_porosity:", "tdrw_diffcoeff:"]:
             if params[required] == None:
                 error = f"Parameter {required} required for tdrw\n"
                 self.print_log(error, 'error')
-                sys.exit(1)
 
     if params["aperture:"] == "yes":
         if params["aperture_type:"] == None:
             error = "Parameter aperture_type: required for aperture: yes\n"
             self.print_log(error, 'error')
-            sys.exit(1)
 
         else:
             if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
                 error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
                 self.print_log(error, 'error')
-                sys.exit(1)
 
     else:
         if params["thickness:"] == None:
             error = "Parameter thickness: required for aperture: no:\n"
             self.print_log(error, 'error')
-            sys.exit(1)
 
     self.print_log("--> Checking Initial Conditions Complete")

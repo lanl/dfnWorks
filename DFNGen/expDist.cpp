@@ -50,7 +50,7 @@ double ExpDist::getValue(double lambda, double rv) {
     std::string logString;
     
     if (rv > 1) {
-        logString = "ERROR: Attempted to input random value of greater than 1 to the exponential distribution class's getValue() function. Input must be on [0,1] interval.\n";
+        logString = "Error: Attempted to input random value of greater than 1 to the exponential distribution class's getValue() function. Input must be on [0,1] interval.\n";
         logger.writeLogFile(ERROR,  logString);
         exit(1);
     }

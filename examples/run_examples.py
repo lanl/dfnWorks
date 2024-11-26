@@ -7,7 +7,7 @@ import timeit
 import pandas as pd
 
 
-verbose = False   
+verbose = False
 
 if not os.path.isdir('example_outputs'):
     os.mkdir('example_outputs')
@@ -20,6 +20,7 @@ home = os.getcwd()
 
 try:
     examples_dirs = [sys.argv[1]]
+    verbose = True 
 except:
     examples_dirs = glob.glob("*")
     for d in examples_dirs:

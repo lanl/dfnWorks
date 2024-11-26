@@ -128,7 +128,7 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
     secondary = list(set(nodes) - set(path_nodes))
     for n in secondary:
         H.remove_node(n)
-    self.print_log("--> Complete\n")
+    self.print_log("--> Complete")
     return H
 
 

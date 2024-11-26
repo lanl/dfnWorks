@@ -41,7 +41,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle, print_out, call_executable
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
@@ -223,11 +223,10 @@ class DFNWORKS():
 
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
-
+        self.print_log("\n--> Creating DFN Object: Starting")
+        self.start_time = time()
         self.print_parameters()
         self.print_log("--> Creating DFN Object: Complete" )
-
-        self.print_log(f"--> Printing {self.local_jobname} log file." )
 
     def __del__(self):
         self.print_log(f"--> {self.local_jobname} completed/exited " )
@@ -336,8 +335,10 @@ def create_dfn():
     '''
 
     options = commandline_options()
-    self.print_log("Command Line Inputs:" )
-    self.print_log(options )
+
+    self.print_log("Command Line Inputs:")
+    self.print_log(options)
+
 
     now = datetime.now()
 
@@ -347,12 +348,13 @@ def create_dfn():
         self.print_log(error, "error")
         sys.exit(1)
     else:
-        self.print_log(f"--> Reading Input from {options.input_file}" )
 
+        self.print_log("--> Reading Input from " + options.input_file)
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    self.print_log(f"--> Reading run files from {options.input_file}" )
+
+    self.print_log(f"--> Reading run files from {options.input_file}")
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -367,10 +369,16 @@ def create_dfn():
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
                     self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
+                elif "dfnFlow" in line:
+                    dfnFlow_file = line[1]
+                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
+                elif "dfnTrans" in line:
+                    dfnTrans_file = line[1]
+                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
             except:
-                error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
+                error = f"Error Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error, "error")
-                sys.exit(1)
+
 
     if not options.path:
         if not options.path.endswith('/'):

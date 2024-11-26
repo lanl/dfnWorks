@@ -50,8 +50,8 @@ DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.print_domain_parameters()
 
-# define_paths()
 DFN.create_network()
+
 DFN.mesh_network()
 DFN.dfn_flow()
 DFN.dfn_trans()

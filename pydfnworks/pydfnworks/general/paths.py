@@ -85,14 +85,15 @@ def print_paths(self):
         None
 
     """
-    self.print_log("dfnWorks paths:" )
-    self.print_log("---------------" )
-    self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}" )
-    self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}" )
-    self.print_log(f"* PETSC_DIR: {os.environ['PETSC_DIR']}" )
-    self.print_log(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}" )
-    self.print_log(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}" )
-    self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}\n" )
+
+    self.print_log("dfnWorks paths:")
+    self.print_log("---------------")
+    self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
+    self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
+    self.print_log(f"* PETSC_DIR: {os.environ['PETSC_DIR']}")
+    self.print_log(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
+    self.print_log(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
+    self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}\n")
 
 
 def define_paths(self):
@@ -140,9 +141,6 @@ def define_paths(self):
     else:
         error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
         self.print_log(error,  'critical')
-        sys.stderr.write(error)
-        sys.exit(1)
-
     # PETSC paths
     if env_paths['PETSC_DIR']:
         os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
@@ -182,7 +180,7 @@ def define_paths(self):
     os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-        self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
+    self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
     os.environ[
         'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
