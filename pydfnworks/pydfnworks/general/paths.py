@@ -141,9 +141,6 @@ def define_paths(self):
     else:
         error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
         self.print_log(error,  'critical')
-        sys.stderr.write(error)
-        sys.exit(1)
-
     # PETSC paths
     if env_paths['PETSC_DIR']:
         os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
