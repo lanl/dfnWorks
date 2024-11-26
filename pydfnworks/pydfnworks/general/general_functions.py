@@ -12,6 +12,13 @@ import sys
 from pydfnworks.general.logging import local_print_log
 
 
+import io
+import logging
+import select
+import subprocess
+import sys
+
+
 
 def call_executable(self, command):
     ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.
