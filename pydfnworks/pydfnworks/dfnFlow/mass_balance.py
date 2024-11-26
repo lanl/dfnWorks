@@ -14,7 +14,7 @@ import glob
 __author__ = 'Jeffrey Hyman'
 __email__ = 'jhyman@lanl.gov'
 
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 
 def check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, darcy_vel_file):
     """
