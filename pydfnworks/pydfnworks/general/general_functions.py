@@ -12,14 +12,6 @@ import sys
 from pydfnworks.general.logging import local_print_log
 
 
-import io
-import logging
-import select
-import subprocess
-import sys
-
-from pydfnworks.general.logging import local_print_log
-
 
 
 def call_executable(self, command):
@@ -203,11 +195,11 @@ def from_pickle(self, filename):
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle
-    print_log(f"--> Loading DFN from {filename}")
+    self.print_log(f"--> Loading DFN from {filename}")
     if os.path.isfile(filename):
         tmp = pickle.load(open(filename, "rb"))
         self.__dict__ = tmp.__dict__.copy()
     else:
         error = f"Error. Cannot find pickle file {filename}.\nExiting program.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'critical')
+        
