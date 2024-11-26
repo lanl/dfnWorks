@@ -143,14 +143,12 @@ def create_network(self):
                                                      -4] + '_clean.dat' + ' ' + self.jobname
 
     self.print_log(f"Running: >> {cmd}")
-    subprocess.call(cmd, shell=True)
-    # self.call_executable(cmd)
+    # subprocess.call(cmd, shell=True)
+    self.call_executable(cmd)
 
     self.print_log("-->Opening dfnGen LogFile...\n")
     with open('dfngen_logfile.txt', 'r') as f:
         self.print_log(f.read())
-
-
 
     if os.path.isfile("params.txt"):
         self.gather_dfn_gen_output()
@@ -534,6 +532,9 @@ def grab_polygon_data(self):
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
     self.print_log('--> Data from polygons.dat stored on class in self.polygons\n')
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 9952ef6e (working on log file in generaator, lots to do in checking input)
 
 >>>>>>> 48ad955d (working on log file in generaator, lots to do in checking input)
