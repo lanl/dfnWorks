@@ -20,20 +20,14 @@ def initialize_log_file(self, time = False):
     '''
 
 
-    logging.getLogger(__name__)
-    self.log_filename = self.log_filename+".log"
-    if time:
-        logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
-                            , format="%(asctime)s %(levelname)s %(message)s" )
-    else:
-        logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
-                            , format="%(levelname)s %(message)s" )
+    # logging.getLogger(__name__)
+    logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
+                        , format="%(asctime)s %(levelname)s %(message)s" )
     statement = f"Initializing logfile: {self.log_filename}"
     self.print_log(statement)
 
-
 def print_log(self, statement, level = 'info'):
-    '''print and log statments to a file
+    '''print and log statments to a file 
 
     Parameters
     ---------
