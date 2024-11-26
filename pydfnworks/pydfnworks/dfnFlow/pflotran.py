@@ -128,11 +128,8 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         ex_file = zone_file.strip('zone') + 'ex'
 
         # Opening the input file
-<<<<<<< HEAD
         self.print_log(f'--> Opening zone file: {zone_file}')
-=======
-        self.print_log('--> Opening zone file: ', zone_file)
->>>>>>> 8c0172d7 (log files for flow)
+
         with open(zone_file, 'r') as fzone:
             self.print_log('--> Reading boundary node ids')
             node_array = fzone.read()
