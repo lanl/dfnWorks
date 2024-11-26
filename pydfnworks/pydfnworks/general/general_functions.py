@@ -48,16 +48,6 @@ def print_parameters(self):
         self.print_log(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
     self.print_log("=" * 80 + "\n")
 
-def print_out(self):
-
-    self.print_log("-->Opening dfnGen LogFile...\n")
-    with open('dfngen_logfile.txt', 'r') as f:
-<<<<<<< HEAD
-        self.print_log(f.read())
-=======
-        self.print_log(f.read()) 
->>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
-
 def go_home(self):
     os.chdir(self.jobname)
     self.print_log(f"--> Current directory is {os.getcwd()}")
@@ -199,11 +189,7 @@ def from_pickle(self, filename):
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle
-<<<<<<< HEAD
     self.print_log(f"--> Loading DFN from {filename}")
-=======
-    print_log(f"--> Loading DFN from {filename}")
->>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
     if os.path.isfile(filename):
         tmp = pickle.load(open(filename, "rb"))
         self.__dict__ = tmp.__dict__.copy()

@@ -61,12 +61,12 @@ def compile_dfn_exe(self,path):
         This function is only called if an executable is not found. 
 """
 
-    self.print_log(f"Compiling {path}")
+    self.print_log(f"Compiling {path}" )
     cwd = os.getcwd()
     os.chdir(path)
     self.call_executable("make")
     os.chdir(cwd)
-    self.print_log("Complete")
+    self.print_log("Complete" )
 
 
 def print_paths(self):
@@ -85,10 +85,7 @@ def print_paths(self):
         None
 
     """
-<<<<<<< HEAD
 
-=======
->>>>>>> 865b18f6 (pring log formatting)
     self.print_log("dfnWorks paths:")
     self.print_log("---------------")
     self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
@@ -116,7 +113,7 @@ def define_paths(self):
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
 
-    self.print_log("--> Loading and checking dfnWorks dependency paths")
+    self.print_log("--> Loading and checking dfnWorks dependency paths" )
     # Either write paths to ~/.dfnworksrc in a JSON format...
     if os.path.isfile(DFNPARAMS):
         with open(DFNPARAMS, 'r') as f:
