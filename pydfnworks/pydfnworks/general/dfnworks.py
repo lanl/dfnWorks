@@ -1,4 +1,4 @@
-__author__ = "Jeffrey Hyman"
+pydfnworks/pydfnworks/general/dfnworks.py__author__ = "Jeffrey Hyman"
 __version__ = "2.8"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
@@ -123,11 +123,15 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
+<<<<<<< HEAD
                  log_filename="dfnWorks",
                  log_time=True):
                  #log_filename=None,
                  #log_time=False):
         
+=======
+                 log_filename = 'dfnWorks.log'):
+>>>>>>> 191e5c6d (added log file to class)
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -166,6 +170,7 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
+<<<<<<< HEAD
             if not log_filename:
                 self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
             else:
@@ -197,6 +202,33 @@ class DFNWORKS():
         if pickle_file:
             self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
             self.from_pickle(pickle_file)
+=======
+            self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            self.initialize_log_file()
+
+        else:
+            self.jobname = os.getcwd() + os.sep + "output"
+            self.local_jobname = "output"
+
+
+        ## check is define_paths has been run yet
+        if not 'dfnworks_PATH' in os.environ:
+            self.define_paths()
+            self.legal()
+
+        # try:
+        #     os.remove('dfnWorks.log') #Remove the old log file
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
+        # except:
+        #     print("Creating New Log File (dfnWorks.log)")
+        #     print("")
+
+        if pickle_file:
+            print(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.from_pickle(pickle_file)
+
+>>>>>>> 191e5c6d (added log file to class)
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -224,6 +256,17 @@ class DFNWORKS():
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
 
+<<<<<<< HEAD
+=======
+        # if logging:
+        #     print("--> Writting output to log file.")
+        #     import logging
+        #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
+        #             format="%(asctime)s %(message)s")
+
+        self.print_log("\n--> Creating DFN Object: Starting")
+        self.start_time = time()
+>>>>>>> 191e5c6d (added log file to class)
         self.print_parameters()
         self.print_log("--> Creating DFN Object: Complete" )
 
