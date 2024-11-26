@@ -1,7 +1,7 @@
 import re
 import sys
 import os
-from pydfnworks.general.logging import print_log, local_print_log
+from pydfnworks.general.logging import local_print_log
 
 def print_error(error_string):
     """ print an error
