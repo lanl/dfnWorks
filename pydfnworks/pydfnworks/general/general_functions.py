@@ -3,6 +3,17 @@ import sys
 from datetime import datetime
 from time import time
 import subprocess
+<<<<<<< HEAD
+=======
+
+
+def call_executable(self, command):
+
+    cmd = subprocess.run(command, capture_output=True)
+    self.print_log(cmd.stdout.decode())
+    self.print_log(cmd.stderr.decode())
+
+>>>>>>> c4fa910b (moved subprocess call to new function on class, all output piped to screen and to log gile")
 
 import io
 import logging

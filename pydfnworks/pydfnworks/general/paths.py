@@ -61,12 +61,12 @@ def compile_dfn_exe(self,path):
         This function is only called if an executable is not found. 
 """
 
-    self.print_log(f"Compiling {path}" )
+    self.print_log(f"Compiling {path}")
     cwd = os.getcwd()
     os.chdir(path)
     self.call_executable("make")
     os.chdir(cwd)
-    self.print_log("Complete" )
+    self.print_log("Complete")
 
 
 def print_paths(self):
@@ -217,40 +217,56 @@ def define_paths(self):
     os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
 =======
         compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
 >>>>>>> 49894fa5 (added print_log to paths)
+=======
+        self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+>>>>>>> c4fa910b (moved subprocess call to new function on class, all output piped to screen and to log gile")
         self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
     os.environ[
         'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
 <<<<<<< HEAD
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
 =======
         compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
 >>>>>>> 49894fa5 (added print_log to paths)
+=======
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+>>>>>>> c4fa910b (moved subprocess call to new function on class, all output piped to screen and to log gile")
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
     os.environ['CORRECT_UGE_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
 <<<<<<< HEAD
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
 =======
         compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
 >>>>>>> 49894fa5 (added print_log to paths)
+=======
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+>>>>>>> c4fa910b (moved subprocess call to new function on class, all output piped to screen and to log gile")
     self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
     os.environ['CORRECT_STOR_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
     if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
 <<<<<<< HEAD
+<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
 =======
         compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
 >>>>>>> 49894fa5 (added print_log to paths)
+=======
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+>>>>>>> c4fa910b (moved subprocess call to new function on class, all output piped to screen and to log gile")
     self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[

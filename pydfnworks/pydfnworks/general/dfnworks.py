@@ -123,15 +123,7 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-<<<<<<< HEAD
-                 log_filename="dfnWorks",
-                 log_time=True):
-                 #log_filename=None,
-                 #log_time=False):
-        
-=======
                  log_filename = 'dfnWorks.log'):
->>>>>>> 191e5c6d (added log file to class)
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -170,7 +162,6 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-<<<<<<< HEAD
             if not log_filename:
                 self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
             else:
@@ -202,33 +193,6 @@ class DFNWORKS():
         if pickle_file:
             self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
             self.from_pickle(pickle_file)
-=======
-            self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
-            self.initialize_log_file()
-
-        else:
-            self.jobname = os.getcwd() + os.sep + "output"
-            self.local_jobname = "output"
-
-
-        ## check is define_paths has been run yet
-        if not 'dfnworks_PATH' in os.environ:
-            self.legal()
-            self.define_paths()
-
-        # try:
-        #     os.remove('dfnWorks.log') #Remove the old log file
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
-        # except:
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
-
-        if pickle_file:
-            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}")
-            self.from_pickle(pickle_file)
-
->>>>>>> 191e5c6d (added log file to class)
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
