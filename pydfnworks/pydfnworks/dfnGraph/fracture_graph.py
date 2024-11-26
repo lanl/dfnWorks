@@ -2,12 +2,8 @@ import networkx as nx
 import numpy as np
 
 from pydfnworks.dfnGraph.graph_attributes import add_perm
-<<<<<<< HEAD
-from pydfnworks.general.logging import local_print_log, print_log
-=======
-from pydfnworks.general.logging import local_print_log
->>>>>>> 9c8a7a0e (fixed up graph flow)
 
+from pydfnworks.general.logging import local_print_log
 
 def create_fracture_graph(inflow, outflow):
     """ Create a graph based on topology of network. Fractures
