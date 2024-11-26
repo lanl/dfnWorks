@@ -33,7 +33,7 @@ def print_domain_parameters(self, print_all=False):
     for key in self.params.keys():
         value = self.params[key]['value']
         if print_all:
-            self.print_log(f"{key:34s}{value}")
+            self.print_log(f"{key:34s}\t{value}")
         else:
             if value:
                 self.print_log(f"Name: {key:34s}Value: {value}")
@@ -80,7 +80,6 @@ def check_input(self, from_file=False):
         else:
             error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
             self.print_log(error, 'error')
-
         input_file = self.local_dfnGen_file
         output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         self.print_log(f"--> Reading input file: {input_file}")
