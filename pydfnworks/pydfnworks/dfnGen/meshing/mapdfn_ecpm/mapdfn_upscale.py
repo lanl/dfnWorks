@@ -2,7 +2,7 @@ import math as m
 import numpy as np
 import time
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 
 
 def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
