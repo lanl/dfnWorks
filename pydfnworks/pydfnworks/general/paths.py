@@ -28,32 +28,20 @@ def valid(self, name, path, path_type):
     if path_type == "executable":
         if not os.path.isfile(path):
             error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
-<<<<<<< HEAD
             self.print_log(error,  'critical')
-=======
-            self.print_log(error, level = 'error')
->>>>>>> e6c92dcf (added print_log to paths)
             # sys.stderr.write(error)
             sys.exit(1)
         else:
             if not os.access(path, os.X_OK):
                 error = f"Error checking {name}\n{path} is not an executable.\nPlease check file permissions.\nExiting\n"
-<<<<<<< HEAD
                 self.print_log(error,  'critical')
-=======
-                self.print_log(error, level = 'error')
->>>>>>> e6c92dcf (added print_log to paths)
                 sys.stderr.write(error)
                 sys.exit(1)
 
     if path_type == "directory":
         if not os.path.isdir(path):
             error = f"Error checking {name}\n{path} is not a directory.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
-<<<<<<< HEAD
             self.print_log(error,  'critical')
-=======
-            self.print_log(error, level = 'error')
->>>>>>> e6c92dcf (added print_log to paths)
             sys.stderr.write(error)
             sys.exit(1)
 
@@ -97,12 +85,8 @@ def print_paths(self):
         None
 
     """
-<<<<<<< HEAD
 
     self.print_log("dfnWorks paths:")
-=======
-    self.print_log("\ndfnWorks paths:")
->>>>>>> e6c92dcf (added print_log to paths)
     self.print_log("---------------")
     self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
     self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
@@ -156,11 +140,7 @@ def define_paths(self):
         self.valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
     else:
         error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
-<<<<<<< HEAD
         self.print_log(error,  'critical')
-=======
-        self.print_log(error, level = 'error')
->>>>>>> e6c92dcf (added print_log to paths)
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -173,43 +153,27 @@ def define_paths(self):
               os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
               "directory")
     else:
-<<<<<<< HEAD
         self.print_log("--> Warning. No PETSC Directory provided.",  'warning')
-=======
-        self.print_log("--> Warning. No PETSC Directory provided.", level = 'warning')
->>>>>>> e6c92dcf (added print_log to paths)
 
     # PFLOTRAN path
     if env_paths['PETSC_DIR']:
         os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
         self.valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
     else:
-<<<<<<< HEAD
         self.print_log("--> Warning. No PFLOTRAN path provided.",  'warning')
-=======
-        self.print_log("--> Warning. No PFLOTRAN path provided.", level = 'warning')
->>>>>>> e6c92dcf (added print_log to paths)
 
     if env_paths['FEHM_EXE']:
         os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
         self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
     else:
-<<<<<<< HEAD
         self.print_log("Warning. No FEHM path provided.",  'warning')
-=======
-        self.print_log("Warning. No FEHM path provided.", level = 'warning')
->>>>>>> e6c92dcf (added print_log to paths)
 
     # LaGriT executable
     if env_paths['LAGRIT_EXE']:
         os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
         self.valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
     else:
-<<<<<<< HEAD
         self.print_log("--> Warning. No LaGriT path provided.",  'warning')
-=======
-        self.print_log("--> Warning. No LaGriT path provided.", level = 'warning')
->>>>>>> e6c92dcf (added print_log to paths)
 
     # ===================================================
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
@@ -218,43 +182,25 @@ def define_paths(self):
     # Directories
     os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
     if not os.path.isfile(os.environ['DFNGEN_EXE']):
-<<<<<<< HEAD
         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
     self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
-=======
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-        self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
->>>>>>> e6c92dcf (added print_log to paths)
 
     os.environ[
         'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
     if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
-=======
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
->>>>>>> e6c92dcf (added print_log to paths)
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
     os.environ['CORRECT_UGE_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
-
-=======
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
->>>>>>> e6c92dcf (added print_log to paths)
     self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
     os.environ['CORRECT_STOR_EXE'] = os.environ[
         'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
     if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-<<<<<<< HEAD
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
-=======
-        compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
->>>>>>> e6c92dcf (added print_log to paths)
     self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[
