@@ -9,6 +9,8 @@ import select
 import subprocess
 import sys
 
+from pydfnworks.general.logging import local_print_log
+
 
 
 def call_executable(self, command):
@@ -24,6 +26,19 @@ def call_executable(self, command):
         None
 
     '''
+    # line = command.split(" ")
+    # p = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE, text = True)
+    # print(p)
+    # # ## But do not wait till netstat finish, start displaying output immediately ##
+    # # while True:
+    # #     out = p.stderr.read(1)
+    # #     if out == '' and p.poll() != None:
+    # #         break
+    # #     if out != '':
+    # #         # sys.stdout.write(out)
+    # #         # sys.stdout.flush()
+    # #         self.print_log(p.stdout.decode())
+            
 
     print(f"Executing {command}")
     subprocess.call(command, shell = True)
