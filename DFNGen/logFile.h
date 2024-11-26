@@ -1,4 +1,4 @@
-// C++ program to implement a basic logging system.
+DFNGen/logFile.h// C++ program to implement a basic logging system.
 #pragma once
 #include <ctime>
 #include <fstream>
