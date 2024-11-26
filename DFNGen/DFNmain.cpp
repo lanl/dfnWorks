@@ -386,17 +386,10 @@ int main (int argc, char **argv) {
                         
                         for (int i = 0; i < totalFamilies; i++) {
                             if (stopCondition == 0) {
-<<<<<<< HEAD
                                 logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
                                 logger.writeLogFile(INFO,  logString);
                             } else {
                                 logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target)) + ", Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) +  "\n";
-=======
-                                logString =  shapeType(shapeFamilies[i]) + " family "+ std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)))+ " Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32));
-                                logger.writeLogFile(INFO,  logString);
-                            } else {
-                                logString =  shapeType(shapeFamilies[i]) + " family "+ std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)))+ " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target))+ ", Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32));
->>>>>>> 25d00c99 (Adding logger to DFNGen)
                                 logger.writeLogFile(INFO,  logString);
                             }
                             
