@@ -123,8 +123,12 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
+<<<<<<< HEAD
                  log_filename =  None,
                  log_time = False):
+=======
+                 log_filename = 'dfnWorks.log'):
+>>>>>>> 55ded3ab (added log file to class)
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -220,7 +224,8 @@ class DFNWORKS():
 
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
-
+        self.print_log("\n--> Creating DFN Object: Starting")
+        self.start_time = time()
         self.print_parameters()
         self.print_log("--> Creating DFN Object: Complete" )
 
