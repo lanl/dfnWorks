@@ -1,10 +1,9 @@
+
 import logging
-import sys
+import sys 
 
-from pydfnworks.general.images import failure, success
-
-def initialize_log_file(self, time = False):
-    ''' Create Log file
+def initialize_log_file(self):
+    ''' Create Log file 
 
     Parameters
     ---------
@@ -21,15 +20,10 @@ def initialize_log_file(self, time = False):
 
 
     # logging.getLogger(__name__)
-    if time:
-        logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
-                            , format="%(asctime)s %(levelname)s %(message)s" )
-    else:
-        logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
-                            , format="%(levelname)s %(message)s" )     
+    logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
+                        , format="%(asctime)s %(levelname)s %(message)s" )
     statement = f"Initializing logfile: {self.log_filename}"
     self.print_log(statement)
-    
 
 def print_log(self, statement, level = 'info'):
     '''print and log statments to a file 
