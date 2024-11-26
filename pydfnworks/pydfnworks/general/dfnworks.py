@@ -213,8 +213,8 @@ class DFNWORKS():
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
-            self.define_paths()
             self.legal()
+            self.define_paths()
 
         # try:
         #     os.remove('dfnWorks.log') #Remove the old log file
@@ -225,7 +225,7 @@ class DFNWORKS():
         #     print("")
 
         if pickle_file:
-            print(f"--> Loading DFN from pickled object file {pickle_file}")
+            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}")
             self.from_pickle(pickle_file)
 
 >>>>>>> 191e5c6d (added log file to class)
@@ -268,7 +268,11 @@ class DFNWORKS():
         self.start_time = time()
 >>>>>>> 191e5c6d (added log file to class)
         self.print_parameters()
+<<<<<<< HEAD
         self.print_log("--> Creating DFN Object: Complete" )
+=======
+        self.print_log("\n--> Creating DFN Object: Complete")
+>>>>>>> 49894fa5 (added print_log to paths)
 
         self.print_log(f"--> Printing {self.local_jobname} log file." )
 
