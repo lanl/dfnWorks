@@ -55,8 +55,7 @@ def copy_dfn_trans_files(self):
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except:
         error = f"--> Error: Problem copying {self.dfnTrans_file} file\n" "Unable to replace. Exiting Program\n"
-        self.print_log(error, 'critical')
-        sys.exit(1)
+        self.print_log(error, 'error')
 
 
 def run_dfn_trans(self):
@@ -306,8 +305,6 @@ def check_dfn_trans_run_files(self):
     elif len(ic_selected) == 0:
         error = "Error. No initial condition defined\nExiting\n"
         self.print_log(error, 'error')
-        sys.stderr.write(error)
-        sys.exit(1)
 
     if params["ControlPlane:"] != None:
         for required in ["control_out:", "delta_Control:", "flowdir:"]:
