@@ -80,6 +80,8 @@ def check_input(self, from_file=False):
         else:
             error = f"Input file \n{self.dfnGen_file} not found\n Exiting"
             self.print_log(error, 'error')
+
+
         input_file = self.local_dfnGen_file
         output_file = "dfnGen_output/" + self.local_dfnGen_file[:-4] + '_clean.dat'
         self.print_log(f"--> Reading input file: {input_file}")
