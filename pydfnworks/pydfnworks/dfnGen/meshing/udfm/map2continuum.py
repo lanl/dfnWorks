@@ -11,7 +11,7 @@ import subprocess
 import shutil
 import numpy as np
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log
 import time
 import multiprocessing as mp
 import pickle
@@ -423,7 +423,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating driver_octree_start.lgi file: Complete\n")
+    local_print_log("Creating driver_octree_start.lgi file: Complete\n")
 
 
 def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
@@ -491,7 +491,7 @@ define / REFINE_AMR / 123
     f.write('finish\n')
     f.flush()
     f.close()
-    print_log("Creating parameters_octree_dfn.mlgi file: Complete\n")
+    local_print_log("Creating parameters_octree_dfn.mlgi file: Complete\n")
 
 
 def lagrit_build(dir_name):
@@ -546,7 +546,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating build_octree.mlgi file: Complete\n")
+    local_print_log("Creating build_octree.mlgi file: Complete\n")
 
 
 def lagrit_intersect(dir_name):
@@ -597,7 +597,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating intersect_refine.mlgi file: Complete\n")
+    local_print_log("Creating intersect_refine.mlgi file: Complete\n")
     f_name = f'{dir_name}/intersect_refine_np1.mlgi'
     f = open(f_name, 'w')
     fin = """#
@@ -621,7 +621,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating intersect_refine_np1.mlgi file: Complete\n")
+    local_print_log("Creating intersect_refine_np1.mlgi file: Complete\n")
 
 
 def lagrit_hex_to_tet(dir_name):
@@ -692,7 +692,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating hex_to_tet.mlgi file: Complete\n")
+    local_print_log("Creating hex_to_tet.mlgi file: Complete\n")
 
 
 def lagrit_remove(dir_name):
@@ -728,7 +728,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print_log("Creating remove_cells.mlgi file: Complete\n")
+    local_print_log("Creating remove_cells.mlgi file: Complete\n")
 
 
 def lagrit_run(self, num_poly, path, dir_name):
@@ -758,7 +758,7 @@ def lagrit_run(self, num_poly, path, dir_name):
     elif os.path.isfile(path + "../" + "reduced_mesh.inp"):
         os.symlink(path + "../" + "reduced_mesh.inp", "reduced_mesh.inp")
     else:
-        error = "ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
+        error = "Error. Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
         self.print_log(error, 'critical')
         sys.stderr.write(error)
         sys.exit(1)
