@@ -144,7 +144,12 @@ def create_network(self):
 
     self.print_log(f"Running: >> {cmd}")
     subprocess.call(cmd, shell=True)
-    # self.call_executable(cmd)
+
+    self.print_log("-->Opening dfnGen LogFile...\n")
+    with open('dfngen_logfile.txt', 'r') as f:
+        self.print_log(f.read())
+
+
 
     self.print_log("-->Opening dfnGen LogFile...\n")
     with open('dfngen_logfile.txt', 'r') as f:
