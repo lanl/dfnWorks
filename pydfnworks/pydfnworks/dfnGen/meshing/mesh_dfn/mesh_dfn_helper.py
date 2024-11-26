@@ -1,4 +1,4 @@
-pydfnworks/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.py"""
+"""
 .. module:: mesh_dfn_helper.py
    :synopsis: helper functions for meshing DFN using LaGriT  
 .. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>

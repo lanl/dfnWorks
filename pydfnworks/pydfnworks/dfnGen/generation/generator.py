@@ -536,13 +536,3 @@ def grab_polygon_data(self):
         poly = np.array(poly)
         self.polygons[f'fracture-{i+1}'] = poly #store in dictionary
     self.print_log('--> Data from polygons.dat stored on class in self.polygons\n')
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 9952ef6e (working on log file in generaator, lots to do in checking input)
-=======
->>>>>>> 9e62c8da (working on log file in generaator, lots to do in checking input)
-
->>>>>>> 48ad955d (working on log file in generaator, lots to do in checking input)

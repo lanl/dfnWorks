@@ -1,4 +1,4 @@
-pydfnworks/pydfnworks/general/dfnworks.py__author__ = "Jeffrey Hyman"
+__author__ = "Jeffrey Hyman"
 __version__ = "2.8"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
@@ -41,7 +41,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle, print_out, call_executable
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
