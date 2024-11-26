@@ -123,8 +123,10 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-                 log_filename =  None,
-                 log_time = False):
+                 log_filename="dfnWorks",
+                 log_time=True):
+                 #log_filename=None,
+                 #log_time=False):
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -332,8 +334,13 @@ def create_dfn():
     '''
 
     options = commandline_options()
+<<<<<<< HEAD
     self.print_log("Command Line Inputs:" )
     self.print_log(options )
+=======
+    self.print_log("Command Line Inputs:")
+    self.print_log(options)
+>>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
 
     now = datetime.now()
 
@@ -343,12 +350,20 @@ def create_dfn():
         self.print_log(error, "error")
         sys.exit(1)
     else:
+<<<<<<< HEAD
         self.print_log(f"--> Reading Input from {options.input_file}" )
+=======
+        self.print_log("--> Reading Input from " + options.input_file)
+>>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
 
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
+<<<<<<< HEAD
     self.print_log(f"--> Reading run files from {options.input_file}" )
+=======
+    self.print_log(f"--> Reading run files from {options.input_file}")
+>>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -356,6 +371,7 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
+<<<<<<< HEAD
                     self.print_log(f'--> dfnGen input file: {dfnGen_file}' )
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
@@ -363,6 +379,15 @@ def create_dfn():
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
                     self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
+=======
+                    self.print_log('--> dfnGen input file: ', dfnGen_file)
+                elif "dfnFlow" in line:
+                    dfnFlow_file = line[1]
+                    self.print_log('--> dfnFlow input file: ', dfnFlow_file)
+                elif "dfnTrans" in line:
+                    dfnTrans_file = line[1]
+                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
+>>>>>>> a6f6b68b (updates to add loging and bring in dfngen logfile)
             except:
                 error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
                 sys.stderr.write(error, "error")
