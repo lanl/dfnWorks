@@ -37,6 +37,7 @@ def mapdfn_ecpm(self,
                 tortuosity_factor=0.001,
                 lump_diag_terms=False,
                 correction_factor=True,
+                h5origin = [0,0,0],
                 output_dir="mapdfn_ecpm"):
     """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
   
@@ -93,7 +94,7 @@ def mapdfn_ecpm(self,
 
     # write evereything to files
     write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on)
+                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on, h5origin)
 
     self.print_log('=' * 80)
     self.print_log("* MAPDFN Complete")
