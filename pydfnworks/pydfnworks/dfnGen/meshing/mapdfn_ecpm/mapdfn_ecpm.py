@@ -37,8 +37,9 @@ def mapdfn_ecpm(self,
                 tortuosity_factor=0.001,
                 lump_diag_terms=False,
                 correction_factor=True,
-                h5origin = [0,0,0],
+                h5origin = None,
                 output_dir="mapdfn_ecpm"):
+
     """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
   
     Parameters
@@ -80,7 +81,9 @@ def mapdfn_ecpm(self,
 
     # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
-    origin, nx, ny, nz, num_cells = setup_domain(self.domain, cell_size)
+    domain_center = [self.params['domainCenter']['value'][0], self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
+    origin, h5origin, nx, ny, nz, num_cells = setup_domain(self.domain, domain_center, cell_size)
+
 
     # id cells that intersect the DFN
     cell_fracture_id = self.mapdfn_tag_cells(origin, num_cells, nx, ny, nz,
