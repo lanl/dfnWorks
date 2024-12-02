@@ -37,7 +37,6 @@ def mapdfn_ecpm(self,
                 tortuosity_factor=0.001,
                 lump_diag_terms=False,
                 correction_factor=True,
-                h5origin = None,
                 output_dir="mapdfn_ecpm"):
 
     """ This script takes the top-level directory of the dfn and maps it to an ecpm, saving the ecpm files in that directory
