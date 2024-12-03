@@ -36,7 +36,7 @@ def setup_output_dir(output_dir, jobname):
     return filenames
 
 
-def setup_domain(domain, cell_size):
+def setup_domain(domain, domain_center, cell_size):
     """ Initialize domain and discretization
 
     Parameters
@@ -68,6 +68,11 @@ def setup_domain(domain, cell_size):
     """
     local_print_log("--> Computing discrete domain parameters")
     origin = [-1 * domain['x'] / 2, -1 * domain['y'] / 2, -1 * domain['z'] / 2]
+    local_print_log(f" Sampling Domain Origin : {origin}")
+    local_print_log(f" Domain Center : {domain_center}")
+    h5origin = [origin[0] + domain_center[0], origin[1] + domain_center[1], origin[2] + domain_center[2] ]
+    local_print_log(f"h5origin {h5origin}")
+
     # Origin of area to map in DFN domain coordinates (0,0,0 is center of DFN)
     [nx, ny, nz] = [
         int(domain['x'] / cell_size),
