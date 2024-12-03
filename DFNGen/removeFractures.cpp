@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include "logFile.h"
 
 /***********************************************************************/
 /***********  Remove Fractures Smaller Than Minimum Size  **************/
@@ -58,11 +59,13 @@ void removeFractures(double minSize, std::vector<Poly> &acceptedPolys, std::vect
             // SAVING POLYGON (intersection and triple points saved witchin intersectionChecking())
             finalPolyList.push_back(newPoly); // SAVE newPoly to accepted polys list
         } else { // Poly rejected
-            std::cout << "\nError rebuilding dfn, previously accepted fracture was rejected during DFN rebuild.\n";
+            std::string logString = "Error rebuilding dfn, previously accepted fracture was rejected during DFN rebuild.\n";
+            logger.writeLogFile(ERROR,  logString);
         }
     }
     
-    std::cout << "Rebuilding DFN complete.\n";
+    std::string logString = "Rebuilding DFN complete.\n";
+    logger.writeLogFile(INFO,  logString);
     acceptedPolys.clear();
     acceptedPolys = finalPolyList;
 }

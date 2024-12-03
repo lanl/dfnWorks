@@ -29,7 +29,7 @@ def create_merge_poly_scripts(self):
     -----
         1. Fracture mesh objects are read into different part_*.lg files. This allows for merging of the mesh to be performed in batches.  
     """
-    print("--> Writting partial merge scripts")
+    self.print_log("--> Writting partial merge scripts")
 
     lagrit_input = """
 # Change to read LaGriT
@@ -63,15 +63,15 @@ finish
         max(np.floor(self.num_frac / self.ncpu) + 1, 1)
     )  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
 
-    print(f"--> There are {part_size} fractures in each part")
+    self.print_log(f"--> There are {part_size} fractures in each part")
 
     frac_index = 0
     for cpu in range(self.ncpu):
         # grab the fractures for this cpu
         current_fractures = list(self.fracture_list[frac_index:frac_index +
                                                     part_size])
-        # print(f"cpu: {cpu}")
-        # print(current_fractures)
+        # self.print_log(f"cpu: {cpu}")
+        # self.print_log(current_fractures)
         frac_index += part_size
         # write script to merge them in batch
         with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
@@ -80,12 +80,12 @@ finish
                 fout.write(lagrit_input.format(filename, frac_id))
             fout.write(lagrit_input_2.format(cpu + 1))
 
-    print("--> Writting merge scripts: Complete ")
+    self.print_log("--> Writting merge scripts: Complete ")
 
 
 def create_final_merge_script(self):
 
-    print("--> Writing : merge_network.lgi")
+    self.print_log("--> Writing : merge_network.lgi")
 
     eps = self.h * 10**-3
     ## Write LaGriT file for merge parts of the mesh and remove duplicate points
@@ -121,19 +121,63 @@ sort / mo_all / index / ascending / ikey / imt xic yic zic
 reorder / mo_all / ikey 
 cmo / DELATT / mo_all / ikey
 resetpts / itp 
+
+
+
+
+# Dump out zone files
+define / XMAX / {0.5*self.domain['x'] - eps:0.12e}
+define / XMIN / {-0.5*self.domain['x'] + eps:0.12e} 
+define / YMAX / {0.5*self.domain['y'] - eps:0.12e} 
+define / YMIN / {-0.5*self.domain['y'] + eps:0.12e}
+define / ZMAX / {0.5*self.domain['z'] - eps:0.12e}
+define / ZMIN / {-0.5*self.domain['z'] + eps:0.12e}
+
+define / ZONE / 1
+define / FOUT / boundary_top
+pset / top / attribute / zic / 1,0,0/ gt / ZMAX
+pset / top / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 2
+define / FOUT / boundary_bottom
+pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
+pset / bottom / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 3
+define / FOUT / boundary_left_w
+pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
+pset / left_w / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 4
+define / FOUT / boundary_front_n
+pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
+pset / front_n / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 5
+define / FOUT / boundary_right_e
+pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
+pset / right_e / zone / FOUT/ ascii / ZONE
+
+define / ZONE / 6
+define / FOUT / boundary_back_s
+pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
+pset / back_s / zone / FOUT/ ascii / ZONE
+
+trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
+
 boundary_components 
 #dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
 """
             if self.flow_solver == "PFLOTRAN":
-                print(f"\n--> Dumping output for {self.flow_solver}")
+                self.print_log(f"--> Dumping output for {self.flow_solver}")
                 lagrit_input += """
     dump / pflotran / full_mesh / mo_all / nofilter_zero
     dump / stor / full_mesh / mo_all / ascii
         """
             elif self.flow_solver == "FEHM":
-                print(f"\n--> Dumping output for {self.flow_solver}")
+                self.print_log(f"--> Dumping output for {self.flow_solver}")
                 lagrit_input += """
     dump / stor / full_mesh / mo_all / ascii
     dump / coord / full_mesh / mo_all 
@@ -176,50 +220,16 @@ dump / lagrit / full_mesh.lg / mo_all
     # Dump mesh with no attributes for viz
     # dump / full_mesh_viz.inp / mo_all
 
-    # Dump out zone files
-    define / XMAX / {0.5*self.domain['x'] - eps:0.12e}
-    define / XMIN / {-0.5*self.domain['x'] + eps:0.12e} 
-    define / YMAX / {0.5*self.domain['y'] - eps:0.12e} 
-    define / YMIN / {-0.5*self.domain['y'] + eps:0.12e}
-    define / ZMAX / {0.5*self.domain['z'] - eps:0.12e}
-    define / ZMIN / {-0.5*self.domain['z'] + eps:0.12e}
-
-    define / ZONE / 1
-    define / FOUT / boundary_top
-    pset / top / attribute / zic / 1,0,0/ gt / ZMAX
-    pset / top / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 2
-    define / FOUT / boundary_bottom
-    pset / bottom / attribute / zic / 1,0,0/ lt / ZMIN
-    pset / bottom / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 3
-    define / FOUT / boundary_left_w
-    pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
-    pset / left_w / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 4
-    define / FOUT / boundary_front_n
-    pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
-    pset / front_n / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 5
-    define / FOUT / boundary_right_e
-    pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
-    pset / right_e / zone / FOUT/ ascii / ZONE
-
-    define / ZONE / 6
-    define / FOUT / boundary_back_s
-    pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
-    pset / back_s / zone / FOUT/ ascii / ZONE
     """
         else:
-            lagrit_input = """
+            lagrit_input = f"""
     cmo / modatt / mo_all / icr1 / ioflag / l
     cmo / modatt / mo_all / isn1 / ioflag / l
     cmo / modatt / mo_all / itp1 / ioflag / l
-    #dump / reduced_mesh.gmv / mo_all 
+    ## shift mesh
+
+    trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
+    
     dump / reduced_mesh.inp / mo_all
     """
         lagrit_input += """
@@ -228,4 +238,4 @@ dump / lagrit / full_mesh.lg / mo_all
     """
         f.write(lagrit_input)
         f.flush()
-    print("--> Writing : merge_network.lgi - complete")
+    self.print_log("--> Writing : merge_network.lgi - complete")

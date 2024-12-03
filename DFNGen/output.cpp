@@ -15,6 +15,7 @@
 #include <iomanip> // std::setprecision()
 #include <sys/stat.h> // mkdir system call 
 #include "readInputFunctions.h" // error check for file open checkIfOpen()
+#include "logFile.h"
 
 //NOTE: do not use std::endl for new lines when writing to files. This will flush the output buffer. Use '\n'
 
@@ -32,7 +33,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
     output += dfnGenExtension;
-    std::cout << output << '\n';
+    std::string logString = output + "\n";
+    logger.writeLogFile(INFO,  logString);
     // Define Output Files:
     // std::string permOutputFile = output + "/perm.dat";
     // std::string aperture = output + "/aperture.dat";
@@ -80,7 +82,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     writeBoundaryFiles(finalFractures, acceptedPoly);
     
     if (outputAcceptedRadiiPerFamily) {
-        std::cout << "Writing Accepted Radii Files Per Family\n";
+        logString = "Writing Accepted Radii Files Per Family\n";
+        logger.writeLogFile(INFO,  logString);
         // Creates radii files per family, before isolated fracture removal.
         int size = shapeFamilies.size();
         
@@ -105,7 +108,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     }
     
     if (outputFinalRadiiPerFamily) {
-        std::cout << "Writing Final Radii Files Per Family\n";
+        logString = "Writing Final Radii Files Per Family\n";
+        logger.writeLogFile(INFO,  logString);
         int size = shapeFamilies.size();
         
         for (int i = 0; i < size; i++) {
@@ -127,7 +131,8 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
     
     // If triple intersections are on, write triple intersection points file
     if (tripleIntersections) {
-        std::cout << "Writing Triple Intersection Points File\n";
+        logString = "Writing Triple Intersection Points File\n";
+        logger.writeLogFile(INFO,  logString);
         writeTriplePts(triplePoints, finalFractures, acceptedPoly, intPts, output);
     }
 } // End writeOutput()
@@ -269,7 +274,8 @@ void adjustIntFractIDs(std::vector<unsigned int> &finalFractures, std::vector<Po
     Arg 6: Stats strcture. DFNGen running program stats (keeps track of total intersecion node count) */
 void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, std::string intersectionFolder, struct Stats &pstats) {
     Point tempPoint1, tempPoint2; // Keeps track of current un-rotated points we are working with
-    std::cout << "Writing Intersection Files\n";
+    std::string logString = "Writing Intersection Files\n";
+    logger.writeLogFile(INFO,  logString);
     std::ofstream fractIntFile;
     //int keepIsolated = 1;
     
@@ -466,7 +472,7 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
     std::string polyOutputFile = output + "/polys.inp";
     polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(polyOutput, polyOutputFile);
-    std::cout << "Writing " << polyOutputFile << "\n";
+    std::string logString = "Writing " + polyOutputFile + "\n";
     unsigned long long int vertexCount = 0;
     
     //HEADER
@@ -515,7 +521,8 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
     Arg 3: Path to output folder */
 void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::ofstream polyOutput;
-    std::cout << "Writing Polygon Files\n";
+    std::string logString = "Writing Polygon Files\n";
+    logger.writeLogFile(INFO,  logString);
     int polyCount = finalFractures.size();
     std::string polyOutputFile = output + "/polygons.dat";
     polyOutput.open(polyOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -539,7 +546,8 @@ void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &ac
     }
     
     polyOutput.close();
-    std::cout << "Writing Polygon Files Complete\n";
+    logString = "Writing Polygon Files Complete\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 /* writePolysInp() ****************************************************************************/
@@ -549,7 +557,8 @@ void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &ac
     Arg 3: Path to output folder */
 void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::ofstream polyOutput;
-    std::cout << "Writing poly inp files\n";
+    std::string logString = "Writing poly inp files\n";
+    logger.writeLogFile(INFO,  logString);
     int polyCount = finalFractures.size();
     
     for (int j = 0; j < polyCount; j++) {
@@ -589,7 +598,8 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
     std::string paramsOutputFile = output + "/../params.txt";
     params.open(paramsOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(params, paramsOutputFile);
-    std::cout << "Writing " << paramsOutputFile << "\n";
+    std::string logString = "Writing " + paramsOutputFile + "\n";
+    logger.writeLogFile(INFO,  logString);
     params << finalFractures.size() << "\n";
     params << h << "\n";
     params << visualizationMode << "\n"; // Production mode
@@ -650,7 +660,8 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
 void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::cout << "Writing Radii File (radii.dat)\n";
+    std::string logString = "Writing Radii File (radii.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     std::string file = output + "/radii.dat";
     std::ofstream radii;
     radii.open(file.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -691,7 +702,8 @@ void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     Arg 2: std::vector array of all accetped fractures
     Arg 3: Path to output folder */
 void writeFractureTranslations(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
-    std::cout << "Writing Fracture Translations File (translations.dat)\n";
+    std::string logString = "Writing Fracture Translations File (translations.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     std::string filePath = output + "/translations.dat";
     std::ofstream file;
     file.open(filePath.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -918,7 +930,8 @@ void writeTriplePts(std::vector<Point> &triplePoints, std::vector<unsigned int> 
     Arg 1: Stats structure of program statistics
     Arg 2: Path to output folder */
 void writeRejectionStats(Stats &pstats, std::string &output) {
-    std::cout << "Writing Rejection Statistics File (rejections.dat)\n";
+    std::string logString = "Writing Rejection Statistics File (rejections.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     std::string fileName = output + "/rejections.dat";
     std::ofstream file;
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -939,7 +952,8 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     Arg 2: Path to output folder */
 void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
     if (pstats.rejectedUserFracture.size() > 0) {
-        std::cout << "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
+        std::string logString = "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
+        logger.writeLogFile(INFO,  logString);
         std::string fileName = output + "/userFractureRejections.dat";
         std::ofstream file;
         file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -960,7 +974,8 @@ void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
     Arg 2: Path to output folder */
 void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     double radToDeg = 180 / M_PI;
-    std::cout << "Writing Family Definitions File (families.dat)\n";
+    std::string logString = "Writing Family Definitions File (families.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     std::string fileName = output + "/families.dat";
     std::ofstream file;
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -1095,14 +1110,16 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     If dir already exists, the directoy will not be overwritten
     Arg 1: Path to directory to be created */
 void makeDIR(const char *dir) {
+    std::string logString;
+    
     // If dir already exists, remove it
     if (DIR_exists(dir)) {
         std::string tempStr = "rm -r ";
         tempStr += dir;
         
         if (system(tempStr.c_str())) {
-            std::cout << "ERROR: Problem executing system "
-                      << "command: " << tempStr << "\n";
+            logString = "ERROR: Problem executing system command: " + tempStr;
+            logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
     }
@@ -1112,7 +1129,8 @@ void makeDIR(const char *dir) {
         int dir_err = mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         
         if (-1 == dir_err)  {
-            std::cout << "\nError creating directory " << dir << "\n";
+            logString = "Error creating directory " + std::string(dir);
+            logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
     }
@@ -1126,7 +1144,8 @@ void makeDIR(const char *dir) {
     Arg 3: Array of all intersections in DFN
     Arg 4: Path to output folder */
 void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::string &output) {
-    std::cout << "Writing Connectivity Data (connectivity.dat)\n";
+    std::string logString = "Writing Connectivity Data (connectivity.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     std::string fileName = output + "/connectivity.dat";
     std::ofstream file;
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
@@ -1176,7 +1195,8 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
     std::string fileOutputFile = output + "/../poly_info.dat";
     file.open(fileOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileOutputFile);
-    std::cout << "Writing Rotation Data File (poly_info.dat)\n";
+    std::string logString = "Writing Rotation Data File (poly_info.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     double maxDomainSize = domainSize[0];
     
     if (maxDomainSize < domainSize[1]) {
@@ -1233,6 +1253,7 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
     
     file.close();
 }
+
 /* writeNormalVectors() ******************************************************************************/
 /*! Writes normal_vectors.dat
     Writes fracture rotation data. Also includes shape families each fracture belongs to.
@@ -1245,7 +1266,8 @@ void writeNormalVectors(std::vector<Poly> &acceptedPoly, std::vector<unsigned in
     std::string fileOutputFile = output + "/normal_vectors.dat";
     file.open(fileOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileOutputFile);
-    std::cout << "Writing Normal Vectors into File (normal_vectors.dat)\n";
+    std::string logString = "Writing Normal Vectors into File (normal_vectors.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     
     for (unsigned int i = 0; i < finalFractures.size(); i++ ) {
         // poly's normal is already normalized at this point
@@ -1273,7 +1295,8 @@ void writeRejectsPerAttempt(Stats &pstats, std::string &output) {
     std::string fileOutputFile = output + "/rejectsPerAttempt.dat";
     file.open(fileOutputFile.c_str(), std::ofstream::out | std::ofstream::trunc);
     checkIfOpen(file, fileOutputFile);
-    std::cout << "Writing Rotation Data File (rejectsPerAttempt.dat)\n";
+    std::string logString = "Writing Rotation Data File (rejectsPerAttempt.dat)\n";
+    logger.writeLogFile(INFO,  logString);
     
     for (unsigned int i = 0; i < pstats.rejectsPerAttempt.size(); i++) {
         file << pstats.rejectsPerAttempt[i] << "\n";
@@ -1293,7 +1316,8 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     double domainY = domainSize[1] * .5;
     double domainZ = domainSize[2] * .5;
     Point tempPoint1, tempPoint2, tempPoint3; // Keeps track of current un-rotated points we are working with
-    std::cout << "\nWriting Graph Data Files\n";
+    std::string logString = "Writing Graph Data Files\n";
+    logger.writeLogFile(INFO,  logString);
     //adjustIntFractIDs(finalFractures,acceptedPoly, intPts);
     // Make new intersection file in intersections folder
     std::ofstream intFile;
@@ -1449,6 +1473,7 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
     intFile.close();
     fractFile.close();
 }
+
 /* writeMidPoint() ******************************************************************/
 /*! Writes mid point and length of line defined by x1,y1,z1 and x2,y2,z2 into file fp
     Arg 1: std::ofstream file to write informatino into
@@ -1483,7 +1508,8 @@ void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double 
            fracture removal
     Arg 2: std::vector array of all accepted fractures (before isolated fracture removal)*/
 void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly) {
-    std::cout << "Writing Boundary Files\n";
+    std::string logString = "Writing Boundary Files\n";
+    logger.writeLogFile(INFO,  logString);
     std::ofstream leftFile;
     std::string leftFileName = "dfnGen_output/left.dat";
     leftFile.open(leftFileName.c_str(), std::ofstream::out | std::ofstream::trunc);

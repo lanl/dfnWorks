@@ -8,7 +8,7 @@
 
 import matplotlib.pylab as plt
 import numpy as np
-
+from pydfnworks.general.logging import local_print_log
 
 def plot_fram_information(params):
     """ Gathers information from the file 'rejections.dat' about FRAM and creates a bar-chart named fram_information.png 
@@ -29,7 +29,7 @@ def plot_fram_information(params):
     """
     # Gather Data
     if params["verbose"]:
-        print("--> Plotting FRAM information")
+        local_print_log("--> Plotting FRAM information")
 
     rejections = {}
     with open('dfnGen_output/rejections.dat', "r") as fp:

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include "structures.h"
+#include "logFile.h"
 // Variable prototypes for user input variables
 
 extern short stopCondition;
@@ -132,6 +133,7 @@ extern float *r_p32Targets;
 extern float removeFracturesLessThan;
 extern std::string polygonFile;
 extern std::vector<Point> vertices;
+extern Logger logger;
 
 #endif
 

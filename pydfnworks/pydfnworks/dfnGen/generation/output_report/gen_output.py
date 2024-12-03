@@ -77,10 +77,10 @@ def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
 
   """
     cwd = os.getcwd()
-    print("=" * 80)
-    print('Creating Report of DFN generation')
-    print("=" * 80 + "\n")
-    print('--> Gathering Network Information')
+    self.print_log("=" * 80)
+    self.print_log('Creating Report of DFN generation')
+    self.print_log("=" * 80 + "\n")
+    self.print_log('--> Gathering Network Information')
     # Create a list of dictionaries with information about fracture family
     families = get_family_information()
     # Create a list of dictionaries with information about fracture
@@ -98,24 +98,24 @@ def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
 
     # Create Plots
     if len(families) > 0:
-        print('--> Plotting Information')
+        self.print_log('--> Plotting Information')
         plot_fracture_centers(params, families, fractures)
         plot_fracture_radii(params, families, fractures)
         plot_fracture_orientations(params, families, fractures)
         plot_fram_information(params)
         # # Combine plots into a pdf
         make_pdf(params, families, fractures)
-        print(
+        self.print_log(
             f"--> Output report is written into {self.local_jobname}_output_report.pdf\n"
         )
 
     else:
-        print(
+        self.print_log(
             "--> There are no stochastic families. An output PDF will not be generated.\n"
         )
 
     # Return to main directory
-    print("=" * 80)
-    print("Creating Report of DFN generation complete")
-    print("=" * 80 + "\n")
-    os.chdir(self.jobname)
+    self.print_log("=" * 80)
+    self.print_log("Creating Report of DFN generation complete")
+    self.print_log("=" * 80 + "\n")
+    self.go_home()

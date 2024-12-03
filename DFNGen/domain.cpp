@@ -2,6 +2,7 @@
 #include <vector>
 #include "domain.h"
 #include "input.h"
+#include "logFile.h"
 #include "structures.h"
 #include "vectorFunctions.h"
 
@@ -296,15 +297,20 @@ bool domainTruncation(Poly &newPoly, double *domainSize) {
 // Prints a vector<Point> array to screen
 // Arg 1: Vector<Point> array
 void printPoints(std::vector<double> &point) {
+    std::string logString;
+    
     for (unsigned int i = 0; i < point.size(); i++) {
         if (i != 0 && i % 3 == 0) {
-            std::cout << "\n";
+            logString = "\n";
+            logger.writeLogFile(INFO,  logString);
         }
         
-        std::cout << point[i] << " ";
+        logString = to_string(point[i]) + " ";
+        logger.writeLogFile(INFO,  logString);
     }
     
-    std::cout << std::endl;
+    logString = "\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 

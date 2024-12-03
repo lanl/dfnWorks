@@ -4,11 +4,13 @@
 #include <algorithm>
 #include <iterator> // std::copy
 #include <iomanip>
+#include <string>
 #include "structures.h"
 #include "insertShape.h"
 #include <vector>
 #include "input.h"
 #include "output.h"
+#include "logFile.h"
 #include "readInputFunctions.h"
 #include "clusterGroups.h"
 #include "mathFunctions.h"
@@ -33,6 +35,8 @@
 #include <termios.h>
 #include "hotkey.h"
 
+Logger logger("dfngen_logfile.txt");
+
 // DO NOT CHANGE VAR NAME
 struct termios orig_termios; //used for custom console and hotkey
 
@@ -41,23 +45,26 @@ double eps;
 
 using std::cout;
 using std::endl;
+using std::string;
+
+
 
 // SEE STRUCTURES.H FOR ALL STRUCTURE DEFINITIONS
 int main (int argc, char **argv) {
-    std::cout << "\n";
-    cout << "Starting DFNGen" << endl;
+    std::string logString =  "Starting DFNGen\n";
+    logger.writeLogFile(INFO,  logString);
     
     // Error check on cmd line input:
     // 1st argument = input file path
     // 2nd argument = output folder path
     if (argc != 3) {
         if (argc == 1 ) {
-            std::cout << "Error: DFNWorks input and output file "
-                      << "paths were not included on command line.\n";
+            logString = "Error: DFNWorks input and output file paths were not included on command line.\n";
+            logger.writeLogFile(ERROR,  logString);
             return 1;
         } else if (argc == 2) {
-            std::cout << "Error: DFNWorks output file path "
-                      << "was not included on command line.\n";
+            logString = "Error: DFNWorks output file path was not included on command line.\n";
+            logger.writeLogFile(ERROR,  logString);
             return 1;
         }
     }
@@ -82,7 +89,9 @@ int main (int argc, char **argv) {
     getInput(argv[1], shapeFamilies);
     // Set epsilon
     eps = h * 1e-8;
-    std::cout << "\nh: " << h << "\n";
+    std::string h_to_string = to_string(h);
+    logString =  "h: " + h_to_string + "\n";
+    logger.writeLogFile(INFO,  logString);
     int totalFamilies = nFamEll + nFamRect;
     
     // Print shape families to screen
@@ -109,7 +118,8 @@ int main (int argc, char **argv) {
         } else { // P32 Option
             // ESTIMATE # FRACTURES NEEDED
             if (disableFram == false) {
-                std::cout << "\nEstimating number of fractures needed...\n";
+                logString =  "Estimating number of fractures needed...\n";
+                logger.writeLogFile(INFO,  logString);
                 dryRun(shapeFamilies, famProb, generator, distributions);
             }
         }
@@ -124,14 +134,11 @@ int main (int argc, char **argv) {
             for (unsigned int j = 0; j < shapeFamilies.size(); j++) {
                 if (shapeFamilies[j].distributionType == 4) {
                     // Constant size
-                    std::cout << shapeType(shapeFamilies[j])
-                              << " family " << getFamilyNumber(j, shapeFamilies[j].shapeFamily)
-                              << " using constant size\n";
+                    logString =  std::string(shapeType(shapeFamilies[j])) + " family " + to_string(getFamilyNumber(j, shapeFamilies[j].shapeFamily)) + " using constant size\n";
+                    logger.writeLogFile(INFO,  logString);
                 } else {
-                    std::cout << "Estimated " << shapeFamilies[j].radiiList.size()
-                              << " fractures for " <<  shapeType(shapeFamilies[j])
-                              << " family " << getFamilyNumber(j, shapeFamilies[j].shapeFamily)
-                              << "\n";
+                    logString =  "Estimated " + to_string(shapeFamilies[j].radiiList.size()) + " fractures for " +  shapeType(shapeFamilies[j]) + " family " + to_string(getFamilyNumber(j, shapeFamilies[j].shapeFamily)) + "\n";
+                    logger.writeLogFile(INFO,  logString);
                 }
             }
             
@@ -351,7 +358,8 @@ int main (int argc, char **argv) {
                         // insert any more fractures. ajust the CDF and familiy probabilites to account for this
                         if (shapeFamilies[familyIndex].currentP32 >= shapeFamilies[familyIndex].p32Target ) {
                             p32Status[familyIndex] = 1; // Mark family as having its p32 requirement met
-                            std::cout << "\nP32 For Family " << familyIndex + 1 << " Completed\n\n";
+                            logString =  "P32 For Family " + std::string(to_string(familyIndex + 1)) + " Completed\n\n";
+                            logger.writeLogFile(INFO,  logString);
                             
                             // Adjust CDF, PDF. Reduce their size by 1.
                             // Remove the completed family's element in 'CDF[]' and 'famProb[]'
@@ -367,29 +375,30 @@ int main (int argc, char **argv) {
                     
                     // Output to user: print running program status to user
                     if (pstats.acceptedPolyCount % 200 == 0) {
-                        std::cout << "\nAccepted " << pstats.acceptedPolyCount << " fractures\n";
-                        std::cout << "Rejected " << pstats.rejectedPolyCount << " fractures\n";
-                        std::cout << "Re-translated " << pstats.retranslatedPolyCount << " fractures\n\n";
-                        std::cout << "Current p32 values per family:\n";
+                        logString =  "Accepted " + std::string(to_string(pstats.acceptedPolyCount)) + " fractures\n";
+                        logger.writeLogFile(INFO,  logString);
+                        logString =  "Rejected " + std::string(to_string(pstats.rejectedPolyCount)) + " fractures\n";
+                        logger.writeLogFile(INFO,  logString);
+                        logString =  "Re-translated " + std::string(to_string(pstats.retranslatedPolyCount)) + " fractures\n\n";
+                        logger.writeLogFile(INFO,  logString);
+                        logString =  "Current p32 values per family:\n";
+                        logger.writeLogFile(INFO,  logString);
                         
                         for (int i = 0; i < totalFamilies; i++) {
                             if (stopCondition == 0) {
-                                std::cout << shapeType(shapeFamilies[i]) << " family "
-                                          << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
-                                          << " Current P32 = " << std::setprecision(8)
-                                          << shapeFamilies[i].currentP32;
+                                logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
+                                logger.writeLogFile(INFO,  logString);
                             } else {
-                                std::cout << shapeType(shapeFamilies[i]) << " family "
-                                          << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
-                                          << " target P32 = " << std::setprecision(8)
-                                          << shapeFamilies[i].p32Target
-                                          << ", " << "Current P32 = " << shapeFamilies[i].currentP32;
+                                logString =  shapeType(shapeFamilies[i]) + " family " + std::string(to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily))) + " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target)) + ", Current P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) +  "\n";
+                                logger.writeLogFile(INFO,  logString);
                             }
                             
                             if (stopCondition == 1 && shapeFamilies[i].p32Target <= shapeFamilies[i].currentP32) {
-                                std::cout << "...Done\n";
+                                logString =  "...Done\n";
+                                logger.writeLogFile(INFO,  logString);
                             } else {
-                                std::cout << "\n";
+                                logString =  "\n";
+                                logger.writeLogFile(INFO,  logString);
                             }
                         }
                     }
@@ -416,7 +425,8 @@ int main (int argc, char **argv) {
                     } else {
                         // Translate poly to new position
                         if (printRejectReasons != 0) {
-                            std::cout << "Translating rejected fracture to new position\n";
+                            logString =  "Translating rejected fracture to new position\n";
+                            logger.writeLogFile(INFO,  logString);
                         }
                         
                         pstats.retranslatedPolyCount++;
@@ -461,30 +471,38 @@ int main (int argc, char **argv) {
     std::ofstream file;
     std::string fileName = output + "/DFN_output.txt";
     file.open(fileName.c_str(), std::ofstream::out | std::ofstream::trunc);
-    file << "\n========================================================\n";
+    file << "========================================================\n";
     file << "            Network Generation Complete\n";
     file << "========================================================\n";
     file << "Version of DFNGen: 2.2\n";
     std::time_t result = std::time(nullptr);
     file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
-    std::cout << "\n========================================================\n";
-    std::cout << "            Network Generation Complete\n";
-    std::cout << "========================================================\n";
-    std::cout << "Version of DFNGen: 2.2\n";
-    std::cout << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
+    logString =  "========================================================\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "            Network Generation Complete\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "========================================================\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Version of DFNGen: 2.2\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Time Stamp: " + std::string(std::asctime(std::localtime(&result))) + "\n";
+    logger.writeLogFile(INFO,  logString);
     
     if (stopCondition == 1 ) {
-        std::cout << "\nFinal p32 values per family:\n";
+        logString =  "Final p32 values per family:\n";
+        logger.writeLogFile(INFO,  logString);
         
         for (int i = 0; i < totalFamilies; i++) {
-            std::cout << "Family " << i + 1 << " target P32 = " << shapeFamilies[i].p32Target
-                      << ", " << "Final P32 = " << shapeFamilies[i].currentP32 << "\n";
+            logString =  "Family " + std::string(to_string(i + 1)) + " target P32 = " + std::string(to_string(shapeFamilies[i].p32Target))
+                         + ", Final P32 = " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n";
+            logger.writeLogFile(INFO,  logString);
             file << "Family " << i + 1 << " target P32 = " << shapeFamilies[i].p32Target
                  << ", " << "Final P32 = " << shapeFamilies[i].currentP32 << "\n";
         }
     }
     
-    std::cout << "\n________________________________________________________\n";
+    logString =  "________________________________________________________\n\n";
+    logger.writeLogFile(INFO,  logString);
     file << "\n________________________________________________________\n";
     // Calculate total area, volume
     double userDefinedShapesArea = 0;
@@ -499,10 +517,13 @@ int main (int argc, char **argv) {
         }
     }
     
-    std::cout << "\nStatistics Before Isolated Fractures Removed:\n\n";
-    std::cout << "Fractures: " << acceptedPoly.size() << "\n";
-    std::cout << "Truncated: " << pstats.truncated << "\n\n";
-    file << "\nStatistics Before Isolated Fractures Removed:\n\n";
+    logString =  "Statistics Before Isolated Fractures Removed:\n\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Fractures: " + std::string(to_string(acceptedPoly.size())) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Truncated: " + std::string(to_string(pstats.truncated)) + "\n\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "Statistics Before Isolated Fractures Removed:\n\n";
     file << "Fractures: " << acceptedPoly.size() << "\n";
     file << "Truncated: " << pstats.truncated << "\n\n";
     
@@ -518,10 +539,13 @@ int main (int argc, char **argv) {
         }
     }
     
-    std::cout << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
-    std::cout << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";
-    std::cout << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * 2) / domVol << "\n";
-    // std::cout << "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
+    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaBeforeRemoval * 2)) + " m^2\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fracture Density   (P30): " + std::string(to_string(acceptedPoly.size() / domVol)) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaBeforeRemoval * 2) / domVol)) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    // logString =  "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
     file << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
     file << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";
     file << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * 2) / domVol << "\n";
@@ -529,65 +553,83 @@ int main (int argc, char **argv) {
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
-        std::cout << "Family: " << i + 1 << "\n";
-        std::cout << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
-        std::cout << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
+        logString =  "Family: " + std::string(to_string(i + 1)) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Accepted: " + std::string(to_string(pstats.acceptedFromFam[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Rejected: " + std::string(to_string(pstats.rejectedFromFam[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
         file << "Family: " << i + 1 << "\n";
         file << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
         file << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
         
         if ( shapeFamilies[i].layer > 0) {
             int idx = (shapeFamilies[i].layer - 1) * 2;
-            std::cout << "    Layer: " << shapeFamilies[i].layer << "\n";
-            std::cout << "    Layer {-z, +z}: {" << layers[idx] << ", " << layers[idx + 1] << "}\n";
+            logString =  "    Layer: " + std::string(to_string(shapeFamilies[i].layer)) + "\n";
+            logger.writeLogFile(INFO,  logString);
+            logString =  "    Layer {-z, +z}: {" + std::string(to_string(layers[idx])) + ", " + std::string(to_string(layers[idx + 1])) + "}\n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Layer: " << shapeFamilies[i].layer << "\n";
             file << "    Layer {-z, +z}: {" << layers[idx] << ", " << layers[idx + 1] << "}\n";
         } else {
-            std::cout << "    Layer: Whole Domain \n";
+            logString =  "    Layer: Whole Domain \n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Layer: Whole Domain \n";
         }
         
         if ( shapeFamilies[i].region > 0) {
             int idx = (shapeFamilies[i].region - 1) * 6;
-            std::cout << "    Region: " << shapeFamilies[i].region << "\n";
-            std::cout << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+            logString =  "    Region: " + std::string(to_string(shapeFamilies[i].region)) + "\n";
+            logger.writeLogFile(INFO,  logString);
+            logString =  "    {-x,+x,-y,+y,-z,+z}: {" + std::string(to_string(regions[idx])) + "," + std::string(to_string(regions[idx + 1])) + "," + std::string(to_string(regions[idx + 2]))  + "," + std::string(to_string(regions[idx + 3])) + "," + std::string(to_string(regions[idx + 4])) + "," + std::string(to_string(regions[idx + 5])) + "}\n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Region: " << shapeFamilies[i].region << "\n";
             file << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
         } else {
-            std::cout << "    Region: Whole Domain \n";
+            logString =  "    Region: Whole Domain \n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Region: Whole Domain \n";
         }
         
-        std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        std::cout << "    Fracture Intensity (P32): " << shapeFamilies[i].currentP32 << "\n\n";
+        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * 2)) + " m^2\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n\n";
+        logger.writeLogFile(INFO,  logString);
         file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
         file << "    Fracture Intensity (P32): " << shapeFamilies[i].currentP32 << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
-        std::cout << "User Defined: \n";
-        std::cout << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        std::cout << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
+        logString =  "User Defined: \n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * 2)) + " m^2\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * 2 / domVol)) + "\n\n";
+        logger.writeLogFile(INFO,  logString);
         file << "User Defined: \n";
         file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
         file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
     }
     
     if (removeFracturesLessThan > 0) {
-        std::cout << "\nRemoving fractures with radius less than " << removeFracturesLessThan << " and rebuilding DFN\n";
+        logString =  "\nRemoving fractures with radius less than " + std::string(to_string(removeFracturesLessThan)) + " and rebuilding DFN\n";
+        logger.writeLogFile(INFO,  logString);
         file      << "\nRemoving fractures with radius less than " << removeFracturesLessThan << " and rebuilding DFN\n";
         int size = acceptedPoly.size();
         removeFractures(removeFracturesLessThan, acceptedPoly, intPts, triplePoints, pstats);
-        std::cout << "Removed " << size - acceptedPoly.size() << " fractures with radius less than " << removeFracturesLessThan << "\n\n";
+        logString =  "Removed " + std::string(to_string(size - acceptedPoly.size())) + " fractures with radius less than " + std::string(to_string(removeFracturesLessThan)) + "\n\n";
+        logger.writeLogFile(INFO,  logString);
         file      << "Removed " << size - acceptedPoly.size() << " fractures with radius less than " << removeFracturesLessThan << "\n\n";
     }
     
     if (polygonBoundaryFlag) {
-        cout << "\nExtracting fractures from a polygon boundary domain" << endl;
+        logString =  "\nExtracting fractures from a polygon boundary domain";
+        logger.writeLogFile(INFO,  logString);
         file << "\nExtracting fractures from a polygon boundary domain" << endl;
         int size = acceptedPoly.size();
         polygonBoundary(acceptedPoly, intPts, triplePoints, pstats);
-        std::cout << "Removed " << size - acceptedPoly.size() << " fractures outside subdomain \n\n";
+        logString =  "Removed " + std::string(to_string(size - acceptedPoly.size())) + " fractures outside subdomain \n\n";
+        logger.writeLogFile(INFO,  logString);
         file      << "Removed " << size - acceptedPoly.size() << " fractures outside subdomain \n\n";
     }
     
@@ -614,10 +656,10 @@ int main (int argc, char **argv) {
     }
     
     if (finalFractures.size() == 0) {
-        std::cout << "\nError: DFN Generation has finished, however"
-                  << " there are no intersecting fractures."
-                  << " Please adjust input parameters.\n";
-        std::cout << "Try increasing the fracture density, or shrinking the domain.\n";
+        logString =  "Error: DFN Generation has finished, however there are no intersecting fractures. Please adjust input parameters.\n";
+        logger.writeLogFile(ERROR,  logString);
+        logString =  "Try increasing the fracture density, or shrinking the domain.\n";
+        logger.writeLogFile(ERROR,  logString);
         file << "\nError: DFN Generation has finished, however"
              << " there are no intersecting fractures."
              << " Please adjust input parameters.\n";
@@ -627,12 +669,17 @@ int main (int argc, char **argv) {
     }
     
     /************************* Print Statistics to User ***********************************/
-    std::cout << "\n________________________________________________________\n\n";
-    std::cout << "Statistics After Isolated Fractures Removed:\n";
-    std::cout << "Final Number of Fractures: " << finalFractures.size() << "\n";
-    std::cout << "Isolated Fractures Removed: " << acceptedPoly.size() - finalFractures.size() << "\n";
-    std::cout << "Fractures before isolated fractures removed:: " << acceptedPoly.size() << "\n\n";
-    file << "\n________________________________________________________\n\n";
+    logString =  "________________________________________________________\n\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Statistics After Isolated Fractures Removed:\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Final Number of Fractures: " + std::string(to_string(finalFractures.size())) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Isolated Fractures Removed: " + std::string(to_string(acceptedPoly.size() - finalFractures.size())) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Fractures before isolated fractures removed:: " + std::string(to_string(acceptedPoly.size())) + "\n\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "________________________________________________________\n\n";
     file << "Statistics After Isolated Fractures Removed:\n";
     file << "Final Number of Fractures: " << finalFractures.size() << "\n";
     file << "Isolated Fractures Removed: " << acceptedPoly.size() - finalFractures.size() << "\n";
@@ -679,20 +726,28 @@ int main (int argc, char **argv) {
         }
     }
     
-    std::cout << "Total Surface Area:     " << pstats.areaAfterRemoval * 2 << " m^2\n";
-    std::cout << "Total Fracture Density   (P30): " << finalFractures.size() / domVol << "\n";
-    std::cout << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * 2) / domVol << "\n";
+    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaAfterRemoval * 2)) + " m^2\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fracture Density   (P30): " + std::string(to_string(finalFractures.size() / domVol)) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaAfterRemoval * 2) / domVol)) + "\n";
+    logger.writeLogFile(INFO,  logString);
     file << "Total Surface Area:     " << pstats.areaAfterRemoval * 2 << " m^2\n";
     file << "Total Fracture Density   (P30): " << finalFractures.size() / domVol << "\n";
     file << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * 2) / domVol << "\n";
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
-        std::cout << "Family: " << i + 1 << "\n";
-        std::cout << "    Fractures After Isolated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
-        std::cout << "    Isolated Fractures Removed: " << pstats.acceptedFromFam[i] - acceptedFromFamCounters[i] << "\n";
-        std::cout << "    Accepted: " << pstats.acceptedFromFam[i] << "\n";
-        std::cout << "    Rejected: " << pstats.rejectedFromFam[i] << "\n";
+        logString =  "Family: " + std::string(to_string(i + 1) + "\n");
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Fractures After Isolated Fracture Removal: " + std::string(to_string(acceptedFromFamCounters[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Isolated Fractures Removed: " + std::string(to_string(pstats.acceptedFromFam[i] - acceptedFromFamCounters[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Accepted: " + std::string(to_string(pstats.acceptedFromFam[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Rejected: " + std::string(to_string(pstats.rejectedFromFam[i])) + "\n";
+        logger.writeLogFile(INFO,  logString);
         file << "Family: " << i + 1 << "\n";
         file << "    Fractures After Isolated Fracture Removal: " << acceptedFromFamCounters[i] << "\n";
         file << "    Isolated Fractures Removed: " << pstats.acceptedFromFam[i] - acceptedFromFamCounters[i] << "\n";
@@ -701,36 +756,47 @@ int main (int argc, char **argv) {
         
         if ( shapeFamilies[i].layer > 0) {
             int idx = (shapeFamilies[i].layer - 1) * 2;
-            std::cout << "    Layer: " << shapeFamilies[i].layer << "\n";
-            std::cout << "    Layer {-z, +z}: {" << layers[idx] << "," << layers[idx + 1] << "}\n";
+            logString =  "    Layer: " + std::string(to_string(shapeFamilies[i].layer)) + "\n";
+            logger.writeLogFile(INFO,  logString);
+            logString =  "    Layer {-z, +z}: {" + std::string(to_string(layers[idx])) + "," + std::string(to_string(layers[idx + 1])) + "}\n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Layer: " << shapeFamilies[i].layer << "\n";
             file << "    Layer {-z, +z}: {" << layers[idx] << "," << layers[idx + 1] << "}\n";
         } else {
-            std::cout << "    Layer: Whole Domain \n";
+            logString =  "    Layer: Whole Domain \n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Layer: Whole Domain \n";
         }
         
         if ( shapeFamilies[i].region > 0) {
             int idx = (shapeFamilies[i].region - 1) * 6;
-            std::cout << "    Region: " << shapeFamilies[i].region << "\n";
-            std::cout << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
+            logString =  "    Region: " + std::string(to_string(shapeFamilies[i].region)) + "\n";
+            logger.writeLogFile(INFO,  logString);
+            logString =  "    {-x,+x,-y,+y,-z,+z}: {" + std::string(to_string(regions[idx])) + "," + std::string(to_string(regions[idx + 1])) + "," + std::string(to_string(regions[idx + 2]))  + "," + std::string(to_string(regions[idx + 3])) + "," + std::string(to_string(regions[idx + 4])) + "," + std::string(to_string(regions[idx + 5])) + "}\n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Region: " << shapeFamilies[i].region << "\n";
             file << "    {-x,+x,-y,+y,-z,+z}: {" << regions[idx] << "," << regions[idx + 1] << "," << regions[idx + 2]  << "," << regions[idx + 3] << "," << regions[idx + 4] << "," << regions[idx + 5] << "}\n";
         } else {
-            std::cout << "    Region: Whole Domain \n";
+            logString =  "    Region: Whole Domain \n";
+            logger.writeLogFile(INFO,  logString);
             file << "    Region: Whole Domain \n";
         }
         
-        std::cout << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        std::cout << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
+        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * 2)) + " m^2\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(familyArea[i] * 2 / domVol)) + "\n\n";
+        logger.writeLogFile(INFO,  logString);
         file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
         file << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
-        std::cout << "User Defined Shapes: \n";
-        std::cout << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        std::cout << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
+        logString =  "User Defined Shapes: \n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * 2)) + " m^2\n";
+        logger.writeLogFile(INFO,  logString);
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * 2 / domVol)) + "\n\n";
+        logger.writeLogFile(INFO,  logString);
         file << "User Defined Shapes: \n";
         file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
         file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
@@ -740,23 +806,27 @@ int main (int argc, char **argv) {
         delete[] acceptedFromFamCounters;
     }
     
-    std::cout << "\n________________________________________________________\n\n";
-    file << "\n________________________________________________________\n\n";
-    std::cout << "\n" << acceptedPoly.size() << " Fractures Accepted (Before Isolated Fracture Removal)\n";
-    std::cout << finalFractures.size() << " Final Fractures (After Isolated Fracture Removal)\n\n";
-    std::cout << "Total Fractures Rejected: " << pstats.rejectedPolyCount << "\n";
-    std::cout << "Total Fractures Re-translated: " << pstats.retranslatedPolyCount << "\n";
+    logString =  "________________________________________________________\n\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "________________________________________________________\n\n";
+    logString = std::string(to_string(acceptedPoly.size())) + " Fractures Accepted (Before Isolated Fracture Removal)\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  std::string(to_string(finalFractures.size())) + " Final Fractures (After Isolated Fracture Removal)\n\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fractures Rejected: " + std::string(to_string(pstats.rejectedPolyCount)) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Total Fractures Re-translated: " + std::string(to_string(pstats.retranslatedPolyCount)) + "\n";
+    logger.writeLogFile(INFO,  logString);
     file << "\n" << acceptedPoly.size() << " Fractures Accepted (Before Isolated Fracture Removal)\n";
     file << finalFractures.size() << " Final Fractures (After Isolated Fracture Removal)\n\n";
     file << "Total Fractures Rejected: " << pstats.rejectedPolyCount << "\n";
     file << "Total Fractures Re-translated: " << pstats.retranslatedPolyCount << "\n";
     
     if (printConnectivityError == 1) {
-        std::cout << "\nERROR: DFN generation has finished but the formed\n"
-                  << "fracture network does not make a connection between\n"
-                  << "the user's specified boundary faces.\n";
-        std::cout << "Try increasing the fracture density, shrinking the domain\n"
-                  << "or consider using the 'ignoreBoundaryFaces' option.\n";
+        logString =  "ERROR: DFN generation has finished but the formed\nfracture network does not make a connection between\nthe user's specified boundary faces.\n";
+        logger.writeLogFile(ERROR,  logString);
+        logString =  "Try increasing the fracture density, shrinking the domain\nor consider using the 'ignoreBoundaryFaces' option.\n";
+        logger.writeLogFile(ERROR,  logString);
         file << "\nERROR: DFN generation has finished but the formed\n"
              << "fracture network does not make a connection between\n"
              << "the user's specified boundary faces.\n";
@@ -767,30 +837,45 @@ int main (int argc, char **argv) {
     }
     
     //************ Intersection Stats ***************
-    std::cout << "\nNumber of Triple Intersection Points (Before Isolated Fracture Removal): " << triplePoints.size() << "\n";
-    file << "\nNumber of Triple Intersection Points (Before Isolated Fracture Removal): " << triplePoints.size() << "\n";
+    logString =  "Number of Triple Intersection Points (Before Isolated Fracture Removal): " + std::string(to_string(triplePoints.size())) + "\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "Number of Triple Intersection Points (Before Isolated Fracture Removal): " << triplePoints.size() << "\n";
     // Shrink intersection stats
-    std::cout << "\nIntersection Statistics:\n";
-    std::cout << "    Number of Intersections: " << intPts.size() << " \n";
-    std::cout << "    Intersections Shortened: " << pstats.intersectionsShortened << " \n";
-    std::cout << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << " m\n";
-    std::cout << "    Intersection Length Discarded: " << pstats.discardedLength << " m\n";
-    std::cout << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << " m\n";
-    file << "\nIntersection Statistics:\n";
+    logString =  "Intersection Statistics:\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    Number of Intersections: " + std::string(to_string(intPts.size())) + " \n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    Intersections Shortened: " + std::string(to_string(pstats.intersectionsShortened)) + " \n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    Original Intersection (Before Intersection Shrinking) Length: " + std::string(to_string(pstats.originalLength)) + " m\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    Intersection Length Discarded: " + std::string(to_string(pstats.discardedLength)) + " m\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    Final Intersection Length: " + std::string(to_string(pstats.originalLength - pstats.discardedLength)) + " m\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "Intersection Statistics:\n";
     file << "    Number of Intersections: " << intPts.size() << " \n";
     file << "    Intersections Shortened: " << pstats.intersectionsShortened << " \n";
     file << "    Original Intersection (Before Intersection Shrinking) Length: " << pstats.originalLength << " m\n";
     file << "    Intersection Length Discarded: " << pstats.discardedLength << " m\n";
     file << "    Final Intersection Length: " << pstats.originalLength - pstats.discardedLength << " m\n";
     //*********** Rejection Stats *******************
-    std::cout << "\nRejection Statistics: \n";
-    std::cout << "    " << pstats.rejectionReasons.shortIntersection << " Short Intersections \n";
-    std::cout << "    " << pstats.rejectionReasons.closeToNode << " Close to Node\n";
-    std::cout << "    " << pstats.rejectionReasons.closeToEdge << " Close to Edge\n";
-    std::cout << "    " << pstats.rejectionReasons.closePointToEdge << " Vertex Close to Edge\n";
-    std::cout << "    " << pstats.rejectionReasons.outside << " Outside of Domain\n";
-    std::cout << "    " << pstats.rejectionReasons.triple << " Triple intersection Rejections\n";
-    std::cout << "    " << pstats.rejectionReasons.interCloseToInter << " Intersections Close to Other Intersections\n\n";
+    logString =  "Rejection Statistics: \n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.shortIntersection)) + " Short Intersections \n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.closeToNode)) + " Close to Node\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.closeToEdge)) + " Close to Edge\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.closePointToEdge)) + " Vertex Close to Edge\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.outside)) + " Outside of Domain\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.triple)) + " Triple intersection Rejections\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "    " + std::string(to_string(pstats.rejectionReasons.interCloseToInter)) + " Intersections Close to Other Intersections\n\n";
+    logger.writeLogFile(INFO,  logString);
     file << "\nRejection Statistics: \n";
     file << "    " << pstats.rejectionReasons.shortIntersection << " Short Intersections \n";
     file << "    " << pstats.rejectionReasons.closeToNode << " Close to Node\n";
@@ -799,65 +884,68 @@ int main (int argc, char **argv) {
     file << "    " << pstats.rejectionReasons.outside << " Outside of Domain\n";
     file << "    " << pstats.rejectionReasons.triple << " Triple intersection Rejections\n";
     file << "    " << pstats.rejectionReasons.interCloseToInter << " Intersections Close to Other Intersections\n\n";
-    std::cout << "\n________________________________________________________\n\n";
-    file << "\n________________________________________________________\n\n";
+    logString =  "________________________________________________________\n";
+    logger.writeLogFile(INFO,  logString);
+    file << "\n________________________________________________________\n";
     
     if (totalFamilies > 0) {
-        std::cout << "Fracture Estimation statistics:\n";
+        logString =  "Fracture Estimation statistics:\n";
+        logger.writeLogFile(INFO,  logString);
         file << "Fracture Estimation statistics:\n";
-        std::cout << "NOTE: If estimation and actual are very different, \nexpected family distributions might "
-                  << "not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option "
-                  << "in the input file.\n\n";
-        file << "NOTE: If estimation and actual are very different, \nexpected family distributions might "
-             << "not be accurate. \nIf this is the case, try increasing or decreasing \nthe 'radiiListIncrease' option "
-             << "in the input file.\n\n";
+        logString =  "NOTE: If estimation and actual are very different, expected family distributions might not be accurate. If this is the case, try increasing or decreasing the 'radiiListIncrease' option in the input file.\n";
+        logger.writeLogFile(INFO,  logString);
+        file << "NOTE: If estimation and actual are very different, expected family distributions might "
+             << "not be accurate. If this is the case, try increasing or decreasing the 'radiiListIncrease' option "
+             << "in the input file.\n";
              
         // Compare expected radii/poly size and actual
         for (int i = 0; i < totalFamilies; i++) {
             if (shapeFamilies[i].distributionType == 4) { // Constant
-                std::cout << shapeType(shapeFamilies[i]) << " Family "
-                          << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
-                          << "Using constant size\n\n";
+                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n" + "Using constant size\n\n";
+                logger.writeLogFile(INFO,  logString);
                 file << shapeType(shapeFamilies[i]) << " Family "
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Using constant size\n\n";
             } else {
-                std::cout << shapeType(shapeFamilies[i]) << " Family "
-                          << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
-                          << "Estimated: " << pstats.expectedFromFam[i] << "\n";
-                std::cout << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n\n";
+                logString =  shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + "\n";
+                logger.writeLogFile(INFO,  logString);
+                logString =  "Estimated: " + to_string(pstats.expectedFromFam[i]) + "\n";
+                logString =  "Actual:    " + to_string(pstats.acceptedFromFam[i]) + to_string(pstats.rejectedFromFam[i]) + "\n";
+                logger.writeLogFile(INFO,  logString);
                 file << shapeType(shapeFamilies[i]) << " Family "
                      << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n"
                      << "Estimated: " << pstats.expectedFromFam[i] << "\n";
-                file << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n\n";
+                file << "Actual:    " << pstats.acceptedFromFam[i] + pstats.rejectedFromFam[i] << "\n";
             }
         }
         
-        std::cout << "\n________________________________________________________\n\n";
+        logString =  "________________________________________________________\n\n";
+        logger.writeLogFile(INFO,  logString);
         file << "\n________________________________________________________\n\n";
     }
     
-    std::cout << "Seed: " << seed << "\n";
+    logString = "Seed: " + to_string(seed) + "\n";
+    logger.writeLogFile(INFO,  logString);
     file << "Seed: " << seed << "\n";
     // Write all output files
     writeOutput(argv[2], acceptedPoly, intPts, triplePoints, pstats, finalFractures, shapeFamilies);
     // Duplicate node counters are set in writeOutput(). Write output must happen before
     // duplicate node prints
     // Print number of duplicate nodes (pstats.intersectionsNodeCount is set in writeOutpu() )
-    std::cout << "\nLagrit Should Remove "
-              << pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount
-              << " Nodes (" << pstats.intersectionNodeCount << "/2 - "
-              << pstats.tripleNodeCount << ")\n";
+    logString =  "Lagrit Should Remove "
+                 + to_string(pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount)
+                 + " Nodes (" + to_string(pstats.intersectionNodeCount) + "/2 - "
+                 + to_string(pstats.tripleNodeCount) + ")\n";
+    logger.writeLogFile(INFO,  logString);
     file << "\nLagrit Should Remove "
          << pstats.intersectionNodeCount / 2 - pstats.tripleNodeCount
          << " Nodes (" << pstats.intersectionNodeCount << "/2 - "
          << pstats.tripleNodeCount << ")\n";
     file.close();
-    cout << "DFNGen - Complete" << endl;
+    logString =  "DFNGen - Complete\n";
+    logger.writeLogFile(INFO,  logString);
     return 0;
 }
 
 /******************************** END MAIN ***********************************/
 /*****************************************************************************/
-
-

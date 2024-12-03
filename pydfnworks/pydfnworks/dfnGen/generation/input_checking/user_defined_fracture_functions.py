@@ -1,8 +1,11 @@
+from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
+from pydfnworks.general.logging import local_print_log
+
+
 import sys
 import os
 from numpy import pi
 
-from pydfnworks.dfnGen.generation.input_checking.helper_functions import print_error, print_warning
 
 def check_angle_option(angle_option, array):
     for val in array:
@@ -39,7 +42,7 @@ def print_user_fracture_information(self, shape, frac_number=None):
     --------------
         None
     """
-    print(f"\n--> User Fracture information")
+    self.print_log(f"--> User Fracture information")
     if shape == 'rect':
         if frac_number:
             fracture_dictionary = self.user_rect_params[frac_number]
@@ -56,21 +59,20 @@ def print_user_fracture_information(self, shape, frac_number=None):
         fracture_dictionaries = self.user_poly_params
 
     if frac_number:
-        print(f"* Fracture Number {frac_number} *")
-        print("{:40s}{:}".format("Name", "Value"))
-        print("{:40s}{:}".format("----------------------------",
+        self.print_log(f"* Fracture Number {frac_number} *")
+        self.print_log("{:40s}{:}".format("Name", "Value"))
+        self.print_log("{:40s}{:}".format("----------------------------",
                                  "---------------"))
         for key in fracture_dictionary.keys():
-            print(f"{key:40s} {fracture_dictionary[key]}")
+            self.print_log(f"{key:40s} {fracture_dictionary[key]}")
     else:
         for i, fracture_dictionary in enumerate(fracture_dictionaries):
-            print(f"* Fracture Number {i+1} *")
-            print("{:40s}{:}".format("Name", "Value"))
-            print("{:40s}{:}".format("----------------------------",
+            self.print_log(f"* Fracture Number {i+1} *")
+            self.print_log("{:40s}{:}".format("Name", "Value"))
+            self.print_log("{:40s}{:}".format("----------------------------",
                                      "---------------"))
             for key in fracture_dictionary.keys():
-                print(f"{key:40s} {fracture_dictionary[key]}")
-            print("\n")
+                self.print_log(f"{key:40s} {fracture_dictionary[key]}")
 
 
 def add_user_fract_from_file(self,
@@ -330,7 +332,7 @@ def add_user_fract(self,
             )
 
         # Check is angles make sense given radians or degrees
-        print("--> Checking trend_plunge angles")
+        self.print_log("--> Checking trend_plunge angles")
         check_angle_option(angle_option, trend_plunge)
 
     elif orientation_option == 'dip_strike':
@@ -351,7 +353,7 @@ def add_user_fract(self,
         )
 
         # Check is angles make sense given radians or degrees
-        print("--> Checking dip_strike angles")
+        self.print_log("--> Checking dip_strike angles")
         check_angle_option(angle_option, dip_strike)
 
     # hydraulic properties
@@ -408,7 +410,7 @@ def write_user_fractures_to_file(self):
     n_ells = len(self.user_ell_params)
 
     if n_ells > 0:
-        print(
+        self.print_log(
             f"--> Writing user defined ellispes to file {self.params['UserEll_Input_File_Path']['value']}"
         )
         with open(self.params['UserEll_Input_File_Path']['value'],
@@ -429,8 +431,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -447,8 +448,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -465,8 +465,7 @@ def write_user_fractures_to_file(self):
                                 ell_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'normal'\n1:'trend_plunge'\n2:'dip_strike'\n"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         ell_file.write('\n')
 
@@ -485,7 +484,7 @@ def write_user_fractures_to_file(self):
 
     if n_rects > 0:
 
-        print(
+        self.print_log(
             f"--> Writing user defined rectangles to file {self.params['UserRect_Input_File_Path']['value']}"
         )
         with open(self.params['UserRect_Input_File_Path']['value'],
@@ -513,8 +512,7 @@ def write_user_fractures_to_file(self):
                                 rect_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         rect_file.write('\n')
 
@@ -531,8 +529,7 @@ def write_user_fractures_to_file(self):
                                 rect_file.write(f'{value} \n')
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
-                                sys.stderr.write(error)
-                                sys.exit(1)
+                                self.print_log(error, 'error')
 
                         rect_file.write('\n')
 
@@ -550,7 +547,6 @@ def write_user_fractures_to_file(self):
                             else:
                                 error = "user orientation option not specified correctly \n0:'Normal'\n1:'Trend_Plunge'\n2:Dip_Strike'"
                                 sys.stderr.write(error)
-                                sys.exit(1)
 
                         rect_file.write('\n')
 
@@ -595,23 +591,20 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
 
     if transmissivity is not None:
         if hy_prop_type != None:
-            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = "Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            local_print_log(error, 'error')
         else:
             hy_prop_type = 'transmissivity'
 
     if permeability is not None:
         if hy_prop_type != None:
-            error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = "Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
+            local_print_log(error, 'error')
         else:
             hy_prop_type = 'permeability'
 
     if hy_prop_type == None:
         error = "\nPlease specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     return hy_prop_type

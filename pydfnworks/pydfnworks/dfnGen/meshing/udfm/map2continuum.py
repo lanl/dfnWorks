@@ -11,6 +11,7 @@ import subprocess
 import shutil
 import numpy as np
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
+from pydfnworks.general.logging import local_print_log
 import time
 import multiprocessing as mp
 import pickle
@@ -46,12 +47,13 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
             Octree-refined continuum meshes, which contain intersection areas 
     
     """
-    print('=' * 80)
-    print("Meshing Continuum Using LaGrit : Starting")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Meshing Continuum Using LaGrit : Starting")
+    self.print_log('=' * 80)
 
     if type(orl) is not int or orl < 1:
         error = "ERROR: orl must be positive integer. Exiting"
+        self.print_log(error, 'critical')
         sys.stderr.write(error)
         sys.exit(1)
 
@@ -70,10 +72,11 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
 
     if nx * ny * nz > 1e8:
         error = "Error: Number of elements too large (> 1e8). Exiting"
+        self.print_log(error, 'critical')
         sys.stderr.write(error)
         sys.exit(1)
 
-    print("\nCreating *.lgi files for octree mesh\n")
+    self.print_log("\nCreating *.lgi files for octree mesh\n")
     try:
         os.mkdir(dir_name)
         os.mkdir(dir_name + os.sep + "lagrit_scripts")
@@ -90,7 +93,12 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     if self.num_frac == 1:
         self.normal_vectors = np.array([self.normal_vectors])
 
-    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points)
+
+
+    center = [self.params['domainCenter']['value'][0],self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
+    translate_mesh(center,[0,0,0])
+
+    lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,points, center)
 
     #lagrit_driver(dir_name, nx, ny, nz, self.num_frac, self.normal_vectors,
     #              self.centers)
@@ -108,8 +116,38 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     dir_cleanup()
     ## set object variable name
     self.inp_file = "octree_dfn.inp" 
+    translate_mesh([0,0,0], center)
 
-def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
+
+def translate_mesh(x1, x2):
+    """
+    Moves reduced_mesh.inp from center at x1 to x2 
+
+    Parameters
+    ---------------
+        x1 : list
+            floats x-0, y-1, z-2 - current center
+
+        x2 : list
+            floats x-0, y-1, z-2 - requisted center 
+    Returns
+    --------------
+        None 
+
+    """
+
+    lagrit_script = f"""
+read / avs / reduced_mesh.inp / MODFN
+trans / 1 0 0 / {x1[0]} {x1[1]} {x1[2]} / {x2[0]} {x2[1]} {x2[2]}
+dump / reduced_mesh.inp / MODFN
+finish
+"""
+    with open('translate_mesh.lgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+    mh.run_lagrit_script("translate_mesh.lgi")
+
+def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points, center):
     """ This function creates the main lagrit driver script, which calls all 
     lagrit scripts.
 
@@ -242,7 +280,7 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points):
 
     f_name = f'{dir_name}/driver_octree_start.lgi'
     f = open(f_name, 'w')
-    fin = ("""# 
+    fin = (f"""# 
 # LaGriT control files to build an octree refined hex mesh with refinement
 # based on intersection of hex mesh with a DFN triangulation mesh
 #
@@ -370,6 +408,10 @@ define / FOUT / boundary_back_s
 pset / back_s / attribute / yic / 1 0 0 / lt / YMIN
 pset / back_s / zone / FOUT / ascii / ZONE
 
+           
+trans / 1 0 0 / 0. 0. 0. / {center[0]}, {center[1]}, {center[2]} 
+
+           
 dump / pflotran / full_mesh / MOTET / nofilter_zero
 dump / avs2 /         octree_dfn.inp / MOTET
 dump / coord  /       octree_dfn     / MOTET
@@ -381,7 +423,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating driver_octree_start.lgi file: Complete\n")
+    local_print_log("Creating driver_octree_start.lgi file: Complete\n")
 
 
 def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
@@ -449,7 +491,7 @@ define / REFINE_AMR / 123
     f.write('finish\n')
     f.flush()
     f.close()
-    print("Creating parameters_octree_dfn.mlgi file: Complete\n")
+    local_print_log("Creating parameters_octree_dfn.mlgi file: Complete\n")
 
 
 def lagrit_build(dir_name):
@@ -504,7 +546,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating build_octree.mlgi file: Complete\n")
+    local_print_log("Creating build_octree.mlgi file: Complete\n")
 
 
 def lagrit_intersect(dir_name):
@@ -555,7 +597,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating intersect_refine.mlgi file: Complete\n")
+    local_print_log("Creating intersect_refine.mlgi file: Complete\n")
     f_name = f'{dir_name}/intersect_refine_np1.mlgi'
     f = open(f_name, 'w')
     fin = """#
@@ -579,7 +621,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating intersect_refine_np1.mlgi file: Complete\n")
+    local_print_log("Creating intersect_refine_np1.mlgi file: Complete\n")
 
 
 def lagrit_hex_to_tet(dir_name):
@@ -650,7 +692,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating hex_to_tet.mlgi file: Complete\n")
+    local_print_log("Creating hex_to_tet.mlgi file: Complete\n")
 
 
 def lagrit_remove(dir_name):
@@ -686,7 +728,7 @@ finish
     f.write(fin)
     f.flush()
     f.close()
-    print("Creating remove_cells.mlgi file: Complete\n")
+    local_print_log("Creating remove_cells.mlgi file: Complete\n")
 
 
 def lagrit_run(self, num_poly, path, dir_name):
@@ -716,9 +758,9 @@ def lagrit_run(self, num_poly, path, dir_name):
     elif os.path.isfile(path + "../" + "reduced_mesh.inp"):
         os.symlink(path + "../" + "reduced_mesh.inp", "reduced_mesh.inp")
     else:
-        error = "ERROR!!! Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error. Reduced Mesh not found. Please run mesh_dfn with visual_mode=True.\nExiting"
+        self.print_log(error, 'critical')
+
 
     mh.run_lagrit_script("driver_octree_start.lgi")
 
@@ -816,7 +858,7 @@ def driver_interpolate_parallel(self, num_poly):
         p.join()
 
     while not tasks_that_are_done.empty():
-        print(tasks_that_are_done.get())
+        self.print_log(tasks_that_are_done.get())
 
     return True
 
@@ -862,7 +904,7 @@ def driver_parallel(self, num_poly):
         p.join()
 
     while not tasks_that_are_done.empty():
-        print(tasks_that_are_done.get())
+        self.print_log(tasks_that_are_done.get())
 
     return True
 

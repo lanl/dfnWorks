@@ -26,10 +26,11 @@ def correct_stor_file(self):
     --------
     Currently does not work with cell based aperture
     """
+    self.print_log('--> Correcing STOR file')
     # Make input file for C Stor converter
     if self.flow_solver != "FEHM":
         error = "Error. Incorrect flow solver requested\n"
-        sys.stderr.write(error)
+        self.print_log(error, 'error')
         sys.exit(1)
 
     self.dump_hydraulic_values(format = "FEHM")
@@ -46,12 +47,11 @@ def correct_stor_file(self):
     cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
-        error = 'ERROR: stor conversion failed\nExiting Program\n'
-        sys.stderr.write(error)
+        error = 'Erro: stor conversion failed\nExiting Program\n'
+        self.print_log(error, 'error')
         sys.exit(1)
     elapsed = time() - t
-    print('--> Time elapsed for STOR file conversion: %0.3f seconds\n' %
-          elapsed)
+    self.print_log(f'--> Time elapsed for STOR file conversion: {elapsed:0.3f} seconds')
 
 
 def correct_perm_for_fehm():
@@ -70,13 +70,14 @@ def correct_perm_for_fehm():
     ------------
         Only adds a new line if the last line is not empty
     """
+    # self.print_log("Modifing perm.dat for FEHM")
     fp = open("perm.dat")
     lines = fp.readlines()
     fp.close()
     # Check if the last line of file is just a new line
     # If it is not, then add a new line at the end of the file
     if len(lines[-1].split()) != 0:
-        print("--> Adding line to perm.dat")
+        self.print_log("--> Adding line to perm.dat")
         fp = open("perm.dat", "a")
         fp.write("\n")
         fp.close()
@@ -99,36 +100,37 @@ def fehm(self):
     See https://fehm.lanl.gov/ for details about FEHM
 
     """
-    print("--> Running FEHM")
+    self.print_log("--> Running FEHM")
     if self.flow_solver != "FEHM":
         error = "Error. Incorrect flow solver requested\n"
-        sys.stderr.write(error)
+        self.print_log(error, 'error')
         sys.exit(1)
 
     try:
         shutil.copy(self.dfnFlow_file, self.jobname)
     except:
         error = f"--> Error copying FEHM run file: {self.dfnFlow_file}"
-        sys.stderr.write(error)
+        self.print_log(error, 'error')
         sys.exit(1)
 
     path = self.dfnFlow_file.strip(self.local_dfnFlow_file)
-    fp = open(self.local_dfnFlow_file)
-    line = fp.readline()
+    with open(self.local_dfnFlow_file) as fp:
+        line = fp.readline()
     fehm_input = line.split()[-1]
-    fp.close()
     try:
         shutil.copy(path + fehm_input, os.getcwd())
     except:
-        error = "-->ERROR copying FEHM input file:\n" % fehm_input
-        sys.stderr.write(error)
+        error = f"--> Error copying FEHM input file: {fehm_input}"
+        self.print_log(error, 'error')
         sys.exit(1)
 
     correct_perm_for_fehm()
     tic = time()
-    subprocess.call(os.environ["FEHM_EXE"] + " " + self.local_dfnFlow_file,
-                    shell=True)
-    print('=' * 80)
-    print("FEHM Complete")
-    print("Time Required %0.2f Seconds" % (time() - tic))
-    print('=' * 80)
+    cmd = os.environ["FEHM_EXE"] + " " + self.local_dfnFlow_file
+    # self.call_executable(cmd)
+    subprocess.call(cmd, shell = True)
+    self.print_log('=' * 80)
+    self.print_log("FEHM Complete")
+    elapsed = time() - tic
+    self.print_log(f"Time Required {elapsed} Seconds")
+    self.print_log('=' * 80)

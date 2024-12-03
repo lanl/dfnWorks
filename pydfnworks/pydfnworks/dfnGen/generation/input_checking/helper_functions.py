@@ -1,7 +1,7 @@
 import re
 import sys
 import os
-
+from pydfnworks.general.logging import print_log, local_print_log
 
 def print_error(error_string):
     """ print an error
@@ -10,33 +10,32 @@ def print_error(error_string):
         errString (str): a string describing the error
     """
     error = f"\nError while parsing input\n\n{error_string}\n\nProgram terminated.\n"
-    sys.stderr.write(error)
-    sys.exit(1)
+    local_print_log(error,'error')
 
 
-def print_warning(warnString):
+def print_warning(warning_string):
     """ print warning
     
     Args:
         warnStinrg (str): a string with the warning
     """
-    print("WARNING --- " + warnString)
-
+    warning_string = f"--> Warning while parsing input\n\n{warning_string}\nBe Careful out there\n"
+    local_print_log(warning_string,'warning')
 
 def curly_to_list(curly_list):
     """ Converts a list with curly brackets used in input files into a python list.  '{1,2,3}' --> [1,2,3]
 
     Parameters
     -------------
-    	curly_list : string
+        curly_list : string
 
     Returns
     ----------
-    	list
+        list
 
-	Notes 
-	---------
-		None
+    Notes 
+    ---------
+        None
     """
     return re.sub("{|}", "", curly_list).strip().split(",")
 
@@ -46,18 +45,18 @@ def has_curlys(line, key):
 
     Parameters
     -------------
-    	line : string
-    		string read from input file
-    	key : string
-    		name of key on line
+        line : string
+            string read from input file
+        key : string
+            name of key on line
 
     Returns
     ----------
-    	bool : True if okay. 
+        bool : True if okay. 
 
-	Notes 
-	---------
-		None
+    Notes 
+    ---------
+        None
 
     """
     if '{' in line and '}' in line:
@@ -126,7 +125,7 @@ def check_min_max(min_val, max_val, i, dist):
     """ Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.
     """
     if min_val == max_val:
-        hf.print_error(
+        local_print_log(
             f"Minimum {min_val} and maximum {max_val} value are equal in {dist} entry number {i+1}"
         )
     if min_val > max_val:

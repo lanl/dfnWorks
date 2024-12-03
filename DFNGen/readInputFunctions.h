@@ -6,6 +6,7 @@
 #include <iostream>
 #include "structures.h"
 #include "input.h"
+#include "logFile.h"
 
 //Note, Template functions (type t) are coded inside .h files
 
@@ -79,13 +80,16 @@ template <typename T>
 void printAry(T *var, std::string varName, int nElements) {
     int i;
     nElements += -1;
-    std::cout << varName << " = {";
+    std::string logString = varName + " = {";
+    logger.writeLogFile(INFO,  logString);
     
     for (i = 0; i < nElements; i++) {
-        std::cout << var[i] << ", ";
+        logString = to_string(var[i]) + ", ";
+        logger.writeLogFile(INFO,  logString);
     }
     
-    std::cout << var[nElements] << "}\n";
+    logString = to_string(var[nElements]) + "}\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 
@@ -98,11 +102,13 @@ void printAry(T *var, std::string varName, int nElements) {
 template <typename T>
 void print2dAry(T *var, std::string varName, int rowSize) {
     int i;
-    std::cout << varName << " :\n";
+    std::string logString = varName + " :\n";
+    logger.writeLogFile(INFO,  logString);
     
     for(i = 0; i < rowSize; i++) {
         int x = 3 * i;
-        std::cout << "{" << var[x] << ", " << var[x + 1] << ", " << var[x + 2] << "}\n";
+        logString = "{" + to_string(var[x]) + ", " + to_string(var[x + 1]) + ", " + to_string(var[x + 2]) + "}\n";
+        logger.writeLogFile(INFO,  logString);
     }
 }
 

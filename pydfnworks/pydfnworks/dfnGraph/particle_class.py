@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 
+from pydfnworks.general.logging import local_print_log
 
 class Particle():
     ''' 
@@ -49,6 +50,7 @@ class Particle():
         self.frac_seq = []
         self.cp_adv_time = []
         self.cp_tdrw_time = []
+        self.cp_pathline_length = []
         self.velocity = []
         self.lengths = []
         self.times = []
@@ -113,7 +115,7 @@ class Particle():
             self.frac_seq.append(self.frac)
 
             self.delta_t = G.edges[self.curr_node, self.next_node]['time']
-            self.delat_l = G.edges[self.curr_node, self.next_node]['length']
+            self.delta_l = G.edges[self.curr_node, self.next_node]['length']
             self.delta_beta = (
                 2.0 * G.edges[self.curr_node, self.next_node]['length']) / (
                     G.edges[self.curr_node, self.next_node]['b'] *
@@ -146,16 +148,23 @@ class Particle():
             x1 = G.nodes[self.curr_node][self.direction]
             x2 = G.nodes[self.next_node][self.direction]
             tau = self.interpolate_time(x0, t1, t2, x1, x2)
+            ## interpolate pathline distance to control plane
+            l1 = self.length
+            l2 = self.length + self.delta_l
+            l0 = self.interpolate_time(x0, l1, l2, x1, x2) 
+            ##print(l1,l2,l0)
+
             # print(f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}")
             if tau < 0:
-                error = ("Error. Interpolated negative travel time.\nExiting")
-                print(
+
+                self.print_log(
                     f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}"
                 )
-                sys.stderr.write(error)
-                sys.exit(1)
+                error = "Error. Interpolated negative travel time."
+                self.print_log(error,'error')
             # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
             self.cp_adv_time.append(tau)
+            self.cp_pathline_length.append(self.length)
             if self.tdrw_flag:
                 t1 = self.total_time
                 t2 = self.total_time + self.delta_t_md + self.delta_t
@@ -184,13 +193,13 @@ class Particle():
         self.advect_time += self.delta_t
         self.matrix_diffusion_time += self.delta_t_md
         self.total_time += self.delta_t + self.delta_t_md
-        self.length += self.delat_l
+        self.length += self.delta_l
         self.beta += self.delta_beta
         self.frac_seq.append(self.frac)
         self.curr_node = self.next_node
 
         self.velocity.append(self.curr_velocity)
-        self.lengths.append(self.delat_l)
+        self.lengths.append(self.delta_l)
         self.times.append(self.delta_t)
         self.coords.append(self.curr_coords)
         # self.fracs.append(self.frac)

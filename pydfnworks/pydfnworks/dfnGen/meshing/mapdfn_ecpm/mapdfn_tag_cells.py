@@ -34,6 +34,7 @@ import time
 import numpy as np
 import itertools
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations as tr
+from pydfnworks.general.logging import local_print_log, print_log
 
 
 def get_corner(origin, i, j, k, cell_size):
@@ -131,7 +132,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         None
 
     """
-    print(f"** Tagging cells in hex mesh that intersect fractures **")
+    self.print_log(f"** Tagging cells in hex mesh that intersect fractures **")
 
     # creat dictionary
     index_list = range(num_cells)
@@ -142,7 +143,7 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
     if mod < 1: mod = 1
     for ifrac in range(self.num_frac):
         if ifrac % mod == 0:
-            print(
+            self.print_log(
                 f'--> Tagging cells for fracture\t{ifrac} of {self.num_frac}\t({percent}%)'
             )
             percent += 10
@@ -216,5 +217,5 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
                             break
 
     tnow = time.time() - t0
-    print(f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
+    self.print_log(f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
     return cell_fracture_id

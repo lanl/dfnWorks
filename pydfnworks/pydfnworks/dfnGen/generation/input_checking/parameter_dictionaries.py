@@ -57,6 +57,17 @@ def load_parameters(self):
             'description':
             "Type <list of 3 floats>, e.g., {x,y,z}\nCreates a temporary size increase of the domain during sampling.\nExample: {1,1,1} will increase the domain size by adding 0.5 to the +x, and subtracting 0.5 to the -x.\nMust be less than 1/2 the domain size value in that direction."
         },
+        'domainCenter': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            3,
+            'value': [0, 0, 0],
+            'description':
+            "Type <list of 3 floats>, e.g., {x,y,z}\nCenter of domain. Default is [0,0,0]"
+        },
         'polygonBoundaryFlag': {
             'type': bool,
             'list': False,

@@ -6,10 +6,12 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include "logFile.h"
 
 
 using std::cout;
 using std::endl;
+using std::string;
 
 
 /*******************************************************************/
@@ -31,7 +33,8 @@ void searchVar(std::ifstream &stream, std::string search) {
     }
     
     if ((int) stream.tellg() == -1) {
-        std::cout << "Variable not found: \"" << search << "\"\n";
+        std::string logString = "Variable not found: \"" + search + "\"\n";
+        logger.writeLogFile(INFO,  logString);
         exit(1);
     }
 }
@@ -43,14 +46,16 @@ void searchVar(std::ifstream &stream, std::string search) {
     Arg 2: Filename. Used for error print if there is an error*/
 void checkIfOpen(std::ifstream &stream, std::string fileName) {
     if (!stream.is_open()) {
-        std::cout << "ERROR: unable to open file " << fileName << std::endl;
+        std::string logString = "ERROR: unable to open file " + fileName;
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
 }
 
 void checkIfOpen(std::ofstream &stream, std::string fileName) {
     if (!stream.is_open()) {
-        std::cout << "ERROR: unable to open file " << fileName << std::endl;
+        std::string logString = "ERROR: unable to open file " + fileName;
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
 }
@@ -103,14 +108,13 @@ void getCords(std::ifstream & stream, double *outAry, int nPoly, int nVertices) 
     Arg 3: Number of rectangles */
 void printRectCoords(double *var, std::string varName, int nRectangles) {
     int i;
-    std::cout << varName << ": \n";
+    std::string logString = varName + ": \n";
+    logger.writeLogFile(INFO,  logString);
     
     for (i = 0; i < nRectangles; i++) {
         int x = i * 12;
-        std::cout << "{" << var[x]   << "," << var[x + 1]  << "," << var[x + 2]  << "} "
-                  << "{" << var[x + 3] << "," << var[x + 4]  << "," << var[x + 5]  << "} "
-                  << "{" << var[x + 6] << "," << var[x + 7]  << "," << var[x + 8]  << "} "
-                  << "{" << var[x + 9] << "," << var[x + 10] << "," << var[x + 11] << "}\n";
+        logString = "{" + to_string(var[x]) + "," + to_string(var[x + 1]) + "," + to_string(var[x + 2]) + "} {" + to_string(var[x + 3]) + "," + to_string(var[x + 4]) + "," + to_string(var[x + 5]) + "} {" + to_string(var[x + 6]) + "," + to_string(var[x + 7]) + "," + to_string(var[x + 8]) + "} {" + to_string(var[x + 9]) + "," + to_string(var[x + 10]) + "," + to_string(var[x + 11]) + "}\n";
+        logger.writeLogFile(INFO,  logString);
     }
 }
 
@@ -131,8 +135,10 @@ unsigned int getTimeBasedSeed() {
     Arg 3: Filename. Used for error print if there is an error*/
 void checkLineLength(std::vector<std::string> &parsedLine, std::string line, long unsigned int length, std::string fileName) {
     if (parsedLine.size() != length) {
-        std::cout << "Error reading " << fileName << " file." << std::endl;
-        std::cout << "Line\n" << line << "\nhas a length of " << parsedLine.size() << ". Expected length of " << length << ".\nExiting" << std::endl;
+        std::string logString = "Error reading " + fileName + " file.";
+        logger.writeLogFile(ERROR,  logString);
+        logString = "Line\n" + line + "\nhas a length of " + to_string(parsedLine.size()) + ". Expected length of " + to_string(length) + ".\nExiting";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
 }
@@ -153,7 +159,8 @@ std::vector<std::string> splitOnWhiteSpace(std::string line) {
 
 
 void readDomainVertices(std::string filename) {
-    std::cout << "Reading in Domain Vertices from " << filename << std::endl;
+    std::string logString = "Reading in Domain Vertices from " + filename;
+    logger.writeLogFile(INFO,  logString);
     std::string line;
     std::ifstream verticesFile;
     std::vector<std::string> parsedLine;
@@ -163,7 +170,8 @@ void readDomainVertices(std::string filename) {
     parsedLine = splitOnWhiteSpace(line);
     // get number of cells in x and y
     numOfDomainVertices = std::stoi(parsedLine[0]);
-    cout << "There are " << numOfDomainVertices << " Vertices on the boundary" << endl;
+    logString = "There are " + to_string(numOfDomainVertices) + " Vertices on the boundary";
+    logger.writeLogFile(INFO,  logString);
     domainVertices.reserve(numOfDomainVertices);
     Point tmpPoint;
     
@@ -176,6 +184,7 @@ void readDomainVertices(std::string filename) {
     }
     
     verticesFile.close();
-    cout << "Reading in Vertices Complete\n" << endl;
+    logString = "Reading in Vertices Complete\n";
+    logger.writeLogFile(INFO,  logString);
 }
 

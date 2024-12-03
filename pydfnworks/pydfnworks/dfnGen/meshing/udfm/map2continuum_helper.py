@@ -1,5 +1,6 @@
 import numpy as np
 
+from pydfnworks.general.logging import local_print_log, print_log
 
 def in_domain(self, point, buffer = 0):
     """ Checks is a point is within the domain
@@ -54,7 +55,7 @@ def gather_points(self):
         Attempts to grab fracture center first. If the center is outside of the domain, then we walk through the vertices until we find one that is within the domain using a buffer zone of h. The latter is to ensure don't run into any floating point issues within inside/outside the domiain. 
     
     """
-    print("--> Gathering points on fractures")
+    self.print_log("--> Gathering points on fractures")
     points = np.zeros((self.num_frac,3))
     for i in range(self.num_frac):
         ## first check if the fracture center is in the domain
@@ -71,11 +72,11 @@ def gather_points(self):
                 j +=1 
                 point = self.polygons[name][j]
                 if j == num_pts:
-                    print(f'--> Warning. Fracture {i+1} has a center and all vertices either outside the domain or on the boundary. Could be a problem.')
+                    self.print_log(f'--> Warning. Fracture {i+1} has a center and all vertices either outside the domain or on the boundary. Could be a problem.', 'warning')
                     break
             points[i] = point
 
-    print("--> Gathering points on fractures : Complete\n")
+    self.print_log("--> Gathering points on fractures : Complete\n")
     return points 
 
             

@@ -2,15 +2,25 @@ import numpy as np
 from h5py import File
 import itertools
 import time
-
+from pydfnworks.general.logging import local_print_log, print_log
 
 def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
-                     porosity, cell_fracture_id, matrix_on):
+                     porosity, cell_fracture_id, matrix_on, h5origin):
     """ Converts values into arrays to be dumped into h5 files
 
     Parameters
     ------------------
+        nx : int 
 
+        ny : int 
+
+        nz : int 
+
+        cell_size : int
+
+        k_iso : float 
+
+        k_aniso 
 
     Returns
     ------------------
@@ -23,8 +33,8 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
     
     """
 
-    #h5origin = [x - y for x, y in zip(domain_origin, domain_origin)]
-    h5origin = [0, 0, 0]
+    # h5origin = [x - y for x, y in zip(domain_origin, domain_origin)]
+    # h5origin = [0, 0, 0]
     # arrays for PFLOTRAN hf files
     x = np.zeros(nx + 1, '=f8')
     x[nx] = h5origin[0] + nx * cell_size
@@ -72,11 +82,11 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
         else:
             mat_array[i] = 1
 
-    return x, y, z, fracture_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array
+    return x, y, z, fracture_id, khdf5, kx, ky, kz, phdf5, idx_array, mat_array
 
 
 def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on):
+                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on, h5origin):
     """ Write informaiton into h5 files for pflotran run. 
 
     Parameters
@@ -99,13 +109,13 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
     #    origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
     #    matrix_perm, porosity, cell_fracture_id)
 
-    x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
+    x, y, z, material_id, khdf5, kx, ky, kz, phdf5, idx_array, mat_array = create_h5_arrays(
         nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
         cell_fracture_id, matrix_on)
-    print("** Dumping h5 files **")
+    local_print_log("** Dumping h5 files **")
     t0 = time.time()
 
-    print(f"--> Writting {filenames['mapdfn']} file for viz")
+    local_print_log(f"--> Writting {filenames['mapdfn']} file for viz")
     with File(filenames['mapdfn'], 'w') as h5file:
         dataset_name = 'Coordinates/X [m]'
         h5dset = h5file.create_dataset(dataset_name, data=x)
@@ -127,7 +137,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         hfdset = h5file.create_dataset(dataset_name, data=phdf5)
 
     # Write isotropic permeability to a gridded dataset for use with PFLOTRAN.
-    print(
+    local_print_log(
         f"--> Writing isotropic permeability into {filenames['isotropic_k']} as a gridded dataset"
     )
     with File(filenames['isotropic_k'], 'w') as h5file2:
@@ -142,12 +152,12 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset(
             'Data', data=khdf5)  #does this matter that it is also called data?
 
     # Write porosity as a gridded dataset for use with PFLOTRAN.
-    print(
+    local_print_log(
         f"--> Writting porosity into {filenames['porosity']} as a gridded dataset"
     )
     with File(filenames['porosity'], 'w') as h5file2:
@@ -162,11 +172,11 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset('Data', data=phdf5)
 
     # Write tortuosity as a gridded dataset for use with PFLOTRAN.
-    print(
+    local_print_log(
         f"--> Writting tortuosity into {filenames['tortuosity']} as a gridded dataset"
     )
     with File(filenames['tortuosity'], 'w') as h5file2:
@@ -181,11 +191,11 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset('Data', data=tortuosity_factor / phdf5)
 
     # Write anisotropic permeability as a gridded dataset for use with PFLOTRAN.
-    print(
+    local_print_log(
         f"--> Writting anisotropic permeability into {filenames['anisotropic_k']} as a gridded dataset"
     )
     with File(filenames['anisotropic_k'], 'w') as h5file3:
@@ -200,7 +210,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset(
             'Data', data=kx)  #does this matter that it is also called data?
 
@@ -215,7 +225,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset(
             'Data', data=ky)  #does this matter that it is also called data?
 
@@ -230,12 +240,12 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
         h5grp.create_dataset(
             'Data', data=kz)  #does this matter that it is also called data?
 
     # Write materials.h5 to inactivate non-fracture cells in PFLOTRAN.
-    print(
+    local_print_log(
         f"--> Writting material id into {filenames['materials']} file for inactivating matrix cells"
     )
     with File(filenames['materials'], 'w') as h5file4:
@@ -243,6 +253,6 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         h5dset = materials_group.create_dataset('Cell Ids', data=idx_array)
         h5dset = materials_group.create_dataset('Material Ids', data=mat_array)
     t1 = time.time()
-    print(
+    local_print_log(
         f'** Writting h5 files complete. Time required : {t1 - t0:0.2f} seconds **\n'
     )

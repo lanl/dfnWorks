@@ -60,27 +60,26 @@ def mesh_network(self,
 
     """
 
-    print('=' * 80)
-    print("Meshing DFN using LaGriT : Starting")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Meshing DFN using LaGriT : Starting")
+    self.print_log('=' * 80)
     tic = timeit.default_timer()
 
     mh.setup_meshing_directory()
 
     ######## Pruning scripts
     if self.prune_file:
-        print(
+        self.print_log(
             f"Loading list of fractures to remain in network from {self.prune_file}"
         )
         self.fracture_list = sort(genfromtxt(self.prune_file).astype(int))
-        print("--> Retaining Fractures: ")
-        print(self.fracture_list)
-        print("\n")
+        self.print_log("--> Retaining Fractures: ")
+        self.print_log(self.fracture_list)
         if self.path:
             self.create_mesh_links(self.path)
         else:
-            hf.print_error(
-                "User requested pruning in meshing but did not provide path for main files."
+            self.print_log(
+                "User requested pruning in meshing but did not provide path for main files.", "error"
             )
 
         if not self.visual_mode:
@@ -96,7 +95,7 @@ def mesh_network(self,
         self.h, min_dist, max_dist, max_resolution_factor, uniform_mesh)
     digits = len(str(self.num_frac))
     ## Create user resolution function
-    print("--> Creating scripts for LaGriT meshing")
+    self.print_log("--> Creating scripts for LaGriT meshing")
     lg.create_poisson_user_function_script()
     ## make driver files for each function
     for index, frac_id in enumerate(self.fracture_list):
@@ -108,7 +107,7 @@ def mesh_network(self,
         else:
             lg.create_lagrit_poisson_script(frac_id, digits)
 
-    print("--> Creating scripts for LaGriT meshing: complete")
+    self.print_log("--> Creating scripts for LaGriT meshing: complete")
 
     # ##### FOR SERIAL DEBUG ######
     # for frac_id in self.fracture_list:
@@ -122,13 +121,13 @@ def mesh_network(self,
     # ### Parallel runs
     # if there are more processors than fractures,
     if self.ncpu > self.num_frac:
-        hf.print_warning(
-            "More processors than fractures requested.\nResetting ncpu to num_frac"
+        self.print_log(
+            "More processors than fractures requested.\nResetting ncpu to num_frac","warning"
         )
         self.ncpu = self.num_frac
 
     if self.mesh_fractures_header(quiet):
-        hf.print_error("One or more fractures failed to mesh properly.")
+        self.print_log("One or more fractures failed to mesh properly.", "error")
 
     # ### Parallel runs
     self.merge_network()
@@ -138,15 +137,15 @@ def mesh_network(self,
         if not mh.check_dudded_points(self.dudded_points):
             mh.cleanup_meshing_files()
             if strict:
-                hf.print_error("Incorrect Number of dudded points removed.")
+                self.print_log("Incorrect Number of dudded points removed.","error")
 
     if not self.visual_mode:
         lgs.define_zones()
 
-    self.gather_mesh_information()
-
     if self.prune_file:
         self.clean_up_files_after_prune()
+
+    self.gather_mesh_information()
 
     if cleanup:
         mh.cleanup_meshing_files()
@@ -156,11 +155,10 @@ def mesh_network(self,
     time_min = elapsed / 60
     time_hrs = elapsed / 3600
 
-    print("--> Total Time to Mesh Network:")
-    print(
+    self.print_log("--> Total Time to Mesh Network:")
+    self.print_log(
         f"--> {time_sec:.2e} seconds\t{time_min:.2e} minutes\t{time_hrs:.2e} hours"
     )
-    print()
-    print('=' * 80)
-    print("Meshing DFN using LaGriT : Complete")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Meshing DFN using LaGriT : Complete")
+    self.print_log('=' * 80)

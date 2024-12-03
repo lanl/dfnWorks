@@ -3,7 +3,6 @@ functions for using pflotran in dfnworks
 """
 import os
 import subprocess
-import sys
 import h5py
 import glob
 import shutil
@@ -31,24 +30,21 @@ def lagrit2pflotran(self, boundary_cell_area = None):
     
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error. Wrong flow solver requested\n"
+        self.print_log(error, 'error')
 
-    print('=' * 80)
-    print("Starting conversion of files for PFLOTRAN ")
+    self.print_log('=' * 80)
+    self.print_log("Starting conversion of files for PFLOTRAN ")
 
     if self.inp_file == '':
         error = 'Error: inp filename not attached to object\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'error')
 
     # Check if UGE file was created by LaGriT, if it does not exists, exit
     self.uge_file = self.inp_file[:-4] + '.uge'
     if not os.path.isfile(self.uge_file):
         error = 'Error. Cannot file uge file\nExiting\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'error')
 
     self.write_perms_and_correct_volumes_areas()
     
@@ -57,9 +53,8 @@ def lagrit2pflotran(self, boundary_cell_area = None):
 
     self.zone2ex(zone_file='all', boundary_cell_area = boundary_cell_area)
     self.dump_h5_files()
-    print("Conversion of files for PFLOTRAN complete")
-    print('=' * 80)
-    print("\n\n")
+    self.print_log("Conversion of files for PFLOTRAN complete")
+    self.print_log('=' * 80)
 
 def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     """
@@ -85,16 +80,14 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     ----------
     the boundary_cell_area should be a function of h, the mesh resolution
     """
-    print('*' * 80)
-    print('--> Converting zone files to ex')
+    self.print_log('*' * 80)
+    self.print_log('--> Converting zone files to ex')
 
     if self.uge_file == '':
-        error = 'Error: uge filename not assigned to object yet\n'
-        sys.stderr.write(error)
-        sys.exit(1)
-
+        error = 'Error: uge filename not assigned to object yet'
+        self.print_log(error, 'error')
     # Opening uge file
-    print('\n--> Opening uge file')
+    self.print_log('--> Opening uge file')
     with open(self.uge_file, 'r') as fuge:
         # Reading cell ids, cells centers and cell volumes
         line = fuge.readline()
@@ -113,7 +106,7 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
             cell_vol[cells] = line.pop(3)
             cell_coord[cells] = line
 
-    print('--> Finished processing uge file\n')
+    self.print_log('--> Finished processing uge file\n')
 
     # loop through zone files
     if zone_file == 'all':
@@ -121,13 +114,11 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
     else:
         if zone_file == '':
-            error = 'ERROR: Please provide boundary zone filename!\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = 'Error: Please provide boundary zone filename!\n'
+            self.print_log(error, 'error')
         if face == '':
-            error = 'ERROR: Please provide face name among: top, bottom, north, south, east, west !\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = 'Error: Please provide face name among: top, bottom, north, south, east, west !\n'
+            self.print_log(error, 'error')
         zone_files = [zone_file]
         face_names = [face]
 
@@ -137,21 +128,21 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
         ex_file = zone_file.strip('zone') + 'ex'
 
         # Opening the input file
-        print('--> Opening zone file: ', zone_file)
+        self.print_log(f'--> Opening zone file: {zone_file}')
         with open(zone_file, 'r') as fzone:
-            print('--> Reading boundary node ids')
+            self.print_log('--> Reading boundary node ids')
             node_array = fzone.read()
             node_array = node_array.split()
             num_nodes = int(node_array[4])
             node_array = np.array(node_array[5:-1], dtype='int')
-        print('--> Finished reading zone file')
+        self.print_log('--> Finished reading zone file')
 
         Boundary_cell_area_array = np.zeros(num_nodes, 'float')
         for i in range(num_nodes):
             Boundary_cell_area_array[
                 i] = boundary_cell_area  # Fix the area to a large number
 
-        print('--> Finished calculating boundary connections')
+        self.print_log('--> Finished calculating boundary connections')
         boundary_cell_coord = [
             cell_coord[cell_id[i - 1] - 1] for i in node_array
         ]
@@ -182,9 +173,8 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
             boundary_cell_coord = [[cell[0], cell[1], cell[2]]
                                    for cell in boundary_cell_coord]
         else:
-            error = 'ERROR: unknown face. Select one of: top, bottom, east, west, north, south.\n'
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f'Error: Unknown face provided: {face}. Select one of: top, bottom, east, west, north, south, none'
+            self.print_log(error, 'error')
         ## Write out ex files
         with open(ex_file, 'w') as f:
             f.write('CONNECTIONS\t%i\n' % node_array.size)
@@ -193,13 +183,12 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
                     f"{node_array[idx]}\t{cell[0]:.12e}\t{cell[1]:.12e}\t{cell[2]:.12e}\t{Boundary_cell_area_array[idx]:.12e}\n"
                 )
 
-        print(
+        self.print_log(
             f'--> Finished writing ex file {ex_file} corresponding to the zone file: {zone_file} \n'
         )
 
-    print('--> Converting zone files to ex complete')
-    print('*' * 80)
-    print()
+    self.print_log('--> Converting zone files to ex complete')
+    self.print_log('*' * 80)
 
 def write_perms_and_correct_volumes_areas(self):
     """ Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file 
@@ -217,33 +206,28 @@ def write_perms_and_correct_volumes_areas(self):
     ----------
         Calls executable correct_uge
     """
-    print('*' * 80)
-    print("--> Correcting UGE file: Starting")
+    self.print_log('*' * 80)
+    self.print_log("--> Correcting UGE file: Starting")
     if self.flow_solver != "PFLOTRAN":
         error = "Error. Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error,'error')
 
-    print("--> Writing Perms and Correct Volume Areas")
+    self.print_log("--> Writing Perms and Correct Volume Areas")
     if self.inp_file == '':
-        error = 'Error.: inp file must be specified!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = 'Error. inp file must be specified.\n'
+        self.print_log(error,'error')
 
     if self.uge_file == '':
-        error = 'Error. uge file must be specified!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = 'Error. uge file must be specified.\n'
+        self.print_log(error,'error')
 
     if self.perm_file == '' and self.perm_cell_file == '':
-        error = 'Error. perm file must be specified!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = 'Error. perm file must be provide.'
+        self.print_log(error,'error')
 
     if self.aper_file == '' and self.aper_cell_file == '':
-        error = 'ERROR: aperture file must be specified!\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = 'Error. aperture file must be specified.'
+        self.print_log(error,'error')
 
     t = time()
     # Make input file for C UGE converter
@@ -263,19 +247,18 @@ def write_perms_and_correct_volumes_areas(self):
     self.dump_aperture(self.aper_file, format='fehm')
     ## execute convert uge C code
     cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
-    print(f"\n>> {cmd}\n")
+    self.print_log(f">> {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
-        error = 'ERROR: UGE conversion failed\nExiting Program\n'
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = 'Error: UGE conversion failed\nExiting Program\n'
+        self.print_log(error, 'error')
+    
     elapsed = time() - t
-    print(
+    self.print_log(
         f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n')
 
-    print("--> Correcting UGE file: Complete")
-    print('*' * 80)
-    print()
+    self.print_log("--> Correcting UGE file: Complete")
+    self.print_log('*' * 80)
 
 
 def dump_h5_files(self):
@@ -294,30 +277,29 @@ def dump_h5_files(self):
     ----------
         Hydraulic properties need to attached to the class prior to running this function. Use DFN.assign_hydraulic_properties() to do so. 
     """
-    print('*' * 80)
-    print("--> Dumping h5 file")
+    self.print_log('*' * 80)
+    self.print_log("--> Dumping h5 file")
     filename = 'dfn_properties.h5'
-    print(f'--> Opening HDF5 File {filename}')
+    self.print_log(f'--> Opening HDF5 File {filename}')
     with h5py.File(filename, mode='w') as h5file:
-        print('--> Allocating cell index array')
-        print('--> Writing cell indices')
+        self.print_log('--> Allocating cell index array')
+        self.print_log('--> Writing cell indices')
         iarray = np.arange(1, self.num_nodes + 1)
         dataset_name = 'Cell Ids'
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
-        print('--> Creating permeability array')
-        print('--> Note: This script assumes isotropic permeability')
+        self.print_log('--> Creating permeability array')
+        self.print_log('--> Note: This script assumes isotropic permeability')
         if self.cell_based_aperture: 
             self.perm_cell = np.genfromtxt(self.perm_cell_file, skip_header = 1)[:,1]
         else: 
             for i in range(self.num_nodes):
                 self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
-        print('--> Writting Permeability')
+        self.print_log('--> Writting Permeability')
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)
 
-    print("--> Done writting h5 file")
-    print('*' * 80)
-    print()
+    self.print_log("--> Done writting h5 file")
+    self.print_log('*' * 80)
 
 def pflotran(self, transient=False, restart=False, restart_file=''):
     """ Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus
@@ -342,20 +324,18 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error! Wrong flow solver requested\n"
+        self.print_log(error, 'error')
 
     try:
         shutil.copy(os.path.abspath(self.dfnFlow_file),
                     os.path.abspath(os.getcwd()))
     except:
-        error = "--> ERROR!! Unable to copy PFLOTRAN input file\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "--> Error. Unable to copy PFLOTRAN input file\n"
+        self.print_log(error, 'error')
 
-    print("=" * 80)
-    print("--> Running PFLOTRAN")
+    self.print_log("=" * 80)
+    self.print_log("--> Running PFLOTRAN")
 
     mpirun = os.environ['PETSC_DIR'] + '/' + os.environ[
         'PETSC_ARCH'] + '/bin/mpirun'
@@ -367,7 +347,7 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     cmd = mpirun + ' -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
 
-    print(f"--> Running: {cmd}")
+    self.print_log(f"--> Running: {cmd}")
     subprocess.call(cmd, shell=True)
 
     if restart:
@@ -376,20 +356,19 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
                         os.path.abspath(os.getcwd()))
         except:
             error = "--> ERROR!! Unable to copy PFLOTRAN restart input file\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error, 'error')
 
-        print("=" * 80)
-        print("--> Running PFLOTRAN")
+        self.print_log("=" * 80)
+        self.print_log("--> Running PFLOTRAN")
         cmd = os.environ['PETSC_DIR']+'/'+os.environ['PETSC_ARCH']+'/bin/mpirun -np ' + str(self.ncpu) + \
               ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + ntpath.basename(restart_file)
-        print("Running: %s" % cmd)
+        self.print_log("Running: %s" % cmd)
         subprocess.call(cmd, shell=True)
 
-    print('=' * 80)
-    print("--> Running PFLOTRAN Complete")
-    print('=' * 80)
-    print("\n")
+    self.print_log('=' * 80)
+    self.print_log("--> Running PFLOTRAN Complete")
+    self.print_log('=' * 80)
+    self.print_log("\n")
 
 
 def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
@@ -411,26 +390,25 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         Can be run in a loop over all pflotran dumps
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error. Wrong flow solver requested\n"
+        self.print_log(error, 'error')
 
     if filename == '':
         filename = self.local_dfnFlow_file[:-3]
     else:
         filename = ntpath.basename(filename[:-3])
 
-    print('--> Processing PFLOTRAN output')
+    self.print_log('--> Processing PFLOTRAN output')
 
     for index in range(index_start, index_finish + 1):
         cmd = 'cat ' + filename + '-cellinfo-%03d-rank*.dat > cellinfo_%03d.dat' % (
             index, index)
-        print("Running >> %s" % cmd)
+        self.print_log("Running >> %s" % cmd)
         subprocess.call(cmd, shell=True)
 
         cmd = 'cat ' + filename + '-darcyvel-%03d-rank*.dat > darcyvel_%03d.dat' % (
             index, index)
-        print(f"--> Running >> {cmd}")
+        self.print_log(f"--> Running >> {cmd}")
         subprocess.call(cmd, shell=True)
 
         #for fl in glob.glob(self.local_dfnFlow_file[:-3]+'-cellinfo-000-rank*.dat'):
@@ -445,11 +423,11 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
     try:
         os.symlink("darcyvel_%03d.dat" % index_finish, "darcyvel.dat")
     except:
-        print("--> WARNING!!! Unable to create symlink for darcyvel.dat")
+        self.print_log("--> Warning. Unable to create symlink for darcyvel.dat", 'warning')
     try:
         os.symlink("cellinfo_%03d.dat" % index_finish, "cellinfo.dat")
     except:
-        print("--> WARNING!!! Unable to create symlink for cellinfo.dat")
+        self.print_log("--> Warning. Unable to create symlink for cellinfo.dat")
 
 
 def parse_pflotran_vtk_python(self, grid_vtk_file=''):
@@ -469,12 +447,11 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     --------
     If DFN class does not have a vtk file, inp2vtk_python is called
     """
-    print('--> Parsing PFLOTRAN output with Python')
+    self.print_log('--> Parsing PFLOTRAN output with Python')
 
     if self.flow_solver != "PFLOTRAN":
-        error = "ERROR! Wrong flow solver requested\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error. Wrong flow solver requested\n"
+        self.print_log(error, 'error')
 
     if grid_vtk_file:
         self.vtk_file = grid_vtk_file
@@ -496,7 +473,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
             num_cells = line.strip(' ').split()[1]
 
     for file in files:
-        print(f"--> Processing file: {file}")
+        self.print_log(f"--> Processing file: {file}")
         with open(file, 'r') as f:
             pflotran_out = f.readlines()[4:]
         pflotran_out = [
@@ -520,4 +497,4 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
             for line in pflotran_out:
                 f.write(line)
         os.remove(file)
-    print('--> Parsing PFLOTRAN output complete')
+    self.print_log('--> Parsing PFLOTRAN output complete')
