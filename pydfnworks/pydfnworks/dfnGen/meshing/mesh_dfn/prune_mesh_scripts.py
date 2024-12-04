@@ -296,7 +296,8 @@ def clean_up_files_after_prune(self, dump_files=True):
                 # new header
                 fout.write(f'nPolygons: {self.num_frac}\n')
                 for fracture, line in enumerate(data.split('\n')):
-                    if fracture - 1 in keep_list:
+                    if (fracture+1) in keep_list:
+                        retained_fractures.append(fracture + 1)
                         fout.write(line + "\n")
 
     self.print_log("--> Editing Fracture Files Complete")
