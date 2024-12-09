@@ -20,11 +20,11 @@ DFNGen/DFNGen
 
 internal/Documentation/sphinx-docs/build/*
 
-*/build/*
-*/dist/*
+build/*
+dist/*
 *.egg
 
-pydfnworks/pydfnworks.egg-info/*
+*.egg-info
 
 *.pdf
 !dfnWorks.pdf
@@ -73,3 +73,6 @@ examples/TPL/output_rfram/*
 .vscode 
 .vscode/* 
 
+# Virtual Environment
+.venv
+venv

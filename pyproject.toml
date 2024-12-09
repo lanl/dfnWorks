@@ -1,0 +1,87 @@
+[project]
+name = "pydfnWorks"
+requires-python = ">=3.6"
+dynamic = ["version"]
+authors = [
+  { name = "Jeffrey Hyman", email = "jhyman@lanl.gov" },
+  { name = "Daniel Livingston", email = "livingston@lanl.gov" },
+  { name = "Carl Gable", email = "gable@lanl.gov" },
+  { name = "Satish Karra", email = "satkarra@lanl.gov" },
+  { name = "Nataliia Makedonska", email = "nataliia@lanl.gov" },
+  { name = "Matthew Sweeney", email = "sweeney2796@lanl.gov" },
+  { name = "Erica Hinrichs", email = "ehinrichs@lanl.gov" },
+]
+maintainers = [{ name = "dfnWorks Developers", email = "dfnworks@lanl.gov" }]
+description = "pydfnWorks is a a Python package interactively working with the dfnWorks DFN simulate suite."
+readme = "README.md"
+license = { file = "LICENSE.md" }
+dependencies = [
+  "numpy",
+  "scipy",
+  "h5py",
+  "pyvtk",
+  "fpdf",
+  "matplotlib>3.0",
+  "networkx>=2.4",
+  "mplstereonet",
+  "seaborn",
+  "mpmath",
+]
+keywords = [
+  "Discrete Fracture Networks",
+  "Subsurface flow and Transport",
+  "Graph Theory",
+  "Mathematics",
+  "Fracture Networks",
+  "Simulations",
+  "Computational Geometry",
+  "network",
+  "graph",
+  "discrete mathematics",
+  "math",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Homepage = "http://dfnworks.lanl.gov"
+Documentation = "https://dfnworks.lanl.gov/index_docs.html"
+Repository = "https://github.com/lanl/dfnWorks/tree/master/pydfnworks"
+Issues = "https://github.com/lanl/dfnWorks/issues"
+"Mailing List" = "https://groups.google.com/d/forum/dfnworks-users"
+
+[tool.setuptools]
+packages = [
+  "pydfnworks",
+  "pydfnworks.general",
+  "pydfnworks.dfnGen",
+  "pydfnworks.dfnGen.generation",
+  "pydfnworks.dfnGen.generation.input_checking",
+  "pydfnworks.dfnGen.generation.output_report",
+  "pydfnworks.dfnGen.meshing",
+  "pydfnworks.dfnGen.meshing.mesh_dfn",
+  "pydfnworks.dfnGen.meshing.udfm",
+  "pydfnworks.dfnGen.meshing.mapdfn_ecpm",
+  "pydfnworks.dfnGen.meshing.dfm",
+  "pydfnworks.dfnGen.meshing.poisson_disc",
+  "pydfnworks.dfnGen.well_package",
+  "pydfnworks.dfnFlow",
+  "pydfnworks.dfnTrans",
+  "pydfnworks.dfnGraph",
+]

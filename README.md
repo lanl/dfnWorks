@@ -23,7 +23,7 @@ machine. To setup dfnWorks using Docker instead, see the next section.
 - LAGRIT_EXE:  Path to LaGriT executable
 - FEHM_EXE: Path to FEHM executable
 
-    $ vi dfnWorks/pydfnworks/pydfnworks/general/paths.py
+    $ vi dfnWorks/pydfnworks/general/paths.py
 
 For example:
     
@@ -44,19 +44,27 @@ Note that you need to set the dfnworks_path, but the others are optional if you 
 
 ## Installing pydfnworks
 
-Go up into the pydfnworks sub-directory:
+Go to the dfnWorks directory:
     
-    $ cd dfnWorks/pydfnworks/
+    $ cd dfnWorks
 
-Compile The pydfnWorks Package & Install on Your Local Machine:
+Activate the default conda environment:
+
+    $ conda activate
+
+Or, create a conda environment and activate it:
+
+    $ conda create -n dfnworks
+    $ conda activate dfnworks
+
+Or, create a virtual environment and activate it:
+
+    $ python -m venv venv
+    $ source venv/bin/activate
+
+Then, Compile The pydfnWorks Package & Install on Your Local Machine:
    
-    $ pip install -r requirements.txt
-
-or  
-
-    $ pip install -r requirements.txt --user
-
-if you don't have admin privileges.
+    $ pip install .
 
 **Note that the python version needs to be consistent with the current release**
 
@@ -75,7 +83,8 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 
 pydfnworks uses Python 3. We recommend using 
 the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``mplstereonet``, ``fpdf``, and ``re``.
+pydfnworks requires the following python modules: ``numpy``, ``scipy``, ``h5py``, ``pyvtk``, ``fpdf``, ``matplotlib``, ``networkx``, ``mplstereonet``, ``seaborn``, and ``mpmath``.
+These packages would be installed automatically when you run `pip install .` in the dfnWorks directory.
 
 
 ### LaGriT

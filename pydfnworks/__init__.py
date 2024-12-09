@@ -33,17 +33,9 @@ Released under the GPL License
     Satish Karra < satkarra@lanl.gov>
     
 """
-from pydfnworks import release
+__date__ = "4 Decemeber 2024"
 
-__author__ = '%s <%s>\n%s <%s>\n%s <%s>' % \
-    (release.authors['Hyman'] + release.authors['Livingston'] +
-        release.authors['Karra'])
-
-__license__ = release.license
-
-__date__ = release.date
-
-__version__ = release.version
+__version__ = "2.9.1"
 
 __bibtex__ = """@article{hyman2015dfnworks,
   title={dfnWorks: A discrete fracture network framework for modeling subsurface flow and transport},
