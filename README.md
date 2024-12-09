@@ -17,7 +17,6 @@ machine. To setup dfnWorks using Docker instead, see the next section.
 
 **Before executing dfnWorks,** the following paths must be set:
 
-- dfnWorks_PATH: the dfnWorks repository folder
 - PETSC_DIR and PETSC_ARCH: PETSC environmental variables
 - PFLOTRAN_EXE:  Path to PFLOTRAN executable 
 - LAGRIT_EXE:  Path to LaGriT executable
@@ -27,12 +26,11 @@ machine. To setup dfnWorks using Docker instead, see the next section.
 
 For example:
     
-    os.environ['dfnWorks_PATH'] = '/home/<username>/dfnWorks/'    
+    os.environ['LAGRIT_EXE'] = '/home/<username>/.local/bin/lagrit'
 
 Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
 
     {
-        "dfnworks_PATH": "<your-home-directory>/src/dfnWorks/",
         "PETSC_DIR": "<your-home-directory>/src/petsc",
         "PETSC_ARCH": "arch-darwin-c-debug",
         "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
@@ -40,7 +38,7 @@ Alternatively, you can create a ``.dfnworksrc`` file in your home directory with
         "FEHM_EXE": "<your-home-directory>//src/xfehm_v3.3.1"
     }
 
-Note that you need to set the dfnworks_path, but the others are optional if you don't want to run those executables
+Paths are optional if you don't want to run those executables
 
 ## Installing pydfnworks
 

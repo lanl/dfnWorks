@@ -9,6 +9,7 @@ import shutil
 import ntpath
 from time import time
 import numpy as np
+import importlib.resources
 
 
 def lagrit2pflotran(self, boundary_cell_area = None):
@@ -246,7 +247,8 @@ def write_perms_and_correct_volumes_areas(self):
     ## dump aperture file
     self.dump_aperture(self.aper_file, format='fehm')
     ## execute convert uge C code
-    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
+    correct_uge_exe = importlib.resources.files("pydfnworks") / "bin" / "correct_uge"
+    cmd = f'{correct_uge_exe} convert_uge_params.txt'
     self.print_log(f">> {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:

@@ -3,6 +3,7 @@ import sys
 import shutil
 from time import time
 import subprocess
+import importlib.resources
 
 
 def dfn_trans(self):
@@ -71,7 +72,8 @@ def run_dfn_trans(self):
     None
     """
     tic = time()
-    cmd = os.environ['DFNTRANS_EXE'] + ' ' + self.local_dfnTrans_file
+    dfntrans_exe = importlib.resources.files("pydfnworks") / "bin" / "DFNTrans"
+    cmd = f'{dfntrans_exe} {self.local_dfnTrans_file}'
     self.call_executable(cmd)
     self.dump_time("Function: DFNTrans ", time() - tic)
 

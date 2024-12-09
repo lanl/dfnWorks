@@ -188,12 +188,6 @@ class DFNWORKS():
             statement = f"Starting at {now}"
             self.print_log(statement ) 
 
-        ## check is define_paths has been run yet
-        if not 'dfnworks_PATH' in os.environ:
-            self.legal()
-            self.print_log("--> Creating DFN Object: Starting" )
-            self.define_paths()
-
         if pickle_file:
             self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
             self.from_pickle(pickle_file)

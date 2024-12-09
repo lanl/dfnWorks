@@ -18,6 +18,12 @@ C_stor_correct/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
 
+pydfnworks/bin/ConnectivityTest
+pydfnworks/bin/correct_stor 
+pydfnworks/bin/correct_uge 
+pydfnworks/bin/DFNGen 
+pydfnworks/bin/DFNTrans
+
 internal/Documentation/sphinx-docs/build/*
 
 build/*

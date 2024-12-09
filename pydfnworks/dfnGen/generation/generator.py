@@ -4,6 +4,7 @@ import numpy as np
 import shutil
 from time import time
 import subprocess
+import importlib.resources
 
 
 def dfn_gen(self, output=True):
@@ -138,9 +139,8 @@ def create_network(self):
     '''
     self.print_log('--> Running DFNGEN')
     os.chdir(self.jobname)
-    cmd = os.environ[
-        'DFNGEN_EXE'] + ' ' + 'dfnGen_output/' + self.local_dfnGen_file[:
-                                                     -4] + '_clean.dat' + ' ' + self.jobname
+    dfngen_exe = importlib.resources.files("pydfnworks") / "bin" / "DFNGen"
+    cmd = f'{dfngen_exe} dfnGen_output/{self.local_dfnGen_file[:-4]}_clean.dat {self.jobname}'
 
     self.print_log(f"Running: >> {cmd}")
     subprocess.call(cmd, shell=True)

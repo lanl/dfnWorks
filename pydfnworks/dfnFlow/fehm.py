@@ -5,6 +5,7 @@ import glob
 import shutil
 from time import time
 import numpy as np
+import importlib.resources
 """
 Functions for using FEHM in dfnWorks
 """
@@ -44,7 +45,8 @@ def correct_stor_file(self):
         f.write("%s\n" % self.aper_file)
 
     t = time()
-    cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
+    correct_stor_exe = importlib.resources.files("pydfnworks") / "bin" / "correct_stor"
+    cmd = f'{correct_stor_exe} convert_stor_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
         error = 'Erro: stor conversion failed\nExiting Program\n'

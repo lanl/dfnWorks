@@ -10,6 +10,7 @@ import os
 import sys
 import timeit
 import glob
+import importlib.resources
 
 import numpy as np
 import multiprocessing as mp
@@ -235,7 +236,8 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
 
     ## Once meshing is complete, check if the lines of intersection are in the final mesh
     if not visual_mode:
-        cmd_check = f"{os.environ['CONNECT_TEST_EXE']} \
+        connect_test_exe = importlib.resources.files("pydfnworks") / "bin" / "ConnectivityTest"
+        cmd_check = f"{connect_test_exe} \
             intersections_{fracture_id}.inp \
             id_tri_node_{fracture_id:0{digits}d}.list \
             mesh_{fracture_id:0{digits}d}.inp \
