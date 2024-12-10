@@ -6,6 +6,7 @@
 #include "FuncDef.h"
 #include <unistd.h>
 #include <time.h>
+#include <sys/stat.h>
 
 
 

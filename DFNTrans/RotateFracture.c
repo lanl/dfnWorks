@@ -5,6 +5,7 @@
 #include <string.h>
 #include "FuncDef.h"
 #include <unistd.h>
+#include <sys/stat.h>
 
 
 struct posit3d
