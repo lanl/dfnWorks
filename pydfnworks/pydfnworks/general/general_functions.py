@@ -19,6 +19,9 @@ def call_executable(self, command):
 
     Parameters
     -----------------
+        self : object
+                DFN Class
+
         command : string
             command to execute
 
@@ -32,6 +35,18 @@ def call_executable(self, command):
 
 
 def print_parameters(self):
+    ''' Prints parameters
+
+    Parameters
+    -----------------
+        self : object
+                DFN Class
+
+    Returns
+    -------------
+        None
+
+    '''
     self.print_log("=" * 80 + "\n")
     self.print_log(f"--> Jobname: {self.jobname}")
     self.print_log(f"--> Local Jobname: {self.local_jobname}")
@@ -60,8 +75,10 @@ def dump_time(self, function_name, time):
     ----------
         self : object
             DFN Class
+        
         function_name : string
             Name of function that was timed
+        
         time : float
             Run time of function in seconds
 
@@ -139,6 +156,11 @@ def to_pickle(self, filename=None):
 
     Parameters
     --------------
+        self : object
+            DFN Class
+
+        filename : string
+            name of pickle DFN object, default is None
 
     Returns
     ------------
@@ -177,6 +199,7 @@ def from_pickle(self, filename):
     Parameters
     --------------
         self : DFN Object
+        
         filename : string
             name of pickle DFN object
 

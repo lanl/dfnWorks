@@ -28,7 +28,10 @@ def track_particle(data, verbose=False):
             data : dict
                 Dictionary of parameters the includes particle_number, initial_position, 
                 tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes,
-                 direction, G, and nbrs_dict.  
+                 direction, G, and nbrs_dict. 
+
+            verbose : bool
+                Toggles verbosity 
 
         Returns
         -------
@@ -71,11 +74,11 @@ def get_initial_posititions(G, initial_positions, nparticles):
             G : NetworkX graph 
                 obtained from graph_flow
 
-        initial_positions : str
-            distribution of initial conditions. options are uniform and flux (flux-weighted)
+            initial_positions : str
+                distribution of initial conditions. options are uniform and flux (flux-weighted)
 
-        nparticles : int
-            requested number of particles
+            nparticles : int
+                requested number of particles
 
         Returns
         -------

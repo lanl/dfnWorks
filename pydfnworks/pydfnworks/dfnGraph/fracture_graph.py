@@ -17,10 +17,13 @@ def create_fracture_graph(inflow, outflow):
     ----------
         inflow : string
             Name of inflow boundary (connect to source)
+        
         outflow : string
             Name of outflow boundary (connect to target)
+        
         topology_file : string
             Name of adjacency matrix file for a DFN default=connectivity.dat  
+        
         fracture_infor : str
                 filename for fracture information
 

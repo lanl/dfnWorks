@@ -60,12 +60,15 @@ def create_intersection_graph(
     ----------
         inflow : string
             Name of inflow boundary
+        
         outflow : string
             Name of outflow boundary
+        
         intersection_file : string
              File containing intersection information
              File Format:
              fracture 1, fracture 2, x center, y center, z center, intersection length
+        
         fracture_info : str
                 filename for fracture information
     Returns

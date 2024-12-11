@@ -49,6 +49,7 @@ def add_table_of_contents(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -84,7 +85,6 @@ def add_table_of_contents(params, pdf):
 def create_network_text(params):
     """ Creates block text for the entire network.
     
-
     Parameters
     -------------
         params : dictionary
@@ -128,6 +128,7 @@ def add_network_page(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -221,10 +222,13 @@ def add_family_page(params, family, i, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         family : dictionary 
             Dictionary of information about a fracture family
+        
         i : int
             Fracture family id
+        
         pdf : fpdf object
             Current working pdf
 
@@ -269,6 +273,7 @@ def add_fram_page(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -302,9 +307,11 @@ def make_pdf(params, families, fractures):
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
 
+        
         families: list of fracture family dictionaries
             Created by get_family_information
 
+        
         fractures: list of fracture dictionaries   
             Created by get_fracture_information
 

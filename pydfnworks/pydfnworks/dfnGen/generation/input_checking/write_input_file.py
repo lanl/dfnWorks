@@ -3,6 +3,22 @@ from pydfnworks.general.logging import local_print_log
 
 def dump_params(params, output_file):
     """ Write the parameters from the verbose input file back to a simplified input file.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        output_file : string
+            output file name
+
+    Returns 
+    ------------
+        None
+
+    Notes
+    -------------
+        None
+
     """
     local_print_log(f"--> Writing parameters to file {output_file}")
     try:

@@ -8,8 +8,10 @@ def in_domain(self, point, buffer = 0):
     Parameters
     ---------------
         self : DFN object
+        
         point : numpy array
             x,y,z coordinates of point
+        
         buffer : float
             buffer zone from the boundary. If non-zero, then it is determiend with the point is within the domain shrunk by the buffer zone
 

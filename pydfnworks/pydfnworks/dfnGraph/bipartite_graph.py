@@ -18,10 +18,13 @@ def create_bipartite_graph(
     ----------
         inflow : str
             name of inflow boundary
+        
         outflow : str
             name of outflow boundary
+        
         intersection_list: str
              filename of intersections generated from DFN
+        
         fracture_infor : str
                 filename for fracture information
 

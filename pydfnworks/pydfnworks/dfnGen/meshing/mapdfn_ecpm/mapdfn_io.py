@@ -18,19 +18,62 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
         cell_size : int
 
-        k_iso : float 
+        k_iso : numpy array
+            numpy array of isotropic permeability for each cell in the ECPM. 
 
-        k_aniso 
+        k_aniso : numpy array
+            Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+
+        matrix_perm : float
+            permeability of the matrix cells
+
+        porosity : numpy array
+            porosity values in the domain cells
+        
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+        matrix_on: bool
+
+        h5origin : list
 
     Returns
     ------------------
+        x : numpy array
+            x values
+        
+        y : numpy array
+            y values
+        
+        z : numpy array
+            z values
+        
+        fracture_id : int
+            fracture index
+        
+        khdf5 : numpy array
+            k iso values
+        
+        kx : numpy array
+            k aniso values
+        
+        ky : numpy array
+            k aniso values
+        
+        kz : numpy array
+            k aniso values
+        
+        phdf5 : numpy array
+            porosity values
+        
+        idx_array : numpy array
+        
+        mat_array : numpy array
 
 
     Notes
     ------------------
 
-     
-    
     """
 
     # h5origin = [x - y for x, y in zip(domain_origin, domain_origin)]
@@ -87,17 +130,45 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
 def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
                    k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on, h5origin):
-    """ Write informaiton into h5 files for pflotran run. 
+     """ Write informaiton into h5 files for pflotran run. 
 
     Parameters
-    ----------------
+    ------------------
+        filenames : string
+            filenames
 
+        nx : int 
 
+        ny : int 
+
+        nz : int 
+
+        cell_size : int
+
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+        k_iso : numpy array
+            numpy array of isotropic permeability for each cell in the ECPM.
+
+        k_aniso : numpty array
+            Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+
+        porosity : numpy array
+            porosity values in the domain cells
+
+        matrix_perm : float
+            permeability of the matrix cells
+
+        tortuosity_factor : float
+
+        matrix_on: bool
+
+        h5origin : list
 
     Returns
-    ------------
-
-
+    ------------------
+        None
 
     Notes
     -----------

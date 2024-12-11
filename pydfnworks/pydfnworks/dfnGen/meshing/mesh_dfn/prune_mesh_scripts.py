@@ -13,6 +13,20 @@ from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 
 
 def load_connectivity_file(path):
+    """ Load file
+ 
+    Parameters
+    ---------
+        path : path to file
+
+    Returns
+    -------
+        connectivity : list
+
+    Notes
+    -----
+
+   """
     connectivity = []
     with open(path + "/dfnGen_output/connectivity.dat", "r") as fp:
         for line in fp.readlines():
@@ -33,6 +47,7 @@ def edit_intersection_files(self):
     ---------
         self.num_frac : int 
             Number of Fractures in the original DFN
+        
         fracture_list :list of int
             List of fractures to keep in the DFN
 
@@ -135,6 +150,9 @@ def clean_up_files_after_prune(self, dump_files=True):
     Parameters
     ----------
         self : DFN object
+
+        dump_files : bool
+            toggle to dump files. Default is True
          
     Returns
     -------

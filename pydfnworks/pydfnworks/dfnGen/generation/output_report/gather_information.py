@@ -21,6 +21,7 @@ def parse_dfn_output(params, families):
     ------------
         params : dictionary
             Output report dictionary containing general parameters. See output_report for more details
+        
         families : list
             list of dictionaries with information about fracture family
 
@@ -28,7 +29,8 @@ def parse_dfn_output(params, families):
     ---------
         params : dictionary
             Output report dictionary containing general parameters. See output_report for more details
-        families : list
+        f
+        amilies : list
             list of dictionaries with information about fracture family
 
     Notes
@@ -135,6 +137,7 @@ def get_family_information():
     --------
         families : list
             List of dictionaries with information about fracture family
+    
     Notes
     ------
         None
@@ -274,6 +277,7 @@ def get_fracture_information():
     --------
         fractuers : list
             List of fracture dictionaries with information.
+    
     Notes
     ------
         Both fractures in the final network and those removed due to being isolated are included in the list. 
@@ -348,15 +352,24 @@ def combine_family_and_fracture_information(families, fractures, num_fractures,
     -----------
         families : list
             List of dictionaries with information about fracture family
+        
         fractures : list
             List of fracture dictionaries
+
+        num_fractures : int
+            Number of fractures
+
+        domain : dict
+            Dictionary of domain sizes 
 
     Returns
     --------
         families : list
             List of dictionaries with information about fracture family
+        
         fractures : list
             List of fracture dictionaries
+        
         params : dictionary
             Output report dictionary containing general parameters. See output_report for more details
 

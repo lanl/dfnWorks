@@ -16,6 +16,7 @@ def check_false_connections(self, path="../"):
     ----------
         self : object
             DFN Class
+        
         fmc_filname : string
             name of the pickled dictionary of mesh and fracture intersections 
 
@@ -23,8 +24,10 @@ def check_false_connections(self, path="../"):
     -------
         num_false_connections : int
             number of false connections
-        num_cell_false : int
+        
+        num_false_cells : int
             number of Voronoi cells with false connections
+        
         false_connections : list
             list of tuples of false connections created by upscaling
 

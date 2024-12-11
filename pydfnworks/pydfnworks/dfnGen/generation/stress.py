@@ -18,18 +18,27 @@ def stress_based_apertures(self,
 
     Parameters
     ----------------------
+        self : object 
+            DFN Class
+
         sigma_mat : array
             3 x 3 stress tensor (units in Pa)
+        
         friction_angle : float
             Friction angle (Degrees)
+        
         dilation_angle : float
             Dilation angle (Degrees)
+        
         critical_shear_displacement : float
             Critical shear displacement
+        
         shear_modulus : float 
             Shear modulus (Pa)
+        
         min_b : float
              Minimum aperture (m)
+        
         shear_stiffness : float 
             Shear stiffness (Pa/m)
 

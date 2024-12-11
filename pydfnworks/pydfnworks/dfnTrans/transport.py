@@ -15,7 +15,7 @@ def dfn_trans(self):
    
     Returns
     --------
-        Nonie
+        None
     """
     self.print_log('=' * 80)
     self.print_log("dfnTrans Starting")
@@ -83,6 +83,7 @@ def create_dfn_trans_links(self, path='../'):
     ---------
         self : object 
             DFN Class
+        
         path : string 
             Absolute path to primary directory. 
    

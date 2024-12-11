@@ -24,12 +24,16 @@ def check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, da
     ----------------
         direction : string
             Primary direction of flow (x, y, or z)
+        
         inflow_pressure : float 
             Inflow boundary pressure 
+        
         outflow_pressure : float 
             Outflow Boundary pressure
+        
         boundary_file : string
             Name of ex file for inflow boundary
+        
         darcy_vel_file : string
             name of darcy veloctiy file (pflotran output file)
 
@@ -73,6 +77,7 @@ def flow_rate(darcy_vel_file, boundary_file):
     ----------
         darcy_vel_file : string
             Name of concatenated Darcy velocity file
+        
         boundary_file : string
              ex file for the inflow boundary
 
@@ -80,6 +85,7 @@ def flow_rate(darcy_vel_file, boundary_file):
     -------
         mass_rate : float
             Mass flow rate across the inflow boundary
+        
         volume_rate : float
             Volumetric flow rate across the inflow boundary
 
@@ -139,16 +145,22 @@ def dump_effective_perm(local_jobname, mass_rate, volume_rate, domain,
     ----------
         local_jobname  : string
             Jobname
+        
         mass_rate : float
             Mass flow rate through inflow boundary
+        
         volume_rate : float
             Volumetric flow rate through inflow boundary
+        
         direction : string
             Primary direction of flow (x, y, or z)
+        
         domain : dict
             Dictionary of domain sizes in x, y, z
+        
         inflow_pressure : float
             Inflow boundary pressure
+        
         outflow_pressure : float
             Outflow boundary pressure
 
@@ -214,14 +226,19 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
     ----------
         self : object 
             DFN Class
+        
         inflow_pressure: float
             Pressure at the inflow boundary face. Units are Pascal
+        
         outflow_pressure: float
             Pressure at the outflow boundary face. Units are Pascal
+        
         boundary_file: string
             Name of inflow boundary file, e.g., pboundary_left.ex
+        
         direction: string
             Primary direction of flow, x, y, or z
+        
         darcy_vel_file : string
             Name of concatenated Darcy velocity file
     Returns

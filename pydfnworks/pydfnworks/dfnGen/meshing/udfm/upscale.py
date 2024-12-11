@@ -24,8 +24,10 @@ def upscale(self, mat_perm, mat_por, path='../'):
     ----------
         self : object
             DFN Class 
+        
         mat_perm : float 
             Matrix permeability (in m^2)
+        
         mat_por: float
             Matrix porosity
 
@@ -33,10 +35,13 @@ def upscale(self, mat_perm, mat_por, path='../'):
     -------
         perm_fehm.dat : text file
             Contains permeability data for FEHM input
+        
         rock_fehm.dat : text file
             Contains rock properties data for FEHM input
+        
         mesh_permeability.h5 : h5 file
             Contains permeabilites at each node for PFLOTRAN input
+        
         mesh_porosity.h5 : h5 file
             Contains porosities at each node for PFLOTRAN input               
         

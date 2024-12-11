@@ -41,10 +41,13 @@ def tpl_pdf(norm_const, xmin, alpha, x):
     --------------
         norm_const : double 
             The normalization constant for the PDF
+        
         xmin : double
             The lower bound of the truncated power law distribution.
+        
         alpha  : double
              The alpha parameter (decay rate / exponent) in the power law distribution.
+        
         x : numpy array
             x-values of the function
     Returns
@@ -64,8 +67,10 @@ def tpl(alpha, xmin, xmax):
     -----------
         alpha  : double
              The alpha parameter (decay rate / exponent) in the power law distribution. (alpha > 0)
+        
         xmin : double
             Minimum x-value
+        
         xmax : double
             Maximum x-value
 
@@ -73,8 +78,10 @@ def tpl(alpha, xmin, xmax):
     ---------
         x : numpy array
             x-values of the function
+        
         pdf : numpy array
             pdf values of the truncated powerlaw
+        
         cdf : numpy array
             cdf values of truncated powerlaw distribution
 
@@ -100,8 +107,10 @@ def exp_pdf(norm_const, eLambda, x):
     -------------
         norm_const : double 
             The normalization constant for the PDF
+        
         eLambda  : double
             The exponent of the exponential distribution
+        
         x : numpy array
             x-values of the function
     Returns
@@ -124,8 +133,13 @@ def exp_cdf(eLambda, x, xmin):
     -------------
         eLambda  : double
             The exponent of the exponential distribution
+        
         x : numpy array
             x-values of the function
+
+        xmin : double
+            Minimum x-value
+
     Returns
     --------
         cdf : numpy array
@@ -146,8 +160,10 @@ def exponential(eLambda, xmin, xmax):
     -----------
         eLambda  : double
             The exponent of the exponential distribution
+        
         xmin : double
             Minimum x-value
+        
         xmax : double
             Maximum x-value
 
@@ -155,6 +171,7 @@ def exponential(eLambda, xmin, xmax):
     ---------
         x : numpy array
             x-values of the function
+        
         pdf : numpy array
             pdf values of the exponential distribution
         cdf : numpy array
@@ -180,8 +197,10 @@ def lognormal_cdf(x, mu, sigma):
     -------------
         x : numpy array
             x-values of the function
+        
         mu  : double
             Lognormal distribution parameter #1
+        
         sigma : double
             Lognormal distribution parameter #1 (sigma > 0)            
     Returns
@@ -204,10 +223,13 @@ def lognormal_pdf(x, mu, sigma):
     -------------
         x : numpy array
             x-values of the function
+        
         mu  : double
             Lognormal distribution parameter #1
+        
         sigma : double
             Lognormal distribution parameter #1 (sigma > 0)            
+    
     Returns
     --------
         pdf : numpy array
@@ -230,10 +252,13 @@ def lognormal(mu, sigma, xmin, xmax):
     -----------
         mu  : double
             Lognormal distribution parameter #1
+        
         sigma : double
             Lognormal distribution parameter #1 (sigma > 0)
+        
         xmin : double
             Minimum x-value
+        
         xmax : double
             Maximum x-value
 
@@ -241,8 +266,10 @@ def lognormal(mu, sigma, xmin, xmax):
     ---------
         x : numpy array
             x-values of the function
+        
         pdf : numpy array
             pdf values of the lognormal distribution
+        
         cdf : numpy array
             cdf values of lognormal distribution
 
@@ -279,8 +306,9 @@ def create_ecdf(vals):
 
     Returns
     -------
-        x : numpy array
-            sorted input values
+        vals : array
+           array of values
+        
         cdf : numpy array
             values of the cdf, normalized so cumulative sum = 1
 

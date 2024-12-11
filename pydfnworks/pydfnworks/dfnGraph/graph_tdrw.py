@@ -42,6 +42,7 @@ def get_fracture_segments(transfer_time,
     ---------------------
         segment_length : float
             Length of the segment of the edge to compute the matrix diffusion time
+        
         num_segments : int
             Number of segments of length segment_length on the original edge/fracture. We ake the ceiling of the value.  
 
@@ -72,8 +73,10 @@ def t_diff_unlimited(a, tf, xi):
     -------------------
         a : double
          Constant parameter describing retention in the matrix. a = (matrix_porosity*matrix_diffusion)/aperture_length
+        
         tf : double
             Advective travel time
+        
         xi : float
             value between [0,1)
    
@@ -100,12 +103,16 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
     ---------------
         t_min : float
             Minumum value of diffusion time [s]
+        
         t_max : float
             Maximum value of diffusion time [s]
+        
         frac_spacing : float
             Spacing between fractures [m]
+        
         matrix_diffusivity : float
             Matrix Diffusivity value  [m^2/s]
+        
         num_pts : int 
             Number of points in the logspace array between t_min and t_max
 
@@ -113,6 +120,7 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
     --------------
         times : np.array
             Array of diffusion times 
+        
         prob_cdf : np.array
             Array of cummulative probabilities. They only go to 0.5
 
@@ -178,20 +186,28 @@ def transfer_probabilities(b_min,
     ------------
         b_min : float
             Minimum aperture in the network
+        
         b_max : float
             Maximum aperture in the network
+        
         tf_min : float 
             Minimum advective travel time in the network
+        
         tf_max : float 
             Maximum advective travel time in the network
+        
         matrix_porosity: float
             Matrix Porosity 
+        
         matrix_diffusivity : float
             Matrix Diffusivity value  [m^2/s]
+        
         frac_spacing : float
             Spacing between fractures [m]
+        
         eps : float 
             Default - 1e-16
+        
         num_pts : int 
             Number of points in the logspace array between t_min and t_max
  
@@ -369,10 +385,13 @@ def get_aperture_and_time_limits(G):
     -------------
         b_min : float
             Minimum value of aperture on the network
+        
         b_max : float
             Maximmum value of aperture on the network
+        
         t_min : float
             Minimum value of advective travel time on the network
+        
         t_max : float
             Maximmum value of advective travel time on the network
 
