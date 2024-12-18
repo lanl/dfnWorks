@@ -22,10 +22,13 @@ def create_graph(self, graph_type, inflow, outflow):
     ----------
         self : object
             DFN Class object 
+        
         graph_type : string
             Option for what graph representation of the DFN is requested. Currently supported are fracture, intersection, and bipartitie 
+        
         inflow : string
             Name of inflow boundary (connect to source)
+        
         outflow : string
             Name of outflow boundary (connect to target)
 
@@ -95,10 +98,15 @@ def add_fracture_source(self, G, source):
     
     Parameters
     ----------
+        self : object 
+            DFN Class
+
         G : NetworkX Graph
             NetworkX Graph based on a DFN 
+        
         source_list : list
             list of integers corresponding to fracture numbers
+        
         remove_old_source: bool
             remove old source from the graph
 
@@ -171,8 +179,12 @@ def add_fracture_target(self, G, target):
     
     Parameters
     ----------
+        self : object 
+            DFN Class
+
         G : NetworkX Graph
             NetworkX Graph based on a DFN 
+        
         target : list
             list of integers corresponding to fracture numbers
     Returns 
@@ -247,8 +259,10 @@ def pull_source_and_target(nodes, source='s', target='t'):
     ----------
         nodes :list 
             List of nodes in the graph
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
     Returns
@@ -275,8 +289,10 @@ def dump_fractures(self, G, filename):
     ----------
         self : object
             DFN Class
+        
         G : NetworkX graph
             NetworkX Graph based on the DFN
+        
         filename : string
             Output filename 
 
@@ -312,12 +328,18 @@ def plot_graph(self, G, source='s', target='t', output_name="dfn_graph"):
     
     Parameters
     ---------- 
+        self : object 
+            DFN Class
+
         G : NetworkX graph
             NetworkX Graph based on the DFN
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
+        
         output_name : string
             Name of output file (no .png)
 
@@ -370,8 +392,10 @@ def dump_json_graph(self, G, name):
     ---------- 
         self : object 
             DFN Class
+        
         G :networkX graph
             NetworkX Graph based on the DFN
+        
         name : string
              Name of output file (no .json)
 
@@ -397,6 +421,7 @@ def load_json_graph(self, filename):
     ---------- 
         self : object 
             DFN Class
+        
         name : string
              Name of input file (no .json)
 

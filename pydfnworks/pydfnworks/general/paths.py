@@ -11,8 +11,15 @@ def valid(self, name, path, path_type):
     """" Check that path is valid for a executable
     Parameters
     ----------
+        self : object
+            DFN Class
+
         name : string
             Path to file or executable
+        
+        path : string
+            path to executable
+
         path_type : string
             Path type can either be an executable or a directory
 
@@ -50,8 +57,13 @@ def compile_dfn_exe(self,path):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
     Parameters
     ----------
+        self : object
+            DFN Class
+
         directory : string
-            Path to dfnWorks executable 
+        
+        Path : string
+            path to dfnWorks executable 
     Returns
     -------
         None
@@ -74,7 +86,8 @@ def print_paths(self):
     
     Parameters
     -------------
-        None
+        self : object
+            DFN Class
 
     Returns
     -------------
@@ -98,12 +111,16 @@ def print_paths(self):
 
 def define_paths(self):
     """ Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
+    
     Parameters
     ----------
-        None
+        self : object
+            DFN Class
+    
     Returns
     -------
         None
+    
     Notes
     -----
         Environmental variables are set to executables

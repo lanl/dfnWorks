@@ -18,7 +18,9 @@ def lagrit2pflotran(self, boundary_cell_area = None):
     Parameters    
     --------------
         self : object
-            DFN Class 
+            DFN Class
+        boundary_cell_area : double 
+            Boundary cell area. Defaults to None.
 
     Returns
     --------
@@ -381,6 +383,8 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
             DFN Class
         index : int
              If PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat
+        filename : string
+            name of file to be concatenated
     Returns 
     ----------
         None

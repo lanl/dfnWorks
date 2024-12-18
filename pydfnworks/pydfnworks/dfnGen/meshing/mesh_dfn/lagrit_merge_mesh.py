@@ -7,16 +7,24 @@ def create_merge_poly_scripts(self):
 
     Parameters
     ----------
+        self : object 
+            DFN Class
+
         ncpu : int 
             Number of Processors used for meshing
+        
         fracture_list : list of int
             List of fracture numbers in the DFN
+        
         h : float 
             Meshing length scale
+        
         visual_mode : bool
             If True, reduced_mesh.inp will be output. If False, full_mesh.inp is output
+        
         domain : dict
             Dictionary of x,y,z domain size
+        
         flow_solver : string
             Name of target flow solver (Changes output files)
 
@@ -84,7 +92,20 @@ finish
 
 
 def create_final_merge_script(self):
+    """
+    Parameters
+    ------------
+        self : object 
+            DFN Class
 
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+
+    """
     self.print_log("--> Writing : merge_network.lgi")
 
     eps = self.h * 10**-3

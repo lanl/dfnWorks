@@ -8,7 +8,10 @@ def initialize_log_file(self, time = False):
 
     Parameters
     ---------
-        self : dfnWorks object
+        self :
+            dfnWorks object
+
+        time : Toggle to print times in log. Default is False
 
     Returns
     --------
@@ -37,7 +40,14 @@ def print_log(self, statement, level = 'info'):
 
     Parameters
     ---------
-        statement : the print/log statement
+        self :
+            dfnWorks object
+
+        statement : string
+            the print/log statement
+
+        level : string
+            the log level, info, debug, warning, error, critical. Default is info
 
     Returns
     --------
@@ -79,11 +89,15 @@ def local_print_log(statement, level = 'info'):
 
     Parameters
     ---------
-    statement : the print/log statement
+        statement : string
+            the print/log statement
+
+        level : string
+            the log level, info, debug, warning, error, critical. Default is info
 
     Returns
     --------
-    None
+        None
 
     Notes
     -------

@@ -35,18 +35,28 @@ def mesh_network(self,
     ----------
         self : object 
             DFN Class
+        
         uniform_mesh : bool
             toggle for uniform or variable mesh. Default : False 
+        
         min_dist : float
             Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h
+        
         max_dist : float
             Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h
+        
         max_resolution_factor : float
             Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
+        
+        well : bool
+            Toggle well points. Default : False
+        
         cleanup : bool
             toggle to clean up directory (remove meshing files after a run). Default : True
+        
         strict : bool
             Toggle if a few mesh errors are acceptable. default is true
+        
         quiet : bool
             Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen
 

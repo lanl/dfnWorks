@@ -3,10 +3,15 @@ def load_parameters(self):
 
     Parameters
     --------------
-        None
+        self : object
+            DFN Class
+
     Returns
     --------------
-        None
+        params : dict
+            Returns a dictionary of parameters
+        mandatory : set
+            set of mandatory parameters
 
     Notes
     ---------
