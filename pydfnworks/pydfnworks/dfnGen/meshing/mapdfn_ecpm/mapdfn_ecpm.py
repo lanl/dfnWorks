@@ -31,7 +31,7 @@ from pydfnworks.general.logging import initialize_log_file, print_log
 
 def mapdfn_ecpm(self,
                 matrix_perm,
-                matrix_perm,
+                matrix_porosity,
                 cell_size,
                 matrix_on = False, 
                 tortuosity_factor=0.001,
