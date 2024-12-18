@@ -44,12 +44,16 @@ def get_corner(origin, i, j, k, cell_size):
     ---------------
         origin : list
             min x,y,z corner of domain
+        
         i : int
             x index
+        
         j : int
             y index
+        
         k : int
             z index
+        
         cell_size : float
             hex cell size 
 
@@ -108,20 +112,26 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
 
     Parameters
     -----------------
+        self : dfnWorks object
+
         origin : list 
             [x,y,z] float coordinates of lower left front corner of DFN domain
+        
         num_cells : int
             Number of cells in the domain 
+        
         nx : int
             number of cells in x in ECPM domain
+        
         ny : int 
             number of cells in y in ECPM domain
+        
         nz : int 
             number of cells in z in ECPM domain
+        
         cell_size : float 
             discretization length in ECPM domain
         
-
     Returns
     --------------
         cell_fracture_id : dict

@@ -51,8 +51,10 @@ def check_for_mandatory_values(params, mandatory):
     --------------
         params : dictionary
             input parameter dictionary
+        
         mandatory : list
             list of mandatory keys
+    
     Returns
     --------
         None
@@ -85,8 +87,10 @@ def strip_comments(line, input_iterator):
     --------------
         line : string
             line of text from input file
+        
         input_iterator : iter
             iterator of input file
+    
     Returns
     --------
         line : string
@@ -118,10 +122,13 @@ def process_line(line, found_keys, params):
     ------------
         line : string
             line of text from input file. 
+        
         found_keys : list
             list of keys that have been found in the input file so far
+        
         params : dictionary 
             input parameter dictionary
+    
     Returns 
     --------
         None
@@ -170,6 +177,7 @@ def find_val(line, key):
     -------------
         line : string
             line of text from input file
+        
         key : string
             current key word
     

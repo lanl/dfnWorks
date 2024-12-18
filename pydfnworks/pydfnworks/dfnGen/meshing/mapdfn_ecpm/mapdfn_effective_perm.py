@@ -8,12 +8,16 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure, mas_filename,
     ----------
         self : object 
             DFN Class
+        
         inflow_pressure: float
             Pressure at the inflow boundary face. Units are Pascal
+        
         outflow_pressure: float
             Pressure at the outflow boundary face. Units are Pascal
+        
         mas_filename: string
             name of -mas.dat filename. 
+        
         direction: string
             Primary direction of flow, x, y, or z
 

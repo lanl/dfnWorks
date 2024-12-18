@@ -41,7 +41,6 @@ def setup_output_directory(params):
   --------
     None
 
-
   """
 
     if not os.path.isdir(params["output_dir"]):
@@ -60,8 +59,10 @@ def output_report(self, verbose=True, output_dir="dfnGen_output_report"):
   ----------
       self : object
         DFN Class object
+      
       verbose : bool
         Toggle for the amount of information printed to screen. If true, progress information printed to screen
+      
       output_dir : string
         Name of directory where all plots are saved
 

@@ -19,14 +19,21 @@ def current_flow_threshold(self,
     
     Parameters
     ----------
+        self : object
+            DFN Class
+
         G : NetworkX Graph
             NetworkX Graph based on a DFN 
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
+        
         weight : string
             Resistance term used in the solution of Laplace's Equation
+        
         thrs: float
             Threshold value for pruning the graph
 
@@ -66,12 +73,16 @@ def k_shortest_paths(G, k, source, target, weight):
     ----------
         G : NetworkX Graph
             NetworkX Graph based on a DFN 
+        
         k : int
             Number of requested paths
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
+        
         weight : string
             Edge weight used for finding the shortest path
 
@@ -93,14 +104,21 @@ def k_shortest_paths_backbone(self, G, k, source='s', target='t', weight=None):
    
     Parameters
     ----------
+        self : object
+            DFN Class
+
         G : NetworkX Graph
             NetworkX Graph based on a DFN 
+        
         k : int
             Number of requested paths
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
+        
         weight : string
             Edge weight used for finding the shortest path
 
@@ -141,14 +159,19 @@ def greedy_edge_disjoint(self, G, source='s', target='t', weight='None', k=''):
     ----------
         self : object 
             DFN Class Object
+        
         G : NetworkX graph
             NetworkX Graph based on the DFN
+        
         source : node 
             Starting node
+        
         target : node
             Ending node
+        
         weight : string
             Edge weight used for finding the shortest path
+        
         k : int
             Number of edge disjoint paths requested
     

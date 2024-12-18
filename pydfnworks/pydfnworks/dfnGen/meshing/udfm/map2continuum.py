@@ -26,12 +26,16 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     ----------
         self : object
             DFN Class
+        
         l : float
             Size (m) of level-0 mesh element in the continuum mesh
+        
         orl : int
             Number of total refinement levels in the octree
+        
         path : string
             path to primary DFN directory
+        
         dir_name : string
             name of directory where the octree mesh is created
     
@@ -43,6 +47,7 @@ def map_to_continuum(self, l, orl, path="./", dir_name="octree"):
     -----
         octree_dfn.inp : Mesh file
             Octree-refined continuum mesh 
+        
         fracX.inp : Mesh files
             Octree-refined continuum meshes, which contain intersection areas 
     
@@ -155,14 +160,20 @@ def lagrit_driver(dir_name, nx, ny, nz, num_poly, normal_vectors, points, center
     ----------
         dir_name : string
             Name of working directory
+        
         ni : int
             Number of cells in each direction
+        
         num_poly : int
             Number of fractures
+        
         normal_vectors : array
             Array containing normal vectors of each fracture
+        
         points : array
             Array containing a point on each fracture
+
+        center : center points
 
     Returns
     -------
@@ -433,12 +444,16 @@ def lagrit_parameters(dir_name, orl, x0, x1, y0, y1, z0, z1, nx, ny, nz, h):
     ----------
         dir_name : string
             Name of working directory
+        
         orl : int
             Number of total refinement levels in the octree
+        
         i0, i1 : float
             Extent of domain in x, y, z directions   
+        
         ni : int
             Number of cells in each direction
+    
     Returns
     -------
         None
@@ -736,8 +751,15 @@ def lagrit_run(self, num_poly, path, dir_name):
     
     Parameters
     ----------
+        self : object 
+            DFN Class
+
+        num_poly : int
+            Number of fractures
+
         path : string
             path to primary DFN directory
+        
         dir_name : string
             name of directory where the octree mesh is created       
 
@@ -824,6 +846,7 @@ def driver_interpolate_parallel(self, num_poly):
     ----------
         self : object
             DFN Class
+        
         num_poly : int
             Number of fractures
 
@@ -870,6 +893,7 @@ def driver_parallel(self, num_poly):
     ----------
         self : object
             DFN Class
+        
         num_poly : int
             Number of fractures
 
@@ -974,8 +998,13 @@ def worker(tasks_to_accomplish, tasks_that_are_done):
     ----------
         tasks_to_accomplish : ?
             Processes still in queue 
+        
         tasks_that_are_done : ?
             Processes complete
+
+    Returns
+    -------
+        None
 
     Notes
     -----
@@ -998,8 +1027,13 @@ def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
     ----------
         tasks_to_accomplish : ?
             Processes still in queue 
+        
         tasks_that_are_done : ?
             Processes complete
+
+    Returns
+    -------
+        None
 
     Notes
     -----
@@ -1015,6 +1049,21 @@ def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
 
 
 def interpolate_parallel(f_id):
+    """
+
+    Parameters
+    ----------
+        f_id : int
+
+    Returns
+    -------
+        None
+
+    Notes
+    ------
+        
+    """
+
     mh.run_lagrit_script(f"driver_frac{f_id}.lgi",
                          f"lagrit_logs/driver_frac{f_id}")
     shutil.copy(f"driver_frac{f_id}.lgi", "lagrit_scripts")
@@ -1022,6 +1071,27 @@ def interpolate_parallel(f_id):
 
 
 def build_dict(self, num_poly, delete_files):
+    """
+
+    Parameters
+    ----------
+        self : object 
+            DFN Class
+
+        num_poly : int
+            Number of fractures
+
+        delete_files : bool
+            togle to delet files
+
+    Returns
+    -------
+        None
+
+    Notes
+    ------
+        
+    """
     f_dict = {}
     for i in range(1, num_poly + 1):
         imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 0]
@@ -1038,6 +1108,7 @@ def build_dict(self, num_poly, delete_files):
 
 
 def dir_cleanup():
+    """ Directory cleanup """
     os.rename("build_octree.mlgi", "lagrit_scripts/build_octree.mlgi")
     os.rename("driver_octree_start.lgi",
               "lagrit_scripts/driver_octree_start.lgi")

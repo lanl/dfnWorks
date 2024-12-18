@@ -204,7 +204,17 @@ __all__ = ()
 
 
 def identity_matrix():
-    """Return 4x4 identity/unit matrix.
+    """ Return 4x4 identity/unit matrix.
+    Parameters
+    ------------
+        None
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
 
     >>> I = identity_matrix()
     >>> numpy.allclose(I, numpy.dot(I, I))
@@ -221,6 +231,18 @@ def identity_matrix():
 def translation_matrix(direction):
     """Return matrix to translate by direction vector.
 
+    Parameters
+    ------------
+        direction : string
+            string indicating direction
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
+
     >>> v = numpy.random.random(3) - 0.5
     >>> numpy.allclose(v, translation_matrix(v)[:3, 3])
     True
@@ -232,7 +254,19 @@ def translation_matrix(direction):
 
 
 def translation_from_matrix(matrix):
-    """Return translation vector from translation matrix.
+    """Return 4x4 identity/unit matrix.
+    
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix 
+
+    Returns
+    ---------
+        Translated matrix
+
+    Notes
+    -----
 
     >>> v0 = numpy.random.random(3) - 0.5
     >>> v1 = translation_from_matrix(translation_matrix(v0))
@@ -245,6 +279,21 @@ def translation_from_matrix(matrix):
 
 def reflection_matrix(point, normal):
     """Return matrix to mirror at plane defined by point and normal vector.
+
+    Parameters
+    ------------
+        point : numpy array
+
+        normal : numpy array
+#             normal vector of a fracture
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
 
     >>> v0 = numpy.random.random(4) - 0.5
     >>> v0[3] = 1.
@@ -271,6 +320,21 @@ def reflection_matrix(point, normal):
 
 def reflection_from_matrix(matrix):
     """Return mirror plane point and normal vector from reflection matrix.
+
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
+
+    Returns
+    ---------
+        point : numpy array
+
+        normal : numpy array
+#             normal vector of a fracture
+
+    Notes
+    -----
 
     >>> v0 = numpy.random.random(3) - 0.5
     >>> v1 = numpy.random.random(3) - 0.5
@@ -300,6 +364,24 @@ def reflection_from_matrix(matrix):
 
 def rotation_matrix(angle, direction, point=None):
     """Return matrix to rotate about axis defined by point and direction.
+
+    Parameters
+    ------------
+        angle : int
+        
+        direction : string
+            string indicating direction
+
+        point : numpy array
+            Default is None
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
 
     >>> R = rotation_matrix(math.pi/2, [0, 0, 1], [1, 0, 0])
     >>> numpy.allclose(numpy.dot(R, [0, 0, 0, 1]), [1, -1, 0, 1])
@@ -345,6 +427,24 @@ def rotation_matrix(angle, direction, point=None):
 def rotation_from_matrix(matrix):
     """Return rotation angle and axis from rotation matrix.
 
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
+
+    Returns
+    ---------
+        angle : int
+        
+        direction : string
+            string indicating direction
+
+        point : numpy array
+            Default is None
+
+    Notes
+    -----
+
     >>> angle = (random.random() - 0.5) * (2*math.pi)
     >>> direc = numpy.random.random(3) - 0.5
     >>> point = numpy.random.random(3) - 0.5
@@ -388,6 +488,24 @@ def rotation_from_matrix(matrix):
 def scale_matrix(factor, origin=None, direction=None):
     """Return matrix to scale by factor around origin in direction.
 
+    Parameters
+    ------------
+        factor : int
+
+        origin : int
+            Default None
+
+        direction : string
+            string indicating direction. Default is None. 
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
+
     Use factor -1 for point symmetry.
 
     >>> v = (numpy.random.rand(4, 5) - 0.5) * 20
@@ -421,6 +539,24 @@ def scale_matrix(factor, origin=None, direction=None):
 
 def scale_from_matrix(matrix):
     """Return scaling factor, origin and direction from scaling matrix.
+
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
+
+    Returns
+    ---------
+        factor : int
+
+        origin : int
+            Default None
+
+        direction : string
+            string indicating direction. Default is None.
+
+    Notes
+    -----
 
     >>> factor = random.random() * 10 - 5
     >>> origin = numpy.random.random(3) - 0.5
@@ -471,6 +607,29 @@ def projection_matrix(point,
 
     If pseudo is True, perspective projections will preserve relative depth
     such that Perspective = dot(Orthogonal, PseudoPerspective).
+
+    Parameters
+    ------------
+        point : numpy array
+
+        normal : numpy array
+            normal vector of a fracture
+
+        direction : string
+            string indicating direction. Default is None.
+
+        perspective : numpy array
+            perspective partition of matrix
+
+        pseudo : bool
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
 
     >>> P = projection_matrix([0, 0, 0], [1, 0, 0])
     >>> numpy.allclose(P[1:, 1:], numpy.identity(4)[1:, 1:])
@@ -531,6 +690,20 @@ def projection_from_matrix(matrix, pseudo=False):
 
     Return values are same as arguments for projection_matrix function:
     point, normal, direction, perspective, and pseudo.
+
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
+
+        pseudo : bool
+
+    Returns
+    ---------
+        Projection plane
+
+    Notes
+    -----
 
     >>> point = numpy.random.random(3) - 0.5
     >>> normal = numpy.random.random(3) - 0.5
@@ -614,6 +787,21 @@ def clip_matrix(left, right, bottom, top, near, far, perspective=False):
 
     Homogeneous coordinates transformed by the perspective clip matrix
     need to be dehomogenized (divided by w coordinate).
+    
+    Parameters
+    ------------
+        left, right, bottom, top, near, far : int
+            frustum bounds
+
+        perspective : numpy array
+            perspective partition of matrix
+
+    Returns
+    ---------
+        matrix
+
+    Notes
+    -----
 
     >>> frustum = numpy.random.rand(6)
     >>> frustum[1] += frustum[0]
@@ -662,6 +850,26 @@ def shear_matrix(angle, direction, point, normal):
     given by the angle of P-P'-P", where P' is the orthogonal projection
     of P onto the shear plane.
 
+    Parameters
+    ------------
+        angle : int
+
+        direction : string
+            string indicating direction. Default is None.
+
+        point : numpy array
+
+        normal : numpy array
+            normal vector of a fracture
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
+
     >>> angle = (random.random() - 0.5) * 4*math.pi
     >>> direct = numpy.random.random(3) - 0.5
     >>> point = numpy.random.random(3) - 0.5
@@ -684,6 +892,26 @@ def shear_matrix(angle, direction, point, normal):
 
 def shear_from_matrix(matrix):
     """Return shear angle, direction and plane from shear matrix.
+
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
+
+    Returns
+    ---------
+        angle : int
+
+        direction : string
+            string indicating direction. Default is None.
+
+        point : numpy array
+
+        normal : numpy array
+            normal vector of a fracture
+
+    Notes
+    -----
 
     >>> angle = (random.random() - 0.5) * 4*math.pi
     >>> direct = numpy.random.random(3) - 0.5
@@ -729,17 +957,23 @@ def shear_from_matrix(matrix):
 
 def decompose_matrix(matrix):
     """Return sequence of transformations from transformation matrix.
+    
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix
 
-    matrix : array_like
-        Non-degenerative homogeneous transformation matrix
+    Returns
+    ---------
+        Return tuple of:
+            scale : vector of 3 scaling factors
+            shear : list of shear factors for x-y, x-z, y-z axes
+            angles : list of Euler angles about static x, y, z axes
+            translate : translation vector along x, y, z axes
+            perspective : perspective partition of matrix
 
-    Return tuple of:
-        scale : vector of 3 scaling factors
-        shear : list of shear factors for x-y, x-z, y-z axes
-        angles : list of Euler angles about static x, y, z axes
-        translate : translation vector along x, y, z axes
-        perspective : perspective partition of matrix
-
+    Notes
+    -----
     Raise ValueError if matrix is of wrong type or degenerative.
 
     >>> T0 = translation_matrix([1, 2, 3])
@@ -819,14 +1053,23 @@ def compose_matrix(scale=None,
                    perspective=None):
     """Return transformation matrix from sequence of transformations.
 
-    This is the inverse of the decompose_matrix function.
+    Parameters
+    ------------
+        Sequence of transformations:
+            scale : vector of 3 scaling factors
+            shear : list of shear factors for x-y, x-z, y-z axes
+            angles : list of Euler angles about static x, y, z axes
+            translate : translation vector along x, y, z axes
+            perspective : perspective partition of matrix
 
-    Sequence of transformations:
-        scale : vector of 3 scaling factors
-        shear : list of shear factors for x-y, x-z, y-z axes
-        angles : list of Euler angles about static x, y, z axes
-        translate : translation vector along x, y, z axes
-        perspective : perspective partition of matrix
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
+    This is the inverse of the decompose_matrix function.
 
     >>> scale = numpy.random.random(3) - 0.5
     >>> shear = numpy.random.random(3) - 0.5
@@ -871,6 +1114,18 @@ def compose_matrix(scale=None,
 def orthogonalization_matrix(lengths, angles):
     """Return orthogonalization matrix for crystallographic cell coordinates.
 
+    Parameters
+    ------------
+        lengths : lengths of a, b, and c
+        
+        angles : list of Euler angles about static x, y, z axes
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
     Angles are expected in degrees.
 
     The de-orthogonalization matrix is the inverse.
@@ -896,6 +1151,27 @@ def orthogonalization_matrix(lengths, angles):
 def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
     """Return affine transform matrix to register two point sets.
 
+    Parameters
+    ------------
+        v0, v1 : array
+            shape (ndims, \*) arrays
+
+        shear : bool
+            Default = True
+
+        scale : bool
+            Default = True
+
+        usesvd : bool
+            Default = True
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
     v0 and v1 are shape (ndims, \*) arrays of at least ndims non-homogeneous
     coordinates, where ndims is the dimensionality of the coordinate space.
 
@@ -1004,13 +1280,31 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
 def superimposition_matrix(v0, v1, scale=False, usesvd=True):
     """Return matrix to transform given 3D point set into second point set.
 
+    
+
+    Parameters
+    ------------
+        v0, v1 : array
+            shape (3, \*) or (4, \*) arrays
+
+        scale : bool
+            Default = False
+
+        usesvd : bool
+            Default = True
+
+    Returns
+    ---------
+        Matrix - The returned matrix is a similarity or Euclidean transformation matrix.
+    This function has a fast C implementation in transformations.c.
+
+    Notes
+    -----
+
     v0 and v1 are shape (3, \*) or (4, \*) arrays of at least 3 points.
 
     The parameters scale and usesvd are explained in the more general
     affine_matrix_from_points function.
-
-    The returned matrix is a similarity or Euclidean transformation matrix.
-    This function has a fast C implementation in transformations.c.
 
     >>> v0 = numpy.random.rand(3, 10)
     >>> M = superimposition_matrix(v0, v0)
@@ -1058,8 +1352,18 @@ def superimposition_matrix(v0, v1, scale=False, usesvd=True):
 def euler_matrix(ai, aj, ak, axes='sxyz'):
     """Return homogeneous rotation matrix from Euler angles and axis sequence.
 
-    ai, aj, ak : Euler's roll, pitch and yaw angles
-    axes : One of 24 axis sequences as string or encoded tuple
+    Parameters
+    ------------
+        ai, aj, ak : Euler's roll, pitch and yaw angles
+        axes : One of 24 axis sequences as string or encoded tuple
+
+    Returns
+    ---------
+        M : numpy array
+            array of translated direction vectors
+
+    Notes
+    -----
 
     >>> R = euler_matrix(1, 2, 3, 'syxz')
     >>> numpy.allclose(numpy.sum(R[0]), -1.34786452)
@@ -1121,9 +1425,22 @@ def euler_matrix(ai, aj, ak, axes='sxyz'):
 def euler_from_matrix(matrix, axes='sxyz'):
     """Return Euler angles from rotation matrix for specified axis sequence.
 
-    axes : One of 24 axis sequences as string or encoded tuple
+    
 
     Note that many Euler angle triplets can describe one matrix.
+
+    Parameters
+    ------------
+        matrix : array_like
+            Non-degenerative homogeneous transformation matrix 
+        axes : One of 24 axis sequences as string or encoded tuple
+
+    Returns
+    ---------
+        ax, ay, az : Euler angles from rotation matrix
+
+    Notes
+    -----
 
     >>> R0 = euler_matrix(1, 2, 3, 'syxz')
     >>> al, be, ga = euler_from_matrix(R0, 'syxz')
@@ -1179,6 +1496,19 @@ def euler_from_matrix(matrix, axes='sxyz'):
 def euler_from_quaternion(quaternion, axes='sxyz'):
     """Return Euler angles from quaternion for specified axis sequence.
 
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
+
+        axes : One of 24 axis sequences as string or encoded tuple
+
+    Returns
+    ---------
+        Matrix : Euler angles from quaternion for specified axis sequence.
+
+    Notes
+    -----
+
     >>> angles = euler_from_quaternion([0.99810947, 0.06146124, 0, 0])
     >>> numpy.allclose(angles, [0.123, 0, 0])
     True
@@ -1190,8 +1520,18 @@ def euler_from_quaternion(quaternion, axes='sxyz'):
 def quaternion_from_euler(ai, aj, ak, axes='sxyz'):
     """Return quaternion from Euler angles and axis sequence.
 
-    ai, aj, ak : Euler's roll, pitch and yaw angles
-    axes : One of 24 axis sequences as string or encoded tuple
+    Parameters
+    ------------
+        ai, aj, ak : Euler's roll, pitch and yaw angles
+        
+        axes : One of 24 axis sequences as string or encoded tuple
+
+    Returns
+    ---------
+        q : quaternion from Euler angles and axis sequence.
+
+    Notes
+    -----
 
     >>> q = quaternion_from_euler(1, 2, 3, 'ryxz')
     >>> numpy.allclose(q, [0.435953, 0.310622, -0.718287, 0.444435])
@@ -1247,6 +1587,19 @@ def quaternion_from_euler(ai, aj, ak, axes='sxyz'):
 def quaternion_about_axis(angle, axis):
     """Return quaternion for rotation about axis.
 
+    Parameters
+    ------------
+        angle : int
+
+        axis : axis of rotation
+
+    Returns
+    ---------
+        q : quaternion from Euler angles and axis sequence.
+
+    Notes
+    -----
+
     >>> q = quaternion_about_axis(0.123, [1, 0, 0])
     >>> numpy.allclose(q, [0.99810947, 0.06146124, 0, 0])
     True
@@ -1262,6 +1615,17 @@ def quaternion_about_axis(angle, axis):
 
 def quaternion_matrix(quaternion):
     """Return homogeneous rotation matrix from quaternion.
+
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
+
+    Returns
+    ---------
+        matrix of rotations from quaternion
+
+    Notes
+    -----
 
     >>> M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])
     >>> numpy.allclose(M, rotation_matrix(0.123, [1, 0, 0]))
@@ -1292,6 +1656,19 @@ def quaternion_from_matrix(matrix, isprecise=False):
 
     If isprecise is True, the input matrix is assumed to be a precise rotation
     matrix and a faster algorithm is used.
+
+    Parameters
+    ------------
+        Matrix : Euler angles from quaternion for specified axis sequence.
+
+        isprecise : bool. Default is False
+
+    Returns
+    ---------
+        q : quaternion from Euler angles and axis sequence.
+
+    Notes
+    -----
 
     >>> q = quaternion_from_matrix(numpy.identity(4), True)
     >>> numpy.allclose(q, [1, 0, 0, 0])
@@ -1371,6 +1748,17 @@ def quaternion_from_matrix(matrix, isprecise=False):
 def quaternion_multiply(quaternion1, quaternion0):
     """Return multiplication of two quaternions.
 
+    Parameters
+    ------------
+        quaternion1, quaternion0 : quaternions for mutliplication
+
+    Returns
+    ---------
+        matrix of mutliplication of two quaternions
+
+    Notes
+    -----
+
     >>> q = quaternion_multiply([4, 1, -2, 3], [8, -5, 6, 7])
     >>> numpy.allclose(q, [28, -44, -14, 48])
     True
@@ -1389,6 +1777,17 @@ def quaternion_multiply(quaternion1, quaternion0):
 def quaternion_conjugate(quaternion):
     """Return conjugate of quaternion.
 
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
+
+    Returns
+    ---------
+        q : quaternion from Euler angles and axis sequence.
+
+    Notes
+    -----
+
     >>> q0 = random_quaternion()
     >>> q1 = quaternion_conjugate(q0)
     >>> q1[0] == q0[0] and all(q1[1:] == -q0[1:])
@@ -1402,6 +1801,17 @@ def quaternion_conjugate(quaternion):
 
 def quaternion_inverse(quaternion):
     """Return inverse of quaternion.
+
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
+
+    Returns
+    ---------
+        matrix : q / numpy.dot(q, q)
+
+    Notes
+    -----
 
     >>> q0 = random_quaternion()
     >>> q1 = quaternion_inverse(q0)
@@ -1417,6 +1827,16 @@ def quaternion_inverse(quaternion):
 def quaternion_real(quaternion):
     """Return real part of quaternion.
 
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
+
+    Returns
+    ---------
+        matrix : float(quaternion[0])
+
+    Notes
+    -----
     >>> quaternion_real([3, 0, 1, 2])
     3.0
 
@@ -1426,7 +1846,17 @@ def quaternion_real(quaternion):
 
 def quaternion_imag(quaternion):
     """Return imaginary part of quaternion.
+    
+    Parameters
+    ------------
+        quaternion : eigenvector of K that corresponds to largest eigenvalue
 
+    Returns
+    ---------
+        matrix : numpy.array(quaternion[1:4], dtype=numpy.float64, copy=True)
+
+    Notes
+    -----
     >>> quaternion_imag([3, 0, 1, 2])
     array([ 0.,  1.,  2.])
 
@@ -1436,6 +1866,22 @@ def quaternion_imag(quaternion):
 
 def quaternion_slerp(quat0, quat1, fraction, spin=0, shortestpath=True):
     """Return spherical linear interpolation between two quaternions.
+    
+    Parameters
+    ------------
+        quat0, quat1 : random quaternion
+        fraction : int
+        spin : int
+            Default is 0
+        shortestpath : bool
+            Default is True
+
+    Returns
+    ---------
+        q0 : random quaternion
+
+    Notes
+    -----
 
     >>> q0 = random_quaternion()
     >>> q1 = random_quaternion()
@@ -1477,10 +1923,18 @@ def quaternion_slerp(quat0, quat1, fraction, spin=0, shortestpath=True):
 
 def random_quaternion(rand=None):
     """Return uniform random unit quaternion.
+    
+    Parameters
+    ------------
+        rand: array like or None
+            Three independent random variables that are uniformly distributed between 0 and 1.
 
-    rand: array like or None
-        Three independent random variables that are uniformly distributed
-        between 0 and 1.
+    Returns
+    ---------
+        martix : uniform random unit quaternion
+
+    Notes
+    -----
 
     >>> q = random_quaternion()
     >>> numpy.allclose(1, vector_norm(q))
@@ -1509,10 +1963,18 @@ def random_quaternion(rand=None):
 
 def random_rotation_matrix(rand=None):
     """Return uniform random rotation matrix.
+    
+    Parameters
+    ------------
+        rand: array like
+            Three independent random variables that are uniformly distributed between 0 and 1 for each returned quaternion.
 
-    rand: array like
-        Three independent random variables that are uniformly distributed
-        between 0 and 1 for each returned quaternion.
+    Returns
+    ---------
+        martix : uniform random rotation matrix
+
+    Notes
+    -----
 
     >>> R = random_rotation_matrix()
     >>> numpy.allclose(numpy.dot(R.T, R), numpy.identity(4))
@@ -1573,10 +2035,23 @@ class Arcball(object):
     def place(self, center, radius):
         """Place Arcball, e.g. when window size changes.
 
-        center : sequence[2]
-            Window coordinates of trackball center.
-        radius : float
-            Radius of trackball in window coordinates.
+        Parameters
+        ------------
+            self : object
+                DFN Class
+            
+            center : sequence[2]
+                Window coordinates of trackball center.
+            
+            radius : float
+                Radius of trackball in window coordinates.
+
+        Returns
+        ---------
+            Arcball placement
+
+        Notes
+        -----
 
         """
         self._radius = float(radius)
@@ -1584,7 +2059,22 @@ class Arcball(object):
         self._center[1] = center[1]
 
     def setaxes(self, *axes):
-        """Set axes to constrain rotations."""
+        """Set axes to constrain rotations.
+        
+        Parameters
+        ------------
+            self : object
+                DFN Class
+            
+            axes : One of 24 axis sequences as string or encoded tuple 
+
+        Returns
+        ---------
+            set axes
+
+        Notes
+        -----
+        """
         if axes is None:
             self._axes = None
         else:
@@ -1601,7 +2091,22 @@ class Arcball(object):
         self._constrain = bool(value)
 
     def down(self, point):
-        """Set initial cursor window coordinates and pick constrain-axis."""
+        """Set initial cursor window coordinates and pick constrain-axis.
+        
+        Parameters
+        ------------
+            self : object
+                DFN Class
+
+            point : numpy array
+
+        Returns
+        ---------
+            initial cursor window coordinates and constrain-axis
+
+        Notes
+        -----
+        """
         self._vdown = arcball_map_to_sphere(point, self._center, self._radius)
         self._qdown = self._qpre = self._qnow
         if self._constrain and self._axes is not None:
@@ -1634,7 +2139,24 @@ class Arcball(object):
 
 
 def arcball_map_to_sphere(point, center, radius):
-    """Return unit sphere coordinates from window coordinates."""
+    """Return unit sphere coordinates from window coordinates.
+        Parameters
+        ------------
+            point : numpy array
+
+            center : sequence[2]
+                Window coordinates of trackball center.
+
+            radius : float
+                Radius of trackball in window coordinates.
+
+        Returns
+        ---------
+            unit sphere coordinates from window coordinates
+
+        Notes
+        -----
+    """
     v0 = (point[0] - center[0]) / radius
     v1 = (center[1] - point[1]) / radius
     n = v0 * v0 + v1 * v1
@@ -1647,7 +2169,20 @@ def arcball_map_to_sphere(point, center, radius):
 
 
 def arcball_constrain_to_axis(point, axis):
-    """Return sphere point perpendicular to axis."""
+    """Return sphere point perpendicular to axis.
+        Parameters
+        ------------
+            point : numpy array
+
+            axis : axis of rotation
+
+        Returns
+        ---------
+            unit vector
+
+        Notes
+        -----
+    """
     v = numpy.array(point, dtype=numpy.float64, copy=True)
     a = numpy.array(axis, dtype=numpy.float64, copy=True)
     v -= a * numpy.dot(a, v)  # on plane
@@ -1663,7 +2198,22 @@ def arcball_constrain_to_axis(point, axis):
 
 
 def arcball_nearest_axis(point, axes):
-    """Return axis, which arc is nearest to point."""
+    """Return axis, which arc is nearest to point.
+
+    Parameters
+    ------------
+        point : numpy array
+
+        axis : axis of rotation
+
+    Returns
+    ---------
+        nearest : nearest axis
+
+    Notes
+    -----
+
+    """
     point = numpy.array(point, dtype=numpy.float64, copy=False)
     nearest = None
     mx = -1.0
@@ -1715,6 +2265,20 @@ _TUPLE2AXES = dict((v, k) for k, v in _AXES2TUPLE.items())
 def vector_norm(data, axis=None, out=None):
     """Return length, i.e. Euclidean norm, of ndarray along axis.
 
+    Parameters
+    ------------
+        data : numpy array
+        axis : axis of rotation
+            Default is None
+        out : Default is None
+
+    Returns
+    ---------
+        length of ndarray along axis
+    
+    Notes
+    -----
+
     >>> v = numpy.random.random(3)
     >>> n = vector_norm(v)
     >>> numpy.allclose(n, numpy.linalg.norm(v))
@@ -1753,6 +2317,20 @@ def vector_norm(data, axis=None, out=None):
 
 def unit_vector(data, axis=None, out=None):
     """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
+    
+    Parameters
+    ------------
+        data : numpy array
+        axis : axis of rotation
+            Default is None
+        out : Default is None
+
+    Returns
+    ---------
+        matrix : ndarray normalized by length along axis
+
+    Notes
+    -----
 
     >>> v0 = numpy.random.random(3)
     >>> v1 = unit_vector(v0)
@@ -1798,6 +2376,17 @@ def unit_vector(data, axis=None, out=None):
 def random_vector(size):
     """Return array of random doubles in the half-open interval [0.0, 1.0).
 
+    Parameters
+    ------------
+        size : int
+
+    Returns
+    ---------
+        matrix : array of random doubles
+
+    Notes
+    -----
+
     >>> v = random_vector(10000)
     >>> numpy.all(v >= 0) and numpy.all(v < 1)
     True
@@ -1812,6 +2401,20 @@ def random_vector(size):
 
 def vector_product(v0, v1, axis=0):
     """Return vector perpendicular to vectors.
+
+    Parameters
+    ------------
+        v0, v1 : array
+        
+        axis : axis of rotation
+            Default is 0
+
+    Returns
+    ---------
+        vector
+
+    Notes
+    -----
 
     >>> v = vector_product([2, 0, 0], [0, 3, 0])
     >>> numpy.allclose(v, [0, 0, 6])
@@ -1833,6 +2436,23 @@ def vector_product(v0, v1, axis=0):
 
 def angle_between_vectors(v0, v1, directed=True, axis=0):
     """Return angle between vectors.
+
+    Parameters
+    ------------
+        v0, v1 : array
+
+        directed : bool
+            Default is True
+
+        axis : axis of rotation
+            Default is 0
+
+    Returns
+    ---------
+        angle between vectors
+
+    Notes
+    -----
 
     If directed is False, the input vectors are interpreted as undirected axes,
     i.e. the maximum angle is pi/2.
@@ -1865,6 +2485,17 @@ def angle_between_vectors(v0, v1, directed=True, axis=0):
 def inverse_matrix(matrix):
     """Return inverse of square transformation matrix.
 
+    Parameters
+    ------------
+        matrix : array
+
+    Returns
+    ---------
+        inverse of square transformation matrix
+
+    Notes
+    -----
+
     >>> M0 = random_rotation_matrix()
     >>> M1 = inverse_matrix(M0.T)
     >>> numpy.allclose(M1, numpy.linalg.inv(M0.T))
@@ -1881,6 +2512,17 @@ def inverse_matrix(matrix):
 def concatenate_matrices(*matrices):
     """Return concatenation of series of transformation matrices.
 
+    Parameters
+    ------------
+        matrices : a series of matrices
+
+    Returns
+    ---------
+        M : concatenation of transformation matrices
+
+    Notes
+    -----
+
     >>> M = numpy.random.rand(16).reshape((4, 4)) - 0.5
     >>> numpy.allclose(M, concatenate_matrices(M))
     True
@@ -1896,6 +2538,17 @@ def concatenate_matrices(*matrices):
 
 def is_same_transform(matrix0, matrix1):
     """Return True if two matrices perform same transformation.
+ 
+    Parameters
+    ------------
+        matrix0, matrix1 : matrices to compare
+
+    Returns
+    ---------
+        Return True if two matrices perform same transformation
+
+    Notes
+    -----
 
     >>> is_same_transform(numpy.identity(4), numpy.identity(4))
     True
@@ -1917,7 +2570,6 @@ def _import_module(name, package=None, warn=True, prefix='_py_', ignore='_'):
     Attributes starting with underscore are ignored by default.
 
     Return True on successful import.
-
     """
     import warnings
     from importlib import import_module

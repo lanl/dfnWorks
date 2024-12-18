@@ -6,6 +6,22 @@ old = 'DUMMY'
 new = os.path.join('/',*os.getcwd().split('/')[:-3])
 
 def listdir_recursive(base_directory):
+    ''' List files
+
+    Parameters
+    ----------
+        base_directory : string
+            base directory
+
+    Returns
+    -------
+        files : list
+            list of files
+
+    Notes
+    -----
+    None
+    '''
     files = []
     for root, directories, filenames in os.walk(base_directory):
         for filename in filenames: 
@@ -13,6 +29,24 @@ def listdir_recursive(base_directory):
     return files
 
 def replace(old, new):
+    ''' Replace ext
+
+    Parameters
+    ----------
+        old : string
+            old text to replace
+
+        new : string
+            new text to overwrite with
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+    None
+    '''
     files = listdir_recursive('../')
     files.extend(listdir_recursive('../../examples'))
 

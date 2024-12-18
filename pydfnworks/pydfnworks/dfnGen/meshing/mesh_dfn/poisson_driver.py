@@ -4,7 +4,19 @@ from pydfnworks.general import helper_functions as hf
 
 
 def create_poisson_user_function_script():
+    """
+    Parameters
+    ------------
+        None
 
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+
+    """
     lagrit_script = f"""
  
 read / avs / INTERSECTION / MO_INTERSECTIONS
@@ -31,6 +43,20 @@ finish
 
 
 def grab_z_value(fracture_id):
+    """
+    Parameters
+    ------------
+        fracture_id : int
+            Fracture ID number 
+
+    Returns
+    ---------
+        z_value : string
+
+    Notes
+    -----
+    
+    """
 
     with open(f'polys/poly_{fracture_id}.inp', 'r') as fp:
         _ = fp.readline()
@@ -41,7 +67,32 @@ def grab_z_value(fracture_id):
 
 def create_lagrit_parameters_file(self, fracture_id, index, digits, slope,
                                   intercept, max_resolution_factor):
+    """
+    Parameters
+    ------------
+        self : object 
+            DFN Class 
+        fracture_id : int
+            Fracture ID number
+        index : int
+            index number
+        digits : int
+            number of digits in total number of fractures
+        slope : float 
+            slope of the linear function of the mesh resolution
+        intercept : float 
+            Intercept of the linear function of the mesh resolution
+        max_resolution_factor : float
+            Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
 
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+
+    """
     ## while h is th key paramter, the intersecctions are meshed at h/2
     local_h = 0.5 * self.h
 
@@ -115,6 +166,23 @@ finish
 
 
 def create_lagrit_poisson_script(fracture_id, digits):
+    """ Read in polygon boundary and create points and mesh using Poisson Disc Sampling
+    Parameters
+    ------------
+        fracture_id : int
+            Fracture ID number
+
+        digits : int
+            number of digits in total number of fractures
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+
+    """
 
     lagrit_script = f"""
 
@@ -348,6 +416,11 @@ def create_lagrit_reduced_mesh_script(fracture_id, digits):
     
     Parameters
     ---------- 
+        fracture_id : int
+            Fracture ID number
+
+        digits : int
+            number of digits in total number of fractures
 
     Returns
     -------

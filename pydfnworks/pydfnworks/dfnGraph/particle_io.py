@@ -65,8 +65,10 @@ def dump_trajectories(particles, num_cpu, single_file=True):
     ---------------
         particle : list
             list of particle objects from graph_transport
+        
         num_cpu : int
             number of processors requested for io
+        
         single_file : boolean
             If true, all particles are written into a single h5 file. If false, each particle gets an individual file. 
 
@@ -138,7 +140,25 @@ def dump_trajectories(particles, num_cpu, single_file=True):
 
 def gather_particle_info(particles):
     """ Gather particle information into numpy arrays.
-    
+        
+        Parameters
+        ----------
+            particles : list
+                list of particle objects
+
+        Returns
+        -------
+            adv_times, md_times, total_times : array of times
+            
+            length : array of lengths
+            
+            beta : array of beta particles
+            
+            stuck_particles : int 
+                Number of particles that do not exit the domain
+
+        Notes
+        ------
     
     """
     # Gather data

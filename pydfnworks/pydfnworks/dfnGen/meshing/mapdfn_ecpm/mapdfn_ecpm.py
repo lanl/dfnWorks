@@ -45,11 +45,25 @@ def mapdfn_ecpm(self,
     -----------------
         self : dfnWorks object
         
+        matrix_perm : float
+            permeability of the matrix cells without fratures 
+
         cell_size : float
             The cell size (meters) to use for the meshing
 
+        matrix_on : bool
+            Default is False
+
+        tortuosity_factor : float
+
+        lump_diag_terms : bool
+            Deault is False
+
         correction_factor : boolean
             Apply stairstep correction from EDFM to  not applied to permeability
+
+        output_dir : string
+            output directory
 
         
     Returns

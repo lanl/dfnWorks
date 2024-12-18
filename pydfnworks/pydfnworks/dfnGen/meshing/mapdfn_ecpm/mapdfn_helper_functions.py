@@ -7,7 +7,10 @@ def setup_output_dir(output_dir, jobname):
     Parameters
     ----------------
         output_dir : string
-            relative path name of output directory. 
+            relative path name of output directory.
+
+        jobname : string
+            name of job 
 
     Returns
     ------------
@@ -43,6 +46,10 @@ def setup_domain(domain, domain_center, cell_size):
     -----------------
         domain : dictionary
             Domain size in x, y, z from DFN object
+        
+        domain_center : list
+            List of points
+        
         cell_size : float
             Hexahedron cell size
 
@@ -50,12 +57,16 @@ def setup_domain(domain, domain_center, cell_size):
     -----------------
         origin : list 
             min_x, min_y, min_z values of domain
+        
         nx : int
             Number of cells in x direction 
+        
         ny : int
             Number of cells in y direction
+        
         nz : int
             Number of cells in z direction 
+        
         num_cells : int 
             Total number of cells in the domain
 

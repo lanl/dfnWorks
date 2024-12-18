@@ -18,10 +18,9 @@ def dfn_gen(self, output=True):
     ----------
         self :
             DFN object
+        
         output : bool
             If True, output pdf will be created. If False, no pdf is made 
-        visual_mode : None
-            If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode
 
     Returns
     -------
@@ -171,6 +170,9 @@ def parse_params_file(self, quiet=False):
 
     Parameters
     ---------
+        self :
+            DFN object
+
         quiet : bool
             If True details are not printed to screen, if False they area 
 
@@ -329,7 +331,7 @@ def read_boundaries(file_path):
 
     Returns
     --------
-        array of values (or empty array if file is empty
+        data : array of values (or empty array if file is empty
     
     Notes
     ------

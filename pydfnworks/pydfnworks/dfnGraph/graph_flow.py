@@ -64,6 +64,8 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
         outflow: string
             name of file containing list of DFN fractures on outflow boundary
 
+        G : NetworkX graph
+
     Returns
     -------
         Gtilde : NetworkX graph
@@ -233,6 +235,7 @@ def compute_dQ(self, G):
     ---------------
         p32 : float
             Fracture intensity
+        
         dQ : float flow channeling density indicator 
 
     Notes

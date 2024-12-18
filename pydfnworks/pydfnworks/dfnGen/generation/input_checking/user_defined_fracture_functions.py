@@ -8,6 +8,24 @@ from numpy import pi
 
 
 def check_angle_option(angle_option, array):
+    """ Checks the angle value using specified angle option.
+
+    Parameters
+    ----------------
+        angle_option : string
+            angle type, radian or degree
+
+        array: array
+            array of values
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    --------------
+        None
+    """
     for val in array:
         if angle_option == "radian":
             if val > 2 * pi:
@@ -87,6 +105,8 @@ def add_user_fract_from_file(self,
 
     Parameters
     ----------------
+        self : DFN object
+
         filename : string
             path to source file
 
@@ -191,6 +211,8 @@ def add_user_fract(self,
     
     Parameters
     -------------
+        self : DFN object
+
         shape: string
             The desired shape of the fracture options are 'rect', 'ell', and 'poly' - Required
         
@@ -573,14 +595,19 @@ def determine_hy_prop_type(aperture, transmissivity, permeability):
         Parameters
         -------------
             aperture : None or Float
+
             transmissivity : None or Float
+
             permeability : None or Float
 
         Returns
         ---------
-            The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown
-                                                                                           Notes
-        -------"""
+            The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown 
+
+        Notes
+        -------
+            None
+    """
 
     #Determine Hydraulic Property type
 
