@@ -227,5 +227,6 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
                             break
 
     tnow = time.time() - t0
-    self.print_log(f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
+    self.print_log(
+        f'** Tagging Cells Complete. Time required : {tnow:0.2f} seconds **')
     return cell_fracture_id

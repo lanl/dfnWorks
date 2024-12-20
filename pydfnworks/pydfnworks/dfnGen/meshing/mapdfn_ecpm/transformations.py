@@ -2007,6 +2007,7 @@ class Arcball(object):
     >>> ball.next()
 
     """
+
     def __init__(self, initial=None):
         """Initialize virtual trackball control.
 
