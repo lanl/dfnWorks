@@ -4,6 +4,7 @@ import itertools
 import time
 from pydfnworks.general.logging import local_print_log, print_log
 
+
 def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
                      porosity, cell_fracture_id, matrix_on, h5origin):
     """ Converts values into arrays to be dumped into h5 files
@@ -129,8 +130,9 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
 
 def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on, h5origin):
-     """ Write informaiton into h5 files for pflotran run. 
+                   k_aniso, porosity, matrix_perm, tortuosity_factor,
+                   matrix_on, h5origin):
+    """ Write informaiton into h5 files for pflotran run. 
 
     Parameters
     ------------------
@@ -179,7 +181,6 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
     #x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
     #    origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
     #    matrix_perm, porosity, cell_fracture_id)
-
     x, y, z, material_id, khdf5, kx, ky, kz, phdf5, idx_array, mat_array = create_h5_arrays(
         nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
         cell_fracture_id, matrix_on)
