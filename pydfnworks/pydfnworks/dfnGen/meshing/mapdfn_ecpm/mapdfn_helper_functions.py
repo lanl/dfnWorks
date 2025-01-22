@@ -1,13 +1,17 @@
 import os, sys
 from pydfnworks.general.logging import local_print_log, print_log
 
+
 def setup_output_dir(output_dir, jobname):
     """ Create ECPM output directory
 
     Parameters
     ----------------
         output_dir : string
-            relative path name of output directory. 
+            relative path name of output directory.
+
+        jobname : string
+            name of job 
 
     Returns
     ------------
@@ -43,6 +47,10 @@ def setup_domain(domain, domain_center, cell_size):
     -----------------
         domain : dictionary
             Domain size in x, y, z from DFN object
+        
+        domain_center : list
+            List of points
+        
         cell_size : float
             Hexahedron cell size
 
@@ -50,12 +58,16 @@ def setup_domain(domain, domain_center, cell_size):
     -----------------
         origin : list 
             min_x, min_y, min_z values of domain
+        
         nx : int
             Number of cells in x direction 
+        
         ny : int
             Number of cells in y direction
+        
         nz : int
             Number of cells in z direction 
+        
         num_cells : int 
             Total number of cells in the domain
 
@@ -70,7 +82,10 @@ def setup_domain(domain, domain_center, cell_size):
     origin = [-1 * domain['x'] / 2, -1 * domain['y'] / 2, -1 * domain['z'] / 2]
     local_print_log(f" Sampling Domain Origin : {origin}")
     local_print_log(f" Domain Center : {domain_center}")
-    h5origin = [origin[0] + domain_center[0], origin[1] + domain_center[1], origin[2] + domain_center[2] ]
+    h5origin = [
+        origin[0] + domain_center[0], origin[1] + domain_center[1],
+        origin[2] + domain_center[2]
+    ]
     local_print_log(f"h5origin {h5origin}")
 
     # Origin of area to map in DFN domain coordinates (0,0,0 is center of DFN)

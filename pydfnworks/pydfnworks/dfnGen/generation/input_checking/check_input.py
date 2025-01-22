@@ -52,6 +52,7 @@ def check_input(self, from_file=False):
     Parameters
     ------------
         self : DFN Class Object
+        from_file : Bool, default False. Checking for file. (See Note)
 
     Returns
     ---------

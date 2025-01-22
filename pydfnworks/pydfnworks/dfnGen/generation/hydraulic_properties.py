@@ -11,10 +11,15 @@ def get_units(variable):
     -----------
         variable : string
             name of variable. Acceptable values are aperture, permeability, and transmissivity
+    
     Returns
     ----------
         units : string
             appropriate units for provided variable
+
+    Notes
+    ----------
+
     """
 
     if variable == "aperture":
@@ -36,11 +41,16 @@ def check_key(dict, key):
     Parameters
     -----------
         dict : dictionary
+        
         key : string
+    
     Returns
     ----------
         bool : bool
             True if key is in dictionary, False if not
+
+    Notes
+    ----------
 
     '''
 
@@ -58,6 +68,10 @@ def load_fractures(filename, quiet):
     -----------
         filename : string
             name of fracture radii file
+
+        quiet : bool
+            If True details are not printed to screen, if False they area
+    
     Returns
     ----------
         r : array of doubles
@@ -65,8 +79,12 @@ def load_fractures(filename, quiet):
 
         family_id : array of ints
             family id for each fractures
+        
         n : int
             number of fractures in the domain 
+
+    Notes
+    ----------
 
     '''
     if not quiet:
@@ -92,10 +110,13 @@ def convert(x, source, target):
     -----------
         x : numpy array
             input values
+        
         source : string
             variable name of source
+        
         target : string
             variable name of output 
+    
     Returns
     ----------
         y : numpy array
@@ -150,16 +171,20 @@ def log_normal(params, variable, number_of_fractures):
     -----------
         params : dict 
             Dictionary of parameters for the Log Normal values. Must contain keys mu and sigma. 
+        
         variable : string 
             name of values being generated. Acceptable values are aperture, permeability, and transmissivity
+        
         number_of_fractures : int
             number of fractures in the DFN 
     Returns
     ----------
         b : array
             aperture values
+        
         perm : array
             permeability values
+        
         T : array
             transmissivity values
 
@@ -212,8 +237,10 @@ def correlated(params, variable, radii):
     -----------
         params : dict 
             Dictionary of parameters for the power-law relationship. Must contain alpha and beta. 
+        
         variable : string 
             name of values being generated. Acceptable values are aperture, permeability, and transmissivity
+        
         radii : array
             array of fracture radii in the domain
 
@@ -221,8 +248,10 @@ def correlated(params, variable, radii):
     ----------
         b : array
             aperture values
+        
         perm : array
             permeability values
+        
         T : array
             transmissivity values
 
@@ -269,10 +298,13 @@ def semi_correlated(params, variable, radii, number_of_fractures):
     -----------
         params : dict 
             Dictionary of parameters for the power-law relationship. Must contain alpha and beta. 
+        
         variable : string 
             name of values being generated. Acceptable values are aperture, permeability, and transmissivity
+        
         radii : array
             array of fracture radii in the domain
+        
         number_of_fractures : int
             number of fractures in the DFN 
 
@@ -280,8 +312,10 @@ def semi_correlated(params, variable, radii, number_of_fractures):
     ----------
         b : array
             aperture values
+        
         perm : array
             permeability values
+        
         T : array
             transmissivity values
 
@@ -331,8 +365,10 @@ def constant(params, variable, number_of_fractures):
     -----------
         params : dict 
             Dictionary of parameters for the power-law relationship. Must contain alpha and beta. 
+        
         variable : string 
             name of values being generated. Acceptable values are aperture, permeability, and transmissivity
+        
         number_of_fractures : int
             number of fractures in the DFN 
 
@@ -340,16 +376,10 @@ def constant(params, variable, number_of_fractures):
     ----------
         b : array
             aperture values
+        
         perm : array
             permeability values
-        T : array
-            transmissivity values
-    Returns
-    ----------
-        b : array
-            aperture values
-        perm : array
-            permeability values
+        
         T : array
             transmissivity values
 
@@ -384,6 +414,27 @@ def constant(params, variable, number_of_fractures):
 
 
 def dump_aperture(self, filename, format=None):
+    """ Check for format type and then writes to file
+    
+    Parameters
+    -----------
+        self :
+            DFN object
+
+        filename : string
+            name of file
+
+        format : string
+            format type with options None, fehm, FEHM. Default is None
+
+    Returns
+    ----------
+        
+
+    Notes
+    ----------
+        
+    """
 
     if format is None:
         np.savetxt(filename, self.aperture)
@@ -397,6 +448,27 @@ def dump_aperture(self, filename, format=None):
         self.print_log("--> Warning. Unknown format requested.\nOptions are None and fehm/FEHM (case senstive)")
 
 def dump_perm(self, filename, format=None):
+    """ Check for format type and then writes to file
+    
+    Parameters
+    -----------
+        self :
+            DFN object
+
+        filename : string
+            name of file
+
+        format : string
+            format type with options None, fehm, FEHM. Default is None
+
+    Returns
+    ----------
+        
+
+    Notes
+    ----------
+        
+    """
 
     if format is None:
         np.savetxt(filename, self.perm)
@@ -411,6 +483,27 @@ def dump_perm(self, filename, format=None):
 
 
 def dump_transmissivity(self, filename, format=None):
+    """ Check for format type and then writes to file
+    
+    Parameters
+    -----------
+        self :
+            DFN object
+
+        filename : string
+            name of file
+
+        format : string
+            format type with options None, fehm, FEHM. Default is None
+
+    Returns
+    ----------
+        
+
+    Notes
+    ----------
+        
+    """
     if format is None:
         np.savetxt(filename, self.transmissivity)
     elif format == "fehm" or format == "FEHM":
@@ -422,6 +515,24 @@ def dump_transmissivity(self, filename, format=None):
 
 
 def dump_fracture_info(self, filename):
+    """ Check for format type and then writes to file
+    
+    Parameters
+    -----------
+        self :
+            DFN object
+
+        filename : string
+            name of file
+
+    Returns
+    ----------
+        
+
+    Notes
+    ----------
+        
+    """
 
     ## revise fracture_info.dat
     self.print_log(f"--> Writing {filename}")
@@ -445,15 +556,16 @@ def dump_hydraulic_values(
     
     Parameters
     -----------
+        self :
+            DFN object
+
         prefix : string
             prefix of aperture.dat and perm.dat file names
             prefix_aperture.dat and prefix_perm.dat 
-        b : array
-            aperture values
-        perm : array
-            permeability values
-        T : array
-            transmissivity values
+        
+        format : string
+            format type. Default is None
+        
     Returns
     ----------
         None
@@ -491,10 +603,13 @@ def set_fracture_hydraulic_values(self, variable, fracture_list, value_list):
     -----------------
         self : object 
             DFN Class
+        
         variable : string
             base variable in relationship. Options are: aperture, permeability, transmissivity
+        
         fractture_list : list
             List of fractures index whose variables are being assigned. *Note* Fractures are indexed starting at 1.
+        
         value_list : list  
             values to be assigned. 
 
@@ -552,13 +667,15 @@ def generate_hydraulic_values(self,
     -----------
         self : object 
             DFN Class
+        
         variable : string
             base variable in relationship. Options are: aperture, permeability, transmissivity
-
+        
         relationship : string
             name of functional relationship for apertures. 
             options are log-normal, correlated, semi-correlated, and
             constant
+        
         params : dictionary
             dictionary of parameters for functional relationship
                 if correlated --> {"alpha":value, "beta:value}

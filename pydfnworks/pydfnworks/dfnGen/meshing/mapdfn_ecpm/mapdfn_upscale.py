@@ -41,7 +41,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
             for ifrac in fractures:
-                porosity[cell_id] += aperture[ifrac] / cell_size  
+                porosity[cell_id] += aperture[ifrac] / cell_size
         else:
             porosity[cell_id] = matrix_porosity
     return porosity
@@ -113,7 +113,7 @@ def mapdfn_perm_aniso(num_frac,
         normal_vectors : numpy array 
             array of fracture normal vectors 
 
-        T : numpy array
+        transmissivity : numpy array
             array of fracture transmissivity (k * b)
 
         cell_size : float 
@@ -122,9 +122,16 @@ def mapdfn_perm_aniso(num_frac,
         matrix_perm : float
             permeability of the matrix cells without fratures 
 
+        lump_diag_terms : bool
+            Default is False
+
+        correction_factor : bool
+            Default is True
+
     Returns
     --------------
-             Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+            k_aniso : numpy array
+                Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
 
     Notes
     ---------------
@@ -228,7 +235,46 @@ def mapdfn_perm_aniso(num_frac,
 def mapdfn_upscale(self, num_cells, cell_fracture_id, cell_size,
                    matrix_porosity, matrix_perm, lump_diag_terms,
                    correction_factor):
+    """ 
+  
+    Parameters
+    -----------------
+        self : dfnWorks object
 
+        num_cells : int
+            Total number of cells in the domain 
+    
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+        cell_size : float 
+            discretization length in ECPM domain
+        
+        matrix_porosity : float
+            perosity of the matrix
+
+        matrix_perm : float
+            permeability of the matrix cells without fratures 
+
+        lump_diag_terms : bool
+            Default is False
+
+        correction_factor : bool
+            Default is True
+        
+    Returns
+    -----------------
+        porosity : numpy array
+            porosity values in the domain cells
+        k_iso : numpy array
+            numpy array of isotropic permeability for each cell in the ECPM.
+        k_aniso : numpy array
+            Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+
+    Notes
+    -----------------
+
+    """
     self.print_log("\n** Starting upscaling **")
     t0 = time.time()
     # compute the porosities of the cells

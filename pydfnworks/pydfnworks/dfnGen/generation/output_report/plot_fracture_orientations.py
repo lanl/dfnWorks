@@ -26,6 +26,7 @@ def convert_to_trend_and_plunge(normal_vectors):
     ----------
         trends : numpy array
             Array of fracture trends 
+        
         plunge : numpy array
             Array of fracture plunge
 

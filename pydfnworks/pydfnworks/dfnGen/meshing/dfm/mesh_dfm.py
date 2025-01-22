@@ -21,6 +21,7 @@ def setup_mesh_dfm_directory(jobname, dirname):
     ----------------
         jobname : string
             path to DFN working directory 
+        
         dirname : string 
             name of working directory
 
@@ -92,6 +93,7 @@ def create_domain(domain, h):
     ----------
         domain : dict
             Domain size dictionary from DFN object 
+        
         h : float 
             Meshing length scale from DFN object 
 
@@ -99,6 +101,7 @@ def create_domain(domain, h):
     -------
         num_points : int 
             Number of points on side of the domain 
+        
         box_domain : dict
             dictionary of domain min/max for x,y,z
 
@@ -147,11 +150,18 @@ def dfm_driver(num_points_x, num_points_y, num_points_z , num_fracs, h, box_doma
     Parameters
     ----------
         num_points : int 
-            Number of points on side of the domain 
+            Number of points on side of the domain for x,y,z
+        
         num_fracs : int 
             Number of Fractures in the DFN
+        
         h : float
             meshing length scale 
+
+        box_domain : dict
+            dictionary of domain min/max for x,y,z
+
+        psets : bool
 
     Returns
     -------
@@ -807,8 +817,18 @@ finish
 
 
 def dfm_diagnostics(h):
-    """
-    
+    """ Run diagnostics
+    Parameters
+    ----------
+        None 
+
+    Returns
+    -------
+        None 
+
+    Notes
+    -----
+        None 
     """
     eps_offset = 0.1*h
     lagrit_script = f"""
@@ -1044,12 +1064,19 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
 
     Parameters
     ------------------
+        self : DFN object
+
         dirname : string
             name of working directory. Default : dfm_mesh
+        
         allowed_percentage : float
             Percentage of the mesh allowed to be missing and still continue
+
+        psets : bool
+            Default is False
+        
         cleanup : bool
-            Clean up working directory. If true dep files are moved into subdirectories
+            Clean up working directory. If true dep files are moved into subdirectories. Default is True
 
     Returns
     ---------------

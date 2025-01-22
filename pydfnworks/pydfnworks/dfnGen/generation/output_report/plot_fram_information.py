@@ -74,13 +74,19 @@ def plot_fram_information(params):
     axs.xaxis.set_ticks(values_list)
     axs.set_xticklabels(values_list, fontsize=16)
     axs.grid(alpha=0.1)
-    axs.axis([0, 1.1 * max(cnts), axs.get_ylim()[0], axs.get_ylim()[1]])
+    if max(cnts) > 0:
+        axs.axis([0, 1.1 * max(cnts), axs.get_ylim()[0], axs.get_ylim()[1]])
+    else:
+        axs.axis([0, 1, axs.get_ylim()[0], axs.get_ylim()[1]])
     axs.set_title("Re-sampling Histogram", fontsize=18)
 
     # Add notes to the end of bars
     for bar in horizBar:
         width = bar.get_width()
-        label = f"  {int(width):d}\n  {100*width/total_number_of_rejections:0.2f}\%"
+        if total_number_of_rejections > 0:
+            label = f"  {int(width):d}\n  {100*width/total_number_of_rejections:0.2f}\%"
+        else:
+            label = f"  {int(width):d}\n  0\%" 
         axs.text(bar.get_width() + 2,
                  bar.get_y() + 0.5 * h,
                  label,

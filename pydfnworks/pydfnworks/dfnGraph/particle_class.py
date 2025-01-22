@@ -65,14 +65,21 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+            
             x0 : float
                 current location
+            
             t1 : float
                 previous time step
+            
             t2 : float
                 next time step
+            
             x1 : float
                 previous location
+            
             x2 : float
                 next location
 
@@ -88,6 +95,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 
@@ -131,6 +141,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 
@@ -184,6 +197,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             particle object
 
         Returns
@@ -205,6 +221,17 @@ class Particle():
         # self.fracs.append(self.frac)
 
     def cleanup_frac_seq(self):
+        """ Cleanup
+
+        Parameters
+        ----------
+            self : object
+                DFN Class
+
+        Returns
+        -------
+            None
+        """
         frac_seq = [self.frac_seq[0]]
         for frac in self.frac_seq:
             if frac != frac_seq[-1]:
@@ -217,6 +244,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 

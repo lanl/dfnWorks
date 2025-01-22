@@ -4,7 +4,26 @@ import scipy
 
 
 def f(theta, t, a, b):
-    """Differential Equation Angle Theta as a function of arc length, see Hyman et al. 2014, SIAM J. Sci. Comp. Equation 3.3"""
+    """ Differential Equation Angle Theta as a function of arc length, see Hyman et al. 2014, SIAM J. Sci. Comp. Equation 3.3
+    
+    Parameters
+    ------------
+        theta : use if orientationOption = 0 (default). default = None
+        t : unused
+        a : float
+            aspect ratio of fracture family 
+        b : int
+            Constant parameter
+
+    Returns
+    ----------
+        returns f
+
+    Notes
+    -------------
+        None
+
+    """
     return 1.0 / np.sqrt((a * np.sin(theta))**2 + (b * np.cos(theta)**2))
 
 

@@ -259,7 +259,8 @@ def add_fracture_family(self,
         
         probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 
         
-        p32 : fracture intensity for the family. default = None. use if stopCondition = 1
+        p32 : fracture intensity for the family. default = None. use if stopCondition = 
+
         layer : assigns fracture family to a layer in the domain. default = 0
         
         region : assigns fracture family to a region in the domain. default = 0
@@ -275,14 +276,14 @@ def add_fracture_family(self,
         theta : use if orientationOption = 0 (default). default = None
         
         phi : use if orientationOption = 0 (default). default = None
+
+        strike : use if orientationOption = 2. default = None
+
+        dip : use if orientationOption = 2. default = None
         
         trend : use if orientationOption = 1. default = None
         
         plunge : use if orientationOption = 1. default = None
-        
-        dip : use if orientationOption = 2. default = None
-        
-        strike : use if orientationOption = 2. default = None
         
         alpha : parameter for 'tpl'. default = None
         

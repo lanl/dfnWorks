@@ -17,24 +17,47 @@ import numpy as np
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
-    
-    Attributes:
-        * jobname: name of job, also the folder where output files are stored
-        * ncpu: number of CPUs used in the job
-        * dfnGen file: the name of the dfnGen input file
-        * dfnFlow file: the name of the dfnFlow input file
-        * dfnTrans file: the name of the dfnFlow input file
-        * local prefix: indicates that the name contains only the most local directory
-        * vtk_file: the name of the VTK file
-        * inp_file: the name of the INP file
-        * uge_file: the name of the UGE file
-        * mesh_type: the type of mesh
-        * perm_file: the name of the file containing permeabilities 
-        * aper_file: the name of the file containing apertures 
-        * perm_cell file: the name of the file containing cell permeabilities 
-        * aper_cell_file: the name of the file containing cell apertures
-        * freeze: indicates whether the class attributes can be modified
-        * h : FRAM length scale 
+    Parameters
+    ----------
+        jobname: name of job, also the folder where output files are stored
+        
+        ncpu: number of CPUs used in the job
+        
+        dfnGen file: the name of the dfnGen input file
+        
+        dfnFlow file: the name of the dfnFlow input file
+        
+        dfnTrans file: the name of the dfnFlow input file
+        
+        local prefix: indicates that the name contains only the most local directory
+        
+        vtk_file: the name of the VTK file
+        
+        inp_file: the name of the INP file
+        
+        uge_file: the name of the UGE file
+        
+        mesh_type: the type of mesh
+        
+        perm_file: the name of the file containing permeabilities 
+        
+        aper_file: the name of the file containing apertures 
+        
+        perm_cell file: the name of the file containing cell permeabilities 
+        
+        aper_cell_file: the name of the file containing cell apertures
+        
+        freeze: indicates whether the class attributes can be modified
+        
+        h : FRAM length scale 
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        None
     '''
 
     from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
@@ -229,7 +252,12 @@ class DFNWORKS():
         self.print_log("--> Creating DFN Object: Complete" )
 
     def __del__(self):
-        self.print_log(f"--> {self.local_jobname} completed/exited " )
+        try:
+            print(f"--> {self.local_jobname} completed/exited " )
+            pass
+        except Exception:
+            print("--> Job completed/exited")
+            pass
 
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed

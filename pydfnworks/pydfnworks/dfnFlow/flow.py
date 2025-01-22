@@ -14,6 +14,7 @@ def set_flow_solver(self, flow_solver):
     ----------
         self : object
             DFN Class
+        
         flow_solver: string  
             Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
 
@@ -40,6 +41,7 @@ def dfn_flow(self, dump_vtk=True):
     ----------
         self : object
             DFN Class
+        
         dump_vtk : bool
             True - Write out vtk files for flow solutions 
             False  - Does not write out vtk files for flow solutions 
@@ -89,6 +91,7 @@ def create_dfn_flow_links(self, path='../'):
     ---------
         self : object
             DFN Class
+        
         path : string 
             Absolute path to primary directory. 
    
