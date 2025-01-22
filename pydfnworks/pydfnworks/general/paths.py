@@ -125,142 +125,118 @@ def define_paths(self):
     -----
         Environmental variables are set to executables
     """
-
+    docker = True
     # ================================================
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
-
     self.print_log("--> Loading and checking dfnWorks dependency paths" )
+    if not docker:
     # Either write paths to ~/.dfnworksrc in a JSON format...
-    if os.path.isfile(DFNPARAMS):
-        with open(DFNPARAMS, 'r') as f:
-            env_paths = json.load(f)
-    # Or, change the paths here
-    else:
-        env_paths = {
-            'dfnworks_PATH': None, 
-            'PETSC_DIR': None,
-            'PETSC_ARCH': None,
-            'PFLOTRAN_EXE': None,
-            'LAGRIT_EXE': None,
-            'FEHM_EXE': None
-        }
+        if os.path.isfile(DFNPARAMS):
+            with open(DFNPARAMS, 'r') as f:
+                env_paths = json.load(f)
+        # Or, change the paths here
+        else:
+            env_paths = {
+                'dfnworks_PATH': None, 
+                'PETSC_DIR': None,
+                'PETSC_ARCH': None,
+                'PFLOTRAN_EXE': None,
+                'LAGRIT_EXE': None,
+                'FEHM_EXE': None
+            }
 
-    # Or, read the variables from the environment
-    for envVar in env_paths:
-        if env_paths[envVar] == '':
-            env_paths[envVar] = os.environ.get(envVar, '')
+        # Or, read the variables from the environment
+        for envVar in env_paths:
+            if env_paths[envVar] == '':
+                env_paths[envVar] = os.environ.get(envVar, '')
 
-    # the dfnworks  repository
-    if env_paths['dfnworks_PATH']:
-        os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
-        self.valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
-    else:
-        error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
-        self.print_log(error,  'critical')
-    # PETSC paths
-    if env_paths['PETSC_DIR']:
-        os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
-        os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
-        self.valid('PETSC_DIR', os.environ['PETSC_DIR'], "directory")
-        self.valid('PETSC_ARCH',
-              os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
-              "directory")
-    else:
-        self.print_log("--> Warning. No PETSC Directory provided.",  'warning')
+        # the dfnworks  repository
+        if env_paths['dfnworks_PATH']:
+            os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
+            self.valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
+        else:
+            error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
+            self.print_log(error,  'critical')
+        # PETSC paths
+        if env_paths['PETSC_DIR']:
+            os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
+            os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
+            self.valid('PETSC_DIR', os.environ['PETSC_DIR'], "directory")
+            self.valid('PETSC_ARCH',
+                os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
+                "directory")
+        else:
+            self.print_log("--> Warning. No PETSC Directory provided.",  'warning')
 
-    # PFLOTRAN path
-    if env_paths['PETSC_DIR']:
-        os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
-        self.valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No PFLOTRAN path provided.",  'warning')
+        # PFLOTRAN path
+        if env_paths['PETSC_DIR']:
+            os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
+            self.valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
+        else:
+            self.print_log("--> Warning. No PFLOTRAN path provided.",  'warning')
 
-    if env_paths['FEHM_EXE']:
-        os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
-        self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
-    else:
-        self.print_log("Warning. No FEHM path provided.",  'warning')
+        if env_paths['FEHM_EXE']:
+            os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
+            self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
+        else:
+            self.print_log("Warning. No FEHM path provided.",  'warning')
 
-    # LaGriT executable
-    if env_paths['LAGRIT_EXE']:
-        os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
-        self.valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No LaGriT path provided.",  'warning')
+        # LaGriT executable
+        if env_paths['LAGRIT_EXE']:
+            os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
+            self.valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
+        else:
+            self.print_log("--> Warning. No LaGriT path provided.",  'warning')
 
-    # ===================================================
-    # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
-    # ====================================================
+        ===================================================
+        THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
+        ====================================================
 
-    # # Directories
-    # os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
-    # if not os.path.isfile(os.environ['DFNGEN_EXE']):
-    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-    #     valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
+        # Directories
+        os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
+        if not os.path.isfile(os.environ['DFNGEN_EXE']):
+            compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+            valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
 
-    # os.environ[
-    #     'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
-    # if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
-    # valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
+        os.environ[
+            'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
+        if not os.path.isfile(os.environ['DFNTRANS_EXE']):
+            compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+        valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
-    # os.environ['CORRECT_UGE_EXE'] = os.environ[
-    #     'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
-    # if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
-    # valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
+        os.environ['CORRECT_UGE_EXE'] = os.environ[
+            'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
+        if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
+            compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+        valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
-    # os.environ['CORRECT_STOR_EXE'] = os.environ[
-    #     'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
-    # if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-    #     compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
-    # valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
+        os.environ['CORRECT_STOR_EXE'] = os.environ[
+            'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
+        if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
+            compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+        valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
-    # os.environ['CONNECT_TEST_EXE'] = os.environ[
-    #     'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
-    # if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
-    #     compile_dfn_exe(os.environ['dfnworks_PATH'] +
-    #                     'DFN_Mesh_Connectivity_Test/')
-    # valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
+        os.environ['CONNECT_TEST_EXE'] = os.environ[
+            'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
+        if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
+            compile_dfn_exe(os.environ['dfnworks_PATH'] +
+                            'DFN_Mesh_Connectivity_Test/')
+        valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
 
-
-    ### for DOCKER
-    os.environ['DFNGEN_EXE'] = '/dfnWorks/bin/DFNGen'
-    os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/DFNTrans'
-    os.environ['CORRECT_UGE_EXE'] = '/dfnWorks/bin/correct_uge'
-    os.environ['CORRECT_STOR_EXE'] = '/dfnWorks/bin/correct_stor'
-    os.environ['CONNECT_TEST_EXE'] = '/dfnWorks/bin/ConnectivityTest'
-    # Directories
-    os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
-    if not os.path.isfile(os.environ['DFNGEN_EXE']):
-        self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-    self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
-
-    os.environ[
-        'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
-    if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
-    self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
-
-    os.environ['CORRECT_UGE_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
-    if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
-    self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
-
-    os.environ['CORRECT_STOR_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
-    if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
-    self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
-
-    os.environ['CONNECT_TEST_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
-    if not os.path.isfile(os.environ['CONNECT_TEST_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] +
-                        'DFN_Mesh_Connectivity_Test/')
-    self.valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
+    if docker:
+        ### for DOCKER
+        os.environ['dfnworks_PATH']  = '/dfnWorks/bin/'
+        os.environ['DFNGEN_EXE'] = '/dfnWorks/bin/DFNGen'
+        os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/DFNTrans'
+        os.environ['CORRECT_UGE_EXE'] = '/dfnWorks/bin/correct_uge'
+        os.environ['CORRECT_STOR_EXE'] = '/dfnWorks/bin/correct_stor'
+        os.environ['CONNECT_TEST_EXE'] = '/dfnWorks/bin/ConnectivityTest'
+        os.environ['PFLOTRAN_EXE'] = '/dfnWorks/bin/pflotran' 
+        os.environ['FEHM_EXE'] = '/dfnWorks/bin/fehm' 
+        os.environ['LAGRIT_EXE'] = '/dfnWorks/bin/lagrit'
+        os.environ['PETSC_DIR'] = '/dfnWorks/lib/petsc'
+        os.environ['PETSC_ARCH'] = 'arch-linux2-c-debug'
 
     self.print_paths() 
     self.print_log("--> Loading and checking dfnWorks dependency paths successful")
