@@ -10,7 +10,7 @@ If no space left on device run
 to build core deps
 docker build -t dfn-deps -f docker/build-core.dockerfile .
 
-docker build -t dfn-deps -f docker/build-core.dockerfile .//
+## docker build -t dfn-deps -f docker/build-core.dockerfile .//
 
 to build dfnWorks
 docker build -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./

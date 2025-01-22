@@ -13,10 +13,10 @@ MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
-# ENV http_proxy=http://proxyout.lanl.gov:8080
-# ENV HTTP_PROXY=http://proxyout.lanl.gov:8080
-# ENV https_proxy=http://proxyout.lanl.gov:8080
-# ENV HTTPS_PROXY=http://proxyout.lanl.gov:8080
+ENV http_proxy=http://proxyout.lanl.gov:8080
+ENV HTTP_PROXY=http://proxyout.lanl.gov:8080
+ENV https_proxy=http://proxyout.lanl.gov:8080
+ENV HTTPS_PROXY=http://proxyout.lanl.gov:8080
 
 # ENV https_proxy=
 # ENV http_proxy=
@@ -71,7 +71,7 @@ ENV alias gfortran="gfortran-10"
 # # 3.2 Install and configure PETSc
 RUN ["git","clone","https://gitlab.com/petsc/petsc.git","lib/petsc"]
 WORKDIR $APP_PATH/lib/petsc
-RUN ["git","checkout","v3.20.2"]
+RUN ["git","checkout","v3.21.5"]
 
 ENV PETSC_DIR=/dfnWorks/lib/petsc
 ENV PETSC_ARCH=arch-linux2-c-debug
