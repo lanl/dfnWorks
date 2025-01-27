@@ -146,10 +146,8 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-                 log_filename="dfnWorks",
+                 log_filename=None,
                  log_time=True):
-                 #log_filename=None,
-                 #log_time=False):
         
         ## initialize variables 
         self.num_frac = int
