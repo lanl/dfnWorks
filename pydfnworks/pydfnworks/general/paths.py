@@ -189,9 +189,9 @@ def define_paths(self):
         else:
             self.print_log("--> Warning. No LaGriT path provided.",  'warning')
 
-        ===================================================
-        THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
-        ====================================================
+        #===================================================
+        #THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
+        #====================================================
 
         # Directories
         os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
