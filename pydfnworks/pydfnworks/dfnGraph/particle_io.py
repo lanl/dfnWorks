@@ -325,10 +325,15 @@ def dump_control_planes(particles, control_planes, filename, format):
     adv_times = np.zeros((num_cp, num_particles))
     total_times = np.zeros((num_cp, num_particles))
     pathline_length = np.zeros((num_cp, num_particles))
+    # x1 = np.zeros((num_cp, num_particles))
+    # x2 = np.zeros((num_cp, num_particles))
+    
     for i, particle in enumerate(particles):
         adv_times[:, i] = particle.cp_adv_time
         total_times[:, i] = particle.cp_tdrw_time
         pathline_length[:, i] = particle.cp_pathline_length
+        # x1[:,i] = particle.cp_x1
+        # x2[:,i] = particle.cp_x2
 
     if format == "ascii":
         local_print_log(
@@ -358,7 +363,7 @@ def dump_control_planes(particles, control_planes, filename, format):
             dataset_name = 'control_planes'
             h5dset = f5file.create_dataset(dataset_name, data=control_planes)
             for it in range(num_cp):
-                cp_subgroup = f5file.create_group(f'cp_{it}')
+                cp_subgroup = f5file.create_group(f'cp_x_{control_planes[it]}')
                 dataset_name = 'adv_times'
                 adv_cp = adv_times[it, :]
                 h5dset = cp_subgroup.create_dataset(dataset_name,
@@ -376,5 +381,17 @@ def dump_control_planes(particles, control_planes, filename, format):
                 h5dset = cp_subgroup.create_dataset(dataset_name,
                                                     data=pathline_cp,
                                                     dtype='float64')
-                                                    
+
+                # dataset_name = 'x1'
+                # x_cp = x1[it, :]
+                # h5dset = cp_subgroup.create_dataset(dataset_name,
+                #                                     data=x_cp,
+                #                                     dtype='float64')
+                # dataset_name = 'x2'
+                # x_cp = x2[it, :]
+                # h5dset = cp_subgroup.create_dataset(dataset_name,
+                #                                     data=x_cp,
+                #                                     dtype='float64')
+
+
         f5file.close()
