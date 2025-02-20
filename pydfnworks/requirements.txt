@@ -6,3 +6,28 @@
 
 # normally
 .
+
+numpy
+h5py
+scipy
+matplotlib
+multiprocessing
+argparse
+shutil
+os
+sys
+networkx
+subprocess
+glob
+mplstereonet
+fpdf
+re
+vtk
+pyvista
+shapely
+geopandas
+python-ternary
+setuptools
+seaborn
+pyvtk
+mpmath
