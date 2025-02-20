@@ -103,26 +103,28 @@ Alternatively, you can create a ``.dfnworksrc`` file in your home directory with
 Installing pydfnworks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Go up into the pydfnworks sub-directory:
 
 .. code-block:: bash
-    
+
     $ cd dfnWorks/pydfnworks/
 
-Complie The pydfnWorks Package:
+Compile The pydfnWorks Package & Install on Your Local Machine:
 
 .. code-block:: bash
-    
-    $ python setup.py bdist_wheel
 
+    $ pip install -r requirements.txt
 
-Install on Your Local Machine:
+or  
 
 .. code-block:: bash
-    
-    $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+    $ pip install -r requirements.txt --user
+
+if you don't have admin privileges.
+
+**Note that the python version needs to be consistent with the current release**
 
 Installation Requirements for Native Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
