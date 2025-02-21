@@ -115,62 +115,8 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
     return Gtilde
 
 
-def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
-    """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
+def update_graph_attributes(G, pressure, fluid_viscosity, phi):
 
-    Parameters
-    ----------
-        G : NetworkX graph
-
-        pressure_in : double
-            Value of pressure (in Pa) at inlet
-        
-        pressure_out : double
-            Value of pressure (in Pa) at outlet
-        
-        fluid_viscosity : double
-            optional, in Pa-s, default is for water
-
-        phi : double
-            Porosity, default is 1
-
-    Returns
-    -------
-        H : Acyclic Directed NetworkX graph 
-            H is updated with vertex pressures, edge fluxes and travel times. The only edges that exists are those with postive flow rates. 
-
-    Notes
-    ----------
-        None
-
-    """
-
-    local_print_log("--> Starting Graph flow")
-
-    Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
-    Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
-
-    if not set(Inlet).isdisjoint(set(Outlet)):
-        error = "Incompatible graph: Vertex connected to both source and target\n"
-        local_print_log(error, 'error')
-
-    D, A = get_laplacian_sparse_mat(G, weight='weight', format='lil')
-
-    b = np.zeros(G.number_of_nodes())
-
-    for v in Inlet:
-        b[v] = pressure_in
-        A[v, :] = 0
-        D[v, v] = 1.0
-    for v in Outlet:
-        b[v] = pressure_out
-        A[v, :] = 0
-        D[v, v] = 1.0
-    L = D - A  # automatically converts to csr when returning L
-
-    local_print_log("--> Solving Linear System for pressure at nodes")
-    pressure = scipy.sparse.linalg.spsolve(L, b)
-    local_print_log("--> Updating graph edges with flow solution")
 
     for v in nx.nodes(G):
         G.nodes[v]['pressure'] = pressure[v]
@@ -215,6 +161,135 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
             H.edges[upstream,
                     downstream]['time'] = H.edges[upstream, downstream][
                         'length'] / (H.edges[upstream, downstream]['velocity'])
+
+
+
+def solve_nonlinear_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi, flow_model):
+    """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
+
+    Parameters
+    ----------
+        G : NetworkX graph
+
+        pressure_in : double
+            Value of pressure (in Pa) at inlet
+        
+        pressure_out : double
+            Value of pressure (in Pa) at outlet
+        
+        fluid_viscosity : double
+            optional, in Pa-s, default is for water
+
+        phi : double
+            Porosity, default is 1
+
+    Returns
+    -------
+        H : Acyclic Directed NetworkX graph 
+            H is updated with vertex pressures, edge fluxes and travel times. The only edges that exists are those with postive flow rates. 
+
+    Notes
+    ----------
+        None
+
+    """
+
+    local_print_log("--> Starting Graph flow")
+
+    Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
+    Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
+
+    if not set(Inlet).isdisjoint(set(Outlet)):
+        error = "Incompatible graph: Vertex connected to both source and target\n"
+        local_print_log(error, 'error')
+
+            
+
+
+    D, A = get_laplacian_sparse_mat(G, weight='weight', format='lil')
+
+    b = np.zeros(G.number_of_nodes())
+
+    for v in Inlet:
+        b[v] = pressure_in
+        A[v, :] = 0
+        D[v, v] = 1.0
+    for v in Outlet:
+        b[v] = pressure_out
+        A[v, :] = 0
+        D[v, v] = 1.0
+    L = D - A  # automatically converts to csr when returning L
+
+    local_print_log("--> Solving Linear System for pressure at nodes")
+    pressure = scipy.sparse.linalg.spsolve(L, b)
+    local_print_log("--> Updating graph edges with flow solution")
+
+    H = update_graph_attributes(G, pressure, fluid_viscosity, phi)
+
+    local_print_log("--> Graph flow complete")
+    return H
+
+
+def solve_linear_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
+    """ Given a NetworkX graph prepared  for flow solve, solve for vertex pressures, and equip edges with attributes (Darcy) flux  and time of travel
+
+    Parameters
+    ----------
+        G : NetworkX graph
+
+        pressure_in : double
+            Value of pressure (in Pa) at inlet
+        
+        pressure_out : double
+            Value of pressure (in Pa) at outlet
+        
+        fluid_viscosity : double
+            optional, in Pa-s, default is for water
+
+        phi : double
+            Porosity, default is 1
+
+    Returns
+    -------
+        H : Acyclic Directed NetworkX graph 
+            H is updated with vertex pressures, edge fluxes and travel times. The only edges that exists are those with postive flow rates. 
+
+    Notes
+    ----------
+        None
+
+    """
+
+    local_print_log("--> Starting Graph flow")
+
+    Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
+    Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
+
+    if not set(Inlet).isdisjoint(set(Outlet)):
+        error = "Incompatible graph: Vertex connected to both source and target\n"
+        local_print_log(error, 'error')
+
+
+
+    D, A = get_laplacian_sparse_mat(G, weight='weight', format='lil')
+
+    b = np.zeros(G.number_of_nodes())
+
+    for v in Inlet:
+        b[v] = pressure_in
+        A[v, :] = 0
+        D[v, v] = 1.0
+    for v in Outlet:
+        b[v] = pressure_out
+        A[v, :] = 0
+        D[v, v] = 1.0
+    L = D - A  # automatically converts to csr when returning L
+
+    local_print_log("--> Solving Linear System for pressure at nodes")
+    pressure = scipy.sparse.linalg.spsolve(L, b)
+    local_print_log("--> Updating graph edges with flow solution")
+
+    H = update_graph_attributes(G, pressure, fluid_viscosity, phi)
 
     local_print_log("--> Graph flow complete")
     return H
@@ -349,7 +424,8 @@ def run_graph_flow(self,
                    fluid_viscosity=8.9e-4,
                    phi=1,
                    G=None,
-                   graph_flow_name = "graph_flow.hdf5"):
+                   graph_flow_name = "graph_flow.hdf5",
+                   flow_model = "laminar"):
     """ Solve for pressure driven steady state flow on a graph representation of the DFN. 
 
     Parameters
@@ -397,8 +473,12 @@ def run_graph_flow(self,
         G = self.create_graph("intersection", inflow, outflow)
 
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
-    Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
-                                 fluid_viscosity, phi)
+    if flow_model == 'linear':
+        Gtilde = solve_linear_flow_on_graph(Gtilde, pressure_in, pressure_out,
+                                    fluid_viscosity, phi)
+    elif flow_model == "nonlinear":
+            Gtilde = solve_nonlinear_flow_on_graph(Gtilde, pressure_in, pressure_out,
+                                    fluid_viscosity, phi, flow_model)    
 
     dump_graph_flow_values(Gtilde, graph_flow_name)
     self.print_log("Graph Flow: Complete")
