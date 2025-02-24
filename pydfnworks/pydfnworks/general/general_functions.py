@@ -175,22 +175,22 @@ def to_pickle(self, filename=None):
         pickle_filename = f'{filename}.pkl'
     else:
         pickle_filename = f'{self.local_jobname}.pkl'
-    print_log(f'--> Pickling DFN object to {pickle_filename}')
+    self.print_log(f'--> Pickling DFN object to {pickle_filename}')
     if os.path.isfile(pickle_filename):
         response = input(
             f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: "
         )
         if response == 'yes' or response == 'y':
-            print_log('--> Overwritting file')
+            self.print_log('--> Overwritting file')
             pickle.dump(self, open(pickle_filename, "wb"))
-            print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
+            self.print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
         elif response == 'no' or 'n':
-            print_log("--> Not writting file.")
+            self.print_log("--> Not writting file.")
         else:
-            print_log("Unknown Response. {response}.\nNot writting file.")
+            self.print_log("Unknown Response. {response}.\nNot writting file.")
     else:
         pickle.dump(self, open(pickle_filename, "wb"))
-        print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
+        self.print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
 
 
 def from_pickle(self, filename):

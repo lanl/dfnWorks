@@ -24,7 +24,9 @@ def initialize_log_file(self, time = False):
 
 
     logging.getLogger(__name__)
-    self.log_filename = self.log_filename+".log"
+    if not self.log_filename.endswith('.log'):
+        self.log_filename += '.log'
+
     if time:
         logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
                             , format="%(asctime)s %(levelname)s %(message)s" )
