@@ -97,6 +97,7 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, porosity, cell_
         ## weighted average 
         # print("Using Weighted average")
         k_iso[cell_id] = max(matrix_perm, ( 1 - porosity[cell_id] ) * matrix_perm  + porosity[cell_id] * local_perm)
+        # k_iso[cell_id] = local_perm 
     return k_iso
 
 
