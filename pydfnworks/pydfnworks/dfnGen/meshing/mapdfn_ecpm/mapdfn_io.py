@@ -183,7 +183,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
     #    matrix_perm, porosity, cell_fracture_id)
     x, y, z, material_id, khdf5, kx, ky, kz, phdf5, idx_array, mat_array = create_h5_arrays(
         nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
-        cell_fracture_id, matrix_on)
+        cell_fracture_id, matrix_on, h5origin)
     local_print_log("** Dumping h5 files **")
     t0 = time.time()
 

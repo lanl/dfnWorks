@@ -105,4 +105,4 @@ def setup_domain(domain, domain_center, cell_size):
     local_print_log(f"--> Hexahedron edge length {cell_size} m")
     local_print_log(f"--> Domain is {nx} x {ny} x {ny} cells. ")
     local_print_log(f"--> Total number of cells {num_cells}\n")
-    return origin, nx, ny, nz, num_cells
+    return origin, h5origin, nx, ny, nz, num_cells
