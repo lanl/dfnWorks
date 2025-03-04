@@ -2,22 +2,24 @@
 # Example Descriptions
  
 
-### 4_user_ell_uniform (4_user_defined_ell_uniform)
-This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. Resolution is uniform and slope = 0.
+- **4_user_ell_uniform (4_user_defined_ell_uniform)**
+
+   This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. Resolution is uniform and slope = 0.
 
 
-See [Example Description](https://lanl.github.io/dfnWorks/examples.html)
-
-See [Example Run](https://lanl.github.io/dfnWorks/pydfnworks.html)
-
-
-### 4_user_rects (4_user_defined_rects)
-Simple example with  four user defined rectangular fractures within a a cubic domain. 
+   See [Example Description](https://lanl.github.io/dfnWorks/examples.html)
+   See [Example Run](https://lanl.github.io/dfnWorks/pydfnworks.html)
 
 
-See [Example Description](https://lanl.github.io/dfnWorks/examples.html)
+- **4_user_rects (4_user_defined_rects)**
 
-See dfnworks_overview_short.pdf
+   Simple example with  four user defined rectangular fractures within a a cubic domain. 
+
+
+   See [Example Description](https://lanl.github.io/dfnWorks/examples.html)
+
+   See dfnworks_overview_short.pdf
+
 
 
 ### ade_example
