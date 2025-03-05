@@ -121,6 +121,8 @@ def get_initial_posititions(G, initial_positions, nparticles):
         flow_rates_cnts = [np.floor(nparticles * flow_rate) for flow_rate in flow_rates]
         nparticles = int(sum(flow_rates_cnts))
         ip = np.zeros(nparticles).astype(int)
+        np.savetxt("inlet_node_flow_rates.dat", flow_rates)
+        
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
         # inflow_idx = 0
