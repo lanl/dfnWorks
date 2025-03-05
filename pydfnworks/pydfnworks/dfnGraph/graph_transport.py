@@ -118,7 +118,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
             for v in G.successors(u):
                 flow_rates[i] += G.edges[u, v]['vol_flow_rate']
         flow_rates /= flow_rates.sum()
-        flow_rates_cnts = [np.ceil(nparticles * i) for i in flow_rates]
+        flow_rates_cnts = [np.floor(nparticles * i) for i in flow_rates]
         nparticles = int(sum(flow_rates_cnts))
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
