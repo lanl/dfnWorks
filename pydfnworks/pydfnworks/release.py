@@ -1,9 +1,16 @@
+import datetime
+
+# Get current date and time
+now = datetime.datetime.now()
+
+# Format date and time as a string
+timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
 
 name = "pydfnWorks"
 
-date = "4 Decemeber 2024"
+date = f"{timestamp}" 
 
-version = "2.9.1"
+version = "2.9.2"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
