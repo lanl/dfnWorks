@@ -113,13 +113,13 @@ def get_initial_posititions(G, initial_positions, nparticles):
     ## flux weighted initial positions for particles
     elif initial_positions == "flux":
         local_print_log("--> Using flux-weighted initial positions.\n")
-        flux = np.zeros(cnt)
+        flow_rates = np.zeros(cnt)
         for i, u in enumerate(inlet_nodes):
             for v in G.successors(u):
-                flux[i] += G.edges[u, v]['flux']
-        flux /= flux.sum()
-        flux_cnts = [np.ceil(nparticles * i) for i in flux]
-        nparticles = int(sum(flux_cnts))
+                flow_rates[i] += G.edges[u, v]['vol_flow_rate']
+        flow_rates /= flow_rates.sum()
+        flow_rates_cnts = [np.ceil(nparticles * i) for i in flow_rates]
+        nparticles = int(sum(flow_rates_cnts))
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
@@ -128,7 +128,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
         for i in range(nparticles):
             ip[i] = inlet_nodes[inflow_idx]
             inflow_cnt += 1
-            if inflow_cnt >= flux_cnts[inflow_idx]:
+            if inflow_cnt >= flow_rates_cnts[inflow_idx]:
                 inflow_idx += 1
                 inflow_cnt = 0
 
