@@ -121,8 +121,8 @@ def get_initial_posititions(G, initial_positions, nparticles):
         flow_rates_cnts = [np.floor(nparticles * flow_rate) for flow_rate in flow_rates]
         nparticles = int(sum(flow_rates_cnts))
         ip = np.zeros(nparticles).astype(int)
-        np.savetxt("inlet_node_flow_rates.dat", flow_rates)
-        
+        # np.savetxt("inlet_node_flow_rates.dat", flow_rates)
+
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
         # inflow_idx = 0
@@ -151,6 +151,13 @@ def get_initial_posititions(G, initial_positions, nparticles):
     else:
         error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
         local_print_log(error, 'error')
+
+    # dump velocities 
+    velocities = np.zeros(cnt)
+    for i, u in enumerate(inlet_nodes):
+        for v in G.successors(u):
+            velocities[i] += G.edges[u, v]['velocity']
+    np.savetxt("inlet_node_velocities.dat", velocities)
 
     return ip, nparticles
 
