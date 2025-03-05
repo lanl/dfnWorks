@@ -118,19 +118,32 @@ def get_initial_posititions(G, initial_positions, nparticles):
             for v in G.successors(u):
                 flow_rates[i] += G.edges[u, v]['vol_flow_rate']
         flow_rates /= flow_rates.sum()
-        flow_rates_cnts = [np.floor(nparticles * i) for i in flow_rates]
+        flow_rates_cnts = [np.floor(nparticles * flow_rate) for flow_rate in flow_rates]
         nparticles = int(sum(flow_rates_cnts))
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
+        # inflow_idx = 0
+        # inflow_cnt = 0
+        # for i in range(nparticles):
+        #     ip[i] = inlet_nodes[inflow_idx]
+        #     inflow_cnt += 1
+        #     if inflow_cnt >= flow_rates_cnts[inflow_idx]:
+        #         inflow_idx += 1
+        #         inflow_cnt = 0
+
         inflow_idx = 0
         inflow_cnt = 0
         for i in range(nparticles):
-            ip[i] = inlet_nodes[inflow_idx]
-            inflow_cnt += 1
-            if inflow_cnt >= flow_rates_cnts[inflow_idx]:
+            if flow_rates_cnts[inflow_idx] > 0:
+                ip[i] = inlet_nodes[inflow_idx]
+                inflow_cnt += 1
+                if inflow_cnt >= flow_rates_cnts[inflow_idx]:
+                    inflow_idx += 1
+                    inflow_cnt = 0
+            else:
                 inflow_idx += 1
-                inflow_cnt = 0
+                inflow_cnt = 0 
 
     # Throw error if unknown initial position is provided
     else:
