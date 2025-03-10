@@ -1,23 +1,49 @@
 .. _pydfnworks-setup:
 
-Setting and Running up dfnWorks
+Setup and Running dfnWorks
 ================================
+
+These options are available for running dfnWorks:
+
+* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker will not persist past the exit. Except for Docker, no installation is needed.
+
+* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit.
+
+* Clone and build dfnWorks on your machine. This will give full access and control of all the tools and files for your project. Installation will include Python, dfnWorks, LaGriT, PFLOTRAN, and FEHM.
+
+* Linux dfnWorks module. Some servers use the module system and may have dfnWorks available. You will still need to clone dfnWorks for the files, but you can skip the build process.
+
 
 Docker
 ------------------------------
-The easiest way to get started with dfnWorks is using our docker container (https://hub.docker.com/r/ees16/dfnworks).
 
-If you do not already have Docker installed on your machine,
-visit `Getting Started with Docker <https://www.docker.com/get-started>`_.
+.. _docker_section:
 
-The dfnWorks Docker image can be pulled from DockerHub using:
+
+The easiset way to get started with dfnWorks is by Using Docker. You will not need to install any software or manage your enviornment. All the tools and the dfnWorks repository are contained in the Docker image. 
+
+Check Docker is installed and running correctly. 
+
+If you do not already have Docker installed on your machine, visit `Getting Started with Docker <https://www.docker.com/get-started>`_.
+
+.. code-block:: bash
+
+    $ docker run hello-world
+    Hello from Docker!
+    This message shows that your installation appears to be working correctly.
+
+
+Before running the dfnWorks container, pull the dfnWorks Docker image using:
 
 .. code-block:: bash
 
     $ docker pull ees16/dfnworks:latest
 
 
-Running the dfnWorks container
+Now you can run the dfnWorks container using the dfnWorks repository included, or by mounting a volume for the container to share with your host. Note files written inside the container do not persist past the Docker ```exit```.
+
+
+Run the dfnWorks container 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The base command for running the dfnWorks container is:
@@ -26,8 +52,43 @@ The base command for running the dfnWorks container is:
 
     docker run -ti ees16/dfnworks:latest
 
-However, to exchange files between the host and container, we will need to mount
-a volume.
+Your current directory will be /dfnWorks. You can run one of the included examples and run dfnWorks. For example:
+
+
+.. code-block:: bash
+
+    cd examples/4_user_rects
+    python driver.py
+
+
+Files are written to the /output directory. Without a mounted volume, the files will not exist outside of Docker and after you ```exit```.
+ 
+
+Run the dfnWorks container with mounted volume
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to exchange files between the host and Docker container you can mount a volume. The mount command may work differently depending on your machine. Use a volume where permissions will not be an issue.
+These examples use a cloned version of dfnWorks for the local files. 
+
+
+**On LANL Linux Servers**
+
+Docker is available on local server es11 and you must work from your home directory to avoid permission issues. After you have cloned the dfnWorks repository, open permissions:
+
+.. code-block:: bash
+
+    chmod 777 -R dfnWorks 
+    docker pull ees16/dfnworks:latest
+
+
+Once built, the inner-docker folder /app will share its content with your local current folder. Move into the directory where you want to run dfnWorks then copy the following command. (assuming driver.py is your dfnWorks driver script). 
+
+.. code-block:: bash
+
+    docker run -v "$(pwd):/app" -w /app ees16/dfnworks:latest python driver.py 
+
+
+**On macOS:**
 
 The option ``-v LOCAL_FOLDER:/dfnWorks/work`` will allow all files present in the
 container folder ``dfnWorks/work`` to be exposed to ``LOCAL_FOLDER``, where
@@ -35,17 +96,33 @@ container folder ``dfnWorks/work`` to be exposed to ``LOCAL_FOLDER``, where
 
 With this is place, the final command for running the Docker container is:
 
-**On macOS:**
 
 .. code-block:: bash
 
     docker run -ti -v <LOCAL_FOLDER>:/dfnWorks/work ees16/dfnworks:latest
 
-Native build from github repository
+
+**In General**
+
+
+To link current folder between host and container for development:
+
+```docker run <image-name> -v $(pwd):<folder-path-in-container> ees16/dfnworks:latest``` 
+
+
+To copy a file from the running container to host mechine:
+
+```docker cp <container-id>:<path/to/file> <host/copy/path>```
+
+
+
+Native Build 
 ------------------------------------------
 
-This document contains instructions for setting up dfnWorks natively on your
-machine. To setup dfnWorks using Docker instead, see the next section.
+.. _build_section:
+
+These instructions describe how to setup dfnWorks natively on your
+machine. 
 
 Clone the dnfWorks repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
