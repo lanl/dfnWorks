@@ -206,15 +206,15 @@ def define_paths(self):
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
     os.environ['CORRECT_UGE_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
+        'dfnworks_PATH'] + 'CPP_correct/correct_uge'
     if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'CPP_correct/')
     self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
 
     os.environ['CORRECT_STOR_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
+        'dfnworks_PATH'] + 'CPP_correct/correct_stor'
     if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'CPP_correct/')
     self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[
