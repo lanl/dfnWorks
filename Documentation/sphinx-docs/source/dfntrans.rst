@@ -1,4 +1,4 @@
-.. _dftrans-chapter:
+.. _dfntrans-chapter:
 
 dfnTrans
 ============
