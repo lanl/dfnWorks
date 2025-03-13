@@ -26,3 +26,4 @@ Contents:
    output
    publications
    gallery
+   tutorials
