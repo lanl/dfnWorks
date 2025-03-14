@@ -1,13 +1,20 @@
-CC = g++ -std=c++17  # Use g++ for C++ and set standard to C++17
-CFLAGS = -O3 -Wall -g 
+CC = g++ -std=c++17
+CFLAGS = -O3 -Wall -g
 
-OBJ = main.o 
+# Define the targets
+TARGETS = correct_stor correct_uge
 
-%.o: %.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+# Default target: build both executables
+all: $(TARGETS)
 
-correct_stor: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+# Build correct_stor with BUILD_STOR defined
+correct_stor: main.cpp
+	$(CC) -o $@ main.cpp $(CFLAGS) -DBUILD_STOR
 
+# Build correct_uge with BUILD_UGE defined
+correct_uge: main.cpp
+	$(CC) -o $@ main.cpp $(CFLAGS) -DBUILD_UGE
+
+# Clean up compiled files
 clean:
-	rm -f main.o
+	rm -f $(TARGETS)
