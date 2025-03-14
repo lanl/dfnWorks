@@ -172,7 +172,7 @@ Open the script python `driver.py`. You can open with any text editor or use the
 
 
 Script: Initialization
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The script begins by importing the necessary libraries and setting up paths for input files and the output directory. 
 
@@ -181,7 +181,7 @@ The script begins by importing the necessary libraries and setting up paths for 
 
 
 Script: Define Parameters
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The domain size and hydraulic head are defined. This defines domain to a cube of size 1 unit in all dimensions and sets h (hydraulic head of fluid in domain) to 0.1 unit.
 
@@ -192,7 +192,7 @@ The domain size and hydraulic head are defined. This defines domain to a cube of
 
 
 Script: Define Fractures
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The dfnGen module manages and creates the fracture network. Parameters can be set using fracture families (for generated fractures) or set by the user. See a full description of fracture paramters and commands at :ref:`pydfnWorks: dfnGen <dfngen-chapter>`. 
 
@@ -239,7 +239,7 @@ This image was created with Paraview reading the AVS mesh file output/full_mesh.
 
 
 Script: Mesh the Fracture Network
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Once parameters and fractures have been defined, the script checks if the inputs are correct and prints the parameters of the domain for verification.  If everything checks ok, the `create_network()` method generates the fracture network based on the defined parameters.
 
@@ -250,7 +250,7 @@ Checking the output log file to screen and file `output.log`, the mesh reports l
  
 
 Script: Run Simulations  
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 Once the mesh looks good, executes flow and transport simulations using dfn_flow() and dfn_trans(). Simple runs can  provide insights into the behavior of fluids  within the fractured network.  
@@ -310,7 +310,7 @@ Additional output information and log files are written in the `output` director
    :align: center
 
 
-   *dfnWorks modules include dfnGen for meshing with dfnFlow and dfnTrans for simulations.*
+   *Figure shows the meshed fractures colored by the fracture ID.*
 
 
 .. figure:: figures/tut1_mesh_no_poly2.png
@@ -319,14 +319,13 @@ Additional output information and log files are written in the `output` director
    :align: center
 
 
-   *dfnWorks modules include dfnGen for meshing with dfnFlow and dfnTrans for simulations.*
+   *Figure shows the intersections in the  meshed fractures.*
 
 
 
 Step 5. Analyze Simulation Results 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. This image is created by loading the file 4_user_defined_rectangles/PFLOTRAN/parsed_vtk/dfn_explicit-001.vtk into Paraview.
 
 
 View `output.log` to verify the dfnFlow module was successful and result files were written.
@@ -342,6 +341,9 @@ View `output.log` to verify the dfnFlow module was successful and result files w
     2025-03-06 17:15:05,113 INFO dfnFlow Complete
     2025-03-06 17:15:05,113 INFO Time Required for dfnFlow 1.0802464485168457 seconds 
 
+Read the PFLOTRAN result file `output/parsed_vtk/dfn_explicit-001.vtk` into Paraview and select pressure to view.
+High pressure (red) is shown on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
+
 
 .. figure:: figures/tut1_liq_pressure_002.png
    :width: 500px 
@@ -353,8 +355,6 @@ View `output.log` to verify the dfnFlow module was successful and result files w
 
 
 
-Particles are inserted uniformly along the inlet fracture on the left side of the image. Particles exit the domain through the two horizontal fractures on the right side of the image. Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image. Trajectories are colored by the current velocity magnitude of the particle’s velocity. Trajectories can be visualized by loading the files part_*.inp, in the folder 4_user_rectangles/traj/trajectories/ We have used the extract surface and tube filters in paraview for visual clarity.
-
 View `output.log` to verify the dfnTrans module was successful and result files were written. Note directory and file names may change due to code development. Check the log to confirm names used.
 
 .. code-block:: bash
@@ -365,6 +365,12 @@ View `output.log` to verify the dfnTrans module was successful and result files 
     2025-03-06 17:15:05,122 INFO --> Checking Initial Conditions Complete
     2025-03-06 17:15:05,630 INFO ================================================================================
     2025-03-06 17:15:05,630 INFO dfnTrans Complete
+
+
+
+Read the particle files `output/traj/trajectories/part_1.inp, ... part_10.inp`` into Paraview in addition to the mesh. You can view the particle lines with "wireframe" and expand the line width. These lines are colored by the fracture ID, also view velocity for good views.
+
+View shows particles uniform along the inlet fracture on the left side of the image. Particles exit the domain through the two horizontal fractures on the right side of the image. Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image. 
 
 
 .. figure:: figures/tut1_parts_fracture.png
