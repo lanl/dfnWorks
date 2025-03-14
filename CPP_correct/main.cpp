@@ -3,26 +3,25 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
+#include <cmath>
 #include <cstring>
 #include <string>
 #include <limits>
 #include <iomanip>
-#include <cmath>
 
-//========================================================================
-// UGE Conversion Code
-//========================================================================
-struct UgeParams {
+struct Params {
     std::string mesh_file;
     std::string matID_file;
     std::string aper_file;
     std::string uge_in_file;
     std::string uge_out_file;
+    std::string stor_in_file;
+    std::string stor_out_file;
     int cell_flag;
 };
 
+// Find integers
 int readInt(const std::string& buf) {
-    std::cout << "The buf is?: " << buf << std::endl;
     std::istringstream iss(buf);
     std::string temp;
     int num;
@@ -33,13 +32,10 @@ int readInt(const std::string& buf) {
         std::istringstream tempStream(temp);
         char leftover;
         if (tempStream >> num && !(tempStream >> leftover)) { 
-            std::cout << "Number found: " << num << std::endl;
             found = true;
-            break;  // Stop as soon as we find the first valid integer
+            break;
         }
     }
-
-    std::cout << "What is found?: " << found << std::endl;
 
     // If no integer was found, print an error and exit
     if (!found) {
@@ -50,6 +46,7 @@ int readInt(const std::string& buf) {
     return num;
 }
 
+// Checks for null pointers
 void check_null_pointer(void* temp) {
     if (!temp) {
         std::cerr << "Out of Memory\n";
@@ -57,17 +54,18 @@ void check_null_pointer(void* temp) {
     }
 }
 
-// A unified file opening function used by both UGE and STOR parts.
+// Open input File
 std::ifstream open_file(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
         std::cerr << "Error: Unable to open file: " << filename << std::endl;
         exit(1);
     }
-    std::cout << "Opening file " << filename << std::endl;
+    std::cout << "Opening input file " << filename << std::endl;
     return file;
 }
 
+// Open output file
 std::ofstream open_output_file(const std::string& filename) {
     std::ofstream file(filename);
     if (!file) {
@@ -78,6 +76,11 @@ std::ofstream open_output_file(const std::string& filename) {
     return file;
 }
 
+/*********************************************************\
+* UGE Specific
+\*********************************************************/
+
+// Get node number
 int get_number_of_nodes(const std::string& mesh_file) {
     std::ifstream fp = open_file(mesh_file);
     int numNodes, numElem, numNodeAtt, numElemAtt, tmp;
@@ -90,12 +93,12 @@ int get_number_of_nodes(const std::string& mesh_file) {
     return numNodes;
 }
 
+// Get material id
 int load_mat_id(const std::string& matID_file, int numNodes, std::vector<int>& matID) {
     std::ifstream fp = open_file(matID_file);
     std::string line;
     
-    // Skip header lines
-    for (int i = 0; i < 3; i++) std::getline(fp, line);
+    for (int i = 0; i < 3; i++) std::getline(fp, line); // Skip header
 
     int num_mat = 0, matid;
     for (int i = 0; i < numNodes; i++) {
@@ -110,6 +113,7 @@ int load_mat_id(const std::string& matID_file, int numNodes, std::vector<int>& m
     return num_mat;
 }
 
+// Loading Aperture
 void load_aperture(const std::string& aper_file, int num_mat, std::vector<int>& aper_index, std::vector<double>& aper_values) {
     std::ifstream fp = open_file(aper_file);
     std::string line;
@@ -124,9 +128,9 @@ void load_aperture(const std::string& aper_file, int num_mat, std::vector<int>& 
         aper_index[i] = aper_id;
         aper_values[i] = aper;
     }
-    std::cout << "Aperture loaded\n";
 }
 
+// Loading Aperture cell
 void load_aperture_cell(const std::string& aper_file, int numNodes, std::vector<int>& aper_index, std::vector<double>& aper_values) {
     std::ifstream fp = open_file(aper_file);
     std::string line;
@@ -141,10 +145,11 @@ void load_aperture_cell(const std::string& aper_file, int numNodes, std::vector<
         aper_index[i] = aper_id;
         aper_values[i] = aper;
     }
-    std::cout << "Aperture loaded\n";
 }
 
+// Converting UGE file 
 void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file, std::vector<int>& matID, std::vector<int>& aper_index, std::vector<double>& aper_values)  {
+    // Open input and output files
     std::ifstream fin(uge_in_file);
     if (!fin) {
         std::cerr << "Error opening input file: " << uge_in_file << "\n";
@@ -159,7 +164,7 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
     std::string buf;
     std::cout << "Reading in UGE: " << uge_in_file << "\n";
     
-    // Read the first line from the input file
+    // Reading in number of cells
     std::getline(fin, buf);
     int NumCells = readInt(buf);
     std::cout << "Number of Cells: " << NumCells << "\n";
@@ -168,6 +173,7 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
     int cell_index, index_1, index_2;
     double x, y, z, volume;
     for (int i = 0; i < NumCells; i++) {
+        // Read the cell data; using >> extraction to mimic fscanf
         fin >> cell_index >> x >> y >> z >> volume;
         if (fin.fail()) {
             std::cout << "*** Error loading Cells in the UGE file ***\n";
@@ -187,8 +193,10 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
              << y << "\t" << z << "\t" << volume << "\n";
     }
     
+    // Remove any leftover newline character after formatted input
     fin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     
+    // Reading in number of connections
     std::getline(fin, buf);
     int NumConns = readInt(buf);
     std::cout << "--> Number of Connections: " << NumConns << "\n";
@@ -214,8 +222,10 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
     fout.close();
     std::cout << "--> new UGE written in " << uge_out_file << "\n";
 }
- 
-void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out_file, std::vector<int>& matID, std::vector<int>& aper_index, std::vector<double>& aper_values) {
+
+// Converting UGE cells 
+void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out_file, std::vector<int>& matID, std::vector<int>& aper_index, std::vector<double>& aper_values){
+    // Open input and output files
     std::ifstream fin(uge_in_file);
     if (!fin) {
         std::cerr << "Error opening input file: " << uge_in_file << "\n";
@@ -230,6 +240,7 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
     std::string buf;
     std::cout << "Reading in UGE: " << uge_in_file << "\n";
     
+    // Reading in number of cells
     std::getline(fin, buf);
     int NumCells = readInt(buf);
     std::cout << "Number of Cells: " << NumCells << "\n";
@@ -249,8 +260,10 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
              << y << "\t" << z << "\t" << volume << "\n";
     }
     
+    // Remove any leftover newline character after formatted input
     fin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     
+    // Readin in number of connections
     std::getline(fin, buf);
     int NumConns = readInt(buf);
     std::cout << "--> Number of Connections: " << NumConns << "\n";
@@ -269,202 +282,272 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
              << y << "\t" << z << "\t" << volume << "\n";
     }
     
+    // Closing files
     fin.close();
     fout.close();
     std::cout << "--> new UGE written in " << uge_out_file << "\n";
 }
 
-void readInUgeParams(std::ifstream& fparams, UgeParams& params) {
-    fparams >> params.mesh_file >> params.matID_file >> params.uge_in_file 
-            >> params.uge_out_file >> params.aper_file >> params.cell_flag;
+// UGE Specific parameters
+void readInUGEParams(std::ifstream& fparams, Params& params) {
+    fparams >> params.mesh_file >> params.matID_file >> params.uge_in_file >> params.uge_out_file >> params.aper_file >> params.cell_flag;
 }
 
-//========================================================================
-// STOR Conversion Code
-//========================================================================
-struct StorParams {
-    std::string matID_file;
-    std::string aper_file;
-    std::string stor_in_file;
-    std::string stor_out_file;
-};
-
-void readInStorParams(std::ifstream& fparams, StorParams& params) {
-    fparams >> params.matID_file >> params.stor_in_file 
-            >> params.stor_out_file >> params.aper_file;
+// Parse UGE Parameters
+void parseCommandLineArgs(int countArgs, char* args[], std::string& paramsName) {
+    paramsName = (countArgs > 1) ? args[1] : "convert_uge_params.txt";
 }
 
+// Stor Specific Parameters
+void readInParams(std::ifstream& fparams, Params& params) {
+    fparams >> params.matID_file >> params.stor_in_file >> params.stor_out_file >> params.aper_file;
+}
+
+/*********************************************************\
+* STOR Specific
+\*********************************************************/
+
+// Copying header
 void copyHeader(std::ifstream& f2d, std::ofstream& f3d) {
     std::cout << "Copying Header\n";
     std::string line;
+    
     for (int i = 0; i < 2; i++) {
         std::getline(f2d, line);
         f3d << line << "\n";
     }
 }
 
-void copyMain(std::ifstream& f2d, std::ofstream& f3d, const StorParams& params) {
-    std::ifstream fmz = open_file(params.matID_file);
-    std::ifstream fad = open_file(params.aper_file);
+// Matrix Parameters
+void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
+    // Read in file
+    std::ifstream fmz(params.matID_file);
+    if (!fmz) {
+        std::cerr << "Error opening material file: " << params.matID_file << "\n";
+        std::exit(1);
+    }
+    std::cout << params.matID_file << " opened.\n";
+    // --- Read aperature file ---
+    std::ifstream fad(params.aper_file);
+    if (!fad) {
+        std::cerr << "Error opening aperature file: " << params.aper_file << "\n";
+        std::exit(1);
+    }
 
-    int nedges, nnodes, snode_edge, area_coef, max_neighb;
+    // Get Nodes and Edges
+    int nnodes, nedges, area_coef, max_neighb, snode_edge;
     f2d >> nedges >> nnodes >> snode_edge >> area_coef >> max_neighb;
     f3d << nedges << " " << nnodes << " " << snode_edge << " " << area_coef << " " << max_neighb << "\n";
     std::cout << "There are " << nnodes << " nodes and " << nedges << " edges \n";
 
+    unsigned int mat_number, nnum, currentn;
+    std::string junk;
+
     struct Material {
         unsigned int matnumber;
     };
+
+    // Allocate material vector (one per node)
     std::vector<Material> node(nnodes);
 
-    // Read material file
-    std::string junk;
-    unsigned int mat_number, nnum, currentn;
-    fmz >> junk;
-    while (true) {
-        fmz >> mat_number >> junk;
-        if (junk == "nnum") {
-            fmz >> nnum;
+    // Read a header junk string before entering the loop.
+    if (!(fmz >> junk)) {
+        std::cerr << "Failed to read header from material file.\n";
+        std::exit(1);
+    }
+    
+    // Use a counter for the number of processed materials.
+    unsigned int materialCount = 0;
+    
+    // Process material blocks
+    do {
+        if (!(fmz >> mat_number)) break;
+        if (!(fmz >> junk)) break; 
+        
+        // If the command string starts with "nnum", process the following node indices.
+        if (junk.compare(0, 4, "nnum") == 0) {
+            if (!(fmz >> nnum)) break;
+            
             for (unsigned int i = 0; i < nnum; i++) {
-                fmz >> currentn;
-                node[currentn - 1].matnumber = mat_number;
+                if (!(fmz >> currentn)) break;
+                // Check to ensure currentn > 0 to avoid underflow, then adjust for zero-based indexing.
+                if (currentn > 0 && (currentn - 1) < node.size()) {
+                    node[currentn - 1].matnumber = mat_number;
+                } else {
+                    std::cerr << "Index out of range: " << currentn << "\n";
+                }
             }
+            materialCount++; // Count this processed material block.
         } else {
             break;
         }
-    }
-    std::cout << "\nThere are " << mat_number - 6 << " materials\n";
-
-    // Read aperture file
-    std::vector<double> aperturem(mat_number);
-    int apmat, zn;
-    double currentap;
-    fad >> junk;
-    for (int i = 0; i < mat_number; i++) {
-        fad >> apmat >> zn >> zn >> currentap;
-        apmat *= -1;
-        aperturem[apmat - 1] = currentap;
-    }
-
+    } while (junk.compare(0, 4, "stop") != 0);
+    std::cout << "\nThere are " << materialCount << " materials\n";
+    std::vector<double> aperturem(materialCount);    
     std::cout << "Correcting Voronoi Volumes\n";
     f3d << " ";
 
-    // Voronoi Volumes
+    // Calculate voronoi volumes
+    double volume2d, volume3d;
+    int count = 0;
+    int c = 0;
+
     for (int i = 0; i < nnodes; i++) {
-        double volume2d, volume3d;
-        f2d >> volume2d;
+        if (!(f2d >> volume2d)) {
+            std::cerr << "Error reading volume for node " << i + 1 << "\n";
+            break;
+        }
+        // Multiply volume2d by the appropriate aperture value
         volume3d = volume2d * aperturem[node[i].matnumber - 1];
-        f3d << volume3d << ((i + 1) % 5 == 0 || i == nnodes - 1 ? "\n" : " ");
+        
+        if (((i + 1) % 5 == 0) || (i == nnodes - 1)){
+            f3d << std::setprecision(12) << volume3d << "\n";
+        }
+        else{
+            f3d << std::setprecision(12) << volume3d << " ";
+        }
     }
-
-    // Count for Each Row
-    int count, c = 0;
+    
+    // Count rows
+    c = 0;
     for (int i = 0; i < nnodes + 1; i++) {
+        //std::cout << "Calculating row count\n";
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
-
+    
     // Row Entries
     std::vector<unsigned int> nodeind(nedges);
     c = 0;
     for (int i = 0; i < nedges; i++) {
+        //std::cout << "Calculating row entries\n";
         f2d >> count;
         nodeind[i] = count;
-        f3d << count << ((++c % 5 == 0 || i == nedges - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nedges - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
-
+    
     // Indices into Coefficient List
     c = 0;
     for (int i = 0; i < nedges * area_coef; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nedges * area_coef - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nedges * area_coef - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
-
+    
     c = 0;
     for (int i = 0; i < nnodes + 1; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
-
+    
     c = 0;
     for (int i = 0; i < nnodes; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
-
+    
     // Geometric Area Coefficient Values
     for (int i = 0; i < nedges * area_coef; i++) {
-        double volume2d, volume3d;
         f2d >> volume2d;
-        volume3d = volume2d * aperturem[node[nodeind[i] - 1].matnumber - 1];
-        f3d << volume3d << (((i + 1) % 5 == 0 || i == nedges * area_coef - 1) ? "\n" : " ");
+        // Use the previously read node index (stored in nodeind) to retrieve the material
+        int nodeIndex = static_cast<int>(nodeind[i]) - 1;
+        volume3d = volume2d * aperturem[node[nodeIndex].matnumber - 1];
+        if (((i + 1) % 5 == 0) || (i == nedges * area_coef - 1))
+            f3d << std::setw(15) << std::scientific << std::setprecision(12) << volume3d << "\n";
+        else
+            f3d << std::setw(15) << std::scientific << std::setprecision(12) << volume3d << " ";
     }
-
+    
     std::cout << "Conversion Complete\n";
 }
 
-//========================================================================
-// Main Function
-//========================================================================
 int main(int argc, char* args[]) {
-    if (argc < 3) {
-        std::cerr << "Usage: " << args[0] << " [mode: uge|stor] [params_file]\n";
-        return 1;
-    }
-    
-    std::string mode = args[1];
-    std::string paramsName = args[2];
+    std::string paramsName;
 
-    if (mode == "uge") {
-        std::ifstream fp = open_file(paramsName);
-        UgeParams params;
-        readInUgeParams(fp, params);
+    if (argc > 1) {
+        paramsName = args[1];
+     
+        if (paramsName == "convert_uge_params.txt") {
+            std::cout << "Params File Name " << paramsName << "\n";
+            std::ifstream fp = open_file(paramsName);
+            Params params;
+            readInUGEParams(fp, params);
 
-        std::cout << "\nCorrecting UGE Volumes and Areas for dfnWorks\n";
-        std::cout << "-> Mesh File: " << params.mesh_file << "\n";
-        std::cout << "-> MatID File: " << params.matID_file << "\n";
-        std::cout << "-> Aperture File: " << params.aper_file << "\n";
-        std::cout << "-> UGE input File: " << params.uge_in_file << "\n";
-        std::cout << "-> UGE output File: " << params.uge_out_file << "\n\n";
+            std::cout << "\nCorrecting UGE Volumes and Areas for dfnWorks\n";
+            std::cout << "-> Mesh File: " << params.mesh_file << "\n";
+            std::cout << "-> MatID File: " << params.matID_file << "\n";
+            std::cout << "-> Aperture File: " << params.aper_file << "\n";
+            std::cout << "-> UGE input File: " << params.uge_in_file << "\n";
+            std::cout << "-> UGE output File: " << params.uge_out_file << "\n\n";
 
-        int numNodes = get_number_of_nodes(params.mesh_file);
-        std::vector<int> matID(numNodes);
-        int num_mat = load_mat_id(params.matID_file, numNodes, matID);
+            int numNodes = get_number_of_nodes(params.mesh_file);
+            std::vector<int> matID(numNodes);
+            int num_mat = load_mat_id(params.matID_file, numNodes, matID);
 
-        std::vector<double> aper_values(numNodes);
-        std::vector<int> aper_index(numNodes);
+            std::vector<double> aper_values(numNodes);
+            std::vector<int> aper_index(numNodes);
 
-        if (params.cell_flag < 0) {
-            load_aperture(params.aper_file, num_mat, aper_index, aper_values);
-            convert_uge(params.uge_in_file, params.uge_out_file, matID, aper_index, aper_values);
-        } else if (params.cell_flag > 0) {
-            load_aperture_cell(params.aper_file, numNodes, aper_index, aper_values);
-            convert_uge_cell(params.uge_in_file, params.uge_out_file, matID, aper_index, aper_values);
-        } else {
-            std::cerr << "Invalid cell_flag value. It should not be 0.\n";
+            if (params.cell_flag < 0) {
+                load_aperture(params.aper_file, num_mat, aper_index, aper_values);
+                convert_uge(params.uge_in_file, params.uge_out_file, matID, aper_index, aper_values);
+            }
+            if (params.cell_flag > 0) {
+                load_aperture_cell(params.aper_file, numNodes, aper_index, aper_values);
+                convert_uge_cell(params.uge_in_file, params.uge_out_file, matID, aper_index, aper_values);
+            }
+            std::cout << "Cleaning up\n" ;
+
         }
-    }
-    else if (mode == "stor") {
-        std::ifstream fp = open_file(paramsName);
-        StorParams params;
-        readInStorParams(fp, params);
+        else if (paramsName == "convert_stor_params.txt") {
+            std::cout << "--> DFN STOR file: recalculating length of area coefficients to 2D area.----- \n";
+            std::cout << "--> Current version works for Uniform Fracture Aperture\n";
 
-        std::cout << "-> Material File: " << params.matID_file << "\n";
-        std::cout << "-> Aperture File: " << params.aper_file << "\n";
-        std::cout << "-> stor input File: " << params.stor_in_file << "\n";
-        std::cout << "-> stor output File: " << params.stor_out_file << "\n\n";
+            std::string paramsName;
+            parseCommandLineArgs(argc, args, paramsName);
+            std::cout << "Params File Name: " << paramsName << "\n";
 
-        std::ifstream f2d = open_file(params.stor_in_file);
-        std::ofstream f3d = open_output_file(params.stor_out_file);
+            std::ifstream fp = open_file(paramsName);
+            Params params;
+            readInParams(fp, params);
 
-        copyHeader(f2d, f3d);
-        copyMain(f2d, f3d, params);
+            std::cout << "-> Material File: " << params.matID_file << "\n";
+            std::cout << "-> Aperture File: " << params.aper_file << "\n";
+            std::cout << "-> stor input File: " << params.stor_in_file << "\n";
+            std::cout << "-> stor output File: " << params.stor_out_file << "\n\n";
 
-        std::cout << "Cleaning up\n";
-    }
-    else {
-        std::cerr << "Invalid mode. Use 'uge' or 'stor'.\n";
-        return 1;
+            std::ifstream f2d = open_file(params.stor_in_file);
+            std::ofstream f3d = open_output_file(params.stor_out_file);
+
+            copyHeader(f2d, f3d);
+            copyMain(f2d, f3d, params);
+
+            std::cout << "Cleaning up\n" ;
+        }
+        else{
+            std::cout << "File name not set.";
+        }
+
+    } else {
+        paramsName = "Error";  // Default value
     }
     return 0;
 }
