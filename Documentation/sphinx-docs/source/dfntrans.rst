@@ -1,7 +1,8 @@
-.. _dfntrans-chapter:
 
 dfnTrans
 ============
+
+.. _dfntrans-chapter:
 
 dfnTrans is a method for resolving solute transport using control volume flow
 solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen.
