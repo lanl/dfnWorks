@@ -78,5 +78,5 @@ packages = [
 
 install_requires = [
     "numpy", "scipy", "h5py", "pyvtk", "fpdf", "pytz", "datetime",
-    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0"
+    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0", "vtk", "pyvista", "shapely", "geopandas", "python-ternary", "setuptools", "seaborn", "mpmath"
 ]
