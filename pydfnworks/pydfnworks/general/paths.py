@@ -130,13 +130,15 @@ def define_paths(self):
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
 
-    self.print_log("--> Loading and checking dfnWorks dependency paths" )
+    self.print_log("--> Loading and checking dfnWorks dependency paths..." )
     # Either write paths to ~/.dfnworksrc in a JSON format...
     if os.path.isfile(DFNPARAMS):
+        print(f"{DFNPARAMS} found.")
         with open(DFNPARAMS, 'r') as f:
             env_paths = json.load(f)
     # Or, change the paths here
     else:
+        self.print_log("--> Warning. ~/.dfnworksrc not found. Checking for environmantal variables.",  'warning')
         env_paths = {
             'dfnworks_PATH': None,
             'PETSC_DIR': None,
@@ -180,7 +182,7 @@ def define_paths(self):
         os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
         self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
     else:
-        self.print_log("Warning. No FEHM path provided.",  'warning')
+        self.print_log("--> Warning. No FEHM path provided.",  'warning')
 
     # LaGriT executable
     if env_paths['LAGRIT_EXE']:
