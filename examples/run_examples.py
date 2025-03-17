@@ -43,10 +43,10 @@ for i,d in enumerate(examples_dirs):
         os.chdir(d)
         if os.path.isdir('output'):
             shutil.rmtree('output')
-            print(f"--> Removing output directory from {d}")
+            #print(f"--> Removing output directory from {d}")
         if os.path.isfile('output.log'):
             os.remove('output.log')
-            print(f"--> Removing output.log file from {d}")
+            #print(f"--> Removing output.log file from {d}")
         driver_file = glob.glob("*py")
         if verbose:
             cmd = f"python {driver_file[0]}"
@@ -58,13 +58,13 @@ for i,d in enumerate(examples_dirs):
         toc = timeit.default_timer()
         elapsed = toc - tic
         print(f"--> Time required {elapsed:0.2f} seconds\n")
-        print(f"--> Cleaning up outputs")
+        #print(f"--> Cleaning up outputs")
         if os.path.isdir('output'):
             shutil.rmtree('output')
-            print(f"--> Removing output directory from {d}")
+            #print(f"--> Removing output directory from {d}")
         if os.path.isfile('output.log'):
             os.remove('output.log')
-            print(f"--> Removing output.log file from {d}")
+            #print(f"--> Removing output.log file from {d}")
         os.chdir(home)
         #df_index = len(df) + 1
         #print(df_index, i)
