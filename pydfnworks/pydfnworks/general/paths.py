@@ -130,10 +130,10 @@ def define_paths(self):
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
 
-    self.print_log("--> Loading and checking dfnWorks dependency paths..." )
+    self.print_log("--> Loading and checking dfnWorks dependency paths." )
     # Either write paths to ~/.dfnworksrc in a JSON format...
     if os.path.isfile(DFNPARAMS):
-        print(f"{DFNPARAMS} found.")
+        self.print_log(f"--> {DFNPARAMS} found.\n")
         with open(DFNPARAMS, 'r') as f:
             env_paths = json.load(f)
     # Or, change the paths here
