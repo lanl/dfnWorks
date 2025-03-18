@@ -5,9 +5,9 @@ Setup and Running dfnWorks
 
 These options are available for running dfnWorks:
 
-* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker will not persist past the exit. Except for Docker, no installation is needed.
+* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker can be examined but will not persist past the exit. (You will not be able to load files into a viewer like Paraview). Except for Docker, no installation is needed.
 
-* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit.
+* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit and Paraview will work.
 
 * Clone and build dfnWorks on your machine. This will give full access and control of all the tools and files for your project. Installation will include Python, dfnWorks, LaGriT, PFLOTRAN, and FEHM.
 

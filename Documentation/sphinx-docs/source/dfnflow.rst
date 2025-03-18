@@ -1,8 +1,9 @@
+.. _dfnflow-chapter:
+
 
 dfnFlow
 ========
 
-.. _dfnflow-chapter:
 
 *dfnFlow* involves using flow solver such as PFLOTRAN or FEHM. PFLOTRAN is recommended if a large number of fractures ( > O(1000)) are involved in a network. Using the function calls that are part of pydfnworks, one can create the mesh files needed to run PFLOTRAN. This will involve creating unstructured mesh file ``*uge`` as well as the boundary  ``*ex`` files. Please see the PFLOTRAN user manual at http://www.pflotran.org under unstructured *explicit* format usage for further details. An example input file for PFLOTRAN is provided in the repository. Please use this as a starting point to build your input deck.
 

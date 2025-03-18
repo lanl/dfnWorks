@@ -1,9 +1,7 @@
+.. _dfngen-chapter:
 
 dfnGen - C++ Generation Code  
 #################################
-
-
-.. _dfngen-chapter:
 
 dfnGen creates the discrete fracture networks using the feature rejection algorithm for meshing (FRAM). Fractures can be created stochastically or as deterministic features. 
 

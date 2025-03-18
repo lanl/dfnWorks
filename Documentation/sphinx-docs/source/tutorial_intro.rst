@@ -2,16 +2,40 @@
 dfnWorks Introduction and Beginner Tutorial
 ==============================================
 
-This tutorial serves as an introduction to dfnWorks for new users. It covers the example 4_user_rect, providing a detailed explanation and running instructions. All images are rendered using ParaView, which can be downloaded for free at www.paraview.org. By the end of this tutorial, users should feel confident running additional examples and applying them to their own projects. 
-
-For the Tutorial, you can run dfnWorks using Docker or build it on your own machine. For initial runs, we recommend using Docker, as it simplifies the setup process before committing time to install the full suite. For more information, please refer to the Setup and Installation section at :ref:`pydfnWorks install <pydfnworks-setup>`.
- 
+This tutorial serves as an introduction to dfnWorks for new users. It covers the example 4_user_rect, providing a detailed explanation and running instructions. By the end of this tutorial, you should feel confident running additional examples and applying them to your own projects. 
 
 The following items are covered in this Tutorial:
 
 .. contents::
    :depth: 2
    :local:
+
+
+
+Tutorial Prerequisites
+--------------------------
+
+For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included on this page.
+
+You will learn more if you follow the tutorial with your own version of dfnWorks. You can run dfnWorks using Docker or build dfnWorks on your own machine. For initial runs, we recommend using Docker, as it simplifies the setup process before committing time to install the full suite. 
+
+For more information, please refer to the Setup and Installation section at :ref:`pydfnWorks install <pydfnworks-setup>`.
+ 
+If you are not using the files in the Docker container, but want to run this example, you will need to download a clone of the dfnWorks repository:
+
+.. code-block:: bash
+
+    $ git clone https://github.com/lanl/dfnWorks.git
+
+
+
+Paraview_ is an open-source visualization software and is used to create the mesh and simulation images in this document. 
+Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
+
+.. _Paraview: http://www.paraview.org
+
+
+
 
 
 dfnWorks Package Overview
@@ -42,7 +66,7 @@ dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for m
 -	FRAM (feature rejection algorithm for meshing) is executed using the dfnGen C++ source code, contained in the dfnGen folder of the dfnWorks repository.
 -	The LaGriT meshing toolbox is used to create a high resolution computational mesh representation of the DFN. An algorithm for conforming Delaunay triangulation is implemented so that fracture intersections are coincident with triangle edges in the mesh and Voronoi control volumes are suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
-See the docs at :ref:`pydfnWorks: dfnGen <dfngen-chapter>`
+See Module at :ref:`dfnGen <dfngen-chapter>` and python docs at :ref:`pydfnWorks: dfnGen <dfnWorks-python-chapter-dfnGen>`
 
 
 dfnFlow 
@@ -53,7 +77,8 @@ Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow u
 -	PFLOTRAN is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media. 
 - FEHM is a subsurface multiphase flow code developed at Los Alamos National Laboratory.
 
-See the docs at :ref:`pydfnWorks: dfnFlow <dfnflow-chapter>`
+
+See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
 dfnTrans 
@@ -62,16 +87,21 @@ dfnTrans
 
 dfnTrans is a method for resolving solute transport using control volume flow solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen. We adopt a Lagrangian approach and represent a non-reactive conservative solute as a collection of indivisible passive tracer particles.
 
-See the docs at :ref:`pydfnWorks: dfnTrans <dfntrans-chapter>`
+
+See Module at :ref:`dfnTrans <dfntrans-chapter>` and python docs at :ref:`pydfnTrans: dfnGen <dfnWorks-python-chapter-dfnTrans>`
 
 
 
-Beginner Tutorial 4 User Rectangles
-------------------------------------
+Beginner Tutorial with 4_user_rects 
+---------------------------------------
 
-There are many dfnWorks projects in dfnWorks/examples, this tutorial will use dfnWorks/examples/4_user_rects.
+dfnWorks is run in a terminal where you will interact with the system using text commands. The command line requires you to type commands and manage files directly, so it can be a bit more challenging initially. However, once you get familiar with the command line, it can offer greater flexibility and automation capabilities, especially for running batch processes or integrating scripts into larger workflows.
 
-This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. After running dfnWorks you will view the fracture mesh, the fractures colored by pressure, and the particle tracks as shown in this image. 
+
+This example, 4_user_rects, consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. 
+High and low pressure boundary conditions are applied to the fracture mesh and used in ``dfnFlow``. 
+Then particles are inserted along an inlet fracture and used in ``dfnTrans``.
+After running dfnWorks you will view the fracture mesh, the fractures colored by pressure, and the particle tracks as shown in this image. 
 
 
 .. figure:: figures/4_user_rectangles.png
@@ -80,36 +110,6 @@ This test case consists of four user defined rectangular fractures within a a cu
    :align: center
 	
    *Figure shows 4_user_rect  meshed network of four fractures with views of the mesh (left), pressure (middle), and particle tracks (right).*
-
-
-dfnWorks is run in a terminal where you will interact with the system using text commands. The command line requires you to type commands and manage files directly, so it can be a bit more challenging initially. However, once you get familiar with the command line, it can offer greater flexibility and automation capabilities, especially for running batch processes or integrating scripts into larger workflows.
-
-This guide will help beginners understand the essential steps involved in setting up and executing dfnWorks. 
-
-
-
-Tutorial Prerequisites
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-- Docker dfnWorks is recommended for new users.
-- If you are not using Docker, Ensure that you have Python and the PyDFNworks package installed in your environment.
-
-For Docker and Build Instructions see :ref:`pydfnWorks install <pydfnworks-setup>`
- 
-- Download a clone of the dfnWorks repository for this example and others 
-
-.. code-block:: bash
-
-    $ git clone https://github.com/lanl/dfnWorks.git
-
-
-
-Paraview_ is an open-source visualization software and is used to create images in this document. 
-While not required for running dfnWorks, Paraview is very helpful for visualizing the fracture mesh and simulations.
-Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
-
-.. _Paraview: http://www.paraview.org
 
 
 
@@ -124,11 +124,11 @@ From the top of dfnWorks repository, use the `cd` command to move to the folder 
     cd examples/4_user_rects
 
 
-Familiarize yourself with the structure of your project directory and the expected input files.
+Familiarize yourself with the structure of this project directory and the input files. Note the directory is empty except for three input files:
 
-`driver.py` is the python script controlling the files and the workflow.
-`dfn_explicit.in` is PFLOTRAN control file
-`PTDFN_control.dat` is the FEHM control file for particle tracking
+- `driver.py` is the python script controlling the files and the workflow.
+- `dfn_explicit.in` is a PFLOTRAN control file.
+- `PTDFN_control.dat` is the control file for particle tracking.
 
 
 Step 2. Execute the `driver.py` script 
@@ -141,7 +141,7 @@ In the terminal, execute the script using Python.
     python driver.py
 
 
-If you are running files within Docker with dfnWorks (no mounted volume):
+If you are running files within Docker (no mounted volume):
 
 .. code-block:: bash
 
@@ -150,7 +150,7 @@ If you are running files within Docker with dfnWorks (no mounted volume):
     python driver.py
 
 
-If you are running with Docker dfnWorks with the cloned repository as your mounted volume:
+If you are running Docker with the dfnWorks repository as your mounted volume:
 
 .. code-block:: bash
 
@@ -158,17 +158,20 @@ If you are running with Docker dfnWorks with the cloned repository as your mount
     docker run -v "$(pwd):/app" -w /app ees16/dfnworks:latest python driver.py
 
 
-While dfnWorks is running, you will see extensive reporting to the screen. This will alert you to errors or missing files. When done a report file is written to `output.log`. This is the first place to check if there were any issues. Look for the first occurrence of Errors as fixing those will likely fix the ones that follow. Warnings can usually be ignored but may be helpful.
+While dfnWorks is running, you will see extensive reporting to the screen. This will alert you to errors or missing files. When finished, a report is written to to file `output.log`. This is the first place to check if there are any issues. Look for the first occurrence of Errors as later Errors are likely caused by the first. Warnings may exist and can usually be ignored.
 
 The directory `/output` is created and contains files written during the run. Many of the files were created as input for the meshing and simulation portions of the workflow. These files can be helpful in understanding the run and for viewing the mesh and fractures used.
-A list of files and their descriptions are at :ref:`dfnWorks Files <output-chapter>`.
+
+A list of dfnWorks files and their descriptions are at :ref:`dfnWorks Files <output-chapter>`.
 
 
 
 Step 3. Understanding the Script 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Open the script python `driver.py`. You can open with any text editor or use the unix command ``cat driver.py`` which will display the content to the screen.
+Open the script python `driver.py`. You can open with any text editor or use the unix command ``cat driver.py`` which will display the content to the screen.  Note the first line of the file imports the `pydfnworks` package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts. 
+
+You can also see a complete description of pydfnworks python package and example `driver.py` at :ref:`pydfnWorks python package <dfnWorks-python-chapter>`.
 
 
 Script: Initialization
@@ -176,14 +179,14 @@ Script: Initialization
 
 The script begins by importing the necessary libraries and setting up paths for input files and the output directory. 
 
-- It creates a DFNWORKS object, specifying paths for the flow and transport control files. 
+- It creates a DFN object, specifying paths for the flow and transport control files. 
 - It prepares the output environment using make_working_directory(delete=True), which ensures a fresh directory for storing results. 
 
 
 Script: Define Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The domain size and hydraulic head are defined. This defines domain to a cube of size 1 unit in all dimensions and sets h (hydraulic head of fluid in domain) to 0.1 unit.
+The domain size and hydraulic head are defined for the DFN object. The domain is set to length 1 in all dimensions and h (hydraulic head of fluid in domain) is set to 0.1 unit.
 
 .. code-block:: python
 
@@ -194,20 +197,21 @@ The domain size and hydraulic head are defined. This defines domain to a cube of
 Script: Define Fractures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The dfnGen module manages and creates the fracture network. Parameters can be set using fracture families (for generated fractures) or set by the user. See a full description of fracture paramters and commands at :ref:`pydfnWorks: dfnGen <dfngen-chapter>`. 
+The dfnGen module manages and creates the fracture network. Parameters can be set using fracture families (for generated fractures) or set individually by the user. See a full description of fracture parameters and commands at :ref:`pydfnWorks: dfnGen <dfngen-chapter>`. 
 
 The script for this example uses `add_user_fract` commands to create rectangular-shaped fractures with specified properties such as radius, translation, normal vector, and permeability. Four fractures are created in this example.
 
-    Key fracture parameters include: 
-    - Shape : The geometric shape of the fracture (e.g., 'rect' for rectangular). 
-    - Radii : The size or extent of the fracture. 
-    - Aspect Ratio : The ratio of the length to width for non-circular fractures. 
-    - Translation : The position of the fracture in the domain. 
-    - Normal Vector : This represents the orientation of the fracture. 
-    - Permeability : Describes how easily fluids can pass through the fracture. 
+Key fracture parameters include: 
+
+- Shape : The geometric shape of the fracture (e.g., 'rect' for rectangular). 
+- Radii : The size or extent of the fracture. 
+- Aspect Ratio : The ratio of the length to width for non-circular fractures. 
+- Translation : The position of the fracture in the domain. 
+- Normal Vector : This represents the orientation of the fracture. 
+- Permeability : Describes how easily fluids can pass through the fracture. 
 
 
-For this example, four fractures are created. Their shape is rectangle, with radii less than the length of the domain of 1. Three fractures are horizontal with normal in positive Z direction and translated  by .4 in the X direction. One fracture is at Z=0, the other horizontal fractures are translated above and below by .2. The 2nd fracture is vertical with a radii of 1, equal to the domain width. 
+For this example, four fractures are created. Their shape is rectangle, with radii less than the length of the domain of 1. Three fractures are horizontal with normal in positive Z direction and translated  by .4 in the X direction. One fracture is at Z=0, the other horizontal fractures are translated above and below the 0 elevation. The 2nd fracture defined is vertical with a radii of 1, equal to the domain width. 
 
 .. code-block:: python
 
@@ -224,16 +228,16 @@ For this example, four fractures are created. Their shape is rectangle, with rad
         radii=.6, translation=[0.4, 0, -0.2], normal_vector=[0, 0, 1], permeability=1.0e-12)
 
 
+This image was created with Paraview reading the AVS mesh file output/full_mesh.inp. The fractures are colored by Material ID as assigned by dfnGen module. It is a good idea to create the fracture mesh and check it before running the simulations.  
 
 .. figure:: figures/tut1_polys_setup.png
-   :width: 500px
-   :alt: fracture setup 
+   :width: 500px  
+   :alt: four fractures  
    :align: center
 
-   *Figure shows fractures in order of definitions 1 (blue), 2 (green vertical), 3 (orange top), and 4 (red bottom).*
+   *Figure shows fractures in order of definition; 1 (blue), 2 (green vertical), 3 (orange top), and 4 (red bottom).*
 
 
-This image was created with Paraview reading the AVS mesh file output/full_mesh.inp. The fractures are colored by Material ID as assigned by dfnGen module. It is a good idea to create the fracture mesh and check it before running the simulations.  
 
 
 
@@ -243,31 +247,84 @@ Script: Mesh the Fracture Network
 
 Once parameters and fractures have been defined, the script checks if the inputs are correct and prints the parameters of the domain for verification.  If everything checks ok, the `create_network()` method generates the fracture network based on the defined parameters.
 
-It is recommended that you stop driver.py after `create_network()` but before calling the simulations. Ensure the mesh and all checks are good and as expected.  Observe output screen reports and the output log file, all tests should output "Test passed". Any tests which ouput "TEST FAILED" must be debugged.
+It is recommended that you stop driver.py after `create_network()` but before calling the simulations. Ensure the mesh and all checks are good and as expected.  Observe output screen reports and the output log file and check for Errors or unexpected results, 
 
-Viewing the the mesh and program output files will allow simple mistakes to be fixed. 
-Checking the output log file to screen and file `output.log`, the mesh reports look as expected:
+Checking the screen output or file `output.log`, the mesh reports look as expected:
+
+.. code-block:: bash
+
+    * Checking for meshing issues.
+    Merging the mesh: Starting
+    --> Writting partial merge scripts
+    --> There are 2 fractures in each part
+    --> Writting merge scripts: Complete
+    --> Writing : merge_network.lgi
+    --> Dumping output for PFLOTRAN
+    --> Writing : merge_network.lgi - complete
+
+    Opening full_mesh.inp
+    Number of Nodes: 537
+    Reading in Material ID: materialid.dat
+    There are 4 Materials
+    Reading in Apertures
+    Reading in UGE: full_mesh.uge
+    Number of Cells: 537
+    --> Number of Connections: 1533
+    --> new UGE written in full_mesh_vol_area.uge
+
+
+The meshed fractures are written to the AVS format file `full_mesh.inp` with 4 materials, 537 nodes, and 537 cells. Setup files for the simulations are also written. These include voronoi areas (.stor and .uge) and boundaries (.zone and .ex).
+
+
  
 
 Script: Run Simulations  
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-Once the mesh looks good, executes flow and transport simulations using dfn_flow() and dfn_trans(). Simple runs can  provide insights into the behavior of fluids  within the fractured network.  
-
-View the dfnFlow_file '/dfn_explicit.in'. This is a PFLOTRAN input file.  High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. 
+The pydfnworks commands `dfn_flow()` and `dfn_trans()` are used to run the simulations. These can provide insights into the behavior of fluids within the fractured network.
 
 
-View the dfnTrans_file '/PTDFN_control.dat.  Particles are inserted uniformly along the inlet fracture on the left side of the image. Particles exit the domain through the two horizontal fractures on the right side of the image. 
+View the dfnFlow_file 'dfn_explicit.in'. This is a PFLOTRAN input file.  High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. 
+
+The dfn_flow is successful:
+
+.. code-block:: bash
+
+     ==================================================
+     --> Running PFLOTRAN
+     --> Running: /dfnWorks/lib/petsc/arch-linux2-c-debug/bin/mpirun -np 4 /dfnWorks/bin/pflotran -pflotranin dfn_explicit.in
+     ==================================================
+     --> Running PFLOTRAN Complete
+     ==================================================
+
+
+
+View the dfnTrans_file 'PTDFN_control.dat.  Particles are inserted uniformly along the inlet fracture on the left side of the fracture network. Particles exit the domain through the two horizontal fractures on the right side of the domain. 
+
+
+The dfn_trans run is successful:
+
+.. code-block:: bash
+
+     ==================================================
+     dfnTrans Starting
+     ==================================================
+     --> Checking Initial Conditions
+     --> Checking Initial Conditions Complete
+     Executing /dfnWorks/bin/DFNTrans PTDFN_control.dat
+     ==================================================
+     dfnTrans Complete
 
 
 
 Step 4. Verify the Fracture Mesh 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Upon completion of the script, output files will be created in the specified `output` directory. Review these files to analyze your DFN simulation results. See full description of files at files.rst
 
-After generation, verify the mesh quality using the mesh quality tools available in the interface. Look for warnings or errors that may indicate issues with element quality or aspect ratios.
+Upon completion of the python script, output files will be created in the specified `output` directory. 
+The primary file for viewing the fracture mesh is `full_mesh.inp` which includes mesh properties such as fracture (and family) IDs, materials, and permeability. Note all `*.inp` are AVS format files that can be viewed by Paraview. 
+
 
 Viewing the the mesh and program output files will allow simple mistakes to be fixed.
 Checking the output log file to screen and file `output.log`, the mesh reports look as expected:
@@ -305,21 +362,35 @@ Additional output information and log files are written in the `output` director
 
 
 .. figure:: figures/tut1_mesh_lines.png
-   :width: 500px 
+   :width: 600px 
    :alt: fracture mesh
    :align: center
 
 
    *Figure shows the meshed fractures colored by the fracture ID.*
 
+It is important that fracture intersections are well connected. You can overlay the intersections on the full mesh for easier examination as shown in the image below. An AVS file is written for each and are found in `output/intersections/intersections_*.inp`
 
-.. figure:: figures/tut1_mesh_no_poly2.png
-   :width: 500px 
+
+.. figure:: figures/tut1_intersections_close.png
+   :width: 450px 
    :alt: fracture intersections
    :align: center
 
 
-   *Figure shows the intersections in the  meshed fractures.*
+   *Figure shows close-up of intersection (black dots) created in the meshed fractures.*
+
+
+The intersections can be represented as wire-frame or points. Selecting spherical points will make the connectivity between intersecting fractures more visible. Click on image for full size views.
+
+
+.. figure:: figures/tut1_paraview_intersection_close.png
+   :width: 350px 
+   :alt: paraview fracture intersections
+   :align: center
+
+
+   *Snapshot of Paraview session with intersections represented as spherical points.*
 
 
 
@@ -328,53 +399,37 @@ Step 5. Analyze Simulation Results
 
 
 
-View `output.log` to verify the dfnFlow module was successful and result files were written.
+View the screen report or  `output.log` to verify the dfnFlow module has written result files.
 
 .. code-block:: bash
 
     2025-03-06 17:15:04,156 INFO --> Running PFLOTRAN
-    2025-03-06 17:15:04,157 INFO --> Running: /dfnWorks/lib/petsc/arch-linux2-c-debug/bin/mpirun -np 4 /dfnWorks/bin/pflotran -pflotranin dfn_explicit.in
     2025-03-06 17:15:04,924 INFO --> Processing file: dfn_explicit-000.vtk
     2025-03-06 17:15:04,933 INFO --> Processing file: dfn_explicit-001.vtk
-    2025-03-06 17:15:04,941 INFO --> Parsing PFLOTRAN output complete
-    2025-03-06 17:15:05,112 INFO ====================================================
-    2025-03-06 17:15:05,113 INFO dfnFlow Complete
-    2025-03-06 17:15:05,113 INFO Time Required for dfnFlow 1.0802464485168457 seconds 
 
-Read the PFLOTRAN result file `output/parsed_vtk/dfn_explicit-001.vtk` into Paraview and select pressure to view.
+
+Read the PFLOTRAN result file `output/parsed_vtk/dfn_explicit-001.vtk` into Paraview and select the property pressure to view.
 High pressure (red) is shown on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
 
 
 .. figure:: figures/tut1_liq_pressure_002.png
-   :width: 500px 
+   :width: 600px 
    :alt: fracture pressure
    :align: center
 
 
-   *Figure shows the fracture surfaces colored by liquid pressure*
+   *Figure shows the fracture surfaces colored by Liquid_Pressure*
 
 
+If you do not see file names for dfn_Trans results, look for a `traj` or `trajectories`. In this example particle files are written to `output/traj/trajectories/part_1.inp, ... part_10.inp`.
 
-View `output.log` to verify the dfnTrans module was successful and result files were written. Note directory and file names may change due to code development. Check the log to confirm names used.
-
-.. code-block:: bash
-
-    2025-03-06 17:15:05,119 INFO --> dfnTrans is running from: PTDFN_control.dat
-    2025-03-06 17:15:05,120 INFO --> Checking DFNTrans Parameters
-    2025-03-06 17:15:05,122 INFO --> All files required for dfnTrans have been found in current directory
-    2025-03-06 17:15:05,122 INFO --> Checking Initial Conditions Complete
-    2025-03-06 17:15:05,630 INFO ================================================================================
-    2025-03-06 17:15:05,630 INFO dfnTrans Complete
-
-
-
-Read the particle files `output/traj/trajectories/part_1.inp, ... part_10.inp`` into Paraview in addition to the mesh. You can view the particle lines with "wireframe" and expand the line width. These lines are colored by the fracture ID, also view velocity for good views.
+Use Paraview to read full_mesh.inp and all the particle files.  For the particle lines, select "wireframe" and expand the line width for easier views. The lines in the image below are colored by the fracture ID, also view velocity for good views.
 
 View shows particles uniform along the inlet fracture on the left side of the image. Particles exit the domain through the two horizontal fractures on the right side of the image. Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image. 
 
 
 .. figure:: figures/tut1_parts_fracture.png
-   :width: 500px 
+   :width: 600px 
    :alt: fracture intersections
    :align: center
 
@@ -384,13 +439,29 @@ View shows particles uniform along the inlet fracture on the left side of the im
 
 
 
-
-
 Conclusion
 ------------------------------------------
 
-You have successfully run a basic simulation using the `driver.py` script in dfnWorks! As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.
+You have successfully run dfnWorks to create a simple fracture network and run  basic simulations using the `driver.py` script in dfnWorks! As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.
 
+
+
+Additional Resources
+------------------------------------------
+
+There are more demo runs in the `dfnWorks/examples` directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
+
+• 4_user_rects (4_user_defined_rectangles): The example used in this tutorial. 
+• 4_user_ell_uniform (4_user_defined_ellipses): User defined elliptical fractures.
+• exp (exponential_dist): Use parameters for two families of fractures with an exponential distribution of fracture size.
+• lognormal (lognormal_dist): Use parameters for two families of fractures with a lognormal distribution of fracture size.
+• TPL (truncated_power_law_dist): Use parameters for two families of fractures with a truncated power-law distribution of fracture size.
+
+See a description of these 5 examples at :ref:`pydfnWorks examples <examples>`.
+
+All examples are available from github at `DFNWorks Examples <https://github.com/lanl/dfnWorks/tree/master/examples>`_
+
+For a short description of all examples see `Examples README file <https://github.com/lanl/dfnWorks/tree/master/examples/README.md>`_
 
 For Additional Resources you can browse the online docs including examples, module descriptions, and the pydfnworks code descriptions.
 The Publications are a good source of applications and discussions. Consider joining community forums and user groups for support and to share experiences with dfnWorks users.

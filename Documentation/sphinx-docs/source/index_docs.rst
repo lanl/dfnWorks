@@ -13,6 +13,7 @@ Contents:
    intro
    applications
    setup
+   examples 
    pydfnworks
    pydfnGen
    pydfnFlow
@@ -23,7 +24,6 @@ Contents:
    dfnflow
    dfntrans
    output
-   examples 
-   tutorial_intro
    publications
    gallery
+   tutorial_intro
