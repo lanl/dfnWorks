@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.dfnGen.meshing.udfm.upscale &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+              <div class="version">
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.dfnGen.meshing.udfm.upscale</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.dfnGen.meshing.udfm.upscale</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: upscale.py</span>
+<span class="sd">   :synopsis: Generates PFLOTRAN or FEHM input from octree refined continuum mesh</span>
+<span class="sd">.. moduleauthor:: Matthew Sweeney &lt;msweeney2796@lanl.gov&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+
+<div class="viewcode-block" id="upscale"><a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.udfm.upscale.upscale">[docs]</a><span class="k">def</span> <span class="nf">upscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_perm</span><span class="p">,</span> <span class="n">mat_por</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate permeabilities and porosities based on output of map2continuum.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class </span>
+<span class="sd">        </span>
+<span class="sd">        mat_perm : float </span>
+<span class="sd">            Matrix permeability (in m^2)</span>
+<span class="sd">        </span>
+<span class="sd">        mat_por: float</span>
+<span class="sd">            Matrix porosity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        perm_fehm.dat : text file</span>
+<span class="sd">            Contains permeability data for FEHM input</span>
+<span class="sd">        </span>
+<span class="sd">        rock_fehm.dat : text file</span>
+<span class="sd">            Contains rock properties data for FEHM input</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_permeability.h5 : h5 file</span>
+<span class="sd">            Contains permeabilites at each node for PFLOTRAN input</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_porosity.h5 : h5 file</span>
+<span class="sd">            Contains porosities at each node for PFLOTRAN input               </span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Starting&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+    <span class="c1"># Check values of porosity and permeability</span>
+    <span class="k">if</span> <span class="n">mat_por</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mat_por</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Matrix porosity must be between 0 and 1. Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;perm_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;perm</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rock_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;rock</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Bring in f_dict dictionary</span>
+    <span class="n">f_dict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;connections.p&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;full_mesh.uge&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">cv_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">iarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;=i4&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">):</span>
+            <span class="n">fline</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">cv_vol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fline</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="n">iarray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fline</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">perm_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">por_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="c1">#cv_vol = np.zeros(num_nodes, &#39;float&#39;)</span>
+    <span class="c1">#iarray = np.zeros(num_nodes, &#39;=i4&#39;)</span>
+    <span class="n">frac_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">permX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">permY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">permZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Populate permeability and porosity arrays here</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f_dict</span><span class="p">:</span>
+            <span class="c1"># Get porosity:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="c1"># Calculate total volume of fractures in cv cell i</span>
+                <span class="n">frac_vol</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                                                 <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">frac_vol</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cv_vol</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_por</span>
+            <span class="k">if</span> <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="c1"># Get permeability:</span>
+            <span class="n">perm_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+            <span class="n">phi_sum</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span>
+                       <span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">cv_vol</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">phi</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                    <span class="n">phi</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="n">phi_sum</span> <span class="o">+=</span> <span class="n">phi</span>
+                <span class="k">if</span> <span class="n">phi_sum</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                    <span class="n">phi_sum</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># Construct tensor Omega</span>
+                <span class="n">Omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+                <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">n3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n1</span> <span class="o">*</span> <span class="n">n2</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n3</span> <span class="o">*</span> <span class="n">n1</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n1</span> <span class="o">*</span> <span class="n">n2</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">n1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n2</span> <span class="o">*</span> <span class="n">n3</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n3</span> <span class="o">*</span> <span class="n">n1</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n2</span> <span class="o">*</span> <span class="n">n3</span>
+                <span class="n">Omega</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">n2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">perm_tensor</span> <span class="o">+=</span> <span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Omega</span><span class="p">)</span>
+            <span class="n">perm_tensor</span> <span class="o">*=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mi">12</span>
+
+            <span class="c1"># Calculate eigenvalues</span>
+            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="c1"># Arithmetic average of matrix perm</span>
+            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi_sum</span><span class="p">)</span> <span class="o">*</span> <span class="n">mat_perm</span>
+            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi_sum</span><span class="p">)</span> <span class="o">*</span> <span class="n">mat_perm</span>
+            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi_sum</span><span class="p">)</span> <span class="o">*</span> <span class="n">mat_perm</span>
+
+            <span class="c1"># Correction factor</span>
+
+            <span class="c1"># Actual value doesn&#39;t matter here, just needs to be high</span>
+            <span class="n">min_n1</span> <span class="o">=</span> <span class="mf">1e6</span>
+            <span class="n">min_n2</span> <span class="o">=</span> <span class="mf">1e6</span>
+            <span class="n">min_n3</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+            <span class="c1"># See Sweeney et al. 2019 Computational Geoscience</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="n">n1_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">theta1_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n1_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta1_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n1</span><span class="p">:</span>
+                    <span class="n">theta1</span> <span class="o">=</span> <span class="n">theta1_t</span>
+                    <span class="n">min_n1</span> <span class="o">=</span> <span class="n">theta1_t</span>
+                <span class="n">n2_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">theta2_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n2_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta2_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n2</span><span class="p">:</span>
+                    <span class="n">theta2</span> <span class="o">=</span> <span class="n">theta2_t</span>
+                    <span class="n">min_n2</span> <span class="o">=</span> <span class="n">theta2_t</span>
+                <span class="n">n3_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">theta3_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n3_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta3_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n3</span><span class="p">:</span>
+                    <span class="n">theta3</span> <span class="o">=</span> <span class="n">theta3_t</span>
+                    <span class="n">min_n3</span> <span class="o">=</span> <span class="n">theta3_t</span>
+
+            <span class="n">sl</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mf">45.0</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">cf_x</span> <span class="o">=</span> <span class="n">sl</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta1</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="n">cf_y</span> <span class="o">=</span> <span class="n">sl</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta2</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="n">cf_z</span> <span class="o">=</span> <span class="n">sl</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta3</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+
+            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">cf_x</span>
+            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">cf_y</span>
+            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">cf_z</span>
+
+            <span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Assign matrix properties</span>
+            <span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_por</span>
+            <span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_perm</span>
+
+            <span class="c1"># Note these aren&#39;t needed if not using anisotropic perm</span>
+            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_perm</span>
+            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_perm</span>
+            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_perm</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;perm_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rock_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;2165.&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
+                    <span class="s2">&quot;931.&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">por_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Need an extra space at end for FEHM</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;perm_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rock_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
+        <span class="n">perm_filename</span> <span class="o">=</span> <span class="s1">&#39;mesh_permeability.h5&#39;</span>
+        <span class="n">poros_filename</span> <span class="o">=</span> <span class="s1">&#39;mesh_porosity.h5&#39;</span>
+
+        <span class="n">h5file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">perm_filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Cell Ids&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iarray</span><span class="p">)</span>
+
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Permeability&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">perm_var</span><span class="p">)</span>
+
+        <span class="c1">#dataset_name = &#39;Perm_X&#39;</span>
+        <span class="c1">#h5dset = h5file.create_dataset(dataset_name, data = permX)</span>
+
+        <span class="c1">#dataset_name = &#39;Perm_Y&#39;</span>
+        <span class="c1">#h5set = h5file.create_dataset(dataset_name, data = permY)</span>
+
+        <span class="c1">#dataset_name = &#39;Perm_Z&#39;</span>
+        <span class="c1">#h5set = h5file.create_dataset(dataset_name, data = permZ)</span>
+        <span class="n">h5file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">h5file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">poros_filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Cell Ids&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iarray</span><span class="p">)</span>
+
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Porosity&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">por_var</span><span class="p">)</span>
+        <span class="n">h5file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+ 
+    <span class="c1">#upscale_cleanup()</span>
+
+    <span class="c1"># What nodes are fractures vs. matrix</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">perm_var</span> <span class="o">&gt;</span> <span class="n">mat_perm</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="c1"># Add 1 since PFLOTRAN doesn&#39;t like mat id = 0</span>
+    <span class="n">tag</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;tag_frac.dat&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
+        <span class="c1"># Save as h5</span>
+        <span class="n">h5file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">&quot;materials.h5&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Materials/Cell Ids&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iarray</span><span class="p">)</span>
+
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Materials/Material Ids&#39;</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
+        <span class="n">h5file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="s2">&quot;full_mesh.uge&quot;</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="s2">&quot;full_mesh.stor&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Finished&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
+
+
+<span class="c1">#def upscale_cleanup():</span>
+<span class="c1">#    files_to_remove = [</span>
+<span class="c1">#        &quot;area*&quot;, &quot;build*&quot;, &quot;driver*&quot;, &quot;ex*&quot;, &quot;frac*&quot;, &quot;hex*&quot;, &quot;intersect*&quot;,</span>
+<span class="c1">#        &quot;log*&quot;, &quot;out*&quot;, &quot;parame*&quot;, &quot;remove*&quot;, &quot;time*&quot;, &quot;tmp*&quot;</span>
+<span class="c1">#    ]</span>
+<span class="c1">#    for name in files_to_remove:</span>
+<span class="c1">#        for fl in glob.glob(name):</span>
+<span class="c1">#            os.remove(fl)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

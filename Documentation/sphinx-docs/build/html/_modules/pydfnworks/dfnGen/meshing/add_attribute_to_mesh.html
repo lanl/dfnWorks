@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.dfnGen.meshing.add_attribute_to_mesh &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+              <div class="version">
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.dfnGen.meshing.add_attribute_to_mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.dfnGen.meshing.add_attribute_to_mesh</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">savetxt</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper</span> <span class="kn">import</span> <span class="n">run_lagrit_script</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.general</span> <span class="kn">import</span> <span class="n">helper_functions</span> <span class="k">as</span> <span class="n">hf</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.general.logging</span> <span class="kn">import</span> <span class="n">local_print_log</span><span class="p">,</span> <span class="n">print_log</span> 
+
+
+<span class="k">def</span> <span class="nf">create_variable_file</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">variable_file</span><span class="p">,</span> <span class="n">matid_file</span><span class="o">=</span><span class="s2">&quot;materialid.dat&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a node based file for variables</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">        variable : string</span>
+<span class="sd">            name of variable</span>
+<span class="sd">        </span>
+<span class="sd">        variable_file : string</span>
+<span class="sd">            name of file containing variable files. Must be a single column where each line corresponds to that fracture number. </span>
+<span class="sd">        </span>
+<span class="sd">        matid_file : string</span>
+<span class="sd">            name of materialid file produced by large. Normally produced by run_meshing.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">        variable_file_by_node : string</span>
+<span class="sd">            name of file containing node based values of the variable</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Making </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2"> by node file&quot;</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">genfromtxt</span><span class="p">(</span><span class="n">variable_file</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matid_file</span><span class="p">):</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot locate the file &#39;</span><span class="si">{</span><span class="n">matid_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">genfromtxt</span><span class="p">(</span><span class="n">matid_file</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">value_by_node</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+        <span class="n">value_by_node</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">variable_file_by_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">_by_node.dat&quot;</span>
+    <span class="n">savetxt</span><span class="p">(</span><span class="n">variable_file_by_node</span><span class="p">,</span> <span class="n">value_by_node</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Complete&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">variable_file_by_node</span>
+
+
+<span class="k">def</span> <span class="nf">create_lagrit_append_script</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">variable_file</span><span class="p">,</span> <span class="n">mesh_file_in</span><span class="p">,</span>
+                                <span class="n">mesh_file_out</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a LaGriT script to append the attribute to the mesh </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">        variable : string</span>
+<span class="sd">            name of variable</span>
+<span class="sd">        </span>
+<span class="sd">        variable_file : string</span>
+<span class="sd">            name of file containing variable files. Must be a single column where each line corresponds to that node number in the mesh</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_file_in : string</span>
+<span class="sd">            Name of source mesh file</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_file_out : string</span>
+<span class="sd">            Name of Target mesh file</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">        lagrit_file : string</span>
+<span class="sd">            Name of LaGriT output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Making LaGriT script&quot;</span><span class="p">)</span>
+    <span class="n">lagrit_script</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">read / </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s1"> / mo1</span>
+<span class="s1">cmo / addatt / mo1 / </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> / vdouble / scalar / nnodes</span>
+<span class="s1">cmo / setatt / mo1 / </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> / 1 0 0 / 1</span>
+<span class="s1">cmo / readatt / mo1 / </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> / 1, 0, 0 / </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s1"> </span>
+<span class="s1">dump / </span><span class="si">{</span><span class="n">mesh_file_out</span><span class="si">}</span><span class="s1"> / mo1 </span>
+<span class="s1">finish</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+    <span class="n">lagrit_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;add_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">_to_mesh.lgi&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">lagrit_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Complete&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lagrit_file</span>
+
+
+<div class="viewcode-block" id="add_variable_to_mesh"><a class="viewcode-back" href="../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.add_attribute_to_mesh.add_variable_to_mesh">[docs]</a><span class="k">def</span> <span class="nf">add_variable_to_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">variable</span><span class="p">,</span>
+                         <span class="n">variable_file</span><span class="p">,</span>
+                         <span class="n">mesh_file_in</span><span class="p">,</span>
+                         <span class="n">mesh_file_out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">node_based</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a variable to the nodes of a mesh. Can be either fracture (material) based </span>
+<span class="sd">    or node based. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+<span class="sd">        </span>
+<span class="sd">        variable : string</span>
+<span class="sd">            name of variable</span>
+<span class="sd">        </span>
+<span class="sd">        variable_file : string</span>
+<span class="sd">            name of file containing variable files. Must be a single column where each line corresponds to that node number in the mesh</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_file_in : string</span>
+<span class="sd">            Name of source mesh file</span>
+<span class="sd">        </span>
+<span class="sd">        mesh_file_out : string</span>
+<span class="sd">            Name of Target mesh file.  If no name if provide, mesh_file_in will be used</span>
+<span class="sd">        </span>
+<span class="sd">        node_based : bool</span>
+<span class="sd">            Set to True if variable_file contains node-based values, Set to False </span>
+<span class="sd">            if variable_file provide fracture based values</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">        lagrit_file : string</span>
+<span class="sd">            Name of LaGriT output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check input files</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">variable_file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The file </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mesh_file_in</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error -- in function &#39;add_variable_to_mesh&#39;. The mesh file </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s2"> is not in current directory.  Please check the filename.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># if an output mesh file is not provided, set target mesh to be the source mesh.</span>
+    <span class="k">if</span> <span class="n">mesh_file_out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mesh_file_out</span> <span class="o">=</span> <span class="n">mesh_file_in</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--&gt; Adding attribute in </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s2"> to mesh file </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">--&gt; Output writting into </span><span class="si">{</span><span class="n">mesh_file_out</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">node_based</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Expecting node-based values&quot;</span><span class="p">)</span>
+        <span class="n">lagrit_file</span> <span class="o">=</span> <span class="n">create_lagrit_append_script</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">variable_file</span><span class="p">,</span>
+                                                  <span class="n">mesh_file_in</span><span class="p">,</span> <span class="n">mesh_file_out</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">variable_file_by_node</span> <span class="o">=</span> <span class="n">create_variable_file</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">variable_file</span><span class="p">)</span>
+        <span class="n">lagrit_file</span> <span class="o">=</span> <span class="n">create_lagrit_append_script</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span>
+                                                  <span class="n">variable_file_by_node</span><span class="p">,</span>
+                                                  <span class="n">mesh_file_in</span><span class="p">,</span> <span class="n">mesh_file_out</span><span class="p">)</span>
+
+    <span class="n">run_lagrit_script</span><span class="p">(</span><span class="n">lagrit_file</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--&gt; Complete: Adding attribute in </span><span class="si">{</span><span class="n">variable_file</span><span class="si">}</span><span class="s2"> to mesh file </span><span class="si">{</span><span class="n">mesh_file_in</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">--&gt; Output writting into </span><span class="si">{</span><span class="n">mesh_file_out</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
