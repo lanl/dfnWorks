@@ -5,6 +5,7 @@ Setup and Running dfnWorks
 
 These options are available for running dfnWorks:
 
+
 * Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker can be examined but will not persist past the exit. (You will not be able to load files into a viewer like Paraview). Except for Docker, no installation is needed.
 
 * Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit and Paraview will work.
@@ -18,7 +19,6 @@ Docker
 ------------------------------
 
 .. _docker_section:
-
 
 The easiset way to get started with dfnWorks is by Using Docker. You will not need to install any software or manage your enviornment. All the tools and the dfnWorks repository are contained in the Docker image. 
 
@@ -34,7 +34,6 @@ If you do not already have Docker installed on your machine, visit `Getting Star
     $ docker run hello-world
     Hello from Docker!
     This message shows that your installation appears to be working correctly.
-
 
 Once Docker is installed, pull the dfnWorks Docker image:
 
@@ -84,7 +83,6 @@ Use a volume where permissions will not be an issue to ensure smooth operation.
 
 
 **On LANL Linux Servers**
-
 
 Docker is available on the local server `es11`. It is important to work from your home directory to avoid permission issues.
 
