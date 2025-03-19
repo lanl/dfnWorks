@@ -275,9 +275,9 @@ Type: Value of 0,1,2
 This value is set automatically with the definition of fracture families (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`).
 
 .. note:: 
-    | For spherical coordinates, values are defined using the function parameters :ref:`theta <dfnWorks-python-chapter-dfnGen>`/:ref:`phi <dfnWorks-python-chapter-dfnGen>`. 
-    | For Trend/Plunge,  values are defined using :ref:`trend <dfnWorks-python-chapter-dfnGen>`/:ref:`plunge <dfnWorks-python-chapter-dfnGen>`.
-    | For Dip/Strike, values are defined using :ref:`dip <dfnWorks-python-chapter-dfnGen>`/:ref:`strike <dfnWorks-python-chapter-dfnGen>`.
+    | For spherical coordinates, values are defined using the function parameters :ref:`theta`/:ref:`phi`. 
+    | For Trend/Plunge,  values are defined using :ref:`trend`/:ref:`plunge`.
+    | For Dip/Strike, values are defined using :ref:`dip`/:ref:`strike`.
 
 .. warning:: 
     | When using Trend / Plunge or Dip / Strike, :ref:`angleOption` must be set to degree (default), :ref:`angleOption` = 'degree'
