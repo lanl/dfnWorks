@@ -5,9 +5,10 @@ Setup and Running dfnWorks
 
 These options are available for running dfnWorks:
 
-* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker will not persist past the exit. Except for Docker, no installation is needed.
 
-* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit.
+* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker can be examined but will not persist past the exit. (You will not be able to load files into a viewer like Paraview). Except for Docker, no installation is needed.
+
+* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit and Paraview will work.
 
 * Clone and build dfnWorks on your machine. This will give full access and control of all the tools and files for your project. Installation will include Python, dfnWorks, LaGriT, PFLOTRAN, and FEHM.
 
@@ -18,7 +19,6 @@ Docker
 ------------------------------
 
 .. _docker_section:
-
 
 The easiset way to get started with dfnWorks is by Using Docker. You will not need to install any software or manage your enviornment. All the tools and the dfnWorks repository are contained in the Docker image. 
 
@@ -34,7 +34,6 @@ If you do not already have Docker installed on your machine, visit `Getting Star
     $ docker run hello-world
     Hello from Docker!
     This message shows that your installation appears to be working correctly.
-
 
 Once Docker is installed, pull the dfnWorks Docker image:
 
@@ -84,7 +83,6 @@ Use a volume where permissions will not be an issue to ensure smooth operation.
 
 
 **On LANL Linux Servers**
-
 
 Docker is available on the local server `es11`. It is important to work from your home directory to avoid permission issues.
 
@@ -208,18 +206,20 @@ Go up into the pydfnworks sub-directory:
     
     $ cd dfnWorks/pydfnworks/
 
-Complie The pydfnWorks Package:
+Compile The pydfnWorks Package & Install on Your Local Machine:
 
 .. code-block:: bash
     
-    $ python setup.py bdist_wheel
+    $ pip install -r requirements.txt
 
 
-Install on Your Local Machine:
+or
 
 .. code-block:: bash
     
-    $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
+    $ pip install -r requirements.txt --user
+
+if you don't have admin privileges
 
 **Note that the python version in dist/ needs to be consistent with the current release**
 

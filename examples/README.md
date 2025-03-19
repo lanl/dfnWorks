@@ -2,7 +2,8 @@
 # Example Descriptions
  
 
-- ### 4_user_ell_uniform (4_user_defined_ell_uniform)
+
+#### 4_user_ell_uniform (4_user_defined_ell_uniform)
 
    This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. Resolution is uniform and slope = 0.
 
@@ -11,7 +12,7 @@
    See [Example Run](https://lanl.github.io/dfnWorks/pydfnworks.html)
 
 
-- ### 4_user_rects (4_user_defined_rects)
+#### 4_user_rects (4_user_defined_rects)
 
    Simple example with  four user defined rectangular fractures within a a cubic domain. 
 
@@ -48,7 +49,6 @@
    This test case creates a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. PFLOTRAN and FEHM simulations are run.
 
    See [Example Description](https://lanl.github.io/dfnWorks/examples.html)
-
 
 - ### faults
 
