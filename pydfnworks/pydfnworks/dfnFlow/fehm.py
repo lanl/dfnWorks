@@ -44,7 +44,7 @@ def correct_stor_file(self):
         f.write("%s\n" % self.aper_file)
 
     t = time()
-    cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
+    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_stor_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
         error = 'Erro: stor conversion failed\nExiting Program\n'
