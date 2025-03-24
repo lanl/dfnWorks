@@ -248,7 +248,7 @@ def write_perms_and_correct_volumes_areas(self):
     ## dump aperture file
     self.dump_aperture(self.aper_file, format='fehm')
     ## execute convert uge C code
-    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
+    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_uge_params.txt'
     self.print_log(f">> {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
