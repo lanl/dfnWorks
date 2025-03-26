@@ -47,15 +47,10 @@ int readInt(const std::string& buf) {
 
 // Checks for null pointers
 void check_null_pointer(void* temp) {
-<<<<<<< HEAD
     std::string logString;
     if (!temp) {
         logString = "Out of Memory\n";
         logger.writeLogFile(ERROR,  logString);
-=======
-    if (!temp) {
-        std::cerr << "Out of Memory\n";
->>>>>>> 4421e8f0 (Updates to add a main driver and single executable)
         exit(1);
     }
 }
