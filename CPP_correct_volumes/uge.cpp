@@ -254,11 +254,8 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
     std::cout << "--> new UGE written in " << uge_out_file << "\n";
 }
 
-// Create a namespace for uge parameters
-namespace uge {
-    void readInParams(std::ifstream& fparams, Params& params) {
-        fparams >> params.mesh_file >> params.matID_file >> params.uge_in_file >> params.uge_out_file >> params.aper_file >> params.cell_flag;
-    }
+void readInParams(std::ifstream& fparams, Params& params) {
+    fparams >> params.mesh_file >> params.matID_file >> params.uge_in_file >> params.uge_out_file >> params.aper_file >> params.cell_flag;
 }
 
 int uge_main(int argc, char* args[]) {
@@ -267,7 +264,7 @@ int uge_main(int argc, char* args[]) {
     std::ifstream fp = open_file(paramsName);
     Params params;
  
-    uge::readInParams(fp, params);
+    readInParams(fp, params);
     std::cout << "\nCorrecting UGE Volumes and Areas for dfnWorks\n";
     std::cout << "-> Mesh File: " << params.mesh_file << "\n";
     std::cout << "-> MatID File: " << params.matID_file << "\n";

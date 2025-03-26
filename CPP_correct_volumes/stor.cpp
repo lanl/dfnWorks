@@ -5,6 +5,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
+#include <string> 
+#include <limits>
+#include <iomanip>
  
 struct Params {
     std::string matID_file;
@@ -20,7 +23,7 @@ std::ifstream openFile(const std::string& filename) {
         std::cerr << "Can't open file: " << filename << "\n";
         exit(1);
     }
-    std::cout << "Opening file " << filename << "\n";
+    std::cout << "Opening input file " << filename << "\n";
     return file;
 }
 
@@ -31,6 +34,7 @@ std::ofstream openOutputFile(const std::string& filename) {
         std::cerr << "Can't open file: " << filename << "\n";
         exit(1);
     }
+    std::cout << "Opening output file " << filename << "\n";
     return file;
 } 
 
@@ -57,66 +61,99 @@ void copyHeader(std::ifstream& f2d, std::ofstream& f3d) {
 } 
 
 void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
-    std::ifstream fmz = openFile(params.matID_file);
-    std::ifstream fad = openFile(params.aper_file); 
-
+    // Read in file
+    std::ifstream fmz(params.matID_file);
+    if (!fmz) {
+        std::cerr << "Error opening material file: " << params.matID_file << "\n";
+        std::exit(1);
+    }
+    std::cout << params.matID_file << " opened.\n";
+    // --- Read aperature file ---
+    std::ifstream fad(params.aper_file);
+    if (!fad) {
+        std::cerr << "Error opening aperature file: " << params.aper_file << "\n";
+        std::exit(1);
+    }
+ 
+    // Get Nodes and Edges
     int nnodes, nedges, area_coef, max_neighb, snode_edge;
     f2d >> nedges >> nnodes >> snode_edge >> area_coef >> max_neighb;
     f3d << nedges << " " << nnodes << " " << snode_edge << " " << area_coef << " " << max_neighb << "\n";
     std::cout << "There are " << nnodes << " nodes and " << nedges << " edges \n";
  
+    unsigned int mat_number, nnum, currentn;
+    std::string junk;
+
     struct Material {
         unsigned int matnumber;
     };
     std::vector<Material> node(nnodes);
  
-    // Read material file
-    std::string junk;
-    unsigned int mat_number, nnum, currentn;
-    fmz >> junk; 
+    // Read a header junk string before entering the loop.
+    if (!(fmz >> junk)) {
+        std::cerr << "Failed to read header from material file.\n";
+        std::exit(1);
+    }
 
-    while (true) {
-        fmz >> mat_number >> junk;
-        if (junk == "nnum") {
-            fmz >> nnum;
+    // Use a counter for the number of processed materials.
+    unsigned int materialCount = 0;
+    // Process material blocks
+    do {
+        if (!(fmz >> mat_number)) break;
+        if (!(fmz >> junk)) break; 
+ 
+        // If the command string starts with "nnum", process the following node indices.
+        if (junk.compare(0, 4, "nnum") == 0) {
+            if (!(fmz >> nnum)) break;
             for (unsigned int i = 0; i < nnum; i++) {
-                fmz >> currentn;
-                node[currentn - 1].matnumber = mat_number;
+                if (!(fmz >> currentn)) break;
+                // Check to ensure currentn > 0 to avoid underflow, then adjust for zero-based indexing.
+                if (currentn > 0 && (currentn - 1) < node.size()) {
+                    node[currentn - 1].matnumber = mat_number;
+                } else {
+                    std::cerr << "Index out of range: " << currentn << "\n";
+                }
             }
+            materialCount++; // Count this processed material block.
         } else {
             break; 
         }
-    }
-    std::cout << "\nThere are " << mat_number - 6 << " materials\n"; 
-
-    // Read aperture file
-    std::vector<double> aperturem(mat_number);
-    int apmat, zn;
-    double currentap;
-    fad >> junk; 
-
-    for (unsigned int i = 0; i < mat_number; i++) {
-        fad >> apmat >> zn >> zn >> currentap;
-        apmat *= -1;
-        aperturem[apmat - 1] = currentap;
-    }
+    } while (junk.compare(0, 4, "stop") != 0);
+    std::cout << "\nThere are " << materialCount << " materials\n";
+    std::vector<double> aperturem(materialCount);  
     std::cout << "Correcting Voronoi Volumes\n";
     f3d << " ";
   
-    // Voronoi Volumes
+    // Calculate voronoi volumes
+    double volume2d, volume3d;
+    int count = 0;
+    int c = 0;
+
     for (int i = 0; i < nnodes; i++) {
-        double volume2d, volume3d;
-        f2d >> volume2d;
+        if (!(f2d >> volume2d)) {
+            std::cerr << "Error reading volume for node " << i + 1 << "\n";
+            break;
+        }
+        // Multiply volume2d by the appropriate aperture value
         volume3d = volume2d * aperturem[node[i].matnumber - 1];
-        f3d << volume3d << ((i + 1) % 5 == 0 || i == nnodes - 1 ? "\n" : " ");
+        if (((i + 1) % 5 == 0) || (i == nnodes - 1)){
+            f3d << std::setprecision(12) << volume3d << "\n";
+        }
+        else{
+            f3d << std::setprecision(12) << volume3d << " ";
+        }
     }
  
     // Count for Each Row
-    int count, c = 0;
+    c = 0;
 
     for (int i = 0; i < nnodes + 1; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
  
     // Row Entries
@@ -126,7 +163,11 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
     for (int i = 0; i < nedges; i++) {
         f2d >> count;
         nodeind[i] = count;
-        f3d << count << ((++c % 5 == 0 || i == nedges - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nedges - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
 
     // Indices into Coefficient List
@@ -134,27 +175,43 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
  
     for (int i = 0; i < nedges * area_coef; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nedges * area_coef - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nedges * area_coef - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
     c = 0;
 
     for (int i = 0; i < nnodes + 1; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
     c = 0;
  
     for (int i = 0; i < nnodes; i++) {
         f2d >> count;
-        f3d << count << ((++c % 5 == 0 || i == nnodes - 1) ? "\n" : " ");
+        c++;
+        if ((c % 5 == 0) || (i == nnodes - 1))
+            f3d << std::setw(10) << count << "\n";
+        else
+            f3d << std::setw(10) << count << " ";
     }
  
     // Geometric Area Coefficient Values
     for (int i = 0; i < nedges * area_coef; i++) {
-        double volume2d, volume3d;
         f2d >> volume2d;
-        volume3d = volume2d * aperturem[node[nodeind[i] - 1].matnumber - 1];
-        f3d << volume3d << (((i + 1) % 5 == 0 || i == nedges * area_coef - 1) ? "\n" : " ");
+        // Use the previously read node index (stored in nodeind) to retrieve the material
+        int nodeIndex = static_cast<int>(nodeind[i]) - 1;
+        volume3d = volume2d * aperturem[node[nodeIndex].matnumber - 1];
+        if (((i + 1) % 5 == 0) || (i == nedges * area_coef - 1))
+            f3d << std::setw(15) << std::scientific << std::setprecision(12) << volume3d << "\n";
+        else
+            f3d << std::setw(15) << std::scientific << std::setprecision(12) << volume3d << " ";
     }
     std::cout << "Conversion Complete\n";
 }
