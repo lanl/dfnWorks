@@ -39,6 +39,7 @@ int main(int argc, char* args[]) {
 
     // Map mode string to a code
     int modeCode = getModeCode(mode);
+    std::cout << "-> Mode Code: " << modeCode << "\n";
 
     // Dispatch to the proper main function using original arguments
     switch (modeCode) {

@@ -128,8 +128,12 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
                 if (currentn > 0 && (currentn - 1) < node.size()) {
                     node[currentn - 1].matnumber = mat_number;
                 } else {
+<<<<<<< HEAD
                     logString = "Index out of range: " + to_string(currentn) + "\n";
                     logger.writeLogFile(ERROR,  logString);
+=======
+                    std::cerr << "Index out of range: " << currentn << "\n";
+>>>>>>> a00e06e8 (Fix for stor file error)
                 }
             }
             materialCount++; // Count this processed material block.
