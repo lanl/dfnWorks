@@ -17,6 +17,8 @@ DFN = DFNWORKS(jobname)
 
 DFN.params['domainSize']['value'] = [1000.0, 1000.0, 1000.0]
 DFN.params['domainSizeIncrease']['value'] = [100, 100, 100]
+DFN.params['domainCenter']['value'] = [500, 500, 500]
+
 DFN.params['h']['value'] = 3.0
 DFN.params['stopCondition']['value'] = 1
 DFN.params['seed']['value'] = 1
@@ -115,10 +117,10 @@ DFN.create_network()
 #DFN.mesh_network()
 
 #DFN.dfn_flow()
-mat_perm = 1e-16
+mat_perm = 1e-13
 mat_por = 0.1
 cell_size = 20
-DFN.mapdfn_ecpm(mat_perm, mat_por, cell_size)
+DFN.mapdfn_ecpm(mat_perm, mat_por, cell_size )
 
 DFN.dfnFlow_file = f"{src_path}/cpm_pflotran.in"
 DFN.local_dfnFlow_file = f"cpm_pflotran.in"
