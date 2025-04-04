@@ -9,6 +9,8 @@ import numpy as np
 Functions for using FEHM in dfnWorks
 """
 
+from pydfnworks.general.logging import local_print_log
+
 
 def correct_stor_file(self):
     """Corrects volumes in stor file to account for apertures
@@ -77,7 +79,7 @@ def correct_perm_for_fehm():
     # Check if the last line of file is just a new line
     # If it is not, then add a new line at the end of the file
     if len(lines[-1].split()) != 0:
-        self.print_log("--> Adding line to perm.dat")
+        local_print_log("--> Adding line to perm.dat")
         fp = open("perm.dat", "a")
         fp.write("\n")
         fp.close()
