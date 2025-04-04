@@ -8,6 +8,9 @@
 #include <string> 
 #include <limits>
 #include <iomanip>
+#include "logFile.h"
+
+extern Logger logger;
  
 struct Params {
     std::string matID_file;
@@ -19,22 +22,28 @@ struct Params {
 // Open file to read
 std::ifstream openFile(const std::string& filename) {
     std::ifstream file(filename);
+    std::string logString;
     if (!file) {
-        std::cerr << "Can't open file: " << filename << "\n";
+        logString = "Can't open file: " + filename + "\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
-    std::cout << "Opening input file " << filename << "\n";
+    logString = "Opening input file " + filename + "\n";
+    logger.writeLogFile(INFO,  logString);
     return file;
 }
 
 // Open file to write
 std::ofstream openOutputFile(const std::string& filename) {
     std::ofstream file(filename);
+    std::string logString;
     if (!file) {
-        std::cerr << "Can't open file: " << filename << "\n";
+        logString = "Can't open file: " + filename + "\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
-    std::cout << "Opening output file " << filename << "\n";
+    logString = "Opening output file " + filename + "\n";
+    logger.writeLogFile(INFO,  logString);
     return file;
 } 
 
@@ -51,7 +60,9 @@ namespace stor {
 }
 
 void copyHeader(std::ifstream& f2d, std::ofstream& f3d) {
-    std::cout << "Copying Header\n";
+    std::string logString;
+    logString = "Copying Header\n";
+    logger.writeLogFile(INFO,  logString);
     std::string line; 
 
     for (int i = 0; i < 2; i++) {
@@ -63,15 +74,19 @@ void copyHeader(std::ifstream& f2d, std::ofstream& f3d) {
 void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
     // Read in file
     std::ifstream fmz(params.matID_file);
+    std::string logString;
     if (!fmz) {
-        std::cerr << "Error opening material file: " << params.matID_file << "\n";
+        logString = "Error opening material file: " + params.matID_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         std::exit(1);
     }
-    std::cout << params.matID_file << " opened.\n";
+    logString = params.matID_file + " opened.\n";
+    logger.writeLogFile(INFO,  logString);
     // --- Read aperature file ---
     std::ifstream fad(params.aper_file);
     if (!fad) {
-        std::cerr << "Error opening aperature file: " << params.aper_file << "\n";
+        logString = "Error opening aperature file: " + params.aper_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         std::exit(1);
     }
  
@@ -79,7 +94,8 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
     int nnodes, nedges, area_coef, max_neighb, snode_edge;
     f2d >> nedges >> nnodes >> snode_edge >> area_coef >> max_neighb;
     f3d << nedges << " " << nnodes << " " << snode_edge << " " << area_coef << " " << max_neighb << "\n";
-    std::cout << "There are " << nnodes << " nodes and " << nedges << " edges \n";
+    logString = "There are " + to_string(nnodes) + " nodes and " + to_string(nedges) + " edges \n";
+    logger.writeLogFile(INFO,  logString);
  
     unsigned int mat_number, nnum, currentn;
     std::string junk;
@@ -91,7 +107,8 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
  
     // Read a header junk string before entering the loop.
     if (!(fmz >> junk)) {
-        std::cerr << "Failed to read header from material file.\n";
+        logString = "Failed to read header from material file.\n";
+        logger.writeLogFile(ERROR,  logString);
         std::exit(1);
     }
 
@@ -111,7 +128,8 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
                 if (currentn > 0 && (currentn - 1) < node.size()) {
                     node[currentn - 1].matnumber = mat_number;
                 } else {
-                    std::cerr << "Index out of range: " << currentn << "\n";
+                    logString = "Index out of range: " + to_string(currentn) + "\n";
+                    logger.writeLogFile(ERROR,  logString);
                 }
             }
             materialCount++; // Count this processed material block.
@@ -119,9 +137,11 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
             break; 
         }
     } while (junk.compare(0, 4, "stop") != 0);
-    std::cout << "\nThere are " << materialCount << " materials\n";
+    logString = "There are " + to_string(materialCount) + " materials\n";
+    logger.writeLogFile(INFO,  logString);
     std::vector<double> aperturem(materialCount);  
-    std::cout << "Correcting Voronoi Volumes\n";
+    logString = "Correcting Voronoi Volumes\n";
+    logger.writeLogFile(INFO,  logString);
     f3d << " ";
   
     // Calculate voronoi volumes
@@ -131,7 +151,8 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
 
     for (int i = 0; i < nnodes; i++) {
         if (!(f2d >> volume2d)) {
-            std::cerr << "Error reading volume for node " << i + 1 << "\n";
+            logString = "Error reading volume for node " + to_string(i + 1) + "\n";
+            logger.writeLogFile(ERROR,  logString);
             break;
         }
         // Multiply volume2d by the appropriate aperture value
@@ -213,30 +234,39 @@ void copyMain(std::ifstream& f2d, std::ofstream& f3d, const Params& params) {
         else
             f3d << std::setw(15) << std::scientific << std::setprecision(12) << volume3d << " ";
     }
-    std::cout << "Conversion Complete\n";
+    logString = "Conversion Complete\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 int stor_main(int argc, char* args[]) {
-    std::cout << "--> DFN STOR file: recalculating length of area coefficients to 2D area.----- \n";
-    std::cout << "--> Current version works for Uniform Fracture Aperture\n";
+    std::string logString = "--> DFN STOR file: recalculating length of area coefficients to 2D area.----- \n";
+    logger.writeLogFile(INFO,  logString);
+    logString = "--> Current version works for Uniform Fracture Aperture\n";
+    logger.writeLogFile(INFO,  logString);
     std::string paramsName;
     parseCommandLineArgs(argc, args, paramsName);
-    std::cout << "Params File Name: " << paramsName << "\n";
+    logString = "Params File Name: " + paramsName + "\n";
+    logger.writeLogFile(INFO,  logString);
  
     std::ifstream fp = openFile(paramsName);
     Params params;
     stor::readInParams(fp, params);
  
-    std::cout << "-> Material File: " << params.matID_file << "\n";
-    std::cout << "-> Aperture File: " << params.aper_file << "\n";
-    std::cout << "-> stor input File: " << params.stor_in_file << "\n";
-    std::cout << "-> stor output File: " << params.stor_out_file << "\n\n";
+    logString = "-> Material File: " + params.matID_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> Aperture File: " + params.aper_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> stor input File: " + params.stor_in_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> stor output File: " + params.stor_out_file + "\n";
+    logger.writeLogFile(INFO,  logString);
     std::ifstream f2d = openFile(params.stor_in_file);
     std::ofstream f3d = openOutputFile(params.stor_out_file);
  
     copyHeader(f2d, f3d);
     copyMain(f2d, f3d, params);
 
-    std::cout << "Cleaning up\n";
+    logString = "Cleaning up\n";
+    logger.writeLogFile(INFO,  logString);
     return 0;
 }

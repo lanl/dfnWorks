@@ -134,3 +134,15 @@ def fehm(self):
     elapsed = time() - tic
     self.print_log(f"Time Required {elapsed} Seconds")
     self.print_log('=' * 80)
+    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.txt")
+    if os.path.exists(correct_volume_file):
+        self.print_log(f"--> Printing correct volumes output file:")
+        self.print_log(f"filename: {correct_volume_file}")
+        try:
+            with open(correct_volume_file, 'r') as file:
+                for line in file:
+                    self.print_log(line.strip())
+        except FileNotFoundError:
+            self.print_log(f"File not found: {correct_volume_file}")
+        except Exception as e:
+            self.print_log(f"An error occurred: {e}")
