@@ -1,6 +1,13 @@
 #include <iostream>
 #include <string>
+#include <ctime>
+#include <fstream>
+#include <sstream>
+#include <stdio.h>
+#include <cstring>
+#include "logFile.h"
 
+Logger logger("correct_volumes_logfile.txt");
 // Bring in uge.cpp and stor.cpp
 extern int uge_main(int argc, char* args[]);
 extern int stor_main(int argc, char* args[]);
@@ -13,25 +20,25 @@ int getModeCode(const std::string &mode) {
 }
 
 int main(int argc, char* args[]) {
-    std::cout << "Argc: " << argc << "\nArgs: ";
+    std::string logString =  "Creating Volume file.\n";
+    logger.writeLogFile(INFO,  logString);
+
     for (int i = 0; i < argc; ++i) {
         std::cout << args[i] << " ";
     }
     std::cout << "\n";
 
     if (argc < 2) {
-        std::cerr << "Usage: " << args[0] << " <mode> [parameter file...]\n";
-        std::cerr << "Modes: convert_stor_params.txt, convert_uge_params.txt\n";
+        logString = "Error: <mode> [parameter file...]\nModes: convert_stor_params.txt, convert_uge_params.txt\n";
+        logger.writeLogFile(ERROR,  logString);
         return 1;
     }
 
     // The mode is the second argument (args[1])
     std::string mode = args[1];
-    std::cout << "Mode: " << mode << "\n";
 
     // Map mode string to a code
     int modeCode = getModeCode(mode);
-    std::cout << "-> Mode Code: " << modeCode << "\n";
 
     // Dispatch to the proper main function using original arguments
     switch (modeCode) {
@@ -40,7 +47,8 @@ int main(int argc, char* args[]) {
         case 2:
             return uge_main(argc, args);
         default:
-            std::cerr << "Unknown mode: " << mode << "\n";
+            logString = "Error: Unknown Mode.\n";
+            logger.writeLogFile(ERROR,  logString);
             return 1;
     }
 }

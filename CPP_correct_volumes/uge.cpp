@@ -7,6 +7,9 @@
 #include <string>
 #include <limits>
 #include <iomanip> 
+#include "logFile.h"
+
+extern Logger logger;
 
 struct Params {
     std::string mesh_file;
@@ -19,6 +22,7 @@ struct Params {
 
 // Find valis integer 
 int readInt(const std::string& buf) {
+    std::string logString;
     std::istringstream iss(buf);
     std::string temp;
     int num;
@@ -34,7 +38,8 @@ int readInt(const std::string& buf) {
     } 
     // If no integer was found, print an error and exit
     if (!found) {
-        std::cerr << "ERROR: parsing line: " << buf << std::endl;
+        logString = "ERROR: parsing line: " + buf+ "\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
     return num;
@@ -42,61 +47,76 @@ int readInt(const std::string& buf) {
 
 // Checks for null pointers
 void check_null_pointer(void* temp) {
+    std::string logString;
     if (!temp) {
-        std::cerr << "Out of Memory\n";
+        logString = "Out of Memory\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
 }
 
 // Opens file to read
 std::ifstream open_file(const std::string& filename) {
+    std::string logString;
     std::ifstream file(filename);
     if (!file) {
-        std::cerr << "Error: Unable to open file: " << filename << std::endl;
+        logString = "Error: Unable to open file: " + filename + "\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
-    std::cout << "Opening input file " << filename << std::endl;
+    logString =  "Opening input file " + filename + "\n";
+    logger.writeLogFile(INFO,  logString);
     return file;
 }
 
 // Opens file to write
 std::ofstream open_output_file(const std::string& filename) {
+    std::string logString;
     std::ofstream file(filename);
     if (!file) {
-        std::cerr << "Can't open file: " << filename << "\n";
+        logString = "Can't open file: " + filename + "\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
-    std::cout << "Opening output file " << filename << std::endl;
+    logString =  "Opening output file " + filename+ "\n";
+    logger.writeLogFile(INFO,  logString);
     return file;
 }
 
 int get_number_of_nodes(const std::string& mesh_file) {
+    std::string logString;
     std::ifstream fp = open_file(mesh_file);
     int numNodes, numElem, numNodeAtt, numElemAtt, tmp;
     if (!(fp >> numNodes >> numElem >> numNodeAtt >> numElemAtt >> tmp)) {
-        std::cerr << "*** Error Reading number of nodes ***\n";
+        logString = "*** Error Reading number of nodes ***\n";
+        logger.writeLogFile(ERROR,  logString);
     }
-    std::cout << "Number of Nodes: " << numNodes << "\n";
+    logString =  "Number of Nodes: " + to_string(numNodes) + "\n";
+    logger.writeLogFile(INFO,  logString);
     return numNodes;
 }
 
 int load_mat_id(const std::string& matID_file, int numNodes, std::vector<int>& matID) {
+    std::string logString;
     std::ifstream fp = open_file(matID_file);
     std::string line;
     for (int i = 0; i < 3; i++) std::getline(fp, line); // Skip header
     int num_mat = 0, matid;
     for (int i = 0; i < numNodes; i++) {
         if (!(fp >> matid)) {
-            std::cerr << "Error Reading in Mat ID\n";
+            logString = "Error Reading in Mat ID\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         matID[i] = matid;
         if (matid > num_mat) num_mat = matid;
     }
-    std::cout << "There are " << num_mat << " Materials\n";
+    logString =  "There are " + to_string(num_mat) + " Materials\n";
+    logger.writeLogFile(INFO,  logString);
     return num_mat;
 } 
 
 void load_aperture(const std::string& aper_file, int num_mat, std::vector<int>& aper_index, std::vector<double>& aper_values) {
+    std::string logString;
     std::ifstream fp = open_file(aper_file);
     std::string line;
     std::getline(fp, line); // Skip header
@@ -105,15 +125,18 @@ void load_aperture(const std::string& aper_file, int num_mat, std::vector<int>& 
  
     for (int i = 0; i < num_mat; i++) {
         if (!(fp >> aper_id >> tmp >> tmp2 >> aper)) {
-            std::cerr << "Error loading apertures\n";
+            logString = "Error loading apertures\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         aper_index[i] = aper_id;
         aper_values[i] = aper;
     }
-    std::cout << "Aperture loaded\n";
+    logString =  "Aperture loaded\n";
+    logger.writeLogFile(INFO,  logString);
 }
  
 void load_aperture_cell(const std::string& aper_file, int numNodes, std::vector<int>& aper_index, std::vector<double>& aper_values) {
+    std::string logString;
     std::ifstream fp = open_file(aper_file);
     std::string line;
     std::getline(fp, line); // Skip header
@@ -121,33 +144,40 @@ void load_aperture_cell(const std::string& aper_file, int numNodes, std::vector<
     double aper;
     for (int i = 0; i < numNodes; i++) {
         if (!(fp >> aper_id >> tmp >> tmp2 >> aper)) {
-            std::cerr << "Error loading apertures\n";
+            logString = "Error loading apertures\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         aper_index[i] = aper_id;
         aper_values[i] = aper;
     }
-    std::cout << "Aperture loaded\n";
+    logString =  "Aperture loaded\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file, std::vector<int>& matID, std::vector<int>& aper_index, std::vector<double>& aper_values)  {
     // Open input and output files using C++ streams
+    std::string logString;
     std::ifstream fin(uge_in_file);
     if (!fin) {
-        std::cerr << "Error opening input file: " << uge_in_file << "\n";
+        logString = "Error opening input file: " + uge_in_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         return;
     }
     std::ofstream fout(uge_out_file);
     if (!fout) {
-        std::cerr << "Error opening output file: " << uge_out_file << "\n";
+        logString = "Error opening output file: " + uge_out_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         return;
     }
     std::string buf;
-    std::cout << "Reading in UGE: " << uge_in_file << "\n";
+    logString =  "Reading in UGE: " + uge_in_file + "\n";
+    logger.writeLogFile(INFO,  logString);
     
     // Read the first line from the input file
     std::getline(fin, buf);
     int NumCells = readInt(buf);
-    std::cout << "Number of Cells: " << NumCells << "\n";
+    logString =  "Number of Cells: " + to_string(NumCells) + "\n";
+    logger.writeLogFile(INFO,  logString);
     fout << "CELLS\t" << NumCells << "\n";
     int cell_index, index_1, index_2;
     double x, y, z, volume;
@@ -155,15 +185,15 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
         // Read the cell data; using >> extraction to mimic fscanf
         fin >> cell_index >> x >> y >> z >> volume;
         if (fin.fail()) {
-            std::cout << "*** Error loading Cells in the UGE file ***\n";
+            logString =  "*** Error loading Cells in the UGE file ***\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         index_1 = matID[cell_index - 1] - 1;
         if (aper_index[index_1] == -1 * matID[cell_index - 1] - 6) {
             volume *= aper_values[index_1];
         } else {
-            std::cout << "*** Error Indexing Aperture List ***\n";
-            std::cout << "Index from aperture: " << aper_index[index_1] << "\n";
-            std::cout << "Index from matid: " << -1 * matID[cell_index - 1] - 6 << "\n";
+            logString =  "*** Error Indexing Aperture List ***\nIndex from aperture: " + to_string(aper_index[index_1]) + "\nIndex from matid: " + to_string(-1 * matID[cell_index - 1] - 6) + "\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         fout << cell_index << "\t"
              << std::scientific << std::setprecision(12) << x << "\t"
@@ -176,13 +206,15 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
     // Read the next line which contains the number of connections
     std::getline(fin, buf);
     int NumConns = readInt(buf);
-    std::cout << "--> Number of Connections: " << NumConns << "\n";
+    logString =  "--> Number of Connections: " + to_string(NumConns) + "\n";
+    logger.writeLogFile(INFO,  logString);
     fout << "CONNECTIONS\t" << NumConns << "\n";
     int conn_index_1, conn_index_2;
     for (int i = 0; i < NumConns; i++) {
         fin >> conn_index_1 >> conn_index_2 >> x >> y >> z >> volume;
         if (fin.fail()) {
-            std::cout << "*** Error loading connections in the UGE file ***\n";
+            logString =  "*** Error loading connections in the UGE file ***\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         index_1 = matID[conn_index_1 - 1] - 1;
         index_2 = matID[conn_index_2 - 1] - 1;
@@ -193,36 +225,43 @@ void convert_uge(const std::string& uge_in_file, const std::string& uge_out_file
     }
     fin.close();
     fout.close();
-    std::cout << "--> new UGE written in " << uge_out_file << "\n";
+    logString =  "--> new UGE written in " + uge_out_file + "\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out_file, std::vector<int>& matID, std::vector<int>& aper_index, std::vector<double>& aper_values){
     // Open input and output files using C++ streams
+    std::string logString;
     std::ifstream fin(uge_in_file);
     if (!fin) {
-        std::cerr << "Error opening input file: " << uge_in_file << "\n";
+        logString = "Error opening input file: " + uge_in_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         return;
     }
     std::ofstream fout(uge_out_file);
  
     if (!fout) {
-        std::cerr << "Error opening output file: " << uge_out_file << "\n";
+        logString = "Error opening output file: " + uge_out_file + "\n";
+        logger.writeLogFile(ERROR,  logString);
         return;
     }
     std::string buf;
-    std::cout << "Reading in UGE: " << uge_in_file << "\n";
+    logString =  "Reading in UGE: " + uge_in_file + "\n";
+    logger.writeLogFile(INFO,  logString);
 
     // Read the first line from the input file
     std::getline(fin, buf);
     int NumCells = readInt(buf);
-    std::cout << "Number of Cells: " << NumCells << "\n";
+    logString =  "Number of Cells: " + to_string(NumCells) + "\n";
+    logger.writeLogFile(INFO,  logString);
     fout << "CELLS\t" << NumCells << "\n";
     int cell_index; 
     double x, y, z, volume;
     for (int i = 0; i < NumCells; i++) {
         fin >> cell_index >> x >> y >> z >> volume;
         if (fin.fail()) {
-            std::cout << "*** Error loading Cells in the UGE file ***\n";
+            logString =  "*** Error loading Cells in the UGE file ***\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         volume *= aper_values[cell_index - 1];
         fout << cell_index << "\t"
@@ -236,13 +275,15 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
     // Read the next line which contains the number of connections
     std::getline(fin, buf);
     int NumConns = readInt(buf);
-    std::cout << "--> Number of Connections: " << NumConns << "\n";
+    logString =  "--> Number of Connections: " + to_string(NumConns) + "\n";
+    logger.writeLogFile(INFO,  logString);
     fout << "CONNECTIONS\t" << NumConns << "\n";
     int conn_index_1, conn_index_2;
     for (int i = 0; i < NumConns; i++) {
         fin >> conn_index_1 >> conn_index_2 >> x >> y >> z >> volume;
         if (fin.fail()) {
-            std::cout << "*** Error loading connections in the UGE file ***\n";
+            logString =  "*** Error loading connections in the UGE file ***\n";
+            logger.writeLogFile(ERROR,  logString);
         }
         volume *= 0.5 * (aper_values[conn_index_1 - 1] + aper_values[conn_index_2 - 1]);
         fout << conn_index_1 << "\t" << conn_index_2 << "\t"
@@ -251,7 +292,8 @@ void convert_uge_cell(const std::string& uge_in_file, const std::string& uge_out
     }
     fin.close();
     fout.close();
-    std::cout << "--> new UGE written in " << uge_out_file << "\n";
+    logString =  "--> new UGE written in " + uge_out_file + "\n";
+    logger.writeLogFile(INFO,  logString);
 }
 
 void readInParams(std::ifstream& fparams, Params& params) {
@@ -259,18 +301,26 @@ void readInParams(std::ifstream& fparams, Params& params) {
 }
 
 int uge_main(int argc, char* args[]) {
+    std::string logString;
     std::string paramsName = (argc > 1) ? args[1] : "convert_uge_params.txt";
-    std::cout << "Params File Name " << paramsName << "\n";
+    logString =  "Params File Name " + paramsName + "\n";
+    logger.writeLogFile(INFO,  logString);
     std::ifstream fp = open_file(paramsName);
     Params params;
  
     readInParams(fp, params);
-    std::cout << "\nCorrecting UGE Volumes and Areas for dfnWorks\n";
-    std::cout << "-> Mesh File: " << params.mesh_file << "\n";
-    std::cout << "-> MatID File: " << params.matID_file << "\n";
-    std::cout << "-> Aperture File: " << params.aper_file << "\n";
-    std::cout << "-> UGE input File: " << params.uge_in_file << "\n";
-    std::cout << "-> UGE output File: " << params.uge_out_file << "\n\n";
+    logString =  "Correcting UGE Volumes and Areas for dfnWorks\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> Mesh File: " + params.mesh_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> MatID File: " + params.matID_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> Aperture File: " + params.aper_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> UGE input File: " + params.uge_in_file + "\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "-> UGE output File: " + params.uge_out_file + "\n";
+    logger.writeLogFile(INFO,  logString);
  
     int numNodes = get_number_of_nodes(params.mesh_file);
     std::vector<int> matID(numNodes);
