@@ -7,7 +7,7 @@
 #include <cstring>
 #include "logFile.h"
 
-Logger logger("correct_volumes_logfile.txt");
+Logger logger("correct_volumes_logfile.log");
 // Bring in uge.cpp and stor.cpp
 extern int uge_main(int argc, char* args[]);
 extern int stor_main(int argc, char* args[]);
