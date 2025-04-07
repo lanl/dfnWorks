@@ -261,7 +261,7 @@ def write_perms_and_correct_volumes_areas(self):
 
     self.print_log("--> Correcting UGE file: Complete")
     self.print_log('*' * 80)
-    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.txt")
+    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
     if os.path.exists(correct_volume_file):
         self.print_log(f"--> Printing correct volumes output file:")
         self.print_log(f"filename: {correct_volume_file}")
