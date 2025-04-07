@@ -9,6 +9,8 @@ import numpy as np
 Functions for using FEHM in dfnWorks
 """
 
+from pydfnworks.general.logging import local_print_log
+
 
 def correct_stor_file(self):
     """Corrects volumes in stor file to account for apertures
@@ -44,7 +46,7 @@ def correct_stor_file(self):
         f.write("%s\n" % self.aper_file)
 
     t = time()
-    cmd = os.environ['CORRECT_STOR_EXE'] + ' convert_stor_params.txt'
+    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_stor_params.txt'
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
         error = 'Erro: stor conversion failed\nExiting Program\n'
@@ -77,7 +79,7 @@ def correct_perm_for_fehm():
     # Check if the last line of file is just a new line
     # If it is not, then add a new line at the end of the file
     if len(lines[-1].split()) != 0:
-        self.print_log("--> Adding line to perm.dat")
+        local_print_log("--> Adding line to perm.dat")
         fp = open("perm.dat", "a")
         fp.write("\n")
         fp.close()
@@ -134,3 +136,15 @@ def fehm(self):
     elapsed = time() - tic
     self.print_log(f"Time Required {elapsed} Seconds")
     self.print_log('=' * 80)
+    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
+    if os.path.exists(correct_volume_file):
+        self.print_log(f"--> Printing correct volumes output file:")
+        self.print_log(f"filename: {correct_volume_file}")
+        try:
+            with open(correct_volume_file, 'r') as file:
+                for line in file:
+                    self.print_log(line.strip())
+        except FileNotFoundError:
+            self.print_log(f"File not found: {correct_volume_file}")
+        except Exception as e:
+            self.print_log(f"An error occurred: {e}")

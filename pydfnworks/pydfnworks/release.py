@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "4 Decemeber 2024"
+date = "7 April 2025"
 
-version = "2.9.1"
+version = "2.9.2"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -78,5 +78,5 @@ packages = [
 
 install_requires = [
     "numpy", "scipy", "h5py", "pyvtk", "fpdf", "pytz", "datetime",
-    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0"
+    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0", "vtk", "pyvista", "shapely", "geopandas", "python-ternary", "setuptools", "seaborn", "mpmath"
 ]

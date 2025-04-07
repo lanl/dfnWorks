@@ -248,7 +248,7 @@ def write_perms_and_correct_volumes_areas(self):
     ## dump aperture file
     self.dump_aperture(self.aper_file, format='fehm')
     ## execute convert uge C code
-    cmd = os.environ['CORRECT_UGE_EXE'] + ' convert_uge_params.txt'
+    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_uge_params.txt'
     self.print_log(f">> {cmd}")
     failure = subprocess.call(cmd, shell=True)
     if failure > 0:
@@ -261,7 +261,18 @@ def write_perms_and_correct_volumes_areas(self):
 
     self.print_log("--> Correcting UGE file: Complete")
     self.print_log('*' * 80)
-
+    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
+    if os.path.exists(correct_volume_file):
+        self.print_log(f"--> Printing correct volumes output file:")
+        self.print_log(f"filename: {correct_volume_file}")
+        try:
+            with open(correct_volume_file, 'r') as file:
+                for line in file:
+                    self.print_log(line.strip())
+        except FileNotFoundError:
+            self.print_log(f"File not found: {correct_volume_file}")
+        except Exception as e:
+            self.print_log(f"An error occurred: {e}")
 
 def dump_h5_files(self):
     """ Write permeability values to cell ids and permeability values to dfn_properties.h5 file for pflotran. 
