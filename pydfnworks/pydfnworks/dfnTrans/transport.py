@@ -5,7 +5,7 @@ from time import time
 import subprocess
 
 
-def dfn_trans(self):
+def dfn_trans(self, avs = False):
     """Primary driver for dfnTrans. 
 
     Parameters
@@ -25,6 +25,8 @@ def dfn_trans(self):
     self.check_dfn_trans_run_files()
     self.run_dfn_trans()
     delta_time = time() - tic
+    if avs:
+        self.combine_avs_trajectories() 
     self.dump_time('Process: dfnTrans', delta_time)
     self.print_log('=' * 80)
     self.print_log("dfnTrans Complete")
@@ -339,3 +341,7 @@ def check_dfn_trans_run_files(self):
             self.print_log(error, 'error')
 
     self.print_log("--> Checking Initial Conditions Complete")
+
+    self.dfnTrans_params = params 
+    print(self.dfnTrans_params)
+    
