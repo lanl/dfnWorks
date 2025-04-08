@@ -120,6 +120,7 @@ class DFNWORKS():
     # dfnTrans
     import pydfnworks.dfnTrans
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
+    from pydfnworks.dfnTrans.combine_avs_trajectories import combine_avs_trajectories 
 
     # dfnGraph
     import pydfnworks.dfnGraph
