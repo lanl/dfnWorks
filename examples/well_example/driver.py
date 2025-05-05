@@ -1,8 +1,9 @@
 #"""
 #   :synopsis: Driver run file for wells example
-#   :version: 2.7
 #   :maintainer: Jeffrey Hyman
 #.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
+
+## . This includes two wells into the domain. 
 #"""
 
 from pydfnworks import *
@@ -84,16 +85,6 @@ os.chdir(DFN.jobname)
 DFN.combine_well_boundary_zones(wells)
 
 ####dfnFlow()
-fin = open("boundary_bottom.ex", "r")
-fin.readline()
-line = fin.readline()
-fin.close()
-
-fout = open("pinned.ex", "w")
-fout.write("CONNECTIONS 1\n")
-fout.write(line)
-fout.close()
-
 DFN.pflotran()
 DFN.parse_pflotran_vtk_python()
 DFN.pflotran_cleanup()
