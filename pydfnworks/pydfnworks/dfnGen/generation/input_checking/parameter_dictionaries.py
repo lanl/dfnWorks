@@ -572,6 +572,18 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'ekappa2': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'eLogMean': {
             'type':
             float,
@@ -871,6 +883,18 @@ def load_parameters(self):
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rkappa': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa2': {
             'type':
             float,
             'list':

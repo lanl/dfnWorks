@@ -218,6 +218,11 @@ float *ebeta;
     elliptical familiy's normal vectors.*/
 float *ekappa;
 
+/*! Parameter for the fisher distribnShaprutions. The
+    bigger, the more similar (less diverging) are the
+    elliptical familiy's normal vectors.*/
+float *ekappa2;
+
 /*! Log-normal ellipse parameter. Mean of the underlying normal distribution.*/
 float *eLogMean;
 
@@ -323,6 +328,11 @@ float *rbeta;
     bigger, the more similar (less diverging) are the
     rectangle family's normal vectors.*/
 float *rkappa;
+
+/*! Parameter for the fisher distribnShaprutions. The
+    bigger, the more similar (less diverging) are the
+    rectangle family's normal vectors.*/
+float *rkappa2;
 
 /*! Log-normal rectangle parameter. Standard deviation of the underlying normal distribution*/
 float *rLogMean;
@@ -818,6 +828,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "ekappa:");
         ekappa = new float[nFamEll];
         getInputAry(inputFile, ekappa, nFamEll);
+        searchVar(inputFile, "ekappa2:");
+        ekappa2 = new float[nFamEll];
+        getInputAry(inputFile, ekappa2, nFamEll);
         searchVar(inputFile, "eLogMean:");
         eLogMean = new float[nFamEll];
         getInputAry(inputFile, eLogMean, nFamEll);
@@ -878,6 +891,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.angleOne = eAngleOne[i];
         newShapeFam.angleTwo = eAngleTwo[i];
         newShapeFam.kappa = ekappa[i];
+        newShapeFam.kappa2 = ekappa2[i];
         newShapeFam.angleOption = eAngleOption;
         newShapeFam.layer = eLayer[i];
         newShapeFam.region = eRegion[i];
@@ -940,6 +954,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] eAngleTwo;
         delete[] ebeta;
         delete[] ekappa;
+        delete[] ekappa2;
         delete[] eLogMean;
         delete[] esd;
         delete[] eExpMean;
@@ -1007,6 +1022,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "rkappa:");
         rkappa = new float[nFamRect];
         getInputAry(inputFile, rkappa, nFamRect);
+        searchVar(inputFile, "rkappa2:");
+        rkappa2 = new float[nFamRect];
+        getInputAry(inputFile, rkappa2, nFamRect);
         searchVar(inputFile, "rLogMean:");
         rLogMean = new float[nFamRect];
         getInputAry(inputFile, rLogMean, nFamRect);
@@ -1083,6 +1101,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.angleOne = rAngleOne[i];
         newShapeFam.angleTwo = rAngleTwo[i];
         newShapeFam.kappa = rkappa[i];
+        newShapeFam.kappa2 = rkappa2[i];
         newShapeFam.angleOption = rAngleOption;
         newShapeFam.layer = rLayer[i];
         newShapeFam.region = rRegion[i];
@@ -1143,6 +1162,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] rAngleTwo;
         delete[] rbeta;
         delete[] rkappa;
+        delete[] rkappa2;
         delete[] rLogMean;
         delete[] rsd;
         delete[] rExpMean;
@@ -1525,6 +1545,7 @@ void printInputVars() {
     
     printAry(ebeta, "ebeta", nFamEll);
     printAry(ekappa, "ekappa", nFamEll);
+    printAry(ekappa2, "ekappa2", nFamEll);
     printAry(eLogMean, "eLogMean", nFamEll);
     printAry(esd, "esd", nFamEll);
     printAry(eExpMean, "eExpMean", nFamEll);
@@ -1555,6 +1576,7 @@ void printInputVars() {
     printAry(rmax, "rmax", nFamRect);
     printAry(ralpha, "ralpha", nFamRect);
     printAry(rkappa, "rkappa", nFamRect);
+    printAry(rkappa2, "rkappa2", nFamRect);
     printAry(rExpMean, "rExpMean", nFamRect);
     printAry(rconst, "rconst", nFamRect);
     logString = "userEllipsesOnOff = " + to_string(userEllipsesOnOff);
