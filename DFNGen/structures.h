@@ -2,6 +2,7 @@
 #define _polyStruct_h_
 #include <vector>
 #include <cmath>
+#include <string>
 
 
 /**************************************************************************************/
@@ -439,6 +440,9 @@ struct Shape {
         True - User Specified Rotation
         False - Uniform Distribution */
     bool betaDistribution;
+
+    /*! 'orientation_distribution' is the distribution type 'fisher' or 'bingham' */
+    std::string orientation_distribution;
     
     /*! 'beta' is the rotation, or twist, around z normal before 3d rotation in radians
         or degrees depending on 'angleOption'. */
@@ -461,6 +465,11 @@ struct Shape {
         bigger, the more similar (less diverging) are the
         rectangular familiy's normal vectors. */
     double kappa;
+
+    /*! Parameter for bingham distributions. The
+        bigger, the more similar (less diverging) are the
+        rectangular familiy's normal vectors. */
+    double kappa2;
     
     
     /**************** Distribution Variables *********************/

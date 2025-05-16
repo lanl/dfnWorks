@@ -221,6 +221,10 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
         // kappa
         logString = "Kappa: " + to_string(shapeFamilies[i].kappa )  + "\n";
         logger.writeLogFile(INFO,  logString);
+
+        // kappa2
+        logString = "Kappa2: " + to_string(shapeFamilies[i].kappa2 )  + "\n";
+        logger.writeLogFile(INFO,  logString);
         
         // Print layer family belongs to
         if (shapeFamilies[i].layer == 0) {

@@ -1046,9 +1046,14 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             file << "Strike-rad: " << shapeFamilies[i].angleTwo << endl;
             file << "Strike-deg: " << shapeFamilies[i].angleTwo * radToDeg << endl;
         }
-        
-        // kappa
-        file << "Kappa: " << shapeFamilies[i].kappa << endl;
+    
+        if (shapeFamilies[i].kappa) {
+            file << "Kappa: " << shapeFamilies[i].kappa << "\n";
+        } 
+        if (shapeFamilies[i].kappa2) {
+            file << "Kappa2: " << shapeFamilies[i].kappa2 << "\n";
+        }
+    
         
         // Print layer family belongs to
         if (shapeFamilies[i].layer == 0) {
