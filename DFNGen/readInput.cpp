@@ -230,6 +230,11 @@ float *ekappa;
     elliptical familiy's normal vectors.*/
 float *ekappa2;
 
+/*! Parameter for the fisher distribnShaprutions. The
+    bigger, the more similar (less diverging) are the
+    elliptical familiy's normal vectors.*/
+float *ekappa2;
+
 /*! Log-normal ellipse parameter. Mean of the underlying normal distribution.*/
 float *eLogMean;
 

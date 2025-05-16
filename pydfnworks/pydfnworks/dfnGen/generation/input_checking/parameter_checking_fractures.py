@@ -306,7 +306,7 @@ def check_beta_distribution(params, prefix):
         'nFamRect']['value']
     angle_option_key = 'angleOption'
 
-    #check kappa
+    #check beta
     key = prefix + 'betaDistribution'
     hf.check_none(key, params[key]['value'])
     hf.check_length(key, params[key]['value'], num_families)
