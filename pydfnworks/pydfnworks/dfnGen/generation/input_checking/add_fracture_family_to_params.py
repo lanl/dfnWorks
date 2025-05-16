@@ -239,43 +239,36 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                               fracture_type_prefix,
                               value_flag=True)
 
-    fisher_params = fracture_family['fisher']['value']
+    orientation_dist = fracture_family.get('orientation_distribution', {}).get('value', 'fisher').lower()
 
-    for key in fisher_params.keys():
-        if key == 'theta' or key == 'phi':
-            if params['orientationOption']['value'] == 0:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
+    if orientation_dist == 'fisher':
+        fisher_params = fracture_family['fisher']['value']
+        print_log("Fisher distribution selected.", 'info')
+        for key in fisher_params:
+            if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'trend', 'plunge'} and params['orientationOption']['value'] == 1:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'strike', 'dip'} and params['orientationOption']['value'] == 2:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key == 'kappa':
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
 
-        if key == 'trend' or key == 'plunge':
-            if params['orientationOption']['value'] == 1:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
+    elif orientation_dist == 'bingham':
+        bingham_params = fracture_family['bingham']['value']
+        print_log("Bingham distribution selected.", 'info')
+        for key in bingham_params:
+            if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'trend', 'plunge'} and params['orientationOption']['value'] == 1:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'strike', 'dip'} and params['orientationOption']['value'] == 2:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'kappa', 'kappa2'}:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
 
-        if key == 'strike' or key == 'dip':
-            if params['orientationOption']['value'] == 2:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
-
-        if key == 'kappa':
-            write_value_to_params(params,
-                                  key,
-                                  fisher_params,
-                                  key,
-                                  fracture_type_prefix,
-                                  value_flag=True)
+    else:
+        hf.print_error(f"Unknown orientation_distribution: {orientation_dist}")
 
     return params, distribution_type
 

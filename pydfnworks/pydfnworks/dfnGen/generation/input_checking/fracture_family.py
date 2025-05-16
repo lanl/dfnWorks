@@ -87,6 +87,28 @@ def fracture_family_dictionary():
             'description':
             'Value for constant angle of rotation around the normal vector'
         },
+        # orientation distribution type
+        'orientation_distribution': {
+            'type': str,
+            'value': 'fisher',  # default
+            'description': 'Orientation distribution model: "fisher" or "bingham"'
+        },
+
+        # bingham distribution
+        'bingham': {
+            'type': float,
+            'value': {
+                'theta': None,
+                'phi': None,
+                'strike': None,
+                'dip': None,
+                'trend': None,
+                'plunge': None,
+                'kappa': None,
+                'kappa2': None
+            },
+            'description': 'Bingham distribution parameters: orientation and kappa, kappa2'
+        },
         #fisher distribution
         'fisher': {
             'type':
@@ -202,6 +224,7 @@ def print_family_information(self, family_number):
     if len(self.fracture_families) > 0:
         family = self.fracture_families[family_number - 1]
         self.print_log(f"--> Family information for family # {family_number}")
+        self.print_log(f"Orientation model: {family.get('orientation_distribution', {}).get('value', 'fisher')}")
         for key in family.keys():
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():
@@ -218,6 +241,8 @@ def add_fracture_family(self,
                         shape,
                         distribution,
                         kappa,
+                        orientation_distribution="fisher",
+                        kappa2=None,
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -349,13 +374,30 @@ def add_fracture_family(self,
     ## Orienation
     family['beta_distribution']['value'] = beta_distribution
     family['beta']['value'] = beta
-    family['fisher']['value']['theta'] = theta
-    family['fisher']['value']['phi'] = phi
-    family['fisher']['value']['strike'] = strike
-    family['fisher']['value']['dip'] = dip
-    family['fisher']['value']['trend'] = trend
-    family['fisher']['value']['plunge'] = plunge
-    family['fisher']['value']['kappa'] = kappa
+    family['orientation_distribution']['value'] = orientation_distribution.lower()
+
+    if orientation_distribution.lower() == "bingham":
+        family['bingham']['value']['theta'] = theta
+        family['bingham']['value']['phi'] = phi
+        family['bingham']['value']['strike'] = strike
+        family['bingham']['value']['dip'] = dip
+        family['bingham']['value']['trend'] = trend
+        family['bingham']['value']['plunge'] = plunge
+        family['bingham']['value']['kappa'] = kappa
+        family['bingham']['value']['kappa2'] = kappa2
+
+    elif orientation_distribution.lower() == "fisher":
+        family['fisher']['value']['theta'] = theta
+        family['fisher']['value']['phi'] = phi
+        family['fisher']['value']['strike'] = strike
+        family['fisher']['value']['dip'] = dip
+        family['fisher']['value']['trend'] = trend
+        family['fisher']['value']['plunge'] = plunge
+        family['fisher']['value']['kappa'] = kappa
+
+    else:
+        error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"
+        self.print_log(error, 'error')
 
     ## Set and check orientation option
     # note orientationOption = 0 --> theta/phi

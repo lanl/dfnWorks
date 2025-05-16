@@ -234,11 +234,20 @@ def check_orientations(params, prefix):
                     hf.print_error(
                         f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
-    #check kappa
-    key = prefix + 'kappa'
-    hf.check_none(key, params[key]['value'])
-    hf.check_length(key, params[key]['value'], num_families)
-    hf.check_values(key, params[key]['value'], 0, 100)
+    # check kappa (used by both fisher and bingham)
+    kappa_key = prefix + 'kappa'
+    hf.check_none(kappa_key, params[kappa_key]['value'])
+    hf.check_length(kappa_key, params[kappa_key]['value'], num_families)
+    hf.check_values(kappa_key, params[kappa_key]['value'], 0, 100)
+
+    # check for bingham orientation distribution
+    orientation_model = params.get(prefix + 'orientation_distribution', {}).get('value', 'fisher').lower()
+    if orientation_model == 'bingham':
+        kappa2_key = prefix + 'kappa2'
+        if kappa2_key not in params or params[kappa2_key]['value'] is None:
+            hf.print_error(f"{kappa2_key} is required for Bingham orientation distribution but is missing.")
+        hf.check_length(kappa2_key, params[kappa2_key]['value'], num_families)
+        hf.check_values(kappa2_key, params[kappa2_key]['value'], 0, 100)
 
 
 def check_beta_distribution(params, prefix):
@@ -267,7 +276,7 @@ def check_beta_distribution(params, prefix):
         'nFamRect']['value']
     angle_option_key = 'angleOption'
 
-    #check kappa
+    #check beta
     key = prefix + 'betaDistribution'
     hf.check_none(key, params[key]['value'])
     hf.check_length(key, params[key]['value'], num_families)
