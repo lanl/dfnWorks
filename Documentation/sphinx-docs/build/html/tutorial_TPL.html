@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dfnWorks Tutorial for TPL (Truncated Power-Law) &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+              <div class="version">
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">dfnWorks Tutorial for TPL (Truncated Power-Law)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial_TPL.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dfnworks-tutorial-for-tpl-truncated-power-law">
+<h1>dfnWorks Tutorial for TPL (Truncated Power-Law)<a class="headerlink" href="#dfnworks-tutorial-for-tpl-truncated-power-law" title="Permalink to this heading"></a></h1>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_3images.png"><img alt="alternate text" src="_images/tpl_3images.png" style="width: 720.0px; height: 405.0px;" /></a>
+</figure>
+<p>The TPL (Truncated Power-Law) is a type of distribution (‘tpl’, ‘log_normal’, ‘exp’, or ‘constant’) that defines the sample distribution for the fracture radius.</p>
+<p>This example consists of one family of fractures whose sizes have a truncated power law distribution with a minimum radius of 1 meter and a maximum size of 10 meters.</p>
+<p>For a complete list of parameters and functions see [pydfnworks: dfnGen](<a class="reference external" href="https://lanl.github.io/dfnWorks/pydfnGen.html">https://lanl.github.io/dfnWorks/pydfnGen.html</a>)</p>
+<p>The following items are covered in this Tutorial:</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#tutorial-prerequisites" id="id2">Tutorial Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#dfnworks-tpl-overview" id="id3">dfnWorks TPL Overview</a></p></li>
+<li><p><a class="reference internal" href="#python-add-fracture-family" id="id4">Python add_fracture_family</a></p></li>
+<li><p><a class="reference internal" href="#network-evaluations" id="id5">Network Evaluations</a></p>
+<ul>
+<li><p><a class="reference internal" href="#log-reports" id="id6">Log Reports</a></p></li>
+<li><p><a class="reference internal" href="#statistical-reports" id="id7">Statistical Reports</a></p></li>
+<li><p><a class="reference internal" href="#visual-inspection" id="id8">Visual Inspection</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#run-flow-model" id="id9">Run Flow Model</a></p></li>
+<li><p><a class="reference internal" href="#run-transport-model" id="id10">Run Transport Model</a></p></li>
+<li><p><a class="reference internal" href="#add-a-second-family" id="id11">Add a Second family</a></p></li>
+<li><p><a class="reference internal" href="#conclusion-edit-this" id="id12">Conclusion EDIT this</a></p></li>
+<li><p><a class="reference internal" href="#additional-resources-edit-these" id="id13">Additional Resources EDIT these</a></p></li>
+</ul>
+</nav>
+<section id="tutorial-prerequisites">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Tutorial Prerequisites</a><a class="headerlink" href="#tutorial-prerequisites" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.</p></li>
+<li><p>This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](<a class="reference external" href="https://lanl.github.io/dfnWorks/tutorial_intro.html">https://lanl.github.io/dfnWorks/tutorial_intro.html</a>)</p></li>
+</ul>
+<p>For install and setup instuctions, refer to the section at <a class="reference internal" href="setup.html#pydfnworks-setup"><span class="std std-ref">pydfnWorks install</span></a>.
+- TeX Live is needed to write the PDF report summary. Local servers use <code class="docutils literal notranslate"><span class="pre">`module</span> <span class="pre">load</span> <span class="pre">texlive`</span></code>
+- <a href="#id14"><span class="problematic" id="id15">Paraview_</span></a> is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing <a href="#id16"><span class="problematic" id="id17">Paraview_</span></a> can be found at <a class="reference external" href="http://www.paraview.org/download/">http://www.paraview.org/download/</a></p>
+</section>
+<section id="dfnworks-tpl-overview">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">dfnWorks TPL Overview</a><a class="headerlink" href="#dfnworks-tpl-overview" title="Permalink to this heading"></a></h2>
+<p>The TPL option for stochastic generation of fractures… brief overview.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_mesh_material.png"><img alt="alternate text" src="_images/tpl_mesh_material.png" style="width: 636.0px; height: 508.5px;" /></a>
+</figure>
+<p>This tutorial’s main focus will be dfnGen and how to use TPL parameters to generate a network. Evaluations include visualization of the fractures and reports generated by dfnWorks.</p>
+</section>
+<section id="python-add-fracture-family">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Python add_fracture_family</a><a class="headerlink" href="#python-add-fracture-family" title="Permalink to this heading"></a></h2>
+<p>Open the script python <cite>driver.py</cite>. You can open with any text editor or use the unix command <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">driver.py</span></code> which will display the content to the screen.  Note the first line of the file imports the <cite>pydfnworks</cite> package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts.</p>
+<p>Single family network
+alpha is the TPL parameter
+kappa concentration param of the von Mises-Fisher distribution
+beta angle rotation around fracture axis
+spherical theta for Z and phi for XY plane</p>
+<p>For more details on these parameters, please refer to the <a class="reference external" href="TPL_parameters.txt">TPL_parameters.txt</a> file for the necessary settings.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DFN.add_fracture_family<span class="o">(</span>
+<span class="w">    </span><span class="nv">shape</span><span class="o">=</span><span class="s2">&quot;ell&quot;</span>,
+<span class="w">    </span><span class="nv">distribution</span><span class="o">=</span><span class="s2">&quot;tpl&quot;</span>,
+<span class="w">    </span><span class="nv">alpha</span><span class="o">=</span><span class="m">1</span>.8,
+<span class="w">    </span><span class="nv">min_radius</span><span class="o">=</span><span class="m">1</span>.0,
+<span class="w">    </span><span class="nv">max_radius</span><span class="o">=</span><span class="m">10</span>.0,
+<span class="w">    </span><span class="nv">kappa</span><span class="o">=</span><span class="m">1</span>.0,
+<span class="w">    </span><span class="nv">theta</span><span class="o">=</span><span class="m">0</span>.0,
+<span class="w">    </span><span class="nv">phi</span><span class="o">=</span><span class="m">0</span>.0,
+<span class="w">    </span><span class="c1">#aspect=2,</span>
+<span class="w">    </span><span class="nv">p32</span><span class="o">=</span><span class="m">1</span>,
+<span class="w">    </span><span class="nv">hy_variable</span><span class="o">=</span><span class="s1">&#39;aperture&#39;</span>,
+<span class="w">    </span><span class="nv">hy_function</span><span class="o">=</span><span class="s1">&#39;correlated&#39;</span>,
+<span class="w">    </span><span class="nv">number_of_points</span><span class="o">=</span><span class="m">8</span>,
+<span class="w">    </span><span class="nv">hy_params</span><span class="o">={</span>
+<span class="w">        </span><span class="s2">&quot;alpha&quot;</span>:<span class="w"> </span><span class="m">10</span>**-5,
+<span class="w">        </span><span class="s2">&quot;beta&quot;</span>:<span class="w"> </span><span class="m">0</span>.5
+<span class="w">    </span><span class="o">})</span>
+</pre></div>
+</div>
+</section>
+<section id="network-evaluations">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Network Evaluations</a><a class="headerlink" href="#network-evaluations" title="Permalink to this heading"></a></h2>
+<p>The most immediate feedback for the network are text reports.
+Additional information is provided in statistical reports.
+Visual inspection provides best sense of the network.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DFN.check_input<span class="o">()</span>
+DFN.create_network<span class="o">()</span>
+DFN.output_report<span class="o">()</span>
+DFN.mesh_network<span class="o">(</span><span class="nv">min_dist</span><span class="o">=</span><span class="m">1</span>,<span class="w"> </span><span class="nv">max_dist</span><span class="o">=</span><span class="m">5</span>,<span class="w"> </span><span class="nv">max_resolution_factor</span><span class="o">=</span><span class="m">10</span><span class="o">)</span>
+</pre></div>
+</div>
+<section id="log-reports">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Log Reports</a><a class="headerlink" href="#log-reports" title="Permalink to this heading"></a></h3>
+<p>See output.log</p>
+<p>While dfnWorks is running, you will see extensive reporting to the screen. This will alert you to errors or missing files. When finished, a report is written to to file <cite>output.log</cite>. This is the first place to check if there are any issues. Look for the first occurrence of Errors as later Errors are likely caused by the first. Warnings may exist and can usually be ignored.</p>
+<p>The directory <cite>/output</cite> is created and contains files written during the run. Many of the files were created as input for the meshing and simulation portions of the workflow. These files can be helpful in understanding the run and for viewing the mesh and fractures used.</p>
+<p>A list of dfnWorks files and their descriptions are at <a class="reference internal" href="output.html#output-chapter"><span class="std std-ref">dfnWorks Files</span></a>.</p>
+</section>
+<section id="statistical-reports">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Statistical Reports</a><a class="headerlink" href="#statistical-reports" title="Permalink to this heading"></a></h3>
+<p>Created by DFN.output_report()
+see output_output_report.pdf  and directory dfnGen_output_report</p>
+<p>utput_report(self, verbose=True, output_dir=’dfnGen_output_report’)[source]</p>
+<blockquote>
+<div><p>Creates a PDF output report for the network created by DFNGen. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into “output_dir/family_{id}/”. Information about the whole network are also created and written into “output_dir/network/”</p>
+<p>Parameters:</p>
+<blockquote>
+<div><p>self (object) – DFN Class object</p>
+<p>verbose (bool) – Toggle for the amount of information printed to screen. If true, progress information printed to screen</p>
+<p>output_dir (string) – Name of directory where all plots are saved</p>
+</div></blockquote>
+<p>Return type:</p>
+<blockquote>
+<div><p>None</p>
+</div></blockquote>
+<p>Notes</p>
+<p>Final output report is named “jobname”_output_report.pdf User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.</p>
+</div></blockquote>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/tpl_report_page_2.png"><img alt="alternate text" src="_images/tpl_report_page_2.png" style="width: 1343.0px; height: 903.0px;" /></a>
+<figcaption>
+<p><span class="caption-text"><em>dfnWorks routine DFN.output_report() will generate a PDF summary of the network.</em></span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="visual-inspection">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Visual Inspection</a><a class="headerlink" href="#visual-inspection" title="Permalink to this heading"></a></h3>
+<p>Created by DFN.mesh_network()
+Meshed network to be used by simulations.
+See full_mesh.inp or reduced_mesh.inp</p>
+<p>View the mesh attributes to check parameters.
+Materials are the fractures generated 1 through n.
+Property evol_one are the element volumes
+Property dfield is the linear distance from intersections and is used for element size changes.</p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_material.png" alt="Figure Materials" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_evol_one.png" alt="Figure Volume" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_dfield.png" alt="Figure dfield" style="width: 100%;">
+    </div>
+
+</div><p>You can adjust color maps and opacity for views that help show the meshed network.
+See examples in file <a class="reference external" href="tpl_paraview_examples.rst">tpl_paraview_examples.rst</a></p>
+</section>
+</section>
+<section id="run-flow-model">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Run Flow Model</a><a class="headerlink" href="#run-flow-model" title="Permalink to this heading"></a></h2>
+<p>The pydfnworks commands <cite>dfn_flow()</cite> and <cite>dfn_trans()</cite> are used to run the simulations. These can provide insights into the behavior of fluids within the fractured network.</p>
+<p>View the dfnFlow_file ‘file.in’. This is a PFLOTRAN input file.  EDIT TEXT High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.</p>
+<p>The solver type is set to PFLOTRAN</p>
+<p>For viewing results see the vtk files written in output/parsed_vtk</p>
+<p>Read dfn_explicit-000.vtk see permeability and Liquid Pressure at time 0
+Read dfn_explicit-001.vtk for Liquid Pressure at time 1</p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_permeability.png" alt="permeability" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_liq_press_vtk0.png" alt="Figure Volume" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_liq_press_vtk1.png" alt="Figure dfield" style="width: 100%;">
+    </div>
+
+</div></section>
+<section id="run-transport-model">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Run Transport Model</a><a class="headerlink" href="#run-transport-model" title="Permalink to this heading"></a></h2>
+<p>View the dfnTrans_file ‘file.dat.  EDIT TEXT Particles are inserted SOMEWHERE
+to exit SOMEWHERE else</p>
+<p>Generate particle tracks with call….</p>
+<p>NOTE: There are a thousand particle tracks, these can be merged into a single file “all_particles.inp” with the command</p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_1000.png" alt="particles" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_aperature_mesh.png" alt="aperature" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_time_threshold_.005.png" alt="time threshold .005" style="width: 100%;">
+    </div>
+
+</div></section>
+<section id="add-a-second-family">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Add a Second family</a><a class="headerlink" href="#add-a-second-family" title="Permalink to this heading"></a></h2>
+<p>Once this network is working well, a more complicated version can be created by adding more families with different paramters from the first.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_f2_families.png"><img alt="alternate text" src="_images/tpl_f2_families.png" style="width: 2002.0px; height: 1336.0px;" /></a>
+</figure>
+</section>
+<section id="conclusion-edit-this">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Conclusion EDIT this</a><a class="headerlink" href="#conclusion-edit-this" title="Permalink to this heading"></a></h2>
+<p>You have successfully run dfnWorks to create a simple fracture network and run  basic simulations using the <cite>driver.py</cite> script in dfnWorks! As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.</p>
+</section>
+<section id="additional-resources-edit-these">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Additional Resources EDIT these</a><a class="headerlink" href="#additional-resources-edit-these" title="Permalink to this heading"></a></h2>
+<p>There are more demo runs in the <cite>dfnWorks/examples</cite> directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here.</p>
+<ul class="simple">
+<li><p>4_user_rects (4_user_defined_rectangles): The example used in this tutorial.</p></li>
+<li><p>4_user_ell_uniform (4_user_defined_ellipses): User defined elliptical fractures.</p></li>
+<li><p>exp (exponential_dist): Use parameters for two families of fractures with an exponential distribution of fracture size.</p></li>
+<li><p>lognormal (lognormal_dist): Use parameters for two families of fractures with a lognormal distribution of fracture size.</p></li>
+<li><p>TPL (truncated_power_law_dist): Use parameters for two families of fractures with a truncated power-law distribution of fracture size.</p></li>
+</ul>
+<p>See a description of these 5 examples at <a class="reference internal" href="examples.html#examples"><span class="std std-ref">pydfnWorks examples</span></a>.</p>
+<p>All examples are available from github at <a class="reference external" href="https://github.com/lanl/dfnWorks/tree/master/examples">DFNWorks Examples</a></p>
+<p>For a short description of all examples see <a class="reference external" href="https://github.com/lanl/dfnWorks/tree/master/examples/README.md">Examples README file</a></p>
+<p>For Additional Resources you can browse the online docs including examples, module descriptions, and the pydfnworks code descriptions.
+The Publications are a good source of applications and discussions. Consider joining community forums and user groups for support and to share experiences with dfnWorks users.</p>
+<p>Feel free to reach out if you have any questions or need further assistance with your simulation!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

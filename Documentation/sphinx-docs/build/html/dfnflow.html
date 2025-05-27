@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dfnFlow &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dfnTrans" href="dfntrans.html" />
+    <link rel="prev" title="dfnGen - C++ Generation Code" href="dfngen.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+              <div class="version">
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">dfnFlow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dfnflow.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dfnflow">
+<span id="dfnflow-chapter"></span><h1>dfnFlow<a class="headerlink" href="#dfnflow" title="Permalink to this heading"></a></h1>
+<p><em>dfnFlow</em> involves using flow solver such as PFLOTRAN or FEHM. PFLOTRAN is recommended if a large number of fractures ( &gt; O(1000)) are involved in a network. Using the function calls that are part of pydfnworks, one can create the mesh files needed to run PFLOTRAN. This will involve creating unstructured mesh file <code class="docutils literal notranslate"><span class="pre">*uge</span></code> as well as the boundary  <code class="docutils literal notranslate"><span class="pre">*ex</span></code> files. Please see the PFLOTRAN user manual at <a class="reference external" href="http://www.pflotran.org">http://www.pflotran.org</a> under unstructured <em>explicit</em> format usage for further details. An example input file for PFLOTRAN is provided in the repository. Please use this as a starting point to build your input deck.</p>
+<p>Below is a sample input file. Refer to the PFLOTRAN user manual at <a class="reference external" href="http://www.pflotran.org">http://www.pflotran.org</a> for input parameter descriptions.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp"># Jan 13, 2014</span>
+<span class="cp"># Nataliia Makedonska, Satish Karra, LANL</span>
+<span class="cp">#================================================</span>
+
+<span class="n">SIMULATION</span>
+<span class="w">  </span><span class="n">SIMULATION_TYPE</span><span class="w"> </span><span class="n">SUBSURFACE</span>
+<span class="w">  </span><span class="n">PROCESS_MODELS</span>
+<span class="w">    </span><span class="n">SUBSURFACE_FLOW</span><span class="w"> </span><span class="n">flow</span>
+<span class="w">      </span><span class="n">MODE</span><span class="w"> </span><span class="n">RICHARDS</span>
+<span class="w">    </span><span class="o">/</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="n">END</span>
+<span class="n">SUBSURFACE</span>
+
+<span class="n">DFN</span>
+
+<span class="cp">#=========================== discretization ===================================</span>
+<span class="n">GRID</span>
+<span class="w">  </span><span class="n">TYPE</span><span class="w"> </span><span class="n">unstructured_explicit</span><span class="w"> </span><span class="n">full_mesh_vol_area</span><span class="p">.</span><span class="n">uge</span>
+<span class="w">  </span><span class="n">GRAVITY</span><span class="w"> </span><span class="mf">0.</span><span class="n">d0</span><span class="w"> </span><span class="mf">0.</span><span class="n">d0</span><span class="w"> </span><span class="mf">0.</span><span class="n">d0</span>
+<span class="n">END</span>
+
+
+<span class="cp">#=========================== fluid properties =================================</span>
+<span class="n">FLUID_PROPERTY</span>
+<span class="w">  </span><span class="n">DIFFUSION_COEFFICIENT</span><span class="w"> </span><span class="mf">1.</span><span class="n">d</span><span class="mi">-9</span>
+<span class="n">END</span>
+
+<span class="n">DATASET</span><span class="w"> </span><span class="n">Permeability</span>
+<span class="w">  </span><span class="n">FILENAME</span><span class="w"> </span><span class="n">dfn_properties</span><span class="p">.</span><span class="n">h5</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== material properties ==============================</span>
+<span class="n">MATERIAL_PROPERTY</span><span class="w"> </span><span class="n">soil1</span>
+<span class="w">  </span><span class="n">ID</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="n">POROSITY</span><span class="w"> </span><span class="mf">0.25</span><span class="n">d0</span>
+<span class="w">  </span><span class="n">TORTUOSITY</span><span class="w"> </span><span class="mf">0.5</span><span class="n">d0</span>
+<span class="w">  </span><span class="n">CHARACTERISTIC_CURVES</span><span class="w"> </span><span class="k">default</span>
+<span class="w">  </span><span class="n">PERMEABILITY</span>
+<span class="w">    </span><span class="n">DATASET</span><span class="w"> </span><span class="n">Permeability</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="n">END</span>
+
+
+<span class="cp">#=========================== characteristic curves ============================</span>
+<span class="n">CHARACTERISTIC_CURVES</span><span class="w"> </span><span class="k">default</span>
+<span class="w">  </span><span class="n">SATURATION_FUNCTION</span><span class="w"> </span><span class="n">VAN_GENUCHTEN</span>
+<span class="w">    </span><span class="n">M</span><span class="w"> </span><span class="mf">0.5</span><span class="n">d0</span>
+<span class="w">    </span><span class="n">ALPHA</span><span class="w">  </span><span class="mf">1.</span><span class="n">d</span><span class="mi">-4</span>
+<span class="w">    </span><span class="n">LIQUID_RESIDUAL_SATURATION</span><span class="w"> </span><span class="mf">0.1</span><span class="n">d0</span>
+<span class="w">    </span><span class="n">MAX_CAPILLARY_PRESSURE</span><span class="w"> </span><span class="mf">1.</span><span class="n">d8</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="w">  </span><span class="n">PERMEABILITY_FUNCTION</span><span class="w"> </span><span class="n">MUALEM_VG_LIQ</span>
+<span class="w">    </span><span class="n">M</span><span class="w"> </span><span class="mf">0.5</span><span class="n">d0</span>
+<span class="w">    </span><span class="n">LIQUID_RESIDUAL_SATURATION</span><span class="w"> </span><span class="mf">0.1</span><span class="n">d0</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== output options ===================================</span>
+<span class="n">OUTPUT</span>
+<span class="w">  </span><span class="n">TIMES</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="mf">0.01</span><span class="w"> </span><span class="mf">0.05</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="mf">0.2</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="mi">1</span>
+<span class="cp">#  FORMAT TECPLOT BLOCK</span>
+<span class="w">  </span><span class="n">PRINT_PRIMAL_GRID</span>
+<span class="w">  </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">VTK</span>
+<span class="w">  </span><span class="n">MASS_FLOWRATE</span>
+<span class="w">  </span><span class="n">MASS_BALANCE</span>
+<span class="w">  </span><span class="n">VARIABLES</span>
+<span class="w">    </span><span class="n">LIQUID_PRESSURE</span>
+<span class="w">    </span><span class="n">PERMEABILITY</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== times ============================================</span>
+<span class="n">TIME</span>
+<span class="w">  </span><span class="n">INITIAL_TIMESTEP_SIZE</span><span class="w">  </span><span class="mf">1.</span><span class="n">d</span><span class="mi">-8</span><span class="w"> </span><span class="n">s</span>
+<span class="w">  </span><span class="n">FINAL_TIME</span><span class="w"> </span><span class="mf">1.</span><span class="n">d0</span><span class="w"> </span><span class="n">d</span><span class="o">==</span>
+<span class="w">  </span><span class="n">MAXIMUM_TIMESTEP_SIZE</span><span class="w"> </span><span class="mf">10.</span><span class="n">d0</span><span class="w"> </span><span class="n">d</span>
+<span class="w">  </span><span class="n">STEADY_STATE</span>
+<span class="n">END</span>
+
+<span class="cp"># REFERENCE_PRESSURE 1500000.</span>
+
+<span class="cp">#=========================== regions ==========================================</span>
+<span class="n">REGION</span><span class="w"> </span><span class="n">All</span>
+<span class="w">  </span><span class="n">COORDINATES</span>
+<span class="w">    </span><span class="mf">-1.</span><span class="n">d20</span><span class="w"> </span><span class="mf">-1.</span><span class="n">d20</span><span class="w"> </span><span class="mf">-1.</span><span class="n">d20</span>
+<span class="w">    </span><span class="mf">1.</span><span class="n">d20</span><span class="w"> </span><span class="mf">1.</span><span class="n">d20</span><span class="w"> </span><span class="mf">1.</span><span class="n">d20</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="n">END</span>
+
+<span class="n">REGION</span><span class="w"> </span><span class="n">inflow</span>
+<span class="w">  </span><span class="kt">FILE</span><span class="w"> </span><span class="n">pboundary_left_w</span><span class="p">.</span><span class="n">ex</span>
+<span class="n">END</span>
+
+<span class="n">REGION</span><span class="w"> </span><span class="n">outflow</span>
+<span class="w">  </span><span class="kt">FILE</span><span class="w"> </span><span class="n">pboundary_right_e</span><span class="p">.</span><span class="n">ex</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== flow conditions ==================================</span>
+<span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">initial</span>
+<span class="w">  </span><span class="n">TYPE</span>
+<span class="w">     </span><span class="n">PRESSURE</span><span class="w"> </span><span class="n">dirichlet</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="w">  </span><span class="n">PRESSURE</span><span class="w"> </span><span class="mf">1.01325</span><span class="n">d6</span>
+<span class="n">END</span>
+
+
+<span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">outflow</span>
+<span class="w">  </span><span class="n">TYPE</span>
+<span class="w">     </span><span class="n">PRESSURE</span><span class="w"> </span><span class="n">dirichlet</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="w">  </span><span class="n">PRESSURE</span><span class="w"> </span><span class="mf">1.</span><span class="n">d6</span>
+<span class="n">END</span>
+
+<span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">inflow</span>
+<span class="w">  </span><span class="n">TYPE</span>
+<span class="w">    </span><span class="n">PRESSURE</span><span class="w"> </span><span class="n">dirichlet</span>
+<span class="w">  </span><span class="o">/</span>
+<span class="w">  </span><span class="n">PRESSURE</span><span class="w"> </span><span class="mf">2.</span><span class="n">d6</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== condition couplers ===============================</span>
+<span class="cp"># initial condition</span>
+<span class="n">INITIAL_CONDITION</span>
+<span class="w">  </span><span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">initial</span>
+<span class="w">  </span><span class="n">REGION</span><span class="w"> </span><span class="n">All</span>
+<span class="n">END</span>
+
+
+<span class="n">BOUNDARY_CONDITION</span><span class="w"> </span><span class="n">INFLOW</span>
+<span class="w">  </span><span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">inflow</span>
+<span class="w">  </span><span class="n">REGION</span><span class="w"> </span><span class="n">inflow</span>
+<span class="n">END</span>
+
+<span class="n">BOUNDARY_CONDITION</span><span class="w"> </span><span class="n">OUTFLOW</span>
+<span class="w">  </span><span class="n">FLOW_CONDITION</span><span class="w"> </span><span class="n">outflow</span>
+<span class="w">  </span><span class="n">REGION</span><span class="w"> </span><span class="n">outflow</span>
+<span class="n">END</span>
+
+<span class="cp">#=========================== stratigraphy couplers ============================</span>
+<span class="n">STRATA</span>
+<span class="w">  </span><span class="n">REGION</span><span class="w"> </span><span class="n">All</span>
+<span class="w">  </span><span class="n">MATERIAL</span><span class="w"> </span><span class="n">soil1</span>
+<span class="n">END</span>
+
+<span class="n">END_SUBSURFACE</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dfngen.html" class="btn btn-neutral float-left" title="dfnGen - C++ Generation Code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dfntrans.html" class="btn btn-neutral float-right" title="dfnTrans" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.dfnGen.generation.output_report.gen_output &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+              <div class="version">
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.dfnGen.generation.output_report.gen_output</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.dfnGen.generation.output_report.gen_output</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  :filename: gen_output.py</span>
+<span class="sd">  :synopsis: Main driver for dfnGen output report</span>
+<span class="sd">  :version: 1.0</span>
+<span class="sd">  :maintainer: Jeffrey Hyman </span>
+<span class="sd">  :moduleauthor: Jeffrey Hyman &lt;jhyman@lanl.gov&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
+
+<span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">pydfnworks.dfnGen.generation.generator</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.gather_information</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.plot_fracture_orientations</span> <span class="kn">import</span> <span class="n">plot_fracture_orientations</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.plot_fracture_radii</span> <span class="kn">import</span> <span class="n">plot_fracture_radii</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.plot_fracture_centers</span> <span class="kn">import</span> <span class="n">plot_fracture_centers</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.plot_fram_information</span> <span class="kn">import</span> <span class="n">plot_fram_information</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.plot_intersection_lengths</span> <span class="kn">import</span> <span class="n">plot_intersection_lengths</span>
+<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.output_report.make_pdf</span> <span class="kn">import</span> <span class="n">make_pdf</span>
+
+
+<span class="k">def</span> <span class="nf">setup_output_directory</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Create working dictionary for plots. There is one directory for the entire network information and one for each family.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ------------</span>
+<span class="sd">    params : dictionary</span>
+<span class="sd">      Output report dictionary containing general parameters. See output_report for more details</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  ---------</span>
+<span class="sd">    None</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  --------</span>
+<span class="sd">    None</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;output_dir&quot;</span><span class="p">]):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;output_dir&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/network&quot;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/network&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;num_families&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/family_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/family_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="output_report"><a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.generation.output_report.gen_output.output_report">[docs]</a><span class="k">def</span> <span class="nf">output_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;dfnGen_output_report&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a PDF output report for the network created by DFNGen. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into &quot;output_dir/family_{id}/&quot;. Information about the whole network are also created and written into &quot;output_dir/network/&quot;</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">      self : object</span>
+<span class="sd">        DFN Class object</span>
+<span class="sd">      </span>
+<span class="sd">      verbose : bool</span>
+<span class="sd">        Toggle for the amount of information printed to screen. If true, progress information printed to screen</span>
+<span class="sd">      </span>
+<span class="sd">      output_dir : string</span>
+<span class="sd">        Name of directory where all plots are saved</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  --------</span>
+<span class="sd">    None</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  ---------</span>
+<span class="sd">    Final output report is named &quot;jobname&quot;_output_report.pdf</span>
+<span class="sd">    User defined fractures (ellipses, rectangles, and polygons) are not supported at this time. </span>
+
+
+<span class="sd">  &quot;&quot;&quot;</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;Creating Report of DFN generation&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Gathering Network Information&#39;</span><span class="p">)</span>
+    <span class="c1"># Create a list of dictionaries with information about fracture family</span>
+    <span class="n">families</span> <span class="o">=</span> <span class="n">get_family_information</span><span class="p">()</span>
+    <span class="c1"># Create a list of dictionaries with information about fracture</span>
+    <span class="n">fractures</span> <span class="o">=</span> <span class="n">get_fracture_information</span><span class="p">()</span>
+    <span class="c1"># Combine information of the families and fractures, e.g., which fracture are in each family, and create a dictionary with parameters used throughout the output report</span>
+    <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">combine_family_and_fracture_information</span><span class="p">(</span>
+        <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">families</span> <span class="o">=</span> <span class="n">parse_dfn_output</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">families</span><span class="p">)</span>
+
+    <span class="n">params</span><span class="p">[</span><span class="s2">&quot;verbose&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="n">params</span><span class="p">[</span><span class="s2">&quot;jobname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span>
+    <span class="n">params</span><span class="p">[</span><span class="s2">&quot;output_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_dir</span>
+
+    <span class="n">setup_output_directory</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c1"># Create Plots</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">families</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Plotting Information&#39;</span><span class="p">)</span>
+        <span class="n">plot_fracture_centers</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">)</span>
+        <span class="n">plot_fracture_radii</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">)</span>
+        <span class="n">plot_fracture_orientations</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">)</span>
+        <span class="n">plot_fram_information</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="c1"># # Combine plots into a pdf</span>
+        <span class="n">make_pdf</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">families</span><span class="p">,</span> <span class="n">fractures</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Output report is written into </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="si">}</span><span class="s2">_output_report.pdf</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;--&gt; There are no stochastic families. An output PDF will not be generated.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Return to main directory</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Creating Report of DFN generation complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">go_home</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
