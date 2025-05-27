@@ -1,0 +1,153 @@
+
+arameters for add_fracture_family
+
+    aspect :
+        Definition : The aspect ratio of the fractures is defined as the ratio of the length to the width of the fractures. A higher aspect ratio means the fracture is longer compared to its width, giving it an elongated shape. Conversely, an aspect ratio of 1 indicates a square or circular fracture.
+        Default : 1
+        Usage : Setting this parameter allows you to adjust the geometry of the fractures in your network, which can influence fluid flow behavior. For example, if you expect more elongated fractures in your geological model, you can set a value greater than 1.
+
+    beta_distribution :
+        Definition : This parameter controls how the normal vectors of the fractures are distributed in terms of orientation. When set to 0, the orientation is uniformly distributed over the range [0, 2π), meaning that fractures can be rotated in any direction within a full circle. When set to 1, it allows for a constant rotation specified by the beta angle for all fractures.
+        Default : 0
+        Usage : Use this parameter to define how fractures are oriented in your model. If you want all fractures to have a specific orientation (for example, if they are to be aligned in a certain direction due to tectonic forces), you would set beta_distribution to 1 and specify the beta angle.
+
+    beta :
+        Definition : The beta parameter is the angle for constant rotation applied to the normal vector of each fracture when beta_distribution is set to 1. This angle represents how much each fracture's normal vector is rotated from its original orientation.
+        Default : 0
+        Usage : When you want to apply a uniform rotation to all fractures, set beta to the desired angle (in radians). For example, if you want all fractures to be rotated 45 degrees from their original orientation, set beta to π/4.
+
+    theta :
+        Definition : This parameter defines the angle used to specify the orientation of fractures if orientationOption is set to 0 (the default). It typically represents the angle of a fracture in the vertical plane in spherical coordinates.
+        Default : None
+        Usage : Set this parameter to define the tilt or dip of the fractures. For instance, a value of 0 would represent a horizontal fracture, while a value of π/2 (90 degrees) would indicate a vertical fracture.
+
+    phi :
+        Definition : Similar to theta, phi is used in conjunction with orientationOption 0 to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.
+        Default : None
+        Usage : Specify this parameter to set the direction of the fracture’s orientation in the horizontal plane. For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
+
+
+
+
+Summary
+
+Understanding these parameters will help you effectively describe the geometry and orientation of fractures within your discrete fracture network in dfnWorks. By adjusting these settings, you can model complex geological configurations and accurately represent the flow behavior in fractured media.
+
+Additional Parameters for add_fracture_family
+
+    trend :
+        Definition : The trend parameter specifies the horizontal direction of the fracture when orientationOption is set to 1. This parameter allows you to define the azimuthal orientation of the fracture's normal vector.
+        Default : None
+        Usage : Set the value of trend in degrees to specify the direction in which the fracture is oriented in the horizontal plane. For example, a trend of 0 degrees points north, 90 degrees points east, and so forth. This parameter is useful when you want to align fractures along specific geological features or directional stresses.
+
+    plunge :
+        Definition : The plunge parameter indicates the vertical angle at which the fracture descends from the horizontal when using orientationOption 1. This angle is measured downwards from the horizontal plane.
+        Default : None
+        Usage : Set plunge to define how steeply the fracture dips below the horizontal. A plunge of 0 indicates a horizontal fracture, while a plunge of 90 means a vertical fracture. Adjusting this parameter allows for modeling of fractures that are inclined at various angles.
+
+    dip :
+        Definition : The dip parameter is used when orientationOption is set to 2. It specifies the angle at which the fracture surface falls relative to the horizontal. The dip is always measured downward from the horizontal plane.
+        Default : None
+        Usage : Use this parameter to indicate how steep the fracture is. For example, a dip of 30 degrees means the fracture dips downward at that angle from the horizontal plane, while a dip of 60 degrees would be steeper.
+
+    strike :
+        Definition : The strike parameter, also used with orientationOption 2, indicates the horizontal orientation of the fracture plane. It describes the direction of the line created by the intersection of the fracture surface with a horizontal plane.
+        Default : None
+        Usage : Set the strike angle in degrees to determine the direction of the fracture surface. Similar to the trend, strike angles are measured from true north (0 degrees) in a clockwise direction (with 90 degrees pointing east, 180 degrees pointing south, etc.). This parameter is essential for aligning fractures with regional geological structures or stress fields.
+
+Summary
+
+These parameters enable users to define precise orientations for fractures within a discrete fracture network. By appropriately setting trend, plunge, dip, and strike, you can model various geological scenarios, accurately represent fracture orientations, and understand their implications for fluid flow and transport processes in subsurface environments. 
+
+
+General 
+
+Here’s a detailed explanation of the general parameters used to describe a fracture family in dfnWorks. These parameters help define the characteristics and distribution of fractures within your discrete fracture network.
+Parameters for a Fracture Family
+
+    distribution :
+        Definition : This parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:
+            'tpl': Truncated Power Law distribution.
+            'log_normal': Log-normal distribution.
+            'exp': Exponential distribution.
+            'constant': A constant value for the fracture radius.
+        Usage : Selecting the appropriate distribution allows you to model the variability of fracture sizes in your geological setting. For example, if fractures tend to have a size that follows a log-normal distribution in your study area, you would set this parameter accordingly.
+
+    kappa :
+        Definition : The concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.
+        Usage : Use this parameter when fractures are expected to have a strongly defined orientation. Adjust kappa to reflect the degree of clustering present in your geological scenario.
+
+    family_number :
+        Definition : This parameter assigns an identifier to the fracture family, typically represented as an integer. It helps in distinguishing between different families of fractures in the model.
+        Default : None
+        Usage : Set this parameter to create unique identifiers for each fracture family, which can be especially useful when analyzing results from multiple families.
+
+    probability :
+        Definition : The probability that a fracture belongs to this specific family. This is relevant when using stopCondition = 0, which refers to a probabilistic approach for fracture generation.
+        Default : None
+        Usage : Use this parameter to control the likelihood of fractures being assigned to this family, allowing for realistic modeling of geological processes where certain families are more predominant.
+
+    p32 :
+        Definition : A parameter representing the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.
+        Default : None
+        Usage : Set this parameter to define how densely the fractures are distributed in space. The value of p32 often relates to the number of fractures per unit volume or area.
+
+    layer :
+        Definition : This parameter assigns the fracture family to a specific layer within the domain. Layers can represent different geological formations or strata within the model.
+        Default : 0
+        Usage : Use this to categorize fractures by their position in the geological column, which can be critical for modeling flow behavior across different strata.
+
+    region :
+        Definition : This parameter assigns the fracture family to a specific region in the domain. Regions can be defined to represent unique geological features or spatial constraints.
+        Default : 0
+        Usage : Utilize this parameter to constrain fracture placement to certain areas of the model, allowing for targeted analysis of regions of interest.
+
+    aspect :
+        Definition : The aspect ratio of the fractures, indicating the proportional relationship between the length and width of the fractures. An aspect ratio greater than 1 means the fracture is elongated, while 1 indicates a square or circular shape.
+        Default : 1
+        Usage : Set this parameter according to the expected shape of the fractures in your geological model. Adjusting the aspect ratio can impact fluid flow and connectivity among fractures.
+
+    beta_distribution :
+        Definition : This parameter determines how the normal vectors of the fractures are rotated. If beta_distribution is set to 0, a uniform distribution over [0, 2π) is applied to all fracture normal vectors. If set to 1, a constant rotation specified by another parameter (ebeta) is applied.
+        Default : 0
+        Usage : Use this to control the orientation randomness of fractures. If you have a preferred direction for the normal vectors, set this to 1 and specify the rotation.
+
+    alpha :
+        Definition : A parameter used when the distribution is set to tpl. It indicates the power-law exponent of the truncated power-law distribution.
+        Default : None
+        Usage : Set this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
+
+
+These hydraulic parameters—hy_variable, hy_function, and hy_params—are essential for modeling how fluid flows through fractured media. By carefully selecting and defining each parameter, you can create a more accurate and realistic representation of subsurface flow behavior influenced by the fractures present in your geological model.
+
+Here’s a detailed explanation of the hydraulic parameters used in the add_fracture_family function in dfnWorks, which help define the hydraulic properties of fractures within a discrete fracture network.
+Hydraulic Parameters for a Fracture Family
+
+    hy_variable :
+        Definition : This parameter specifies the hydraulic variable to which values will be assigned for the fractures within the family. The options include:
+            'aperture': The opening width of the fractures, which is critical for determining flow rates.
+            'permeability': A measure of how easily fluids can pass through the fractures.
+            'transmissivity': Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.
+        Usage : Choose the appropriate hydraulic variable based on the specific properties you want to model for the fractures. For example, if you are interested in how the fracture opening impacts fluid flow, you would select 'aperture'.
+
+    hy_function :
+        Definition : This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. The options include:
+            'correlated': Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
+            'semi-correlated': Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
+            'constant': Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
+            'log-normal': Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
+        Usage : Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose 'correlated'.
+
+    hy_params :
+        Definition : This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:
+            If hy_function is 'correlated' :
+                Expected syntax: {"alpha": value, "beta": value}
+                Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
+            If hy_function is 'semi-correlated' :
+                Expected syntax: {"alpha": value, "beta": value, "sigma": value}
+                In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
+            If hy_function is 'constant' :
+                Expected syntax: {"mu": value} 
+
+
+

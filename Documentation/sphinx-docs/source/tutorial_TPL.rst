@@ -61,6 +61,9 @@ kappa concentration param of the von Mises-Fisher distribution
 beta angle rotation around fracture axis
 spherical theta for Z and phi for XY plane
 
+For more details on these parameters, please refer to the `TPL_parameters.txt <TPL_parameters.txt>`_ file for the necessary settings.
+
+
 .. code-block:: bash
 
     DFN.add_fracture_family(
@@ -191,37 +194,85 @@ Run Flow Model
 
 The pydfnworks commands `dfn_flow()` and `dfn_trans()` are used to run the simulations. These can provide insights into the behavior of fluids within the fractured network.
 
-View the dfnFlow_file 'file.in'. This is a PFLOTRAN input file.  FIX TEXT High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. 
+View the dfnFlow_file 'file.in'. This is a PFLOTRAN input file.  EDIT TEXT High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. 
 
 The solver type is set to PFLOTRAN
+
+For viewing results see the vtk files written in output/parsed_vtk
+
+Read dfn_explicit-000.vtk see permeability and Liquid Pressure at time 0
+Read dfn_explicit-001.vtk for Liquid Pressure at time 1
+
+
+.. raw:: html
+
+    <div style="display: flex; justify-content: space-between;">
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_flow_permeability.png" alt="permeability" style="width: 100%;">
+        </div>
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_flow_liq_press_vtk0.png" alt="Figure Volume" style="width: 100%;">
+        </div>
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_flow_liq_press_vtk1.png" alt="Figure dfield" style="width: 100%;">
+        </div>
+
+    </div>
 
 
 Run Transport Model
 --------------------
 
-View the dfnTrans_file 'file.dat.  FIX TEXT Particles are inserted uniformly along the inlet fracture on the left side of the fracture network. Particles exit the domain through the two horizontal fractures on the right side of the domain. 
+View the dfnTrans_file 'file.dat.  EDIT TEXT Particles are inserted SOMEWHERE 
+to exit SOMEWHERE else
 
 Generate particle tracks with call....
 
+NOTE: There are a thousand particle tracks, these can be merged into a single file "all_particles.inp" with the command 
+
+.. raw:: html
+
+    <div style="display: flex; justify-content: space-between;">
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_part_1000.png" alt="particles" style="width: 100%;">
+        </div>
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_part_aperature_mesh.png" alt="aperature" style="width: 100%;">
+        </div>
+
+        <div style="flex: 1;">
+            <img src="figures/tpl_part_time_threshold_.005.png" alt="time threshold .005" style="width: 100%;">
+        </div>
+
+    </div>
 
 
 Add a Second family
 ---------------------
 
+Once this network is working well, a more complicated version can be created by adding more families with different paramters from the first.
+
+
+.. figure:: figures/tpl_f2_families.png
+   :scale: 100 %
+   :alt: alternate text
+   :align: center
 
 
 
-
-
-
-Conclusion FIX this
+Conclusion EDIT this
 ------------------------------------------
 
 You have successfully run dfnWorks to create a simple fracture network and run  basic simulations using the `driver.py` script in dfnWorks! As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.
 
 
 
-Additional Resources FIX these
+Additional Resources EDIT these
 ------------------------------------------
 
 There are more demo runs in the `dfnWorks/examples` directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
