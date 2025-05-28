@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "insertShape.h"
 
-double* rotationMatrixFromZToVector(double *target);
+
 /**************************************************************************/
 /********************  Discretize Intersection  ***************************/
 /*! Discretizes intersetion
@@ -173,86 +173,92 @@ double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::
     vec[2] = V[0] * R[6] + V[1] * R[7] + w * R[8];
     return vec;
 }
-
-double *binghamDistribution(double angleOne, double angleTwo, double kappa, double kappa2, std::mt19937_64 &generator) {
-    double meanVec[3];
-
+double* binghamDistribution(double angleOne,
+                            double angleTwo,
+                            double kappa,
+                            double kappa2,
+                            std::mt19937_64 &generator)
+{
+    // 1) Build the “mode” direction v1 exactly like your Fisher code:
+    double v1[3];
     if (orientationOption == 0) {
-        meanVec[0] = sin(angleOne) * cos(angleTwo);
-        meanVec[1] = sin(angleOne) * sin(angleTwo);
-        meanVec[2] = cos(angleOne);
-    } else if (orientationOption == 1) {
-        meanVec[0] = cos(angleOne) * cos(angleTwo);
-        meanVec[1] = sin(angleOne) * cos(angleTwo);
-        meanVec[2] = sin(angleTwo);
-    } else if (orientationOption == 2) {
-        meanVec[0] = sin(angleOne) * sin(angleTwo);
-        meanVec[1] = -sin(angleOne) * cos(angleTwo);
-        meanVec[2] = cos(angleOne);
+        // spherical coords θ=angleOne, φ=angleTwo
+        v1[0] = sin(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * sin(angleTwo);
+        v1[2] = cos(angleOne);
+    }
+    else if (orientationOption == 1) {
+        // trend/plunge
+        v1[0] = cos(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * cos(angleTwo);
+        v1[2] = sin(angleTwo);
+    }
+    else { // orientationOption == 2
+        // dip/strike
+        v1[0] = sin(angleOne) * sin(angleTwo);
+        v1[1] = -sin(angleOne) * cos(angleTwo);
+        v1[2] = cos(angleOne);
     }
 
-    // Sample from anisotropic Gaussian (approximates Bingham)
-    std::normal_distribution<double> normal_dist(0.0, 1.0);
-    double x = normal_dist(generator) / sqrt(kappa);
-    double y = normal_dist(generator) / sqrt(kappa);
-    double z = normal_dist(generator) / sqrt(kappa2);
-
-    // Normalize
-    double mag = sqrt(x * x + y * y + z * z);
-    double sample[3] = {x / mag, y / mag, z / mag};
-
-    // Align sample to meanVec
-    double zAxis[3] = {0, 0, 1};
-    double *rotMat = rotationMatrixFromZToVector(meanVec);
-
-    double *vec = new double[3];
-    vec[0] = rotMat[0] * sample[0] + rotMat[1] * sample[1] + rotMat[2] * sample[2];
-    vec[1] = rotMat[3] * sample[0] + rotMat[4] * sample[1] + rotMat[5] * sample[2];
-    vec[2] = rotMat[6] * sample[0] + rotMat[7] * sample[1] + rotMat[8] * sample[2];
-
-    delete[] rotMat;
-    return vec;
-}
-
-double* rotationMatrixFromZToVector(double *target) {
-    double *R = new double[9];
-    double z[3] = {0, 0, 1};
-    double *v = crossProduct(z, target);
-    double s = sqrt(dotProduct(v, v));
-    double c = dotProduct(z, target);
-
-    if (s < eps) {
-        // Already aligned or opposite
-        if (c > 0) {
-            R[0] = R[4] = R[8] = 1.0;
-            R[1] = R[2] = R[3] = R[5] = R[6] = R[7] = 0.0;
-            return R;
-        } else {
-            // 180 degree rotation (simple case: flip Z)
-            R[0] = R[4] = R[8] = -1.0;
-            R[1] = R[2] = R[3] = R[5] = R[6] = R[7] = 0.0;
-            return R;
+    // 2) Compute rotation R that takes (0,0,1) → v1 (same as yours):
+    double u[3] = {0,0,1};
+    double *xProd = crossProduct(u, v1);
+    double R[9];
+    const double eps = 1e-12;
+    if (!(fabs(xProd[0])<=eps && fabs(xProd[1])<=eps && fabs(xProd[2])<=eps)) {
+        double sinA = sqrt(xProd[0]*xProd[0] + xProd[1]*xProd[1] + xProd[2]*xProd[2]);
+        double cosA = dotProduct(u, v1);
+        double v[9] = {
+            0,       -xProd[2],  xProd[1],
+            xProd[2], 0,        -xProd[0],
+           -xProd[1], xProd[0],  0
+        };
+        double scalar = (1.0 - cosA) / (sinA*sinA);
+        // compute v² = v * v:
+        double v2[9];
+        for (int i=0;i<3;i++) for(int j=0;j<3;j++){
+            v2[3*i+j] = v[3*i+0]*v[0*3+j] + v[3*i+1]*v[1*3+j] + v[3*i+2]*v[2*3+j];
+            v2[3*i+j] *= scalar;
         }
+        // R = I + v + v²
+        R[0]=1+v[0]+v2[0]; R[1]=   v[1]+v2[1]; R[2]=   v[2]+v2[2];
+        R[3]=   v[3]+v2[3]; R[4]=1+v[4]+v2[4]; R[5]=   v[5]+v2[5];
+        R[6]=   v[6]+v2[6]; R[7]=   v[7]+v2[7]; R[8]=1+v[8]+v2[8];
+    } else {
+        // already aligned
+        R[0]=1; R[1]=0; R[2]=0;
+        R[3]=0; R[4]=1; R[5]=0;
+        R[6]=0; R[7]=0; R[8]=1;
+    }
+    delete[] xProd;
+
+    // 3) Rejection‐sample in the local frame:
+    //    x_local ~ Uniform(S²), accept with prob ∝ exp(k1·x² + k2·y²).
+    std::uniform_real_distribution<double> unif01(0.0,1.0);
+    std::uniform_real_distribution<double> phiDist(0.0, 2.0*M_PI);
+    const double M = std::exp(std::max(kappa, kappa2)); 
+    double xL[3];
+    while (true) {
+        double z   = unif01(generator)*2.0 - 1.0;
+        double phi = phiDist(generator);
+        double r   = sqrt(1.0 - z*z);
+        xL[0] = r * cos(phi);  // local x
+        xL[1] = r * sin(phi);  // local y
+        xL[2] = z;             // local z
+
+        // Bingham density (up to normalizing constant)
+        double w = kappa*xL[0]*xL[0] + kappa2*xL[1]*xL[1];
+        double acceptProb = exp(w) / M;
+        if (unif01(generator) <= acceptProb)
+            break;  // keep xL
     }
 
-    double vx = v[0], vy = v[1], vz = v[2];
-    double vx2 = vx * vx, vy2 = vy * vy, vz2 = vz * vz;
-    double k = (1 - c) / (s * s);
-
-    R[0] = c + k * vx2;
-    R[1] = k * vx * vy - vz;
-    R[2] = k * vx * vz + vy;
-
-    R[3] = k * vy * vx + vz;
-    R[4] = c + k * vy2;
-    R[5] = k * vy * vz - vx;
-
-    R[6] = k * vz * vx - vy;
-    R[7] = k * vz * vy + vx;
-    R[8] = c + k * vz2;
-
-    delete[] v;
-    return R;
+    // 4) Rotate into global frame and return
+    double *vec = new double[3];
+    vec[0] = R[0]*xL[0] + R[1]*xL[1] + R[2]*xL[2];
+    vec[1] = R[3]*xL[0] + R[4]*xL[1] + R[5]*xL[2];
+    vec[2] = R[6]*xL[0] + R[7]*xL[1] + R[8]*xL[2];
+    return vec;
 }
 
 /**************************************************************************/

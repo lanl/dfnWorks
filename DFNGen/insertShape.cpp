@@ -156,14 +156,12 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     // Assumes polygon on x-y plane
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
+    
 
-    // Log which distribution we’re using
-    std::string logString = "Orientation distribution set to: "
-                          + shapeFam.orientation_distribution;
-    logger.writeLogFile(INFO, logString);
+    // Fisher vs. Bingham normal: pick one, then normalize & rotate
+    double *norm   = nullptr;
+    double  mag    = 0.0;
 
-    // Draw the normal vector
-    double* norm;
     if (shapeFam.orientation_distribution == "bingham") {
         norm = binghamDistribution(
             shapeFam.angleOne,
@@ -172,7 +170,7 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
             shapeFam.kappa2,
             generator
         );
-        logger.writeLogFile(INFO, "Using Bingham distribution for fracture normal");
+        //logger.writeLogFile(INFO, "Using Bingham distribution for fracture normal");
     } else {
         norm = fisherDistribution(
             shapeFam.angleOne,
@@ -180,16 +178,18 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
             shapeFam.kappa,
             generator
         );
-        logger.writeLogFile(INFO, "Using Fisher distribution for fracture normal");
+        //logger.writeLogFile(INFO, "Using Fisher distribution for fracture normal");
     }
 
-    // Make sure it’s unit‐length
-    double mag = magnitude(norm[0], norm[1], norm[2]);
-    if (mag < 1.0 - eps || mag > 1.0 + eps) {
+    // now that norm is set, compute its length
+    mag = magnitude(norm[0], norm[1], norm[2]);
+
+    // normalize if it’s off
+    if (mag < 1 - eps || mag > 1 + eps) {
         normalize(norm);
     }
 
-    // Rotate the polygon into place
+    // apply it, save it, and free it
     applyRotation3D(newPoly, norm);
     newPoly.normal[0] = norm[0];
     newPoly.normal[1] = norm[1];
@@ -283,22 +283,8 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     // assumes polygon on x-y plane
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
-    // Distribution / get normal vector
-    double* norm;
-    if (shapeFam.orientation_distribution == "bingham") {
-        norm = binghamDistribution(shapeFam.angleOne,
-                                   shapeFam.angleTwo,
-                                   shapeFam.kappa,
-                                   shapeFam.kappa2,
-                                   generator);
-        std::cout << "\n\n________________________\n| Bingham Distribution |\n________________________\n";    
-    } else {
-        norm = fisherDistribution(shapeFam.angleOne,
-                                  shapeFam.angleTwo,
-                                  shapeFam.kappa,
-                                  generator);
-        std::cout << "\n\n________________________\n| Fisher Distribution |\n________________________\n";
-    }
+    // Fisher distribution / get normal vector
+    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
     double mag = magnitude(norm[0], norm[1], norm[2]);
     
     if (mag < 1 - eps || mag > 1 + eps) {

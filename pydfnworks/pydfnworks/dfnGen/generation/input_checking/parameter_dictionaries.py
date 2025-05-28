@@ -577,6 +577,8 @@ def load_parameters(self):
             float,
             'list':
             True,
+            'required':
+            False,
             'list_length':
             None,
             'value':
