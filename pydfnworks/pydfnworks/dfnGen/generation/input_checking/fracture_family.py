@@ -135,6 +135,23 @@ def fracture_family_dictionary():
             'description':
             'Parameters theta, phi, kappa, and kappa2 for Bingham distribution'
         },
+        #bingham distribution
+        'bingham': {
+            'type':
+            float,
+            'value': {
+                'theta': None,
+                'phi': None,
+                'strike': None,
+                'dip': None,
+                'trend': None,
+                'plunge': None,
+                'kappa': None,
+                'kappa2': None
+            },
+            'description':
+            '3 parameters theta, phi, and kappa for bingham distribution'
+        },
         'distribution': {
             'type': bool,
             'value': {
@@ -236,7 +253,6 @@ def print_family_information(self, family_number):
     if len(self.fracture_families) > 0:
         family = self.fracture_families[family_number - 1]
         self.print_log(f"--> Family information for family # {family_number}")
-        self.print_log(f"Orientation model: {family.get('orientation_distribution', {}).get('value', 'fisher')}")
         for key in family.keys():
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():

@@ -457,9 +457,6 @@ struct Shape {
         True - User Specified Rotation
         False - Uniform Distribution */
     bool betaDistribution;
-
-    /*! 'orientation_distribution' is the distribution type 'fisher' or 'bingham' */
-    std::string orientation_distribution;
     
     /*! 'beta' is the rotation, or twist, around z normal before 3d rotation in radians
         or degrees depending on 'angleOption'. */

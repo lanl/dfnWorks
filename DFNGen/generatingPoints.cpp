@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "insertShape.h"
 
-double* rotationMatrixFromZToVector(double *target);
+
 /**************************************************************************/
 /********************  Discretize Intersection  ***************************/
 /*!
