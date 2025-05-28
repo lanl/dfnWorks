@@ -198,7 +198,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 'Exactly one distribution value must be True for a fracture family'
             )
     if distribution_type == None:
-        self.print_log(
+        print_log(
             'Exactly one distribution value must be True for a fracture family', 'error'
         )
 
@@ -238,12 +238,12 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                               'mean',
                               fracture_type_prefix,
                               value_flag=True)
-
+    
     orientation_dist = fracture_family.get('orientation_distribution', {}).get('value', 'fisher').lower()
 
     if orientation_dist == 'fisher':
         fisher_params = fracture_family['fisher']['value']
-        print_log("Fisher distribution selected.", 'info')
+        hf.print_warning("Fisher distribution selected.")
         for key in fisher_params:
             if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
@@ -251,12 +251,12 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
             elif key in {'strike', 'dip'} and params['orientationOption']['value'] == 2:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
-            elif key == 'kappa':
+            elif key in {'kappa'}:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
 
     elif orientation_dist == 'bingham':
         bingham_params = fracture_family['bingham']['value']
-        print_log("Bingham distribution selected.", 'info')
+        hf.print_warning("Bingham distribution selected.")
         for key in bingham_params:
             if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
                 write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)

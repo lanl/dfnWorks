@@ -440,9 +440,6 @@ struct Shape {
         True - User Specified Rotation
         False - Uniform Distribution */
     bool betaDistribution;
-
-    /*! 'orientation_distribution' is the distribution type 'fisher' or 'bingham' */
-    std::string orientation_distribution;
     
     /*! 'beta' is the rotation, or twist, around z normal before 3d rotation in radians
         or degrees depending on 'angleOption'. */
@@ -461,11 +458,12 @@ struct Shape {
         This is the trend of Rectangle fracture orientation. */
     double angleTwo;
     
+    std::string orientation_distribution;
+
     /*! Parameter for fisher distributions. The
         bigger, the more similar (less diverging) are the
         rectangular familiy's normal vectors. */
     double kappa;
-
     /*! Parameter for bingham distributions. The
         bigger, the more similar (less diverging) are the
         rectangular familiy's normal vectors. */

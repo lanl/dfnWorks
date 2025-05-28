@@ -87,27 +87,14 @@ def fracture_family_dictionary():
             'description':
             'Value for constant angle of rotation around the normal vector'
         },
-        # orientation distribution type
         'orientation_distribution': {
-            'type': str,
-            'value': 'fisher',  # default
-            'description': 'Orientation distribution model: "fisher" or "bingham"'
-        },
-
-        # bingham distribution
-        'bingham': {
-            'type': float,
+            'type': bool,
             'value': {
-                'theta': None,
-                'phi': None,
-                'strike': None,
-                'dip': None,
-                'trend': None,
-                'plunge': None,
-                'kappa': None,
-                'kappa2': None
+                'fisher': False,
+                'bingham': False,
             },
-            'description': 'Bingham distribution parameters: orientation and kappa, kappa2'
+            'description':
+            'Type of distibution'
         },
         #fisher distribution
         'fisher': {
@@ -124,6 +111,23 @@ def fracture_family_dictionary():
             },
             'description':
             '3 parameters theta, phi, and kappa for fisher distribution'
+        },
+        #bingham distribution
+        'bingham': {
+            'type':
+            float,
+            'value': {
+                'theta': None,
+                'phi': None,
+                'strike': None,
+                'dip': None,
+                'trend': None,
+                'plunge': None,
+                'kappa': None,
+                'kappa2': None
+            },
+            'description':
+            '3 parameters theta, phi, and kappa for bingham distribution'
         },
         'distribution': {
             'type': bool,
@@ -224,7 +228,6 @@ def print_family_information(self, family_number):
     if len(self.fracture_families) > 0:
         family = self.fracture_families[family_number - 1]
         self.print_log(f"--> Family information for family # {family_number}")
-        self.print_log(f"Orientation model: {family.get('orientation_distribution', {}).get('value', 'fisher')}")
         for key in family.keys():
             if key == 'hydraulic_properties':
                 for sub_key in family[key].keys():
@@ -241,8 +244,8 @@ def add_fracture_family(self,
                         shape,
                         distribution,
                         kappa,
-                        orientation_distribution="fisher",
                         kappa2=None,
+                        orientation_distribution=None,
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -376,7 +379,7 @@ def add_fracture_family(self,
     family['beta']['value'] = beta
     family['orientation_distribution']['value'] = orientation_distribution.lower()
 
-    if orientation_distribution.lower() == "bingham":
+    if orientation_distribution.lower() == 'bingham':
         family['bingham']['value']['theta'] = theta
         family['bingham']['value']['phi'] = phi
         family['bingham']['value']['strike'] = strike
@@ -386,7 +389,7 @@ def add_fracture_family(self,
         family['bingham']['value']['kappa'] = kappa
         family['bingham']['value']['kappa2'] = kappa2
 
-    elif orientation_distribution.lower() == "fisher":
+    elif orientation_distribution.lower() == 'fisher':
         family['fisher']['value']['theta'] = theta
         family['fisher']['value']['phi'] = phi
         family['fisher']['value']['strike'] = strike
