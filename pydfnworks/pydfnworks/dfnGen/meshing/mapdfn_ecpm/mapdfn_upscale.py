@@ -17,7 +17,7 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
         cell_fracture_id : dict
             Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
 
-        apertures : numpy array
+        aperture : numpy array
             array of fracture apertures (likely from DFN.aperture)
 
         cell_size : float 
@@ -41,15 +41,21 @@ def mapdfn_porosity(num_cells, cell_fracture_id, aperture, cell_size,
     for cell_id, fractures in cell_fracture_id.items():
         if len(fractures) > 0:
             for ifrac in fractures:
+                # fracture volume fraction is (aperture * cell_size**2 / cell_size**3)
                 porosity[cell_id] += aperture[ifrac] / cell_size
         else:
             porosity[cell_id] = matrix_porosity
+        if porosity[cell_id] > 1:
+            # print("Error, porisity is greater than 1")
+            porosity[cell_id] = 1
     return porosity
 
 
-def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, cell_size,
+def mapdfn_perm_iso(num_cells, cell_fracture_id, perm, aperture, porosity, cell_size,
                     matrix_perm):
-    """ Calculate isotropic permeability for each cell of ECPM intersected by one or more fractures. Sums fracture transmissivities and divides by cell length (d) to calculate cell permeability. Assign background permeability to cells not intersected by fractures. 
+    """ Calculate isotropic permeability for each cell of ECPM intersected by one or more fractures. Sums fracture permeabilities and multiples by fracture volume (aperture*d*d/d**3) length (d) to calculate cell permeability. 
+    4 March 2024 : Adjusted to also include matrix contribution to flow
+    Assign background permeability to cells not intersected by fractures. 
     
     Parameters
     --------------
@@ -59,8 +65,15 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, cell_size,
         cell_fracture_id : dict
             Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
 
-        transmissivity : numpy array
-            array of fracture transmissivity (k * b)
+        perm : numpy array
+            array of fracture perm (k)
+
+        aperture : numpy array
+            array of fracture aperture (b)
+
+        porosity : numpy array 
+            fracture porosity values in the domain cells
+
 
         cell_size : float 
             discretization length in ECPM domain
@@ -76,15 +89,32 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity, cell_size,
     
     Notes
     ----------
-        The units of T are m^3. 
+  
     """
 
     local_print_log(f'--> Computing Isotropic Permeability')
     k_iso = np.full(num_cells, matrix_perm, '=f8')
     for cell_id, fractures in cell_fracture_id.items():
+        local_perm  = 0
         if len(fractures) > 0:
             for ifrac in fractures:
-                k_iso[cell_id] += transmissivity[ifrac] / cell_size
+                # k_iso[cell_id] += transmissivity[ifrac] / cell_size 
+                ## this is a weighted average based on the fracture volume
+                # fracture volume fraction is (aperture * cell_size**2 / cell_size**3)
+                local_perm += (aperture[ifrac]/cell_size) * perm[ifrac]
+                # local_perm += transmissivity[ifrac] / cell_size
+                # print(local_perm)
+        ## weighted average 
+        # print("Using Weighted average")
+        # print(f"matrix_perm**(1-porosity[cell_id] : {matrix_perm**(1-porosity[cell_id])}")
+        # print(f"local_perm {local_perm}")
+        # print(f"porosity {porosity[cell_id]}")
+        # print(f"local_perm**(porosity[cell_id] : {local_perm**(porosity[cell_id])}")
+        # geo_mean_perm = (matrix_perm**(1-porosity[cell_id])) * ( local_perm**porosity[cell_id])
+        # print(f"geo-mean: {geo_mean_perm:0.2e}")
+        k_iso[cell_id] = max(matrix_perm, ( 1 - porosity[cell_id] ) * matrix_perm  + porosity[cell_id] * local_perm)
+        # k_iso[cell_id] = max(geo_mean_perm, local_perm)
+        # k_iso[cell_id] = local_perm 
     return k_iso
 
 
@@ -92,7 +122,9 @@ def mapdfn_perm_aniso(num_frac,
                       num_cells,
                       cell_fracture_id,
                       normal_vectors,
-                      transmissivity,
+                      perm, 
+                      aperture,
+                      porosity,
                       cell_size,
                       matrix_perm,
                       lump_diag_terms=False,
@@ -113,8 +145,11 @@ def mapdfn_perm_aniso(num_frac,
         normal_vectors : numpy array 
             array of fracture normal vectors 
 
-        transmissivity : numpy array
-            array of fracture transmissivity (k * b)
+        perm : numpy array
+            array of fracture perm (k)
+
+        aperture : numpy array
+            array of fracture aperture (b)
 
         cell_size : float 
             discretization length in ECPM domain
@@ -152,8 +187,10 @@ def mapdfn_perm_aniso(num_frac,
         angle = np.arccos(normal[2])
         M = tr.rotation_matrix(angle, direction)
         Transpose = np.transpose(M[:3, :3])
-        T_local[0, 0] = transmissivity[ifrac]
-        T_local[1, 1] = transmissivity[ifrac]
+        # T_local[0, 0] = transmissivity[ifrac]
+        # T_local[1, 1] = transmissivity[ifrac]
+        T_local[0, 0] = aperture[ifrac]*perm[ifrac]
+        T_local[1, 1] =  aperture[ifrac]*perm[ifrac]
         #permeability = 0 in local z direction of fracture
         T_domain = np.dot(np.dot(M[:3, :3], T_local), Transpose)
         fracture_trans[ifrac][0:3] = [
@@ -175,21 +212,39 @@ def mapdfn_perm_aniso(num_frac,
     t0 = time.time()
     k_aniso = np.full((num_cells, 3), matrix_perm, '=f8')
     for icell in range(num_cells):
+        k_aniso_x = 0
+        k_aniso_y = 0
+        k_aniso_z = 0
         if len(cell_fracture_id[icell]) > 0:
             for ifrac in cell_fracture_id[icell]:
                 if lump_diag_terms:  #lump off diagonal terms
                     #because symmetrical doesn't matter if direction of summing is correct, phew!
-                    k_aniso[icell][0] += np.sum(
+                    # k_aniso[icell][0] += np.sum(
+                    #     full_tensor[ifrac][0, :3]) / cell_size
+                    # k_aniso[icell][1] += np.sum(
+                    #     full_tensor[ifrac][1, :3]) / cell_size
+                    # k_aniso[icell][2] += np.sum(
+                    #     full_tensor[ifrac][2, :3]) / cell_size
+
+                    k_aniso_x += np.sum(
                         full_tensor[ifrac][0, :3]) / cell_size
-                    k_aniso[icell][1] += np.sum(
+                    k_aniso_y += np.sum(
                         full_tensor[ifrac][1, :3]) / cell_size
-                    k_aniso[icell][2] += np.sum(
+                    k_aniso_z += np.sum(
                         full_tensor[ifrac][2, :3]) / cell_size
+
+
                 else:  #discard off diagonal terms (default)
                     #fracture_trans is 0 indexed, fracture numbers are 1 indexed
-                    k_aniso[icell][0] += fracture_trans[ifrac][0] / cell_size
-                    k_aniso[icell][1] += fracture_trans[ifrac][1] / cell_size
-                    k_aniso[icell][2] += fracture_trans[ifrac][2] / cell_size
+                    # k_aniso[icell][0] += fracture_trans[ifrac][0] / cell_size
+                    # k_aniso[icell][1] += fracture_trans[ifrac][1] / cell_size
+                    # k_aniso[icell][2] += fracture_trans[ifrac][2] / cell_size
+
+                    k_aniso_x += fracture_trans[ifrac][0] / cell_size
+                    k_aniso_y += fracture_trans[ifrac][1] / cell_size
+                    k_aniso_z += fracture_trans[ifrac][2] / cell_size
+
+
 
             if correction_factor:
                 #correction factor Sweeney et al. 2019 from upscale.py
@@ -223,11 +278,19 @@ def mapdfn_perm_aniso(num_frac,
                 cf_y = sl * abs(theta2 - 45) + b
                 cf_z = sl * abs(theta3 - 45) + b
 
-                k_aniso[icell][0] *= cf_x
-                k_aniso[icell][1] *= cf_y
-                k_aniso[icell][2] *= cf_z
+                # k_aniso[icell][0] *= cf_x
+                # k_aniso[icell][1] *= cf_y
+                # k_aniso[icell][2] *= cf_z
+
+                k_aniso_x *= cf_x
+                k_aniso_y *= cf_y
+                k_aniso_z *= cf_z
 
             ########
+
+        k_aniso[icell][0] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_x)
+        k_aniso[icell][1] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_y)
+        k_aniso[icell][2] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_z)
 
     return k_aniso
 
@@ -280,12 +343,12 @@ def mapdfn_upscale(self, num_cells, cell_fracture_id, cell_size,
     # compute the porosities of the cells
     porosity = mapdfn_porosity(num_cells, cell_fracture_id, self.aperture,
                                cell_size, matrix_porosity)
-    transmissivity = self.aperture * self.perm
+    # transmissivity = self.aperture * self.perm
     # compute the perms
-    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, transmissivity,
+    k_iso = mapdfn_perm_iso(num_cells, cell_fracture_id, self.perm, self.aperture, porosity, 
                             cell_size, matrix_perm)
     k_aniso = mapdfn_perm_aniso(self.num_frac, num_cells, cell_fracture_id,
-                                self.normal_vectors, transmissivity, cell_size,
+                                self.normal_vectors, self.perm, self.aperture, porosity, cell_size,
                                 matrix_perm, lump_diag_terms,
                                 correction_factor)
     t1 = time.time()

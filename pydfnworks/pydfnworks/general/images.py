@@ -28,8 +28,7 @@ def failure(self):
 
     '''
 
-    #self.print_log(doh)
-
+    self.print_log(doh)
     return doh
 
 
@@ -57,6 +56,5 @@ def success(self):
           (_______) (_______)dwb
     '''
 
-    #self.print_log(oh_yeah)
-
+    self.print_log(oh_yeah)
     return oh_yeah

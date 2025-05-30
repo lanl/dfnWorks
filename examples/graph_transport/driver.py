@@ -47,7 +47,7 @@ DFN.add_fracture_family(shape="ell",
                         max_radius=20.0,
                         hy_variable='permeability',
                         hy_function='constant',
-                        hy_params={"mu": 2e-12})
+                        hy_params={"mu": 2e-8})
 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -61,7 +61,7 @@ DFN.add_fracture_family(shape="ell",
                         max_radius=20.0,
                         hy_variable='permeability',
                         hy_function='constant',
-                        hy_params={"mu": 3e-12})
+                        hy_params={"mu": 3e-10})
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()

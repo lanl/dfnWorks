@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "4 Decemeber 2024"
+date = "30 May 2025"
 
-version = "2.9.1"
+version = "2.9.3"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -16,10 +16,7 @@ license = 'GPL'
 
 authors = {
     'Hyman': ('Jeffrey Hyman', 'jhyman@lanl.gov'),
-    'Livingston': ('Daniel Livingston', 'livingston@lanl.gov'),
     'Gable': ('Carl Gable', 'gable@lanl.gov'),
-    'Karra': ('Satish Karra', 'satkarra@lanl.gov'),
-    'Makedonska': ('Nataliia Makedonska', 'nataliia@lanl.gov'),
     'Sweeney': ('Matthew Sweeney', 'sweeney2796@lanl.gov'),
     'Hinrichs': ('Erica Hinrichs', 'ehinrichs@lanl.gov')
 }
@@ -78,5 +75,5 @@ packages = [
 
 install_requires = [
     "numpy", "scipy", "h5py", "pyvtk", "fpdf", "pytz", "datetime",
-    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0"
+    "networkx>=2.4", "mplstereonet", "datetime", "matplotlib>3.0", "vtk", "pyvista", "shapely", "geopandas", "python-ternary", "setuptools", "seaborn", "mpmath"
 ]

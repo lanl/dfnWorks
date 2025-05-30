@@ -16,7 +16,7 @@ def valid(self, name, path, path_type):
 
         name : string
             Path to file or executable
-        
+
         path : string
             path to executable
 
@@ -61,16 +61,16 @@ def compile_dfn_exe(self,path):
             DFN Class
 
         directory : string
-        
+
         Path : string
-            path to dfnWorks executable 
+            path to dfnWorks executable
     Returns
     -------
         None
-    
+
     Notes
     -----
-        This function is only called if an executable is not found. 
+        This function is only called if an executable is not found.
 """
 
     self.print_log(f"Compiling {path}" )
@@ -82,8 +82,8 @@ def compile_dfn_exe(self,path):
 
 
 def print_paths(self):
-    """ Print enviromental variable paths to screen 
-    
+    """ Print enviromental variable paths to screen
+
     Parameters
     -------------
         self : object
@@ -111,16 +111,16 @@ def print_paths(self):
 
 def define_paths(self):
     """ Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
-    
+
     Parameters
     ----------
         self : object
             DFN Class
-    
+
     Returns
     -------
         None
-    
+
     Notes
     -----
         Environmental variables are set to executables
