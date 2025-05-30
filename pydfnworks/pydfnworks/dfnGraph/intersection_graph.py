@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import json
 import sys
 import time
 from itertools import combinations
@@ -8,7 +9,7 @@ from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area
 from pydfnworks.general.logging import local_print_log
 
 def boundary_index(bc_name):
-    """Map a boundary name to its index in intersection_list.dat."""
+    """Determine boundary index in intersections_list.dat from name."""
     bc_dict = {
         "top":    -1,
         "bottom": -2,
@@ -23,127 +24,91 @@ def boundary_index(bc_name):
         local_print_log(f"Error. Unknown boundary condition: {bc_name}", 'error')
         sys.exit(1)
 
-def parse_boundary_inputs(inputs):
-    """
-    Convert inflow/outflow inputs into a list of integer codes.
-    Accepts single int, numeric string, boundary name, or list/tuple thereof.
-    """
-    if not isinstance(inputs, (list, tuple)):
-        items = [inputs]
-    else:
-        items = list(inputs)
-    codes = []
-    for item in items:
-        if isinstance(item, str) and not item.isdigit():
-            codes.append(boundary_index(item))
-        else:
-            codes.append(int(item))
-    return codes
-
-def create_intersection_graph(inflow_codes, outflow_codes,
+def create_intersection_graph(inflow, outflow,
                               intersection_file="dfnGen_output/intersection_list.dat"):
-    """
-    1) Build full graph with all rows (positive & negative).
-    2) For any negative frac matching inflow/outflow, replace with 's'/'t'.
-    3) Remove nodes with negative frac not replaced.
-    4) Add 's' and 't' nodes and connect edges accordingly.
-    """
-    t_start = time.time()
-    local_print_log("--> Starting full-graph construction")
+    total_start = time.time()
+    local_print_log("--> Starting intersection graph construction")
 
-    # Parse inflow/outflow codes
-    inflow_list = parse_boundary_inputs(inflow_codes)
-    outflow_list = parse_boundary_inputs(outflow_codes)
-    local_print_log(f"--> Inflow codes: {inflow_list}, Outflow codes: {outflow_list}")
+    # 1) Load & filter intersections
+    load_start = time.time()
+    inflow_index = boundary_index(inflow)
+    outflow_index = boundary_index(outflow)
+    frac_intersections = np.genfromtxt(intersection_file, skip_header=1)
+    internal_int = np.where(frac_intersections[:, 1] > 0)
+    source_int   = np.where(frac_intersections[:, 1] == inflow_index)
+    target_int   = np.where(frac_intersections[:, 1] == outflow_index)
+    edges_to_keep = list(internal_int[0]) + list(source_int[0]) + list(target_int[0])
+    frac_intersections = frac_intersections[edges_to_keep, :]
+    load_end = time.time()
+    local_print_log(f"--> Loaded & filtered intersections in {load_end - load_start:.3f} s")
 
-    # Load all intersections
-    raw = np.genfromtxt(intersection_file, skip_header=1)
-    first = raw[:, 0].astype(int)
-    second = raw[:, 1].astype(int)
+    # 2) Build fracture → node map
+    map_start = time.time()
+    max_frac_index = int(max(frac_intersections[:, 0].max(),
+                              frac_intersections[:, 1].max()))
+    frac_list = [i for i in range(1, max_frac_index + 1)] + ['s', 't']
+    fracture_node_dict = dict(zip(frac_list, ([] for _ in frac_list)))
+    map_end = time.time()
+    local_print_log(f"--> Built fracture→node map in {map_end - map_start:.3f} s")
 
-    # Build graph with every row as a node
+    # 3) Add nodes and source/target
+    nodes_start = time.time()
     G = nx.Graph(representation="intersection")
-    max_frac = int(max(abs(first).max(), abs(second).max()))
-    frac_map = {i: [] for i in range(1, max_frac+1)}
+    G.add_node('s', frac=('s', 's'))
+    G.add_node('t', frac=('t', 't'))
 
-    for idx, row in enumerate(raw):
-        f1_orig, f2_orig = int(row[0]), int(row[1])
-        # replace negative codes if they match inflow/outflow
-        if f1_orig < 0 and f1_orig in inflow_list:
-            f1 = 's'
-        elif f1_orig < 0 and f1_orig in outflow_list:
-            f1 = 't'
-        else:
-            f1 = f1_orig
-        if f2_orig < 0 and f2_orig in inflow_list:
+    num_nodes = len(frac_intersections)
+    for i in range(num_nodes):
+        f1 = int(frac_intersections[i][0])
+        raw2 = frac_intersections[i][1]
+        if raw2 > 0:
+            f2 = int(raw2)
+        elif int(raw2) == inflow_index:
             f2 = 's'
-        elif f2_orig < 0 and f2_orig in outflow_list:
+        elif int(raw2) == outflow_index:
             f2 = 't'
         else:
-            f2 = f2_orig
+            continue
 
-        x, y, z, length = map(float, row[2:6])
-        G.add_node(idx, frac=(f1, f2), x=x, y=y, z=z, length=length)
+        G.add_node(i, frac=(f1, f2))
+        G.nodes[i]['x']      = float(frac_intersections[i][2])
+        G.nodes[i]['y']      = float(frac_intersections[i][3])
+        G.nodes[i]['z']      = float(frac_intersections[i][4])
+        G.nodes[i]['length'] = float(frac_intersections[i][5])
 
-        # register in frac_map only if positive integer fracture
-        if isinstance(f1, int) and f1 > 0:
-            frac_map[f1].append(idx)
-        if isinstance(f2, int) and f2 > 0:
-            frac_map[f2].append(idx)
-    t_nodes = time.time()
-    local_print_log(f"--> Added {len(G.nodes())} nodes (with replaced frac) in {t_nodes - t_start:.3f}s")
+        fracture_node_dict[f1].append(i)
+        fracture_node_dict[f2].append(i)
 
-    # Add internal edges along positive fractures
-    for frac, nodes in frac_map.items():
-        for u, v in combinations(nodes, 2):
+        if f2 == 's':
+            G.add_edge(i, 's', frac='s', length=0.0, perm=1, iperm=1)
+        if f2 == 't':
+            G.add_edge(i, 't', frac='t', length=0.0, perm=1, iperm=1)
+    nodes_end = time.time()
+    local_print_log(f"--> Added nodes and source/target edges in {nodes_end - nodes_start:.3f} s")
+
+    # 4) Add internal edges
+    edges_start = time.time()
+    for frac, nodes_on_frac in fracture_node_dict.items():
+        if frac in ('s', 't'):
+            continue
+        for u, v in combinations(set(nodes_on_frac), 2):
             dx = G.nodes[u]['x'] - G.nodes[v]['x']
             dy = G.nodes[u]['y'] - G.nodes[v]['y']
             dz = G.nodes[u]['z'] - G.nodes[v]['z']
-            dist = np.sqrt(dx*dx + dy*dy + dz*dz)
-            G.add_edge(u, v, frac=frac, length=dist)
-    t_edges = time.time()
-    local_print_log(f"--> Added internal edges in {t_edges - t_nodes:.3f}s")
+            distance = np.sqrt(dx*dx + dy*dy + dz*dz)
+            G.add_edge(u, v, frac=frac, length=distance)
+    edges_end = time.time()
+    local_print_log(f"--> Added internal edges in {edges_end - edges_start:.3f} s")
 
-    # Prune nodes with negative frac not replaced (still negative)
-    to_remove = []
-    for n, data in list(G.nodes(data=True)):
-        f1, f2 = data['frac']
-        if (isinstance(f1, int) and f1 < 0) or (isinstance(f2, int) and f2 < 0):
-            to_remove.append(n)
-    G.remove_nodes_from(to_remove)
-    t_prune = time.time()
-    local_print_log(f"--> Removed {len(to_remove)} nodes with unwanted negatives in {t_prune - t_edges:.3f}s")
-
-    # Add source and target nodes
-    G.add_node('s', frac=('s','s'))
-    G.add_node('t', frac=('t','t'))
-
-    # Connect edges to 's' and 't'
-    for n, data in G.nodes(data=True):
-        if n in ('s', 't'):
-            continue
-        f1, f2 = data['frac']
-        # connect if either frac matches inflow/outflow or is 's'/'t'
-        if f1 == 's' or f2 == 's' or (isinstance(f1, int) and f1 in inflow_list) or (isinstance(f2, int) and f2 in inflow_list):
-            G.add_edge(n, 's', frac='s', length=0.0, perm=1, iperm=1)
-        if f1 == 't' or f2 == 't' or (isinstance(f1, int) and f1 in outflow_list) or (isinstance(f2, int) and f2 in outflow_list):
-            G.add_edge(n, 't', frac='t', length=0.0, perm=1, iperm=1)
-    t_connect = time.time()
-    local_print_log(f"--> Connected source/target in {t_connect - t_prune:.3f}s")
-
-    # Final perm & area attributes
+    # 5) Apply permeability and area
+    perm_start = time.time()
     add_perm(G)
     add_area(G)
-    
-    # ————————————————————————————————————————————————
-    # Relabel internal nodes 1…N while keeping 's' and 't' as-is
-    internal = [n for n in G.nodes() if n not in ('s','t')]
-    # sort if you care about order (e.g. by original label or x‐coordinate)
-    # internal.sort(key=lambda n: (isinstance(n, int), n))
-    mapping = {old: new for new, old in enumerate(internal, start=1)}
-    # nodes not in mapping (i.e. 's' and 't') will remain unchanged
-    G = nx.relabel_nodes(G, mapping)
-    total = time.time() - t_start
-    local_print_log(f"--> Total create_intersection_graph time: {total:.3f}s")
+    perm_end = time.time()
+    local_print_log(f"--> Applied perm & area in {perm_end - perm_start:.3f} s")
 
+    # Total time
+    total_end = time.time()
+    local_print_log(f"--> Total graph construction time: {total_end - total_start:.3f} s")
+    local_print_log("--> Intersection Graph Construction Complete")
     return G

@@ -311,7 +311,8 @@ def dump_graph_flow_values(G,graph_flow_filename):
     
     """
 
-    local_print_log('Writting flow variables into h5df file: graph_flow.hdf5 - Starting ')
+    local_print_log(f'\n--> Writting flow variables into h5df file: {graph_flow_filename}')
+    local_print_log('--> Starting')
     num_edges = G.number_of_edges()
     velocity = np.zeros(num_edges)
     lengths = np.zeros_like(velocity)
@@ -329,7 +330,6 @@ def dump_graph_flow_values(G,graph_flow_filename):
         aperture[i] = d['b']
         volume[i] = area[i] * aperture[i]
 
-    local_print_log(f"--> Writting flow solution to filename: {graph_flow_filename}")
     with h5py.File(graph_flow_filename, "w") as f5file:
         h5dset = f5file.create_dataset('velocity', data=velocity)
         h5dset = f5file.create_dataset('length', data=lengths)
@@ -337,8 +337,7 @@ def dump_graph_flow_values(G,graph_flow_filename):
         h5dset = f5file.create_dataset('area', data=area)
         h5dset = f5file.create_dataset('aperture', data=aperture)
         h5dset = f5file.create_dataset('volume', data=volume)
-    f5file.close()
-    local_print_log('Writting flow variables into h5df file: graph_flow.hdf5 - Complete')
+    local_print_log('--> Complete')
 
 
 def run_graph_flow(self,
@@ -383,23 +382,24 @@ def run_graph_flow(self,
             Gtilde is a directed acyclic graph with vertex pressures, fluxes, velocities, volumetric flow rates, and travel times
 
     """
-    self.print_log("Graph Flow: Starting")
-    self.print_log(f"inflow: {inflow}")
-    self.print_log(f"outflow: {outflow}")
-    self.print_log(f"pressure in: {pressure_in}")
-    self.print_log(f"pressure out: {pressure_out}")
-    self.print_log(f"fluid viscosity: {fluid_viscosity}")
-    self.print_log(f"porosity: {phi}")
-
-
+    self.print_log("\n--> Graph Flow: Starting")
+    self.print_log(f"--> Inflow Boundary Name: {inflow}")
+    self.print_log(f"--> Outflow: {outflow}")
+    self.print_log(f"--> Inflow Pressure: {pressure_in} [Pa]")
+    self.print_log(f"--> Outflow Pressure: {pressure_out} [Pa]")
+    self.print_log(f"--> Fluid viscosity: {fluid_viscosity} [Pa*s]")
+    self.print_log(f"--> Fracture Porosity: {phi} [-]")
 
     if G == None:
+        self.print_log("\n--> No Graph provided, building one") 
         G = self.create_graph("intersection", inflow, outflow)
+    else:
+         self.print_log("\n--> Graph provided")        
 
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
 
     dump_graph_flow_values(Gtilde, graph_flow_name)
-    self.print_log("Graph Flow: Complete")
+    self.print_log("--> Graph Flow: Complete\n")
     return Gtilde
