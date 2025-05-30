@@ -1,9 +1,9 @@
 
 name = "pydfnWorks"
 
-date = "7 April 2025"
+date = "30 May 2025"
 
-version = "2.9.2"
+version = "2.9.3"
 
 description = "This python package serves as a wrapper for dfnWorks"
 
@@ -16,10 +16,7 @@ license = 'GPL'
 
 authors = {
     'Hyman': ('Jeffrey Hyman', 'jhyman@lanl.gov'),
-    'Livingston': ('Daniel Livingston', 'livingston@lanl.gov'),
     'Gable': ('Carl Gable', 'gable@lanl.gov'),
-    'Karra': ('Satish Karra', 'satkarra@lanl.gov'),
-    'Makedonska': ('Nataliia Makedonska', 'nataliia@lanl.gov'),
     'Sweeney': ('Matthew Sweeney', 'sweeney2796@lanl.gov'),
     'Hinrichs': ('Erica Hinrichs', 'ehinrichs@lanl.gov')
 }
