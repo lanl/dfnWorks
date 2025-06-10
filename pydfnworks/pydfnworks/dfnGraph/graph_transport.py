@@ -116,10 +116,10 @@ def get_initial_posititions(G, initial_positions, nparticles):
         flux = np.zeros(cnt)
         for i, u in enumerate(inlet_nodes):
             for v in G.successors(u):
-                flux[i] += G.edges[u, v]['flux']
-        flux /= flux.sum()
-        flux_cnts = [np.ceil(nparticles * i) for i in flux]
-        nparticles = int(sum(flux_cnts))
+                vol_flow_rate[i] += G.edges[u, v]['vol_flow_rate']
+        vol_flow_rate /= vol_flow_rate.sum()
+        vol_flow_rate_cnts = [np.ceil(nparticles * i) for i in vol_flow_rate]
+        nparticles = int(sum(vol_flow_rate_cnts))
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
