@@ -110,50 +110,49 @@ def get_initial_positions(G, initial_positions, nparticles):
         local_print_log(f"Error. Unknown initial_positions input '{initial_positions}'. Options are 'uniform' or 'flux'.", 'error')
 
     return ip, nparticles
-    
+
+
 def create_neighbor_list(G):
-    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
+    """Create a dictionary of downstream neighbors and selection probabilities for each node.
 
     Parameters
     ----------
-        G: NetworkX graph 
-            Directed Graph obtained from output of graph_flow
+    G : networkx.DiGraph
+        Directed graph from the output of graph_flow.
 
     Returns
     -------
-        dict : nested dictionary.
-
-    Notes
-    -----
-        dict[n]['child'] is a list of vertices downstream to vertex n
-        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+    dict
+        Dictionary mapping each node to its downstream children and selection probabilities.
+        Format: {n: {'child': [...], 'prob': [...]}, ...}
     """
-
     nbrs_dict = {}
 
-    for u in nx.nodes(G):
-
-        if G.nodes[u]['outletflag']:
+    for u, data in G.nodes(data=True):
+        if data.get('outletflag', False):
             continue
 
-        node_list = []
-        prob_list = []
-        nbrs_dict[u] = {}
+        successors = list(G.successors(u))
+        if not successors:
+            nbrs_dict[u] = {'child': None, 'prob': None}
+            continue
 
-        for v in G.successors(u):
-            node_list.append(v)
-            prob_list.append(G.edges[u, v]['vol_flow_rate'])
+        flow_rates = [G.edges[u, v].get('vol_flow_rate', 0) for v in successors]
+        total_flow = sum(flow_rates)
 
-        if node_list:
-            nbrs_dict[u]['child'] = node_list
-            nbrs_dict[u]['prob'] = np.asarray(prob_list) / sum(prob_list)
+        # Normalize probabilities only if total_flow is non-zero
+        if total_flow > 0:
+            probs = np.array(flow_rates) / total_flow
         else:
-            nbrs_dict[u]['child'] = None
-            nbrs_dict[u]['prob'] = None
+            probs = np.full(len(flow_rates), 1 / len(flow_rates))  # fallback uniform
+
+        nbrs_dict[u] = {
+            'child': successors,
+            'prob': probs
+        }
 
     return nbrs_dict
-
-
+     
 def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
     """ Check that the provided tdrw values are physiscal
 
