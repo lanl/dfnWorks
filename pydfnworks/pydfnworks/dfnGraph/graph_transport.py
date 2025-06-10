@@ -132,7 +132,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
         for i in range(nparticles):
             ip[i] = inlet_nodes[inflow_idx]
             inflow_cnt += 1
-            if inflow_cnt >= flux_cnts[inflow_idx]:
+            if inflow_cnt >= vol_flow_rate_cnts[inflow_idx]:
                 inflow_idx += 1
                 inflow_cnt = 0
         np.savetxt("inflow_vol_flow_rates.dat", vol_flow_rate)
