@@ -64,86 +64,53 @@ def track_particle(data, verbose=False):
         )
     return particle
 
+def get_initial_positions(G, initial_positions, nparticles):
+    """Distributes initial particle positions on inlet nodes.
 
-def get_initial_posititions(G, initial_positions, nparticles):
-    """ Distributes initial particle positions 
+    Parameters
+    ----------
+    G : NetworkX graph
+        The graph structure.
+    initial_positions : str
+        Either 'uniform' or 'flux'.
+    nparticles : int
+        Number of particles to distribute.
 
-        Parameters
-        ----------
-                
-            G : NetworkX graph 
-                obtained from graph_flow
-
-            initial_positions : str
-                distribution of initial conditions. options are uniform and flux (flux-weighted)
-
-            nparticles : int
-                requested number of particles
-
-        Returns
-        -------
-            ip : numpy array
-                array nparticles long. Each element is the initial position for each particle
-
-        """
-
-    inlet_nodes = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
+    Returns
+    -------
+    ip : np.ndarray
+        Array of initial particle node indices.
+    nparticles : int
+        Possibly adjusted particle count (in 'flux' mode).
+    """
+    inlet_nodes = [v for v in G.nodes if G.nodes[v].get('inletflag')]
     cnt = len(inlet_nodes)
-    local_print_log(f"--> There are {cnt} inlet nodes")
-    if cnt == 0:
-        error = "Error. There are no nodes in the inlet.\nExiting"
-        local_print_log(error, 'error')
 
-    # Uniform Distribution for particles
+    if cnt == 0:
+        local_print_log("Error. There are no nodes in the inlet.\nExiting", 'error')
+
     if initial_positions == "uniform":
         local_print_log("--> Using uniform initial positions.")
-        ip = np.zeros(nparticles).astype(int)
-        n = int(np.ceil(nparticles / cnt))
-        local_print_log(f"--> {n} particles will be placed at every inflow node.\n")
-        ## this could be cleaned up using clever indexing
-        inflow_idx = 0
-        inflow_cnt = 0
-        for i in range(nparticles):
-            ip[i] = inlet_nodes[inflow_idx]
-            inflow_cnt += 1
-            if inflow_cnt >= n:
-                inflow_idx += 1
-                inflow_cnt = 0
+        repeats = int(np.ceil(nparticles / cnt))
+        ip = np.tile(inlet_nodes, repeats)[:nparticles]
 
-    ## flux weighted initial positions for particles
     elif initial_positions == "flux":
-        local_print_log("--> Using flux-weighted initial positions.\n")
-        vol_flow_rate = np.zeros(cnt)
-        for i, u in enumerate(inlet_nodes):
-            for v in G.successors(u):
-                vol_flow_rate[i] += G.edges[u, v]['vol_flow_rate']
-
+        local_print_log("--> Using flux-weighted initial positions.")
+        vol_flow_rate = np.array([
+            sum(G.edges[u, v]['vol_flow_rate'] for v in G.successors(u))
+            for u in inlet_nodes
+        ])
         vol_flow_rate /= vol_flow_rate.sum()
-        vol_flow_rate_cnts_ceil = [np.ceil(nparticles * i) for i in vol_flow_rate]
-        vol_flow_rate_cnts = [np.floor(nparticles * i) for i in vol_flow_rate]
-        nparticles = int(sum(vol_flow_rate_cnts))
-        nparticles_ceil = int(sum(vol_flow_rate_cnts_ceil))
-        print(f"particle compare: {nparticles}\t{nparticles_ceil}\n")
-        ip = np.zeros(nparticles).astype(int)
-        ## Populate ip with Flux Cnts
-        ## this could be cleaned up using clever indexing
-        inflow_idx = 0
-        inflow_cnt = 0
-        for i in range(nparticles):
-            ip[i] = inlet_nodes[inflow_idx]
-            inflow_cnt += 1
-            if inflow_cnt >= vol_flow_rate_cnts[inflow_idx]:
-                inflow_idx += 1
-                inflow_cnt = 0
+        counts = np.floor(nparticles * vol_flow_rate).astype(int)
+        ip = np.repeat(inlet_nodes, counts)
+        nparticles = len(ip)
         np.savetxt("inflow_vol_flow_rates.dat", vol_flow_rate)
-    # Throw error if unknown initial position is provided
+
     else:
-        error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
-        local_print_log(error, 'error')
+        local_print_log(f"Error. Unknown initial_positions input '{initial_positions}'. Options are 'uniform' or 'flux'.", 'error')
 
     return ip, nparticles
-
-
+    
 def create_neighbor_list(G):
     """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
 
@@ -345,7 +312,7 @@ def run_graph_transport(self,
     nbrs_dict = create_neighbor_list(G)
 
     self.print_log("--> Getting initial Conditions")
-    ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
+    ip, nparticles = get_initial_positions(G, initial_positions, nparticles)
 
     self.print_log(f"--> Starting particle tracking for {nparticles} particles")
 
