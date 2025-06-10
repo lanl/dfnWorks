@@ -113,13 +113,17 @@ def get_initial_posititions(G, initial_positions, nparticles):
     ## flux weighted initial positions for particles
     elif initial_positions == "flux":
         local_print_log("--> Using flux-weighted initial positions.\n")
-        flux = np.zeros(cnt)
+        vol_flow_rate = np.zeros(cnt)
         for i, u in enumerate(inlet_nodes):
             for v in G.successors(u):
                 vol_flow_rate[i] += G.edges[u, v]['vol_flow_rate']
+
         vol_flow_rate /= vol_flow_rate.sum()
-        vol_flow_rate_cnts = [np.ceil(nparticles * i) for i in vol_flow_rate]
+        vol_flow_rate_cnts_ceil = [np.ceil(nparticles * i) for i in vol_flow_rate]
+        vol_flow_rate_cnts = [np.floor(nparticles * i) for i in vol_flow_rate]
         nparticles = int(sum(vol_flow_rate_cnts))
+        nparticles_ceil = int(sum(vol_flow_rate_cnts_ceil))
+        print(f"particle compare: {nparticles}\t{nparticles_ceil}\n")
         ip = np.zeros(nparticles).astype(int)
         ## Populate ip with Flux Cnts
         ## this could be cleaned up using clever indexing
@@ -131,7 +135,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
             if inflow_cnt >= flux_cnts[inflow_idx]:
                 inflow_idx += 1
                 inflow_cnt = 0
-
+        np.savetxt("inflow_vol_flow_rates.dat", vol_flow_rate)
     # Throw error if unknown initial position is provided
     else:
         error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
