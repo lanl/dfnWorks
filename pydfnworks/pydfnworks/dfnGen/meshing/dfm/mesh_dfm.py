@@ -12,6 +12,7 @@ import glob
 
 # pydfnworks Modules
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
+from pydfnworks.general.logging import local_print_log 
 
 def setup_mesh_dfm_directory(jobname, dirname):
     """ Setup working directory for meshing the DFM. 
@@ -20,6 +21,7 @@ def setup_mesh_dfm_directory(jobname, dirname):
     ----------------
         jobname : string
             path to DFN working directory 
+        
         dirname : string 
             name of working directory
 
@@ -41,7 +43,7 @@ def setup_mesh_dfm_directory(jobname, dirname):
         os.chdir(path)
 
 
-    print(f"--> Working directory is now {os.getcwd()}")
+    local_print_log(f"--> Working directory is now {os.getcwd()}")
     # Make symbolic links to required files
     try:
         os.symlink(jobname + os.sep + "full_mesh.inp", "full_mesh.inp")
@@ -50,7 +52,39 @@ def setup_mesh_dfm_directory(jobname, dirname):
         sys.stderr.write(error)
         sys.exit(1)
 
-    print("--> Setting up DFM meshing directory complete")
+    local_print_log("--> Setting up DFM meshing directory complete")
+
+
+
+def translate_mesh(x1, x2):
+    """
+    Moves reduced_mesh.inp from center at x1 to x2 
+
+    Parameters
+    ---------------
+        x1 : list
+            floats x-0, y-1, z-2 - current center
+
+        x2 : list
+            floats x-0, y-1, z-2 - requisted center 
+    Returns
+    --------------
+        None 
+
+    """
+
+    lagrit_script = f"""
+read / avs / full_mesh.inp / MODFN
+trans / 1 0 0 / {x1[0]} {x1[1]} {x1[2]} / {x2[0]} {x2[1]} {x2[2]}
+cmo / printatt / MODFN / -xyz- / minmax
+dump / full_mesh.inp / MODFN
+finish
+"""
+    with open('translate_mesh.lgi', 'w') as fp:
+        fp.write(lagrit_script)
+        fp.flush()
+    mh.run_lagrit_script("translate_mesh.lgi")
+
 
 def create_domain(domain, h):
     """ Gather domain information. 
@@ -59,6 +93,7 @@ def create_domain(domain, h):
     ----------
         domain : dict
             Domain size dictionary from DFN object 
+        
         h : float 
             Meshing length scale from DFN object 
 
@@ -66,6 +101,7 @@ def create_domain(domain, h):
     -------
         num_points : int 
             Number of points on side of the domain 
+        
         box_domain : dict
             dictionary of domain min/max for x,y,z
 
@@ -114,11 +150,18 @@ def dfm_driver(num_points_x, num_points_y, num_points_z , num_fracs, h, box_doma
     Parameters
     ----------
         num_points : int 
-            Number of points on side of the domain 
+            Number of points on side of the domain for x,y,z
+        
         num_fracs : int 
             Number of Fractures in the DFN
+        
         h : float
             meshing length scale 
+
+        box_domain : dict
+            dictionary of domain min/max for x,y,z
+
+        psets : bool
 
     Returns
     -------
@@ -562,7 +605,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
+    local_print_log("Creating dfm_mesh_fracture_driver.lgi file: Complete\n")
 
 def dfm_box(box_domain):    
     """ This function creates the dfm_box_dimensions.mlgi lagrit script.
@@ -598,7 +641,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_box_dimensions.mlgi file: Complete\n")
+    local_print_log("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
 def dfm_build():
     """ Create the dfm_build_background_mesh.mlgi lagrit script.
@@ -630,7 +673,7 @@ finish
     with open('dfm_build_background_mesh.mlgi', 'w') as fp: 
         fp.write(lagrit_script)
         fp.flush()
-    print("Creating dfm_box_dimensions.mlgi file: Complete\n")
+    local_print_log("Creating dfm_box_dimensions.mlgi file: Complete\n")
 
 def dfm_fracture_facets(num_frac):
     """ This function creates the dfm_extract_fracture_facets.mlgi lagrit script.
@@ -692,7 +735,7 @@ finish
     with open('dfm_extract_fracture_facets.mlgi', 'w') as fp:
         fp.write(lagrit_script)
         fp.flush()
-    print("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
+    local_print_log("Creating dfm_extract_fracture_facets.mlgi file: Complete\n")
 
 def dfm_facets():
     """ This function creates the dfm_extract_facets.mlgi lagrit script.
@@ -770,12 +813,22 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_extract_facets.mlgi file: Complete\n")
+    local_print_log("Creating dfm_extract_facets.mlgi file: Complete\n")
 
 
 def dfm_diagnostics(h):
-    """
-    
+    """ Run diagnostics
+    Parameters
+    ----------
+        None 
+
+    Returns
+    -------
+        None 
+
+    Notes
+    -----
+        None 
     """
     eps_offset = 0.1*h
     lagrit_script = f"""
@@ -870,7 +923,7 @@ finish
         fp.write(lagrit_script)
         fp.flush()
 
-    print("Creating dfm_diagonstics.mlgi file: Complete\n")
+    local_print_log("Creating dfm_diagonstics.mlgi file: Complete\n")
 
 
 def create_dfm():
@@ -912,7 +965,7 @@ def cleanup_mesh_dfm_directory():
         None
 
     """
-    print("--> Cleaning up working directory")
+    local_print_log("--> Cleaning up working directory")
     # clean up LaGrit Scripts
     lagrit_script_dir = "dfm_lagrit_files" 
     try:
@@ -956,7 +1009,7 @@ def cleanup_mesh_dfm_directory():
         os.remove(filename)
 
 
-    print("--> Cleaning up working directory: Complete")
+    local_print_log("--> Cleaning up working directory: Complete")
 
 
 def check_dfm_mesh(allowed_percentage):
@@ -977,10 +1030,10 @@ def check_dfm_mesh(allowed_percentage):
     
     """
 
-    print("--> Checking for missing elements")
+    local_print_log("--> Checking for missing elements")
     if os.path.isfile('missed_cells_full_mesh.inp'):
-        print("--> Missing elements have been found.")
-        print(f"--> Missing elements are in the file 'missed_cells_full_mesh.inp' if you want to see them.")
+        local_print_log("--> Missing elements have been found.")
+        local_print_log(f"--> Missing elements are in the file 'missed_cells_full_mesh.inp' if you want to see them.")
         # get number of missed elements in the 
         with open('missed_cells_full_mesh.inp', 'r') as fp:
             line = fp.readline().split()
@@ -992,31 +1045,38 @@ def check_dfm_mesh(allowed_percentage):
             total_num_elems = int(line[1])
         # Compute percentage and compare
         missing_percent = 100*(missing_num_elems/total_num_elems)
-        print(f"--> Out of {total_num_elems} elements in the DFN there are {missing_num_elems} missing from the DFM.")
-        print(f"--> That's {missing_percent:0.2f} percent of the mesh.")
+        local_print_log(f"--> Out of {total_num_elems} elements in the DFN there are {missing_num_elems} missing from the DFM.")
+        local_print_log(f"--> That's {missing_percent:0.2f} percent of the mesh.")
 
         if  missing_percent > allowed_percentage:
             error = f"*** Error. Missing percent of mesh is larger than tolerance {allowed_percentage} ***\n*** Exitting ***\n "
             sys.stderr.write(error)
             sys.exit(1)
         else:
-            print("--> Doesn't seem to bad. Keep Calm and Carry on.")
+            local_print_log("--> Doesn't seem to bad. Keep Calm and Carry on.")
 
     # if the file 'missed_cells_full_mesh.inp' does not exists, this means no elements were missed.  
     else:
-        print("--> No missinng elements found. ")
+        local_print_log("--> No missinng elements found. ")
 
 def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, cleanup = True):
     """" Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))
 
     Parameters
     ------------------
+        self : DFN object
+
         dirname : string
             name of working directory. Default : dfm_mesh
+        
         allowed_percentage : float
             Percentage of the mesh allowed to be missing and still continue
+
+        psets : bool
+            Default is False
+        
         cleanup : bool
-            Clean up working directory. If true dep files are moved into subdirectories
+            Clean up working directory. If true dep files are moved into subdirectories. Default is True
 
     Returns
     ---------------
@@ -1028,12 +1088,14 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
          
     """
 
-    print('=' * 80)
-    print("Creating conforming DFM mesh using LaGriT : Starting")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Creating conforming DFM mesh using LaGriT : Starting")
+    self.print_log('=' * 80)
 
     setup_mesh_dfm_directory(self.jobname, dirname)
 
+    center = [self.params['domainCenter']['value'][0],self.params['domainCenter']['value'][1], self.params['domainCenter']['value'][2]] 
+    translate_mesh(center,[0,0,0])
     box_domain, num_points_x, num_points_y, num_points_z  = create_domain(self.domain, self.h)
     dfm_driver(num_points_x, num_points_y, num_points_z , self.num_frac, self.h, box_domain, psets)
     dfm_box(box_domain)    
@@ -1045,10 +1107,12 @@ def mesh_dfm(self, dirname = "dfm_mesh", allowed_percentage = 1, psets = False, 
 
     check_dfm_mesh(allowed_percentage)
 
+    translate_mesh([0,0,0], center)
+
     if cleanup:
         cleanup_mesh_dfm_directory()
 
-    print('=' * 80)
-    print("Creating conforming DFM mesh using LaGriT : Complete")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("Creating conforming DFM mesh using LaGriT : Complete")
+    self.print_log('=' * 80)
 

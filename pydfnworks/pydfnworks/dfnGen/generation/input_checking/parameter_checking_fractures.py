@@ -1,5 +1,7 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_distributions import *
+from pydfnworks.general.logging import local_print_log
+
 from numpy import pi
 
 
@@ -12,7 +14,7 @@ def check_aspect(params, prefix):
         params : dict
             parameter dictionary
         prefix : string
-        	either 'e' or 'r' for ellipse or rectangle
+            either 'e' or 'r' for ellipse or rectangle
 
     Returns
     ---------
@@ -160,10 +162,10 @@ def convert_angleOption_value(params):
     angle_option = params['angleOption']['value']
     if angle_option == 'radian':
         params['angleOption']['value'] = 0
-        print("Converting angleOption value from radian to 0 for dfnGen input")
+        local_print_log("Converting angleOption value from radian to 0 for dfnGen input")
     elif angle_option == 'degree':
         params['angleOption']['value'] = 1
-        print("Converting angleOption value from degree to 1 for dfnGen input")
+        local_print_log("Converting angleOption value from degree to 1 for dfnGen input")
     else:
         hf.print_error(
             f"Error. Unknown DFN.params['angleOption']['value']. provided: {angle_option}. Acceptable values are 'radian', 'degree'.\nExiting."
@@ -338,12 +340,12 @@ def check_fracture_params(params, shape):
 
     if shape == "ellipse":
         prefix = "e"
-        print(f"--> Checking Ellipse Family parameters")
+        local_print_log(f"--> Checking Ellipse Family parameters")
         check_enum_points(params)
 
     elif shape == "rectangle":
         prefix = "r"
-        print(f"--> Checking Rectangle Family parameters")
+        local_print_log(f"--> Checking Rectangle Family parameters")
 
     check_aspect(params, prefix)
     check_layers_fracture(params, prefix)

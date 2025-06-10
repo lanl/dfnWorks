@@ -1,7 +1,7 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from shutil import copy
 from numpy import zeros
-
+from pydfnworks.general.logging import local_print_log
 
 def check_stop_condition(params):
     """ Check the number of polygons if stopCondition is set to 1, else check the p32 target parameters.
@@ -141,19 +141,19 @@ def check_domain(params):
             hf.print_warning(
                 "--> Ignoring boundary faces. Keeping all clusters.")
     except:
-        print("Error while checking 'boundaryFaces' parameters.")
-        print(f"Values provided: {params['boundaryFaces']['value']}\n")
-        print(params['boundaryFaces']['description'])
+        local_print_log("Error while checking 'boundaryFaces' parameters.")
+        local_print_log(f"Values provided: {params['boundaryFaces']['value']}\n")
+        local_print_log(params['boundaryFaces']['description'])
         hf.print_error("")
-
 
 def check_rejects_per_fracture(rejectsPerFracture):
     """ Check that the value of the rejectsPerFracture is a positive integer. If a value of 0 is provided, it's changed to 1. 
 
     Parameters
     -------------
-        seed : dict
-            seed entry of params dictionary
+        rejectsPerFracture : int
+            If fracture is rejected, it will be re-translated to a new position this number of times.
+    
     Returns
     ---------
         None
@@ -262,11 +262,24 @@ def check_family_prob(params):
                 "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
             params['famProb']['value'] = [x / total for x in values]
-            print(f"--> New Values: {params['famProb']['value']}")
+            local_print_log(f"--> New Values: {params['famProb']['value']}")
 
 
 def check_no_dep_flags(params):
-    """ Check for dependency flags. Not sure this does anything."""
+    """ Check for dependency flags.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Not sure this does anything.
+    """
     no_dependancy_flags = [
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'ecpmOutput', 'tripleIntersections',
@@ -281,9 +294,20 @@ def check_no_dep_flags(params):
 
 
 def check_fram(params):
-    ''' Checks for consistency in FRAM on/off. 
-    
-    '''
+    """ Checks for consistency in FRAM on/off.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
+    """
 
     if params['disableFram']['value'] == None and params['framOn'][
             'value'] == None:
@@ -595,7 +619,20 @@ def check_polygon_boundary_general(params):
 
 
 def check_user_defined(params):
+    """ Check the user definined parameters.
 
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Exits program is inconsistencies are found.
+    """
     user_files = [("userEllipsesOnOff", "UserEll_Input_File_Path"),
                   ("userRectanglesOnOff", "UserRect_Input_File_Path"),
                   ("userRecByCoord", "RectByCoord_Input_File_Path"),
@@ -611,7 +648,21 @@ def check_user_defined(params):
 
 
 def check_general(params):
-    print(f"--> Checking General Parameters")
+    """ Check the general parameters.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Exits program is inconsistencies are found.
+    """
+    local_print_log(f"--> Checking General Parameters: Starting")
     check_stop_condition(params)
     check_domain(params)
     check_family_count(params)
@@ -629,3 +680,5 @@ def check_general(params):
         check_regions_general(params)
     if params['polygonBoundaryFlag']['value']:
         check_polygon_boundary_general(params)
+
+    local_print_log(f"--> Checking General Parameters: Complete")

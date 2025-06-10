@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import pickle
 
+from pydfnworks.general.logging import local_print_log
 
 def dump_trajectory(particle):
     """ Write particle trajectory to h5 file named trajectories/trajectory_{particle.particle_number+1} 
@@ -52,9 +53,9 @@ def dump_trajectory(particle):
         f5file.close()
 
     else:
+        
         error = "Error. Output directorty 'trajectories' not in current path.\nExiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
 
 def dump_trajectories(particles, num_cpu, single_file=True):
@@ -64,8 +65,10 @@ def dump_trajectories(particles, num_cpu, single_file=True):
     ---------------
         particle : list
             list of particle objects from graph_transport
+        
         num_cpu : int
             number of processors requested for io
+        
         single_file : boolean
             If true, all particles are written into a single h5 file. If false, each particle gets an individual file. 
 
@@ -78,7 +81,7 @@ def dump_trajectories(particles, num_cpu, single_file=True):
         None
     """
     if single_file:
-        print(
+        local_print_log(
             "--> Writting particle trajectories into file 'trajectories.hdf5'")
         with h5py.File(f"trajectories.hdf5", "a") as f5file:
             for particle in particles:
@@ -117,7 +120,7 @@ def dump_trajectories(particles, num_cpu, single_file=True):
         f5file.close()
 
     else:
-        print(
+        local_print_log(
             "--> Writting individual particle trajectories into directory 'trajectories'"
         )
 
@@ -130,14 +133,32 @@ def dump_trajectories(particles, num_cpu, single_file=True):
         pool.join()
         pool.terminate()
         elapsed = timeit.default_timer() - tic
-        print(
+        local_print_log(
             f"--> Writting Particle Trajectory information Complete. Time Required {elapsed:0.2e} seconds"
         )
 
 
 def gather_particle_info(particles):
     """ Gather particle information into numpy arrays.
-    
+        
+        Parameters
+        ----------
+            particles : list
+                list of particle objects
+
+        Returns
+        -------
+            adv_times, md_times, total_times : array of times
+            
+            length : array of lengths
+            
+            beta : array of beta particles
+            
+            stuck_particles : int 
+                Number of particles that do not exit the domain
+
+        Notes
+        ------
     
     """
     # Gather data
@@ -189,13 +210,12 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
                 Number of particles that do not exit the domain
 
     """
-    print("")
     adv_times, md_times, total_times, length, beta, stuck_cnt = gather_particle_info(
         particles)
 
     if format == 'ascii':
         filename = f"{partime_file}.dat"
-        print(f"--> Writing Data to files: {filename}")
+        local_print_log(f"--> Writing Data to files: {filename}")
         # Write Header
         header = "Advective time [s],Matrix Diffusion time [s],Total travel time [s],Pathline length [m],Beta (s m^-1)"
         np.savetxt(filename,
@@ -205,7 +225,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
 
         if frac_id_file:
             filename = f"{frac_id_file}.dat"
-            print(f"--> Writing fractures visted to file: {filename}")
+            local_print_log(f"--> Writing fractures visted to file: {filename}")
             with open(filename, "w") as fp_frac_id:
                 for particle in particles:
                     for d in particle.frac_seq[:-1]:
@@ -214,7 +234,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
 
     elif format == 'hdf5':
         filename = f"{partime_file}.hdf5"
-        print(f"--> Writing particle data to file: {filename}")
+        local_print_log(f"--> Writing particle data to file: {filename}")
         with h5py.File(filename, "w") as f5file:
             dataset_name = 'Advective time [s]'
             h5dset = f5file.create_dataset(dataset_name, data=adv_times)
@@ -233,7 +253,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
 
         if frac_id_file:
             filename = f"{frac_id_file}.hdf5"
-            print(f"--> Writing fractures visted to file: {filename}")
+            local_print_log(f"--> Writing fractures visted to file: {filename}")
             with h5py.File(filename, "a") as f5file:
                 for particle in particles:
                     traj_subgroup = f5file.create_group(
@@ -246,7 +266,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
                                                           dtype='float64')
     elif format == "pickle":
         filename = f"{partime_file}.p"
-        print(f"--> Writing Data to files: {filename}")
+        local_print_log(f"--> Writing Data to files: {filename}")
         data_dict = {
             'Advective time [s]': adv_times,
             'Matrix Diffusion time [s]': md_times,
@@ -258,7 +278,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
 
     elif format == "pandas":
         filename = f"{partime_file}_pandas.p"
-        print(f"--> Writing Data to files: {filename}")
+        local_print_log(f"--> Writing Data to files: {filename}")
         data_dict = {
             'Advective time [s]': adv_times,
             'Matrix Diffusion time [s]': md_times,
@@ -269,7 +289,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
         df = pd.from_dict(data_dict)
         df.to_pickle(filename)
 
-    print("--> Writing Data Complete\n")
+    local_print_log("--> Writing Data Complete")
     return stuck_cnt
 
 
@@ -304,12 +324,19 @@ def dump_control_planes(particles, control_planes, filename, format):
     num_particles = len(particles)
     adv_times = np.zeros((num_cp, num_particles))
     total_times = np.zeros((num_cp, num_particles))
+    pathline_length = np.zeros((num_cp, num_particles))
+    # x1 = np.zeros((num_cp, num_particles))
+    # x2 = np.zeros((num_cp, num_particles))
+    
     for i, particle in enumerate(particles):
         adv_times[:, i] = particle.cp_adv_time
         total_times[:, i] = particle.cp_tdrw_time
+        pathline_length[:, i] = particle.cp_pathline_length
+        # x1[:,i] = particle.cp_x1
+        # x2[:,i] = particle.cp_x2
 
     if format == "ascii":
-        print(
+        local_print_log(
             f'--> Writting travel times at control planes to {filename}_adv.dat & {filename}_total.dat'
         )
         header = f"{control_planes[0]},"
@@ -324,17 +351,21 @@ def dump_control_planes(particles, control_planes, filename, format):
                    total_times,
                    delimiter=",",
                    header=header)
+        np.savetxt(f"{filename}_pathline_length.dat",
+                   pathline_length,
+                   delimiter=",",
+                   header=header)
+
 
     elif format == "hdf5":
-        print(f'--> Writting travel times at control planes to {filename}.h5')
+        local_print_log(f'--> Writting travel times at control planes to {filename}.h5')
         with h5py.File(f"{filename}.hdf5", "w") as f5file:
             dataset_name = 'control_planes'
             h5dset = f5file.create_dataset(dataset_name, data=control_planes)
             for it in range(num_cp):
-                cp_subgroup = f5file.create_group(f'cp_{it}')
+                cp_subgroup = f5file.create_group(f'cp_x_{control_planes[it]}')
                 dataset_name = 'adv_times'
                 adv_cp = adv_times[it, :]
-
                 h5dset = cp_subgroup.create_dataset(dataset_name,
                                                     data=adv_cp,
                                                     dtype='float64')
@@ -344,5 +375,23 @@ def dump_control_planes(particles, control_planes, filename, format):
                 h5dset = cp_subgroup.create_dataset(dataset_name,
                                                     data=total_cp,
                                                     dtype='float64')
+
+                dataset_name = 'pathline_length'
+                pathline_cp = pathline_length[it, :]
+                h5dset = cp_subgroup.create_dataset(dataset_name,
+                                                    data=pathline_cp,
+                                                    dtype='float64')
+
+                # dataset_name = 'x1'
+                # x_cp = x1[it, :]
+                # h5dset = cp_subgroup.create_dataset(dataset_name,
+                #                                     data=x_cp,
+                #                                     dtype='float64')
+                # dataset_name = 'x2'
+                # x_cp = x2[it, :]
+                # h5dset = cp_subgroup.create_dataset(dataset_name,
+                #                                     data=x_cp,
+                #                                     dtype='float64')
+
 
         f5file.close()

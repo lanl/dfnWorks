@@ -5,31 +5,36 @@ from time import time
 import subprocess
 
 
-def dfn_trans(self):
-    """Primary driver for dfnTrans. 
+def dfn_trans(self, combine_avs = False):
+    """ Primary driver for dfnTrans. 
 
     Parameters
     ---------
         self : object
             DFN Class 
-   
+
+        combine_avs : bool
+            If True, then all avs files for particle trajectories are combined into a single avs file 
+
     Returns
     --------
         None
     """
-    print('=' * 80)
-    print("\ndfnTrans Starting\n")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("dfnTrans Starting")
+    self.print_log('=' * 80)
     tic = time()
     self.copy_dfn_trans_files()
     self.check_dfn_trans_run_files()
     self.run_dfn_trans()
     delta_time = time() - tic
+    if combine_avs:
+        self.combine_avs_trajectories() 
     self.dump_time('Process: dfnTrans', delta_time)
-    print('=' * 80)
-    print("\ndfnTrans Complete\n")
-    print("Time Required for dfnTrans: %0.2f Seconds\n" % delta_time)
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("dfnTrans Complete")
+    self.print_log("Time Required for dfnTrans: %0.2f Seconds\n" % delta_time)
+    self.print_log('=' * 80)
 
 
 def copy_dfn_trans_files(self):
@@ -45,19 +50,17 @@ def copy_dfn_trans_files(self):
         None
     """
 
-    print("Attempting to Copy %s\n" % self.dfnTrans_file)
+    self.print_log(f"Attempting to Copy {self.dfnTrans_file}")
     try:
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except OSError:
-        print("--> Problem copying %s file" % self.local_dfnTrans_file)
-        print("--> Trying to delete and recopy")
+        self.print_log(f"--> Problem copying {self.local_dfnTrans_fil} file")
+        self.print_log(f"--> Trying to delete and recopy")
         os.remove(self.local_dfnTrans_file)
         shutil.copy(self.dfnTrans_file, os.path.abspath(os.getcwd()))
     except:
-        print("--> ERROR: Problem copying %s file\n" % self.dfnTrans_file)
-        error = "Unable to replace. Exiting Program\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = f"--> Error: Problem copying {self.dfnTrans_file} file\n" "Unable to replace. Exiting Program\n"
+        self.print_log(error, 'critical')
 
 
 def run_dfn_trans(self):
@@ -73,14 +76,9 @@ def run_dfn_trans(self):
     None
     """
     tic = time()
-    failure = subprocess.call(os.environ['DFNTRANS_EXE'] + ' ' +
-                              self.local_dfnTrans_file,
-                              shell=True)
+    cmd = os.environ['DFNTRANS_EXE'] + ' ' + self.local_dfnTrans_file
+    self.call_executable(cmd)
     self.dump_time("Function: DFNTrans ", time() - tic)
-    if failure != 0:
-        error = "--> ERROR: dfnTrans did not complete\n"
-        sys.stderr.write(error)
-        sys.exit(1)
 
 
 def create_dfn_trans_links(self, path='../'):
@@ -90,6 +88,7 @@ def create_dfn_trans_links(self, path='../'):
     ---------
         self : object 
             DFN Class
+        
         path : string 
             Absolute path to primary directory. 
    
@@ -117,7 +116,7 @@ def create_dfn_trans_links(self, path='../'):
         try:
             os.symlink(path + f, f)
         except:
-            print("--> Error Creating link for %s\n" % f)
+            self.print_log(f"--> Error Creating link for {f}\n", "error")
 
 
 def check_dfn_trans_run_files(self):
@@ -137,13 +136,13 @@ def check_dfn_trans_run_files(self):
         None
     """
     cwd = os.getcwd()
-    print(
-        "\nChecking that all files required for dfnTrans are in the current directory"
+    self.print_log(
+        "Checking that all files required for dfnTrans are in the current directory"
     )
-    print("--> Current Working Directory: %s" % cwd)
-    print("--> dfnTrans is running from: %s" % self.local_dfnTrans_file)
+    self.print_log(f"--> Current Working Directory: {cwd}")
+    self.print_log(f"--> dfnTrans is running from: {self.local_dfnTrans_file}")
 
-    print("--> Checking DFNTrans Parameters")
+    self.print_log("--> Checking DFNTrans Parameters")
     params = {
         "param:": None,
         "poly:": None,
@@ -248,16 +247,22 @@ def check_dfn_trans_run_files(self):
     # Check if file required for the run are in the directory and are not empty
     for key in files:
         if params[key] is None:
-            error = f"ERROR!!!!!\nRequired file {key} was not provided.\nPlease check DFNTrans control file\nExiting Program\n"
-            sys.stderr.write(error)
+            error = f"Error\nRequired file {key} was not provided.\nPlease check DFNTrans control file\nExiting Program\n"
+            self.print_log(error, 'error')
             sys.exit(1)
         elif not os.path.isfile(params[key]):
-            error = "ERROR!!!!!\nRequired file %s is not in the current directory.\nPlease check required files\nExiting Program\n" % params[
+            error = "Error\nRequired file %s is not in the current directory.\nPlease check required files\nExiting Program\n" % params[
                 key]
+            self.print_log(error, 'error')
             sys.stderr.write(error)
             sys.exit(1)
+        elif os.stat(params[key]).st_size == 0:
+            error = f"File {params[key]} is empty. Exiting Program." 
+            self.print_log(error, 'error')
+            sys.stderr.write(error)
+            sys.exit(1)       
 
-    print(
+    self.print_log(
         "--> All files required for dfnTrans have been found in current directory\n\n"
     )
 
@@ -270,13 +275,13 @@ def check_dfn_trans_run_files(self):
             "streamline_routing:"
     ]:
         if params[required] == None:
-            error = "ERROR!!!\n%s not provided. Exiting\n\n" % (required)
-            sys.stderr.write(error)
+            error = f"Error\n{required} not provided. Exiting\n\n"
+            self.print_log(error, 'error')
             sys.exit(1)
 
     # Check Initial conditions, make sure only 1 Initial condition is selected and that
     # required parameters have been defined
-    print("--> Checking Initial Conditions")
+    self.print_log("--> Checking Initial Conditions")
     initial_conditions = [
         ("init_nf:", "init_partn:"), ("init_eqd:", "init_npart:"),
         ("init_fluxw:", "init_totalnumber:"), ("init_random:", "in_randpart:"),
@@ -294,58 +299,52 @@ def check_dfn_trans_run_files(self):
                 if params[i] == None:
                     error = "Initial condition %s selected but %s not provided\n" % (
                         ic[0], i)
-                    sys.stderr.write(error)
+                    self.print_log(error, 'error')
                     sys.exit(1)
     if len(ic_selected) > 1:
-        error = "ERROR!!! More than one initial condition defined\nExiting\n"
-        sys.stderr.write(error)
-        print("Selected Initial Conditions:\n:")
+        self.print_log("Selected Initial Conditions:\n:")
         for ic in ic_selected:
-            print(ic)
-        print()
-        sys.exit(1)
+            self.print_log(ic)
+
+        error = "Error. More than one initial condition defined\nExiting\n"
+        self.print_log(error, 'error')
     elif len(ic_selected) == 0:
-        error = "ERROR!!! No initial condition defined\nExiting\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = "Error. No initial condition defined\nExiting\n"
+        self.print_log(error, 'error')
 
     if params["ControlPlane:"] != None:
         for required in ["control_out:", "delta_Control:", "flowdir:"]:
             if params[required] == None:
-                error = "Parameter %s required for ControlPlane\n" % required
-                sys.stderr.write(error)
-                sys.exit(1)
+                error = f"Parameter {required} required for ControlPlane\n"
+                self.print_log(error, 'error')
 
     if params["tdrw:"] == "yes":
         if params["time_units:"] != "seconds":
-            error = "ERROR!!!You must use seconds for the time_units to run TDRW"
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = "Error. You must use seconds for the time_units to run TDRW"
+            self.print_log(error, 'error')
 
         for required in ["tdrw_porosity:", "tdrw_diffcoeff:"]:
             if params[required] == None:
-                error = "Parameter %s required for tdrw\n" % required
-                sys.stderr.write(error)
-                sys.exit(1)
+                error = f"Parameter {required} required for tdrw\n"
+                self.print_log(error, 'error')
 
     if params["aperture:"] == "yes":
         if params["aperture_type:"] == None:
             error = "Parameter aperture_type: required for aperture: yes\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error, 'error')
 
         else:
-            if not os.path.isfile(params["aperture_file:"]) or os.stat(
-                    params["aperture_file:"]).st_size == 0:
-                error = "aperture_file: %s not found or empty\n" % params[
-                    "aperture_file:"]
-                sys.stderr.write(error)
-                sys.exit(1)
+            if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
+                error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
+                self.print_log(error, 'error')
 
     else:
         if params["thickness:"] == None:
             error = "Parameter thickness: required for aperture: no:\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            self.print_log(error, 'error')
 
-    print("--> Checking Initial Conditions Complete")
+    self.print_log("--> Checking Initial Conditions Complete")
+
+    self.dfnTrans_params = params 
+    print(self.dfnTrans_params)
+    

@@ -1,5 +1,6 @@
 # func.py
 from pydfnworks.dfnGen.meshing.poisson_disc import poisson_class as pc
+from pydfnworks.general.logging import local_print_log, print_log
 
 from numpy import arange, array, ogrid, nonzero, zeros, append
 from random import random, shuffle
@@ -184,6 +185,7 @@ def dump_coordinates(c, output_file="points.xyz"):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         output_file : string
             coordinates will be printed to a file with this name
 
@@ -214,6 +216,7 @@ def plot_coordinates(c, output_file=""):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         output_file : string
             name of the file in which c.coordinated-plot will be saved.
             c.coordinates are plotted to screen, if empty.
@@ -253,6 +256,7 @@ def neighbor_cell(c, X):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             2D coordinates of a point inside the neighbor-grid
 
@@ -321,6 +325,7 @@ def new_candidate(c, X):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             first two entries: x,y-coordinates of a already accepted node.
             last entry: local exclusion_radius of that node.
@@ -354,6 +359,7 @@ def accept_candidate(c, candidate):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         candidate : ndarray(float)
             x,y-coordinates of a potential new node
 
@@ -423,6 +429,7 @@ def exclusion_radius(c, X):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             first two entries: x,y-coordinates of a node
 
@@ -470,8 +477,10 @@ def intersect_distance_sq(c, X, closeby_intersections):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             x,y-coordinates of a node
+        
         closeby_intersections : list(int)
             numbers of intersections, that pass X in a distance of 2*(H*(R+F)) or less
 
@@ -519,6 +528,7 @@ def in_domain(c, X):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             x,y-coordinates of a node
 
@@ -527,6 +537,7 @@ def in_domain(c, X):
         True/False : bool
             False if X lies within the polygon
             True otherwise
+    
     Notes
     -----
 
@@ -585,8 +596,10 @@ def neighboring_cells(c, center_cell, exclusion_radius):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         center_cell : ndarray(int)
             neighbor-cell index (x,y) of candidate
+        
         exclusion_radius : float
             local exclusion radius of candidate
 
@@ -627,6 +640,7 @@ def read_vertices(c, path_to_polygon):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         path_to_polygon : string
             file containing coordinates of vertices
 
@@ -696,6 +710,7 @@ def read_intersections(c, path_to_intersections):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         path_to_intersections : string
             file containing intersection points
 
@@ -804,9 +819,6 @@ def boundary_sampling(c):
     Notes
     -----
 
-
-
-
     """
 
     # Could be written more efficient, but will only be called a few times
@@ -875,6 +887,7 @@ def sampling_along_line(c, x, y):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         x,y : ndarray(float)
             coordinates of start and end point of the line to be sampled
 
@@ -925,6 +938,7 @@ def intersect_cell(c, X):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             x,y-coordinates of the point C
 
@@ -1005,8 +1019,10 @@ def intersect_mark_start_cells(c, center_cell, intersect_number):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         center_cell : ndarrya(int)
             index-pair of an intersection-cell
+        
         intersect_number : int
             contains the number of an intersection if the are enumerated starting at 1.
 
@@ -1042,6 +1058,7 @@ def intersect_direction(c, delta_x, delta_y):
     ---------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         delta_x/delta_y : float
             x/y distance between start and end point of an intersection
 
@@ -1082,11 +1099,14 @@ def intersect_mark_next_cells(c, direction, center_cell, intersect_number):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         direction : list(int)
             integer between 1 and 4 corresponding to directions
                 right,left,up,down (1,3,2,4)
+        
         center_cell : ndarray(int)
             index-pair of an intersection-cell
+        
         intersect_number : int
             number of an intersection if they were enumerated starting at 1
 
@@ -1147,11 +1167,14 @@ def intersect_crossing_cell_wall(c, direction, current_cell, delta_x, delta_y,
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         direction : list(int)
             integer between 1 and 4 corresponding to the
             directions right,left,up,down (1,3,2,4)
+        
         delta_x/delta_y : ndarray(float)
             x/y distance between start and end point of current intersection
+        
         y_intercept : float
             y-value of the y-axis interception of the intersection if extended
             to an infinite line.
@@ -1196,10 +1219,13 @@ def intersect_cell_sign(c, X, Y, dx, dy, yshift):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X/Y : ndarray(float)
             coordinates of two points
+        
         dx/dy : float
             x/y distance between start and end points of a line segment
+        
         yshift : float
             y-intercept of an infinite line in 2d or x-value of line
              is parallel to y axis
@@ -1242,6 +1268,7 @@ def occupancy_cell(c, X):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         X : ndarray(float)
             x,y-coordinats of a points
 
@@ -1252,7 +1279,6 @@ def occupancy_cell(c, X):
 
     Notes
     -----
-
 
     """
     x = floor((X[0] - c.x_min) * c.occupancy_grid_side_length_inv)
@@ -1309,7 +1335,7 @@ def occupancy_undersampled(c):
         try:
             boundary_cell = occupancy_cell(c, upper_boundary(c, points))
         except BaseException:
-            print("error", points)
+            local_print_log(f"error {points}", 'error')
         if boundary_cell[0] < c.no_horizontal_occupancy_cells:
             # for every x-value find the two boundary-cells and mark
             # everything above/below, i.w. outside of the domain as
@@ -1341,6 +1367,7 @@ def occupancy_mark(c, node):
     ------------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         node : ndarray(float)
             x,y coordinates of an accepted node
 
@@ -1380,6 +1407,7 @@ def resample(c, cell_x, cell_y):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         cell_x/cell_y : int
             x,y index of an empty occupancy cell
 
@@ -1410,6 +1438,7 @@ def lower_boundary(c, x):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         x : float
             x-value between c.x_min and c.x_max
 
@@ -1445,6 +1474,7 @@ def upper_boundary(c, x):
     -----------
         c : Poisson Disc Class
             contains input parameters and widely used variables
+        
         x : float
             x-value between c.x_min and c.x_max
 
@@ -1573,18 +1603,25 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
     ------------
         h : float
             Min distance of the system. defined in params.txt
+        
         coarse_factor: float
             Maximum resolution of the mesh. Given as a factor of h
+        
         slope : float
             slope of variable coarsening resolution. 
+        
         min_dist : float 
             Range of constant min-distance around an intersection (in units of h). 
+        
         max_dist : float 
             Range over which the min-distance between nodes increases (in units of h)
+        
         concurrent_samples : int
             number of new candidates sampled around an accepted node at a time.
+        
         grid_size : float
             side length of the occupancy grid is given by H/occupancy_factor
+        
         well_flag : bool
             boolean if wells are included in the meshing.
 
@@ -1603,27 +1640,27 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
         grid_size = occupancy_factor
 
     """
-    print("--> Writing Poisson Disc Parameters")
+    local_print_log("--> Writing Poisson Disc Parameters")
     # Check parameter ranges
     if 0 <= slope < 1:
         pass
     else:
-        print(f"--> Slope Parameter is outside correct range [0,1)")
-        print(f"--> Value provided: {slope}")
-        print("--> Setting to default: 0.1")
+        local_print_log(f"--> Slope Parameter is outside correct range [0,1)")
+        local_print_log(f"--> Value provided: {slope}")
+        local_print_log("--> Setting to default: 0.1")
         slope = 0.1
 
     if min_dist < 0:
-        print("--> Warning: Provided min_dist greater 0")
-        print(f"--> min_dist provided: {min_dist}")
-        print("--> Setting to default: 1")
+        local_print_log("--> Warning: Provided min_dist greater 0")
+        local_print_log(f"--> min_dist provided: {min_dist}")
+        local_print_log("--> Setting to default: 1")
         min_dist = 1
 
     if min_dist > max_dist:
-        print("--> Warning: Provided min_dist greater than max_dist")
-        print(f"--> min_dist provided: {min_dist}")
-        print(f"--> max_dist provided: {max_dist}")
-        print("Setting to default: min_dist=1, max_dist=40")
+        local_print_log("--> Warning: Provided min_dist greater than max_dist")
+        local_print_log(f"--> min_dist provided: {min_dist}")
+        local_print_log(f"--> max_dist provided: {max_dist}")
+        local_print_log("Setting to default: min_dist=1, max_dist=40")
         min_dist = 1
         max_dist = 40
 
@@ -1632,15 +1669,15 @@ def dump_poisson_params(h, coarse_factor, slope, min_dist, max_dist,
         max_dist = (coarse_factor - 1) / (2 * slope)
 
     ## Write information to screen about meshing parameters
-    print("--> Poisson Sampling Parameters:")
-    print(f"--> h: {h}")
-    print(f"--> coarse_factor: {coarse_factor}")
-    print(f"--> min_dist: {min_dist}")
-    print(f"--> max_dist: {max_dist}")
-    print(f"--> concurrent_samples: {concurrent_samples}")
-    print(f"--> grid_size: {grid_size}\n")
-    print(f"--> Lower bound on mesh size: {h/2:0.2e}")
-    print(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
+    local_print_log("--> Poisson Sampling Parameters:")
+    local_print_log(f"--> h: {h}")
+    local_print_log(f"--> coarse_factor: {coarse_factor}")
+    local_print_log(f"--> min_dist: {min_dist}")
+    local_print_log(f"--> max_dist: {max_dist}")
+    local_print_log(f"--> concurrent_samples: {concurrent_samples}")
+    local_print_log(f"--> grid_size: {grid_size}\n")
+    local_print_log(f"--> Lower bound on mesh size: {h/2:0.2e}")
+    local_print_log(f"--> Upper bound on mesh size: {2*slope*h*max_dist + h:0.2e}\n")
 
     params = {"h":h,"R":max_dist,"A":slope,"F":min_dist,\
         "concurrent_samples":concurrent_samples,"grid_size":grid_size,"well_flag": well_flag}
@@ -1672,7 +1709,7 @@ def single_fracture_poisson(fracture_id):
 
         """
 
-    print(f"--> Starting Poisson sampling for fracture number {fracture_id}")
+    local_print_log(f"--> Starting Poisson sampling for fracture number {fracture_id}")
     params = pickle.load(open("poisson_params.p", "rb"))
     c = pc.Poisson_Variables(fracture_id, f"polys/poly_{fracture_id}.inp",\
                            f"intersections/intersections_{fracture_id}.inp", \
@@ -1706,6 +1743,6 @@ def single_fracture_poisson(fracture_id):
     dump_coordinates(c, f'points/points_{fracture_id}.xyz')
 
     runtime = timeit.default_timer() - start
-    print(
+    local_print_log(
         f"--> Poisson sampling for fracture {fracture_id} took {runtime:0.2f} seconds"
     )

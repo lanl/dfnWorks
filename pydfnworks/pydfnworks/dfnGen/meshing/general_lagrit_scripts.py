@@ -13,7 +13,6 @@ def define_zones():
     -----
         None 
     """
-
     with open("allboundaries.zone", "w") as fall:
         #copy all but last 2 lines of boundary_top.zone in allboundaries.zone
         fzone = open("boundary_top.zone", "r")

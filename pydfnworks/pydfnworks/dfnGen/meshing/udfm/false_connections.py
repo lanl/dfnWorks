@@ -7,7 +7,7 @@
 
 import pickle
 import os
-
+from pydfnworks.general.logging import local_print_log, print_log
 
 def check_false_connections(self, path="../"):
     """ 
@@ -16,6 +16,7 @@ def check_false_connections(self, path="../"):
     ----------
         self : object
             DFN Class
+        
         fmc_filname : string
             name of the pickled dictionary of mesh and fracture intersections 
 
@@ -23,8 +24,10 @@ def check_false_connections(self, path="../"):
     -------
         num_false_connections : int
             number of false connections
-        num_cell_false : int
+        
+        num_false_cells : int
             number of Voronoi cells with false connections
+        
         false_connections : list
             list of tuples of false connections created by upscaling
 
@@ -35,14 +38,14 @@ def check_false_connections(self, path="../"):
 
 
     """
-    print("--> Checking for false connections in the upscaled mesh.")
+    local_print_log("--> Checking for false connections in the upscaled mesh.")
     # Create symbolic links to create fracture graph
     files = ["connectivity.dat", "left.dat", "right.dat", "fracture_info.dat"]
     for f in files:
         try:
             os.symlink(path + f, f)
         except:
-            print(f"--> Warning!!! Unable to make symbolic link to {path+f}")
+            local_print_log(f"--> Warning!!! Unable to make symbolic link to {path+f}")
             pass
 
     # create fracture graph, with arbitrary source/target
@@ -57,9 +60,9 @@ def check_false_connections(self, path="../"):
         H.remove_edge(u, v)
 
     # load the fracture_mesh_connection dictionary
-    print("--> Loading mesh intersection information")
+    local_print_log("--> Loading mesh intersection information")
     fmc = pickle.load(open("connections.p", "rb"))
-    print("--> Complete")
+    local_print_log("--> Complete")
     # Get cell ids for the cells that fractures intersect
     cells = [key for key in fmc.keys()]
 
@@ -80,22 +83,22 @@ def check_false_connections(self, path="../"):
                     cell_false[i] = True
 
     ## check for false connections
-    print("--> Checking for false connections")
+    local_print_log("--> Checking for false connections")
     false_connections = []
     for u, v, in H.edges():
         if not G.has_edge(u, v):
-            print(f"--> False connection between fractures {u} and {v}")
+            local_print_log(f"--> False connection between fractures {u} and {v}", 'warning')
             false_connections.append((u, v))
 
     if len(false_connections) > 0:
         num_false_connections = len(false_connections)
-        print(
-            f"--> There are {num_false_connections} false connections between fractures"
+        local_print_log(
+            f"--> There are {num_false_connections} false connections between fractures", 'warning'
         )
         num_false_cells = sum(cell_false)
-        print(f"--> These occur in {num_false_cells} Voronoi cells")
+        local_print_log(f"--> These occur in {num_false_cells} Voronoi cells", 'warning')
     else:
-        print(f"--> No false connections found")
+        local_print_log(f"--> No false connections found")
         num_false_cells = 0
         num_false_connections = 0
 

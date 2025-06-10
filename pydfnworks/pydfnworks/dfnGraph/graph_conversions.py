@@ -18,8 +18,10 @@ def intersection_to_fracture(G, inflow, outflow):
     ----------
         G: NetworkX Graph
             Intersection graph, where nodes correspond to fracture intersections.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
 
@@ -66,7 +68,7 @@ def intersection_to_fracture(G, inflow, outflow):
     return Gp
 
 def fracture_to_intersection(G, inflow, outflow):
-     """ Convert an intersection graph representation of a DFN
+    """ Convert an intersection graph representation of a DFN
     to a fracture graph representation by embedding into a larger
     bipartite graph representation, then projecting onto the
     intersection nodes.
@@ -76,8 +78,10 @@ def fracture_to_intersection(G, inflow, outflow):
     ----------
         G: NetworkX Graph
             Fracture graph, where nodes correspond to fractures.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
 
@@ -90,6 +94,7 @@ def fracture_to_intersection(G, inflow, outflow):
     -----
     See 'fracture_graph.py', 'intersection_graph.py', and 'bipartite_graph.py' for further details on graph representations.
     """
+    
     #Create copy of fracture graph with just nodes, no edges
     Gp = nx.create_empty_copy(G)
 
@@ -134,10 +139,13 @@ def convert_graph(G, inflow, outflow, output):
             Either a fracture graph, where nodes correspond to fractures,
             or an intersection graph, where nodes correspond to fracture
             intersections.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
+        
         output: str
             Output type of the graph conversion. 
             Accepted values include "fracture", "frac", or "f" to call

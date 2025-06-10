@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include "logFile.h"
 
 /*
     The Distributions class was created specifically for
@@ -91,6 +92,8 @@ double Distributions::getMaxDecimalForDouble() {
 
     Arg 1: Array of all stochastic fracture families */
 void Distributions::checkDistributionUserInput(std::vector<Shape> &shapeFamilies) {
+    std::string logString;
+    
     for (unsigned int i = 0; i < shapeFamilies.size(); i++) {
         switch (shapeFamilies[i].distributionType) {
             double input;
@@ -106,14 +109,12 @@ void Distributions::checkDistributionUserInput(std::vector<Shape> &shapeFamilies
             input = expDist->computeInput(shapeFamilies[i].expMin, shapeFamilies[i].expLambda);
             
             if (input >= 1) {
-                std::cout << "\n\nWARNING: The defined minimum value, " << shapeFamilies[i].expMin
-                          << ", for " << shapeType(shapeFamilies[i])
-                          << " family " << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
-                          << " will not be able to be produced by the exponential distribution due to precision issues.\n";
-                std::cout << "The minimum value is too large. The largest value the distribution can "
-                          << "produce with current parameters is "
-                          << expDist->getMaxValue(shapeFamilies[i].expLambda) << "\n";
-                std::cout << "Please adjust the minimum value, or the mean, and try again.\n";
+                logString = "WARNING: The defined minimum value, " + to_string(shapeFamilies[i].expMin) + ", for " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + " will not be able to be produced by the exponential distribution due to precision issues.\n";
+                logger.writeLogFile(INFO,  logString);
+                logString = "The minimum value is too large. The largest value the distribution can produce with current parameters is " + to_string(expDist->getMaxValue(shapeFamilies[i].expLambda));
+                logger.writeLogFile(INFO,  logString);
+                logString = "Please adjust the minimum value, or the mean, and try again.\n";
+                logger.writeLogFile(INFO,  logString);
                 exit(1);
             } else {
                 shapeFamilies[i].minDistInput = input;
@@ -123,24 +124,22 @@ void Distributions::checkDistributionUserInput(std::vector<Shape> &shapeFamilies
             input = expDist->computeInput(shapeFamilies[i].expMax, shapeFamilies[i].expLambda);
             
             if (input >= 1) {
-                std::cout << "\n\nWARNING: The defined maximum value, " << shapeFamilies[i].expMax << ", for "
-                          << shapeType(shapeFamilies[i]) << " family " << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
-                          << " will not be able to be produced by the exponential distribution due to precision issues.\n";
-                std::cout << "The largest value the distribution can produce with current parameters is "
-                          << expDist->getMaxValue(shapeFamilies[i].expLambda) << "\n";
-                std::cout << "Press Enter to automatically adjust this exponential maximum value to "
-                          << expDist->getMaxValue(shapeFamilies[i].expLambda) << " (q to Quit)\n";
+                logString = "WARNING: The defined maximum value, " + to_string(shapeFamilies[i].expMax) + ", for " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + " will not be able to be produced by the exponential distribution due to precision issues.\n";
+                logger.writeLogFile(INFO,  logString);
+                logString = "The largest value the distribution can produce with current parameters is " + to_string(expDist->getMaxValue(shapeFamilies[i].expLambda));
+                logger.writeLogFile(INFO,  logString);
+                logString = "Press Enter to automatically adjust this exponential maximum value to " + to_string(expDist->getMaxValue(shapeFamilies[i].expLambda)) + " (q to Quit)\n";
+                logger.writeLogFile(INFO,  logString);
                 // Prompt user to press enter to continue or q to quit
                 quitOrContinue();
                 double max  = expDist->getMaxValue(shapeFamilies[i].expLambda);
                 
                 //check that the max is not less or equal to the min
                 if (max <= shapeFamilies[i].expMin) {
-                    std::cout << "ERROR: The maximum exponetnial distribution radius possible for " << shapeType(shapeFamilies[i])
-                              << " family " << getFamilyNumber(i, shapeFamilies[i].shapeFamily)
-                              << " is less than or equal to the minimum exponential distribution radius.\n";
-                    std::cout << "Please adjust the exponential distribution parameters in " << shapeType(shapeFamilies[i])
-                              << " family " << getFamilyNumber(i, shapeFamilies[i].shapeFamily) << "\n";
+                    logString = "ERROR: The maximum exponetnial distribution radius possible for " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + " is less than or equal to the minimum exponential distribution radius.\n";
+                    logger.writeLogFile(ERROR,  logString);
+                    logString = "Please adjust the exponential distribution parameters in " + shapeType(shapeFamilies[i]) + " family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) ;
+                    logger.writeLogFile(ERROR,  logString);
                     exit(1);
                 }
             }
@@ -172,7 +171,8 @@ void Distributions::quitOrContinue() {
         }
         
         if (str[0] != 0) {
-            std::cout << "Invalid input.\n";
+            std::string logString = "Invalid input.\n";
+            logger.writeLogFile(ERROR,  logString);
         }
     } while (str[0] != 0);
 }

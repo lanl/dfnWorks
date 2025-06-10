@@ -78,6 +78,10 @@ def check_lognormal_dist(params, prefix, shape, cnt):
             parameter dictionary
         prefix : string
             either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
 
     Returns
     ---------
@@ -85,7 +89,7 @@ def check_lognormal_dist(params, prefix, shape, cnt):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        None
     """
     #print(f"checking log normal {shape}")
     for i in range(cnt):
@@ -124,6 +128,25 @@ def check_lognormal_dist(params, prefix, shape, cnt):
 def check_tpl_dist(params, prefix, shape, cnt):
     """
     Verifies parameters for truncated power law distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     #print(f"checking tpl {shape}")
     for i in range(cnt):
@@ -144,6 +167,25 @@ def check_tpl_dist(params, prefix, shape, cnt):
 def check_exponential_dist(params, prefix, shape, cnt):
     """
     Verifies parameters for exponential distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     #print(f"checking exp {shape}")
     for i in range(cnt):
@@ -165,7 +207,26 @@ def check_exponential_dist(params, prefix, shape, cnt):
 
 def check_constant_dist(params, prefix, shape, cnt):
     """
-    Verifies parameters for constant distribution of fractures
+    Verifies parameters for constant distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     # print(f"checking constant {shape}")
     for i in range(cnt):

@@ -14,6 +14,8 @@ import glob
 __author__ = 'Jeffrey Hyman'
 __email__ = 'jhyman@lanl.gov'
 
+from pydfnworks.general.logging import local_print_log, print_log
+
 def check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, darcy_vel_file):
     """
     Checks that inflow pressure is greater than outflow pressure and that path to file paths are valid. 
@@ -22,12 +24,16 @@ def check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, da
     ----------------
         direction : string
             Primary direction of flow (x, y, or z)
+        
         inflow_pressure : float 
             Inflow boundary pressure 
+        
         outflow_pressure : float 
             Outflow Boundary pressure
+        
         boundary_file : string
             Name of ex file for inflow boundary
+        
         darcy_vel_file : string
             name of darcy veloctiy file (pflotran output file)
 
@@ -39,26 +45,26 @@ def check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, da
     """
 
     if direction not in ['x', 'y', 'z']:
-        print(f"--> Error. Unknown direction provided {direction}. Acceptable values are 'x','y', and 'z'.\nExiting\n"
-        )
+        local_print_log(f"--> Error. Unknown direction provided {direction}. Acceptable values are 'x','y', and 'z'.\nExiting\n"
+        , 'error')
         return False     
     ## Check Pressure
     if inflow_pressure < outflow_pressure:
-        print(
+        local_print_log(
             "--> Error. Inflow pressure is less the outflow pressure. Cannot compute effective permeability.\n"
-        )
-        print(f"--> Inflow Pressure: {inflow_pressure}")
-        print(f"--> Outflow Pressure: {outflow_pressure}")
-        print("Exiting fucntion call.")
+        'warning')
+        local_print_log(f"--> Inflow Pressure: {inflow_pressure}")
+        local_print_log(f"--> Outflow Pressure: {outflow_pressure}")
+        local_print_log("Exiting fucntion call.",'error')
         return False
 
     if not os.path.exists(boundary_file):
-        print(f"--> Error. Boundary file: {boundary_file} not found. Please check path.\nExiting\n")
+        local_print_log(f"--> Error. Boundary file: {boundary_file} not found. Please check path.\nExiting\n")
         return False
     
 
     if not os.path.exists(darcy_vel_file):
-        print(f"--> Error. Darcy velocity file: {darcy_vel_file} not found. Please check path.\nExiting\n")
+        local_print_log(f"--> Error. Darcy velocity file: {darcy_vel_file} not found. Please check path.\nExiting\n")
         return False
     
     return True
@@ -71,6 +77,7 @@ def flow_rate(darcy_vel_file, boundary_file):
     ----------
         darcy_vel_file : string
             Name of concatenated Darcy velocity file
+        
         boundary_file : string
              ex file for the inflow boundary
 
@@ -78,6 +85,7 @@ def flow_rate(darcy_vel_file, boundary_file):
     -------
         mass_rate : float
             Mass flow rate across the inflow boundary
+        
         volume_rate : float
             Volumetric flow rate across the inflow boundary
 
@@ -137,16 +145,22 @@ def dump_effective_perm(local_jobname, mass_rate, volume_rate, domain,
     ----------
         local_jobname  : string
             Jobname
+        
         mass_rate : float
             Mass flow rate through inflow boundary
+        
         volume_rate : float
             Volumetric flow rate through inflow boundary
+        
         direction : string
             Primary direction of flow (x, y, or z)
+        
         domain : dict
             Dictionary of domain sizes in x, y, z
+        
         inflow_pressure : float
             Inflow boundary pressure
+        
         outflow_pressure : float
             Outflow boundary pressure
 
@@ -195,8 +209,8 @@ The Darcy flow rate over {domain['x']} x {domain['z']} m^2 area [m^3/m^2/y]: {sp
 The Darcy flow rate over {domain['x']} x {domain['y']} m^2 area [m^3/m^2/y]: {spery*q:0.5e}
 '''
     output_string += f'The effective permeability of the domain [m^2]: {q * mu / pgrad:0.5e}'
-    print("\n--> Effective Permeability Properties: ")
-    print(output_string)
+    local_print_log("\n--> Effective Permeability Properties: ")
+    local_print_log(output_string)
     with open(f'{local_jobname}_effective_perm.txt', "w") as fp:
         fp.write(output_string)
     
@@ -212,14 +226,19 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
     ----------
         self : object 
             DFN Class
+        
         inflow_pressure: float
             Pressure at the inflow boundary face. Units are Pascal
+        
         outflow_pressure: float
             Pressure at the outflow boundary face. Units are Pascal
+        
         boundary_file: string
             Name of inflow boundary file, e.g., pboundary_left.ex
+        
         direction: string
             Primary direction of flow, x, y, or z
+        
         darcy_vel_file : string
             Name of concatenated Darcy velocity file
     Returns
@@ -234,18 +253,18 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
 
 '''
 
-    print("--> Computing Effective Permeability of Block\n")
+    self.print_log("--> Computing Effective Permeability of Block\n")
     if not self.flow_solver == "PFLOTRAN":
-        print(
-            "Incorrect flow solver selected. Cannot compute effective permeability"
+        self.print_log(
+            "Incorrect flow solver selected. Cannot compute effective permeability", "warning"
         )
         return 0
 
-    print(f"--> Inflow boundary file name:\t\t{boundary_file}")
-    print(f"--> Darcy Velocity File:\t{darcy_vel_file}")
-    print(f"--> Inflow Pressure:\t\t{inflow_pressure:0.5e} Pa")
-    print(f"--> Outflow Pressure:\t\t{outflow_pressure:0.5e} Pa")
-    print(f"--> Primary Flow Direction:\t{direction}")
+    self.print_log(f"--> Inflow boundary file name:\t\t{boundary_file}")
+    self.print_log(f"--> Darcy Velocity File:\t{darcy_vel_file}")
+    self.print_log(f"--> Inflow Pressure:\t\t{inflow_pressure:0.5e} Pa")
+    self.print_log(f"--> Outflow Pressure:\t\t{outflow_pressure:0.5e} Pa")
+    self.print_log(f"--> Primary Flow Direction:\t{direction}")
 
     if not check_inputs(direction, inflow_pressure, outflow_pressure, boundary_file, darcy_vel_file):
         return 1
@@ -254,5 +273,5 @@ def effective_perm(self, inflow_pressure, outflow_pressure, boundary_file,
     keff = dump_effective_perm(self.local_jobname, mass_rate, volume_rate,
                                self.domain, direction, inflow_pressure,
                                outflow_pressure)
-    print("--> Complete\n\n")
+    self.print_log("--> Complete")
     self.keff = keff

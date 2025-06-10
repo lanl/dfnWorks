@@ -2,6 +2,7 @@ import numpy as np
 from scipy import special
 import mpmath as mp
 
+from pydfnworks.general.logging import local_print_log
 
 def get_fracture_segments(transfer_time,
                           fracture_length,
@@ -41,6 +42,7 @@ def get_fracture_segments(transfer_time,
     ---------------------
         segment_length : float
             Length of the segment of the edge to compute the matrix diffusion time
+        
         num_segments : int
             Number of segments of length segment_length on the original edge/fracture. We ake the ceiling of the value.  
 
@@ -71,8 +73,10 @@ def t_diff_unlimited(a, tf, xi):
     -------------------
         a : double
          Constant parameter describing retention in the matrix. a = (matrix_porosity*matrix_diffusion)/aperture_length
+        
         tf : double
             Advective travel time
+        
         xi : float
             value between [0,1)
    
@@ -99,12 +103,16 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
     ---------------
         t_min : float
             Minumum value of diffusion time [s]
+        
         t_max : float
             Maximum value of diffusion time [s]
+        
         frac_spacing : float
             Spacing between fractures [m]
+        
         matrix_diffusivity : float
             Matrix Diffusivity value  [m^2/s]
+        
         num_pts : int 
             Number of points in the logspace array between t_min and t_max
 
@@ -112,6 +120,7 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
     --------------
         times : np.array
             Array of diffusion times 
+        
         prob_cdf : np.array
             Array of cummulative probabilities. They only go to 0.5
 
@@ -121,7 +130,7 @@ def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
         Negative probabilities can sometimes appear due to numerical instabilities in our laplace inverse transform. These are removed in the section below marked CLEAN UP. We also ensure that our final distribution is monotonically increasing 
 
     """
-    print("--> Building transition probability cdf")
+    local_print_log("--> Building transition probability cdf")
 
     times = np.logspace(np.log10(t_min), np.log10(t_max), num=num_pts)
     prob_cdf = np.zeros(num_pts)
@@ -177,20 +186,28 @@ def transfer_probabilities(b_min,
     ------------
         b_min : float
             Minimum aperture in the network
+        
         b_max : float
             Maximum aperture in the network
+        
         tf_min : float 
             Minimum advective travel time in the network
+        
         tf_max : float 
             Maximum advective travel time in the network
+        
         matrix_porosity: float
             Matrix Porosity 
+        
         matrix_diffusivity : float
             Matrix Diffusivity value  [m^2/s]
+        
         frac_spacing : float
             Spacing between fractures [m]
+        
         eps : float 
             Default - 1e-16
+        
         num_pts : int 
             Number of points in the logspace array between t_min and t_max
  
@@ -215,7 +232,7 @@ def transfer_probabilities(b_min,
     t_diff_lb = t_diff_unlimited(a_min, tf_min, eps)
     # Below this value the inversse laplace transform does not convergence
     if t_diff_lb < 1e-12:
-        print(f"lb too low {t_diff_lb:0.2e} changing to 1e-12")
+        local_print_log(f"lb too low {t_diff_lb:0.2e} changing to 1e-12", 'warning')
         t_diff_lb = 1e-12
 
     # estimate upper bound
@@ -227,7 +244,7 @@ def transfer_probabilities(b_min,
     #     print(f"ub too high {t_diff_ub} changing to 1e30")
     #     t_diff_ub = 1e30
 
-    print(
+    local_print_log(
         f"--> Initial bounds for diffusion times. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}"
     )
 
@@ -254,7 +271,7 @@ def transfer_probabilities(b_min,
             t_diff_ub = times[i]
             break
 
-    print(
+    local_print_log(
         f"--> Final bounds for diffusion times. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}"
     )
 
@@ -351,6 +368,7 @@ def segment_matrix_diffusion(trans_prob, matrix_porosity, matrix_diffusivity,
                 t_diff_seg = np.interp(xi, trans_prob['cdf'],
                                        trans_prob['times'])
 
+
         t_diff += t_diff_seg
     return t_diff
 
@@ -367,10 +385,13 @@ def get_aperture_and_time_limits(G):
     -------------
         b_min : float
             Minimum value of aperture on the network
+        
         b_max : float
             Maximmum value of aperture on the network
+        
         t_min : float
             Minimum value of advective travel time on the network
+        
         t_max : float
             Maximmum value of advective travel time on the network
 
@@ -381,7 +402,7 @@ def get_aperture_and_time_limits(G):
 
     """
     # get b_min, b_max, t_min, t_max
-    print("--> Getting b and t limits")
+    local_print_log("--> Getting b and t limits")
     b_min = None
     b_max = None
     t_min = None
@@ -407,8 +428,8 @@ def get_aperture_and_time_limits(G):
         elif d['time'] > t_max:
             t_max = d['time']
 
-    print(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
-    print(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
+    local_print_log(f"--> b-min: {b_min:0.2e}, b-max: {b_max:0.2e}")
+    local_print_log(f"--> t-min: {t_min:0.2e}, t-max: {t_max:0.2e}")
     return b_min, b_max, t_min, t_max
 
 

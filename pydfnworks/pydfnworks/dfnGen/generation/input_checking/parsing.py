@@ -3,7 +3,7 @@
 ## ====================================================================== ##
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
-
+from pydfnworks.general.logging import local_print_log
 
 def check_for_mandatory_keys(params, found_keys, mandatory):
     """ Checks if all required keywords have been found. Exits program if not.
@@ -28,20 +28,20 @@ def check_for_mandatory_keys(params, found_keys, mandatory):
 
     """
 
-    print("--> Checking for mandatory keywords")
+    local_print_log("--> Checking for mandatory keywords")
     missing = []
     for key in mandatory:
         if key not in found_keys:
             missing.append(key)
 
     if missing != []:
-        print("Missing the following mandatory parameters:")
+        local_print_log("Missing the following mandatory parameters:")
         for key in missing:
-            print(f"{key}\n")
-            print(f"{params[key]['description']}")
-        hf.print_error("Missing parameters!")
+            local_print_log(f"{key}\n")
+            local_print_log(f"{params[key]['description']}")
+        hf.print_error("There are missing parameters.")
     else:
-        print("--> All Mandatory keywords have been found")
+        local_print_log("--> All Mandatory keywords have been found")
 
 
 def check_for_mandatory_values(params, mandatory):
@@ -51,8 +51,10 @@ def check_for_mandatory_values(params, mandatory):
     --------------
         params : dictionary
             input parameter dictionary
+        
         mandatory : list
             list of mandatory keys
+    
     Returns
     --------
         None
@@ -62,20 +64,20 @@ def check_for_mandatory_values(params, mandatory):
         None
     """
 
-    print("--> Checking for mandatory values")
+    local_print_log("--> Checking for mandatory values")
     missing = []
     for key in mandatory:
         if params[key]['value'] == None:
             missing.append(key)
 
     if missing != []:
-        print("Missing values for the following mandatory parameters:")
+        local_print_log("Missing values for the following mandatory parameters:")
         for key in missing:
-            print(f"{key}\n")
-            print(f"{params[key]['description']}")
+            local_print_log(f"{key}\n")
+            local_print_log(f"{params[key]['description']}")
         hf.print_error("")
 
-    print("--> All mandatory values have been found")
+    local_print_log("--> All mandatory values have been found")
 
 
 def strip_comments(line, input_iterator):
@@ -85,8 +87,10 @@ def strip_comments(line, input_iterator):
     --------------
         line : string
             line of text from input file
+        
         input_iterator : iter
             iterator of input file
+    
     Returns
     --------
         line : string
@@ -118,10 +122,13 @@ def process_line(line, found_keys, params):
     ------------
         line : string
             line of text from input file. 
+        
         found_keys : list
             list of keys that have been found in the input file so far
+        
         params : dictionary 
             input parameter dictionary
+    
     Returns 
     --------
         None
@@ -170,6 +177,7 @@ def find_val(line, key):
     -------------
         line : string
             line of text from input file
+        
         key : string
             current key word
     

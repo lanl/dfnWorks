@@ -2,50 +2,92 @@ import os
 import sys
 from datetime import datetime
 from time import time
+import subprocess
+import io
 import logging
+import select
+import subprocess
+import sys
+
+from pydfnworks.general.logging import local_print_log
+
+
+
+
+def call_executable(self, command):
+    ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.
+
+    Parameters
+    -----------------
+        self : object
+                DFN Class
+
+        command : string
+            command to execute
+
+    Returns
+    -------------
+        None
+
+    '''
+    print(f"Executing {command}")
+    subprocess.call(command, shell = True)
 
 
 def print_parameters(self):
-    print("=" * 80 + "\n")
-    print(f"--> Jobname: {self.jobname}")
-    print(f"--> Local Jobname: {self.local_jobname}")
+    ''' Prints parameters
 
-    print(f"--> Number of Processors Requested: {self.ncpu}")
+    Parameters
+    -----------------
+        self : object
+                DFN Class
+
+    Returns
+    -------------
+        None
+
+    '''
+    self.print_log("=" * 80 + "\n")
+    self.print_log(f"--> Jobname: {self.jobname}")
+    self.print_log(f"--> Local Jobname: {self.local_jobname}")
+
+    self.print_log(f"--> Number of Processors Requested: {self.ncpu}")
     if self.dfnGen_file:
-        print(f"--> dfnGen filename : {self.dfnGen_file}")
-        print(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
+        self.print_log(f"--> dfnGen filename : {self.dfnGen_file}")
+        self.print_log(f"--> Local dfnGen filename : {self.local_dfnGen_file}")
     if self.dfnFlow_file:
-        print(f"--> dfnFlow filename : {self.dfnFlow_file}")
-        print(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
+        self.print_log(f"--> dfnFlow filename : {self.dfnFlow_file}")
+        self.print_log(f"--> Local dfnFlow filename : {self.local_dfnFlow_file}")
     if self.dfnTrans_file:
-        print(f"--> dfnTrans filename : {self.dfnTrans_file}")
-        print(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
-    print("=" * 80 + "\n")
-
+        self.print_log(f"--> dfnTrans filename : {self.dfnTrans_file}")
+        self.print_log(f"--> Local dfnTrans filename : {self.local_dfnTrans_file}")
+    self.print_log("=" * 80 + "\n")
 
 def go_home(self):
     os.chdir(self.jobname)
-    print(f"--> Current directory is {os.getcwd()}")
+    self.print_log(f"--> Current directory is {os.getcwd()}")
 
 
 def dump_time(self, function_name, time):
-    '''Write run time for a funcion to the jobname_run_time.txt file 
+    '''Write run time for a funcion to the jobname_run_time.txt file
 
     Parameters
     ----------
         self : object
-            DFN Class 
+            DFN Class
+        
         function_name : string
             Name of function that was timed
+        
         time : float
             Run time of function in seconds
 
     Returns
     ----------
         None
-    
+
     Notes
-    --------- 
+    ---------
     While this function is working, the current formulation is not robust through the entire workflow
     '''
     run_time_file = self.jobname + os.sep + self.local_jobname + "_run_time.txt"
@@ -86,7 +128,7 @@ def print_run_time(self):
     if unit == 'minutes':
         total *= 60.0
 
-    print('Runs times for ', f[0])
+    self.print_log('Runs times for ', f[0])
     percent = []
     name = []
     for i in range(1, len(f)):
@@ -97,58 +139,16 @@ def print_run_time(self):
             time *= 60.0
         percent.append(100.0 * (time / total))
         name.append(f[i].split(':')[1])
-        print(f[i], '\t--> Percent if total %0.2f \n' % percent[i - 1])
+        self.print_log(f[i], '\t--> Percent if total %0.2f \n' % percent[i - 1])
 
     #print("Primary Function Percentages")
     #for i in range(1,len(f) - 1):
     #    if name[i-1] == ' dfnGen ' or name[i-1] == ' dfnFlow ' or name[i-1] == ' dfnTrans ':
     #        tmp = int(percent[i-1])/10
     #        print(name[i-1]+"\t"+"*"tmp)
-    print("\n")
+    self.print_log("\n")
 
 
-def print_log(self, statement):
-    '''print and log statments to a file 
-
-    Parameters
-    ---------
-    statement : the print/log statement
-
-    Returns
-    --------
-    None
-
-    Notes
-    -------
-    print statments in pydfnworks should generally be replaced with this print_log function. Use self.print_log if function is on DFN object
-    '''
-    logging.basicConfig(filename=os.getcwd() + os.sep + "dfnWorks.log",
-                        level=logging.DEBUG)
-    print(statement)
-    logging.info(statement)
-
-
-
-def local_print_log(statement):
-    '''print and log statments to a file
-
-    Parameters
-    ---------
-    statement : the print/log statement
-
-    Returns
-    --------
-    None
-
-    Notes
-    -------
-    print statments in pydfnworks should generally be replaced with this print_log function. Use local_print_log if function is not in refernce to DFN object
-    '''
-
-    logging.basicConfig(filename=os.getcwd() + os.sep + "dfnWorks.log",
-                        level=logging.DEBUG)
-    print(statement)
-    logging.info(statement)
 
 
 def to_pickle(self, filename=None):
@@ -156,6 +156,11 @@ def to_pickle(self, filename=None):
 
     Parameters
     --------------
+        self : object
+            DFN Class
+
+        filename : string
+            name of pickle DFN object, default is None
 
     Returns
     ------------
@@ -170,22 +175,22 @@ def to_pickle(self, filename=None):
         pickle_filename = f'{filename}.pkl'
     else:
         pickle_filename = f'{self.local_jobname}.pkl'
-    print(f'--> Pickling DFN object to {pickle_filename}')
+    self.print_log(f'--> Pickling DFN object to {pickle_filename}')
     if os.path.isfile(pickle_filename):
         response = input(
             f"--> Warning {pickle_filename} exists. Are you sure you want to overwrite it?\nResponse [y/n]: "
         )
         if response == 'yes' or response == 'y':
-            print('--> Overwritting file')
+            self.print_log('--> Overwritting file')
             pickle.dump(self, open(pickle_filename, "wb"))
-            print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+            self.print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
         elif response == 'no' or 'n':
-            print("--> Not writting file.")
+            self.print_log("--> Not writting file.")
         else:
-            print("Unknown Response. {response}.\nNot writting file.")
+            self.print_log("Unknown Response. {response}.\nNot writting file.")
     else:
         pickle.dump(self, open(pickle_filename, "wb"))
-        print(f'--> Pickling DFN object to {pickle_filename} : Complete')
+        self.print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
 
 
 def from_pickle(self, filename):
@@ -194,23 +199,24 @@ def from_pickle(self, filename):
     Parameters
     --------------
         self : DFN Object
+        
         filename : string
-            name of pickle DFN object 
+            name of pickle DFN object
 
     Returns
     ------------
-        DFN object 
+        DFN object
 
     Notes
     ------------
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle
-    print(f"--> Loading DFN from {filename}")
+    self.print_log(f"--> Loading DFN from {filename}")
     if os.path.isfile(filename):
         tmp = pickle.load(open(filename, "rb"))
         self.__dict__ = tmp.__dict__.copy()
     else:
         error = f"Error. Cannot find pickle file {filename}.\nExiting program.\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'critical')
+        

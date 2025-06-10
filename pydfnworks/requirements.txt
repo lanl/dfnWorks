@@ -6,3 +6,20 @@
 
 # normally
 .
+
+vtk
+pyvista
+numpy
+shapely
+geopandas
+networkx
+python-ternary
+h5py
+scipy
+matplotlib
+mplstereonet
+fpdf
+setuptools
+seaborn
+pyvtk
+mpmath

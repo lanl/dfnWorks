@@ -20,6 +20,7 @@ home = os.getcwd()
 
 try:
     examples_dirs = [sys.argv[1]]
+    verbose = True
 except:
     examples_dirs = glob.glob("*")
     for d in examples_dirs:
@@ -31,7 +32,7 @@ except:
 print(examples_dirs)
 start_time = timeit.default_timer()
 
-df = pd.DataFrame(columns=['Name', 'Pass/Fail', 'Time'])
+df = pd.DataFrame(columns=['Name', 'Pass/Fail', 'Time', 'Error'])
 
 for i,d in enumerate(examples_dirs):
     tmp = {"Name": d, "Passed/Fail": None, "Time (s)": None}
@@ -40,6 +41,12 @@ for i,d in enumerate(examples_dirs):
     try:
         print(d)
         os.chdir(d)
+        if os.path.isdir('output'):
+            shutil.rmtree('output')
+            #print(f"--> Removing output directory from {d}")
+        if os.path.isfile('output.log'):
+            os.remove('output.log')
+            #print(f"--> Removing output.log file from {d}")
         driver_file = glob.glob("*py")
         if verbose:
             cmd = f"python {driver_file[0]}"
@@ -51,16 +58,22 @@ for i,d in enumerate(examples_dirs):
         toc = timeit.default_timer()
         elapsed = toc - tic
         print(f"--> Time required {elapsed:0.2f} seconds\n")
-        cleanup_dirs = glob.glob("output*")
-        for d in cleanup_dirs:
-            shutil.rmtree(d)
+        #print(f"--> Cleaning up outputs")
+        if os.path.isdir('output'):
+            shutil.rmtree('output')
+            #print(f"--> Removing output directory from {d}")
+        if os.path.isfile('output.log'):
+            os.remove('output.log')
+            #print(f"--> Removing output.log file from {d}")
         os.chdir(home)
         #df_index = len(df) + 1
         #print(df_index, i)
-        df.loc[i + 1,:] = [d, 'Pass', elapsed]
-    except:
+        df.loc[i + 1, :] = [d, 'Pass', elapsed, None]
+
+    except Exception as error:
         print(f"--> {d} failed")
-        df.loc[df_index,:] = [d, 'Fail', elapsed]
+        print(f"--> error {error}")
+        df.loc[i+1,:] = [d, 'Fail', elapsed, error]
         os.chdir(home)
 
 print(df)

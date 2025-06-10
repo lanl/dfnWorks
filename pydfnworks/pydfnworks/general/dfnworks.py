@@ -17,31 +17,56 @@ import numpy as np
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
-    
-    Attributes:
-        * jobname: name of job, also the folder where output files are stored
-        * ncpu: number of CPUs used in the job
-        * dfnGen file: the name of the dfnGen input file
-        * dfnFlow file: the name of the dfnFlow input file
-        * dfnTrans file: the name of the dfnFlow input file
-        * local prefix: indicates that the name contains only the most local directory
-        * vtk_file: the name of the VTK file
-        * inp_file: the name of the INP file
-        * uge_file: the name of the UGE file
-        * mesh_type: the type of mesh
-        * perm_file: the name of the file containing permeabilities 
-        * aper_file: the name of the file containing apertures 
-        * perm_cell file: the name of the file containing cell permeabilities 
-        * aper_cell_file: the name of the file containing cell apertures
-        * freeze: indicates whether the class attributes can be modified
-        * h : FRAM length scale 
+    Parameters
+    ----------
+        jobname: name of job, also the folder where output files are stored
+        
+        ncpu: number of CPUs used in the job
+        
+        dfnGen file: the name of the dfnGen input file
+        
+        dfnFlow file: the name of the dfnFlow input file
+        
+        dfnTrans file: the name of the dfnFlow input file
+        
+        local prefix: indicates that the name contains only the most local directory
+        
+        vtk_file: the name of the VTK file
+        
+        inp_file: the name of the INP file
+        
+        uge_file: the name of the UGE file
+        
+        mesh_type: the type of mesh
+        
+        perm_file: the name of the file containing permeabilities 
+        
+        aper_file: the name of the file containing apertures 
+        
+        perm_cell file: the name of the file containing cell permeabilities 
+        
+        aper_cell_file: the name of the file containing cell apertures
+        
+        freeze: indicates whether the class attributes can be modified
+        
+        h : FRAM length scale 
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        None
     '''
 
-    from pydfnworks.general.paths import define_paths, print_paths
+    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, print_log, go_home, to_pickle, from_pickle 
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable
+    from pydfnworks.general.logging import initialize_log_file, print_log
+
 
     # dfnGen functions
     import pydfnworks.dfnGen
@@ -95,6 +120,7 @@ class DFNWORKS():
     # dfnTrans
     import pydfnworks.dfnTrans
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
+    from pydfnworks.dfnTrans.combine_avs_trajectories import combine_avs_trajectories 
 
     # dfnGraph
     import pydfnworks.dfnGraph
@@ -120,7 +146,10 @@ class DFNWORKS():
                  num_nodes=None,
                  cell_based_aperture=False,
                  store_polygon_data=True,
-                 pickle_file=None):
+                 pickle_file=None,
+                 log_filename=None,
+                 log_time=True):
+        
         ## initialize variables 
         self.num_frac = int
         self.h = float
@@ -153,34 +182,43 @@ class DFNWORKS():
         self.cell_based_aperture = cell_based_aperture
         self.path = path
         self.prune_file = prune_file
-        self.logging = False
+        self.logging = True
         self.store_polygon_data = store_polygon_data
-
-        ## check is define_paths has been run yet
-        if not 'dfnworks_PATH' in os.environ:
-
-            self.define_paths()
-            self.legal()
-
-        # try:
-        #     os.remove('dfnWorks.log') #Remove the old log file
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
-        # except:
-        #     print("Creating New Log File (dfnWorks.log)")
-        #     print("")
-        print("\n--> Creating DFN Object: Starting")
-
-        if pickle_file:
-            print(f"--> Loading DFN from pickled object file {pickle_file}")
-            self.from_pickle(pickle_file)
 
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
+            if not log_filename:
+                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            else:
+                self.log_filename = os.getcwd() + os.sep + log_filename
+            self.initialize_log_file(time = log_time)
+            now = datetime.now()
+            self.start_time = now
+            statement = f"Starting at {now}"
+            self.print_log(statement )
         else:
-            self.jobname = os.getcwd() + os.sep + "output"
-            self.local_jobname = "output"
+            self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
+            self.local_jobname = "dfnWorks_output"
+            if not log_filename:
+                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+            else:
+                self.log_filename = os.getcwd() + os.sep + log_filename
+            self.initialize_log_file(time = log_time)
+            now = datetime.now()
+            self.start_time = now
+            statement = f"Starting at {now}"
+            self.print_log(statement ) 
+
+        ## check is define_paths has been run yet
+        if not 'dfnworks_PATH' in os.environ:
+            self.legal()
+            self.print_log("--> Creating DFN Object: Starting" )
+            self.define_paths()
+
+        if pickle_file:
+            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
+            self.from_pickle(pickle_file)
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -207,36 +245,32 @@ class DFNWORKS():
 
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
-
-        # if logging:
-        #     print("--> Writting output to log file.")
-        #     import logging
-        #     logging.basicConfig(filename= self.local_jobname + "_run_log.txt", level=logging.DEBUG,
-        #             format="%(asctime)s %(message)s")
-
+        self.print_log("\n--> Creating DFN Object: Starting")
         self.start_time = time()
         self.print_parameters()
-        print("\n--> Creating DFN Object: Complete")
+        self.print_log("--> Creating DFN Object: Complete" )
 
+    def __del__(self):
+        try:
+            print(f"--> {self.local_jobname} completed/exited " )
+            pass
+        except Exception:
+            print("--> Job completed/exited")
+            pass
 
-#     def __del__(self):
-#         print("=" * 80)
-#         print(f"--> {self.local_jobname} completed/exited at {now}")
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed
 #         time_min = elapsed / 60
 #         time_hrs = elapsed / 3600
-
-#         print(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
+#         self.print_log(f"\n--> Total Run Time: {time_sec:.2e} seconds / {time_min:.2e} minutes / {time_hrs:.2e} hours")
 #         output = '''
 # \t\t\t*********************************************
 # \t\t\t*   Thank you for using dfnWorks            *
 # \t\t\t*   Learn more at https://dfnworks.lanl.gov *
 # \t\t\t*   Contact us at dfnworks@lanl.gov         *
 # \t\t\t*********************************************
-
 # '''
-#         print(output)
+#         self.print_log(output)
 
 def commandline_options():
     """Read command lines for use in dfnWorks.
@@ -305,6 +339,7 @@ def commandline_options():
     if options.jobname == "":
         error = "Error: Jobname is required. Exiting.\n"
         sys.stderr.write(error)
+        self.print_log(error, "critical")
         sys.exit(1)
     return options
 
@@ -327,22 +362,26 @@ def create_dfn():
     '''
 
     options = commandline_options()
-    print("Command Line Inputs:")
-    print(options)
+
+    self.print_log("Command Line Inputs:")
+    self.print_log(options)
+
 
     now = datetime.now()
 
     if options.input_file == "":
         error = "ERROR!!! Input file must be provided.\n"
         sys.stderr.write(error)
+        self.print_log(error, "error")
         sys.exit(1)
     else:
-        print("--> Reading Input from " + options.input_file)
 
+        self.print_log("--> Reading Input from " + options.input_file)
     dfnGen_file = None
     dfnFlow_file = None
     dfnTrans_file = None
-    print(f"--> Reading run files from {options.input_file}")
+
+    self.print_log(f"--> Reading run files from {options.input_file}")
     with open(options.input_file, "r") as f:
         for i, line in enumerate(f.readlines()):
             line = line.rstrip('\n')
@@ -350,22 +389,27 @@ def create_dfn():
             try:
                 if "dfnGen" in line:
                     dfnGen_file = line[1]
-                    print('--> dfnGen input file: ', dfnGen_file)
+                    self.print_log(f'--> dfnGen input file: {dfnGen_file}' )
                 elif "dfnFlow" in line:
                     dfnFlow_file = line[1]
-                    print('--> dfnFlow input file: ', dfnFlow_file)
+                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
                 elif "dfnTrans" in line:
                     dfnTrans_file = line[1]
-                    print('--> dfnTrans input file: ', dfnTrans_file)
+                    self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
+                elif "dfnFlow" in line:
+                    dfnFlow_file = line[1]
+                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
+                elif "dfnTrans" in line:
+                    dfnTrans_file = line[1]
+                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
             except:
-                error = f"ERROR Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
-                sys.stderr.write(error)
-                sys.exit(1)
+                error = f"Error Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
+                sys.stderr.write(error, "error")
+
 
     if not options.path:
         if not options.path.endswith('/'):
             options.path += os.sep
-
     DFN = DFNWORKS(jobname=options.jobname,
                    ncpu=options.ncpu,
                    dfnGen_file=dfnGen_file,

@@ -1,7 +1,8 @@
-.. _dfnWorks-python-chapter:
 
 pydfnworks: the dfnWorks python package
 ========================================
+
+.. _dfnWorks-python-chapter:
 
 The pydfnworks package allows the user to run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package.
 

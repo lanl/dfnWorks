@@ -1,6 +1,9 @@
 #include "expDist.h"
+#include "logFile.h"
 #include <cmath>
 #include <iostream>
+
+using std::string;
 
 /*
     Exponential Distribution Class
@@ -44,9 +47,11 @@ double ExpDist::unifRandom(double min, double max) {
     Arg 2: Random variable between 0 and 1
     Return: Random number from exponential distribution described by 'lambda' */
 double ExpDist::getValue(double lambda, double rv) {
+    std::string logString;
+    
     if (rv > 1) {
-        std::cout << "ERROR: Attempted to input random value of greater than 1 to the exponential "
-                  << "distribution class's getValue() function. Input must be on [0,1] interval.\n";
+        logString = "Error: Attempted to input random value of greater than 1 to the exponential distribution class's getValue() function. Input must be on [0,1] interval.\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
     
@@ -77,11 +82,13 @@ double ExpDist::getValue(double lambda, double rv) {
     Return: Random number from exponential distribution described by 'lambda'
             and sampled with random variable between minInput and maxVal */
 double ExpDist::getValue(double lambda, double minVal, double maxVal) {
+    std::string logString;
+    
     // Uniform distrubution on [minVal, maxVal)
     if ( maxVal > 1 || minVal > 1) {
         // Passing 1 into exp. distribution will reuturn inf
-        std::cout << "ERROR: Passed min, or max, input value of greater than 1 to getValue()"
-                  << " in expDist.cpp. Input must be in [0,1] interval.\n";
+        logString = "ERROR: Passed min, or max, input value of greater than 1 to getValue() in expDist.cpp. Input must be in [0,1] interval.\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
     

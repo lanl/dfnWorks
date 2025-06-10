@@ -4,7 +4,26 @@ import scipy
 
 
 def f(theta, t, a, b):
-    """Differential Equation Angle Theta as a function of arc length, see Hyman et al. 2014, SIAM J. Sci. Comp. Equation 3.3"""
+    """ Differential Equation Angle Theta as a function of arc length, see Hyman et al. 2014, SIAM J. Sci. Comp. Equation 3.3
+    
+    Parameters
+    ------------
+        theta : use if orientationOption = 0 (default). default = None
+        t : unused
+        a : float
+            aspect ratio of fracture family 
+        b : int
+            Constant parameter
+
+    Returns
+    ----------
+        returns f
+
+    Notes
+    -------------
+        None
+
+    """
     return 1.0 / np.sqrt((a * np.sin(theta))**2 + (b * np.cos(theta)**2))
 
 
@@ -180,7 +199,7 @@ def check_h(params):
             # Check against Minimum radius
             if params['h'][
                     'value'] > params["minimum_fracture_size"]["value"] / 10:
-                hf.print_error(
+                hf.print_warning(
                     f"Provided value  of \"h\" ({params['h']['value']:0.2e}) is greater 1/10th the minimum fracture size ({params['minimum_fracture_size']['value']:0.2e}). The generated mesh will be very coarse and there will likely be a high rate of fracture rejection."
                 )
 

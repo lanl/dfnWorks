@@ -26,13 +26,14 @@ import time
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale import mapdfn_porosity, mapdfn_perm_iso, mapdfn_perm_aniso
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_io import write_h5_files
 from pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_helper_functions import setup_output_dir, setup_domain
+from pydfnworks.general.logging import initialize_log_file, print_log
 
 
 def mapdfn_ecpm(self,
                 matrix_perm,
                 matrix_porosity,
                 cell_size,
-                matrix_on = False, 
+                matrix_on=False,
                 tortuosity_factor=0.001,
                 lump_diag_terms=False,
                 correction_factor=True,
@@ -43,11 +44,25 @@ def mapdfn_ecpm(self,
     -----------------
         self : dfnWorks object
         
+        matrix_perm : float
+            permeability of the matrix cells without fratures 
+
         cell_size : float
             The cell size (meters) to use for the meshing
 
+        matrix_on : bool
+            Default is False
+
+        tortuosity_factor : float
+
+        lump_diag_terms : bool
+            Deault is False
+
         correction_factor : boolean
             Apply stairstep correction from EDFM to  not applied to permeability
+
+        output_dir : string
+            output directory
 
         
     Returns
@@ -71,14 +86,20 @@ def mapdfn_ecpm(self,
 
 
     """
-    print("\n")
-    print('=' * 80)
-    print("* Starting MAPDFN - ECPM")
-    print('=' * 80)
+    self.print_log("\n")
+    self.print_log('=' * 80)
+    self.print_log("* Starting MAPDFN - ECPM")
+    self.print_log('=' * 80)
 
     # setup the domain
     filenames = setup_output_dir(output_dir, self.jobname)
-    origin, nx, ny, nz, num_cells = setup_domain(self.domain, cell_size)
+    domain_center = [
+        self.params['domainCenter']['value'][0],
+        self.params['domainCenter']['value'][1],
+        self.params['domainCenter']['value'][2]
+    ]
+    origin, h5origin, nx, ny, nz, num_cells = setup_domain(
+        self.domain, domain_center, cell_size)
 
     # id cells that intersect the DFN
     cell_fracture_id = self.mapdfn_tag_cells(origin, num_cells, nx, ny, nz,
@@ -92,9 +113,10 @@ def mapdfn_ecpm(self,
 
     # write evereything to files
     write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on)
+                   k_aniso, porosity, matrix_perm, tortuosity_factor,
+                   matrix_on, h5origin)
 
-    print('=' * 80)
-    print("* MAPDFN Complete")
-    print('=' * 80)
-    print("\n")
+    self.print_log('=' * 80)
+    self.print_log("* MAPDFN Complete")
+    self.print_log('=' * 80)
+    self.print_log("\n")

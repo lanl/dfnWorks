@@ -7,6 +7,7 @@
 #include <cmath>
 #include "input.h"
 #include "structures.h"
+#include "logFile.h"
 
 
 double *projection( const double *v1, const double *v2 );
@@ -41,7 +42,8 @@ inline void normalize(T *vec) {
         vec[1] = vec[1] * invMag;
         vec[2] = vec[2] * invMag;
     } else {
-        std::cout << "\nERROR: Attempted to normalize a vector with magnitude = 0\n";
+        std::string logString = "ERROR: Attempted to normalize a vector with magnitude = 0\n";
+        logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
 }
@@ -67,11 +69,13 @@ inline T dotProduct(const T *A, const T *B) {
     Arg 2: Number of vertices in array */
 template <typename T>
 void printVertices(T *vert, int numVertices) {
-    std::cout << "Vertices:\n";
+    std::string logString = "Vertices:\n";
+    logger.writeLogFile(INFO,  logString);
     
     for (int i = 0; i < numVertices; i++ ) {
         int x = i * 3;
-        std::cout << "{" << vert[x] << "," << vert[x + 1] << "," << vert[x + 2] << "}\n";
+        logString = "{" + to_string(vert[x]) + "," + to_string(vert[x + 1]) + "," + to_string(vert[x + 2]) + "}\n";
+        logger.writeLogFile(INFO,  logString);
     }
 }
 

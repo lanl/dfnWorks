@@ -14,6 +14,7 @@ def set_flow_solver(self, flow_solver):
     ----------
         self : object
             DFN Class
+        
         flow_solver: string  
             Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
 
@@ -26,12 +27,11 @@ def set_flow_solver(self, flow_solver):
 
 """
     if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
-        print("Using flow solver %s" % flow_solver)
+        self.print_log(f"Using flow solver {flow_solver}")
         self.flow_solver = flow_solver
     else:
-        error = "ERROR: Unknown flow solver requested %s\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n" % flow_solver
-        sys.stderr.write(error)
-        sys.exit(1)
+        error = f"Error: Unknown flow solver requested {flow_solver}\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"
+        self.print_log(error, 'error')
 
 
 def dfn_flow(self, dump_vtk=True):
@@ -41,6 +41,7 @@ def dfn_flow(self, dump_vtk=True):
     ----------
         self : object
             DFN Class
+        
         dump_vtk : bool
             True - Write out vtk files for flow solutions 
             False  - Does not write out vtk files for flow solutions 
@@ -53,46 +54,34 @@ def dfn_flow(self, dump_vtk=True):
     Information on individual functions is found therein 
     """
 
-    print('=' * 80)
-    print("dfnFlow Starting")
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("dfnFlow Starting")
+    self.print_log('=' * 80)
 
     tic_flow = time()
 
     if self.flow_solver == "PFLOTRAN":
-        print("Using flow solver: %s" % self.flow_solver)
-        tic = time()
+        self.print_log(f"Using flow solver: {self.flow_solver}")
         self.lagrit2pflotran()
-        self.dump_time('Function: lagrit2pflotran', time() - tic)
 
-        tic = time()
         self.pflotran()
-        self.dump_time('Function: pflotran', time() - tic)
 
         if dump_vtk:
-            tic = time()
             self.parse_pflotran_vtk_python()
-            self.dump_time('Function: parse_pflotran_vtk', time() - tic)
-        tic = time()
         self.pflotran_cleanup()
-        self.dump_time('Function: pflotran_cleanup', time() - tic)
-
-        tic = time()
 
     elif self.flow_solver == "FEHM":
-        print("Using flow solver: %s" % self.flow_solver)
-        tic = time()
+        self.print_log(f"Using flow solver: {self.flow_solver}")
         self.correct_stor_file()
         self.fehm()
-        self.dump_time('Function: FEHM', time() - tic)
 
     delta_time = time() - tic_flow
     self.dump_time('Process: dfnFlow', delta_time)
 
-    print('=' * 80)
-    print("dfnFlow Complete")
-    print("Time Required for dfnFlow %0.2f seconds\n" % delta_time)
-    print('=' * 80)
+    self.print_log('=' * 80)
+    self.print_log("dfnFlow Complete")
+    self.print_log(f"Time Required for dfnFlow {delta_time} seconds\n")
+    self.print_log('=' * 80)
 
 
 def create_dfn_flow_links(self, path='../'):
@@ -102,6 +91,7 @@ def create_dfn_flow_links(self, path='../'):
     ---------
         self : object
             DFN Class
+        
         path : string 
             Absolute path to primary directory. 
    
@@ -116,7 +106,7 @@ def create_dfn_flow_links(self, path='../'):
     """
 
     #path = self.jobname + '/../'
-
+    self.print_log(f"Creating symbolic links for dfnFlow from {path}")
     files = [
         'full_mesh.uge', 'full_mesh.inp', 'full_mesh_vol_area.uge',
         'materialid.dat', 'full_mesh.stor', 'full_mesh_material.zone',
@@ -129,4 +119,4 @@ def create_dfn_flow_links(self, path='../'):
         try:
             os.symlink(path + f, f)
         except:
-            print("--> Error creating link for %s" % f)
+            self.print_log(f"--> Unable to create link for{f}")

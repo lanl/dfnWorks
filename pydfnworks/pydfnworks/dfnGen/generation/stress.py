@@ -18,18 +18,27 @@ def stress_based_apertures(self,
 
     Parameters
     ----------------------
+        self : object 
+            DFN Class
+
         sigma_mat : array
             3 x 3 stress tensor (units in Pa)
+        
         friction_angle : float
             Friction angle (Degrees)
+        
         dilation_angle : float
             Dilation angle (Degrees)
+        
         critical_shear_displacement : float
             Critical shear displacement
+        
         shear_modulus : float 
             Shear modulus (Pa)
+        
         min_b : float
              Minimum aperture (m)
+        
         shear_stiffness : float 
             Shear stiffness (Pa/m)
 
@@ -53,18 +62,17 @@ def stress_based_apertures(self,
         Zhao, Zhihong, et al. "Impact of stress on solute transport in a fracture network: A comparison study." Journal of Rock Mechanics and Geotechnical Engineering 5.2 (2013): 110-123.
 
     """
-    print("--> Computing aperture based on stress tensor")
-    print("\n--> Stress Tensor (Pa):\n")
-    print(
+    self.print_log("--> Computing aperture based on stress tensor")
+    self.print_log("\n--> Stress Tensor (Pa):\n")
+    self.print_log(
         f"\t{sigma_mat[0][0]:0.2e} {sigma_mat[0][1]:0.2e} {sigma_mat[0][2]:0.2e}"
     )
-    print(
+    self.print_log(
         f"\t{sigma_mat[1][0]:0.2e} {sigma_mat[1][1]:0.2e} {sigma_mat[1][2]:0.2e}"
     )
-    print(
+    self.print_log(
         f"\t{sigma_mat[2][0]:0.2e} {sigma_mat[2][1]:0.2e} {sigma_mat[2][2]:0.2e}"
     )
-    print()
 
     # write stress to file.
     with open("stress.dat", "w") as fstress:
@@ -117,7 +125,7 @@ def stress_based_apertures(self,
         normal_displacement = (9 * sigma_mag * initial_aperture[i]) / (
             sigma_nc + 10 * sigma_mag)
         # Shear dilation
-        # print(normal_displacement)
+        # self.print_log(normal_displacement)
         shear_stress_critical = sigma_mag * m.tan(m.radians(friction_angle))
         # Fracture half length
         l = radii_frac[i]
@@ -141,12 +149,12 @@ def stress_based_apertures(self,
 
     diff = abs(b - initial_aperture)
     diff2 = diff**2
-    print(f"--> L2 change in apertures {np.sqrt(diff.sum()):0.2e}")
-    print(f"--> Maximum change in apertures {max(diff):0.2e}")
+    self.print_log(f"--> L2 change in apertures {np.sqrt(diff2.sum()):0.2e}")
+    self.print_log(f"--> Maximum change in apertures {max(diff):0.2e}")
 
     self.perm = convert(b, 'aperture', 'permeability')
     self.transmissivity = convert(b, 'aperture', 'transmissivity')
     self.aperture = b
     # self.dump_hydraulic_values()
 
-    print("--> Computing aperture based on stress field complete ")
+    self.print_log("--> Computing aperture based on stress field complete ")

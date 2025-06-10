@@ -15,6 +15,7 @@ import multiprocessing as mp
 import pydfnworks.dfnGraph.particle_io as io
 from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
+from pydfnworks.general.logging import local_print_log
 
 
 def track_particle(data, verbose=False):
@@ -27,7 +28,10 @@ def track_particle(data, verbose=False):
             data : dict
                 Dictionary of parameters the includes particle_number, initial_position, 
                 tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes,
-                 direction, G, and nbrs_dict.  
+                 direction, G, and nbrs_dict. 
+
+            verbose : bool
+                Toggles verbosity 
 
         Returns
         -------
@@ -39,7 +43,7 @@ def track_particle(data, verbose=False):
         p = mp.current_process()
         _, cpu_id = p.name.split("-")
         cpu_id = int(cpu_id)
-        print(
+        local_print_log(
             f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
         )
 
@@ -55,7 +59,7 @@ def track_particle(data, verbose=False):
     global G_global
     particle.track(G_global, nbrs_dict)
     if verbose:
-        print(
+        local_print_log(
             f"--> Particle {data['particle_number']} is complete on worker {cpu_id}"
         )
     return particle
@@ -70,11 +74,11 @@ def get_initial_posititions(G, initial_positions, nparticles):
             G : NetworkX graph 
                 obtained from graph_flow
 
-        initial_positions : str
-            distribution of initial conditions. options are uniform and flux (flux-weighted)
+            initial_positions : str
+                distribution of initial conditions. options are uniform and flux (flux-weighted)
 
-        nparticles : int
-            requested number of particles
+            nparticles : int
+                requested number of particles
 
         Returns
         -------
@@ -85,18 +89,17 @@ def get_initial_posititions(G, initial_positions, nparticles):
 
     inlet_nodes = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
     cnt = len(inlet_nodes)
-    print(f"--> There are {cnt} inlet nodes")
+    local_print_log(f"--> There are {cnt} inlet nodes")
     if cnt == 0:
         error = "Error. There are no nodes in the inlet.\nExiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     # Uniform Distribution for particles
     if initial_positions == "uniform":
-        print("--> Using uniform initial positions.")
+        local_print_log("--> Using uniform initial positions.")
         ip = np.zeros(nparticles).astype(int)
         n = int(np.ceil(nparticles / cnt))
-        print(f"--> {n} particles will be placed at every inflow node.\n")
+        local_print_log(f"--> {n} particles will be placed at every inflow node.\n")
         ## this could be cleaned up using clever indexing
         inflow_idx = 0
         inflow_cnt = 0
@@ -109,7 +112,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
 
     ## flux weighted initial positions for particles
     elif initial_positions == "flux":
-        print("--> Using flux-weighted initial positions.\n")
+        local_print_log("--> Using flux-weighted initial positions.\n")
         flux = np.zeros(cnt)
         for i, u in enumerate(inlet_nodes):
             for v in G.successors(u):
@@ -132,8 +135,7 @@ def get_initial_posititions(G, initial_positions, nparticles):
     # Throw error if unknown initial position is provided
     else:
         error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     return ip, nparticles
 
@@ -203,45 +205,38 @@ def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
 
     if matrix_porosity is None:
         error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
     elif matrix_porosity < 0 or matrix_porosity > 1:
         error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
     if matrix_diffusivity is None:
         error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     if fracture_spacing is not None:
         if fracture_spacing <= 0:
             error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
-            sys.stderr.write(error)
-            sys.exit(1)
+            local_print_log(error, 'error')
 
 
 def check_control_planes(control_planes, direction):
     control_plane_flag = False
     if not type(control_planes) is list:
         error = f"Error. provided controls planes are not a list\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
     else:
         # add None to indicate the end of the control plane list
         control_plane_flag = True
 
     if direction is None:
         error = f"Error. Primary direction not provided. Required for control planes\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
     elif direction not in ['x', 'y', 'z']:
         error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
-    print(f"--> Control Planes: {control_planes}")
-    print(f"--> Direction: {direction}")
+    local_print_log(f"--> Control Planes: {control_planes}")
+    local_print_log(f"--> Direction: {direction}")
     return control_plane_flag
 
 
@@ -322,15 +317,15 @@ def run_graph_transport(self,
         error = (
             f"--> Error. Unknown file format provided in run_graph_transport.\n\n--> Provided value is {format}.\n--> Options: 'ascii' or 'hdf5'.\n\nExitting\n\n"
         )
-        sys.stderr.write(error)
-        sys.exit(1)
+        self.print_log(error, 'error')
 
-    print("\n--> Running Graph Particle Tracking")
+    self.print_log("--> Running Graph Particle Tracking")
+    
     # Check parameters for TDRW
     if tdrw_flag:
         check_tdrw_params(matrix_porosity, matrix_diffusivity,
                           fracture_spacing)
-        print(
+        self.print_log(
             f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
         )
 
@@ -339,23 +334,23 @@ def run_graph_transport(self,
     else:
         control_plane_flag = check_control_planes(
             control_planes=control_planes, direction=direction)
-    print(f"--> Control Plane Flag {control_plane_flag}")
+    self.print_log(f"--> Control Plane Flag {control_plane_flag}")
 
-    print("--> Creating downstream neighbor list")
+    self.print_log("--> Creating downstream neighbor list")
     global nbrs_dict
     nbrs_dict = create_neighbor_list(G)
 
-    print("--> Getting initial Conditions")
+    self.print_log("--> Getting initial Conditions")
     ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
 
-    print(f"--> Starting particle tracking for {nparticles} particles")
+    self.print_log(f"--> Starting particle tracking for {nparticles} particles")
 
     if dump_traj:
-        print(f"--> Writing trajectory information to file")
+        self.print_log(f"--> Writing trajectory information to file")
 
     if fracture_spacing is not None:
-        print(f"--> Using limited matrix block size for TDRW")
-        print(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
+        self.print_log(f"--> Using limited matrix block size for TDRW")
+        self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
         trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
                                                      matrix_porosity,
                                                      matrix_diffusivity)
@@ -371,7 +366,7 @@ def run_graph_transport(self,
         particles = []
         for i in range(nparticles):
             if i % 1000 == 0:
-                print(f"--> Starting particle {i} out of {nparticles}")
+                self.print_log(f"--> Starting particle {i} out of {nparticles}")
             particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
                                 matrix_diffusivity, fracture_spacing,
                                 trans_prob, transfer_time, control_plane_flag,
@@ -380,7 +375,7 @@ def run_graph_transport(self,
             particles.append(particle)
 
         elapsed = timeit.default_timer() - tic
-        print(
+        self.print_log(
             f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
         )
         stuck_particles = io.dump_particle_info(particles, partime_file,
@@ -393,7 +388,7 @@ def run_graph_transport(self,
             io.dump_trajectories(particles, 1)
 
     if self.ncpu > 1:
-        print(f"--> Using {self.ncpu} processors")
+        self.print_log(f"--> Using {self.ncpu} processors")
         ## Prepare input data
         inputs = []
 
@@ -427,7 +422,7 @@ def run_graph_transport(self,
         pool.terminate()
 
         elapsed = timeit.default_timer() - tic
-        print(
+        self.print_log(
             f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
         )
 
@@ -441,12 +436,12 @@ def run_graph_transport(self,
             io.dump_trajectories(particles, min(self.ncpu, nparticles))
 
     if stuck_particles == 0:
-        print("--> All particles exited the network")
-        print("--> Graph Particle Tracking Completed Successfully.")
+        self.print_log("--> All particles exited the network")
+        self.print_log("--> Graph Particle Tracking Completed Successfully.")
     else:
-        print(
+        self.print_log(
             f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit"
-        )
+            'warning')
 
     # Clean up and delete the global versions
     del G_global

@@ -20,6 +20,7 @@ from shutil import copy, rmtree
 from numpy import genfromtxt
 from pydfnworks.general import helper_functions as hf
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
+from pydfnworks.general.logging import local_print_log 
 
 
 def cleanup_failed_run(fracture_id, digits):
@@ -30,6 +31,7 @@ def cleanup_failed_run(fracture_id, digits):
     ----------
         fracture_id : int
             Current Fracture ID number
+        
         digits : int
             Number of digits in total number of fractures
 
@@ -44,7 +46,7 @@ def cleanup_failed_run(fracture_id, digits):
 
 """
 
-    print(f"--> Cleaning up meshing run for fracture {fracture_id}")
+    local_print_log(f"--> Cleaning up meshing run for fracture {fracture_id}")
 
     if not os.path.isfile("failure.txt"):
         with open('failure.txt', "w+") as failure_file:
@@ -57,7 +59,7 @@ def cleanup_failed_run(fracture_id, digits):
     try:
         os.mkdir(folder)
     except:
-        hf.print_warning(f"Unable to make new folder: {folder}")
+        local_print_log(f"Unable to make new folder: {folder}", "warning")
         pass
 
     files = [
@@ -75,7 +77,7 @@ def cleanup_failed_run(fracture_id, digits):
         try:
             copy(f, folder)
         except:
-            hf.print_warning(f'--> Could not copy {f} to failure folder')
+            local_print_log(f'--> Could not copy {f} to failure folder', "warning")
             pass
 
     symlinks = [
@@ -89,10 +91,10 @@ def cleanup_failed_run(fracture_id, digits):
         try:
             os.unlink(f)
         except:
-            hf.print_warning(f'--> Could not unlink {f}')
+            local_print_log(f'--> Could not unlink {f}',"warning")
             pass
 
-    print(f"--> Cleanup for Fracture {fracture_id} complete")
+    local_print_log(f"--> Cleanup for Fracture {fracture_id} complete")
 
 
 def create_symbolic_links(fracture_id, digits, visual_mode):
@@ -102,8 +104,10 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     --------------------
         fracture_id : int 
             fracture index
+        
         digits : int
             number of digits in total number of fractures
+        
         visual_mode : bool
             Boolean to toggle vis mode on/off. Creates reduced_mesh.inp if true
 
@@ -119,16 +123,16 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     try:
         os.symlink(f"polys/poly_{fracture_id}.inp", f"poly_{fracture_id}.inp")
     except:
-        hf.print_error(
-            f"-->\nError creating link for poly_{fracture_id}.inp\n")
+        local_print_log(
+            f"--> Error creating link for poly_{fracture_id}.inp\n","warning")
         return False
 
     try:
         os.symlink(f"lagrit_scripts/parameters_{fracture_id:0{digits}d}.mlgi",\
             f"parameters_{fracture_id:0{digits}d}.mlgi")
     except:
-        print(
-            f"-->\nError creating link for parameters_{fracture_id:0{digits}d}.mlgi\n"
+        local_print_log(
+            f"--> Error creating link for parameters_{fracture_id:0{digits}d}.mlgi\n","warning"
         )
         return False
 
@@ -136,8 +140,8 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
         os.symlink(f"lagrit_scripts/mesh_poly_{fracture_id:0{digits}d}.lgi",\
             f"mesh_poly_{fracture_id:0{digits}d}.lgi")
     except:
-        print(
-            f"-->\nError creating link for mesh_poly_{fracture_id:0{digits}d}.mlgi\n"
+        local_print_log(
+            f"--> Error creating link for mesh_poly_{fracture_id:0{digits}d}.mlgi\n","warning"
         )
         return False
 
@@ -146,8 +150,8 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
             os.symlink(f"intersections/intersections_{fracture_id}.inp",\
                 f"intersections_{fracture_id}.inp")
         except:
-            print(
-                f"\n--> Error creating link for intersections_{fracture_id}.inp\n"
+            local_print_log(
+                f"--> Error creating link for intersections_{fracture_id}.inp\n", "warning"
             )
             return False
 
@@ -161,12 +165,18 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     ----------
         fracture_id : int
             Current Fracture ID number
+        
         visual_mode : bool
             True/False for reduced meshing
+        
         num_frac : int 
             Total Number of Fractures in the DFN
+        
         r_fram : boolean
             relaxed fram
+
+        quiet : boolean
+            toggles for quiet mode.
 
     Returns
     -------
@@ -195,15 +205,15 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     digits = len(str(num_frac))
 
     if not quiet:
-        print(
+        local_print_log(
             f"--> Fracture id {fracture_id:0{digits}d} out of {num_frac} is starting on worker {cpu_id}"
         )
     if fracture_id == 1 and digits != 1:
-        print(
+        local_print_log(
             f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *"
         )
     if fracture_id % 10**(digits - 1) == 0:
-        print(
+        local_print_log(
             f"\t* Starting on Fracture {fracture_id:0{digits}d} out of {num_frac} *"
         )
     tic = timeit.default_timer()
@@ -218,16 +228,16 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             output_file=f"lagrit_logs/mesh_poly_{fracture_id:0{digits}d}",
             quiet=quiet)
     except:
-        hf.print_error(
-            f"Error occurred during meshing fracture {fracture_id}\n")
+        local_print_log(
+            f"Error occurred during meshing fracture {fracture_id}\n","warning")
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -2)
 
     # Check if mesh*.lg file was created, if not exit.
     if not os.path.isfile(f'mesh_{fracture_id:0{digits}d}.lg') or os.stat(
             f'mesh_{fracture_id:0{digits}d}.lg') == 0:
-        hf.print_error(
-            f" Mesh for fracture {fracture_id} was either not produced or has zero size\n"
+        local_print_log(
+            f" Mesh for fracture {fracture_id} was either not produced or has zero size\n","warning"
         )
         cleanup_failed_run(fracture_id, digits)
         return (fracture_id, -3)
@@ -245,13 +255,13 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
         try:
             if subprocess.call(cmd_check, shell=True):
                 if not r_fram:
-                    hf.print_error(
-                        f"Meshing checking failed on {fracture_id}.\n")
+                    local_print_log(
+                        f"Meshing checking failed on {fracture_id}.\n","warning")
                     cleanup_failed_run(fracture_id, digits)
                     return (fracture_id, -4)
         except:
-            hf.print_error(
-                f"Unable to run mesh checking checking on {fracture_id}.\n")
+            local_print_log(
+                f"Unable to run mesh checking checking on {fracture_id}.\n","warning")
             cleanup_failed_run(fracture_id, digits)
             return (fracture_id, -4)
 
@@ -267,7 +277,7 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
             try:
                 os.remove(f)
             except:
-                hf.print_warning(f"--> Could not remove {f}\n")
+                local_print_log(f"--> Could not remove {f}\n","warning")
                 pass
 
     # Remove symbolic
@@ -287,12 +297,12 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
         try:
             os.unlink(f)
         except:
-            hf.print_warning(f'--> Warning: Could unlink {f}')
+            local_print_log(f'--> Warning: Could unlink {f}', 'warning')
             pass
 
     elapsed = timeit.default_timer() - tic
     if not quiet:
-        print(
+        local_print_log(
             f"--> Fracture {fracture_id:0{digits}d} out of {num_frac} is complete on worker {cpu_id}. Time required: {elapsed:.2f} seconds\n"
         )
     return (fracture_id, 0)
@@ -312,10 +322,18 @@ def mesh_fractures_header(self, quiet=True):
 
     Parameters
     ----------
+        self : object 
+            DFN Class
+
+        quiet : bool
+            toggle quite mode. Default is True
+
         fracture_list : list
             Fractures to be meshed
+        
         visual_mode : bool
             True/False for reduced meshing
+        
         num_frac : int
             Total Number of Fractures
 
@@ -331,10 +349,9 @@ def mesh_fractures_header(self, quiet=True):
 
     """
     t_all = timeit.default_timer()
-    print()
-    print('=' * 80)
-    print(
-        f"\n--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n"
+    self.print_log('=' * 80)
+    self.print_log(
+        f"--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n"
     )
 
     pool = mp.Pool(min(self.num_frac, self.ncpu))
@@ -371,21 +388,21 @@ def mesh_fractures_header(self, quiet=True):
     pool.join()
 
     elapsed = timeit.default_timer() - t_all
-    print('\n--> Triangulating Polygons: Complete\n')
+    self.print_log('--> Triangulating Polygons: Complete\n')
     time_sec = elapsed
     time_min = elapsed / 60
     time_hrs = elapsed / 3600
-    print("--> Total Time to Mesh Network:")
-    print(
+    self.print_log("--> Total Time to Mesh Network:")
+    self.print_log(
         f"--> {time_sec:.2e} seconds\t{time_min:.2e} minutes\t{time_hrs:.2e} hours"
     )
-    print('=' * 80)
+    self.print_log('=' * 80)
 
-    print("* Checking for meshing issues.")
+    self.print_log("* Checking for meshing issues.")
     for result in result_list:
         if result[1] != 0:
-            print(
-                f"\n\n--> Fracture number {result[0]} failed with error {result[1]}\n"
+            self.print_log(
+                f"--> Fracture number {result[0]} failed with error {result[1]}\n"
             )
             details = """
         Error index: 
@@ -395,7 +412,7 @@ def mesh_fractures_header(self, quiet=True):
 -3 - mesh file created but empty
 -4 - line of intersection not preserved
         """
-            print(details)
+            self.print_log(details)
             return False
 
     if os.path.isfile("failure.txt"):
@@ -403,8 +420,8 @@ def mesh_fractures_header(self, quiet=True):
         if type(failure_list) is list:
             failure_list = np.sort(failure_list)
         else:
-            print('--> Fractures:', failure_list, 'Failed')
-        print('--> Main process exiting.')
+            self.print_log('--> Fractures:', failure_list, 'Failed', 'warning')
+        self.print_log('--> Main process exiting.')
         return True
 
     ## check for meshing errors in r_fram
@@ -425,9 +442,8 @@ def check_for_missing_edges(self):
         failure_flag : bool
             True if too many edges were lost, False if mesh is okay.    
     """
-    print("")
-    print('=' * 80)
-    print("* Checking missed edges from relaxed FRAM")
+    self.print_log('=' * 80)
+    self.print_log("* Checking missed edges from relaxed FRAM")
     # get total number of edges
     total_edges = 0
     for ifrac in self.fracture_list:
@@ -454,29 +470,27 @@ def check_for_missing_edges(self):
         #print(f"--> Removing filename :{filename}")
         os.remove(filename)
 
-    print(
-        f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}"
-    )
+    self.print_log(
+        f"* Total number of fractures with missed edges: {num_frac_missed} out of {self.num_frac}")
     if num_frac_missed > 0:
-        print(
+        self.print_log(
             f"* Average number of missed edges per fracture: {missed_edges/num_frac_missed}"
-        )
-        print(f"* Minimum number of missed edges: {min(missed_edges_list)}")
-        print(f"* Maximum number of missed edges: {max(missed_edges_list)}")
-        print(f"* Total number of missed edges: {missed_edges}")
-        print(f"* Total number of intersection edges: {total_edges}")
-        print(
-            f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%"
-        )
+        ,"warning")
+        self.print_log(f"* Minimum number of missed edges: {min(missed_edges_list)}","warning")
+        self.print_log(f"* Maximum number of missed edges: {max(missed_edges_list)}","warning")
+        self.print_log(f"* Total number of missed edges: {missed_edges}","warning")
+        self.print_log(f"* Total number of intersection edges: {total_edges}","warning")
+        self.print_log(
+            f"* Percentage of missed intersection edges: {100*missed_edges/total_edges:0.2f}%","warning")
 
     if missed_edges / total_edges > 0.1:
-        print(
+        self.print_log(
             f"* Percentage of missed edges too large (> 10%). Exitting program."
-        )
-        print('=' * 80)
+        ,"warning")
+        self.print_log('=' * 80)
         return True
     else:
-        print('=' * 80)
+        self.print_log('=' * 80)
         return False
 
 
@@ -488,6 +502,9 @@ def merge_worker(job, quiet=True):
         job : int
             job number
 
+        quiet : bool
+            toggle quite mode. Default is True
+
     Returns
     -------
         bool : True if failed / False if successful
@@ -497,18 +514,18 @@ def merge_worker(job, quiet=True):
     """
 
     if not quiet:
-        print(f"--> Starting merge: {job}")
+        local_print_log(f"--> Starting merge: {job}")
 
     tic = timeit.default_timer()
     if mh.run_lagrit_script(f"lagrit_scripts/merge_part_{job}.lgi",
                             f"lagrit_logs/merge_part_{job}",
                             quiet=True):
-        hf.print_warning(f" Merge job : {job} failed")
+        local_print_log(f" Merge job : {job} failed", 'warning')
         return True
 
     elapsed = timeit.default_timer() - tic
     if not quiet:
-        print(
+        local_print_log(
             f"--> Merge Number {job} Complete. Time elapsed: {elapsed:.2f} seconds."
         )
     return False
@@ -521,10 +538,13 @@ def merge_the_fractures(ncpu):
     ----------
         num_frac : int
             Number of Fractures
+        
         ncpu : int
             Number of Processors
+        
         n_jobs : int
             Number of mesh pieces
+        
         visual_mode : bool
             True/False for reduced meshing
 
@@ -536,13 +556,13 @@ def merge_the_fractures(ncpu):
     -----
         Meshes are merged in batches for efficiency  
     """
-    print('=' * 80)
+    local_print_log('=' * 80)
     if ncpu == 1:
-        print(
+        local_print_log(
             f"--> Merging triangulated fracture meshes using {ncpu} processor."
         )
     else:
-        print(
+        local_print_log(
             f"--> Merging triangulated fracture meshes using {ncpu} processors."
         )
 
@@ -554,14 +574,13 @@ def merge_the_fractures(ncpu):
     pool.join()
     pool.terminate()
     elapsed = timeit.default_timer() - tic
-    print(
-        f"\n--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds.\n"
+    local_print_log(
+        f"--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds.\n"
     )
     for output in outputs:
         if output:
             error = "Error!!! One of the merges failed\nExiting\n"
-            sys.stderr.write(error)
-            sys.exit(1)
+            local_print_log(error,'error')
 
 
 def merge_final_mesh():
@@ -579,15 +598,15 @@ def merge_final_mesh():
     -----------------
         None
     """
-    print('=' * 80)
-    print("--> Starting Final Merge")
+    local_print_log('=' * 80)
+    local_print_log("--> Starting Final Merge")
     tic = timeit.default_timer()
     mh.run_lagrit_script('lagrit_scripts/merge_network.lgi',
                          'lagrit_logs/log_merge_all',
                          quiet=True)
 
     elapsed = timeit.default_timer() - tic
-    print(f"--> Final merge complete. Time elapsed: {elapsed:.2e} seconds")
+    local_print_log(f"--> Final merge complete. Time elapsed: {elapsed:.2e} seconds")
 
 
 def check_for_final_mesh(visual_mode):
@@ -597,6 +616,7 @@ def check_for_final_mesh(visual_mode):
     --------------------
         visual_mode : bool
             True/False for reduced meshing
+    
     Returns
     -----------------
         None
@@ -606,17 +626,17 @@ def check_for_final_mesh(visual_mode):
         None
     """
 
-    print("--> Checking for final mesh")
+    local_print_log("--> Checking for final mesh")
     if visual_mode:
         mesh_name = "reduced_mesh.inp"
     else:
         mesh_name = "full_mesh.lg"
 
     if (os.stat(mesh_name).st_size > 0):
-        print("--> Checking for final mesh: Complete")
+        local_print_log("--> Checking for final mesh: Complete")
     else:
-        hf.print_error(
-            f"Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found."
+        local_print_log(
+            f"Final merge failed. Mesh '{mesh_name}' is either empty or cannot be found.", "error"
         )
 
 
@@ -636,8 +656,10 @@ def merge_network(self):
         This is a driver function that class sub-functions. More details are in those sub-functions. 
     
     """
+    self.print_log("Merging the mesh: Starting")
     self.create_merge_poly_scripts()
     self.create_final_merge_script()
     merge_the_fractures(self.ncpu)
     merge_final_mesh()
     check_for_final_mesh(self.visual_mode)
+    self.print_log("Merging the mesh: Complete")

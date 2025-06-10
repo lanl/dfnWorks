@@ -7,7 +7,7 @@ import h5py
 # pydfnworks modules
 from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
 from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
-
+from pydfnworks.general.logging import local_print_log, print_log
 
 def get_laplacian_sparse_mat(G,
                              nodelist=None,
@@ -64,6 +64,8 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
         outflow: string
             name of file containing list of DFN fractures on outflow boundary
 
+        G : NetworkX graph
+
     Returns
     -------
         Gtilde : NetworkX graph
@@ -90,16 +92,14 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
 
     if len(list(nx.neighbors(Gtilde, 's'))) == 0:
         error = "Error. There are no nodes in the inlet.\nExiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     for v in nx.neighbors(Gtilde, 's'):
         Gtilde.nodes[v]['inletflag'] = True
 
     if len(list(nx.neighbors(Gtilde, 't'))) == 0:
         error = "Error. There are no nodes in the outlet.\nExiting"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     for v in nx.neighbors(Gtilde, 't'):
         Gtilde.nodes[v]['outletflag'] = True
@@ -145,15 +145,14 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 
     """
 
-    print("--> Starting Graph flow")
+    local_print_log("--> Starting Graph flow")
 
     Inlet = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
     Outlet = [v for v in nx.nodes(G) if G.nodes[v]['outletflag']]
 
     if not set(Inlet).isdisjoint(set(Outlet)):
         error = "Incompatible graph: Vertex connected to both source and target\n"
-        sys.stderr.write(error)
-        sys.exit(1)
+        local_print_log(error, 'error')
 
     D, A = get_laplacian_sparse_mat(G, weight='weight', format='lil')
 
@@ -169,9 +168,9 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
         D[v, v] = 1.0
     L = D - A  # automatically converts to csr when returning L
 
-    print("--> Solving Linear System for pressure at nodes")
+    local_print_log("--> Solving Linear System for pressure at nodes")
     pressure = scipy.sparse.linalg.spsolve(L, b)
-    print("--> Updating graph edges with flow solution")
+    local_print_log("--> Updating graph edges with flow solution")
 
     for v in nx.nodes(G):
         G.nodes[v]['pressure'] = pressure[v]
@@ -219,7 +218,7 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
         else:
             print(f"no gradient:  {upstream}, {downstream}") 
 
-    print("--> Graph flow complete")
+    local_print_log("--> Graph flow complete")
     return H
 
 
@@ -238,6 +237,7 @@ def compute_dQ(self, G):
     ---------------
         p32 : float
             Fracture intensity
+        
         dQ : float flow channeling density indicator 
 
     Notes
@@ -245,7 +245,7 @@ def compute_dQ(self, G):
         For definitions of p32 and dQ along with a discussion see " Hyman, Jeffrey D. "Flow channeling in fracture networks: characterizing the effect of density on preferential flow path formation." Water Resources Research 56.9 (2020): e2020WR027986. "
 
     """
-    print(
+    self.print_log(
         "--> Computing fracture intensity (p32) and flow channeling density indicator (dQ)"
     )
 
@@ -281,19 +281,40 @@ def compute_dQ(self, G):
     p32 = fracture_surface_area.sum() / domain_volume
     top = sum(fracture_surface_area * Qf)**2
     bottom = sum(fracture_surface_area * Qf**2)
-    print(top, bottom)
     dQ = (1.0 / domain_volume) * (top / bottom)
-    print(f"--> P32: {p32:0.2e} [1/m]")
-    print(f"--> dQ: {dQ:0.2e} [1/m]")
-    print(f"--> Active surface percentage {100*dQ/p32:0.2f}")
-    print(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
-    print(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
-    print("--> Complete \n")
+    self.print_log(f"--> P32: {p32:0.2e} [1/m]")
+    self.print_log(f"--> dQ: {dQ:0.2e} [1/m]")
+    self.print_log(f"--> Active surface percentage {100*dQ/p32:0.2f}")
+    self.print_log(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
+    self.print_log(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
+    self.print_log("--> Complete \n")
     return p32, dQ, Qf
 
 
-def dump_graph_flow_values(G):
+def dump_graph_flow_values(G,graph_flow_filename):
+    """
+    Writes graph flow information to an h5 file named graph_flow_name.
 
+    Parameters
+    --------------------
+        G : NetworkX graph
+            graph with flow variables attached
+
+        graph_flow_filename : string
+            name of output file
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    ---------------
+        name of graph_flow_filename is set in run_graph_flow for primary workflow. Default is graph_flow.hdf5 
+    
+    """
+
+    local_print_log(f'\n--> Writting flow variables into h5df file: {graph_flow_filename}')
+    local_print_log('--> Starting')
     num_edges = G.number_of_edges()
     velocity = np.zeros(num_edges)
     lengths = np.zeros_like(velocity)
@@ -311,14 +332,14 @@ def dump_graph_flow_values(G):
         aperture[i] = d['b']
         volume[i] = area[i] * aperture[i]
 
-    with h5py.File(f"graph_flow.hdf5", "w") as f5file:
+    with h5py.File(graph_flow_filename, "w") as f5file:
         h5dset = f5file.create_dataset('velocity', data=velocity)
         h5dset = f5file.create_dataset('length', data=lengths)
         h5dset = f5file.create_dataset('vol_flow_rate', data=vol_flow_rate)
         h5dset = f5file.create_dataset('area', data=area)
         h5dset = f5file.create_dataset('aperture', data=aperture)
         h5dset = f5file.create_dataset('volume', data=volume)
-    f5file.close()
+    local_print_log('--> Complete')
 
 
 def run_graph_flow(self,
@@ -328,7 +349,8 @@ def run_graph_flow(self,
                    pressure_out,
                    fluid_viscosity=8.9e-4,
                    phi=1,
-                   G=None):
+                   G=None,
+                   graph_flow_name = "graph_flow.hdf5"):
     """ Solve for pressure driven steady state flow on a graph representation of the DFN. 
 
     Parameters
@@ -362,12 +384,24 @@ def run_graph_flow(self,
             Gtilde is a directed acyclic graph with vertex pressures, fluxes, velocities, volumetric flow rates, and travel times
 
     """
+    self.print_log("\n--> Graph Flow: Starting")
+    self.print_log(f"--> Inflow Boundary Name: {inflow}")
+    self.print_log(f"--> Outflow: {outflow}")
+    self.print_log(f"--> Inflow Pressure: {pressure_in} [Pa]")
+    self.print_log(f"--> Outflow Pressure: {pressure_out} [Pa]")
+    self.print_log(f"--> Fluid viscosity: {fluid_viscosity} [Pa*s]")
+    self.print_log(f"--> Fracture Porosity: {phi} [-]")
+
     if G == None:
+        self.print_log("\n--> No Graph provided, building one") 
         G = self.create_graph("intersection", inflow, outflow)
+    else:
+         self.print_log("\n--> Graph provided")        
 
     Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
 
-    dump_graph_flow_values(Gtilde)
+    dump_graph_flow_values(Gtilde, graph_flow_name)
+    self.print_log("--> Graph Flow: Complete\n")
     return Gtilde

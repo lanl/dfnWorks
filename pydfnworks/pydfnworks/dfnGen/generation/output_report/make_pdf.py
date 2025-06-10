@@ -18,6 +18,9 @@ absolute_path = os.path.dirname(os.path.abspath(__file__))
 relative_path = "/figures/lanl-logo-footer.png"
 lanl_image = absolute_path + relative_path
 
+from pydfnworks.general.logging import local_print_log 
+
+
 
 class PDF(FPDF):
     global name
@@ -46,6 +49,7 @@ def add_table_of_contents(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -60,7 +64,7 @@ def add_table_of_contents(params, pdf):
     """
 
     if params["verbose"]:
-        print("--> Making Table of Contents")
+        local_print_log("--> Making Table of Contents")
 
     pdf.add_page()
     pdf.image(f"{params['output_dir']}/network/network_orientations.png",
@@ -81,7 +85,6 @@ def add_table_of_contents(params, pdf):
 def create_network_text(params):
     """ Creates block text for the entire network.
     
-
     Parameters
     -------------
         params : dictionary
@@ -125,6 +128,7 @@ def add_network_page(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -140,7 +144,7 @@ def add_network_page(params, pdf):
 
     # All Fractures
     if params["verbose"]:
-        print(f"--> Working on Entire Network")
+        local_print_log(f"--> Working on Entire Network")
     pdf.add_page()
     pdf.text(x=120, y=20, txt=f'Network Summary')
 
@@ -218,10 +222,13 @@ def add_family_page(params, family, i, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         family : dictionary 
             Dictionary of information about a fracture family
+        
         i : int
             Fracture family id
+        
         pdf : fpdf object
             Current working pdf
 
@@ -236,7 +243,7 @@ def add_family_page(params, family, i, pdf):
     """
 
     if params["verbose"]:
-        print(f"--> Working on Family {family['Global Family']}")
+        local_print_log(f"--> Working on Family {family['Global Family']}")
     pdf.add_page()
     pdf.text(x=120, y=20, txt=f'Fracture Family Number {i}')
     pdf.image(f"{params['output_dir']}/family_{i}/family_{i}_centers.png",
@@ -266,6 +273,7 @@ def add_fram_page(params, pdf):
     ------------
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+        
         pdf : fpdf object
             Current working pdf
 
@@ -280,7 +288,7 @@ def add_fram_page(params, pdf):
     """
 
     if params["verbose"]:
-        print("--> FRAM information")
+        local_print_log("--> FRAM information")
 
     pdf.add_page()
     pdf.text(x=120, y=20, txt=f'FRAM Information')
@@ -299,9 +307,11 @@ def make_pdf(params, families, fractures):
         params : dictionary
             General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
 
+        
         families: list of fracture family dictionaries
             Created by get_family_information
 
+        
         fractures: list of fracture dictionaries   
             Created by get_fracture_information
 
@@ -315,7 +325,7 @@ def make_pdf(params, families, fractures):
 
     """
 
-    print("\n--> Combing Images and Making PDF")
+    local_print_log("--> Combing Images and Making PDF")
     # print(absolute_path)
     # print("here")
     # name needs to be a global so it's in the header of each page in the PDF
@@ -334,3 +344,4 @@ def make_pdf(params, families, fractures):
 
     # Save PDF
     pdf.output(f"{name}_output_report.pdf", "F")
+
