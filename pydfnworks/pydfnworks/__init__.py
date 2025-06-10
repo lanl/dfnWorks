@@ -35,9 +35,7 @@ Released under the GPL License
 """
 from pydfnworks import release
 
-__author__ = '%s <%s>\n%s <%s>\n%s <%s>' % \
-    (release.authors['Hyman'] + release.authors['Livingston'] +
-        release.authors['Karra'])
+__author__ = "EES-16, Los Alamos National Laboratory"
 
 __license__ = release.license
 
