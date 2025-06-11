@@ -104,7 +104,7 @@ def get_initial_positions(G, initial_positions, nparticles):
         counts = np.floor(nparticles * vol_flow_rate).astype(int)
         ip = np.repeat(inlet_nodes, counts)
         nparticles = len(ip)
-        np.savetxt("inflow_vol_flow_rates.dat", vol_flow_rate)
+#         np.savetxt("inflow_vol_flow_rates.dat", vol_flow_rate)
 
     else:
         local_print_log(f"Error. Unknown initial_positions input '{initial_positions}'. Options are 'uniform' or 'flux'.", 'error')

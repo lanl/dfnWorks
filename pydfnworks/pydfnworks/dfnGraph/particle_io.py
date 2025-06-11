@@ -36,7 +36,7 @@ def dump_trajectory(particle):
             h5dset = f5file.create_dataset(dataset_name, data=data)
 
             dataset_name = 'times'
-            data = np.asarray(particle.velocity)
+            data = np.asarray(particle.times)
             h5dset = f5file.create_dataset(dataset_name, data=data)
 
             dataset_name = 'length'
@@ -174,6 +174,7 @@ def gather_particle_info(particles):
     total_times = np.zeros_like(adv_times)
     length = np.zeros_like(adv_times)
     beta = np.zeros_like(adv_times)
+    initial_velocity = np.zeros_like(adv_times)
 
     for i, particle in enumerate(particles):
         adv_times[i] = particle.advect_time
@@ -181,8 +182,9 @@ def gather_particle_info(particles):
         total_times[i] = particle.total_time
         length[i] = particle.length
         beta[i] = particle.beta
+        initial_velocity[i] = particle.velocity[0]
 
-    return adv_times, md_times, total_times, length, beta, stuck_particle_cnt
+    return adv_times, md_times, total_times, length, beta, initial_velocity, stuck_particle_cnt
 
 
 def dump_particle_info(particles, partime_file, frac_id_file, format):
@@ -210,7 +212,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
                 Number of particles that do not exit the domain
 
     """
-    adv_times, md_times, total_times, length, beta, stuck_cnt = gather_particle_info(
+    adv_times, md_times, total_times, length, beta, initial_velocity, stuck_cnt = gather_particle_info(
         particles)
 
     if format == 'ascii':
@@ -219,7 +221,7 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
         # Write Header
         header = "Advective time [s],Matrix Diffusion time [s],Total travel time [s],Pathline length [m],Beta (s m^-1)"
         np.savetxt(filename,
-                   np.c_[adv_times, md_times, total_times, length, beta],
+                   np.c_[adv_times, md_times, total_times, length, beta, initial_velocity ],
                    delimiter=",",
                    header=header)
 
@@ -251,6 +253,10 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
             dataset_name = "Beta [s m^-1]"
             h5dset = f5file.create_dataset(dataset_name, data=beta)
 
+            dataset_name = "Initial Velocity [m s^-1]"
+            h5dset = f5file.create_dataset(dataset_name, data=initial_velocity)
+
+
         if frac_id_file:
             filename = f"{frac_id_file}.hdf5"
             local_print_log(f"--> Writing fractures visted to file: {filename}")
@@ -272,7 +278,8 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
             'Matrix Diffusion time [s]': md_times,
             'Total travel time [s]': total_times,
             'Pathline length [m]': length,
-            'Beta (s/m)': beta
+            'Beta (s/m)': beta,
+            'initial_velocity [m/s]': initial_velocity
         }
         pickle.dump(data_dict, open(filename, "wb"))
 
@@ -284,7 +291,9 @@ def dump_particle_info(particles, partime_file, frac_id_file, format):
             'Matrix Diffusion time [s]': md_times,
             'Total travel time [s]': total_times,
             'Pathline length [m]': length,
-            'Beta (s/m)': beta
+            'Beta (s/m)': beta,
+            'Initial Velocity [m/s]': initial_velocity
+ 
         }
         df = pd.from_dict(data_dict)
         df.to_pickle(filename)
