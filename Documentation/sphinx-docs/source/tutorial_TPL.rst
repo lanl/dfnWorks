@@ -1,5 +1,5 @@
 
-dfnWorks Tutorial for TPL (Truncated Power-Law) 
+dfnWorks Tutorial for Truncated Power-Law (TPL)
 ================================================
 
 
@@ -15,7 +15,6 @@ This example uses add_fracture_family() to control parameters to create a set of
 
 This example consists of one family of fractures whose sizes have a truncated power law distribution with a minimum radius of 1 meter and a maximum size of 10 meters.  
 
-For a complete list of parameters and functions see [pydfnworks: dfnGen](https://lanl.github.io/dfnWorks/pydfnGen.html)
 
 
 
@@ -45,13 +44,16 @@ The Truncated Power-Law (TPL) option for stochastic generation of fractures allo
 
 Understanding these parameters will help you effectively describe the geometry and orientation of fractures within your discrete fracture network in dfnWorks. By adjusting these settings, you can model complex geological configurations and accurately represent the flow behavior in fractured media.
 
+This tutorial's main focus will be on **dfnGen** and how to use TPL parameters to generate a network. Evaluations of a network include reports, graphs, and visual inspection. 
+See Module at :ref:`dfnGen <dfngen-chapter>` and python docs at :ref:`pydfnWorks: dfnGen <dfnWorks-python-chapter-dfnGen>`
+
+
 .. figure:: figures/tpl_mesh_material.png
    :scale: 50 %
    :alt: alternate text
    :align: center
 
 
-This tutorial's main focus will be on **dfnGen** and how to use TPL parameters to generate a network. Evaluations of a network include reports, graphs, and visual inspection. 
 
 Simulations using dfnFlow and dfnTrans are run on the network and are viewed to further evaluate the network and results.
 
@@ -413,7 +415,10 @@ See examples in file `tpl_paraview_examples.rst <tpl_paraview_examples.rst>`_
 Run Flow Model
 ---------------
 
-The pydfnworks commands `dfn_flow()` and `dfn_trans()` are used to run the simulations. These can provide insights into the behavior of fluids within the fractured network.
+The pydfnworks command `dfn_flow()` is used to run the simulation. This can provide insights into the behavior of fluids within the fractured network.
+
+See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
+
 
 See PFLOTRAN user manaul at https://www.pflotran.org/documentation/user_guide/user_guide.html
 
@@ -460,6 +465,11 @@ Run Transport Model
 
 dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.
 See the particle tracking controls in the dfnTrans_file 'PTDFN_control.dat'.  
+
+See Module at :ref:`dfnTrans <dfntrans-chapter>` and python docs at :ref:`pydfnTrans: dfnGen <dfnWorks-python-chapter-dfnTrans>`
+
+
+
 
 As in the flow simulation, in-flow is set to left (-X boundary) and out-flow at right (+X boundary). Input files generated during dfnGen are found in the output directory and included in the particle control file. There are a number of options for inserting particles. For this example 1000 particles are distributed according to in-flow.
 
