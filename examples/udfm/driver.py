@@ -1,5 +1,5 @@
 #"""
-#   :synopsis: Driver run file for TPL example
+#   :synopsis: Driver run file for UFDN example
 #   :version: 2.0
 #   :maintainer: Jeffrey Hyman
 #.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
@@ -52,9 +52,12 @@ DFN.check_input()
 DFN.create_network()
 DFN.mesh_network()
 
-DFN.map_to_continuum(l=0.3, orl=3)
-DFN.upscale(mat_perm=1e-15, mat_por=0.01)
+# map_to_continuum parameters, l and orl, control the mesh resolution
+# L is size of background mesh and orl is the number of refinements (max 8)
 
+DFN.map_to_continuum(l=0.3, orl=3)
+
+DFN.upscale(mat_perm=1e-15, mat_por=0.01)
 DFN.zone2ex(zone_file='all')
 
 DFN.pflotran()

@@ -55,11 +55,51 @@ This tutorial's main focus will be on **dfnGen** and how to use TPL parameters t
 
 Simulations using dfnFlow and dfnTrans are run on the network and are viewed to further evaluate the network and results.
 
+Set Parameters
+---------------------------
+
+Open the script python `driver.py`. You can open with any text editor or use the unix command ``cat driver.py`` which will display the content to the screen.  Note the first line of the file imports the `pydfnworks` package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts.
+
+For this example there are 2 ways to run driver.py, this run will create and run simulations with one fracture family. A second fracture family is commented out, uncomment the output directory name and the portion to add_fracture_family and write results in second directory "output2".
+
+This example will run both the flow model and particle tracks using the input files named here.
+
+.. code-block:: python
+    jobname = os.getcwd() + "/output"
+    #jobname = os.getcwd() + "/output2"
+
+    # These are the input files for PFLOTRAN Flow and Particles
+    dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
+    dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
+    DFN = DFNWORKS(jobname,
+               dfnFlow_file=dfnFlow_file,
+               dfnTrans_file=dfnTrans_file,
+               ncpu=12)
+
+The domain is a 15 meter cube with 0.1 set as smallest edge size. 
+
+It is good practice to use 'domainSizeIncrease' to avoid edge density effects. This temporary domainSize increase for inserting fracture centers outside of the domain defined by domainSize. After generation is complete, the domain is truncated back to domainSize. First entry is expansion in x (east/west), second entry is expansion in y (North/South), and third entry is expansion in z (Top/Bottom). 
+
+The parameter 'boundaryFaces' selects domain boundaries for flow. The generation will only keep clusters of fractures with connections to domain boundaries which are set to 1 as indicated by axis directions [ +X,-X,+Y,-Y,+Z,-Z].  The network will have fractures connecting to the left and right boundaries.
+
+
+.. code-block:: python
+    DFN.params['domainSize']['value'] = [15, 15, 15]
+    DFN.params['h']['value'] = 0.1
+
+    # Define a buffer space around the domain
+    DFN.params['domainSizeIncrease']['value'] = [0.5, 0.5, 0.5]
+
+    DFN.params['keepOnlyLargestCluster']['value'] = True
+    DFN.params['ignoreBoundaryFaces']['value'] = False
+    DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
+    DFN.params['seed']['value'] = 2
+
+
 
 Python add_fracture_family
 ---------------------------
 
-Open the script python `driver.py`. You can open with any text editor or use the unix command ``cat driver.py`` which will display the content to the screen.  Note the first line of the file imports the `pydfnworks` package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts.
 
 This example creates a single family network. The routine **add_fracture_family()** is assigns all the parameters for a fracture network filling the domain.
 
@@ -166,6 +206,8 @@ The most immediate feedback for the network are text reports written to the log 
 
 The following commands will check for errors in the parameters and setup, create the fracture network, writee at PDF report, then triangulate and intersect fractures into a Delaunay mesh.
 
+Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Add ```DFN.set_flow_solver("FEHM")``` before mesh_netork. 
+
 
 .. code-block:: python
 
@@ -216,7 +258,15 @@ The log will write a summary that includes default and user defined parameters. 
     [2025-05-22 13:26:52] INFO: P32 For Family 1 Completed
 
 
-When fractures are generated, they are checked to ensure intersections and that parameters are satisfied. Fractures are rejected if they are isolated, have edges too short or too close, or outside boundary. When the network is created, summary information helps to describe the result. For this example the log output will look similar to this.
+When fractures are generated, they are checked to ensure intersections and that parameters are satisfied. Fractures are rejected if they are isolated, have edges too short or too close, or outside boundary. When the network is created, summary information helps to describe the result. 
+
+P32 is used in discrete fracture network (DFN) modeling and is a measure of fracture abundance in a rock mass, representing the total area of fractures per unit volume. P32 is calculated by summing the areas of all fractures within a given volume and dividing by that volume.
+
+The final P32 of 1.000912, while slightly exceeding the target of 1.000000, indicates that the simulation results are generally satisfactory, showing good agreement with the intended fracture density. Further adjustments can be made if absolute conformity is necessary, but the results suggest successful modeling of the fracture network within acceptable bounds.
+
+Examine the generated fracture network visually and statistically to ensure that the density and distribution of fractures align with geological expectations.
+
+For this example the log output will look similar to this.
 
 .. code-block:: bash
 
@@ -230,32 +280,18 @@ When fractures are generated, they are checked to ensure intersections and that 
     [2025-05-22 13:26:52] INFO: ________________________________________________________
 
 
-Statistical Report
+dfnGen Report
 ~~~~~~~~~~~~~~~~~~~~
+
+
 
 
 
 Created by DFN.output_report()
 see output_output_report.pdf  and directory dfnGen_output_report
 
-output_report(self, verbose=True, output_dir='dfnGen_output_report')[source]
 
     Creates a PDF output report for the network created by DFNGen. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into “output_dir/family_{id}/”. Information about the whole network are also created and written into “output_dir/network/”
-
-    Parameters:
-
-            self (object) – DFN Class object
-
-            verbose (bool) – Toggle for the amount of information printed to screen. If true, progress information printed to screen
-
-            output_dir (string) – Name of directory where all plots are saved
-
-    Return type:
-
-        None
-
-    Notes
-
     Final output report is named “jobname”_output_report.pdf User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.
 
 
@@ -273,6 +309,44 @@ output_report(self, verbose=True, output_dir='dfnGen_output_report')[source]
     2025-05-22 13:27:02,448 INFO --> Combing Images and Making PDF
     2025-05-22 13:27:02,449 INFO --> Making Table of Contents
     2025-05-22 13:27:06,588 INFO --> Output report is written into output_output_report.pdf
+
+
+When working with dfnWorks, the generated reports provide valuable insights into the created discrete fracture network (DFN). Below are descriptions of the different visualizations commonly included, such as the plot of fracture radii distribution, Rose Diagrams, Stereonets, and density plots.
+1. Plot of Fracture Radii Distribution
+
+    Description : This plot displays the distribution of radii of the fractures within the network. It typically shows the frequency of fractures against their corresponding radii on the x-axis.
+    Purpose : The goal is to analyze how fracture sizes are distributed within the modeled volume, which is important for understanding how size may influence fluid flow and connectivity in the subsurface environment.
+    Interpretation :
+        A normal distribution might indicate that most fractures are of average size, while very few are extremely small or large.
+        A truncated power law could suggest that smaller fractures are more common, with larger fractures being rarer, which is a common characteristic in geological formations.
+
+2. Rose Diagrams
+
+    Description : A Rose Diagram (or Rose Plot) represents the directional distribution of fractures. It visualizes the number of fractures or their orientations in relation to a specified reference direction, often presented as a circular plot.
+    Purpose : Rose Diagrams help identify preferred orientations in the fracture network. They can reveal patterns of anisotropy in the fractures, which can be critical for understanding flow pathways in a reservoir or aquifer.
+    Interpretation :
+        Peaks in the diagram indicate directions with a higher concentration of fractures.
+        A uniform distribution suggests a random orientation across the modeled area, while multiple peaks could indicate the influence of geological processes such as tectonic forces.
+
+3. Stereonets
+
+    Description : A Stereonet is a more advanced visualization that plots the orientations of fractures in a three-dimensional context, often represented on a two-dimensional plane. It allows for a clearer understanding of how fractures are situated in space with respect to their dip and strike.
+    Purpose : Stereonets are particularly useful for geologists to visualize the spatial relationships between fractures and to analyze their 3D geometry.
+    Interpretation :
+        The distribution of points on the stereonet can reveal clustering of fracture orientations or indicate dominant fracture systems.
+        Patterns may reveal structural controls on fracture formation, like fault systems or fold axes.
+
+4. Density Plot
+
+    Description : A density plot visualizes the concentration of fractures in space, often represented as a 2D or 3D distribution of fracture density per unit area or volume.
+    Purpose : This plot helps to visualize where fractures are more densely packed, which can influence the flow of fluids through the medium. It can indicate areas of potential resource accumulation or zones that might exhibit different hydraulic properties.
+    Interpretation :
+        High-density regions suggest areas with greater connectivity and potential for fluid movement, while low-density areas might correspond to barriers against flow.
+        Patterns in the density plot can provide insights into the geologic processes that led to the current fracture distribution.
+
+Conclusion
+
+The various plots generated by dfnWorks in its reports serve as essential tools for analyzing the characteristics of fracture networks. Each visualization provides unique insights into aspects such as size distribution, orientation, and spatial density of fractures, helping to inform decisions in resource management, environmental assessment, and geological modeling. Through careful interpretation of these diagrams, users can enhance their understanding of subsurface flow behavior and the roles played by fractures in geological formations. 
 
 
 .. figure:: figures/tpl_report_page_2.png
@@ -341,9 +415,11 @@ Run Flow Model
 
 The pydfnworks commands `dfn_flow()` and `dfn_trans()` are used to run the simulations. These can provide insights into the behavior of fluids within the fractured network.
 
-View the dfnFlow_file 'file.in'. This is a PFLOTRAN input file.  EDIT TEXT High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5. 
+See PFLOTRAN user manaul at https://www.pflotran.org/documentation/user_guide/user_guide.html
 
-The solver type is set to PFLOTRAN
+View the PFLOTRAN input deck defined by dfnFlow_file 'dfn_explicit.in'. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the *.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
+
+As the driver runs PFLOTRAN you will see information about the command line calling PFLOTRAN and information about the output files.  
 
 .. code-block:: bash
 
@@ -354,8 +430,7 @@ The solver type is set to PFLOTRAN
     2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
 
 
-
-For viewing results see the vtk files written in output/parsed_vtk
+The simulation results can be viewed with vtk files written in the directory output/parsed_vtk
 
 Read dfn_explicit-000.vtk see permeability and Liquid Pressure at time 0
 Read dfn_explicit-001.vtk for Liquid Pressure at time 1
@@ -383,8 +458,12 @@ Read dfn_explicit-001.vtk for Liquid Pressure at time 1
 Run Transport Model
 --------------------
 
-View the dfnTrans_file 'file.dat.  EDIT TEXT Particles are inserted SOMEWHERE 
-to exit SOMEWHERE else
+dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.
+See the particle tracking controls in the dfnTrans_file 'PTDFN_control.dat'.  
+
+As in the flow simulation, in-flow is set to left (-X boundary) and out-flow at right (+X boundary). Input files generated during dfnGen are found in the output directory and included in the particle control file. There are a number of options for inserting particles. For this example 1000 particles are distributed according to in-flow.
+
+As dfnTrans finishes output information is written.
 
 .. code-block:: bash
 
@@ -397,7 +476,7 @@ to exit SOMEWHERE else
 
 Generate particle tracks with call....
 
-NOTE: There are a thousand particle tracks, these can be merged into a single file "all_particles.inp" with the command 
+NOTE: There are a thousand particle tracks, these aree  merged into a single file "all_particles.inp" by adding the command ```DFN.dfn_trans(combine_avs = True)``` 
 
 .. raw:: html
 
