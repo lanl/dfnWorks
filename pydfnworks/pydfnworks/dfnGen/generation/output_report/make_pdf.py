@@ -1,9 +1,9 @@
 """
-  :filename: make_pdf.py
-  :synopsis: Combines figures and network information to make the output report pdf
-  :version: 1.0
-  :maintainer: Jeffrey Hyman 
-  :moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
+:filename: make_pdf.py
+:synopsis: Combines figures and network information to make the output report pdf
+:version: 1.0
+:maintainer: Jeffrey Hyman 
+:moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
 """
 
 from fpdf import FPDF
@@ -21,19 +21,38 @@ lanl_image = absolute_path + relative_path
 from pydfnworks.general.logging import local_print_log 
 
 
-
 class PDF(FPDF):
+    """
+    Custom PDF class for dfnGen output report, extending FPDF to include
+    a consistent header and footer for each page.
+    """
+
     global name
 
     def header(self):
+        """
+        Override of FPDF.header()
+
+        Adds logos and a title to the top of each page.
+
+        The dfnWorks logo is placed at the top-left, the LANL footer logo
+        at the top-right, and the report title with the job name is centered.
+        """
         # Add Logos
         self.image(dfnworks_image_black, x=5, y=8, w=50)
         self.set_font('Times', 'B', 18)
         self.text(x=100, y=10, txt=f'dfnGen Output Report: {name}')
         self.image(lanl_image, x=240, y=2, w=50)
 
-    # Page footer
     def footer(self):
+        """
+        Override of FPDF.footer()
+
+        Adds a page number at the bottom-center of each page.
+
+        Positions the cursor 1.5 cm from the bottom, sets an italic font, 
+        and writes 'Page X'.
+        """
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
@@ -43,26 +62,25 @@ class PDF(FPDF):
 
 
 def add_table_of_contents(params, pdf):
-    """ Creates Table of contents
+    """Creates the Table of Contents page in the PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        pdf : fpdf object
-            Current working pdf
+    params : dict
+        General dictionary of output report parameters. Contains information
+        on number of families, output directory, and verbosity.
+    pdf : FPDF
+        The current PDF object to which the TOC will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+    FPDF
+        The PDF object with the TOC page appended.
 
     Notes
     ------
-        None
+    None
     """
-
     if params["verbose"]:
         local_print_log("--> Making Table of Contents")
 
@@ -83,22 +101,21 @@ def add_table_of_contents(params, pdf):
 
 
 def create_network_text(params):
-    """ Creates block text for the entire network.
-    
+    """Creates the descriptive text block for the overall network summary.
+
     Parameters
     -------------
-        params : dictionary
-            Output report dictionary containing general parameters. See output_report for more details
+    params : dict
+        Output report dictionary containing general network parameters.
 
     Returns
     -----------
-        text : string
-            Block of text with information about the network. 
+    str
+        A multi-line string detailing job name, counts, P30/P32 metrics, and domain extents.
 
     Notes
     --------
-        None
-
+    None
     """
     text = f'Jobname: {params["jobname"]}\n\
 Number of fracture families:\t{params["num_families"]}\n\
@@ -112,37 +129,33 @@ Domain (m)\n\
     text += f'Entire Network:\n'
     text += f'    P30: {params["Pre-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32 : {params["Pre-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    # text += f'P33: {params["Pre-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     text += f'Connected Network:\n'
     text += f'    P30: {params["Post-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32: {params["Post-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
-    # text += f'P33: {params["Post-Iso Total Fracture Porosity  (P33)"]:0.2e}\n'
 
     return text
 
 
 def add_network_page(params, pdf):
-    """ Add page about the entire network
+    """Adds the network summary page to the PDF.
+
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        pdf : fpdf object
-            Current working pdf
+    params : dict
+        General dictionary of output report parameters.
+    pdf : FPDF
+        The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+    FPDF
+        The PDF object with the network summary page appended.
 
     Notes
     ------
-        None
+    None
     """
-
-    # All Fractures
     if params["verbose"]:
         local_print_log(f"--> Working on Entire Network")
     pdf.add_page()
@@ -171,23 +184,21 @@ def add_network_page(params, pdf):
 
 
 def create_family_text(family):
-    """ Creates block text for one family
-    
+    """Creates the descriptive text block for a single fracture family.
 
     Parameters
     -------------
-        family : dictionary
-            Fracture family dictionary
+    family : dict
+        Dictionary of parameters for the fracture family.
 
     Returns
     -----------
-        text : string
-            Block of text with information about the family. 
+    str
+        A multi-line string detailing counts, shape, distribution parameters, orientation, and P32 results.
 
     Notes
     --------
-        None
-
+    None
     """
     keys = family.keys()
     dist = family["Distribution"]
@@ -223,32 +234,28 @@ def create_family_text(family):
 
 
 def add_family_page(params, family, i, pdf):
-    """ Add page about fracture family. 
+    """Adds a page for a single fracture family to the PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        family : dictionary 
-            Dictionary of information about a fracture family
-        
-        i : int
-            Fracture family id
-        
-        pdf : fpdf object
-            Current working pdf
+    params : dict
+        General dictionary of output report parameters.
+    family : dict
+        Dictionary of information about a specific fracture family.
+    i : int
+        Family index (1-based) used for titling and file paths.
+    pdf : FPDF
+        The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+    FPDF
+        The PDF object with the family page appended.
 
     Notes
     ------
-        None
+    None
     """
-
     if params["verbose"]:
         local_print_log(f"--> Working on Family {family['Global Family']}")
     pdf.add_page()
@@ -274,26 +281,24 @@ def add_family_page(params, family, i, pdf):
 
 
 def add_fram_page(params, pdf):
-    """ Add Page about FRAM information 
+    """Adds a page displaying FRAM algorithm information.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        pdf : fpdf object
-            Current working pdf
+    params : dict
+        General dictionary of output report parameters.
+    pdf : FPDF
+        The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+    FPDF
+        The PDF object with the FRAM information page appended.
 
     Notes
     ------
-        None
+    None
     """
-
     if params["verbose"]:
         local_print_log("--> FRAM information")
 
@@ -307,34 +312,26 @@ def add_fram_page(params, pdf):
 
 
 def make_pdf(params, families, fractures):
-    """ Combines plots and information to make the final output report pdf. 
+    """Combines plots and information to generate the final output report PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-
-        
-        families: list of fracture family dictionaries
-            Created by get_family_information
-
-        
-        fractures: list of fracture dictionaries   
-            Created by get_fracture_information
+    params : dict
+        General dictionary of output report parameters.
+    families : list of dict
+        List of fracture family dictionaries, as returned by get_family_information().
+    fractures : list of dict
+        List of fracture dictionaries, as returned by get_fracture_information().
 
     Returns
     --------
-        None
+    None
 
     Notes
     -------
-        None
-
+    The generated PDF is written to '{jobname}_output_report.pdf' in the current directory.
     """
-
-    local_print_log("--> Combing Images and Making PDF")
-    # print(absolute_path)
-    # print("here")
+    local_print_log("--> Combining Images and Making PDF")
     # name needs to be a global so it's in the header of each page in the PDF
     global name
     name = params["jobname"]
@@ -351,4 +348,3 @@ def make_pdf(params, families, fractures):
 
     # Save PDF
     pdf.output(f"{name}_output_report.pdf", "F")
-
