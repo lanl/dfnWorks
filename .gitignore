@@ -72,4 +72,5 @@ pydfnworks/pydfnworks.egg-info/*
 examples/TPL/output_rfram/*
 .vscode 
 .vscode/* 
+pydfnworks/.install_date
 
