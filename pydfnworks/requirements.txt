@@ -1,12 +1,3 @@
-# requirements.txt
-#
-# installs dependencies from ./setup.py, and the package itself,
-# editable mode (comment/uncomment desired install)
-# -e . --user
-
-# normally
-.
-
 vtk
 pyvista
 numpy
@@ -19,7 +10,8 @@ scipy
 matplotlib
 mplstereonet
 fpdf
-setuptools
 seaborn
 pyvtk
 mpmath
+pyyaml
+tqdm
