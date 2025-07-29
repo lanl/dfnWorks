@@ -17,6 +17,7 @@ C_uge_correct/correct_uge
 C_stor_correct/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
 DFNGen/DFNGen
+CPP_correct_volumes/correct_volume
 
 internal/Documentation/sphinx-docs/build/*
 
@@ -72,4 +73,4 @@ pydfnworks/pydfnworks.egg-info/*
 examples/TPL/output_rfram/*
 .vscode 
 .vscode/* 
-
+pydfnworks/pydfnworks/.install_date
