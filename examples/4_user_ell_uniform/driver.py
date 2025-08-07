@@ -24,7 +24,7 @@ DFN.params['h']['value'] = 0.025
 DFN.params['tripleIntersections']['value'] = True
 
 DFN.add_user_fract(shape='ell',
-                   filename=f'{src_path}/user_defined_cats.dat',
+                   filename=f'{src_path}/user_defined_ellipses.dat',
                    radii=0.5,
                    translation=[-0.2, 0, 0],
                    normal_vector=[0, 0, 1],

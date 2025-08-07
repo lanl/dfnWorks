@@ -1,6 +1,6 @@
 from pydfnworks import *
 import datetime
-
+from pydfnworks import __version__, __release_date__, __install_date__
 
 def legal(self):
     """Print the legal LANL statement for dfnWorks.
@@ -31,7 +31,9 @@ def legal(self):
 ============================================================  \/
 ===================================================================
 
-Program: pydfnWorks v{pydfnworks.__version__} 
+Program: pydfnWorks v{__version__} 
+Release Date: {__release_date__}
+Install Date: {__install_date__}
 Run time : {datetime.datetime.now()}
 
 This program was prepared at Los Alamos National Laboratory (LANL),
