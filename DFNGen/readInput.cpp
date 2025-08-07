@@ -611,7 +611,844 @@ bool ignoreBoundaryFaces;
     \param shapeFamily OUTPUT vector to store stochastic shape families.
 */
 void getInput(char* input, std::vector<Shape> &shapeFamily) {
-    // ... implementation as above ...
+    std::string tempstring;
+    char ch;
+    std::ifstream inputFile;
+    std::string logString = "DFN Generator Input File: " + std::string(input) + "\n\n";
+    logger.writeLogFile(INFO,  logString);
+    // Open input file and initialize variables
+    inputFile.open(input, std::ifstream::in);
+    checkIfOpen(inputFile, tempstring.c_str());
+    searchVar(inputFile, "stopCondition:");
+    inputFile >> stopCondition;
+    searchVar(inputFile, "printRejectReasons:");
+    inputFile >> printRejectReasons;
+    searchVar(inputFile, "domainSize:");
+    inputFile >> ch >> domainSize[0] >> ch >> domainSize[1] >> ch >> domainSize[2];
+    searchVar(inputFile, "numOfLayers:");
+    inputFile >> numOfLayers;
+    if (numOfLayers > 0 ) {
+        layers = new float[numOfLayers * 2]; // Multiply by 2 for +z and -z for each layer
+        layerVol = new float[numOfLayers];
+        searchVar(inputFile, "layers:");
+        logString = "Number of Layers: " + to_string(numOfLayers);
+        logger.writeLogFile(INFO,  logString);
+        for (int i = 0; i < numOfLayers; i++) {
+            int idx = i * 2;
+            inputFile >> ch >> layers[idx] >> ch >> layers[idx + 1] >> ch;
+            logString = "    Layer " + to_string(i + 1) + "{-z,+z}: {" + to_string(layers[idx]) + "," + to_string(layers[idx + 1]) + "}, Volume: ";
+            logger.writeLogFile(INFO,  logString);
+            layerVol[i] = domainSize[0] * domainSize[1] * (std::abs(layers[idx + 1] - layers[idx]));
+            logString = to_string(layerVol[i]) + "m^3\n";
+            logger.writeLogFile(INFO,  logString);
+        }
+        logString = "\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    searchVar(inputFile, "numOfRegions:");
+    inputFile >> numOfRegions;
+    if (numOfRegions > 0 ) {
+        regions = new float[numOfRegions * 6]; // Multiply by 6 xmin, xmax, ymin, ymax, zmin, zmax
+        regionVol = new float[numOfRegions];
+        searchVar(inputFile, "regions:");
+        logString = "Number of Regions: " + to_string(numOfRegions) + "\n";
+        logger.writeLogFile(INFO,  logString);
+        for (int i = 0; i < numOfRegions; i++) {
+            int idx = i * 6;
+            inputFile >> ch >> regions[idx] >> ch >> regions[idx + 1] >> ch >> regions[idx + 2] >> ch >> regions[idx + 3] >> ch >> regions[idx + 4] >> ch >> regions[idx + 5] >> ch;
+            logString = " Region " + to_string(i + 1) + ": {-x,+x,-y,+y,-z,+z}: {" + to_string(regions[idx]) + "," + to_string(regions[idx + 1]) + "," + to_string(regions[idx + 2]) + "," + to_string(regions[idx + 3]) + "," + to_string(regions[idx + 4]) + "," + to_string(regions[idx + 5]) + "}\n";
+            logger.writeLogFile(INFO,  logString);
+            regionVol[i] = (std::abs(regions[idx + 1] - regions[idx])) * (std::abs(regions[idx + 3] - regions[idx + 2])) * (std::abs(regions[idx + 5] - regions[idx + 4])) ;
+            logString = " Volume: " + to_string(regionVol[i]) + "m^3\n";
+            logger.writeLogFile(INFO,  logString);
+        }
+        logString = "\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    searchVar(inputFile, "h:");
+    inputFile >> h;
+    searchVar(inputFile, "disableFram:");
+    inputFile >> disableFram;
+    if (disableFram == true) {
+        logString = "\nFRAM IS DISABLED\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    searchVar(inputFile, "rFram:");
+    inputFile >> rFram;
+    if (rFram == true) {
+        logString = "Running with relaxed FRAM. Mesh may not be fully conforming\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    searchVar(inputFile, "tripleIntersections:");
+    inputFile >> tripleIntersections;
+    searchVar(inputFile, "forceLargeFractures:");
+    inputFile >> forceLargeFractures;
+    searchVar(inputFile, "visualizationMode:");
+    inputFile >> visualizationMode;
+    if (disableFram == true) {
+        visualizationMode = 1;
+    }
+    searchVar(inputFile, "outputAllRadii:");
+    inputFile >> outputAllRadii;
+    searchVar(inputFile, "outputFinalRadiiPerFamily:");
+    inputFile >> outputFinalRadiiPerFamily;
+    searchVar(inputFile, "outputAcceptedRadiiPerFamily:");
+    inputFile >> outputAcceptedRadiiPerFamily;
+    // searchVar(inputFile, "ecpmOutput:");
+    // inputFile >> ecpmOutput;
+    searchVar(inputFile, "seed:");
+    inputFile >> seed;
+    searchVar(inputFile, "domainSizeIncrease:");
+    inputFile >> ch >> domainSizeIncrease[0] >> ch >> domainSizeIncrease[1] >> ch >> domainSizeIncrease[2];
+    searchVar(inputFile, "keepOnlyLargestCluster:");
+    inputFile >> keepOnlyLargestCluster;
+    searchVar(inputFile, "keepIsolatedFractures:");
+    inputFile >> keepIsolatedFractures;
+    searchVar(inputFile, "ignoreBoundaryFaces:");
+    inputFile >> ignoreBoundaryFaces;
+    searchVar(inputFile, "boundaryFaces:");
+    inputFile >> ch >> boundaryFaces[0] >> ch >> boundaryFaces[1] >> ch >> boundaryFaces[2] >> ch >> boundaryFaces[3] >> ch >> boundaryFaces[4] >> ch >> boundaryFaces[5];
+    searchVar(inputFile, "rejectsPerFracture:");
+    inputFile >> rejectsPerFracture;
+    searchVar(inputFile, "nFamRect:");
+    inputFile >> nFamRect;
+    searchVar(inputFile, "nFamEll:");
+    inputFile >> nFamEll;
+    searchVar(inputFile, "removeFracturesLessThan:");
+    inputFile >> removeFracturesLessThan;
+    searchVar(inputFile, "orientationOption:");
+    inputFile >> orientationOption;
+    if (orientationOption == 0) {
+        logString = "Expecting Theta and phi for orientations\n";
+        logger.writeLogFile(INFO,  logString);
+    } else if  (orientationOption == 1) {
+        logString = "Expecting Trend and Plunge for orientations\n";
+        logger.writeLogFile(INFO,  logString);
+    } else if (orientationOption == 2) {
+        logString = "Expecting Dip and Strike (RHR) for orientations\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    searchVar(inputFile, "polygonBoundaryFlag:");
+    inputFile >> polygonBoundaryFlag;
+    if (polygonBoundaryFlag) {
+        logString = "Expecting Polygon Boundary for domain edges";
+        logger.writeLogFile(INFO,  logString);
+        searchVar(inputFile, "polygonBoundaryFile:");
+        inputFile >> tempstring;
+        logString = "Polygon Boundary File: " + tempstring;
+        logger.writeLogFile(INFO,  logString);
+        readDomainVertices(tempstring);
+        logString = "There are " + to_string(numOfDomainVertices) + " Vertices on the boundary";
+        logger.writeLogFile(INFO,  logString);
+        for (int i = 0; i < numOfDomainVertices; i++) {
+            logString = "Vertex " + to_string(i + 1) + ": {" + to_string(domainVertices[i].x) + "," + to_string(domainVertices[i].y) + "}";
+            logger.writeLogFile(INFO,  logString);
+        }
+        logString = "\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+    if (nFamEll > 0 || nFamRect > 0) {
+        searchVar(inputFile, "famProb:");
+        famProb = new float[(nFamEll + nFamRect)];
+        getInputAry(inputFile, famProb, (nFamEll + nFamRect));
+        searchVar(inputFile, "famProb:");
+        famProbOriginal = new float[(nFamEll + nFamRect)];
+        getInputAry(inputFile, famProbOriginal, (nFamEll + nFamRect));
+        searchVar(inputFile, "radiiListIncrease:");
+        inputFile >> radiiListIncrease;
+    }
+    if (nFamEll > 0) {
+        searchVar(inputFile, "ebetaDistribution:");
+        ebetaDistribution = new bool[nFamEll];
+        getInputAry(inputFile, ebetaDistribution, nFamEll);
+        searchVar(inputFile, "eLayer:");
+        eLayer = new int[nFamEll];
+        getInputAry(inputFile, eLayer, nFamEll);
+        searchVar(inputFile, "eRegion:");
+        eRegion = new int[nFamEll];
+        getInputAry(inputFile, eRegion, nFamEll);
+        searchVar(inputFile, "edistr:");
+        edistr = new int[nFamEll];
+        getInputAry(inputFile, edistr, nFamEll);
+        searchVar(inputFile, "easpect:");
+        easpect = new float[nFamEll];
+        getInputAry(inputFile, easpect, nFamEll);
+        searchVar(inputFile, "enumPoints:");
+        enumPoints = new unsigned int[nFamEll];
+        getInputAry(inputFile, enumPoints, nFamEll);
+        searchVar(inputFile, "angleOption:"); // eAngleOption
+        inputFile >> eAngleOption;
+        
+        if (orientationOption == 0) {
+            searchVar(inputFile, "etheta:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "ephi:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        } else if (orientationOption == 1) {
+            searchVar(inputFile, "etrend:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "eplunge:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        } else if (orientationOption == 2) {
+            searchVar(inputFile, "edip:");
+            eAngleOne = new float[nFamEll];
+            getInputAry(inputFile, eAngleOne, nFamEll);
+            searchVar(inputFile, "estrike:");
+            eAngleTwo = new float[nFamEll];
+            getInputAry(inputFile, eAngleTwo, nFamEll);
+        }
+        
+        searchVar(inputFile, "ebeta:");
+        ebeta = new float[nFamEll];
+        getInputAry(inputFile, ebeta, nFamEll);
+        searchVar(inputFile, "ekappa:");
+        ekappa = new float[nFamEll];
+        getInputAry(inputFile, ekappa, nFamEll);
+        searchVar(inputFile, "ekappa2:");
+        ekappa2 = new float[nFamEll];
+        getInputAry(inputFile, ekappa2, nFamEll);
+        searchVar(inputFile, "eLogMean:");
+        eLogMean = new float[nFamEll];
+        getInputAry(inputFile, eLogMean, nFamEll);
+        searchVar(inputFile, "esd:");
+        esd = new float[nFamEll];
+        getInputAry(inputFile, esd, nFamEll);
+        searchVar(inputFile, "eExpMean:");
+        eExpMean = new float[nFamEll];
+        getInputAry(inputFile, eExpMean, nFamEll);
+        searchVar(inputFile, "emin:");
+        emin = new float[nFamEll];
+        getInputAry(inputFile, emin, nFamEll);
+        searchVar(inputFile, "emax:");
+        emax = new float[nFamEll];
+        getInputAry(inputFile, emax, nFamEll);
+        searchVar(inputFile, "ealpha:");
+        ealpha = new float[nFamEll];
+        getInputAry(inputFile, ealpha, nFamEll);
+        searchVar(inputFile, "econst:");
+        econst = new float[nFamEll];
+        getInputAry(inputFile, econst, nFamEll);
+        searchVar(inputFile, "eLogMin:");
+        eLogMin = new float[nFamEll];
+        getInputAry(inputFile, eLogMin, nFamEll);
+        searchVar(inputFile, "eLogMax:");
+        eLogMax = new float[nFamEll];
+        getInputAry(inputFile, eLogMax, nFamEll);
+        searchVar(inputFile, "eExpMin:");
+        eExpMin = new float[nFamEll];
+        getInputAry(inputFile, eExpMin, nFamEll);
+        searchVar(inputFile, "eExpMax:");
+        eExpMax = new float[nFamEll];
+        getInputAry(inputFile, eExpMax, nFamEll);
+        
+        if (stopCondition == 1) {
+            // Get temp array for ellipse p32 targets
+            // Used to simplify initialization of shape family structures below
+            searchVar(inputFile, "e_p32Targets:");
+            e_p32Targets = new float[nFamEll];
+            getInputAry(inputFile, e_p32Targets, nFamEll);
+        }
+    }
+    
+    // Distribution counters
+    int shape1 = 0; //longnormal dist counter
+    int shape2 = 0; //truncated power-law dist counter
+    int shape3 = 0; //exponential dist counter
+    int shape4 = 0; //constant dist counter
+    int betaCount = 0;
+    
+    // Create shape structures from data gathered above
+    for (int i = 0; i < nFamEll; i++) {
+        struct Shape newShapeFam;
+        newShapeFam.shapeFamily = 0; // shapFam = 0 = ellipse, 1 = rect
+        newShapeFam.distributionType = edistr[i];
+        newShapeFam.numPoints = enumPoints[i];
+        newShapeFam.aspectRatio = easpect[i];
+        newShapeFam.angleOne = eAngleOne[i];
+        newShapeFam.angleTwo = eAngleTwo[i];
+        newShapeFam.kappa = ekappa[i];
+        newShapeFam.kappa2 = ekappa2[i];
+        newShapeFam.angleOption = eAngleOption;
+        newShapeFam.layer = eLayer[i];
+        newShapeFam.region = eRegion[i];
+        generateTheta(newShapeFam.thetaList, newShapeFam.aspectRatio, newShapeFam.numPoints);
+        
+        if (ebetaDistribution[i] == 1 ) { // If constant user defined beta option
+            newShapeFam.betaDistribution = 1;
+            newShapeFam.beta = ebeta[betaCount];
+            betaCount++;
+        } else {
+            newShapeFam.betaDistribution = 0;
+        }
+        
+        // dist options:1 = lognormal, 2= truncated power-law, 3= exponential, 4=constant
+        switch (edistr[i]) {
+        case 1: // Lognormal
+            newShapeFam.mean = eLogMean[shape1];
+            newShapeFam.sd = esd[shape1];
+            newShapeFam.logMin = eLogMin[shape1];
+            newShapeFam.logMax = eLogMax[shape1];
+            shape1++;
+            break;
+            
+        case 2: // Truncated power-law
+            newShapeFam.min = emin[shape2];
+            newShapeFam.max = emax[shape2];
+            newShapeFam.alpha = ealpha[shape2];
+            shape2++;
+            break;
+            
+        case 3:
+            newShapeFam.expMean = eExpMean[shape3];
+            newShapeFam.expLambda = 1 / eExpMean[shape3];
+            newShapeFam.expMin = eExpMin[shape3];
+            newShapeFam.expMax = eExpMax[shape3];
+            shape3++;
+            break;
+            
+        case 4:
+            newShapeFam.constRadi = econst[shape4];
+            shape4++;
+            break;
+        }
+        
+        if (stopCondition == 1) {
+            newShapeFam.p32Target = e_p32Targets[i];
+        }
+        
+        // Save shape family to perminant array
+        shapeFamily.push_back(newShapeFam);
+    }
+    
+    if (nFamEll > 0 ) {
+        // Can now delete/free the memory for these arrays
+        delete[] ebetaDistribution;
+        delete[] edistr;
+        delete[] easpect;
+        delete[] enumPoints;
+        delete[] eAngleOne;
+        delete[] eAngleTwo;
+        delete[] ebeta;
+        delete[] ekappa;
+        delete[] ekappa2;
+        delete[] eLogMean;
+        delete[] esd;
+        delete[] eExpMean;
+        delete[] emin;
+        delete[] emax;
+        delete[] ealpha;
+        delete[] econst;
+        delete[] eLayer;
+        delete[] eRegion;
+        delete[] eLogMin;
+        delete[] eLogMax;
+        delete[] eExpMin;
+        delete[] eExpMax;
+        
+        if (stopCondition == 1) {
+            delete[] e_p32Targets;
+        }
+    }
+    
+    if (nFamRect > 0) {
+        searchVar(inputFile, "rbetaDistribution:");
+        rbetaDistribution = new bool[nFamRect];
+        getInputAry(inputFile, rbetaDistribution, nFamRect);
+        searchVar(inputFile, "rdistr:");
+        rdistr = new unsigned int[nFamRect];
+        getInputAry(inputFile, rdistr, nFamRect);
+        searchVar(inputFile, "rLayer:");
+        rLayer = new int[nFamRect];
+        getInputAry(inputFile, rLayer, nFamRect);
+        searchVar(inputFile, "rRegion:");
+        rRegion = new int[nFamRect];
+        getInputAry(inputFile, rRegion, nFamRect);
+        searchVar(inputFile, "raspect:");
+        raspect = new float[nFamRect];
+        getInputAry(inputFile, raspect, nFamRect);
+        searchVar(inputFile, "angleOption:");//rAngleOption
+        inputFile >> rAngleOption;
+        
+        if (orientationOption == 0) {
+            searchVar(inputFile, "rtheta:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rphi:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        } else if (orientationOption == 1) {
+            searchVar(inputFile, "rtrend:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rplunge:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        } else if (orientationOption == 2) {
+            searchVar(inputFile, "rdip:");
+            rAngleOne = new float[nFamRect];
+            getInputAry(inputFile, rAngleOne, nFamRect);
+            searchVar(inputFile, "rstrike:");
+            rAngleTwo = new float[nFamRect];
+            getInputAry(inputFile, rAngleTwo, nFamRect);
+        }
+        
+        searchVar(inputFile, "rbeta:");
+        rbeta = new float[nFamRect];
+        getInputAry(inputFile, rbeta, nFamRect);
+        searchVar(inputFile, "rkappa:");
+        rkappa = new float[nFamRect];
+        getInputAry(inputFile, rkappa, nFamRect);
+        searchVar(inputFile, "rkappa2:");
+        rkappa2 = new float[nFamRect];
+        getInputAry(inputFile, rkappa2, nFamRect);
+        searchVar(inputFile, "rLogMean:");
+        rLogMean = new float[nFamRect];
+        getInputAry(inputFile, rLogMean, nFamRect);
+        searchVar(inputFile, "rsd:");
+        rsd = new float[nFamRect];
+        getInputAry(inputFile, rsd, nFamRect);
+        searchVar(inputFile, "rmin:");
+        rmin = new float[nFamRect];
+        getInputAry(inputFile, rmin, nFamRect);
+        searchVar(inputFile, "rmax:");
+        rmax = new float[nFamRect];
+        getInputAry(inputFile, rmax, nFamRect);
+        searchVar(inputFile, "ralpha:");
+        ralpha = new float[nFamRect];
+        getInputAry(inputFile, ralpha, nFamRect);
+        searchVar(inputFile, "rExpMean:")
+        rExpMean = new float[nFamRect];
+        getInputAry(inputFile, rExpMean, nFamRect);
+        searchVar(inputFile, "rconst:");
+        rconst = new float[nFamRect];
+        getInputAry(inputFile, rconst, nFamRect);
+        searchVar(inputFile, "rLogMin:");
+        rLogMin = new float[nFamRect];
+        getInputAry(inputFile, rLogMin, nFamRect);
+        searchVar(inputFile, "rLogMax:");
+        rLogMax = new float[nFamRect];
+        getInputAry(inputFile, rLogMax, nFamRect);
+        searchVar(inputFile, "rExpMin:");
+        rExpMin = new float[nFamRect];
+        getInputAry(inputFile, rExpMin, nFamRect);
+        searchVar(inputFile, "rExpMax:");
+        rExpMax = new float[nFamRect];
+        getInputAry(inputFile, rExpMax, nFamRect);
+        
+        if (stopCondition == 1) {
+            // Get temp array for rectangle p32 targets,
+            // Used to simplify initialization of shape family structures below
+            searchVar(inputFile, "r_p32Targets:");
+            r_p32Targets = new float[nFamRect];
+            getInputAry(inputFile, r_p32Targets, nFamRect);
+        }
+    }
+    
+    // Set stop condition variables
+    if (nFamRect > 0 || nFamEll > 0) {
+        if (stopCondition == 0) { // npoly option
+            searchVar(inputFile, "nPoly:");
+            inputFile >> nPoly;
+        } else if (stopCondition == 1) { // Stop program when p32 conditions per fracture family are met
+            p32Status = new bool [nFamRect + nFamEll]; // Staus array for whether or not the family has reached its p32 requirement
+            
+            for (int i = 0; i < (nFamRect + nFamEll); i++) {
+                // Zero the status flags
+                p32Status[i] = 0;
+            }
+        }
+    }
+    
+    // Counters, used to place variable into correct array index
+    // distribution counters
+    shape1 = 0; // Longnormal dist counter
+    shape2 = 0; // Truncated power-law dist counter
+    shape3 = 0; // Exponential dist counter
+    shape4 = 0; // Constant dist counter
+    betaCount = 0;
+    
+    // Create shape strucutres from data gathered above
+    for (int i = 0; i < nFamRect; i++) {
+        struct Shape newShapeFam;
+        newShapeFam.shapeFamily = 1; // shapFam = 0 = ellipse, 1 = rect
+        newShapeFam.distributionType = rdistr[i];
+        newShapeFam.numPoints = 4; // Rectangle
+        newShapeFam.aspectRatio = raspect[i];
+        newShapeFam.angleOne = rAngleOne[i];
+        newShapeFam.angleTwo = rAngleTwo[i];
+        newShapeFam.kappa = rkappa[i];
+        newShapeFam.kappa2 = rkappa2[i];
+        newShapeFam.angleOption = rAngleOption;
+        newShapeFam.layer = rLayer[i];
+        newShapeFam.region = rRegion[i];
+        
+        if (rbetaDistribution[i] == 1 ) { // If constant beta option
+            newShapeFam.betaDistribution = 1;
+            newShapeFam.beta = rbeta[betaCount];
+            betaCount++;
+        } else {
+            newShapeFam.betaDistribution = 0;
+        }
+        
+        // dist options:1 = lognormal, 2= truncated power-law, 3= exponential, 4=constant
+        switch (rdistr[i]) {
+        case 1: // Lognormal
+            newShapeFam.mean = rLogMean[shape1];
+            newShapeFam.sd = rsd[shape1];
+            newShapeFam.logMin = rLogMin[shape1];
+            newShapeFam.logMax = rLogMax[shape1];
+            shape1++;
+            break;
+            
+        case 2: // Truncated power-law
+            newShapeFam.min = rmin[shape2];
+            newShapeFam.max = rmax[shape2];
+            newShapeFam.alpha = ralpha[shape2];
+            shape2++;
+            break;
+            
+        case 3:
+            newShapeFam.expMean = rExpMean[shape3];
+            newShapeFam.expLambda = 1 / rExpMean[shape3];
+            newShapeFam.expMin = rExpMin[shape3];
+            newShapeFam.expMax = rExpMax[shape3];
+            shape3++;
+            break;
+            
+        case 4:
+            newShapeFam.constRadi = rconst[shape4];
+            shape4++;
+            break;
+        }
+        
+        if (stopCondition == 1) {
+            newShapeFam.p32Target = r_p32Targets[i];
+        }
+        // Save family to perminant array
+        shapeFamily.push_back(newShapeFam);
+    }
+    
+    if (nFamRect > 0 ) {
+        // Can now delete/free the memory for these arrays
+        delete[] rbetaDistribution;
+        delete[] rdistr;
+        delete[] raspect;
+        delete[] rAngleOne;
+        delete[] rAngleTwo;
+        delete[] rbeta;
+        delete[] rkappa;
+        delete[] rkappa2;
+        delete[] rLogMean;
+        delete[] rsd;
+        delete[] rExpMean;
+        delete[] rmin;
+        delete[] rmax;
+        delete[] ralpha;
+        delete[] rconst;
+        delete[] rLayer;
+        delete[] rRegion;
+        delete[] rLogMin;
+        delete[] rLogMax;
+        delete[] rExpMin;
+        delete[] rExpMax;
+        
+        if (stopCondition == 1) {
+            delete[] r_p32Targets;
+        }
+    }
+    
+    searchVar(inputFile, "userEllipsesOnOff:");
+    inputFile >> userEllipsesOnOff;
+    
+    if (userEllipsesOnOff != 0) {
+        searchVar(inputFile, "UserEll_Input_File_Path:");
+        inputFile >> tempstring;
+        std::ifstream uEllFile;
+        uEllFile.open(tempstring.c_str(), std::ifstream::in);
+        checkIfOpen(uEllFile, tempstring);
+        logString = "User Defined Ellipses File: " + tempstring;
+        logger.writeLogFile(INFO,  logString);
+        searchVar(uEllFile, "nUserEll:");
+        uEllFile >> nUserEll;
+        searchVar(uEllFile, "Radii:");
+        ueRadii = new float[nUserEll];
+        getElements(uEllFile, ueRadii, nUserEll);
+        searchVar(uEllFile, "Aspect_Ratio:");
+        ueaspect = new float[nUserEll];
+        getElements(uEllFile, ueaspect, nUserEll);
+        searchVar(uEllFile, "AngleOption:");
+        uEllFile >> ueAngleOption;
+        searchVar(uEllFile, "Beta:");
+        ueBeta = new float[nUserEll];
+        getElements(uEllFile, ueBeta, nUserEll);
+        searchVar(uEllFile, "Translation:");
+        uetranslation = new double[3 * nUserEll];
+        get2dAry(uEllFile, uetranslation, nUserEll);
+        //
+        searchVar(uEllFile, "userOrientationOption:");
+        uEllFile >> userEllOrientationOption;
+        logString = "userOrientationOption " + to_string(userEllOrientationOption);
+        logger.writeLogFile(INFO,  logString);
+        
+        if (userEllOrientationOption == 0) {
+            searchVar(uEllFile, "Normal:");
+            uenormal = new double[3 * nUserEll];
+            get2dAry(uEllFile, uenormal, nUserEll);
+        } else if (userEllOrientationOption == 1) {
+            searchVar(uEllFile, "Trend_Plunge:");
+            ueTrendPlunge = new double[2 * nUserEll];
+            get2dAry2(uEllFile, ueTrendPlunge, nUserEll);
+            uenormal = new double[3 * nUserEll];
+            // Convert Trend and Plunge into Dip and Strike
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserEll; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // ueTrendPlunge[index1] = Trend
+                // ueTrendPlunge[index1+1] = Plunge
+                double trend = ueTrendPlunge[index1] * temp;
+                double plunge = ueTrendPlunge[index1 + 1] * temp;
+                //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
+                uenormal[index2] = cos(trend) * cos(plunge);
+                uenormal[index2 + 1] = sin(trend) * cos(plunge);
+                uenormal[index2 + 2] = sin(plunge);
+            }
+        } else if (userEllOrientationOption == 2) {
+            searchVar(uEllFile, "Dip_Strike:");
+            ueDipStrike = new double[2 * nUserEll];
+            get2dAry2(uEllFile, ueDipStrike, nUserEll);
+            uenormal = new double[3 * nUserEll];
+            // Convert Trend and Plunge into Dip and Strike
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserEll; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // angleOne = Trend
+                // angleTwo = Plunge
+                double dip = ueDipStrike[index1] * temp;
+                double strike = ueDipStrike[index1 + 1] * temp;
+                //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
+                uenormal[index2] = sin(dip) * sin(strike);
+                uenormal[index2 + 1] = -sin(dip) * cos(strike);
+                uenormal[index2 + 2] = cos(dip);
+            }
+        }
+        
+        searchVar(uEllFile, "Number_of_Vertices:");
+        uenumPoints = new unsigned int[nUserEll];
+        getElements(uEllFile, uenumPoints, nUserEll);
+        uEllFile.close();
+    }
+    
+    searchVar(inputFile, "userRectanglesOnOff:");
+    inputFile >> userRectanglesOnOff;
+    
+    if (userRectanglesOnOff != 0) {
+        searchVar(inputFile, "UserRect_Input_File_Path:");
+        inputFile >> tempstring;
+        std::ifstream uRectFile;
+        uRectFile.open(tempstring.c_str(), std::ifstream::in);
+        checkIfOpen(uRectFile, tempstring);
+        logString = "User Defined Rectangles File: " + tempstring + "\n";
+        logger.writeLogFile(INFO,  logString);
+        searchVar(uRectFile, "nUserRect:");
+        uRectFile >> nUserRect;
+        searchVar(uRectFile, "Radii:");
+        urRadii = new float[nUserRect];
+        getElements(uRectFile, urRadii, nUserRect);
+        searchVar(uRectFile, "AngleOption:");
+        uRectFile >> urAngleOption;
+        searchVar(uRectFile, "Beta:");
+        urBeta = new float[nUserRect];
+        getElements(uRectFile, urBeta, nUserRect);
+        searchVar(uRectFile, "Aspect_Ratio:");
+        uraspect = new float[nUserRect];
+        getElements(uRectFile, uraspect, nUserRect);
+        searchVar(uRectFile, "Translation:");
+        urtranslation = new double[3 * nUserRect];
+        get2dAry(uRectFile, urtranslation, nUserRect);
+        searchVar(uRectFile, "userOrientationOption:");
+        uRectFile >> userRectOrientationOption;
+        
+        // std::cout << "userRectOrientationOption: " << userRectOrientationOption << " \n";
+        if (userRectOrientationOption == 0) {
+            searchVar(uRectFile, "Normal:");
+            urnormal = new double[3 * nUserRect];
+            get2dAry(uRectFile, urnormal, nUserRect);
+        } else if (userRectOrientationOption == 1) {
+            searchVar(uRectFile, "Trend_Plunge:");
+            urTrendPlunge = new double[2 * nUserRect];
+            get2dAry2(uRectFile, urTrendPlunge, nUserRect);
+            urnormal = new double[3 * nUserRect];
+            double temp = M_PI / 180;
+            
+            // Convert Trend and Plunge into Dip and Strike
+            for (int i = 0; i < nUserRect; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // Trend and Plunge
+                // urTrendPlunge[index1] = Trend
+                // urTrendPlunge[index1+1] = Plunge
+                // convert to radians
+                double trend = urTrendPlunge[index1] * temp;
+                double plunge = urTrendPlunge[index1 + 1] * temp;
+                //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
+                //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
+                urnormal[index2] = cos(trend) * cos(plunge);
+                urnormal[index2 + 1] = sin(trend) * cos(plunge);
+                urnormal[index2 + 2] = sin(plunge);
+                //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
+            }
+        } else if (userRectOrientationOption == 2) {
+            searchVar(uRectFile, "Dip_Strike:");
+            urDipStrike = new double[2 * nUserRect];
+            get2dAry2(uRectFile, urDipStrike, nUserRect);
+            urnormal = new double[3 * nUserRect];
+            // Convert Dip and Strike into normal vectors
+            double temp = M_PI / 180;
+            
+            for (int i = 0; i < nUserRect; i++) {
+                int index1 = i * 2;
+                int index2 = i * 3;
+                // dip and strike
+                // urDipStrike[index1] = dip
+                // urDipStrike[index1+1] = strike
+                // convert to radians
+                double dip = urDipStrike[index1] * temp;
+                double strike = urDipStrike[index1 + 1] * temp;
+                //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
+                urnormal[index2] = sin(dip) * sin(strike);
+                urnormal[index2 + 1] = -sin(dip) * cos(strike);
+                urnormal[index2 + 2] = cos(dip);
+            }
+        }
+        
+        uRectFile.close();
+    }
+    
+    searchVar(inputFile, "userEllByCoord:");
+    inputFile >> userEllByCoord;
+    searchVar(inputFile, "userRecByCoord:");
+    inputFile >> userRecByCoord;
+    searchVar(inputFile, "userPolygonByCoord:");
+    inputFile >> userPolygonByCoord;
+    
+    if ((userRectanglesOnOff == 1 || userRecByCoord == 1) && (userEllipsesOnOff == 1 || userEllByCoord == 1)) {
+        searchVar(inputFile, "insertUserRectanglesFirst:");
+        inputFile >> insertUserRectanglesFirst;
+    } else {
+        insertUserRectanglesFirst = 0;
+    }
+    
+    if (userPolygonByCoord != 0) {
+        searchVar(inputFile, "PolygonByCoord_Input_File_Path:");
+        inputFile >> polygonFile;
+    }
+    
+    if (userEllByCoord != 0) {
+        searchVar(inputFile, "EllByCoord_Input_File_Path:");
+        inputFile >> tempstring;
+        std::ifstream file;
+        file.open(tempstring.c_str(), std::ifstream::in);
+        checkIfOpen(file, tempstring);
+        logString = "User Defined Ellipses by Coordinates File: " + tempstring + "\n";
+        logger.writeLogFile(INFO,  logString);
+        searchVar(file, "nEllipses:");
+        file >> nEllByCoord;
+        searchVar(file, "nNodes:");
+        file >> nEllNodes;
+        userEllCoordVertices = new double[3 * nEllNodes * nEllByCoord];
+        searchVar(file, "Coordinates:");
+        getCords(file, userEllCoordVertices, nEllByCoord, nEllNodes);
+        file.close();
+    }
+    
+    if (userRecByCoord != 0) {
+        searchVar(inputFile, "RectByCoord_Input_File_Path:");
+        inputFile >> tempstring;
+        std::ifstream uCoordFile;
+        uCoordFile.open(tempstring.c_str(), std::ifstream::in);
+        checkIfOpen(uCoordFile, tempstring);
+        logString = "User Defined Rectangles by Coordinates File: " + tempstring + "\n";
+        logger.writeLogFile(INFO,  logString);
+        searchVar(uCoordFile, "nRectangles:");
+        uCoordFile >> nRectByCoord;
+        searchVar(uCoordFile, "Coordinates:");
+        //4 vertices, 12 elements x,y,z per rectangle:
+        userRectCoordVertices = new double[12 * nRectByCoord];
+        getRectCoords(uCoordFile, userRectCoordVertices, nRectByCoord);
+        uCoordFile.close();
+    }
+    
+    // searchVar(inputFile, "aperture:");
+    // inputFile >> aperture;
+    
+    // if (aperture == 1) {
+    //     searchVar(inputFile, "meanAperture:");
+    //     inputFile >> meanAperture;
+    //     searchVar(inputFile, "stdAperture:");
+    //     inputFile >> stdAperture;
+    // } else if (aperture == 2) {
+    //     searchVar(inputFile, "apertureFromTransmissivity:");
+    //     getInputAry(inputFile, apertureFromTransmissivity, 2);
+    // } else if (aperture == 3) {
+    //     searchVar(inputFile, "constantAperture:");
+    //     inputFile >> constantAperture;
+    // } else if (aperture == 4) {
+    //     searchVar(inputFile, "lengthCorrelatedAperture:");
+    //     getInputAry(inputFile, lengthCorrelatedAperture, 2);
+    // } else {
+    //     std::cerr << "\nERROR: Aperture option not recognised\n";
+    //     exit(1);
+    // }
+    // searchVar(inputFile, "permOption:");
+    // inputFile >> permOption;
+    // if (permOption != 0) {
+    //     searchVar(inputFile, "constantPermeability:");
+    //     inputFile >> constantPermeability;
+    // }
+    // Error check on stopping parameter
+    if (nFamEll + nFamRect == 0 && stopCondition != 0) { // If no stochastic shapes, use nPoly option with npoly = number of user polygons
+        logString = "Warning: You have defined stopCondition = 1 (P32 program stopping condition) but have no stochastic shape families defined. Automatically setting stopCondition to 0 for use with user defined polygons and nPoly.\n\n";
+        logger.writeLogFile(WARNING,  logString);
+        stopCondition = 0;
+        if (userEllipsesOnOff == 0 && userRectanglesOnOff == 0 && userRecByCoord == 0 ) {
+            logString = "Error: All polygon generating options are off or undefined, please check input file for errors.\n\n";
+            logger.writeLogFile(ERROR,  logString);
+            exit(1);
+        }
+        int count = 0; // Count of user defined polygons
+        if (userEllipsesOnOff == 1) {
+            count += nUserEll;
+        }
+        if (userRectanglesOnOff == 1) {
+            count += nUserRect;
+        }
+        if (userRecByCoord == 1) {
+            count += nRectByCoord;
+        }
+        // Set nPoly to the amount of user defined polygons
+        nPoly = count;
+    }
+    inputFile.close();
+    // Convert angles to rad if necessary, all functions and code require radians
+    for (unsigned int i = 0; i < shapeFamily.size(); i ++) {
+        if (shapeFamily[i].angleOption == 1 ) { // Convert deg to rad
+            double temp = M_PI / 180;
+            shapeFamily[i].beta *= temp;
+            shapeFamily[i].angleOne *= temp;
+            shapeFamily[i].angleTwo *= temp;
+            shapeFamily[i].angleOption = 0; // Angles now in radians
+        }
+    }
 }
 
 /****************************************************************************************/
