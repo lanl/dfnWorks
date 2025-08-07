@@ -96,10 +96,7 @@ def fracture_family_dictionary():
         },
         'orientation_distribution': {
             'type': bool,
-            'value': {
-                'fisher': False,
-                'bingham': False,
-            },
+            'value': 'fisher',
             'description':
             'Type of orientation distribution'
         },
@@ -254,7 +251,7 @@ def add_fracture_family(self,
                         distribution,
                         kappa,
                         kappa2=None,
-                        orientation_distribution=None,
+                        orientation_distribution='fisher',
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -376,9 +373,9 @@ def add_fracture_family(self,
     # Orientation
     family['beta_distribution']['value'] = beta_distribution
     family['beta']['value'] = beta
-    family['orientation_distribution']['value'] = orientation_distribution.lower()
+    family['orientation_distribution']['value'] = orientation_distribution
 
-    if orientation_distribution.lower() == 'bingham':
+    if family['orientation_distribution']['value'] == 'bingham':
         family['bingham']['value']['theta'] = theta
         family['bingham']['value']['phi'] = phi
         family['bingham']['value']['strike'] = strike
@@ -388,7 +385,7 @@ def add_fracture_family(self,
         family['bingham']['value']['kappa'] = kappa
         family['bingham']['value']['kappa2'] = kappa2
 
-    elif orientation_distribution.lower() == 'fisher':
+    elif family['orientation_distribution']['value'] == 'fisher':
         family['fisher']['value']['theta'] = theta
         family['fisher']['value']['phi'] = phi
         family['fisher']['value']['strike'] = strike
