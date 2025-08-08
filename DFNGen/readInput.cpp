@@ -6,7 +6,6 @@
  * and provides the getInput function to read user-specified parameters
  * from an input file, initializing stochastic fracture families accordingly.
  */
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -217,6 +216,7 @@ float *eAngleOne;
     This is the mean strike of Ellipse fracture orientation.*/
 float *eAngleTwo;
 
+
 /*! Rotation around the fractures' normal vector.
     Ellipse family parameter.*/
 float *ebeta;
@@ -307,6 +307,7 @@ bool rAngleOption;
         distributions will still be used while generating the DFN.*/
 float removeFracturesLessThan;
 
+
 /*! First Rectangle fracture orientation.
     If orientationOption = 0 (Spherical coordinates)
     This The angle the normal vector makes with the z-axis
@@ -323,7 +324,7 @@ float *rAngleOne;
     onto the x-y plane makes with the x-axis
     If  orientationOption = 1
     This is the plunge of Rectangle fracture orientation.
-    If  orientationOption = 2
+    If orientationOption = 2
     This is the mean strike of Rectangle fracture orientation. */
 float *rAngleTwo;
 
@@ -423,6 +424,11 @@ bool userEllByCoord;
 /*! True  - User polygons defined by coordinates are being used.
     False - No polygons defined by coordinates are being used.*/
 bool userPolygonByCoord;
+
+/*! False - Permeability of each fracture is a function of fracture aperture,
+            given by k=(b^2)/12, where b is an aperture and k is permeability
+    True  - Constant permeabilty for all fractures*/
+// bool permOption;
 
 /*! Caution: Can create very large files.
     Outputs all fractures which were generated during
@@ -530,6 +536,7 @@ std::string polygonFile;
     families (Set to 1 to ignore this feature)*/
 int rejectsPerFracture;
 
+
 // Z - layers in the DFN
 /*! Number of layers defined. */
 int numOfLayers;
@@ -606,7 +613,6 @@ bool ignoreBoundaryFaces;
 /*! Reads in all input variables.
     Creates Shape structure array from user input if
     using stochastic fracture families.
-
     \param input Path to input file.
     \param shapeFamily OUTPUT vector to store stochastic shape families.
 */
@@ -627,20 +633,14 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> ch >> domainSize[0] >> ch >> domainSize[1] >> ch >> domainSize[2];
     searchVar(inputFile, "numOfLayers:");
     inputFile >> numOfLayers;
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
+
     if (numOfLayers > 0 ) {
         layers = new float[numOfLayers * 2]; // Multiply by 2 for +z and -z for each layer
         layerVol = new float[numOfLayers];
         searchVar(inputFile, "layers:");
         logString = "Number of Layers: " + to_string(numOfLayers);
         logger.writeLogFile(INFO,  logString);
-<<<<<<< HEAD
-        
-=======
->>>>>>> 11911383 (fixing readInput)
+
         for (int i = 0; i < numOfLayers; i++) {
             int idx = i * 2;
             inputFile >> ch >> layers[idx] >> ch >> layers[idx + 1] >> ch;
@@ -650,7 +650,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             logString = to_string(layerVol[i]) + "m^3\n";
             logger.writeLogFile(INFO,  logString);
         }
-<<<<<<< HEAD
         
         logString = "\n";
         logger.writeLogFile(INFO,  logString);
@@ -659,23 +658,17 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     searchVar(inputFile, "numOfRegions:");
     inputFile >> numOfRegions;
     
-=======
-        logString = "\n";
-        logger.writeLogFile(INFO,  logString);
-    }
-    searchVar(inputFile, "numOfRegions:");
-    inputFile >> numOfRegions;
->>>>>>> 11911383 (fixing readInput)
+    logString = "\n";
+    logger.writeLogFile(INFO,  logString);
+
+    
     if (numOfRegions > 0 ) {
         regions = new float[numOfRegions * 6]; // Multiply by 6 xmin, xmax, ymin, ymax, zmin, zmax
         regionVol = new float[numOfRegions];
         searchVar(inputFile, "regions:");
         logString = "Number of Regions: " + to_string(numOfRegions) + "\n";
         logger.writeLogFile(INFO,  logString);
-<<<<<<< HEAD
-        
-=======
->>>>>>> 11911383 (fixing readInput)
+
         for (int i = 0; i < numOfRegions; i++) {
             int idx = i * 6;
             inputFile >> ch >> regions[idx] >> ch >> regions[idx + 1] >> ch >> regions[idx + 2] >> ch >> regions[idx + 3] >> ch >> regions[idx + 4] >> ch >> regions[idx + 5] >> ch;
@@ -685,63 +678,49 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             logString = " Volume: " + to_string(regionVol[i]) + "m^3\n";
             logger.writeLogFile(INFO,  logString);
         }
-<<<<<<< HEAD
+
         
         logString = "\n";
         logger.writeLogFile(INFO,  logString);
     }
     
-=======
-        logString = "\n";
-        logger.writeLogFile(INFO,  logString);
-    }
->>>>>>> 11911383 (fixing readInput)
+
     searchVar(inputFile, "h:");
     inputFile >> h;
     searchVar(inputFile, "disableFram:");
     inputFile >> disableFram;
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
+
     if (disableFram == true) {
         logString = "\nFRAM IS DISABLED\n";
         logger.writeLogFile(INFO,  logString);
     }
-<<<<<<< HEAD
+
     
     searchVar(inputFile, "rFram:");
     inputFile >> rFram;
     
-=======
-    searchVar(inputFile, "rFram:");
-    inputFile >> rFram;
->>>>>>> 11911383 (fixing readInput)
+
     if (rFram == true) {
         logString = "Running with relaxed FRAM. Mesh may not be fully conforming\n";
         logger.writeLogFile(INFO,  logString);
     }
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
+
     searchVar(inputFile, "tripleIntersections:");
     inputFile >> tripleIntersections;
     searchVar(inputFile, "forceLargeFractures:");
     inputFile >> forceLargeFractures;
     searchVar(inputFile, "visualizationMode:");
     inputFile >> visualizationMode;
-<<<<<<< HEAD
+
     
     if (disableFram == true) {
         visualizationMode = 1;
     }
     
-=======
     if (disableFram == true) {
         visualizationMode = 1;
     }
->>>>>>> 11911383 (fixing readInput)
+
     searchVar(inputFile, "outputAllRadii:");
     inputFile >> outputAllRadii;
     searchVar(inputFile, "outputFinalRadiiPerFamily:");
@@ -772,15 +751,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> removeFracturesLessThan;
     searchVar(inputFile, "orientationOption:");
     inputFile >> orientationOption;
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
+
     if (orientationOption == 0) {
         logString = "Expecting Theta and phi for orientations\n";
         logger.writeLogFile(INFO,  logString);
     } else if  (orientationOption == 1) {
-<<<<<<< HEAD
         logString = "Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n";
         logger.writeLogFile(INFO,  logString);
     } else if (orientationOption == 2) {
@@ -791,16 +766,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     searchVar(inputFile, "polygonBoundaryFlag:");
     inputFile >> polygonBoundaryFlag;
     
-=======
-        logString = "Expecting Trend and Plunge for orientations\n";
-        logger.writeLogFile(INFO,  logString);
-    } else if (orientationOption == 2) {
-        logString = "Expecting Dip and Strike (RHR) for orientations\n";
-        logger.writeLogFile(INFO,  logString);
-    }
-    searchVar(inputFile, "polygonBoundaryFlag:");
-    inputFile >> polygonBoundaryFlag;
->>>>>>> 11911383 (fixing readInput)
+
     if (polygonBoundaryFlag) {
         logString = "Expecting Polygon Boundary for domain edges";
         logger.writeLogFile(INFO,  logString);
@@ -811,25 +777,18 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         readDomainVertices(tempstring);
         logString = "There are " + to_string(numOfDomainVertices) + " Vertices on the boundary";
         logger.writeLogFile(INFO,  logString);
-<<<<<<< HEAD
-        
-=======
->>>>>>> 11911383 (fixing readInput)
+
         for (int i = 0; i < numOfDomainVertices; i++) {
             logString = "Vertex " + to_string(i + 1) + ": {" + to_string(domainVertices[i].x) + "," + to_string(domainVertices[i].y) + "}";
             logger.writeLogFile(INFO,  logString);
         }
-<<<<<<< HEAD
+
         
         logString = "\n";
         logger.writeLogFile(INFO,  logString);
     }
     
-=======
-        logString = "\n";
-        logger.writeLogFile(INFO,  logString);
-    }
->>>>>>> 11911383 (fixing readInput)
+
     if (nFamEll > 0 || nFamRect > 0) {
         searchVar(inputFile, "famProb:");
         famProb = new float[(nFamEll + nFamRect)];
@@ -840,10 +799,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "radiiListIncrease:");
         inputFile >> radiiListIncrease;
     }
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
+
     if (nFamEll > 0) {
         searchVar(inputFile, "ebetaDistribution:");
         ebetaDistribution = new bool[nFamEll];
@@ -1107,13 +1063,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "ralpha:");
         ralpha = new float[nFamRect];
         getInputAry(inputFile, ralpha, nFamRect);
-<<<<<<< HEAD
+
         searchVar(inputFile, "rExpMean:");
-=======
-        searchVar(inputFile, "rExpMean:")
->>>>>>> 11911383 (fixing readInput)
         rExpMean = new float[nFamRect];
         getInputAry(inputFile, rExpMean, nFamRect);
+
         searchVar(inputFile, "rconst:");
         rconst = new float[nFamRect];
         getInputAry(inputFile, rconst, nFamRect);
@@ -1219,10 +1173,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         if (stopCondition == 1) {
             newShapeFam.p32Target = r_p32Targets[i];
         }
-<<<<<<< HEAD
-        
-=======
->>>>>>> 11911383 (fixing readInput)
+
         // Save family to perminant array
         shapeFamily.push_back(newShapeFam);
     }
@@ -1288,17 +1239,15 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         uEllFile >> userEllOrientationOption;
         logString = "userOrientationOption " + to_string(userEllOrientationOption);
         logger.writeLogFile(INFO,  logString);
-<<<<<<< HEAD
+
         if (userEllOrientationOption == 1) {
             logger.writeLogFile(INFO, "User ellipses: Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n");
         } else if (userEllOrientationOption == 2) {
             logger.writeLogFile(INFO, "User ellipses: Expecting Dip & Strike (RHR; strike clockwise from North)\n");
         }
        
- 
-=======
-        
->>>>>>> 11911383 (fixing readInput)
+
+
         if (userEllOrientationOption == 0) {
             searchVar(uEllFile, "Normal:");
             uenormal = new double[3 * nUserEll];
@@ -1308,10 +1257,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             ueTrendPlunge = new double[2 * nUserEll];
             get2dAry2(uEllFile, ueTrendPlunge, nUserEll);
             uenormal = new double[3 * nUserEll];
-<<<<<<< HEAD
-=======
-            // Convert Trend and Plunge into Dip and Strike
->>>>>>> 11911383 (fixing readInput)
             double temp = M_PI / 180;
             
             for (int i = 0; i < nUserEll; i++) {
@@ -1323,27 +1268,18 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double trend = ueTrendPlunge[index1] * temp;
                 double plunge = ueTrendPlunge[index1 + 1] * temp;
                 //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
-<<<<<<< HEAD
                 // Trend clockwise from North, Plunge positive downward
                 // Upward-pointing normal (negated from the standard downward pole)
                 uenormal[index2]     = -sin(trend) * cos(plunge); // X (East)
                 uenormal[index2 + 1] = -cos(trend) * cos(plunge); // Y (North)
                 uenormal[index2 + 2] =  sin(plunge);              // Z (Up)
-=======
-                uenormal[index2] = cos(trend) * cos(plunge);
-                uenormal[index2 + 1] = sin(trend) * cos(plunge);
-                uenormal[index2 + 2] = sin(plunge);
->>>>>>> 11911383 (fixing readInput)
             }
         } else if (userEllOrientationOption == 2) {
             searchVar(uEllFile, "Dip_Strike:");
             ueDipStrike = new double[2 * nUserEll];
             get2dAry2(uEllFile, ueDipStrike, nUserEll);
             uenormal = new double[3 * nUserEll];
-<<<<<<< HEAD
-=======
-            // Convert Trend and Plunge into Dip and Strike
->>>>>>> 11911383 (fixing readInput)
+
             double temp = M_PI / 180;
             
             for (int i = 0; i < nUserEll; i++) {
@@ -1355,16 +1291,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double dip = ueDipStrike[index1] * temp;
                 double strike = ueDipStrike[index1 + 1] * temp;
                 //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
-<<<<<<< HEAD
                 // Strike is clockwise from North (Y), Right-Hand Rule
                 uenormal[index2]     =  sin(dip) * cos(strike); // X (East)
                 uenormal[index2 + 1] = -sin(dip) * sin(strike); // Y (North)
                 uenormal[index2 + 2] =  cos(dip);               // Z (Up)
-=======
-                uenormal[index2] = sin(dip) * sin(strike);
-                uenormal[index2 + 1] = -sin(dip) * cos(strike);
-                uenormal[index2 + 2] = cos(dip);
->>>>>>> 11911383 (fixing readInput)
+
             }
         }
         
@@ -1403,17 +1334,14 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         get2dAry(uRectFile, urtranslation, nUserRect);
         searchVar(uRectFile, "userOrientationOption:");
         uRectFile >> userRectOrientationOption;
-<<<<<<< HEAD
+
         if (userRectOrientationOption == 1) {
             logger.writeLogFile(INFO, "User rectangles: Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n");
         } else if (userRectOrientationOption == 2) {
             logger.writeLogFile(INFO, "User rectangles: Expecting Dip & Strike (RHR; strike clockwise from North)\n");
         }
        
- 
-=======
         
->>>>>>> 11911383 (fixing readInput)
         // std::cout << "userRectOrientationOption: " << userRectOrientationOption << " \n";
         if (userRectOrientationOption == 0) {
             searchVar(uRectFile, "Normal:");
@@ -1426,10 +1354,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             urnormal = new double[3 * nUserRect];
             double temp = M_PI / 180;
             
-<<<<<<< HEAD
-=======
-            // Convert Trend and Plunge into Dip and Strike
->>>>>>> 11911383 (fixing readInput)
             for (int i = 0; i < nUserRect; i++) {
                 int index1 = i * 2;
                 int index2 = i * 3;
@@ -1441,17 +1365,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double plunge = urTrendPlunge[index1 + 1] * temp;
                 //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
                 //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
-<<<<<<< HEAD
                 // Trend clockwise from North, Plunge positive downward
                 // Upward-pointing normal (negated from the standard downward pole)
                 urnormal[index2]     = -sin(trend) * cos(plunge); // X (East)
                 urnormal[index2 + 1] = -cos(trend) * cos(plunge); // Y (North)
                 urnormal[index2 + 2] =  sin(plunge);              // Z (Up)
-=======
-                urnormal[index2] = cos(trend) * cos(plunge);
-                urnormal[index2 + 1] = sin(trend) * cos(plunge);
-                urnormal[index2 + 2] = sin(plunge);
->>>>>>> 11911383 (fixing readInput)
                 //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
             }
         } else if (userRectOrientationOption == 2) {
@@ -1472,16 +1390,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double dip = urDipStrike[index1] * temp;
                 double strike = urDipStrike[index1 + 1] * temp;
                 //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
-<<<<<<< HEAD
+
                 // Strike is clockwise from North (Y), Right-Hand Rule
                 urnormal[index2]     =  sin(dip) * cos(strike); // X (East)
                 urnormal[index2 + 1] = -sin(dip) * sin(strike); // Y (North)
                 urnormal[index2 + 2] =  cos(dip);               // Z (Up)
-=======
-                urnormal[index2] = sin(dip) * sin(strike);
-                urnormal[index2 + 1] = -sin(dip) * cos(strike);
-                urnormal[index2 + 2] = cos(dip);
->>>>>>> 11911383 (fixing readInput)
             }
         }
         
@@ -1542,59 +1455,17 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         uCoordFile.close();
     }
     
-    // searchVar(inputFile, "aperture:");
-    // inputFile >> aperture;
-    
-    // if (aperture == 1) {
-    //     searchVar(inputFile, "meanAperture:");
-    //     inputFile >> meanAperture;
-    //     searchVar(inputFile, "stdAperture:");
-    //     inputFile >> stdAperture;
-    // } else if (aperture == 2) {
-    //     searchVar(inputFile, "apertureFromTransmissivity:");
-    //     getInputAry(inputFile, apertureFromTransmissivity, 2);
-    // } else if (aperture == 3) {
-    //     searchVar(inputFile, "constantAperture:");
-    //     inputFile >> constantAperture;
-    // } else if (aperture == 4) {
-    //     searchVar(inputFile, "lengthCorrelatedAperture:");
-    //     getInputAry(inputFile, lengthCorrelatedAperture, 2);
-    // } else {
-    //     std::cerr << "\nERROR: Aperture option not recognised\n";
-    //     exit(1);
-    // }
-<<<<<<< HEAD
-    
-    // searchVar(inputFile, "permOption:");
-    // inputFile >> permOption;
-    
-=======
-    // searchVar(inputFile, "permOption:");
-    // inputFile >> permOption;
->>>>>>> 11911383 (fixing readInput)
-    // if (permOption != 0) {
-    //     searchVar(inputFile, "constantPermeability:");
-    //     inputFile >> constantPermeability;
-    // }
-<<<<<<< HEAD
-    
-=======
->>>>>>> 11911383 (fixing readInput)
     // Error check on stopping parameter
     if (nFamEll + nFamRect == 0 && stopCondition != 0) { // If no stochastic shapes, use nPoly option with npoly = number of user polygons
         logString = "Warning: You have defined stopCondition = 1 (P32 program stopping condition) but have no stochastic shape families defined. Automatically setting stopCondition to 0 for use with user defined polygons and nPoly.\n\n";
         logger.writeLogFile(WARNING,  logString);
         stopCondition = 0;
-<<<<<<< HEAD
-        
-=======
->>>>>>> 11911383 (fixing readInput)
         if (userEllipsesOnOff == 0 && userRectanglesOnOff == 0 && userRecByCoord == 0 ) {
             logString = "Error: All polygon generating options are off or undefined, please check input file for errors.\n\n";
             logger.writeLogFile(ERROR,  logString);
             exit(1);
         }
-<<<<<<< HEAD
+
         
         int count = 0; // Count of user defined polygons
         
@@ -1616,22 +1487,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     
     inputFile.close();
     
-=======
-        int count = 0; // Count of user defined polygons
-        if (userEllipsesOnOff == 1) {
-            count += nUserEll;
-        }
-        if (userRectanglesOnOff == 1) {
-            count += nUserRect;
-        }
-        if (userRecByCoord == 1) {
-            count += nRectByCoord;
-        }
-        // Set nPoly to the amount of user defined polygons
-        nPoly = count;
-    }
-    inputFile.close();
->>>>>>> 11911383 (fixing readInput)
     // Convert angles to rad if necessary, all functions and code require radians
     for (unsigned int i = 0; i < shapeFamily.size(); i ++) {
         if (shapeFamily[i].angleOption == 1 ) { // Convert deg to rad
@@ -1768,4 +1623,26 @@ void printInputVars() {
         logger.writeLogFile(INFO,  logString);
         printRectCoords(userRectCoordVertices, "userRectCoordVertices", nRectByCoord);
     }
+    
+    // std::cout << "aperture option: " << aperture << std::endl;
+    // if (aperture == 1) {
+    //     std::cout << "meanAperture = " << meanAperture << std::endl;
+    //     std::cout << "stdAperture = " << stdAperture << std::endl;
+    // } else if (aperture == 2) {
+    //     printAry(apertureFromTransmissivity, "apertureFromTransmissivity", 2);
+    // } else if (aperture == 3) {
+    //     std::cout <<  "constantAperture = " << constantAperture << std::endl;
+    // } else if (aperture == 4) {
+    //     printAry(lengthCorrelatedAperture, "lengthCorrelatedAperture", 2);
+    // }
+    // if (permOption == 0) {
+    //     std::cout << "Permeability: Function of aperture\n";
+    // } else {
+    //     std::cout << "ConstantPermeability = " << constantPermeability << std::endl;
+    // }
 }
+
+
+
+
+
