@@ -2,26 +2,25 @@
 .. module:: fracture_family_utils
    :synopsis: Create and manage fracture family dictionaries for DFN generation.
 """
-
 import sys
 
 
 def fracture_family_dictionary():
     """Creates a fracture family dictionary
-
+    
     Parameters
-    ----------
-    None
+    --------------
+        None
 
     Returns
-    -------
-    dict
-        Fracture family dictionary for a specified family.
-
+    --------
+        family : dict
+            fracture family dictionary for specified family
+            
     Notes
-    -----
-    See https://dfnworks.lanl.gov/dfngen.html#domain-parameters for more 
-    information about parameters in this dictionary
+    ---------
+        See https://dfnworks.lanl.gov/dfngen.html#domain-parameters for more 
+        information about parameters in this dictionary
     """
 
     family = {
@@ -96,10 +95,14 @@ def fracture_family_dictionary():
         },
         'orientation_distribution': {
             'type': bool,
-            'value': 'fisher',
+            'value': {
+                'fisher': False,
+                'bingham': False,
+            },
             'description':
             'Type of orientation distribution'
         },
+        #fisher distribution
         'fisher': {
             'type':
             float,
@@ -115,6 +118,7 @@ def fracture_family_dictionary():
             'description':
             'Parameters theta, phi, and kappa for Fisher distribution'
         },
+        #bingham distribution
         'bingham': {
             'type':
             float,
@@ -186,7 +190,7 @@ def fracture_family_dictionary():
                 'value':
                 None,
                 'description':
-                'Acceptable values are aperture, permeability, and transmissivity'
+                ' Acceptable values are aperture, permeability, and transmissivity'
             },
             'function': {
                 'type':
@@ -194,7 +198,7 @@ def fracture_family_dictionary():
                 'value':
                 None,
                 'description':
-                'Acceptable values are correlated, semi-correlated, constant, and log-normal'
+                'Acceptable values or correlated, semi-correlated, constant, and log-normal'
             },
             'params': {
                 'type':
@@ -215,21 +219,19 @@ def fracture_family_dictionary():
 def print_family_information(self, family_number):
     """Print fracture family parameters to the terminal screen.
 
-    Parameters
-    ----------
-    self : DFN
-        The DFN object.
-    family_number : int
-        The ID of the fracture family to display.
+        Parameters
+        ----------
+            self : DFN
+            The DFN object.
+        
+        Returns
+        --------
+            None
 
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    None
-    """
+        Notes
+        ---------
+            None
+        """
 
     if len(self.fracture_families) > 0:
         family = self.fracture_families[family_number - 1]
@@ -251,7 +253,7 @@ def add_fracture_family(self,
                         distribution,
                         kappa,
                         kappa2=None,
-                        orientation_distribution='fisher',
+                        orientation_distribution=None,
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -277,73 +279,83 @@ def add_fracture_family(self,
                         hy_variable=None,
                         hy_function=None,
                         hy_params=None):
-    """Generate and append a new fracture family to the DFN.
+    """Generates a fracture family
 
-    Parameters
-    ----------
-    self : DFN
-        The DFN object.
-    shape : {'rect', 'ell'}
-        Defines the fracture family shape.
-    distribution : {'tpl', 'log_normal', 'exp', 'constant'}
-        Sample distribution for the fracture radius.
-    kappa : float
-        Concentration parameter for the von Mises–Fisher distribution.
-    kappa2 : float, optional
-        Second concentration parameter for Bingham distribution.
-    orientation_distribution : {'fisher', 'bingham'}
-        Orientation distribution type.
-    family_number : int, optional
-        Fracture family ID. Defaults to next available.
-    probability : float, optional
-        Probability of a fracture belonging to this family (used if stopCondition=0).
-    p32 : float, optional
-        Fracture intensity target (used if stopCondition=1).
-    layer : int, default=0
-        Assigns fracture family to a layer in the domain.
-    region : int, default=0
-        Assigns fracture family to a region in the domain.
-    number_of_points : int, default=8
-        Number of vertices defining each elliptical fracture.
-    aspect : float, default=1
-        Aspect ratio of the fractures.
-    beta_distribution : {0,1}, default=0
-        Uniform (0) or constant (1) rotation around each fracture’s normal vector.
-    beta : float, default=0
-        Angle for constant rotation (if beta_distribution=1).
-    theta, phi : float, optional
-        Spherical orientation angles (if orientationOption=0).
-    strike, dip : float, optional
-        Strike and dip angles (if orientationOption=2).
-    trend, plunge : float, optional
-        Trend and plunge angles (if orientationOption=1).
-    alpha : float, optional
-        Parameter for truncated power-law distribution.
-    log_mean, log_std : float, optional
-        Parameters for log-normal distribution.
-    exp_mean : float, optional
-        Parameter for exponential distribution.
-    constant : float, optional
-        Constant radius for constant distribution.
-    min_radius, max_radius : float, optional
-        Minimum and maximum radius for non-constant distributions.
-    hy_variable : str, optional
-        Hydraulic property variable ('aperture', 'permeability', 'transmissivity').
-    hy_function : str, optional
-        Relationship function ('correlated', 'semi-correlated', 'constant', 'log-normal').
-    hy_params : dict, optional
-        Parameters for the hydraulic function.
+        Parameters
+        --------------
+        self : DFN object
+        
+        shape : 'rect' or 'ell' deines the fracture family shape 
+        
+        distribution : 'tpl', 'log_normal', 'exp', or 'constant' defines the sample distribution for the fracture radius
+        
+        kappa : concentration param of the von Mises-Fisher distribution
+        
+        family_number : fracutre family id. default = None
+        
+        probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 
+        
+        p32 : fracture intensity for the family. default = None. use if stopCondition = 
 
-    Returns
-    -------
-    None
+        layer : assigns fracture family to a layer in the domain. default = 0
+        
+        region : assigns fracture family to a region in the domain. default = 0
+        
+        number_of_points : specifies the number of vertices defining th eboundary of each fracture. default = 8
+        
+        aspect : the aspect ratio of the fractures. default = 1
+        
+        beta_distribution : 0 (uniform distribtuion [0,2pi) or 1 (constant rotation specfied by ebeta) rotation of each fractures normal vector. default 0
+        
+        beta : angle fo constant rotation. use if beta_distribution = 1. default = 0
+        
+        theta : use if orientationOption = 0 (default). default = None
+        
+        phi : use if orientationOption = 0 (default). default = None
 
-    Notes
-    -----
-    See https://dfnworks.lanl.gov/dfngen.html#domain-parameters for more
-    information about parameters.
+        strike : use if orientationOption = 2. default = None
+
+        dip : use if orientationOption = 2. default = None
+        
+        trend : use if orientationOption = 1. default = None
+        
+        plunge : use if orientationOption = 1. default = None
+        
+        alpha : parameter for 'tpl'. default = None
+        
+        log_mean : parameter for 'log_normal'. default = None
+        
+        log_std : parameter for 'log_normal'. default = None
+        
+        exp_mean : parameter for 'exp'. default = None
+        
+        constant : parameter for 'constant'. default = None
+        
+        min_radius : minimum fracture radius for 'tpl' 'log_normal' or 'exp'. default = None
+        
+        max_radius : maximum fracture radius for 'tpl' 'log_normal' or 'exp'. default = None
+        
+        hy_variable : hydraulic variable to assign values to. options are 'aperture', 'permeability', 'transmissivity', 
+        
+        hy_function : relationship between hydraulic variable and fracture radius. options are 'correlated', 'semi-correlated', 'constant', 'log-normal'
+        
+        hy_params : parameters for the hydraulic function. see next lines for syntax and options
+            if 'correlated' --> {"alpha":value, "beta:value}
+            if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value}
+            if 'constant' --> {"mu":value}
+            if 'log-normal' --> {"mu":value, "sigma":value}
+        
+        Returns
+        --------
+            Populated fracture family dictionary for specified family
+
+        Notes
+        ---------
+        See https://dfnworks.lanl.gov/dfngen.html#domain-parameters for more
+        information about parameters
     """
-    self.print_log("--> Adding new fracture family")
+
+    self.print_log("--> Adding new facture family")
 
     family = fracture_family_dictionary()
     if shape == "rect":
@@ -353,29 +365,29 @@ def add_fracture_family(self,
         family['type']['value']['ellipse'] = True
         family['number_of_points']['value'] = number_of_points
     else:
-        error = f"Unknown Fracture Type {shape}. Acceptable values are 'rect' & 'ell'. Exiting.\n"
+        error = f"Unknown Fracture Type {shape}. Acceptable values are rect & ell. Exiting.\n"
         self.print_log(error, 'error')
 
     family['layer']['value'] = layer
     family['region']['value'] = region
 
-    if p32 is not None:
+    if p32:
         family['p32']['value'] = p32
         family['probability']['value'] = p32
-    elif probability is not None:
+    elif probability:
         family['probability']['value'] = probability
     else:
-        error = "A value for p32 or probability must be provided. Exiting.\n"
+        error = f"A value for p32 or probability must be provided. Exiting.\n"
         self.print_log(error, 'error')
 
     family['aspect']['value'] = aspect
 
-    # Orientation
+    ## Orienation
     family['beta_distribution']['value'] = beta_distribution
     family['beta']['value'] = beta
-    family['orientation_distribution']['value'] = orientation_distribution
+    family['orientation_distribution']['value'] = orientation_distribution.lower()
 
-    if family['orientation_distribution']['value'] == 'bingham':
+    if orientation_distribution.lower() == 'bingham':
         family['bingham']['value']['theta'] = theta
         family['bingham']['value']['phi'] = phi
         family['bingham']['value']['strike'] = strike
@@ -385,7 +397,7 @@ def add_fracture_family(self,
         family['bingham']['value']['kappa'] = kappa
         family['bingham']['value']['kappa2'] = kappa2
 
-    elif family['orientation_distribution']['value'] == 'fisher':
+    elif orientation_distribution.lower() == 'fisher':
         family['fisher']['value']['theta'] = theta
         family['fisher']['value']['phi'] = phi
         family['fisher']['value']['strike'] = strike
@@ -395,91 +407,88 @@ def add_fracture_family(self,
         family['fisher']['value']['kappa'] = kappa
 
     else:
-        error = (f"Unknown orientation distribution '{orientation_distribution}'. "
-                 "Must be 'fisher' or 'bingham'. Exiting.\n")
+        error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"
         self.print_log(error, 'error')
 
-    # Set orientationOption based on provided angles
-    if theta is not None and phi is not None:
-        if self.params['orientationOption']['value'] is None:
+    ## Set and check orientation option
+    # note orientationOption = 0 --> theta/phi
+    # orientationOption = 1 --> trend/plunge
+    # orientationOption = 2 --> stirke/dip
+    if theta != None and phi != None:
+        if self.params['orientationOption']['value'] == None:
             self.print_log('Setting orientationOption = 0 (theta/phi)')
             self.params['orientationOption']['value'] = 0
-        elif self.params['orientationOption']['value'] != 0:
-            error = ("Each family must have only one of the pairs: strike/dip, "
-                     "theta/phi or trend/plunge defined, consistent across families.\n")
-            self.print_log(error, 'error')
+        if self.params['orientationOption']['value'] != 0:
+            error = f"0 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
-    if trend is not None and plunge is not None:
-        if self.params['orientationOption']['value'] is None:
+    if trend != None and plunge != None:
+        if self.params['orientationOption']['value'] == None:
             self.print_log('Setting orientationOption = 1 (trend/plunge)')
             self.params['orientationOption']['value'] = 1
-        elif self.params['orientationOption']['value'] != 1:
-            error = ("Each family must have only one of the pairs: strike/dip, "
-                     "theta/phi or trend/plunge defined, consistent across families.\n")
-            self.print_log(error, 'error')
+        if self.params['orientationOption']['value'] != 1:
+            error = f"1 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
-    if strike is not None and dip is not None:
-        if self.params['orientationOption']['value'] is None:
+    if strike != None and dip != None:
+        if self.params['orientationOption']['value'] == None:
             self.print_log('Setting orientationOption = 2 (strike/dip)')
             self.params['orientationOption']['value'] = 2
-        elif self.params['orientationOption']['value'] != 2:
-            error = ("Each family must have only one of the pairs: strike/dip, "
-                     "theta/phi or trend/plunge defined, consistent across families.\n")
-            self.print_log(error, 'error')
+        if self.params['orientationOption']['value'] != 2:
+            error = f"2 - Each family must have only one of the pairs of parameters strike/dip, theta/phi or trend/plunge defined. Each family must have the same pair of parameters defined. \n"
+            self.print_log(error,'error')
 
-    # Radius Distribution
+    ## Radius Distribution
     if distribution == "tpl":
         family['distribution']['value']['tpl'] = True
-        if alpha is not None:
+        if alpha != None:
             family['tpl']['value']['alpha'] = alpha
         else:
-            error = ("Error. A value for alpha must be provided if family "
-                     "is tpl distribution. Exiting.\n")
-            self.print_log(error, 'error')
+            error = f"Error. A value for alpha must be provided if family is tpl distribution. Exiting.\n"
+            self.print_log(error,'error')
+    
     elif distribution == "log_normal":
         family['distribution']['value']['log_normal'] = True
-        if log_mean is not None:
+        if log_mean != None:
             family['log_normal']['value']['mean'] = log_mean
         else:
-            error = ("Error. A value for log_mean must be provided if family "
-                     "is log_normal distribution. Exiting.\n")
-            self.print_log(error, 'error')
-        if log_std is not None:
+            error = f"Error. A value for log_mean must be provided if family is log_normal distribution. Exiting. \n"
+            self.print_log(error,'error')
+        if log_std != None:
             family['log_normal']['value']['std'] = log_std
         else:
-            error = ("Error. A value for log_std must be provided if family "
-                     "is log_normal distribution. Exiting.\n")
-            self.print_log(error, 'error')
+            error = f"Error. A value for log_std must be provided if family is log_normal distribution. Exiting. \n"
+            self.print_log(error,'error')
+
     elif distribution == "exp":
         family['distribution']['value']['exp'] = True
-        if exp_mean is not None:
+        if exp_mean != None:
             family['exp']['value']['mean'] = exp_mean
         else:
-            error = ("Error. A value for exp_mean must be provided if family "
-                     "is exp distribution. Exiting.\n")
-            self.print_log(error, 'error')
+            error = f"Error. A value for exp_mean must be provided if family is exp distribution. Exiting. \n"
+            self.print_log(error,'error')
+    
     elif distribution == "constant":
         family['distribution']['value']['constant'] = True
-        if constant is not None:
+        if constant != None:
             family['constant']['value'] = constant
         else:
-            error = ("Error. A value for constant must be provided if family "
-                     "is constant distribution. Exiting.\n")
-            self.print_log(error, 'error')
+            error = f"Error. A value for constant must be provided if family is constant distribution. Exiting. \n"
+            self.print_log(error,'error')
+    
     else:
-        error = (f"Error. Unknown Fracture Distribution {distribution}. "
-                 "Acceptable values are 'tpl', 'exp', 'log_normal', & 'constant'. Exiting.\n")
-        self.print_log(error, 'error')
+        error = f"Error. Unknown Fracture Distribution {distribution}. Acceptable values are 'tpl', 'exp', 'log_normal',  & 'constant'. Exiting.\n"
+        self.print_log(error,'error')
 
-    if distribution != "constant" and (min_radius is None or max_radius is None):
-        error = ("Error. Minimum and Maximum radius must be provided unless "
-                 "using constant distribution. Exiting.\n")
-        self.print_log(error, 'error')
+    if distribution != "constant":
+        if not min_radius or not max_radius:
+            error = f"Error. Minimum and Maximum radius must be provided unless using constant distribution. Exiting.\n"
+            self.print_log(error,'error')
 
     family['min_radius']['value'] = min_radius
     family['max_radius']['value'] = max_radius
 
-    if family_number is not None:
+    if family_number:
         family['number']['value'] = family_number
     else:
         family_number = len(self.fracture_families) + 1
@@ -487,6 +496,7 @@ def add_fracture_family(self,
     family['hydraulic_properties']['variable']['value'] = hy_variable
     family['hydraulic_properties']['function']['value'] = hy_function
     family['hydraulic_properties']['params']['value'] = hy_params
+    ##Do we need exceptions? it will be checked in dfnflow
 
     self.fracture_families.append(family)
     self.print_family_information(family_number)
