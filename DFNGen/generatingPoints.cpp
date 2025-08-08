@@ -378,12 +378,9 @@ void generateTheta(float * &thetaArray, float aspectRatio, int nPoints) {
  * \param i First float.
  * \param j Second float.
  * \return true if i > j, false otherwise.
- */
-
-    Arg 1: float i
-    Arg 2: float j
-    Return: True if i > j
-            False otherwise */
+ * \Arg 1: float i
+ * \Arg 2: float j
+ * \Return: True if i > j False otherwise */
 bool greaterThan(float i, float j) {
     return (i > j);
 }
