@@ -302,6 +302,7 @@ def fehm(self):
         sys.exit(1)
 
 
+    self.correct_stor_file() 
     self.dump_hydraulic_values(format = "FEHM")
     correct_perm_for_fehm()
     tic = time()
