@@ -33,81 +33,72 @@ def correct_uge_file(self):
     Raises:
         Logs and exits if the flow solver is not PFLOTRAN or if the `.uge` file does not exist.
     """
-    # Check flow solver type
+    self.print_log(
+        f'--> Starting: Correcting UGE volumes with fracture apertures'
+    ) 
     if self.flow_solver != "PFLOTRAN":
-        error = "Error. Wrong flow solver requested\n"
-        self.print_log(error, 'error')
+        self.print_log("Error. Wrong flow solver requested\n", 'error')
 
-    # Construct UGE file name
-    self.uge_file = self.inp_file[:-4] + '.uge'
+    uge_file = self.inp_file[:-4] + '.uge'
+    if not os.path.isfile(uge_file):
+        self.print_log('Error. Cannot find uge file\nExiting\n', 'error')
 
-    # Exit if file does not exist
-    if not os.path.isfile(self.uge_file):
-        error = 'Error. Cannot find uge file\nExiting\n'
-        self.print_log(error, 'error')
-
-    # Prepare output file name
     uge_output_file = self.inp_file[:-4] + "_vol_area.uge"
 
-    t = time()  # Start timer
+    t = time()  # start timer
 
-    with open(self.uge_file, 'r') as fin:
-        with open(uge_output_file, 'w') as fout:
-            # Read and write the header line for cells
-            cell_header = fin.readline()
-            fout.write(cell_header)
-            num_nodes = int(cell_header.split()[-1])
+    # Localize frequently accessed attributes for performance
+    aperture = self.aperture
+    material_ids = self.material_ids
+    cell_based = self.cell_based_aperture
 
-            # Process and correct each cell volume
-            for _ in range(num_nodes):
-                line = fin.readline()
-                split_line = line.split()
-                id = int(split_line[0])
-                x = float(split_line[1])
-                y = float(split_line[2])
-                z = float(split_line[3])
-                vol = float(split_line[4])
+    with open(uge_file, 'r') as fin, open(uge_output_file, 'w') as fout:
 
-                # Determine aperture index
-                if not self.cell_based_aperture:
-                    index = self.material_ids[id - 1] - 1  # Material-based
-                else:
-                    index = id - 1  # Cell-based
+        # --------- CELLS Section ---------
+        cell_header = fin.readline()
+        fout.write(cell_header)
+        num_cells = int(cell_header.split()[-1])
 
-                # Apply aperture correction to volume
-                vol *= self.aperture[index]
+        cell_lines = []  # buffer for output
+        for _ in range(num_cells):
+            parts = fin.readline().split(None, 5)
+            id = int(parts[0])
+            vol = float(parts[4])
+            idx = id - 1 if cell_based else material_ids[id - 1] - 1
+            vol *= aperture[idx]
+            cell_lines.append(
+                f"{id}\t{parts[1]}\t{parts[2]}\t{parts[3]}\t{vol:0.12e}\n"
+            )
 
-                fout.write(f"{id}\t{x:0.12e}\t{y:0.12e}\t{z:0.12e}\t{vol:0.12e}\n")
+        fout.writelines(cell_lines)
 
-            # Read and write the header line for connections
-            conn_header = fin.readline()
-            fout.write(conn_header)
-            num_conn = int(conn_header.split()[-1])
+        # --------- CONNECTIONS Section ---------
+        conn_header = fin.readline()
+        fout.write(conn_header)
+        num_conns = int(conn_header.split()[-1])
 
-            # Process and correct each connection area
-            for _ in range(num_conn):
-                line = fin.readline()
-                split_line = line.split()
-                id1 = int(split_line[0])
-                id2 = int(split_line[1])
-                x = float(split_line[2])
-                y = float(split_line[3])
-                z = float(split_line[4])
-                area = float(split_line[5])
+        conn_lines = []  # buffer for output
+        for _ in range(num_conns):
+            parts = fin.readline().split(None, 6)
+            id1 = int(parts[0])
+            id2 = int(parts[1])
+            area = float(parts[5])
+            avg_ap = 0.5 * (aperture[material_ids[id1 - 1] - 1] +
+                            aperture[material_ids[id2 - 1] - 1])
+            area *= avg_ap
+            conn_lines.append(
+                f"{id1}\t{id2}\t{parts[2]}\t{parts[3]}\t{parts[4]}\t{area:0.12e}\n"
+            )
 
-                index1 = self.material_ids[id1 - 1] - 1
-                index2 = self.material_ids[id2 - 1] - 1
-
-                # Apply average aperture correction to area
-                area *= 0.5 * (self.aperture[index1] + self.aperture[index2])
-
-                fout.write(f"{id1}\t{id2}\t{x:0.12e}\t{y:0.12e}\t{z:0.12e}\t{area:0.12e}\n")
+        fout.writelines(conn_lines)
 
     elapsed = time() - t
     self.print_log(
+        f'--> Complete: Correcting UGE volumes with fracture apertures'
+    ) 
+    self.print_log(
         f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n'
     )
-
 def lagrit2pflotran(self, boundary_cell_area = None):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
     Calls the function write_perms_and_correct_volumes_areas() and zone2ex
