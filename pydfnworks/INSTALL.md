@@ -7,42 +7,23 @@ This package now uses a modern `pyproject.toml` build system (PEP 517/518 compli
 To install using pip (isolated build):
 
 ```bash
+pip install -r requirements.txt 
 pip install .
 ```
 
-For development use (editable mode):
+If you are on a shared system, please use 
 
 ```bash
-pip install -e .
+pip install -r requirements.txt --user 
+pip install . --user 
 ```
 
-## 🔧 Build System
-
-The project includes a `pyproject.toml` file which tells Python tools how to build the package using `setuptools`.
-
-## 🧪 Development Requirements
-
-To build or release, install the following:
-
-```bash
-pip install -r requirements.txt
-pip install build twine
-```
-
-## 🚀 Building and Releasing
-
-To build and upload to PyPI:
-
-```bash
-python release.py
-```
 
 This will:
 - Clean previous builds
 - Build the package using `pyproject.toml`
-- Upload with `twine`
 
-Make sure you are authenticated with PyPI via `twine`.
+
 
 ## 📁 Included Files
 
