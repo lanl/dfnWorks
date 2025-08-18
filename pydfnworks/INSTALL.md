@@ -18,12 +18,9 @@ pip install -r requirements.txt --user
 pip install . --user 
 ```
 
-
 This will:
 - Clean previous builds
 - Build the package using `pyproject.toml`
-
-
 
 ## 📁 Included Files
 

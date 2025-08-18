@@ -726,10 +726,10 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         logString = "Expecting Theta and phi for orientations\n";
         logger.writeLogFile(INFO,  logString);
     } else if  (orientationOption == 1) {
-        logString = "Expecting Trend and Plunge for orientations\n";
+        logString = "Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n";
         logger.writeLogFile(INFO,  logString);
     } else if (orientationOption == 2) {
-        logString = "Expecting Dip and Strike (RHR) for orientations\n";
+        logString = "Expecting Dip & Strike (RHR; strike clockwise from North)\n";
         logger.writeLogFile(INFO,  logString);
     }
     
@@ -1194,7 +1194,13 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         uEllFile >> userEllOrientationOption;
         logString = "userOrientationOption " + to_string(userEllOrientationOption);
         logger.writeLogFile(INFO,  logString);
-        
+        if (userEllOrientationOption == 1) {
+            logger.writeLogFile(INFO, "User ellipses: Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n");
+        } else if (userEllOrientationOption == 2) {
+            logger.writeLogFile(INFO, "User ellipses: Expecting Dip & Strike (RHR; strike clockwise from North)\n");
+        }
+       
+ 
         if (userEllOrientationOption == 0) {
             searchVar(uEllFile, "Normal:");
             uenormal = new double[3 * nUserEll];
@@ -1204,7 +1210,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             ueTrendPlunge = new double[2 * nUserEll];
             get2dAry2(uEllFile, ueTrendPlunge, nUserEll);
             uenormal = new double[3 * nUserEll];
-            // Convert Trend and Plunge into Dip and Strike
             double temp = M_PI / 180;
             
             for (int i = 0; i < nUserEll; i++) {
@@ -1216,16 +1221,17 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double trend = ueTrendPlunge[index1] * temp;
                 double plunge = ueTrendPlunge[index1 + 1] * temp;
                 //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
-                uenormal[index2] = cos(trend) * cos(plunge);
-                uenormal[index2 + 1] = sin(trend) * cos(plunge);
-                uenormal[index2 + 2] = sin(plunge);
+                // Trend clockwise from North, Plunge positive downward
+                // Upward-pointing normal (negated from the standard downward pole)
+                uenormal[index2]     = -sin(trend) * cos(plunge); // X (East)
+                uenormal[index2 + 1] = -cos(trend) * cos(plunge); // Y (North)
+                uenormal[index2 + 2] =  sin(plunge);              // Z (Up)
             }
         } else if (userEllOrientationOption == 2) {
             searchVar(uEllFile, "Dip_Strike:");
             ueDipStrike = new double[2 * nUserEll];
             get2dAry2(uEllFile, ueDipStrike, nUserEll);
             uenormal = new double[3 * nUserEll];
-            // Convert Trend and Plunge into Dip and Strike
             double temp = M_PI / 180;
             
             for (int i = 0; i < nUserEll; i++) {
@@ -1237,9 +1243,10 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double dip = ueDipStrike[index1] * temp;
                 double strike = ueDipStrike[index1 + 1] * temp;
                 //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
-                uenormal[index2] = sin(dip) * sin(strike);
-                uenormal[index2 + 1] = -sin(dip) * cos(strike);
-                uenormal[index2 + 2] = cos(dip);
+                // Strike is clockwise from North (Y), Right-Hand Rule
+                uenormal[index2]     =  sin(dip) * cos(strike); // X (East)
+                uenormal[index2 + 1] = -sin(dip) * sin(strike); // Y (North)
+                uenormal[index2 + 2] =  cos(dip);               // Z (Up)
             }
         }
         
@@ -1278,7 +1285,13 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         get2dAry(uRectFile, urtranslation, nUserRect);
         searchVar(uRectFile, "userOrientationOption:");
         uRectFile >> userRectOrientationOption;
-        
+        if (userRectOrientationOption == 1) {
+            logger.writeLogFile(INFO, "User rectangles: Expecting Trend & Plunge (trend clockwise from North; plunge positive downward)\n");
+        } else if (userRectOrientationOption == 2) {
+            logger.writeLogFile(INFO, "User rectangles: Expecting Dip & Strike (RHR; strike clockwise from North)\n");
+        }
+       
+ 
         // std::cout << "userRectOrientationOption: " << userRectOrientationOption << " \n";
         if (userRectOrientationOption == 0) {
             searchVar(uRectFile, "Normal:");
@@ -1291,7 +1304,6 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             urnormal = new double[3 * nUserRect];
             double temp = M_PI / 180;
             
-            // Convert Trend and Plunge into Dip and Strike
             for (int i = 0; i < nUserRect; i++) {
                 int index1 = i * 2;
                 int index2 = i * 3;
@@ -1303,9 +1315,11 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double plunge = urTrendPlunge[index1 + 1] * temp;
                 //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
                 //std::cout << "trend & plunge: " << trend/temp << " " << plunge/temp << "\n";
-                urnormal[index2] = cos(trend) * cos(plunge);
-                urnormal[index2 + 1] = sin(trend) * cos(plunge);
-                urnormal[index2 + 2] = sin(plunge);
+                // Trend clockwise from North, Plunge positive downward
+                // Upward-pointing normal (negated from the standard downward pole)
+                urnormal[index2]     = -sin(trend) * cos(plunge); // X (East)
+                urnormal[index2 + 1] = -cos(trend) * cos(plunge); // Y (North)
+                urnormal[index2 + 2] =  sin(plunge);              // Z (Up)
                 //std::cout << "normal: " << urnormal[index2] << " " << urnormal[index2+1] << " " << urnormal[index2+2] << "\n";
             }
         } else if (userRectOrientationOption == 2) {
@@ -1326,9 +1340,10 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
                 double dip = urDipStrike[index1] * temp;
                 double strike = urDipStrike[index1 + 1] * temp;
                 //std::cout << "dip & strike: " << dip/temp << " " << strike/temp << "\n";
-                urnormal[index2] = sin(dip) * sin(strike);
-                urnormal[index2 + 1] = -sin(dip) * cos(strike);
-                urnormal[index2 + 2] = cos(dip);
+                // Strike is clockwise from North (Y), Right-Hand Rule
+                urnormal[index2]     =  sin(dip) * cos(strike); // X (East)
+                urnormal[index2 + 1] = -sin(dip) * sin(strike); // Y (North)
+                urnormal[index2 + 2] =  cos(dip);               // Z (Up)
             }
         }
         
@@ -1549,7 +1564,7 @@ void printInputVars() {
         logString = "nUserEll = " + to_string(nUserEll) + "\n";
         logger.writeLogFile(INFO,  logString);
         printAry(ueRadii, "ueRadii", nUserEll);
-        logString = "urAngleOption = " + to_string(ueAngleOption);
+        logString = "ueAngleOption = " + to_string(ueAngleOption);
         logger.writeLogFile(INFO,  logString);
         printAry(ueBeta, "ueBeta", nUserEll);
         printAry(ueaspect, "ueaspect", nUserEll);
