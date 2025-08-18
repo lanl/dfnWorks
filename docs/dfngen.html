@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dfnGen - C++ Generation Code &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+  <title>dfnGen - C++ Generation Code &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=53c63d07"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,10 +33,8 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -998,9 +994,9 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <h4>Ellipse: Trend &amp; Plunge<a class="headerlink" href="#ellipse-trend-plunge" title="Link to this heading"></a></h4>
 <p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
 <div class="math">
-<p><img src="_images/math/f709b2722911463d06271f2320d386c4f3ab88fe.png" alt="\vec{n}_x &amp; = \cos(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/13b59309c50cd1dd667679840779ba52d8f16d87.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})\\"/></p>
 </div><div class="math">
-<p><img src="_images/math/73f4958e89c005c29b46fe025be4584c439caa4b.png" alt="\vec{n}_y &amp; = \sin(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/7eb2fac32fb3978fed7ae60efef3d3760fd8b39a.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})\\"/></p>
 </div><div class="math">
 <p><img src="_images/math/e24906bf3a64d622f266503cd7146a8de74a258d.png" alt="\vec{n}_z &amp; = \sin(\text{trend})"/></p>
 </div><section id="etrend">
@@ -1040,11 +1036,11 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <hr class="docutils" />
 <section id="ellipse-dip-strike">
 <h4>Ellipse: Dip &amp; Strike<a class="headerlink" href="#ellipse-dip-strike" title="Link to this heading"></a></h4>
-<p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
+<p>For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
 <div class="math">
-<p><img src="_images/math/279e5f07d040abb28b85734dce062ae251eb1c7b.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \sin(\text{strike})\\"/></p>
+<p><img src="_images/math/54bf8990c37ab5db0481107f9bceeeab02b0711f.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})\\"/></p>
 </div><div class="math">
-<p><img src="_images/math/ef0f29bda011efb4abda29f5620732e335ad5e42.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \cos(\text{strike})\\"/></p>
+<p><img src="_images/math/95ec96cfa171d2721de95553391d496d4553bae6.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})\\"/></p>
 </div><div class="math">
 <p><img src="_images/math/4ed396e004eb768a13e92e60d6ec6ca2d8406bc3.png" alt="\vec{n}_z &amp; = \cos(\text{dip})"/></p>
 </div><hr class="docutils" />
@@ -1535,11 +1531,11 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <hr class="docutils" />
 <section id="rectangle-trend-plunge">
 <h4>Rectangle: Trend &amp; Plunge<a class="headerlink" href="#rectangle-trend-plunge" title="Link to this heading"></a></h4>
-<p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
+<p>For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
 <div class="math">
-<p><img src="_images/math/f709b2722911463d06271f2320d386c4f3ab88fe.png" alt="\vec{n}_x &amp; = \cos(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/13b59309c50cd1dd667679840779ba52d8f16d87.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})\\"/></p>
 </div><div class="math">
-<p><img src="_images/math/73f4958e89c005c29b46fe025be4584c439caa4b.png" alt="\vec{n}_y &amp; = \sin(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/7eb2fac32fb3978fed7ae60efef3d3760fd8b39a.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})\\"/></p>
 </div><div class="math">
 <p><img src="_images/math/e24906bf3a64d622f266503cd7146a8de74a258d.png" alt="\vec{n}_z &amp; = \sin(\text{trend})"/></p>
 </div><section id="rtrend">
@@ -1579,15 +1575,14 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <hr class="docutils" />
 <section id="rectangle-dip-strike">
 <h4>Rectangle: Dip &amp; Strike<a class="headerlink" href="#rectangle-dip-strike" title="Link to this heading"></a></h4>
-<p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
+<p>For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
 <div class="math">
-<p><img src="_images/math/279e5f07d040abb28b85734dce062ae251eb1c7b.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \sin(\text{strike})\\"/></p>
+<p><img src="_images/math/54bf8990c37ab5db0481107f9bceeeab02b0711f.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})\\"/></p>
 </div><div class="math">
-<p><img src="_images/math/ef0f29bda011efb4abda29f5620732e335ad5e42.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \cos(\text{strike})\\"/></p>
+<p><img src="_images/math/95ec96cfa171d2721de95553391d496d4553bae6.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})\\"/></p>
 </div><div class="math">
 <p><img src="_images/math/4ed396e004eb768a13e92e60d6ec6ca2d8406bc3.png" alt="\vec{n}_z &amp; = \cos(\text{dip})"/></p>
-</div><hr class="docutils" />
-<section id="rstrike">
+</div><section id="rstrike">
 <h5>rstrike<a class="headerlink" href="#rstrike" title="Link to this heading"></a></h5>
 <p>Description: Strike of fracture families</p>
 <p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>

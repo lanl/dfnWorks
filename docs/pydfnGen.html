@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=53c63d07"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,10 +33,8 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -177,7 +173,7 @@
 <li><p><strong>kappa</strong> (<em>concentration param</em><em> of </em><em>the von Mises-Fisher distribution</em>)</p></li>
 <li><p><strong>family_number</strong> (<em>fracutre family id. default = None</em>)</p></li>
 <li><p><strong>probability</strong> (<em>probabily</em><em> of </em><em>a fracture belonging to this family. default = None. use if stopCondition = 0</em>)</p></li>
-<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition = 1</em>)</p></li>
+<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition =</em>)</p></li>
 <li><p><strong>layer</strong> (<em>assigns fracture family to a layer in the domain. default = 0</em>)</p></li>
 <li><p><strong>region</strong> (<em>assigns fracture family to a region in the domain. default = 0</em>)</p></li>
 <li><p><strong>number_of_points</strong> (<em>specifies the number</em><em> of </em><em>vertices defining th eboundary</em><em> of </em><em>each fracture. default = 8</em>)</p></li>
@@ -186,10 +182,10 @@
 <li><p><strong>beta</strong> (<em>angle fo constant rotation. use if beta_distribution = 1. default = 0</em>)</p></li>
 <li><p><strong>theta</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>)</p></li>
 <li><p><strong>phi</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>)</p></li>
+<li><p><strong>strike</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
+<li><p><strong>dip</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
 <li><p><strong>trend</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
 <li><p><strong>plunge</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
-<li><p><strong>dip</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
-<li><p><strong>strike</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
 <li><p><strong>alpha</strong> (<em>parameter for 'tpl'. default = None</em>)</p></li>
 <li><p><strong>log_mean</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
 <li><p><strong>log_std</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
@@ -245,6 +241,7 @@ information about parameters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>shape</strong> (<em>string</em>) – The desired shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p></li>
 <li><p><strong>radii</strong> (<em>float</em>) – 1/2 size of the fracture in meters - Required</p></li>
 <li><p><strong>translation</strong> (<em>list</em><em> of </em><em>floats</em><em> [</em><em>3</em><em>]</em>) – Fracture center</p></li>
@@ -294,6 +291,7 @@ ellipses and rectangles not specified by coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>filename</strong> (<em>string</em>) – path to source file</p></li>
 <li><p><strong>shape</strong> (<em>string</em>) – The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p></li>
 <li><p><strong>by_coord</strong> (<em>boolean</em>) – True / False of file format for coordinate or general input</p></li>
@@ -396,7 +394,10 @@ ellipses and rectangles not specified by coordinate.</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>DFN Class Object</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN Class Object</em>)</p></li>
+<li><p><strong>from_file</strong> (<em>Bool</em><em>, </em><em>default False. Checking for file.</em><em> (</em><em>See Note</em><em>)</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -444,7 +445,6 @@ ellipses and rectangles not specified by coordinate.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> – DFN object</p></li>
 <li><p><strong>output</strong> (<em>bool</em>) – If True, output pdf will be created. If False, no pdf is made</p></li>
-<li><p><strong>visual_mode</strong> (<em>None</em>) – If the user wants to run in a different meshing mode from what is in params.txt, set visual_mode = True/False on command line to override meshing mode</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -567,6 +567,7 @@ to account for uncertainty and variability between fractures of the same size. T
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
 <li><p><strong>sigma_mat</strong> (<em>array</em>) – 3 x 3 stress tensor (units in Pa)</p></li>
 <li><p><strong>friction_angle</strong> (<em>float</em>) – Friction angle (Degrees)</p></li>
 <li><p><strong>dilation_angle</strong> (<em>float</em>) – Dilation angle (Degrees)</p></li>
@@ -609,6 +610,7 @@ to account for uncertainty and variability between fractures of the same size. T
 <li><p><strong>min_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h</p></li>
 <li><p><strong>max_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h</p></li>
 <li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolultion (max_resolution <a href="#id1"><span class="problematic" id="id2">*</span></a>h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
+<li><p><strong>well</strong> (<em>bool</em>) – Toggle well points. Default : False</p></li>
 <li><p><strong>cleanup</strong> (<em>bool</em>) – toggle to clean up directory (remove meshing files after a run). Default : True</p></li>
 <li><p><strong>strict</strong> (<em>bool</em>) – Toggle if a few mesh errors are acceptable. default is true</p></li>
 <li><p><strong>quiet</strong> (<em>bool</em>) – Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen</p></li>
@@ -686,15 +688,11 @@ to account for uncertainty and variability between fractures of the same size. T
 <dd><p>Runs LaGriT</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>----------</strong> – <dl class="simple">
-<dt>lagrit_file<span class="classifier">string</span></dt><dd><p>Name of LaGriT script to run</p>
-</dd>
-<dt>output_file<span class="classifier">string</span></dt><dd><p>Name of file to dump LaGriT output</p>
-</dd>
-<dt>quiet<span class="classifier">bool</span></dt><dd><p>If false, information will be printed to screen.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lagrit_file</strong> (<em>string</em>) – Name of LaGriT script to run</p></li>
+<li><p><strong>output_file</strong> (<em>string</em>) – Name of file to dump LaGriT output</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – If false, information will be printed to screen.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>failure</strong> – If the run was successful, then 0 is returned.</p>
@@ -703,6 +701,7 @@ to account for uncertainty and variability between fractures of the same size. T
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
 </dd></dl>
 
 <dl class="py function" id="module-pydfnworks.dfnGen.meshing.add_attribute_to_mesh">
@@ -768,7 +767,7 @@ turn visualization mode on in the DFN input card.</p>
 
 <dl class="py function" id="module-upscale.py">
 <span id="module-pydfnworks.dfnGen.meshing.udfm.upscale"></span><dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.udfm.upscale.upscale">
-<span class="sig-name descname"><span class="pre">upscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_perm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_por</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/udfm/upscale.html#upscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.udfm.upscale.upscale" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">upscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_perm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_por</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/udfm/upscale.html#upscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.udfm.upscale.upscale" title="Link to this definition"></a></dt>
 <dd><p>Generate permeabilities and porosities based on output of map2continuum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -805,7 +804,7 @@ turn visualization mode on in the DFN input card.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>num_false_connections</strong> (<em>int</em>) – number of false connections</p></li>
-<li><p><strong>num_cell_false</strong> (<em>int</em>) – number of Voronoi cells with false connections</p></li>
+<li><p><strong>num_false_cells</strong> (<em>int</em>) – number of Voronoi cells with false connections</p></li>
 <li><p><strong>false_connections</strong> (<em>list</em>) – list of tuples of false connections created by upscaling</p></li>
 </ul>
 </p>
@@ -845,8 +844,13 @@ SAND Number: SAND2018-7605 O</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>dfnWorks object</em>)</p></li>
+<li><p><strong>matrix_perm</strong> (<em>float</em>) – permeability of the matrix cells without fratures</p></li>
 <li><p><strong>cell_size</strong> (<em>float</em>) – The cell size (meters) to use for the meshing</p></li>
+<li><p><strong>matrix_on</strong> (<em>bool</em>) – Default is False</p></li>
+<li><p><strong>tortuosity_factor</strong> (<em>float</em>)</p></li>
+<li><p><strong>lump_diag_terms</strong> (<em>bool</em>) – Deault is False</p></li>
 <li><p><strong>correction_factor</strong> (<em>boolean</em>) – Apply stairstep correction from EDFM to  not applied to permeability</p></li>
+<li><p><strong>output_dir</strong> (<em>string</em>) – output directory</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -879,9 +883,11 @@ Sandia National Laboratories</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>dirname</strong> (<em>string</em>) – name of working directory. Default : dfm_mesh</p></li>
 <li><p><strong>allowed_percentage</strong> (<em>float</em>) – Percentage of the mesh allowed to be missing and still continue</p></li>
-<li><p><strong>cleanup</strong> (<em>bool</em>) – Clean up working directory. If true dep files are moved into subdirectories</p></li>
+<li><p><strong>psets</strong> (<em>bool</em>) – Default is False</p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – Clean up working directory. If true dep files are moved into subdirectories. Default is True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

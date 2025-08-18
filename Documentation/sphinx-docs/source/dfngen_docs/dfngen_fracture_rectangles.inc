@@ -226,13 +226,12 @@ Example:
 
 Rectangle: Trend & Plunge
 ----------------------------------
-
-The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
+For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
 
 .. math::
-        \vec{n}_x & = \cos(\text{trend}) \cos(\text{plunge})\\
+        \vec{n}_x & = -\sin(\text{trend}) \cos(\text{plunge})\\
 .. math::        
-	\vec{n}_y & = \sin(\text{trend}) \cos(\text{plunge})\\
+	\vec{n}_y & = -\cos(\text{trend}) \cos(\text{plunge})\\
 .. math::
 	\vec{n}_z & = \sin(\text{trend})
 
@@ -282,16 +281,17 @@ Example
 
 Rectangle: Dip & Strike
 ----------------------------------
-The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
+
+For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
 
 .. math::
-        \vec{n}_x & = \sin(\text{dip}) \sin(\text{strike})\\
+        \vec{n}_x & = \sin(\text{dip}) \cos(\text{strike})\\
 .. math::
-	\vec{n}_y & = -\sin(\text{dip}) \cos(\text{strike})\\
+	    \vec{n}_y & = -\sin(\text{dip}) \sin(\text{strike})\\
 .. math::
-	\vec{n}_z & = \cos(\text{dip})
+	    \vec{n}_z & = \cos(\text{dip})
 
-----
+
 
 rstrike
 ^^^^^^^^^^^^^^^^
