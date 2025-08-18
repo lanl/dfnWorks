@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example Applications &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Example Applications &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Setting and Running up dfnWorks" href="setup.html" />
+    <link rel="next" title="Setup and Running dfnWorks" href="setup.html" />
     <link rel="prev" title="Welcome To dfnWorks" href="intro.html" /> 
 </head>
 
@@ -33,10 +35,9 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
-              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -54,7 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#nuclear-waste-repository">Nuclear waste repository</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -65,9 +66,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -100,7 +102,8 @@
 <h2>Carbon dioxide sequestration<a class="headerlink" href="#carbon-dioxide-sequestration" title="Link to this heading"></a></h2>
 <p>dfnWorks provides the framework necessary to perform multiphase simulations (such as flow and reactive transport) at the reservoir scale. A particular application, highlighted here, is sequestering CO<sub>2</sub>  from anthropogenic sources and disposing it in geological formations such as deep saline aquifers and abandoned oil fields. Geological CO<sub>2</sub>  sequestration is one of the principal methods under consideration to reduce carbon footprint in the atmosphere due to fossil fuels (Bachu, 2002; Pacala and Socolow, 2004). For safe and sustainable long-term storage of CO<sub>2</sub>  and to prevent leaks through existing faults and fractured rock (along with the ones created during the injection process), understanding the complex physical and chemical interactions between CO<sub>2</sub> , water (or brine) and fractured rock, is vital. dfnWorks capability to study multiphase flow in a DFN can be used to study potential CO<sub>2</sub>  migration through cap-rock, a potential risk associated with proposed subsurface storage of CO<sub>2</sub>  in saline aquifers or depleted reservoirs. Moreover, using the reactive transport capabilities of PFLOTRAN coupled with cell-based transmissivity of the DFN allows one to study dynamically changing permeability fields with mineral precipitation and dissolution due to CO<sub>2</sub> –water interaction with rock.</p>
 <figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="_images/time_co2.png"><img alt="alternate text" src="_images/time_co2.png" style="width: 656.0px; height: 338.0px;" /></a>
+<a class="reference internal image-reference" href="_images/time_co2.png"><img alt="alternate text" src="_images/time_co2.png" style="width: 656.0px; height: 338.0px;" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>Temporal evolution of supercritical |CO2|  displacing water in a meter cube DFN containing 24 fractures. The DFN is initially fully saturated with water, (top left time 0 hours) and supercritical |CO2|  is slowly injected into the system from the bottom of the domain to displace the water for a total time of 10 h. There is an initial flush through the system during the first hour of the simulation, and then the rate of displacement decreases.</em></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
@@ -110,7 +113,8 @@
 <h2>Shale energy extraction<a class="headerlink" href="#shale-energy-extraction" title="Link to this heading"></a></h2>
 <p>Hydraulic fracturing (fracking) has provided access to hydrocarbon trapped in low-permeability media, such as tight shales. The process involves injecting water at high pressures to reactivate existing fractures and also create new fractures to increase permeability of the shale allowing hydrocarbons to be extracted. However, the fundamental physics of why fracking works and its long term ramifications are not well understood. Karra et al. (2015) used dfnWorks to generate a typical production site and simulate production. Using this physics based model, they found good agreement with production field data and determined what physical mechanisms control the decline in the production curve.</p>
 <figure class="align-center" id="id2">
-<a class="reference internal image-reference" href="_images/well-pressure.png"><img alt="alternate text" src="_images/well-pressure.png" style="width: 359.6px; height: 313.70000000000005px;" /></a>
+<a class="reference internal image-reference" href="_images/well-pressure.png"><img alt="alternate text" src="_images/well-pressure.png" style="width: 359.6px; height: 313.70000000000005px;" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>Pressure in a well used for hydraulic fracturing.</em></span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
@@ -121,7 +125,8 @@
 <p>The Swedish Nuclear Fuel and Waste Management Company (SKB) has undertaken a detailed investigation of the fractured granite at the Forsmark, Sweden site as a potential host formation for a subsurface repository for spent nuclear fuel (SKB, 2011; Hartley and Joyce, 2013). The Forsmark area is about 120 km north of Stockholm in northern Uppland, and the repository is proposed
 to be constructed in crystalline bedrock at a depth of approximately 500 m. Based on the SKB site investigation, a statistical fracture model with multiple fracture sets was developed; detailed parameters of the Forsmark site model are in SKB (2011). We adopt a subset of the model that consist of three sets of background (non-deterministic) circular fractures whose orientations follow a Fisher distribution, fracture radii are sampled from a truncated power-law distribution, the transmissivity of the fractures is estimated using a power-law model based on the fracture radius, and the fracture aperture is related to the fracture size using the cubic law (Adler et al., 2012). Under such a formulation, the fracture apertures are uniform on each fracture, but vary among fractures. The network is generated in a cubic domain with sides of length one-kilometer. Dirichlet boundary conditions are imposed on the top (1 MPa) and bottom (2 MPa) of the domain to create a pressure gradient aligned with the vertical axis, and noflow boundary conditions are enforced along lateral boundaries.</p>
 <figure class="align-center" id="id3">
-<a class="reference internal image-reference" href="_images/forsmark_trajectories.png"><img alt="alternate text" src="_images/forsmark_trajectories.png" style="width: 528.3000000000001px; height: 417.5px;" /></a>
+<a class="reference internal image-reference" href="_images/forsmark_trajectories.png"><img alt="alternate text" src="_images/forsmark_trajectories.png" style="width: 528.3000000000001px; height: 417.5px;" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>Simulated particle trajectories in fractured granite at Forsmark, Sweden.</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
@@ -143,7 +148,7 @@ to be constructed in crystalline bedrock at a depth of approximately 500 m. Base
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="intro.html" class="btn btn-neutral float-left" title="Welcome To dfnWorks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="setup.html" class="btn btn-neutral float-right" title="Setting and Running up dfnWorks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="setup.html" class="btn btn-neutral float-right" title="Setup and Running dfnWorks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

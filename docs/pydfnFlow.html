@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnFlow &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>pydfnworks: dfnFlow &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -33,10 +35,9 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
-              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,7 +50,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -86,9 +87,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -278,7 +280,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
 <li><p><strong>zone_file</strong> (<em>string</em>) – Name of zone file</p></li>
-<li><p><strong>Face</strong> (<em>Face</em><em> of </em><em>the plane corresponding to the zone file</em>) – </p></li>
+<li><p><strong>Face</strong> (<em>Face</em><em> of </em><em>the plane corresponding to the zone file</em>)</p></li>
 <li><p><strong>zone_file</strong> – Name of zone file to work on. Can be ‘all’ processes all directions, top, bottom, left, right, front, back</p></li>
 <li><p><strong>boundary_cell_area</strong> (<em>double</em>) – should be a large value relative to the mesh size to force pressure boundary conditions.</p></li>
 </ul>
@@ -331,7 +333,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <span id="processing-flow"></span><h2>Processing Flow<a class="headerlink" href="#module-pydfnworks.dfnFlow.mass_balance" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.mass_balance.effective_perm">
-<span class="sig-name descname"><span class="pre">effective_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/mass_balance.html#effective_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.mass_balance.effective_perm" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">effective_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">darcy_vel_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'darcyvel.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/mass_balance.html#effective_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.mass_balance.effective_perm" title="Link to this definition"></a></dt>
 <dd><p>Computes the effective permeability of a DFN in the primary direction of flow using a steady-state PFLOTRAN solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -341,6 +343,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <li><p><strong>outflow_pressure</strong> (<em>float</em>) – Pressure at the outflow boundary face. Units are Pascal</p></li>
 <li><p><strong>boundary_file</strong> (<em>string</em>) – Name of inflow boundary file, e.g., pboundary_left.ex</p></li>
 <li><p><strong>direction</strong> (<em>string</em>) – Primary direction of flow, x, y, or z</p></li>
+<li><p><strong>darcy_vel_file</strong> (<em>string</em>) – Name of concatenated Darcy velocity file</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

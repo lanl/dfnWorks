@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -33,10 +35,9 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
-              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,7 +50,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pydfnworks: dfnGen</a><ul>
@@ -126,9 +127,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -169,34 +171,34 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>DFN object</em>) – </p></li>
-<li><p><strong>shape</strong> (<em>'rect'</em><em> or </em><em>'ell' deines the fracture family shape</em>) – </p></li>
-<li><p><strong>distribution</strong> (<em>'tpl'</em><em>, </em><em>'log_normal'</em><em>, </em><em>'exp'</em><em>, or </em><em>'constant' defines the sample distribution for the fracture radius</em>) – </p></li>
-<li><p><strong>kappa</strong> (<em>concentration param</em><em> of </em><em>the von Mises-Fisher distribution</em>) – </p></li>
-<li><p><strong>family_number</strong> (<em>fracutre family id. default = None</em>) – </p></li>
-<li><p><strong>probability</strong> (<em>probabily</em><em> of </em><em>a fracture belonging to this family. default = None. use if stopCondition = 0</em>) – </p></li>
-<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition = 1</em>) – </p></li>
-<li><p><strong>layer</strong> (<em>assigns fracture family to a layer in the domain. default = 0</em>) – </p></li>
-<li><p><strong>region</strong> (<em>assigns fracture family to a region in the domain. default = 0</em>) – </p></li>
-<li><p><strong>number_of_points</strong> (<em>specifies the number</em><em> of </em><em>vertices defining th eboundary</em><em> of </em><em>each fracture. default = 8</em>) – </p></li>
-<li><p><strong>aspect</strong> (<em>the aspect ratio</em><em> of </em><em>the fractures. default = 1</em>) – </p></li>
-<li><p><strong>beta_distribution</strong> (<em>0</em><em> (</em><em>uniform distribtuion</em><em> [</em><em>0</em><em>,</em><em>2pi</em><em>) or </em><em>1</em><em> (</em><em>constant rotation specfied by ebeta</em><em>) </em><em>rotation</em><em> of </em><em>each fractures normal vector. default 0</em>) – </p></li>
-<li><p><strong>beta</strong> (<em>angle fo constant rotation. use if beta_distribution = 1. default = 0</em>) – </p></li>
-<li><p><strong>theta</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>) – </p></li>
-<li><p><strong>phi</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>) – </p></li>
-<li><p><strong>trend</strong> (<em>use if orientationOption = 1. default = None</em>) – </p></li>
-<li><p><strong>plunge</strong> (<em>use if orientationOption = 1. default = None</em>) – </p></li>
-<li><p><strong>dip</strong> (<em>use if orientationOption = 2. default = None</em>) – </p></li>
-<li><p><strong>strike</strong> (<em>use if orientationOption = 2. default = None</em>) – </p></li>
-<li><p><strong>alpha</strong> (<em>parameter for 'tpl'. default = None</em>) – </p></li>
-<li><p><strong>log_mean</strong> (<em>parameter for 'log_normal'. default = None</em>) – </p></li>
-<li><p><strong>log_std</strong> (<em>parameter for 'log_normal'. default = None</em>) – </p></li>
-<li><p><strong>exp_mean</strong> (<em>parameter for 'exp'. default = None</em>) – </p></li>
-<li><p><strong>constant</strong> (<em>parameter for 'constant'. default = None</em>) – </p></li>
-<li><p><strong>min_radius</strong> (<em>minimum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>) – </p></li>
-<li><p><strong>max_radius</strong> (<em>maximum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>) – </p></li>
-<li><p><strong>hy_variable</strong> (<em>hydraulic variable to assign values to. options are 'aperture'</em><em>, </em><em>'permeability'</em><em>, </em><em>'transmissivity'</em><em>,</em>) – </p></li>
-<li><p><strong>hy_function</strong> (<em>relationship between hydraulic variable and fracture radius. options are 'correlated'</em><em>, </em><em>'semi-correlated'</em><em>, </em><em>'constant'</em><em>, </em><em>'log-normal'</em>) – </p></li>
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>shape</strong> (<em>'rect'</em><em> or </em><em>'ell' deines the fracture family shape</em>)</p></li>
+<li><p><strong>distribution</strong> (<em>'tpl'</em><em>, </em><em>'log_normal'</em><em>, </em><em>'exp'</em><em>, or </em><em>'constant' defines the sample distribution for the fracture radius</em>)</p></li>
+<li><p><strong>kappa</strong> (<em>concentration param</em><em> of </em><em>the von Mises-Fisher distribution</em>)</p></li>
+<li><p><strong>family_number</strong> (<em>fracutre family id. default = None</em>)</p></li>
+<li><p><strong>probability</strong> (<em>probabily</em><em> of </em><em>a fracture belonging to this family. default = None. use if stopCondition = 0</em>)</p></li>
+<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition = 1</em>)</p></li>
+<li><p><strong>layer</strong> (<em>assigns fracture family to a layer in the domain. default = 0</em>)</p></li>
+<li><p><strong>region</strong> (<em>assigns fracture family to a region in the domain. default = 0</em>)</p></li>
+<li><p><strong>number_of_points</strong> (<em>specifies the number</em><em> of </em><em>vertices defining th eboundary</em><em> of </em><em>each fracture. default = 8</em>)</p></li>
+<li><p><strong>aspect</strong> (<em>the aspect ratio</em><em> of </em><em>the fractures. default = 1</em>)</p></li>
+<li><p><strong>beta_distribution</strong> (<em>0</em><em> (</em><em>uniform distribtuion</em><em> [</em><em>0</em><em>,</em><em>2pi</em><em>) or </em><em>1</em><em> (</em><em>constant rotation specfied by ebeta</em><em>) </em><em>rotation</em><em> of </em><em>each fractures normal vector. default 0</em>)</p></li>
+<li><p><strong>beta</strong> (<em>angle fo constant rotation. use if beta_distribution = 1. default = 0</em>)</p></li>
+<li><p><strong>theta</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>)</p></li>
+<li><p><strong>phi</strong> (<em>use if orientationOption = 0</em><em> (</em><em>default</em><em>)</em><em>. default = None</em>)</p></li>
+<li><p><strong>trend</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
+<li><p><strong>plunge</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
+<li><p><strong>dip</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
+<li><p><strong>strike</strong> (<em>use if orientationOption = 2. default = None</em>)</p></li>
+<li><p><strong>alpha</strong> (<em>parameter for 'tpl'. default = None</em>)</p></li>
+<li><p><strong>log_mean</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
+<li><p><strong>log_std</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
+<li><p><strong>exp_mean</strong> (<em>parameter for 'exp'. default = None</em>)</p></li>
+<li><p><strong>constant</strong> (<em>parameter for 'constant'. default = None</em>)</p></li>
+<li><p><strong>min_radius</strong> (<em>minimum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>)</p></li>
+<li><p><strong>max_radius</strong> (<em>maximum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>)</p></li>
+<li><p><strong>hy_variable</strong> (<em>hydraulic variable to assign values to. options are 'aperture'</em><em>, </em><em>'permeability'</em><em>, </em><em>'transmissivity'</em><em>,</em>)</p></li>
+<li><p><strong>hy_function</strong> (<em>relationship between hydraulic variable and fracture radius. options are 'correlated'</em><em>, </em><em>'semi-correlated'</em><em>, </em><em>'constant'</em><em>, </em><em>'log-normal'</em>)</p></li>
 <li><p><strong>hy_params</strong> (<em>parameters for the hydraulic function. see next lines for syntax and options</em>) – if ‘correlated’ –&gt; {“alpha”:value, “beta:value}
 if ‘semi-correlated’ –&gt; {“alpha”:value, “beta”:value, “sigma”:value}
 if ‘constant’ –&gt; {“mu”:value}
@@ -327,7 +329,7 @@ ellipses and rectangles not specified by coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>DFN object</em>) – </p></li>
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>shape</strong> (<em>string</em>) – The shape of the fracture options are ‘rect’, ‘ell’, and ‘poly’ - Required</p></li>
 <li><p><strong>fracture_number</strong> (<em>int</em>) – Index of fracture. If none (default), then information about all user fractures of input shape are printed to screen</p></li>
 </ul>
@@ -362,8 +364,8 @@ ellipses and rectangles not specified by coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>DFN object</em>) – </p></li>
-<li><p><strong>family_number</strong> (<em>the id</em><em> of </em><em>the fracture family information to be returned</em>) – </p></li>
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>family_number</strong> (<em>the id</em><em> of </em><em>the fracture family information to be returned</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -394,7 +396,7 @@ ellipses and rectangles not specified by coordinate.</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>DFN Class Object</em>) – </p>
+<dd class="field-odd"><p><strong>self</strong> (<em>DFN Class Object</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -460,7 +462,7 @@ ellipses and rectangles not specified by coordinate.</p>
 To access the points that define an individual polygon, call self.polygons[f’poly{i}’] where i is a number between 1 and the number of defined polygons. This returns an array of coordinates in the format np.array([x1,y1,z1],[x2,y2,z2],…[xn,yn,zn])</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>DFN object</em>) – </p>
+<dd class="field-odd"><p><strong>self</strong> (<em>DFN object</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -632,7 +634,7 @@ to account for uncertainty and variability between fractures of the same size. T
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>DFN object</em>) – </p></li>
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>path</strong> (<em>string</em>) – Path to where meshing files are located</p></li>
 </ul>
 </dd>
@@ -842,7 +844,7 @@ SAND Number: SAND2018-7605 O</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>dfnWorks object</em>) – </p></li>
+<li><p><strong>self</strong> (<em>dfnWorks object</em>)</p></li>
 <li><p><strong>cell_size</strong> (<em>float</em>) – The cell size (meters) to use for the meshing</p></li>
 <li><p><strong>correction_factor</strong> (<em>boolean</em>) – Apply stairstep correction from EDFM to  not applied to permeability</p></li>
 </ul>
@@ -872,8 +874,8 @@ Sandia National Laboratories</p>
 <span id="creating-a-conforming-dfm-mesh-dfn"></span><h3>Creating a conforming DFM mesh DFN<a class="headerlink" href="#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm" title="Link to this heading"></a></h3>
 <dl class="py function" id="module-mesh_dfm.py">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm">
-<span class="sig-name descname"><span class="pre">mesh_dfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfm_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/dfm/mesh_dfm.html#mesh_dfm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm" title="Link to this definition"></a></dt>
-<dd><p>” Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))</p>
+<span class="sig-name descname"><span class="pre">mesh_dfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfm_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/dfm/mesh_dfm.html#mesh_dfm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm" title="Link to this definition"></a></dt>
+<dd><p>“ Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Setting and Running up dfnWorks &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Setup and Running dfnWorks &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/documentation_options.js?v=bc52e0b9"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -33,10 +35,9 @@
           
           <a href="index_docs.html" class="icon icon-home">
             dfnWorks
-              <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,12 +50,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting and Running up dfnWorks</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup and Running dfnWorks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#docker">Docker</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-the-docker-dfnworks-image">Setup the Docker dfnWorks image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-dfnworks-container">Run the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-dfnworks-container-with-mounted-volume">Run the dfnWorks container with mounted volume</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#native-build-from-github-repository">Native build from github repository</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#native-build">Native Build</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clone-the-dnfworks-repository">Clone the dnfWorks repository</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#fix-paths-in-test-directory">Fix paths in test directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#set-the-lagrit-petsc-pflotran-python-and-fehm-paths">Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths</a></li>
@@ -83,9 +86,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -102,7 +106,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Setting and Running up dfnWorks</li>
+      <li class="breadcrumb-item active">Setup and Running dfnWorks</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/setup.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -112,39 +116,86 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="setting-and-running-up-dfnworks">
-<span id="pydfnworks-setup"></span><h1>Setting and Running up dfnWorks<a class="headerlink" href="#setting-and-running-up-dfnworks" title="Link to this heading"></a></h1>
+  <section id="setup-and-running-dfnworks">
+<span id="pydfnworks-setup"></span><h1>Setup and Running dfnWorks<a class="headerlink" href="#setup-and-running-dfnworks" title="Link to this heading"></a></h1>
+<p>These options are available for running dfnWorks:</p>
+<ul class="simple">
+<li><p>Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker can be examined but will not persist past the exit. (You will not be able to load files into a viewer like Paraview). Except for Docker, no installation is needed.</p></li>
+<li><p>Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit and Paraview will work.</p></li>
+<li><p>Clone and build dfnWorks on your machine. This will give full access and control of all the tools and files for your project. Installation will include Python, dfnWorks, LaGriT, PFLOTRAN, and FEHM.</p></li>
+<li><p>Linux dfnWorks module. Some servers use the module system and may have dfnWorks available. You will still need to clone dfnWorks for the files, but you can skip the build process.</p></li>
+</ul>
 <section id="docker">
 <h2>Docker<a class="headerlink" href="#docker" title="Link to this heading"></a></h2>
-<p>The easiest way to get started with dfnWorks is using our docker container (<a class="reference external" href="https://hub.docker.com/r/ees16/dfnworks">https://hub.docker.com/r/ees16/dfnworks</a>).</p>
-<p>If you do not already have Docker installed on your machine,
-visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
-<p>The dfnWorks Docker image can be pulled from DockerHub using:</p>
+<p id="docker-section">The easiset way to get started with dfnWorks is by Using Docker. You will not need to install any software or manage your enviornment. All the tools and the dfnWorks repository are contained in the Docker image.</p>
+<section id="setup-the-docker-dfnworks-image">
+<h3>Setup the Docker dfnWorks image<a class="headerlink" href="#setup-the-docker-dfnworks-image" title="Link to this heading"></a></h3>
+<p>Check Docker is installed and running correctly.
+If you do not already have Docker installed on your machine, visit <a class="reference external" href="https://www.docker.com/get-started">Getting Started with Docker</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>hello-world
+Hello<span class="w"> </span>from<span class="w"> </span>Docker!
+This<span class="w"> </span>message<span class="w"> </span>shows<span class="w"> </span>that<span class="w"> </span>your<span class="w"> </span>installation<span class="w"> </span>appears<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>working<span class="w"> </span>correctly.
+</pre></div>
+</div>
+<p>Once Docker is installed, pull the dfnWorks Docker image:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>ees16/dfnworks:latest
 </pre></div>
 </div>
-<section id="running-the-dfnworks-container">
-<h3>Running the dfnWorks container<a class="headerlink" href="#running-the-dfnworks-container" title="Link to this heading"></a></h3>
+<p>After pulling, the dfnWorks Docker image is stored on your machine and can be listed using the command <code class="docutils literal notranslate"><span class="pre">`docker</span> <span class="pre">images`</span></code>. This contains the dfnWorks repository files, libraries, and dependencies needed to run the dfnWorks application.</p>
+</section>
+<section id="run-the-dfnworks-container">
+<h3>Run the dfnWorks container<a class="headerlink" href="#run-the-dfnworks-container" title="Link to this heading"></a></h3>
+<p>This method of running the dfnWorks container is useful for exploring the example files or running tests, but it’s not ideal for saving your own work or results.
+When you run a Docker container without specifying a volume, any files created inside the container during its execution will only exist until you exit the container. Once you type exit, the container stops, and you lose any changes or files generated inside it.</p>
 <p>The base command for running the dfnWorks container is:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>ees16/dfnworks:latest
 </pre></div>
 </div>
-<p>However, to exchange files between the host and container, we will need to mount
-a volume.</p>
-<p>The option <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">LOCAL_FOLDER:/dfnWorks/work</span></code> will allow all files present in the
-container folder <code class="docutils literal notranslate"><span class="pre">dfnWorks/work</span></code> to be exposed to <code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">LOCAL_FOLDER</span></code> is the absolute path to a folder on your machine.</p>
-<p>With this is place, the final command for running the Docker container is:</p>
+<p>When you run the command above, you will be inside the container, and your current directory will be set to <cite>/dfnWorks</cite>.
+Here’s how to run one of the included examples in the dfnWorks container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples/4_user_rects
+python<span class="w"> </span>driver.py
+</pre></div>
+</div>
+<p>The unix command <code class="docutils literal notranslate"><span class="pre">`ls`</span></code> will display the files written, including <cite>output.log</cite> and result files in <cite>/output</cite>.
+After exiting, all the files you created or modified during that session will be lost because they weren’t saved outside the container.</p>
+</section>
+<section id="run-the-dfnworks-container-with-mounted-volume">
+<h3>Run the dfnWorks container with mounted volume<a class="headerlink" href="#run-the-dfnworks-container-with-mounted-volume" title="Link to this heading"></a></h3>
+<p>In order to exchange files between the host computer and a Docker container, you can mount a volume. Mounting a volume allows the container to access files stored on your local machine. Keep in mind that the mount command may vary depending on your operating system.</p>
+<p><strong>General Note:</strong>
+Use a volume where permissions will not be an issue to ensure smooth operation.</p>
+<p><strong>On LANL Linux Servers</strong></p>
+<p>Docker is available on the local server <cite>es11</cite>. It is important to work from your home directory to avoid permission issues.</p>
+<p>Assuming you want to mount a local version of the dfnWorks repository, use the following command to clone it: <code class="docutils literal notranslate"><span class="pre">`git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:lanl/dfnWorks.git`</span></code>.
+You may want to set more open permissions to ensure there are no issues with file access. You can set these permissions using: <code class="docutils literal notranslate"><span class="pre">`chmod</span> <span class="pre">777</span> <span class="pre">-R</span> <span class="pre">dfnWorks`</span></code>.</p>
+<p>After preparing your local volume, pull the latest dfnWorks Docker image:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>ees16/dfnworks:latest
+</pre></div>
+</div>
+<p>Run the container with a mounted volume.
+Move into the directory where you want to run dfnWorks (e.g., <cite>dfnWorks/examples/4_user_rects</cite>) and use the following command. This example assumes you want to run a script named <cite>driver.py</cite> (you can substitute this with your desired script name):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">:/app&quot;</span><span class="w"> </span>-w<span class="w"> </span>/app<span class="w"> </span>ees16/dfnworks:latest<span class="w"> </span>python<span class="w"> </span>driver.py
+</pre></div>
+</div>
+<p>In this example, the inner-docker folder /app will share its content with your local current folder. All files will persist after you exit Docker.</p>
 <p><strong>On macOS:</strong></p>
+<p>On macOS, you can mount a directory on your local machine to the container. Use the following command, replacing <cite>&lt;LOCAL_FOLDER&gt;</cite> with the absolute path to your local directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>-v<span class="w"> </span>&lt;LOCAL_FOLDER&gt;:/dfnWorks/work<span class="w"> </span>ees16/dfnworks:latest
 </pre></div>
 </div>
+<p><strong>In General</strong></p>
+<p>To link the current folder between the host and the container for development, you can use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>&lt;image-name&gt;<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:&lt;folder-path-in-container&gt;<span class="w"> </span>ees16/dfnworks:latest
+</pre></div>
+</div>
+<p>Replace <cite>&lt;image-name&gt;</cite> with <cite>ees16/dfnworks:latest</cite> and <cite>&lt;folder-path-in-container&gt;</cite> with the desired folder path inside the container.</p>
 </section>
 </section>
-<section id="native-build-from-github-repository">
-<h2>Native build from github repository<a class="headerlink" href="#native-build-from-github-repository" title="Link to this heading"></a></h2>
-<p>This document contains instructions for setting up dfnWorks natively on your
-machine. To setup dfnWorks using Docker instead, see the next section.</p>
+<section id="native-build">
+<h2>Native Build<a class="headerlink" href="#native-build" title="Link to this heading"></a></h2>
+<p id="build-section">These instructions describe how to setup dfnWorks natively on your machine.</p>
+<p>For more information about installing dfnWorks, refer to the <a class="reference external" href="https://github.com/lanl/dfnWorks/blob/master/README.md">dfnWorks README on github</a>.</p>
 <section id="clone-the-dnfworks-repository">
 <h3>Clone the dnfWorks repository<a class="headerlink" href="#clone-the-dnfworks-repository" title="Link to this heading"></a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/lanl/dfnWorks.git
@@ -195,14 +246,15 @@ $<span class="w"> </span>python<span class="w"> </span>fix_paths.py
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>dfnWorks/pydfnworks/
 </pre></div>
 </div>
-<p>Complie The pydfnWorks Package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>bdist_wheel
+<p>Compile The pydfnWorks Package &amp; Install on Your Local Machine:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
-<p>Install on Your Local Machine:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dist/pydfnworks-2.6-py3-none-any.whl
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--user
 </pre></div>
 </div>
+<p>if you don’t have admin privileges</p>
 <p><strong>Note that the python version in dist/ needs to be consistent with the current release</strong></p>
 </section>
 <section id="installation-requirements-for-native-build">

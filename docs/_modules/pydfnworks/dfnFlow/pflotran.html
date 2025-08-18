@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnFlow.pflotran &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>pydfnworks.dfnFlow.pflotran &mdash; dfnWorks 2.9.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=ab527d87"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/documentation_options.js?v=bc52e0b9"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -30,10 +32,9 @@
           
           <a href="../../../index_docs.html" class="icon icon-home">
             dfnWorks
-              <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
+                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -46,7 +47,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -57,9 +58,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -404,8 +406,11 @@
         <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iarray</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Creating permeability array&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Note: This script assumes isotropic permeability&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">material_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_based_aperture</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">material_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Writting Permeability&#39;</span><span class="p">)</span>
         <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Permeability&#39;</span>
         <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span><span class="p">)</span>
