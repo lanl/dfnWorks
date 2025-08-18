@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.meshing.udfm.upscale &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnGen.meshing.udfm.upscale &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,29 +92,30 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">m</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
 <div class="viewcode-block" id="upscale">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.udfm.upscale.upscale">[docs]</a>
-<span class="k">def</span> <span class="nf">upscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_perm</span><span class="p">,</span> <span class="n">mat_por</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_perm</span><span class="p">,</span> <span class="n">mat_por</span><span class="p">,</span> <span class="n">tag_mesh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate permeabilities and porosities based on output of map2continuum.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            DFN Class </span>
+<span class="sd">        </span>
 <span class="sd">        mat_perm : float </span>
 <span class="sd">            Matrix permeability (in m^2)</span>
+<span class="sd">        </span>
 <span class="sd">        mat_por: float</span>
 <span class="sd">            Matrix porosity</span>
 
@@ -126,10 +123,13 @@
 <span class="sd">    -------</span>
 <span class="sd">        perm_fehm.dat : text file</span>
 <span class="sd">            Contains permeability data for FEHM input</span>
+<span class="sd">        </span>
 <span class="sd">        rock_fehm.dat : text file</span>
 <span class="sd">            Contains rock properties data for FEHM input</span>
+<span class="sd">        </span>
 <span class="sd">        mesh_permeability.h5 : h5 file</span>
 <span class="sd">            Contains permeabilites at each node for PFLOTRAN input</span>
+<span class="sd">        </span>
 <span class="sd">        mesh_porosity.h5 : h5 file</span>
 <span class="sd">            Contains porosities at each node for PFLOTRAN input               </span>
 <span class="sd">        </span>
@@ -139,13 +139,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Starting&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Starting&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
 
     <span class="c1"># Check values of porosity and permeability</span>
     <span class="k">if</span> <span class="n">mat_por</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mat_por</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Matrix porosity must be between 0 and 1. Exiting</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -348,10 +349,12 @@
     <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="s2">&quot;full_mesh.stor&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Finished&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Generating permeability and porosity for octree mesh: Finished&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">tag_mesh</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_variable_to_mesh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s2">&quot;frac&quot;</span><span class="p">,</span> <span class="n">variable_file</span><span class="o">=</span><span class="s2">&quot;tag_frac.dat&quot;</span><span class="p">,</span> <span class="n">mesh_file_in</span><span class="o">=</span><span class="s2">&quot;octree_dfn.inp&quot;</span><span class="p">,</span> <span class="n">node_based</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>        </div>
 
 
 <span class="c1">#def upscale_cleanup():</span>

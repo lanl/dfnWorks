@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.meshing.udfm.false_connections &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnGen.meshing.udfm.false_connections &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,19 +92,20 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span><span class="p">,</span> <span class="n">print_log</span>
 
 <div class="viewcode-block" id="check_false_connections">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.udfm.false_connections.check_false_connections">[docs]</a>
-<span class="k">def</span> <span class="nf">check_false_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;../&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_false_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;../&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            DFN Class</span>
+<span class="sd">        </span>
 <span class="sd">        fmc_filname : string</span>
 <span class="sd">            name of the pickled dictionary of mesh and fracture intersections </span>
 
@@ -116,8 +113,10 @@
 <span class="sd">    -------</span>
 <span class="sd">        num_false_connections : int</span>
 <span class="sd">            number of false connections</span>
-<span class="sd">        num_cell_false : int</span>
+<span class="sd">        </span>
+<span class="sd">        num_false_cells : int</span>
 <span class="sd">            number of Voronoi cells with false connections</span>
+<span class="sd">        </span>
 <span class="sd">        false_connections : list</span>
 <span class="sd">            list of tuples of false connections created by upscaling</span>
 
@@ -128,14 +127,14 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for false connections in the upscaled mesh.&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for false connections in the upscaled mesh.&quot;</span><span class="p">)</span>
     <span class="c1"># Create symbolic links to create fracture graph</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;connectivity.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;left.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;right.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;fracture_info.dat&quot;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">f</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Warning!!! Unable to make symbolic link to </span><span class="si">{</span><span class="n">path</span><span class="o">+</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Warning!!! Unable to make symbolic link to </span><span class="si">{</span><span class="n">path</span><span class="o">+</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">pass</span>
 
     <span class="c1"># create fracture graph, with arbitrary source/target</span>
@@ -150,9 +149,9 @@
         <span class="n">H</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
     <span class="c1"># load the fracture_mesh_connection dictionary</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Loading mesh intersection information&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Loading mesh intersection information&quot;</span><span class="p">)</span>
     <span class="n">fmc</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;connections.p&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Complete&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Complete&quot;</span><span class="p">)</span>
     <span class="c1"># Get cell ids for the cells that fractures intersect</span>
     <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fmc</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 
@@ -173,22 +172,22 @@
                     <span class="n">cell_false</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1">## check for false connections</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for false connections&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for false connections&quot;</span><span class="p">)</span>
     <span class="n">false_connections</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">G</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; False connection between fractures </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; False connection between fractures </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
             <span class="n">false_connections</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">false_connections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">num_false_connections</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">false_connections</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;--&gt; There are </span><span class="si">{</span><span class="n">num_false_connections</span><span class="si">}</span><span class="s2"> false connections between fractures&quot;</span>
+        <span class="n">local_print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; There are </span><span class="si">{</span><span class="n">num_false_connections</span><span class="si">}</span><span class="s2"> false connections between fractures&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span>
         <span class="p">)</span>
         <span class="n">num_false_cells</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cell_false</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; These occur in </span><span class="si">{</span><span class="n">num_false_cells</span><span class="si">}</span><span class="s2"> Voronoi cells&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; These occur in </span><span class="si">{</span><span class="n">num_false_cells</span><span class="si">}</span><span class="s2"> Voronoi cells&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; No false connections found&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; No false connections found&quot;</span><span class="p">)</span>
         <span class="n">num_false_cells</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">num_false_connections</span> <span class="o">=</span> <span class="mi">0</span>
 

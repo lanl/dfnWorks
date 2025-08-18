@@ -440,7 +440,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <div class="line-block">
-<div class="line">For spherical coordinates, values are defined using the function parameters <span class="xref std std-ref">theta</span>/<span class="xref std std-ref">phi</span>.</div>
+<div class="line">For spherical coordinates, values are defined using the function parameters <a class="reference internal" href="#theta"><span class="std std-ref">theta</span></a>/<a class="reference internal" href="#phi"><span class="std std-ref">phi</span></a>.</div>
 <div class="line">For Trend/Plunge,  values are defined using <span class="xref std std-ref">trend</span>/<span class="xref std std-ref">plunge</span>.</div>
 <div class="line">For Dip/Strike, values are defined using <span class="xref std std-ref">dip</span>/<span class="xref std std-ref">strike</span>.</div>
 </div>
@@ -928,14 +928,6 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <section id="ekappa">
 <h4>ekappa<a class="headerlink" href="#ekappa" title="Link to this heading"></a></h4>
 <p>Description: The concentration parameter of the von Mises-Fisher  distribution, which determines the degree of clustering around the mean orientation.</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> floats</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ekappa&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">17</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a theta value of 45 degrees</span>
-<span class="c1"># Fracture Family 2 has a theta value of 78 degrees</span>
-<span class="c1"># Fracture Family 3 has a theta value of 0 degrees</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Values of <img class="math" src="_images/math/261e3eb56c1757dd003745ee4cc53aa595565af1.png" alt="\kappa"/> approaching zero result in a uniform distribution of points on the sphere.  Larger values create points with a small deviation from mean direction.</p>
@@ -945,140 +937,54 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <p>The numerical method for sampling the von Mises-Fisher  distribution becomes unstable for values greater than 100.</p>
 </div>
 </section>
-<hr class="docutils" />
 <section id="ellipse-spherical-coordinates">
 <h4>Ellipse: Spherical Coordinates<a class="headerlink" href="#ellipse-spherical-coordinates" title="Link to this heading"></a></h4>
 <p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to the spherical coordinates <img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> and <img class="math" src="_images/math/fffd2357ee88a9c50ba9e831ed64c39c73d54a07.png" alt="\phi"/> by</p>
 <div class="math">
-<p><img src="_images/math/8cf77d2801619424ae7a84211bb1a8cca8795192.png" alt="\vec{n}_x &amp; = \sin(\theta) \cos(\phi)\\"/></p>
+<p><img src="_images/math/3c7cedb7f9a7898d5e5d54835ee44eeb04952fa8.png" alt="\vec{n}_x &amp; = \sin(\theta) \cos(\phi)"/></p>
 </div><div class="math">
-<p><img src="_images/math/36bc2e342149719661caf719641e17da4ee2dfe6.png" alt="\vec{n}_y &amp; = \sin(\theta) \sin(\phi)\\"/></p>
+<p><img src="_images/math/5139c71c13b5750ff5a7e1683e335cba027939a0.png" alt="\vec{n}_y &amp; = \sin(\theta) \sin(\phi)"/></p>
 </div><div class="math">
 <p><img src="_images/math/d549c46bd87138576a59f5cb8578b1e7c7ba4344.png" alt="\vec{n}_z &amp; = \cos(\theta)"/></p>
-</div><section id="etheta">
-<h5>etheta<a class="headerlink" href="#etheta" title="Link to this heading"></a></h5>
+</div><section id="theta">
+<h5>theta<a class="headerlink" href="#theta" title="Link to this heading"></a></h5>
 <p>Description: Angle the normal vector of the fracture makes with the z-axis</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> floats</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;etheta&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a theta value of 45 degrees</span>
-<span class="c1"># Fracture Family 2 has a theta value of 78 degrees</span>
-<span class="c1"># Fracture Family 3 has a theta value of 0 degrees</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Both radians and degrees are supported. Use <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> to select one. If <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> is set to radians <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> = ‘radian’, and the value provided must be less than <img class="math" src="_images/math/bf4d6dded1f2769dd9942a7e0071045945dbeb9a.png" alt="2 \pi"/>.</p>
 </div>
 </section>
-<hr class="docutils" />
-<section id="ephi">
-<h5>ephi<a class="headerlink" href="#ephi" title="Link to this heading"></a></h5>
+<section id="phi">
+<h5>phi<a class="headerlink" href="#phi" title="Link to this heading"></a></h5>
 <p>Description: Angle that the projection of the normal vector of a fracture onto the x-y plane makes with the x-axis.</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> float</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ephi&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a phi value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a phi value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a phi value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Both radians and degrees are supported. Use <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> to select one. If <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> is set to radians <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> = ‘radian’, then the value provided must be less than <img class="math" src="_images/math/bf4d6dded1f2769dd9942a7e0071045945dbeb9a.png" alt="2 \pi"/>.</p>
-</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="ellipse-trend-plunge">
 <h4>Ellipse: Trend &amp; Plunge<a class="headerlink" href="#ellipse-trend-plunge" title="Link to this heading"></a></h4>
-<p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
+<p>For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
 <div class="math">
-<p><img src="_images/math/13b59309c50cd1dd667679840779ba52d8f16d87.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/e7d5fa36a2083301a54e264b70d487c3795e6162.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})"/></p>
 </div><div class="math">
-<p><img src="_images/math/7eb2fac32fb3978fed7ae60efef3d3760fd8b39a.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/16023fca010d867826606486010c528051188b3f.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})"/></p>
 </div><div class="math">
 <p><img src="_images/math/e24906bf3a64d622f266503cd7146a8de74a258d.png" alt="\vec{n}_z &amp; = \sin(\text{trend})"/></p>
-</div><section id="etrend">
-<h5>etrend<a class="headerlink" href="#etrend" title="Link to this heading"></a></h5>
-<p>Description: Trend of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;etrend&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a trend value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a trend value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a trend value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
+</div><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’) to use Trend  &amp; Plunge</p>
 </div>
 </section>
-<hr class="docutils" />
-<section id="eplunge">
-<h5>eplunge<a class="headerlink" href="#eplunge" title="Link to this heading"></a></h5>
-<p>Description: Plunge of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;eplunge&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a plunge value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a plunge value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a plunge value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Trend  &amp; Plunge</p>
-</div>
-</section>
-</section>
-<hr class="docutils" />
 <section id="ellipse-dip-strike">
 <h4>Ellipse: Dip &amp; Strike<a class="headerlink" href="#ellipse-dip-strike" title="Link to this heading"></a></h4>
 <p>For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
 <div class="math">
-<p><img src="_images/math/54bf8990c37ab5db0481107f9bceeeab02b0711f.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})\\"/></p>
+<p><img src="_images/math/61836b66522443a4bb9ac74a6d47cdecf03e0d42.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})"/></p>
 </div><div class="math">
-<p><img src="_images/math/95ec96cfa171d2721de95553391d496d4553bae6.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})\\"/></p>
+<p><img src="_images/math/a7f8e9206e0c858058dad0353c7bd1a48a7d3648.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})"/></p>
 </div><div class="math">
 <p><img src="_images/math/4ed396e004eb768a13e92e60d6ec6ca2d8406bc3.png" alt="\vec{n}_z &amp; = \cos(\text{dip})"/></p>
-</div><hr class="docutils" />
-<section id="estrike">
-<h5>estrike<a class="headerlink" href="#estrike" title="Link to this heading"></a></h5>
-<p>Description: Strike of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;estrike&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a strike value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a strike value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a strike value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Dip  &amp; Strike</p>
-</div>
+</div><p>—</p>
 </section>
-<hr class="docutils" />
-<section id="edip">
-<h5>edip<a class="headerlink" href="#edip" title="Link to this heading"></a></h5>
-<p>Description: Dip of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamell"><span class="std std-ref">nFamEll</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;edip&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a dip value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a dip value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a dip value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Dip  &amp; Strike</p>
-</div>
-</section>
-</section>
-<hr class="docutils" />
 <section id="ellipse-in-plane-rotation">
 <h4>Ellipse: In Plane Rotation<a class="headerlink" href="#ellipse-in-plane-rotation" title="Link to this heading"></a></h4>
 <section id="ebetadistribution">
@@ -1489,22 +1395,14 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <h4>Rectangle: Spherical Coordinates<a class="headerlink" href="#rectangle-spherical-coordinates" title="Link to this heading"></a></h4>
 <p>The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to the spherical coordinates <img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> and <img class="math" src="_images/math/fffd2357ee88a9c50ba9e831ed64c39c73d54a07.png" alt="\phi"/> by</p>
 <div class="math">
-<p><img src="_images/math/8cf77d2801619424ae7a84211bb1a8cca8795192.png" alt="\vec{n}_x &amp; = \sin(\theta) \cos(\phi)\\"/></p>
+<p><img src="_images/math/3c7cedb7f9a7898d5e5d54835ee44eeb04952fa8.png" alt="\vec{n}_x &amp; = \sin(\theta) \cos(\phi)"/></p>
 </div><div class="math">
-<p><img src="_images/math/36bc2e342149719661caf719641e17da4ee2dfe6.png" alt="\vec{n}_y &amp; = \sin(\theta) \sin(\phi)\\"/></p>
+<p><img src="_images/math/5139c71c13b5750ff5a7e1683e335cba027939a0.png" alt="\vec{n}_y &amp; = \sin(\theta) \sin(\phi)"/></p>
 </div><div class="math">
 <p><img src="_images/math/d549c46bd87138576a59f5cb8578b1e7c7ba4344.png" alt="\vec{n}_z &amp; = \cos(\theta)"/></p>
 </div><section id="rtheta">
 <h5>rtheta<a class="headerlink" href="#rtheta" title="Link to this heading"></a></h5>
 <p>Description: Angle the normal vector of the fracture makes with the z-axis</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> floats</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rtheta&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a theta value of 45 degrees</span>
-<span class="c1"># Fracture Family 2 has a theta value of 78 degrees</span>
-<span class="c1"># Fracture Family 3 has a theta value of 0 degrees</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Both radians and degrees are supported. Use <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> to select one. If <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> is set to radians <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> = ‘radian’, and the value provided must be less than <img class="math" src="_images/math/bf4d6dded1f2769dd9942a7e0071045945dbeb9a.png" alt="2 \pi"/>.</p>
@@ -1514,14 +1412,6 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <section id="rphi">
 <h5>rphi<a class="headerlink" href="#rphi" title="Link to this heading"></a></h5>
 <p>Description: Angle that the projection of the normal vector of a fracture onto the x-y plane makes with the x-axis.</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rphi&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a phi value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a phi value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a phi value of 12 degrees</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Both radians and degrees are supported. Use <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> to select one. If <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> is set to radians <a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> = ‘radian’, then the value provided must be less than <img class="math" src="_images/math/bf4d6dded1f2769dd9942a7e0071045945dbeb9a.png" alt="2 \pi"/>.</p>
@@ -1533,90 +1423,22 @@ The distribution is sampled using the algorithm provided <a class="reference ext
 <h4>Rectangle: Trend &amp; Plunge<a class="headerlink" href="#rectangle-trend-plunge" title="Link to this heading"></a></h4>
 <p>For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to trend and plunge by</p>
 <div class="math">
-<p><img src="_images/math/13b59309c50cd1dd667679840779ba52d8f16d87.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/e7d5fa36a2083301a54e264b70d487c3795e6162.png" alt="\vec{n}_x &amp; = -\sin(\text{trend}) \cos(\text{plunge})"/></p>
 </div><div class="math">
-<p><img src="_images/math/7eb2fac32fb3978fed7ae60efef3d3760fd8b39a.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})\\"/></p>
+<p><img src="_images/math/16023fca010d867826606486010c528051188b3f.png" alt="\vec{n}_y &amp; = -\cos(\text{trend}) \cos(\text{plunge})"/></p>
 </div><div class="math">
 <p><img src="_images/math/e24906bf3a64d622f266503cd7146a8de74a258d.png" alt="\vec{n}_z &amp; = \sin(\text{trend})"/></p>
-</div><section id="rtrend">
-<h5>rtrend<a class="headerlink" href="#rtrend" title="Link to this heading"></a></h5>
-<p>Description: Trend of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rtrend&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a trend value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a trend value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a trend value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’) to use Trend  &amp; Plunge</p>
-</div>
-</section>
-<hr class="docutils" />
-<section id="rplunge">
-<h5>rplunge<a class="headerlink" href="#rplunge" title="Link to this heading"></a></h5>
-<p>Description: Plunge of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rplunge&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a plunge value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a plunge value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a plunge value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Trend  &amp; Plunge</p>
-</div>
-</section>
-</section>
-<hr class="docutils" />
+</div></section>
 <section id="rectangle-dip-strike">
 <h4>Rectangle: Dip &amp; Strike<a class="headerlink" href="#rectangle-dip-strike" title="Link to this heading"></a></h4>
 <p>For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family <img class="math" src="_images/math/b4ecdaef430093e2c63ec36545fdc953d7b1449c.png" alt="\vec{n}"/> is related to dip and strike by</p>
 <div class="math">
-<p><img src="_images/math/54bf8990c37ab5db0481107f9bceeeab02b0711f.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})\\"/></p>
+<p><img src="_images/math/61836b66522443a4bb9ac74a6d47cdecf03e0d42.png" alt="\vec{n}_x &amp; = \sin(\text{dip}) \cos(\text{strike})"/></p>
 </div><div class="math">
-<p><img src="_images/math/95ec96cfa171d2721de95553391d496d4553bae6.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})\\"/></p>
+<p><img src="_images/math/a7f8e9206e0c858058dad0353c7bd1a48a7d3648.png" alt="\vec{n}_y &amp; = -\sin(\text{dip}) \sin(\text{strike})"/></p>
 </div><div class="math">
 <p><img src="_images/math/4ed396e004eb768a13e92e60d6ec6ca2d8406bc3.png" alt="\vec{n}_z &amp; = \cos(\text{dip})"/></p>
-</div><section id="rstrike">
-<h5>rstrike<a class="headerlink" href="#rstrike" title="Link to this heading"></a></h5>
-<p>Description: Strike of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rstrike&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a strike value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a strike value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a strike value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Dip  &amp; Strike</p>
-</div>
-</section>
-<hr class="docutils" />
-<section id="rdip">
-<h5>rdip<a class="headerlink" href="#rdip" title="Link to this heading"></a></h5>
-<p>Description: Dip of fracture families</p>
-<p>Type: list of <a class="reference internal" href="#nfamrect"><span class="std std-ref">nFamRect</span></a> float</p>
-<p>Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rdip&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="c1"># Fracture Family 1 has a dip value of 0 degrees</span>
-<span class="c1"># Fracture Family 2 has a dip value of 56 degrees</span>
-<span class="c1"># Fracture Family 3 has a dip value of 12 degrees</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#angleoption"><span class="std std-ref">angleOption</span></a> must be set to degree (angleOption = ‘degree’)  to use Dip  &amp; Strike</p>
-</div>
-</section>
-</section>
-<hr class="docutils" />
+</div></section>
 <section id="rectangle-in-plane-rotation">
 <h4>Rectangle: In Plane Rotation<a class="headerlink" href="#rectangle-in-plane-rotation" title="Link to this heading"></a></h4>
 <section id="rbetadistribution">

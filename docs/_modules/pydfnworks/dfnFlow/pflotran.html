@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnFlow.pflotran &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnFlow.pflotran &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -92,27 +88,28 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">functions for using pflotran in dfnworks</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">ntpath</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ntpath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="lagrit2pflotran">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.lagrit2pflotran">[docs]</a>
-<span class="k">def</span> <span class="nf">lagrit2pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lagrit2pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;  Takes output from LaGriT and processes it for use in PFLOTRAN.</span>
 <span class="sd">    Calls the function write_perms_and_correct_volumes_areas() and zone2ex</span>
 <span class="sd">   </span>
 <span class="sd">    Parameters    </span>
 <span class="sd">    --------------</span>
 <span class="sd">        self : object</span>
-<span class="sd">            DFN Class </span>
+<span class="sd">            DFN Class</span>
+<span class="sd">        boundary_cell_area : double </span>
+<span class="sd">            Boundary cell area. Defaults to None.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
@@ -124,24 +121,21 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting conversion of files for PFLOTRAN &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Starting conversion of files for PFLOTRAN &quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: inp filename not attached to object</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="c1"># Check if UGE file was created by LaGriT, if it does not exists, exit</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.uge&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span><span class="p">):</span>
         <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. Cannot file uge file</span><span class="se">\n</span><span class="s1">Exiting</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">write_perms_and_correct_volumes_areas</span><span class="p">()</span>
     
@@ -150,14 +144,13 @@
 
     <span class="bp">self</span><span class="o">.</span><span class="n">zone2ex</span><span class="p">(</span><span class="n">zone_file</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">boundary_cell_area</span> <span class="o">=</span> <span class="n">boundary_cell_area</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dump_h5_files</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conversion of files for PFLOTRAN complete&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Conversion of files for PFLOTRAN complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="zone2ex">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.zone2ex">[docs]</a>
-<span class="k">def</span> <span class="nf">zone2ex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">boundary_cell_area</span><span class="o">=</span><span class="mf">1.e-1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zone2ex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">boundary_cell_area</span><span class="o">=</span><span class="mf">1.e-1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert zone files from LaGriT into ex format for LaGriT</span>
 <span class="sd">    </span>
@@ -181,16 +174,14 @@
 <span class="sd">    ----------</span>
 <span class="sd">    the boundary_cell_area should be a function of h, the mesh resolution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting zone files to ex&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting zone files to ex&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: uge filename not assigned to object yet</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: uge filename not assigned to object yet&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
     <span class="c1"># Opening uge file</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">--&gt; Opening uge file&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Opening uge file&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fuge</span><span class="p">:</span>
         <span class="c1"># Reading cell ids, cells centers and cell volumes</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">fuge</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
@@ -209,7 +200,7 @@
             <span class="n">cell_vol</span><span class="p">[</span><span class="n">cells</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">cell_coord</span><span class="p">[</span><span class="n">cells</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished processing uge file</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished processing uge file</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># loop through zone files</span>
     <span class="k">if</span> <span class="n">zone_file</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
@@ -217,13 +208,11 @@
         <span class="n">face_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;south&#39;</span><span class="p">,</span> <span class="s1">&#39;west&#39;</span><span class="p">,</span> <span class="s1">&#39;east&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">zone_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide boundary zone filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: Please provide boundary zone filename!</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">face</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: Please provide face name among: top, bottom, north, south, east, west !</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: Please provide face name among: top, bottom, north, south, east, west !</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="n">zone_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">zone_file</span><span class="p">]</span>
         <span class="n">face_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">face</span><span class="p">]</span>
 
@@ -233,21 +222,21 @@
         <span class="n">ex_file</span> <span class="o">=</span> <span class="n">zone_file</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;zone&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;ex&#39;</span>
 
         <span class="c1"># Opening the input file</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Opening zone file: &#39;</span><span class="p">,</span> <span class="n">zone_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Opening zone file: </span><span class="si">{</span><span class="n">zone_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">zone_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fzone</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Reading boundary node ids&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Reading boundary node ids&#39;</span><span class="p">)</span>
             <span class="n">node_array</span> <span class="o">=</span> <span class="n">fzone</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">node_array</span> <span class="o">=</span> <span class="n">node_array</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">node_array</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
             <span class="n">node_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">node_array</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished reading zone file&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished reading zone file&#39;</span><span class="p">)</span>
 
         <span class="n">Boundary_cell_area_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">):</span>
             <span class="n">Boundary_cell_area_array</span><span class="p">[</span>
                 <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundary_cell_area</span>  <span class="c1"># Fix the area to a large number</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished calculating boundary connections&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Finished calculating boundary connections&#39;</span><span class="p">)</span>
         <span class="n">boundary_cell_coord</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">cell_coord</span><span class="p">[</span><span class="n">cell_id</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">node_array</span>
         <span class="p">]</span>
@@ -278,9 +267,8 @@
             <span class="n">boundary_cell_coord</span> <span class="o">=</span> <span class="p">[[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
                                    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">boundary_cell_coord</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: unknown face. Select one of: top, bottom, east, west, north, south.</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Error: Unknown face provided: </span><span class="si">{</span><span class="n">face</span><span class="si">}</span><span class="s1">. Select one of: top, bottom, east, west, north, south, none&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="c1">## Write out ex files</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ex_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CONNECTIONS</span><span class="se">\t</span><span class="si">%i</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">node_array</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
@@ -289,18 +277,17 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.12e</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.12e</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.12e</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">Boundary_cell_area_array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.12e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;--&gt; Finished writing ex file </span><span class="si">{</span><span class="n">ex_file</span><span class="si">}</span><span class="s1"> corresponding to the zone file: </span><span class="si">{</span><span class="n">zone_file</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting zone files to ex complete&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">()</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting zone files to ex complete&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="write_perms_and_correct_volumes_areas">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas">[docs]</a>
-<span class="k">def</span> <span class="nf">write_perms_and_correct_volumes_areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_perms_and_correct_volumes_areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file </span>
 
 <span class="sd">    Parameters</span>
@@ -316,33 +303,28 @@
 <span class="sd">    ----------</span>
 <span class="sd">        Calls executable correct_uge</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Correcting UGE file: Starting&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Correcting UGE file: Starting&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Writing Perms and Correct Volume Areas&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Writing Perms and Correct Volume Areas&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error.: inp file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. inp file must be specified.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. uge file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. uge file must be specified.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. perm file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. perm file must be provide.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aper_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">aper_cell_file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: aperture file must be specified!</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error. aperture file must be specified.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="c1"># Make input file for C UGE converter</span>
@@ -361,24 +343,34 @@
     <span class="c1">## dump aperture file</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dump_aperture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aper_file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;fehm&#39;</span><span class="p">)</span>
     <span class="c1">## execute convert uge C code</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_UGE_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; convert_uge_params.txt&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CORRECT_VOLUME_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; convert_uge_params.txt&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">failure</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">failure</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;ERROR: UGE conversion failed</span><span class="se">\n</span><span class="s1">Exiting Program</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;Error: UGE conversion failed</span><span class="se">\n</span><span class="s1">Exiting Program</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+    
     <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
-    <span class="nb">print</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;--&gt; Time elapsed for UGE file conversion: </span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s1">0.3f</span><span class="si">}</span><span class="s1"> seconds</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Correcting UGE file: Complete&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">()</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Correcting UGE file: Complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="n">correct_volume_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">,</span> <span class="s2">&quot;correct_volumes_logfile.log&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">correct_volume_file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Printing correct volumes output file:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;filename: </span><span class="si">{</span><span class="n">correct_volume_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">correct_volume_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">correct_volume_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-
-<span class="k">def</span> <span class="nf">dump_h5_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dump_h5_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Write permeability values to cell ids and permeability values to dfn_properties.h5 file for pflotran. </span>
 
 <span class="sd">    Parameters</span>
@@ -394,34 +386,33 @@
 <span class="sd">    ----------</span>
 <span class="sd">        Hydraulic properties need to attached to the class prior to running this function. Use DFN.assign_hydraulic_properties() to do so. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Dumping h5 file&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Dumping h5 file&quot;</span><span class="p">)</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;dfn_properties.h5&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Opening HDF5 File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Opening HDF5 File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Allocating cell index array&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Writing cell indices&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Allocating cell index array&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Writing cell indices&#39;</span><span class="p">)</span>
         <span class="n">iarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Cell Ids&#39;</span>
         <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iarray</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Creating permeability array&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Note: This script assumes isotropic permeability&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Creating permeability array&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Note: This script assumes isotropic permeability&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_based_aperture</span><span class="p">:</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perm_cell_file</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span> 
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">material_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Writting Permeability&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Writting Permeability&#39;</span><span class="p">)</span>
         <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Permeability&#39;</span>
         <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">perm_cell</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Done writting h5 file&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Done writting h5 file&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
 
 <div class="viewcode-block" id="pflotran">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran">[docs]</a>
-<span class="k">def</span> <span class="nf">pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">restart_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pflotran</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">restart_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Run PFLOTRAN. Copy PFLOTRAN run file into working directory and run with ncpus</span>
 
 <span class="sd">    Parameters</span>
@@ -444,20 +435,18 @@
 <span class="sd">    Runs PFLOTRAN Executable, see http://www.pflotran.org/ for details on PFLOTRAN input cards</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">),</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN input file</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; Error. Unable to copy PFLOTRAN input file</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN&quot;</span><span class="p">)</span>
 
     <span class="n">mpirun</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
         <span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/bin/mpirun&#39;</span>
@@ -469,7 +458,7 @@
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">mpirun</span> <span class="o">+</span> <span class="s1">&#39; -np &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span><span class="p">)</span> <span class="o">+</span> \
           <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; -pflotranin &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Running: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Running: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">restart</span><span class="p">:</span>
@@ -478,26 +467,25 @@
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;--&gt; ERROR!! Unable to copy PFLOTRAN restart input file</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN&quot;</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_DIR&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PETSC_ARCH&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;/bin/mpirun -np &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span><span class="p">)</span> <span class="o">+</span> \
               <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PFLOTRAN_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; -pflotranin &#39;</span> <span class="o">+</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">restart_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Running: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN Complete&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Running PFLOTRAN Complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="pflotran_cleanup">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran_cleanup">[docs]</a>
-<span class="k">def</span> <span class="nf">pflotran_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">index_finish</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pflotran_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">index_finish</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;pflotran_cleanup</span>
 <span class="sd">    Concatenate PFLOTRAN output files and then delete them </span>
 <span class="sd">    </span>
@@ -507,6 +495,8 @@
 <span class="sd">            DFN Class</span>
 <span class="sd">        index : int</span>
 <span class="sd">             If PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat</span>
+<span class="sd">        filename : string</span>
+<span class="sd">            name of file to be concatenated</span>
 <span class="sd">    Returns </span>
 <span class="sd">    ----------</span>
 <span class="sd">        None</span>
@@ -516,26 +506,25 @@
 <span class="sd">        Can be run in a loop over all pflotran dumps</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Processing PFLOTRAN output&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Processing PFLOTRAN output&#39;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">index_start</span><span class="p">,</span> <span class="n">index_finish</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;cat &#39;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;-cellinfo-</span><span class="si">%03d</span><span class="s1">-rank*.dat &gt; cellinfo_</span><span class="si">%03d</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running &gt;&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Running &gt;&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;cat &#39;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;-darcyvel-</span><span class="si">%03d</span><span class="s1">-rank*.dat &gt; darcyvel_</span><span class="si">%03d</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Running &gt;&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Running &gt;&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1">#for fl in glob.glob(self.local_dfnFlow_file[:-3]+&#39;-cellinfo-000-rank*.dat&#39;):</span>
@@ -550,17 +539,17 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="s2">&quot;darcyvel_</span><span class="si">%03d</span><span class="s2">.dat&quot;</span> <span class="o">%</span> <span class="n">index_finish</span><span class="p">,</span> <span class="s2">&quot;darcyvel.dat&quot;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; WARNING!!! Unable to create symlink for darcyvel.dat&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Warning. Unable to create symlink for darcyvel.dat&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="s2">&quot;cellinfo_</span><span class="si">%03d</span><span class="s2">.dat&quot;</span> <span class="o">%</span> <span class="n">index_finish</span><span class="p">,</span> <span class="s2">&quot;cellinfo.dat&quot;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; WARNING!!! Unable to create symlink for cellinfo.dat&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Warning. Unable to create symlink for cellinfo.dat&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="parse_pflotran_vtk_python">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_pflotran_vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -577,12 +566,11 @@
 <span class="sd">    --------</span>
 <span class="sd">    If DFN class does not have a vtk file, inp2vtk_python is called</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output with Python&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output with Python&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;ERROR! Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">grid_vtk_file</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span> <span class="o">=</span> <span class="n">grid_vtk_file</span>
@@ -604,7 +592,7 @@
             <span class="n">num_cells</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Processing file: </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Processing file: </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">pflotran_out</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">4</span><span class="p">:]</span>
         <span class="n">pflotran_out</span> <span class="o">=</span> <span class="p">[</span>
@@ -628,7 +616,7 @@
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">pflotran_out</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output complete&#39;</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output complete&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

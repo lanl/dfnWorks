@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.meshing.dfm.mesh_dfm &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnGen.meshing.dfm.mesh_dfm &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,21 +92,23 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">glob</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span> 
 
 <span class="c1"># pydfnworks Modules</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span> 
 
-<span class="k">def</span> <span class="nf">setup_mesh_dfm_directory</span><span class="p">(</span><span class="n">jobname</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_mesh_dfm_directory</span><span class="p">(</span><span class="n">jobname</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Setup working directory for meshing the DFM. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------------</span>
 <span class="sd">        jobname : string</span>
 <span class="sd">            path to DFN working directory </span>
+<span class="sd">        </span>
 <span class="sd">        dirname : string </span>
 <span class="sd">            name of working directory</span>
 
@@ -132,7 +130,7 @@
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Working directory is now </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Working directory is now </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Make symbolic links to required files</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">jobname</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;full_mesh.inp&quot;</span><span class="p">,</span> <span class="s2">&quot;full_mesh.inp&quot;</span><span class="p">)</span>
@@ -141,11 +139,11 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Setting up DFM meshing directory complete&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Setting up DFM meshing directory complete&quot;</span><span class="p">)</span>
 
 
 
-<span class="k">def</span> <span class="nf">translate_mesh</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">translate_mesh</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Moves reduced_mesh.inp from center at x1 to x2 </span>
 
@@ -175,13 +173,14 @@
     <span class="n">mh</span><span class="o">.</span><span class="n">run_lagrit_script</span><span class="p">(</span><span class="s2">&quot;translate_mesh.lgi&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Gather domain information. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        domain : dict</span>
 <span class="sd">            Domain size dictionary from DFN object </span>
+<span class="sd">        </span>
 <span class="sd">        h : float </span>
 <span class="sd">            Meshing length scale from DFN object </span>
 
@@ -189,6 +188,7 @@
 <span class="sd">    -------</span>
 <span class="sd">        num_points : int </span>
 <span class="sd">            Number of points on side of the domain </span>
+<span class="sd">        </span>
 <span class="sd">        box_domain : dict</span>
 <span class="sd">            dictionary of domain min/max for x,y,z</span>
 
@@ -231,17 +231,24 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">box_domain</span><span class="p">,</span> <span class="n">num_points_x</span><span class="p">,</span> <span class="n">num_points_y</span><span class="p">,</span> <span class="n">num_points_z</span> 
 
-<span class="k">def</span> <span class="nf">dfm_driver</span><span class="p">(</span><span class="n">num_points_x</span><span class="p">,</span> <span class="n">num_points_y</span><span class="p">,</span> <span class="n">num_points_z</span> <span class="p">,</span> <span class="n">num_fracs</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">box_domain</span><span class="p">,</span> <span class="n">psets</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_driver</span><span class="p">(</span><span class="n">num_points_x</span><span class="p">,</span> <span class="n">num_points_y</span><span class="p">,</span> <span class="n">num_points_z</span> <span class="p">,</span> <span class="n">num_fracs</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">box_domain</span><span class="p">,</span> <span class="n">psets</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function creates the main lagrit driver script, which calls the other lagrit scripts.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        num_points : int </span>
-<span class="sd">            Number of points on side of the domain </span>
+<span class="sd">            Number of points on side of the domain for x,y,z</span>
+<span class="sd">        </span>
 <span class="sd">        num_fracs : int </span>
 <span class="sd">            Number of Fractures in the DFN</span>
+<span class="sd">        </span>
 <span class="sd">        h : float</span>
 <span class="sd">            meshing length scale </span>
+
+<span class="sd">        box_domain : dict</span>
+<span class="sd">            dictionary of domain min/max for x,y,z</span>
+
+<span class="sd">        psets : bool</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -685,9 +692,9 @@
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_mesh_fracture_driver.lgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_mesh_fracture_driver.lgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">dfm_box</span><span class="p">(</span><span class="n">box_domain</span><span class="p">):</span>    
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_box</span><span class="p">(</span><span class="n">box_domain</span><span class="p">):</span>    
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function creates the dfm_box_dimensions.mlgi lagrit script.</span>
 
 <span class="sd">    Parameters</span>
@@ -721,9 +728,9 @@
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_box_dimensions.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_box_dimensions.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">dfm_build</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_build</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Create the dfm_build_background_mesh.mlgi lagrit script.</span>
 
 <span class="sd">    Parameters</span>
@@ -753,9 +760,9 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dfm_build_background_mesh.mlgi&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span> 
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_box_dimensions.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_box_dimensions.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">dfm_fracture_facets</span><span class="p">(</span><span class="n">num_frac</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_fracture_facets</span><span class="p">(</span><span class="n">num_frac</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function creates the dfm_extract_fracture_facets.mlgi lagrit script.</span>
 
 <span class="sd">    Parameters</span>
@@ -815,9 +822,9 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dfm_extract_fracture_facets.mlgi&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_extract_fracture_facets.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_extract_fracture_facets.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">dfm_facets</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_facets</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function creates the dfm_extract_facets.mlgi lagrit script.</span>
 
 <span class="sd">    Parameters</span>
@@ -893,12 +900,22 @@
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_extract_facets.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_extract_facets.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">dfm_diagnostics</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    </span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfm_diagnostics</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Run diagnostics</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        None </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None </span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        None </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">eps_offset</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">h</span>
     <span class="n">lagrit_script</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
@@ -993,10 +1010,10 @@
         <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lagrit_script</span><span class="p">)</span>
         <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating dfm_diagonstics.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;Creating dfm_diagonstics.mlgi file: Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">create_dfm</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_dfm</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function executes the lagrit scripts. </span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -1019,7 +1036,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">cleanup_mesh_dfm_directory</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cleanup_mesh_dfm_directory</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Clean up working files from meshing the DFM</span>
 
 <span class="sd">    Parameters</span>
@@ -1035,7 +1052,7 @@
 <span class="sd">        None</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Cleaning up working directory&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Cleaning up working directory&quot;</span><span class="p">)</span>
     <span class="c1"># clean up LaGrit Scripts</span>
     <span class="n">lagrit_script_dir</span> <span class="o">=</span> <span class="s2">&quot;dfm_lagrit_files&quot;</span> 
     <span class="k">try</span><span class="p">:</span>
@@ -1079,10 +1096,10 @@
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Cleaning up working directory: Complete&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Cleaning up working directory: Complete&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">check_dfm_mesh</span><span class="p">(</span><span class="n">allowed_percentage</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_dfm_mesh</span><span class="p">(</span><span class="n">allowed_percentage</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks how many elements of the DFN meshing are missinf from the DFM. If the percentage missing is larger than the allowed percentage, then the program exists.</span>
 
 <span class="sd">    Parameters</span>
@@ -1100,10 +1117,10 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for missing elements&quot;</span><span class="p">)</span>
+    <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking for missing elements&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;missed_cells_full_mesh.inp&#39;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Missing elements have been found.&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Missing elements are in the file &#39;missed_cells_full_mesh.inp&#39; if you want to see them.&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Missing elements have been found.&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Missing elements are in the file &#39;missed_cells_full_mesh.inp&#39; if you want to see them.&quot;</span><span class="p">)</span>
         <span class="c1"># get number of missed elements in the </span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;missed_cells_full_mesh.inp&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -1115,33 +1132,40 @@
             <span class="n">total_num_elems</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="c1"># Compute percentage and compare</span>
         <span class="n">missing_percent</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="n">missing_num_elems</span><span class="o">/</span><span class="n">total_num_elems</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Out of </span><span class="si">{</span><span class="n">total_num_elems</span><span class="si">}</span><span class="s2"> elements in the DFN there are </span><span class="si">{</span><span class="n">missing_num_elems</span><span class="si">}</span><span class="s2"> missing from the DFM.&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; That&#39;s </span><span class="si">{</span><span class="n">missing_percent</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2"> percent of the mesh.&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Out of </span><span class="si">{</span><span class="n">total_num_elems</span><span class="si">}</span><span class="s2"> elements in the DFN there are </span><span class="si">{</span><span class="n">missing_num_elems</span><span class="si">}</span><span class="s2"> missing from the DFM.&quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; That&#39;s </span><span class="si">{</span><span class="n">missing_percent</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2"> percent of the mesh.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span>  <span class="n">missing_percent</span> <span class="o">&gt;</span> <span class="n">allowed_percentage</span><span class="p">:</span>
             <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;*** Error. Missing percent of mesh is larger than tolerance </span><span class="si">{</span><span class="n">allowed_percentage</span><span class="si">}</span><span class="s2"> ***</span><span class="se">\n</span><span class="s2">*** Exitting ***</span><span class="se">\n</span><span class="s2"> &quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Doesn&#39;t seem to bad. Keep Calm and Carry on.&quot;</span><span class="p">)</span>
+            <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Doesn&#39;t seem to bad. Keep Calm and Carry on.&quot;</span><span class="p">)</span>
 
     <span class="c1"># if the file &#39;missed_cells_full_mesh.inp&#39; does not exists, this means no elements were missed.  </span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; No missinng elements found. &quot;</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; No missinng elements found. &quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="mesh_dfm">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm">[docs]</a>
-<span class="k">def</span> <span class="nf">mesh_dfm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;dfm_mesh&quot;</span><span class="p">,</span> <span class="n">allowed_percentage</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">psets</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cleanup</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh_dfm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;dfm_mesh&quot;</span><span class="p">,</span> <span class="n">allowed_percentage</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">psets</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cleanup</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot; Creates a conforming mesh of a DFN using a uniform background tetrahedron mesh. The DFN must be meshed using a uniform triangular mesh. (DFN.mesh_network(uniform_mesh = True))</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ------------------</span>
+<span class="sd">        self : DFN object</span>
+
 <span class="sd">        dirname : string</span>
 <span class="sd">            name of working directory. Default : dfm_mesh</span>
+<span class="sd">        </span>
 <span class="sd">        allowed_percentage : float</span>
 <span class="sd">            Percentage of the mesh allowed to be missing and still continue</span>
+
+<span class="sd">        psets : bool</span>
+<span class="sd">            Default is False</span>
+<span class="sd">        </span>
 <span class="sd">        cleanup : bool</span>
-<span class="sd">            Clean up working directory. If true dep files are moved into subdirectories</span>
+<span class="sd">            Clean up working directory. If true dep files are moved into subdirectories. Default is True</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ---------------</span>
@@ -1153,9 +1177,9 @@
 <span class="sd">         </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating conforming DFM mesh using LaGriT : Starting&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Creating conforming DFM mesh using LaGriT : Starting&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
 
     <span class="n">setup_mesh_dfm_directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">,</span> <span class="n">dirname</span><span class="p">)</span>
 
@@ -1177,9 +1201,9 @@
     <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
         <span class="n">cleanup_mesh_dfm_directory</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating conforming DFM mesh using LaGriT : Complete&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Creating conforming DFM mesh using LaGriT : Complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 
 
 </pre></div>

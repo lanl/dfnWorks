@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,23 +92,23 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">timeit</span>
 
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">sort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">genfromtxt</span><span class="p">,</span> <span class="n">sort</span>
 <span class="c1"># pydfnworks Modules</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.general</span> <span class="kn">import</span> <span class="n">helper_functions</span> <span class="k">as</span> <span class="n">hf</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">poisson_driver</span> <span class="k">as</span> <span class="n">lg</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">run_meshing</span> <span class="k">as</span> <span class="n">run_mesh</span>
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span> <span class="kn">import</span> <span class="n">general_lagrit_scripts</span> <span class="k">as</span> <span class="n">lgs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general</span><span class="w"> </span><span class="kn">import</span> <span class="n">helper_functions</span> <span class="k">as</span> <span class="n">hf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">mesh_dfn_helper</span> <span class="k">as</span> <span class="n">mh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">poisson_driver</span> <span class="k">as</span> <span class="n">lg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_meshing</span> <span class="k">as</span> <span class="n">run_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mesh_dfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">general_lagrit_scripts</span> <span class="k">as</span> <span class="n">lgs</span>
 
 
 <div class="viewcode-block" id="mesh_network">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network">[docs]</a>
-<span class="k">def</span> <span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">uniform_mesh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                  <span class="n">max_dist</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
@@ -128,18 +124,28 @@
 <span class="sd">    ----------</span>
 <span class="sd">        self : object </span>
 <span class="sd">            DFN Class</span>
+<span class="sd">        </span>
 <span class="sd">        uniform_mesh : bool</span>
 <span class="sd">            toggle for uniform or variable mesh. Default : False </span>
+<span class="sd">        </span>
 <span class="sd">        min_dist : float</span>
 <span class="sd">            Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h</span>
+<span class="sd">        </span>
 <span class="sd">        max_dist : float</span>
 <span class="sd">            Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h</span>
+<span class="sd">        </span>
 <span class="sd">        max_resolution_factor : float</span>
 <span class="sd">            Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. </span>
+<span class="sd">        </span>
+<span class="sd">        well : bool</span>
+<span class="sd">            Toggle well points. Default : False</span>
+<span class="sd">        </span>
 <span class="sd">        cleanup : bool</span>
 <span class="sd">            toggle to clean up directory (remove meshing files after a run). Default : True</span>
+<span class="sd">        </span>
 <span class="sd">        strict : bool</span>
 <span class="sd">            Toggle if a few mesh errors are acceptable. default is true</span>
+<span class="sd">        </span>
 <span class="sd">        quiet : bool</span>
 <span class="sd">            Toggle to turn on/off verbose information to screen about meshing. Default is true, does not print to screen</span>
 
@@ -153,27 +159,26 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meshing DFN using LaGriT : Starting&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Meshing DFN using LaGriT : Starting&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
 
     <span class="n">mh</span><span class="o">.</span><span class="n">setup_meshing_directory</span><span class="p">()</span>
 
     <span class="c1">######## Pruning scripts</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Loading list of fractures to remain in network from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fracture_list</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">genfromtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Retaining Fractures: &quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fracture_list</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Retaining Fractures: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fracture_list</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_mesh_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span>
-                <span class="s2">&quot;User requested pruning in meshing but did not provide path for main files.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+                <span class="s2">&quot;User requested pruning in meshing but did not provide path for main files.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span><span class="p">:</span>
@@ -189,7 +194,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">max_resolution_factor</span><span class="p">,</span> <span class="n">uniform_mesh</span><span class="p">)</span>
     <span class="n">digits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">))</span>
     <span class="c1">## Create user resolution function</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Creating scripts for LaGriT meshing&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Creating scripts for LaGriT meshing&quot;</span><span class="p">)</span>
     <span class="n">lg</span><span class="o">.</span><span class="n">create_poisson_user_function_script</span><span class="p">()</span>
     <span class="c1">## make driver files for each function</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">frac_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fracture_list</span><span class="p">):</span>
@@ -201,7 +206,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">lg</span><span class="o">.</span><span class="n">create_lagrit_poisson_script</span><span class="p">(</span><span class="n">frac_id</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Creating scripts for LaGriT meshing: complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Creating scripts for LaGriT meshing: complete&quot;</span><span class="p">)</span>
 
     <span class="c1"># ##### FOR SERIAL DEBUG ######</span>
     <span class="c1"># for frac_id in self.fracture_list:</span>
@@ -215,13 +220,13 @@
     <span class="c1"># ### Parallel runs</span>
     <span class="c1"># if there are more processors than fractures,</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">:</span>
-        <span class="n">hf</span><span class="o">.</span><span class="n">print_warning</span><span class="p">(</span>
-            <span class="s2">&quot;More processors than fractures requested.</span><span class="se">\n</span><span class="s2">Resetting ncpu to num_frac&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;More processors than fractures requested.</span><span class="se">\n</span><span class="s2">Resetting ncpu to num_frac&quot;</span><span class="p">,</span><span class="s2">&quot;warning&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_fractures_header</span><span class="p">(</span><span class="n">quiet</span><span class="p">):</span>
-        <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span><span class="s2">&quot;One or more fractures failed to mesh properly.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;One or more fractures failed to mesh properly.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
 
     <span class="c1"># ### Parallel runs</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">merge_network</span><span class="p">()</span>
@@ -231,15 +236,15 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mh</span><span class="o">.</span><span class="n">check_dudded_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dudded_points</span><span class="p">):</span>
             <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_meshing_files</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
-                <span class="n">hf</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span><span class="s2">&quot;Incorrect Number of dudded points removed.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Incorrect Number of dudded points removed.&quot;</span><span class="p">,</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span><span class="p">:</span>
         <span class="n">lgs</span><span class="o">.</span><span class="n">define_zones</span><span class="p">()</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">gather_mesh_information</span><span class="p">()</span>
-
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clean_up_files_after_prune</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">gather_mesh_information</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
         <span class="n">mh</span><span class="o">.</span><span class="n">cleanup_meshing_files</span><span class="p">()</span>
@@ -249,14 +254,13 @@
     <span class="n">time_min</span> <span class="o">=</span> <span class="n">elapsed</span> <span class="o">/</span> <span class="mi">60</span>
     <span class="n">time_hrs</span> <span class="o">=</span> <span class="n">elapsed</span> <span class="o">/</span> <span class="mi">3600</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Total Time to Mesh Network:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Total Time to Mesh Network:&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;--&gt; </span><span class="si">{</span><span class="n">time_sec</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> seconds</span><span class="se">\t</span><span class="si">{</span><span class="n">time_min</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> minutes</span><span class="se">\t</span><span class="si">{</span><span class="n">time_hrs</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> hours&quot;</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meshing DFN using LaGriT : Complete&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Meshing DFN using LaGriT : Complete&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 
 </pre></div>
 

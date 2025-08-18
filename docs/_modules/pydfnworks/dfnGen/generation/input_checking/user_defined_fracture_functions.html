@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions &mdash; dfnWorks 2.9.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b76e3c8a" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=bc52e0b9"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,10 +30,8 @@
           
           <a href="../../../../../index_docs.html" class="icon icon-home">
             dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.9.1 LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -89,13 +85,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.generation.input_checking.helper_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_error</span><span class="p">,</span> <span class="n">print_warning</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span>
 
-<span class="kn">from</span> <span class="nn">pydfnworks.dfnGen.generation.input_checking.helper_functions</span> <span class="kn">import</span> <span class="n">print_error</span><span class="p">,</span> <span class="n">print_warning</span>
 
-<span class="k">def</span> <span class="nf">check_angle_option</span><span class="p">(</span><span class="n">angle_option</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_angle_option</span><span class="p">(</span><span class="n">angle_option</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks the angle value using specified angle option.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">        angle_option : string</span>
+<span class="sd">            angle type, radian or degree</span>
+
+<span class="sd">        array: array</span>
+<span class="sd">            array of values</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    --------------</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">angle_option</span> <span class="o">==</span> <span class="s2">&quot;radian&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">:</span>
@@ -111,7 +128,7 @@
 
 <div class="viewcode-block" id="print_user_fracture_information">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions.print_user_fracture_information">[docs]</a>
-<span class="k">def</span> <span class="nf">print_user_fracture_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">frac_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_user_fracture_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">frac_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Prints information about a user defined fracture to screen</span>
 
 <span class="sd">    Parameters</span>
@@ -132,7 +149,7 @@
 <span class="sd">    --------------</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--&gt; User Fracture information&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; User Fracture information&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;rect&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">frac_number</span><span class="p">:</span>
             <span class="n">fracture_dictionary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">frac_number</span><span class="p">]</span>
@@ -149,27 +166,26 @@
         <span class="n">fracture_dictionaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span>
 
     <span class="k">if</span> <span class="n">frac_number</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;* Fracture Number </span><span class="si">{</span><span class="n">frac_number</span><span class="si">}</span><span class="s2"> *&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;----------------------------&quot;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;* Fracture Number </span><span class="si">{</span><span class="n">frac_number</span><span class="si">}</span><span class="s2"> *&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;----------------------------&quot;</span><span class="p">,</span>
                                  <span class="s2">&quot;---------------&quot;</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fracture_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fracture_dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fracture_dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fracture_dictionary</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fracture_dictionaries</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;* Fracture Number </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> *&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;----------------------------&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;* Fracture Number </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> *&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:40s}{:}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;----------------------------&quot;</span><span class="p">,</span>
                                      <span class="s2">&quot;---------------&quot;</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fracture_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fracture_dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fracture_dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="add_user_fract_from_file">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions.add_user_fract_from_file">[docs]</a>
-<span class="k">def</span> <span class="nf">add_user_fract_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_user_fract_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">filename</span><span class="p">,</span>
                              <span class="n">shape</span><span class="p">,</span>
                              <span class="n">nPolygons</span><span class="p">,</span>
@@ -181,6 +197,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------------</span>
+<span class="sd">        self : DFN object</span>
+
 <span class="sd">        filename : string</span>
 <span class="sd">            path to source file</span>
 
@@ -267,7 +285,7 @@
 
 <div class="viewcode-block" id="add_user_fract">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions.add_user_fract">[docs]</a>
-<span class="k">def</span> <span class="nf">add_user_fract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_user_fract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                    <span class="n">shape</span><span class="p">,</span>
                    <span class="n">radii</span><span class="p">,</span>
                    <span class="n">translation</span><span class="p">,</span>
@@ -288,6 +306,8 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    -------------</span>
+<span class="sd">        self : DFN object</span>
+
 <span class="sd">        shape: string</span>
 <span class="sd">            The desired shape of the fracture options are &#39;rect&#39;, &#39;ell&#39;, and &#39;poly&#39; - Required</span>
 <span class="sd">        </span>
@@ -429,7 +449,7 @@
             <span class="p">)</span>
 
         <span class="c1"># Check is angles make sense given radians or degrees</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking trend_plunge angles&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking trend_plunge angles&quot;</span><span class="p">)</span>
         <span class="n">check_angle_option</span><span class="p">(</span><span class="n">angle_option</span><span class="p">,</span> <span class="n">trend_plunge</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">orientation_option</span> <span class="o">==</span> <span class="s1">&#39;dip_strike&#39;</span><span class="p">:</span>
@@ -450,7 +470,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Check is angles make sense given radians or degrees</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking dip_strike angles&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Checking dip_strike angles&quot;</span><span class="p">)</span>
         <span class="n">check_angle_option</span><span class="p">(</span><span class="n">angle_option</span><span class="p">,</span> <span class="n">dip_strike</span><span class="p">)</span>
 
     <span class="c1"># hydraulic properties</span>
@@ -488,7 +508,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">write_user_fractures_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_user_fractures_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the user defined fracutres to a file if file is not already specified</span>
 
 <span class="sd">        Parameters</span>
@@ -508,7 +528,7 @@
     <span class="n">n_ells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">n_ells</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;--&gt; Writing user defined ellispes to file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;UserEll_Input_File_Path&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;UserEll_Input_File_Path&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
@@ -529,8 +549,7 @@
                                 <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;trend_plunge&#39;</span><span class="se">\n</span><span class="s2">2:&#39;dip_strike&#39;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
                         <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -547,8 +566,7 @@
                                 <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;trend_plunge&#39;</span><span class="se">\n</span><span class="s2">2:&#39;dip_strike&#39;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
                         <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -565,8 +583,7 @@
                                 <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;trend_plunge&#39;</span><span class="se">\n</span><span class="s2">2:&#39;dip_strike&#39;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
                         <span class="n">ell_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -585,7 +602,7 @@
 
     <span class="k">if</span> <span class="n">n_rects</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;--&gt; Writing user defined rectangles to file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;UserRect_Input_File_Path&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;UserRect_Input_File_Path&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
@@ -613,8 +630,7 @@
                                 <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;Normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;Trend_Plunge&#39;</span><span class="se">\n</span><span class="s2">2:Dip_Strike&#39;&quot;</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
                         <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -631,8 +647,7 @@
                                 <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;Normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;Trend_Plunge&#39;</span><span class="se">\n</span><span class="s2">2:Dip_Strike&#39;&quot;</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
                         <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -650,7 +665,6 @@
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;user orientation option not specified correctly </span><span class="se">\n</span><span class="s2">0:&#39;Normal&#39;</span><span class="se">\n</span><span class="s2">1:&#39;Trend_Plunge&#39;</span><span class="se">\n</span><span class="s2">2:Dip_Strike&#39;&quot;</span>
                                 <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
                         <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -671,20 +685,25 @@
                     <span class="n">rect_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">determine_hy_prop_type</span><span class="p">(</span><span class="n">aperture</span><span class="p">,</span> <span class="n">transmissivity</span><span class="p">,</span> <span class="n">permeability</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">determine_hy_prop_type</span><span class="p">(</span><span class="n">aperture</span><span class="p">,</span> <span class="n">transmissivity</span><span class="p">,</span> <span class="n">permeability</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determines the type of user defined hydraulic property based on user inupt</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        -------------</span>
 <span class="sd">            aperture : None or Float</span>
+
 <span class="sd">            transmissivity : None or Float</span>
+
 <span class="sd">            permeability : None or Float</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ---------</span>
-<span class="sd">            The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown</span>
-<span class="sd">                                                                                           Notes</span>
-<span class="sd">        -------&quot;&quot;&quot;</span>
+<span class="sd">            The hydraulic property type. Exactly one of the three parameters must be a float or an exception will be thrown </span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -------</span>
+<span class="sd">            None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#Determine Hydraulic Property type</span>
 
@@ -695,24 +714,21 @@
 
     <span class="k">if</span> <span class="n">transmissivity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">hy_prop_type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">local_print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="s1">&#39;transmissivity&#39;</span>
 
     <span class="k">if</span> <span class="n">permeability</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">hy_prop_type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">local_print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="s1">&#39;permeability&#39;</span>
 
     <span class="k">if</span> <span class="n">hy_prop_type</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Please specify exactly one of the following for user defined fracture: aperture, transmissivity, permeability</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">local_print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">hy_prop_type</span>
 </pre></div>
