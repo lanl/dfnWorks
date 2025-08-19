@@ -1,7 +1,7 @@
 .. _output-chapter:
 
-Run Files
-=============
+File Descriptions
+===================
 
 This section describes the contents and purpose of each file used in dfnWorks and their locations. 
 
