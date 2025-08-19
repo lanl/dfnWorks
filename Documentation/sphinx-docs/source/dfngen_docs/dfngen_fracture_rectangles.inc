@@ -170,13 +170,12 @@ Example:
 Rectangle: Spherical Coordinates
 ----------------------------------
 
-
 The mean normal vector of the fracture family :math:`\vec{n}` is related to the spherical coordinates :math:`\theta` and :math:`\phi` by
 
 .. math::
-        \vec{n}_x & = \sin(\theta) \cos(\phi)\\
+        \vec{n}_x & = \sin(\theta) \cos(\phi)
 .. math::
-	\vec{n}_y & = \sin(\theta) \sin(\phi)\\
+	\vec{n}_y & = \sin(\theta) \sin(\phi)
 .. math::
 	\vec{n}_z & = \cos(\theta)
 
@@ -185,17 +184,7 @@ rtheta
 
 Description: Angle the normal vector of the fracture makes with the z-axis 
 
-Type: list of :ref:`nFamRect` floats 
 
-Example:
-
-.. code-block:: python
-
-    DFN.params['rtheta']['value'] = [45, 78, 0] 
-    # Fracture Family 1 has a theta value of 45 degrees
-    # Fracture Family 2 has a theta value of 78 degrees
-    # Fracture Family 3 has a theta value of 0 degrees
-    
 .. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', and the value provided must be less than :math:`2 \pi`.  
  
 ----
@@ -206,21 +195,8 @@ rphi
 
 Description: Angle that the projection of the normal vector of a fracture onto the x-y plane makes with the x-axis. 
 
-
-Type: list of :ref:`nFamRect` float 
-
-Example:
-
-.. code-block:: python
-
-    DFN.params['rphi']['value'] =  [0, 56, 12] 
-    # Fracture Family 1 has a phi value of 0 degrees
-    # Fracture Family 2 has a phi value of 56 degrees
-    # Fracture Family 3 has a phi value of 12 degrees
-
 .. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', then the value provided must be less than :math:`2 \pi`.  
  
-
 
 ----
 
@@ -229,55 +205,12 @@ Rectangle: Trend & Plunge
 For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
 
 .. math::
-        \vec{n}_x & = -\sin(\text{trend}) \cos(\text{plunge})\\
+        \vec{n}_x & = -\sin(\text{trend}) \cos(\text{plunge})
 .. math::        
-	\vec{n}_y & = -\cos(\text{trend}) \cos(\text{plunge})\\
+	\vec{n}_y & = -\cos(\text{trend}) \cos(\text{plunge})
 .. math::
 	\vec{n}_z & = \sin(\text{trend})
 
-
-rtrend
-^^^^^^^^^^^^^^^^
-
-Description: Trend of fracture families 
-
-Type: list of :ref:`nFamRect` float 
-
-Example 
-
-.. code-block:: python
-
-    DFN.params['rtrend']['value'] = [0, 56, 12] 
-    # Fracture Family 1 has a trend value of 0 degrees
-    # Fracture Family 2 has a trend value of 56 degrees
-    # Fracture Family 3 has a trend value of 12 degrees
-
-.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree') to use Trend  & Plunge
-
-
-----
-
-
-rplunge
-^^^^^^^^^^^^^^^^
-
-Description: Plunge of fracture families
-
-Type: list of :ref:`nFamRect` float 
- 
-Example 
-
-.. code-block:: python
-
-    DFN.params['rplunge']['value'] = [0, 56, 12] 
-    # Fracture Family 1 has a plunge value of 0 degrees
-    # Fracture Family 2 has a plunge value of 56 degrees
-    # Fracture Family 3 has a plunge value of 12 degrees
-
-.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Trend  & Plunge
-
-
-----
 
 Rectangle: Dip & Strike
 ----------------------------------
@@ -285,56 +218,12 @@ Rectangle: Dip & Strike
 For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
 
 .. math::
-        \vec{n}_x & = \sin(\text{dip}) \cos(\text{strike})\\
+        \vec{n}_x & = \sin(\text{dip}) \cos(\text{strike})
 .. math::
-	    \vec{n}_y & = -\sin(\text{dip}) \sin(\text{strike})\\
+	    \vec{n}_y & = -\sin(\text{dip}) \sin(\text{strike})
 .. math::
 	    \vec{n}_z & = \cos(\text{dip})
 
-
-
-rstrike
-^^^^^^^^^^^^^^^^
-
-Description: Strike of fracture families
-
-Type: list of :ref:`nFamRect` float 
- 
-Example 
-
-.. code-block:: python
-
-    DFN.params['rstrike']['value'] = [0, 56, 12] 
-    # Fracture Family 1 has a strike value of 0 degrees
-    # Fracture Family 2 has a strike value of 56 degrees
-    # Fracture Family 3 has a strike value of 12 degrees
-
-.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Dip  & Strike
-
-
-----
-
-
-rdip
-^^^^^^^^^^^^^^^^
-
-Description: Dip of fracture families
-
-Type: list of :ref:`nFamRect` float 
- 
-Example 
-
-.. code-block:: python
-
-    DFN.params['rdip']['value'] = [0, 56, 12] 
-    # Fracture Family 1 has a dip value of 0 degrees
-    # Fracture Family 2 has a dip value of 56 degrees
-    # Fracture Family 3 has a dip value of 12 degrees
-
-.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Dip  & Strike
-
-
-----
 
 Rectangle: In Plane Rotation 
 ----------------------------------
