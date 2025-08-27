@@ -58,7 +58,17 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 Versions
 -------------------
 
-v2.8 - Current 
+v2.9
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Improved User interface
+- Tutorials 
+- toml based install (pep8)
+- integrated control volume correction
+- non-zero permeability / porosity for mapDFN function
+
+
+v2.8 
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 - New Meshing Using Poisson Disc Sampling (Requires LaGriT v3.3)

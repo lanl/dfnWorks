@@ -18,7 +18,7 @@ SUBSURFACE
 
 #=========================== discretization ===================================
 GRID
-  TYPE unstructured_explicit full_mesh.uge 
+  TYPE unstructured_explicit full_mesh_vol_area.uge 
   GRAVITY 0.d0 0.d0 0.d0
 END
 

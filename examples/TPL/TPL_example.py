@@ -48,7 +48,12 @@ DFN.add_fracture_family(
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
-# DFN.output_report()
+DFN.output_report()
+DFN.visual_mode = True 
+
 DFN.mesh_network(min_dist=1, max_dist=5, max_resolution_factor=10)
+
+exit() 
+
 DFN.dfn_flow()
 DFN.dfn_trans()
