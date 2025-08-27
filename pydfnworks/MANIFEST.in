@@ -1,1 +1,2 @@
-include README.rst
+# Include figure assets for PDF generation
+recursive-include pydfnworks/dfnGen/generation/output_report/figures *.png
