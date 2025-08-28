@@ -8,7 +8,7 @@
 
 # 1. Define && set up the environment
 FROM dfn-deps:latest
-MAINTAINER Daniel Livingston <livingston@lanl.gov>
+# MAINTAINER 
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
 
@@ -24,8 +24,8 @@ COPY . .
 # RUN ["pip3","install","seaborn"]
 # RUN ["python-pip3","install","mplstereonet"]
 # RUN ["pip3","install","-U","setuptools"]
-#RUN ["apt","install","-y","pipx"]
-#RUN ["pipx","install","--include-deps","mplstereonet"]
+# RUN ["apt","install","-y","pipx"]
+# RUN ["pipx","install","--include-deps","mplstereonet"]
 # RUN ["pip","install","--break-system-packages","mplstereonet"]
 # RUN ["pip","install","--break-system-packages","pyvtk"]
 # RUN ["pip","install","--break-system-packages","datetime"]
@@ -33,20 +33,15 @@ COPY . .
 # RUN ["pip","install","--break-system-packages","matplotlib"]
 
 WORKDIR $APP_PATH/pydfnworks/
-#RUN ["python3","setup.py","install"]
+# RUN ["python3","setup.py","install"]
 RUN ["pip","install","--break-system-packages","-r","requirements.txt"]
+RUN ["pip","install","--break-system-packages","."]
 WORKDIR $APP_PATH
 
-WORKDIR $APP_PATH/C_stor_correct
+WORKDIR $APP_PATH/CPP_correct_volumes
 RUN ["make","clean"]
 RUN ["make"]
-RUN ["cp","correct_stor","../bin/correct_stor"]
-WORKDIR $APP_PATH
-
-WORKDIR $APP_PATH/C_uge_correct
-RUN ["make","clean"]
-RUN ["make"]
-RUN ["cp","correct_uge","../bin/correct_uge"]
+RUN ["cp","correct_volume","../bin/correct_volume"]
 WORKDIR $APP_PATH
 
 WORKDIR $APP_PATH/DFNGen
@@ -76,7 +71,7 @@ RUN ["cp","../../pydfnworks/pydfnworks/dfnGen/generation/output_report/figures/l
 
 WORKDIR $APP_PATH
 
-RUN ["rm","-Rf","C_stor_correct/","C_uge_correct/","DFNGen/","DFNTrans/",\
+RUN ["rm","-Rf","correct_volume/","DFNGen/","DFNTrans/",\
      "DFN_Mesh_Connectivity_Test/","pydfnworks/",".git",".gitignore",\
      "internal/","docker/","scripts/","Dockerfile", "Documentation/","pysimfrac"]
 
