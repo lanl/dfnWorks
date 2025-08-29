@@ -228,7 +228,7 @@ float *ekappa;
 /*! Parameter for the bingham distribnShaprutions. The
     bigger, the more similar (less diverging) are the
     elliptical familiy's normal vectors.*/
-float *ekappa2;
+float *ekappa1;
 
 /*! Parameter for the fisher distribnShaprutions. The
     bigger, the more similar (less diverging) are the

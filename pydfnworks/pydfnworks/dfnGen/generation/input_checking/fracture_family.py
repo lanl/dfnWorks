@@ -95,7 +95,10 @@ def fracture_family_dictionary():
         },
         'orientation_distribution': {
             'type': bool,
-            'value': 'fisher',
+            'value': {
+                'fisher': False,
+                'bingham': False,
+            },
             'description':
             'Type of orientation distribution'
         },
@@ -131,23 +134,6 @@ def fracture_family_dictionary():
             },
             'description':
             'Parameters theta, phi, kappa, and kappa2 for Bingham distribution'
-        },
-        #bingham distribution
-        'bingham': {
-            'type':
-            float,
-            'value': {
-                'theta': None,
-                'phi': None,
-                'strike': None,
-                'dip': None,
-                'trend': None,
-                'plunge': None,
-                'kappa': None,
-                'kappa2': None
-            },
-            'description':
-            '3 parameters theta, phi, and kappa for bingham distribution'
         },
         'distribution': {
             'type': bool,
@@ -399,9 +385,9 @@ def add_fracture_family(self,
     ## Orienation
     family['beta_distribution']['value'] = beta_distribution
     family['beta']['value'] = beta
-    family['orientation_distribution']['value'] = orientation_distribution
+    family['orientation_distribution']['value'] = orientation_distribution.lower()
 
-    if family['orientation_distribution']['value'] == 'bingham':
+    if orientation_distribution.lower() == 'bingham':
         family['bingham']['value']['theta'] = theta
         family['bingham']['value']['phi'] = phi
         family['bingham']['value']['strike'] = strike
@@ -411,7 +397,7 @@ def add_fracture_family(self,
         family['bingham']['value']['kappa'] = kappa
         family['bingham']['value']['kappa2'] = kappa2
 
-    elif family['orientation_distribution']['value'] == 'fisher':
+    elif orientation_distribution.lower() == 'fisher':
         family['fisher']['value']['theta'] = theta
         family['fisher']['value']['phi'] = phi
         family['fisher']['value']['strike'] = strike
