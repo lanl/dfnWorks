@@ -1,3 +1,12 @@
+/**
+ * \file input.cpp
+ * \brief Reads and stores DFN generation input parameters.
+ *
+ * This file declares and defines global configuration variables for DFNGen,
+ * and provides the getInput function to read user-specified parameters
+ * from an input file, initializing stochastic fracture families accordingly.
+ */
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -208,7 +217,6 @@ float *eAngleOne;
     This is the mean strike of Ellipse fracture orientation.*/
 float *eAngleTwo;
 
-
 /*! Rotation around the fractures' normal vector.
     Ellipse family parameter.*/
 float *ebeta;
@@ -299,7 +307,6 @@ bool rAngleOption;
         distributions will still be used while generating the DFN.*/
 float removeFracturesLessThan;
 
-
 /*! First Rectangle fracture orientation.
     If orientationOption = 0 (Spherical coordinates)
     This The angle the normal vector makes with the z-axis
@@ -316,7 +323,7 @@ float *rAngleOne;
     onto the x-y plane makes with the x-axis
     If  orientationOption = 1
     This is the plunge of Rectangle fracture orientation.
-    If orientationOption = 2
+    If  orientationOption = 2
     This is the mean strike of Rectangle fracture orientation. */
 float *rAngleTwo;
 
@@ -416,11 +423,6 @@ bool userEllByCoord;
 /*! True  - User polygons defined by coordinates are being used.
     False - No polygons defined by coordinates are being used.*/
 bool userPolygonByCoord;
-
-/*! False - Permeability of each fracture is a function of fracture aperture,
-            given by k=(b^2)/12, where b is an aperture and k is permeability
-    True  - Constant permeabilty for all fractures*/
-// bool permOption;
 
 /*! Caution: Can create very large files.
     Outputs all fractures which were generated during
@@ -528,7 +530,6 @@ std::string polygonFile;
     families (Set to 1 to ignore this feature)*/
 int rejectsPerFracture;
 
-
 // Z - layers in the DFN
 /*! Number of layers defined. */
 int numOfLayers;
@@ -606,8 +607,9 @@ bool ignoreBoundaryFaces;
     Creates Shape structure array from user input if
     using stochastic fracture families.
 
-    Arg 1: Path to input file
-    Arg 2: OUTPUT, Shape array to store stochastic families*/
+    \param input Path to input file.
+    \param shapeFamily OUTPUT vector to store stochastic shape families.
+*/
 void getInput(char* input, std::vector<Shape> &shapeFamily) {
     std::string tempstring;
     char ch;
@@ -1498,9 +1500,12 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
 }
 
 /****************************************************************************************/
-// Depreciated Function
-// Prints all input variables, useful for debugging.
-// NOTE: Needs to be updated. There bave been changes to input variables
+/*!
+ * \brief Prints all input variables for debugging.
+ *
+ * This function logs each input parameter to the log file.
+ * \note Deprecated: Needs to be updated when new input variables are added.
+ */
 void printInputVars() {
     std::string logString = "npoly = " + to_string(nPoly);
     logger.writeLogFile(INFO,  logString);
@@ -1618,26 +1623,4 @@ void printInputVars() {
         logger.writeLogFile(INFO,  logString);
         printRectCoords(userRectCoordVertices, "userRectCoordVertices", nRectByCoord);
     }
-    
-    // std::cout << "aperture option: " << aperture << std::endl;
-    // if (aperture == 1) {
-    //     std::cout << "meanAperture = " << meanAperture << std::endl;
-    //     std::cout << "stdAperture = " << stdAperture << std::endl;
-    // } else if (aperture == 2) {
-    //     printAry(apertureFromTransmissivity, "apertureFromTransmissivity", 2);
-    // } else if (aperture == 3) {
-    //     std::cout <<  "constantAperture = " << constantAperture << std::endl;
-    // } else if (aperture == 4) {
-    //     printAry(lengthCorrelatedAperture, "lengthCorrelatedAperture", 2);
-    // }
-    // if (permOption == 0) {
-    //     std::cout << "Permeability: Function of aperture\n";
-    // } else {
-    //     std::cout << "ConstantPermeability = " << constantPermeability << std::endl;
-    // }
 }
-
-
-
-
-

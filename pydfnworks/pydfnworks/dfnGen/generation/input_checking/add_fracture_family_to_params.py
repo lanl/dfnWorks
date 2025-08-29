@@ -1,6 +1,10 @@
+"""
+.. module:: fracture_family_utils
+   :synopsis: Utilities to reorder fracture families and populate the DFN parameter dictionary.
+"""
+
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.general.logging import initialize_log_file, print_log
-
 
 
 def write_fracture_families(self):
@@ -9,11 +13,12 @@ def write_fracture_families(self):
 
     Parameters
     ------------
-        DFN(self): the descete fracture network object
+        DFN(self): the discrete fracture network object
     
     Returns
     --------
-        DFN object with populated fracture family fields
+        dict
+            DFN parameter dictionary with populated fracture family fields
 
     Notes
     ------
@@ -25,7 +30,7 @@ def write_fracture_families(self):
 
     if self.params['nFracFam']['value'] == 0:
         self.params['orientationOption'][
-            'value'] = 0  #set to 0 if there are only user defined fractures to avoid error
+            'value'] = 0  # set to 0 if there are only user defined fractures to avoid error
 
     for i in range(self.params['nFracFam']['value']):
         add_fracture_family_to_params(self.params, self.fracture_families[i])
@@ -39,13 +44,16 @@ def add_fracture_family_to_params(params, fracture_family):
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        params : dict
+            The DFN parameter dictionary.
         
-        fracture_family: fracture family dictionary for a family
+        fracture_family : dict
+            Fracture family dictionary for a family.
         
     Returns 
     ---------
-        params: The populated dfn parameter dictionary
+        dict
+            The populated DFN parameter dictionary.
         
     Notes
     -------
@@ -55,13 +63,13 @@ def add_fracture_family_to_params(params, fracture_family):
     fracture_type_prefix = determine_type(fracture_family)
 
     if fracture_type_prefix == 'e':
-        if params['nFamEll']['value'] == None:
+        if params['nFamEll']['value'] is None:
             params['nFamEll']['value'] = 1
         else:
             params['nFamEll']['value'] += 1
 
     if fracture_type_prefix == 'r':
-        if params['nFamRect']['value'] == None:
+        if params['nFamRect']['value'] is None:
             params['nFamRect']['value'] = 1
         else:
             params['nFamRect']['value'] += 1
@@ -134,29 +142,31 @@ def determine_type(fracture_family):
     
     Parameters
     -------------        
-        fracture_family: fracture family dictionary for a family
+        fracture_family : dict
+            Fracture family dictionary for a family.
         
     Returns 
     ---------
-        fracture_type_prefix: the prefix 'r' for rectangular or 'e' for elliptical
+        str
+            The prefix 'r' for rectangular or 'e' for elliptical.
         
     Notes
     -------
-        None
+        Raises an error if neither or both types are specified.
     """
 
-    if fracture_family['type']['value']['ellipse'] == True and fracture_family[
-            'type']['value']['rect'] == False:
+    if fracture_family['type']['value']['ellipse'] is True and fracture_family[
+            'type']['value']['rect'] is False:
         fracture_type_prefix = 'e'
 
     elif fracture_family['type']['value'][
-            'ellipse'] == False and fracture_family['type']['value'][
-                'rect'] == True:
+            'ellipse'] is False and fracture_family['type']['value'][
+                'rect'] is True:
         fracture_type_prefix = 'r'
 
     else:
-
-        self.print_log('Fracture family type is not specified', 'error')
+        print_log('Fracture family type is not specified', 'error')
+        fracture_type_prefix = None
 
     return fracture_type_prefix
 
@@ -167,42 +177,43 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        fracture_family : dict
+            Fracture family dictionary for a family.
         
-        fracture_family: fracture family dictionary for a family
+        params : dict
+            The DFN parameter dictionary.
         
-        fracture_type_prefix: specifies the type of fractures 'r' for rectangular or 'e' for elliptical
+        fracture_type_prefix : str
+            'r' for rectangular or 'e' for elliptical.
         
     Returns 
     ---------
-        params: Populated parameter dictionary
+        tuple
+            (params, distribution_type) where distribution_type is one of
+            'tpl', 'log_normal', 'exp', or 'constant'.
         
     Notes
     -------
-        None
+        Raises an error if distribution selection is ambiguous or missing.
     """
 
-    #Figure out what distribution represents the fracture family
-    #Check to make sure that distribution is uniquely prescribed
+    # Figure out what distribution represents the fracture family
     distributions = fracture_family['distribution']['value']
-
     distribution_type = None
 
-    for key in distributions.keys():
-        if distributions[key] == True and distribution_type == None:
+    for key, flag in distributions.items():
+        if flag and distribution_type is None:
             distribution_type = key
-        elif distributions[key] == False:
-            pass
-        else:
+        elif flag and distribution_type is not None:
             hf.print_error(
                 'Exactly one distribution value must be True for a fracture family'
             )
-    if distribution_type == None:
+    if distribution_type is None:
         print_log(
             'Exactly one distribution value must be True for a fracture family', 'error'
         )
 
-    #Populate the parameter dictionary with values from the fracture family dictionary
+    # Populate the parameter dictionary with values from the fracture family dictionary
     distribution_params = fracture_family[distribution_type]['value']
 
     if distribution_type == 'constant':
@@ -251,7 +262,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
             elif key in {'strike', 'dip'} and params['orientationOption']['value'] == 2:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
-            elif key in {'kappa'}:
+            elif key == 'kappa':
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
 
     elif orientation_dist == 'bingham':
@@ -280,46 +291,50 @@ def write_value_to_params(params,
                           fracture_type_prefix,
                           value_flag=False):
     """Write values from fracture family dictionary to param dictionary. Creates a list
-    if type is None
+    if existing value is None.
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        params : dict
+            The DFN parameter dictionary.
         
-        param_key: the key for the parameter value to be written
+        param_key : str
+            The key for the parameter value to be written.
         
-        value_dict : fracture family dictionary for a family
+        value_dict : dict
+            Fracture family dictionary or sub-dictionary.
         
-        value_dict_key: the key for the parameter that will be transferred 
-        from the fracture family dictionary
-
-        fracture_type_prefix: specifies the type of fractures 'r' for rectangular or 'e' for elliptical
+        value_dict_key : str
+            The key for the parameter in value_dict.
         
-        value_flag: defaults to False, determines whether dictionary is in order [param][value] (False) or [value][param] (True)        
+        fracture_type_prefix : str
+            'r' for rectangular or 'e' for elliptical.
+        
+        value_flag : bool, optional
+            If False, value is taken from value_dict[value_dict_key]['value'],
+            if True, from value_dict[value_dict_key].
+        
     Returns 
     ---------
-        params: Populated parameter dictionary
+        None
         
     Notes
     -------
         None 
     """
-    if value_flag == False:
+    if not value_flag:
         value = value_dict[value_dict_key]['value']
     else:
         value = value_dict[value_dict_key]
 
-    ### if value is not present an exception can be raised
-    if value == None:
-        pass
-        # hf.print_error(value_dict_key + ' not specified')
-
+    if value is None:
+        return
     else:
-        if params[fracture_type_prefix + param_key]['value'] == None:
+        target = params[fracture_type_prefix + param_key]['value']
+        if target is None:
             params[fracture_type_prefix + param_key]['value'] = [value]
-
         else:
-            params[fracture_type_prefix + param_key]['value'].append(value)
+            target.append(value)
 
 
 def reorder_fracture_families(self):
@@ -327,7 +342,7 @@ def reorder_fracture_families(self):
     
     Parameters
     --------------
-        DFN(self): the DFN object
+        DFN(self): the DFN object.
 
     Returns
     --------
@@ -340,53 +355,31 @@ def reorder_fracture_families(self):
     """
 
     number_of_families = len(self.fracture_families)
-
     original_order = []
-
     ellipse_list = []
-
     ellipse_index = []
-
     rect_list = []
-
     rect_index = []
 
     for i in range(number_of_families):
-
         original_order.append(i)
+        current = self.fracture_families[i]
 
-        current_fracture_family = self.fracture_families[i]
-
-        if current_fracture_family['type']['value'][
-                'ellipse'] == True and current_fracture_family['type'][
-                    'value']['rect'] == False:
-
-            ellipse_list.append(current_fracture_family)
-
+        if current['type']['value']['ellipse'] and not current['type']['value']['rect']:
+            ellipse_list.append(current)
             ellipse_index.append(i)
-
-        elif current_fracture_family['type']['value'][
-                'ellipse'] == False and current_fracture_family['type'][
-                    'value']['rect'] == True:
-
-            rect_list.append(current_fracture_family)
-
+        elif not current['type']['value']['ellipse'] and current['type']['value']['rect']:
+            rect_list.append(current)
             rect_index.append(i)
-
         else:
             self.print_log('Fracture family type is not specified', 'error')
 
-    ellipse_index.extend(rect_index)
-    final_order = ellipse_index
-
-    ellipse_list.extend(rect_list)
-    final_list = ellipse_list
-
+    final_order = ellipse_index + rect_index
+    final_list = ellipse_list + rect_list
     self.fracture_families = final_list
 
     if original_order == final_order:
         self.print_log("Fracture Family order was not changed")
-
     else:
         self.print_log("Fracture Families have been reordered")
         self.print_log("Original order = ", original_order)
