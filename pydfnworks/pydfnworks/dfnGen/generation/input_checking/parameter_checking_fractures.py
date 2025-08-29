@@ -276,7 +276,7 @@ def check_orientations(params, prefix):
     if k2_key in params and params[k2_key]['value'] is not None:
         hf.check_none(key, params[k2_key]['value'])
         hf.check_length(key, params[k2_key]['value'], num_families)
-        hf.check_values(key, params[k2_key]['value'], -100, 0)
+        hf.check_values(key, params[k2_key]['value'], -100, 100)
 
 
 def check_beta_distribution(params, prefix):

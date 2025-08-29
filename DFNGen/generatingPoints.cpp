@@ -245,7 +245,7 @@ double* binghamDistribution(double angleOne,
     double *xProd = crossProduct(u, v1);
     double R[9];
     const double eps = 1e-12;
-    if (!(fabs(xProd[0])<=eps && fabs(xProd[1])<=eps && fabs(xProd[2])<=eps)) {
+    if (!(std::abs(xProd[0])<=eps && std::abs(xProd[1])<=eps && std::abs(xProd[2])<=eps)) {
         double sinA = sqrt(xProd[0]*xProd[0] + xProd[1]*xProd[1] + xProd[2]*xProd[2]);
         double cosA = dotProduct(u, v1);
         double v[9] = {
@@ -276,21 +276,24 @@ double* binghamDistribution(double angleOne,
     //    x_local ~ Uniform(S²), accept with prob ∝ exp(k1·x² + k2·y²).
     std::uniform_real_distribution<double> unif01(0.0,1.0);
     std::uniform_real_distribution<double> phiDist(0.0, 2.0*M_PI);
-    const double M = std::exp(std::max(kappa, kappa2)); 
+    // const double M = std::exp(std::max(kappa, kappa2));
+    const double M = std::exp(std::max({0.0, kappa, kappa2}));
+
     double xL[3];
     while (true) {
         double z   = unif01(generator)*2.0 - 1.0;
         double phi = phiDist(generator);
-        double r   = sqrt(1.0 - z*z);
-        xL[0] = r * cos(phi);  // local x
-        xL[1] = r * sin(phi);  // local y
-        xL[2] = z;             // local z
+        double r   = std::sqrt(1.0 - z*z);
+        xL[0] = r * std::cos(phi);  // local x
+        xL[1] = r * std::sin(phi);  // local y
+        xL[2] = z;                  // local z
 
-        // Bingham density (up to normalizing constant)
-        double w = kappa*xL[0]*xL[0] + kappa2*xL[1]*xL[1];
-        double acceptProb = exp(w) / M;
-        if (unif01(generator) <= acceptProb)
-            break;  // keep xL
+        // Bingham density up to normalizing constant
+        double w = kappa * xL[0]*xL[0] + kappa2 * xL[1]*xL[1];
+
+        // Valid acceptance probability in [0,1]
+        if (unif01(generator) <= std::exp(w) / M)
+            break;
     }
 
     // 4) Rotate into global frame and return
