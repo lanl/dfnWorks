@@ -9,7 +9,7 @@ from pydfnworks import *
 import os
 import numpy as np
 
-jobname = os.getcwd() + "/bingham_example"
+jobname = os.getcwd() + "/output"
 DFN = DFNWORKS(jobname, ncpu=8)
 
 DFN.params['domainSize']['value'] = [20, 20, 20]
