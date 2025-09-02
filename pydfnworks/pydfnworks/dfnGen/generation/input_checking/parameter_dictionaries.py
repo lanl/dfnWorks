@@ -560,6 +560,20 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'eOrienationDistribution':
+        {
+            'type':
+            str,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+
         'ekappa': {
             'type':
             float,
@@ -875,6 +889,19 @@ def load_parameters(self):
         'rstrike': {
             'type':
             float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rOrienationDistribution':
+        {
+            'type':
+            str,
             'list':
             True,
             'list_length':

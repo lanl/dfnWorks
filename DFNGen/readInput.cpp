@@ -1495,6 +1495,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     // Convert angles to rad if necessary, all functions and code require radians
     for (unsigned int i = 0; i < shapeFamily.size(); i ++) {
         if (shapeFamily[i].angleOption == 1 ) { // Convert deg to rad
+            std::cout << "Converting to Radians for Family: " << i << endl; 
             double temp = M_PI / 180;
             shapeFamily[i].beta *= temp;
             shapeFamily[i].angleOne *= temp;

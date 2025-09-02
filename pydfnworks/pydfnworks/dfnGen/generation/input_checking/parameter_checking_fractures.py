@@ -224,6 +224,8 @@ def check_orientations(params, prefix):
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
         'nFamRect']['value']
+    print(params['eOrienationDistribution'])
+
     angle_option_key = 'angleOption'
 
     if params["orientationOption"]["value"] == 0:
@@ -274,9 +276,9 @@ def check_orientations(params, prefix):
 
     k2_key = prefix + 'kappa2'
     if k2_key in params and params[k2_key]['value'] is not None:
-        hf.check_none(key, params[k2_key]['value'])
-        hf.check_length(key, params[k2_key]['value'], num_families)
-        hf.check_values(key, params[k2_key]['value'], -100, 100)
+        hf.check_none(k2_key, params[k2_key]['value'])
+        hf.check_length(k2_key, params[k2_key]['value'], num_families)
+        hf.check_values(k2_key, params[k2_key]['value'], -100, 100)
 
 
 def check_beta_distribution(params, prefix):

@@ -59,6 +59,7 @@ def add_fracture_family_to_params(params, fracture_family):
         None at the moment
     """
 
+
     fracture_type_prefix = determine_type(fracture_family)
 
     if fracture_type_prefix == 'e':
@@ -163,9 +164,9 @@ def determine_type(fracture_family):
                 'rect'] == True:
         fracture_type_prefix = 'r'
 
-    else:
+    # else:
 
-        self.print_log('Fracture family type is not specified', 'error')
+    #     self.print_log('Fracture family type is not specified', 'error')
 
     return fracture_type_prefix
 
@@ -256,6 +257,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
     if orientation_dist == 'fisher':
         fisher_params = fracture_family['fisher']['value']
         hf.print_warning("Fisher distribution selected.")
+
         for key in fisher_params:
             if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
@@ -266,9 +268,12 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
             elif key in {'kappa'}:
                 write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
 
+                
+
     elif orientation_dist == 'bingham':
         bingham_params = fracture_family['bingham']['value']
         hf.print_warning("Bingham distribution selected.")
+
         for key in bingham_params:
             if key in {'theta', 'phi'} and params['orientationOption']['value'] == 0:
                 write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)

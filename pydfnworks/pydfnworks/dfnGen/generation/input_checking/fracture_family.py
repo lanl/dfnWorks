@@ -405,6 +405,7 @@ def add_fracture_family(self,
         family['fisher']['value']['trend'] = trend
         family['fisher']['value']['plunge'] = plunge
         family['fisher']['value']['kappa'] = kappa
+        family['fisher']['value']['kappa2'] = 0 
 
     else:
         error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"

@@ -22,7 +22,7 @@ DFN.params['seed']['value'] = 2
 DFN.params['disableFram']['value'] = True
 DFN.params['orientationOption']['value'] = 1
 
-# round cap,
+# # round cap,
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
                         alpha=1.8,
@@ -52,7 +52,7 @@ DFN.add_fracture_family(shape="ell",
                         plunge=30.0,
                         kappa=-30,
                         kappa2=-5,
-                        p32=0.5,
+                        p32=10,
                         hy_variable='aperture',
                         hy_function='correlated',
                         hy_params={
@@ -60,7 +60,10 @@ DFN.add_fracture_family(shape="ell",
                             "beta": 0.5
                         })
 
-# elliptical girdle
+
+
+
+# # elliptical girdle
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
                         alpha=1.8,
@@ -79,7 +82,7 @@ DFN.add_fracture_family(shape="ell",
                             "beta": 0.5
                         })
 
-#asymmetric lobes
+# #asymmetric lobes
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
                         alpha=1.8,
@@ -97,6 +100,24 @@ DFN.add_fracture_family(shape="ell",
                             "alpha": 10**-5,
                             "beta": 0.5
                         })
+
+## Uncomment this to test Fisher and Bingham together 
+# DFN.add_fracture_family(shape="ell",
+#                         distribution="tpl",
+#                         alpha=1.8,
+#                         min_radius=1.0,
+#                         max_radius=10.0,
+#                         orientation_distribution='fisher',
+#                         trend=90.0,
+#                         plunge=30.0,
+#                         kappa=30,
+#                         p32=1,
+#                         hy_variable='aperture',
+#                         hy_function='correlated',
+#                         hy_params={
+#                             "alpha": 10**-5,
+#                             "beta": 0.5
+#                         })
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()
