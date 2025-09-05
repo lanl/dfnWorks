@@ -217,9 +217,14 @@ def correct_stor_file(self):
     blocks[0] = volumes
 
     conn_list = blocks[2].astype(int)
+    # print(conn_list)
+    # print(len(conn_list), len(set(conn_list)))
     areas = blocks[6]
-    for i in conn_list:
-        areas[i] *= self.aperture[self.material_ids[i-1] - 1]
+    #for i in conn_list:
+    #    areas[i] *= self.aperture[self.material_ids[i-1] - 1]
+    for i in range(len(areas)):
+        index = conn_list[i]
+        areas[i] *= self.aperture[self.material_ids[index-1] - 1] 
     blocks[6] = areas 
 
     # Also grab the first 3 header lines
