@@ -35,7 +35,7 @@ std::vector<Point> discretizeLineOfIntersection(double *pt1, double *pt2, double
     double v[3] = {pt2[0] - pt1[0], pt2[1] - pt1[1], pt2[2] - pt1[2]}; // {x2-x1, y2-y1, z2-z1};
     double p[3] = {pt1[0], pt1[1], pt1[2]}; // {x1, y1, z1};
 //    double dist = magnitude((pt1[0]-pt2[0]), (pt1[1]-pt2[1]), (pt1[2]-pt2[2])); // (x1-x2), (y1-y2), (z1-z2));
-    double nprime = std::ceil(2 * dist / h);
+    double nprime = std::ceil(2 * dist / h); // I think this could be dist / h rather then 2 * dist / h 
     double hprime = 1 / nprime;
     double *xx = new double[(int)nprime + 1];
     int i;
@@ -73,6 +73,61 @@ Point lineFunction3D(double *v, double *point, double t) {
     return pt;
 }
 
+
+
+void anglesToNormal(double angleOne, double angleTwo, double v1[3]) {
+    /**
+    * @brief Converts orientation angles into a unit normal vector.
+    *
+    * This function maps orientation angles into a 3D Cartesian unit vector
+    * depending on the chosen orientation system. The supported options are:
+    *   - orientationOption = 0 : Spherical coordinates (theta, phi)
+    *       - angleOne = theta (angle from the z-axis)
+    *       - angleTwo = phi (azimuth in the x-y plane from the x-axis)
+    *   - orientationOption = 1 : Trend and Plunge
+    *       - angleOne = trend (azimuth of the vector in the x-y plane)
+    *       - angleTwo = plunge (angle below the horizontal plane)
+    *   - orientationOption = 2 : Dip and Strike
+    *       - angleOne = dip (angle from horizontal plane)
+    *       - angleTwo = strike (azimuth of strike direction)
+    *
+    * If an invalid orientationOption is provided, the function defaults to
+    * returning the z-axis vector (0, 0, 1).
+    *
+    * @param angleOne First orientation angle (meaning depends on orientationOption).
+    * @param angleTwo Second orientation angle (meaning depends on orientationOption).
+    * @param[out] v1 Array of size 3 that will contain the resulting unit normal vector {x, y, z}.
+    */
+
+    if (orientationOption == 0) {
+        // Spherical Coordinates (theta, phi)
+        v1[0] = std::sin(angleOne) * std::cos(angleTwo);
+        v1[1] = std::sin(angleOne) * std::sin(angleTwo);
+        v1[2] = std::cos(angleOne);
+    } else if (orientationOption == 1) {
+        // Trend and Plunge
+        // trend -> angleOne
+        // plunge -> angleTwo
+        // Upward-pointing normal (negated from the standard downward pole)
+        v1[0] = -sin(angleOne) * cos(angleTwo);
+        v1[1] = -cos(angleOne) * cos(angleTwo); 
+        v1[2] = sin(angleTwo);
+
+    } else if (orientationOption == 2) {
+        // Dip and Strike
+        // dip -> angleOne
+        // strike -> angleTwo
+        v1[0] =  sin(angleOne) * cos(angleTwo); // X (East)
+        v1[1] = -sin(angleOne) * sin(angleTwo); // Y (North)
+        v1[2] =  cos(angleOne);  // Z (up)
+    } else {
+        // Default to Z-axis if invalid option
+        v1[0] = 0.0;
+        v1[1] = 0.0;
+        v1[2] = 1.0;
+    }
+}
+
 /**************************************************************************/
 /****** Fisher Distributions for Generating polygons Normal Vectors *******/
 /*! Creates and returns an x,y,z array of doubles using Fisher distribution.
@@ -88,30 +143,9 @@ Point lineFunction3D(double *v, double *point, double t) {
 double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::mt19937_64 &generator) {
     double ck = (std::exp(kappa) - std::exp(-kappa)) / kappa;
     double v1[3];
-    
-    if (orientationOption == 0) {
-        // Spherical Coordinates
-        // angleOne = Theta
-        // angleTwo = Phi
-        v1[0] = sin(angleOne) * cos(angleTwo);
-        v1[1] = sin(angleOne) * sin(angleTwo);
-        v1[2] = cos(angleOne);
-    } else if (orientationOption == 1) {
-        // Trend and Plunge
-        // angleOne = Trend
-        // angleTwo = Plunge
-        v1[0] = cos(angleOne) * cos(angleTwo);
-        v1[1] = sin(angleOne) * cos(angleTwo);
-        v1[2] = sin(angleTwo);
-    } else if (orientationOption == 2) {
-        // Dip and Strike
-        // angleOne = Dip
-        // angleTwo = Strike
-        v1[0] = sin(angleOne) * sin(angleTwo);
-        v1[1] = -sin(angleOne) * cos(angleTwo);
-        v1[2] = cos(angleOne);
-    }
-    
+
+    anglesToNormal(angleOne, angleTwo, v1);
+
     double u[3] = {0, 0, 1};
     double *xProd = crossProduct(u, v1);
     double R[9];
