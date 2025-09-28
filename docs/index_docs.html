@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to dfnWorks 2.8 documentation! &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Welcome to dfnWorks 2.9 documentation! &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=53c63d07"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +34,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,7 +45,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -59,9 +56,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
 </ul>
 
         </div>
@@ -78,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to dfnWorks 2.8 documentation!</li>
+      <li class="breadcrumb-item active">Welcome to dfnWorks 2.9 documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index_docs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,8 +86,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-dfnworks-2-8-documentation">
-<h1>Welcome to dfnWorks 2.8 documentation!<a class="headerlink" href="#welcome-to-dfnworks-2-8-documentation" title="Link to this heading"></a></h1>
+  <section id="welcome-to-dfnworks-2-9-documentation">
+<h1>Welcome to dfnWorks 2.9 documentation!<a class="headerlink" href="#welcome-to-dfnworks-2-9-documentation" title="Link to this heading"></a></h1>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -97,7 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="intro.html#obtaining-dfnworks">Obtaining dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#citing-dfnworks">Citing dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#versions">Versions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-8-current">v2.8 - Current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-9">v2.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-8">v2.8</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-7">v2.7</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-6">v2.6</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-5">v2.5</a></li>
@@ -124,12 +123,14 @@
 <li class="toctree-l2"><a class="reference internal" href="applications.html#nuclear-waste-repository">Nuclear waste repository</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="setup.html#docker">Docker</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="setup.html#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#setup-the-docker-dfnworks-image">Setup the Docker dfnWorks image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#run-the-dfnworks-container">Run the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#run-the-dfnworks-container-with-mounted-volume">Run the dfnWorks container with mounted volume</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#native-build-from-github-repository">Native build from github repository</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#native-build">Native Build</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="setup.html#clone-the-dnfworks-repository">Clone the dnfWorks repository</a></li>
 <li class="toctree-l3"><a class="reference internal" href="setup.html#fix-paths-in-test-directory">Fix paths in test directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="setup.html#set-the-lagrit-petsc-pflotran-python-and-fehm-paths">Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths</a></li>
@@ -329,7 +330,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dfntrans.html#documentation">Documentation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="output.html#dfngen-output">dfnGen - output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#lagrit-output">LaGrit - Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#pflotran-output">PFLOTRAN - output</a></li>
@@ -337,6 +338,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#tutorial-prerequisites">Tutorial Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#dfnworks-package-overview">dfnWorks Package Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfngen">dfnGen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfnflow">dfnFlow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfntrans">dfnTrans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#beginner-tutorial-with-4-user-rects">Beginner Tutorial with 4_user_rects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-1-navigate-to-example-directory">Step 1. Navigate to Example Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-2-execute-the-driver-py-script">Step 2. Execute the <cite>driver.py</cite> script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-3-understanding-the-script">Step 3. Understanding the Script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-4-verify-the-fracture-mesh">Step 4. Verify the Fracture Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-5-analyze-simulation-results">Step 5. Analyze Simulation Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
