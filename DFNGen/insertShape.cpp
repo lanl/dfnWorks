@@ -157,18 +157,16 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     
 
     // Fisher vs. Bingham normal: pick one, then normalize & rotate
-    double *norm   = nullptr;
-    double  mag    = 0.0;
+    double* norm = nullptr;
 
     if (shapeFam.orientation_distribution == "bingham") {
         norm = binghamDistribution(
             shapeFam.angleOne,
             shapeFam.angleTwo,
-            shapeFam.kappa,
+            shapeFam.kappa1,
             shapeFam.kappa2,
             generator
         );
-        //logger.writeLogFile(INFO, "Using Bingham distribution for fracture normal");
     } else {
         norm = fisherDistribution(
             shapeFam.angleOne,
@@ -176,18 +174,14 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
             shapeFam.kappa,
             generator
         );
-        //logger.writeLogFile(INFO, "Using Fisher distribution for fracture normal");
     }
 
-    // now that norm is set, compute its length
-    mag = magnitude(norm[0], norm[1], norm[2]);
+    double mag = magnitude(norm[0], norm[1], norm[2]);
 
-    // normalize if it’s off
-    if (mag < 1 - eps || mag > 1 + eps) {
+    if (std::abs(mag - 1.0) > eps) {
         normalize(norm);
     }
 
-    // apply it, save it, and free it
     applyRotation3D(newPoly, norm);
     newPoly.normal[0] = norm[0];
     newPoly.normal[1] = norm[1];

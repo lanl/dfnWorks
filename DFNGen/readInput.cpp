@@ -341,6 +341,11 @@ float *rbeta;
     rectangle family's normal vectors.*/
 float *rkappa;
 
+/*! Parameter for the fisher distribnShaprutions. The
+    bigger, the more similar (less diverging) are the
+    rectangle family's normal vectors.*/
+float *rkappa1;
+
 /*! Parameter for the bingham distribnShaprutions. The
     bigger, the more similar (less diverging) are the
     rectangle family's normal vectors.*/
@@ -853,9 +858,13 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "ebeta:");
         ebeta = new float[nFamEll];
         getInputAry(inputFile, ebeta, nFamEll);
+        
         searchVar(inputFile, "ekappa:");
         ekappa = new float[nFamEll];
         getInputAry(inputFile, ekappa, nFamEll);
+        searchVar(inputFile, "ekappa1:");
+        ekappa1 = new float[nFamEll];
+        getInputAry(inputFile, ekappa1, nFamEll);
         searchVar(inputFile, "ekappa2:");
         ekappa2 = new float[nFamEll];
         getInputAry(inputFile, ekappa2, nFamEll);
@@ -919,6 +928,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.angleOne = eAngleOne[i];
         newShapeFam.angleTwo = eAngleTwo[i];
         newShapeFam.kappa = ekappa[i];
+        newShapeFam.kappa1 = ekappa1[i];
         newShapeFam.kappa2 = ekappa2[i];
         newShapeFam.angleOption = eAngleOption;
         newShapeFam.layer = eLayer[i];
@@ -982,6 +992,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] eAngleTwo;
         delete[] ebeta;
         delete[] ekappa;
+        delete[] ekappa1;
         delete[] ekappa2;
         delete[] eLogMean;
         delete[] esd;
@@ -1050,6 +1061,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "rkappa:");
         rkappa = new float[nFamRect];
         getInputAry(inputFile, rkappa, nFamRect);
+        searchVar(inputFile, "rkappa1:");
+        rkappa1 = new float[nFamRect];
+        getInputAry(inputFile, rkappa1, nFamRect);
         searchVar(inputFile, "rkappa2:");
         rkappa2 = new float[nFamRect];
         getInputAry(inputFile, rkappa2, nFamRect);
@@ -1131,6 +1145,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.angleOne = rAngleOne[i];
         newShapeFam.angleTwo = rAngleTwo[i];
         newShapeFam.kappa = rkappa[i];
+        newShapeFam.kappa1 = rkappa1[i];
         newShapeFam.kappa2 = rkappa2[i];
         newShapeFam.angleOption = rAngleOption;
         newShapeFam.layer = rLayer[i];
@@ -1192,6 +1207,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         delete[] rAngleTwo;
         delete[] rbeta;
         delete[] rkappa;
+        delete[] rkappa1;
         delete[] rkappa2;
         delete[] rLogMean;
         delete[] rsd;
@@ -1555,6 +1571,7 @@ void printInputVars() {
     
     printAry(ebeta, "ebeta", nFamEll);
     printAry(ekappa, "ekappa", nFamEll);
+    printAry(ekappa1, "ekappa1", nFamEll);
     printAry(ekappa2, "ekappa2", nFamEll);
     printAry(eLogMean, "eLogMean", nFamEll);
     printAry(esd, "esd", nFamEll);
@@ -1586,6 +1603,7 @@ void printInputVars() {
     printAry(rmax, "rmax", nFamRect);
     printAry(ralpha, "ralpha", nFamRect);
     printAry(rkappa, "rkappa", nFamRect);
+    printAry(rkappa1, "rkappa1", nFamRect);
     printAry(rkappa2, "rkappa2", nFamRect);
     printAry(rExpMean, "rExpMean", nFamRect);
     printAry(rconst, "rconst", nFamRect);

@@ -219,14 +219,14 @@ double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::
  *
  * \param angleOne The first angle (theta/trend/dip) depending on orientationOption.
  * \param angleTwo The second angle (phi/plunge/strike) depending on orientationOption.
- * \param kappa First concentration parameter for the Bingham distribution.
+ * \param kappa1 First concentration parameter for the Bingham distribution.
  * \param kappa2 Second concentration parameter for the Bingham distribution.
  * \param generator Random number generator, see std C++ <random> library.
  * \return A Bingham distribution array {x, y, z}. Used for random generation of polygon normal vectors.
  */
 double* binghamDistribution(double angleOne,
                             double angleTwo,
-                            double kappa,
+                            double kappa1,
                             double kappa2,
                             std::mt19937_64 &generator)
 {
@@ -270,8 +270,8 @@ double* binghamDistribution(double angleOne,
     //    x_local ~ Uniform(S²), accept with prob ∝ exp(k1·x² + k2·y²).
     std::uniform_real_distribution<double> unif01(0.0,1.0);
     std::uniform_real_distribution<double> phiDist(0.0, 2.0*M_PI);
-    // const double M = std::exp(std::max(kappa, kappa2));
-    const double M = std::exp(std::max({0.0, kappa, kappa2}));
+    // const double M = std::exp(std::max(kappa1, kappa2));
+    const double M = std::exp(std::max({0.0, kappa1, kappa2}));
 
     double xL[3];
     while (true) {
@@ -283,7 +283,7 @@ double* binghamDistribution(double angleOne,
         xL[2] = z;                  // local z
 
         // Bingham density up to normalizing constant
-        double w = kappa * xL[0]*xL[0] + kappa2 * xL[1]*xL[1];
+        double w = kappa1 * xL[0]*xL[0] + kappa2 * xL[1]*xL[1];
 
         // Valid acceptance probability in [0,1]
         if (unif01(generator) <= std::exp(w) / M)

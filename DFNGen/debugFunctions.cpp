@@ -222,6 +222,10 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
         logString = "Kappa: " + to_string(shapeFamilies[i].kappa )  + "\n";
         logger.writeLogFile(INFO,  logString);
 
+        // kappa1
+        logString = "Kappa1: " + to_string(shapeFamilies[i].kappa1 )  + "\n";
+        logger.writeLogFile(INFO,  logString);
+
         // kappa2
         logString = "Kappa2: " + to_string(shapeFamilies[i].kappa2 )  + "\n";
         logger.writeLogFile(INFO,  logString);

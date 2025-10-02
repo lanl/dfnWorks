@@ -281,7 +281,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
             elif key in {'strike', 'dip'} and params['orientationOption']['value'] == 2:
                 write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
-            elif key in {'kappa', 'kappa2'}:
+            elif key in {'kappa1', 'kappa2'}:
                 write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
 
     else:

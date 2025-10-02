@@ -113,7 +113,9 @@ def fracture_family_dictionary():
                 'dip': None,
                 'trend': None,
                 'plunge': None,
-                'kappa': None
+                'kappa': None,
+                'kappa1': None,
+                'kappa2': None
             },
             'description':
             'Parameters theta, phi, and kappa for Fisher distribution'
@@ -130,10 +132,11 @@ def fracture_family_dictionary():
                 'trend': None,
                 'plunge': None,
                 'kappa': None,
+                'kappa1': None,
                 'kappa2': None
             },
             'description':
-            'Parameters theta, phi, kappa, and kappa2 for Bingham distribution'
+            'Parameters theta, phi, kappa1, and kappa2 for Bingham distribution'
         },
         'distribution': {
             'type': bool,
@@ -251,7 +254,8 @@ def print_family_information(self, family_number):
 def add_fracture_family(self,
                         shape,
                         distribution,
-                        kappa,
+                        kappa=None,
+                        kappa1=None,
                         kappa2=None,
                         orientation_distribution='fisher',
                         family_number=None,
@@ -394,7 +398,8 @@ def add_fracture_family(self,
         family['bingham']['value']['dip'] = dip
         family['bingham']['value']['trend'] = trend
         family['bingham']['value']['plunge'] = plunge
-        family['bingham']['value']['kappa'] = kappa
+        family['bingham']['value']['kappa'] = None
+        family['bingham']['value']['kappa1'] = kappa1
         family['bingham']['value']['kappa2'] = kappa2
 
     elif orientation_distribution.lower() == 'fisher':
@@ -405,7 +410,8 @@ def add_fracture_family(self,
         family['fisher']['value']['trend'] = trend
         family['fisher']['value']['plunge'] = plunge
         family['fisher']['value']['kappa'] = kappa
-        family['fisher']['value']['kappa2'] = 0 
+        family['fisher']['value']['kappa1'] = None 
+        family['fisher']['value']['kappa2'] = None 
 
     else:
         error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"

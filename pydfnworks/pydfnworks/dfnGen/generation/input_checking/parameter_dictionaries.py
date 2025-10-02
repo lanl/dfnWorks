@@ -560,7 +560,7 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'eOrienationDistribution':
+        'eOrientationDistribution':
         {
             'type':
             str,
@@ -579,6 +579,22 @@ def load_parameters(self):
             float,
             'list':
             True,
+            'required':
+            False,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'ekappa1': {
+            'type':
+            float,
+            'list':
+            True,
+            'required':
+            False,
             'list_length':
             None,
             'value':
@@ -912,6 +928,18 @@ def load_parameters(self):
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
         'rkappa': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa1': {
             'type':
             float,
             'list':

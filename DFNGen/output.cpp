@@ -1083,6 +1083,11 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             file << "Kappa:  " << shapeFamilies[i].kappa  << std::endl;
         }
 
+        // kappa1
+        if (shapeFamilies[i].kappa1) {
+            file << "Kappa1:  " << shapeFamilies[i].kappa1  << std::endl;
+        }
+
         // Write Kappa2 only if ekappa2 was set
         if (shapeFamilies[i].kappa2) {
             file << "Kappa2: " << shapeFamilies[i].kappa2 << std::endl;
