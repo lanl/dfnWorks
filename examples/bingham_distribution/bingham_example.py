@@ -31,7 +31,7 @@ DFN.add_fracture_family(shape="ell",
                         orientation_distribution='bingham',
                         trend=0.0,
                         plunge=45.0,
-                        kappa=-20,
+                        kappa1=-20,
                         kappa2=-20,
                         p32=0.5,
                         hy_variable='aperture',
@@ -41,65 +41,65 @@ DFN.add_fracture_family(shape="ell",
                             "beta": 0.5
                         })
 
-# elliptical cap
-DFN.add_fracture_family(shape="ell",
-                        distribution="tpl",
-                        alpha=1.8,
-                        min_radius=1.0,
-                        max_radius=10.0,
-                        orientation_distribution='bingham',
-                        trend=90.0,
-                        plunge=30.0,
-                        kappa=-30,
-                        kappa2=-5,
-                        p32=10,
-                        hy_variable='aperture',
-                        hy_function='correlated',
-                        hy_params={
-                            "alpha": 10**-5,
-                            "beta": 0.5
-                        })
+# # elliptical cap
+# DFN.add_fracture_family(shape="ell",
+#                         distribution="tpl",
+#                         alpha=1.8,
+#                         min_radius=1.0,
+#                         max_radius=10.0,
+#                         orientation_distribution='bingham',
+#                         trend=90.0,
+#                         plunge=30.0,
+#                         kappa=-30,
+#                         kappa2=-5,
+#                         p32=10,
+#                         hy_variable='aperture',
+#                         hy_function='correlated',
+#                         hy_params={
+#                             "alpha": 10**-5,
+#                             "beta": 0.5
+#                         })
 
 
 
 
-# # elliptical girdle
-DFN.add_fracture_family(shape="ell",
-                        distribution="tpl",
-                        alpha=1.8,
-                        min_radius=1.0,
-                        max_radius=10.0,
-                        orientation_distribution='bingham',
-                        trend=0.0,
-                        plunge=60.0,
-                        kappa=20,
-                        kappa2=5,
-                        p32=0.5,
-                        hy_variable='aperture',
-                        hy_function='correlated',
-                        hy_params={
-                            "alpha": 10**-5,
-                            "beta": 0.5
-                        })
+# # # elliptical girdle
+# DFN.add_fracture_family(shape="ell",
+#                         distribution="tpl",
+#                         alpha=1.8,
+#                         min_radius=1.0,
+#                         max_radius=10.0,
+#                         orientation_distribution='bingham',
+#                         trend=0.0,
+#                         plunge=60.0,
+#                         kappa=20,
+#                         kappa2=5,
+#                         p32=0.5,
+#                         hy_variable='aperture',
+#                         hy_function='correlated',
+#                         hy_params={
+#                             "alpha": 10**-5,
+#                             "beta": 0.5
+#                         })
 
-# #asymmetric lobes
-DFN.add_fracture_family(shape="ell",
-                        distribution="tpl",
-                        alpha=1.8,
-                        min_radius=1.0,
-                        max_radius=10.0,
-                        orientation_distribution='bingham',
-                        trend=45.0,
-                        plunge=30.0,
-                        kappa=-20,
-                        kappa2=10,
-                        p32=0.5,
-                        hy_variable='aperture',
-                        hy_function='correlated',
-                        hy_params={
-                            "alpha": 10**-5,
-                            "beta": 0.5
-                        })
+# # #asymmetric lobes
+# DFN.add_fracture_family(shape="ell",
+#                         distribution="tpl",
+#                         alpha=1.8,
+#                         min_radius=1.0,
+#                         max_radius=10.0,
+#                         orientation_distribution='bingham',
+#                         trend=45.0,
+#                         plunge=30.0,
+#                         kappa=-20,
+#                         kappa2=10,
+#                         p32=0.5,
+#                         hy_variable='aperture',
+#                         hy_function='correlated',
+#                         hy_params={
+#                             "alpha": 10**-5,
+#                             "beta": 0.5
+#                         })
 
 ## Uncomment this to test Fisher and Bingham together 
 # DFN.add_fracture_family(shape="ell",
