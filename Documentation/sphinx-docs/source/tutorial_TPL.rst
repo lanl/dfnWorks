@@ -99,8 +99,8 @@ The parameter 'boundaryFaces' selects domain boundaries for flow. The generation
 
 
 
-Python add_fracture_family
----------------------------
+Python add_fracture_family()
+-----------------------------
 
 
 This example creates a single family network. The routine **add_fracture_family()** is assigns all the parameters for a fracture network filling the domain.
@@ -119,82 +119,82 @@ This example creates a single family network. The routine **add_fracture_family(
 
 These parameters help define the characteristics and distribution of fractures within your discrete fracture network.
 
-distribution :
-        Definition : This parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:
-            'tpl': Truncated Power Law distribution.
-            'log_normal': Log-normal distribution.
-            'exp': Exponential distribution.
-            'constant': A constant value for the fracture radius.
-        Usage : Selecting the appropriate distribution allows you to model the variability of fracture sizes in your geological setting. For example, if fractures tend to have a size that follows a log-normal distribution in your study area, you would set this parameter accordingly.
+distribution 
+............
+
+The distribution parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:
+
+- **'tpl'**: Truncated Power Law distribution.
+- **'log_normal'**: Log-normal distribution.
+- **'exp'**: Exponential distribution.
+- **'constant'**: A constant value for the fracture radius.
 
 
-alpha :
-        Definition : A parameter used when the distribution is set to tpl. It indicates the power-law exponent of the truncated power-law distribution.
-        Default : None
-        Usage : Set this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
+alpha 
+.....
+
+This is a parameter used when the distribution is set to tpl. It indicates the power-law exponent of the truncated power-law distribution.
+Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
 
 
-p32 :
-        Definition : A parameter representing the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.
-        Default : None
-        Usage : Set this parameter to define how densely the fractures are distributed in space. The value of p32 often relates to the number of fractures per unit volume or area.
+p32
+....
+
+This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 relates to the number of fractures per unit volume or area.
 
 
-shape and radius : 
-       Definition : The shape parameter defines the fracture family to 'rect' rectangle or 'ell' ellipse. Their sizes are set with 'min_radius' and 'max_radius'
-        Default : None
+shape and radius 
+................
 
+The shape parameter defines the fracture family to **'rect'** rectangle or **'ell'** ellipse. Their sizes are set with **'min_radius'** and **'max_radius'**
+
+
+kappa, theta, phi
+.................
 
 These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike. 
 
-    kappa :
-        Definition : The concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.
-        Usage : Use this parameter when fractures are expected to have a strongly defined orientation. Adjust kappa to reflect the degree of clustering present in your geological scenario.
+- **'kappa'**: Sets concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.
+- **'theta'** : This parameter defines the angle used to specify the orientation of fractures. For example  orientation set to 0 (the default) would represent horizontal fractures  while a value of π/2 (90 degrees) would indicate a vertical fracture.
+- **'phi'** : Similar to theta, phi is used to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.  For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
+
+hy_variable
+............
 
 
-   theta :
-        Definition : This parameter defines the angle used to specify the orientation of fractures if orientationOption is set to 0 (the default). It typically represents the angle of a fracture in the vertical plane in spherical coordinates.
-        Default : None
-        Usage : Set this parameter to define the tilt or dip of the fractures. For instance, a value of 0 would represent a horizontal fracture, while a value of π/2 (90 degrees) would indicate a vertical fracture.
+The hydraulic parameters hy_variable, hy_function, and hy_params—are essential for modeling how fluid flows through fractured media. By carefully selecting and defining each parameter, you can create a more accurate and realistic representation of subsurface flow behavior influenced by the fractures in your model.
 
-    phi :
-        Definition : Similar to theta, phi is used in conjunction with orientationOption 0 to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.
-        Default : None
-        Usage : Specify this parameter to set the direction of the fracture’s orientation in the horizontal plane. For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
+This hydraulic parameter specifies the variable to which values will be assigned for the fractures within the family. The options include:
+
+- **'aperture'** :  The opening width of the fractures, which is critical for determining flow rates.
+- **'permeability'** : A measure of how easily fluids can pass through the fractures.
+- **'transmissivity'** : Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.
 
 
-These hydraulic parameters—hy_variable, hy_function, and hy_params—are essential for modeling how fluid flows through fractured media. By carefully selecting and defining each parameter, you can create a more accurate and realistic representation of subsurface flow behavior influenced by the fractures present in your geological model.
+hy_function
+...........
 
-Here’s a detailed explanation of the hydraulic parameters used in the add_fracture_family function in dfnWorks, which help define the hydraulic properties of fractures within a discrete fracture network.
-Hydraulic Parameters for a Fracture Family
 
-    hy_variable :
-        Definition : This parameter specifies the hydraulic variable to which values will be assigned for the fractures within the family. The options include:
-            'aperture': The opening width of the fractures, which is critical for determining flow rates.
-            'permeability': A measure of how easily fluids can pass through the fractures.
-            'transmissivity': Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.
-        Usage : Choose the appropriate hydraulic variable based on the specific properties you want to model for the fractures. For example, if you are interested in how the fracture opening impacts fluid flow, you would select 'aperture'.
+This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose 'correlated'.  The options include:
 
-    hy_function :
-        Definition : This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. The options include:
-            'correlated': Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
-            'semi-correlated': Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
-            'constant': Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
-            'log-normal': Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
-        Usage : Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose 'correlated'.
+- **'correlated'** : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
+- **'semi-correlated'** : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
+- **'constant'** : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
+- **'log-normal'** : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
 
-    hy_params :
-        Definition : This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:
-            If hy_function is 'correlated' :
-                Expected syntax: {"alpha": value, "beta": value}
-                Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
-            If hy_function is 'semi-correlated' :
-                Expected syntax: {"alpha": value, "beta": value, "sigma": value}
-                In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
-            If hy_function is 'constant' :
-                Expected syntax: {"mu": value}
 
- 
+hy_params
+..........
+
+
+This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:
+
+If hy_function is 'correlated' : Expected syntax: {"alpha": value, "beta": value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
+
+If hy_function is 'semi-correlated' : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
+
+If hy_function is 'constant' : Expected syntax: {"mu": value}
+
 
 For more details on fracture famililies and a complete list of parameters and functions see [pydfnworks: dfnGen](https://lanl.github.io/dfnWorks/pydfnGen.html)
 
@@ -204,11 +204,11 @@ For more details on fracture famililies and a complete list of parameters and fu
 Network Evaluations
 --------------------------
 
-The most immediate feedback for the network are text reports written to the log file. Additional graphs and statistics can be generated into a PDF report. Usually visual inspection will provide a good feel for the network that is generated.
+The most immediate feedback for your created network are text reports written to the log file. Additional graphs and statistics can be generated into a nice PDF report with plots.
 
 The following commands will check for errors in the parameters and setup, create the fracture network, writee at PDF report, then triangulate and intersect fractures into a Delaunay mesh.
 
-Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Add ```DFN.set_flow_solver("FEHM")``` before mesh_netork. 
+*Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Add ```DFN.set_flow_solver("FEHM")``` before mesh_netork.* 
 
 
 .. code-block:: python
@@ -286,15 +286,13 @@ dfnGen Report
 ~~~~~~~~~~~~~~~~~~~~
 
 
-
-
-
 Created by DFN.output_report()
 see output_output_report.pdf  and directory dfnGen_output_report
 
 
-    Creates a PDF output report for the network created by DFNGen. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into “output_dir/family_{id}/”. Information about the whole network are also created and written into “output_dir/network/”
-    Final output report is named “jobname”_output_report.pdf User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.
+A PDF output report is written for the network. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into “output_dir/family_{id}/”. Information about the whole network are also created and written into “output_dir/network/” Final output report is named “jobname”_output_report.pdf 
+
+*User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.*
 
 
 .. code-block:: bash
@@ -314,41 +312,11 @@ see output_output_report.pdf  and directory dfnGen_output_report
 
 
 When working with dfnWorks, the generated reports provide valuable insights into the created discrete fracture network (DFN). Below are descriptions of the different visualizations commonly included, such as the plot of fracture radii distribution, Rose Diagrams, Stereonets, and density plots.
-1. Plot of Fracture Radii Distribution
 
-    Description : This plot displays the distribution of radii of the fractures within the network. It typically shows the frequency of fractures against their corresponding radii on the x-axis.
-    Purpose : The goal is to analyze how fracture sizes are distributed within the modeled volume, which is important for understanding how size may influence fluid flow and connectivity in the subsurface environment.
-    Interpretation :
-        A normal distribution might indicate that most fractures are of average size, while very few are extremely small or large.
-        A truncated power law could suggest that smaller fractures are more common, with larger fractures being rarer, which is a common characteristic in geological formations.
-
-2. Rose Diagrams
-
-    Description : A Rose Diagram (or Rose Plot) represents the directional distribution of fractures. It visualizes the number of fractures or their orientations in relation to a specified reference direction, often presented as a circular plot.
-    Purpose : Rose Diagrams help identify preferred orientations in the fracture network. They can reveal patterns of anisotropy in the fractures, which can be critical for understanding flow pathways in a reservoir or aquifer.
-    Interpretation :
-        Peaks in the diagram indicate directions with a higher concentration of fractures.
-        A uniform distribution suggests a random orientation across the modeled area, while multiple peaks could indicate the influence of geological processes such as tectonic forces.
-
-3. Stereonets
-
-    Description : A Stereonet is a more advanced visualization that plots the orientations of fractures in a three-dimensional context, often represented on a two-dimensional plane. It allows for a clearer understanding of how fractures are situated in space with respect to their dip and strike.
-    Purpose : Stereonets are particularly useful for geologists to visualize the spatial relationships between fractures and to analyze their 3D geometry.
-    Interpretation :
-        The distribution of points on the stereonet can reveal clustering of fracture orientations or indicate dominant fracture systems.
-        Patterns may reveal structural controls on fracture formation, like fault systems or fold axes.
-
-4. Density Plot
-
-    Description : A density plot visualizes the concentration of fractures in space, often represented as a 2D or 3D distribution of fracture density per unit area or volume.
-    Purpose : This plot helps to visualize where fractures are more densely packed, which can influence the flow of fluids through the medium. It can indicate areas of potential resource accumulation or zones that might exhibit different hydraulic properties.
-    Interpretation :
-        High-density regions suggest areas with greater connectivity and potential for fluid movement, while low-density areas might correspond to barriers against flow.
-        Patterns in the density plot can provide insights into the geologic processes that led to the current fracture distribution.
-
-Conclusion
-
-The various plots generated by dfnWorks in its reports serve as essential tools for analyzing the characteristics of fracture networks. Each visualization provides unique insights into aspects such as size distribution, orientation, and spatial density of fractures, helping to inform decisions in resource management, environmental assessment, and geological modeling. Through careful interpretation of these diagrams, users can enhance their understanding of subsurface flow behavior and the roles played by fractures in geological formations. 
+- Radii Distribution : This plot displays the distribution of radii of the fractures within the network. It typically shows the frequency of fractures against their corresponding radii on the x-axis.  A normal distribution might indicate that most fractures are of average size, while very few are extremely small or large.  A truncated power law could suggest that smaller fractures are more common, with larger fractures being rarer.
+- Rose Diagrams : A Rose Diagram (or Rose Plot) represents the directional distribution of fractures. It visualizes the number of fractures or their orientations in relation to a specified reference direction. This can help identify preferred orientations in the fracture network.  Peaks in the diagram indicate directions with a higher concentration of fractures.
+- Stereonets : A Stereonet plots the orientations of fractures in a three-dimensional context, often represented on a two-dimensional plane. It allows for a clearer understanding of how fractures are situated in space with respect to their dip and strike.  Patterns may reveal structural controls on fracture formation, like fault systems or fold axes.
+- Density Plot : A density plot visualizes the concentration of fractures in space, often represented as a 2D or 3D distribution of fracture density per unit area or volume.  High-density regions suggest areas with greater connectivity and potential for fluid movement, while low-density areas might correspond to barriers against flow.
 
 
 .. figure:: figures/tpl_report_page_2.png
@@ -357,7 +325,7 @@ The various plots generated by dfnWorks in its reports serve as essential tools 
    :align: center
 
 
-   *dfnWorks routine DFN.output_report() will generate a PDF summary of the network.*
+   *dfnWorks routine DFN.output_report() creates a PDF summary of the network similar to this image.*
 
 
 Visual Inspection
@@ -520,10 +488,7 @@ Once this network is working well, a more complicated version can be created by 
 
 
 
-Conclusion EDIT this
-------------------------------------------
-
-You have successfully run dfnWorks to create a simple fracture network and run  basic simulations using the `driver.py` script in dfnWorks! As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.
+Now you are familar with the main driver.py script to create a network and run simulations. As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.
 
 
 
