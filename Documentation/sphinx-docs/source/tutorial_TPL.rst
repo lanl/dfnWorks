@@ -120,7 +120,7 @@ This example creates a single family network. The routine **add_fracture_family(
 These parameters help define the characteristics and distribution of fractures within your discrete fracture network.
 
 distribution 
-............
+~~~~~~~~~~~~~
 
 The distribution parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:
 
@@ -131,26 +131,26 @@ The distribution parameter defines the statistical distribution from which the f
 
 
 alpha 
-.....
+~~~~~~~~~~~~~
 
 This is a parameter used when the distribution is set to tpl. It indicates the power-law exponent of the truncated power-law distribution.
 Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
 
 
 p32
-....
+~~~~~~~~~~~~~
 
 This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 relates to the number of fractures per unit volume or area.
 
 
 shape and radius 
-................
+~~~~~~~~~~~~~
 
 The shape parameter defines the fracture family to **'rect'** rectangle or **'ell'** ellipse. Their sizes are set with **'min_radius'** and **'max_radius'**
 
 
 kappa, theta, phi
-.................
+~~~~~~~~~~~~~
 
 These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike. 
 
@@ -158,9 +158,9 @@ These parameters enable users to define density and orientations for fractures w
 - **'theta'** : This parameter defines the angle used to specify the orientation of fractures. For example  orientation set to 0 (the default) would represent horizontal fractures  while a value of π/2 (90 degrees) would indicate a vertical fracture.
 - **'phi'** : Similar to theta, phi is used to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.  For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
 
-hy_variable
-............
 
+hy_variable
+~~~~~~~~~~~
 
 The hydraulic parameters hy_variable, hy_function, and hy_params—are essential for modeling how fluid flows through fractured media. By carefully selecting and defining each parameter, you can create a more accurate and realistic representation of subsurface flow behavior influenced by the fractures in your model.
 
@@ -172,7 +172,7 @@ This hydraulic parameter specifies the variable to which values will be assigned
 
 
 hy_function
-...........
+~~~~~~~~~~~
 
 
 This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose 'correlated'.  The options include:
@@ -184,7 +184,7 @@ This parameter describes the relationship between the chosen hydraulic variable 
 
 
 hy_params
-..........
+~~~~~~~~~
 
 
 This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:
@@ -492,8 +492,8 @@ Now you are familar with the main driver.py script to create a network and run s
 
 
 
-Additional Resources EDIT these
-------------------------------------------
+Additional Resources 
+------------------------
 
 There are more demo runs in the `dfnWorks/examples` directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
