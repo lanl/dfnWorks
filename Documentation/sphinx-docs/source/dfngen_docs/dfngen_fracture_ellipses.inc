@@ -175,10 +175,23 @@ ekappa
 
 Description: The concentration parameter of the von Mises-Fisher  distribution, which determines the degree of clustering around the mean orientation. 
 
+Type: list of :ref:`nFamEll` floats 
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['ekappa']['value'] = [0.1, 20, 17] 
+    # Fracture Family 1 has a theta value of 45 degrees
+    # Fracture Family 2 has a theta value of 78 degrees
+    # Fracture Family 3 has a theta value of 0 degrees
     
 .. note:: Values of :math:`\kappa` approaching zero result in a uniform distribution of points on the sphere.  Larger values create points with a small deviation from mean direction. 
 
 .. warning:: The numerical method for sampling the von Mises-Fisher  distribution becomes unstable for values greater than 100. 
+
+
+----
 
 
 Ellipse: Spherical Coordinates
@@ -188,55 +201,167 @@ Ellipse: Spherical Coordinates
 The mean normal vector of the fracture family :math:`\vec{n}` is related to the spherical coordinates :math:`\theta` and :math:`\phi` by
 
 .. math::
-        \vec{n}_x & = \sin(\theta) \cos(\phi)
+        \vec{n}_x & = \sin(\theta) \cos(\phi)\\
 .. math::
-	\vec{n}_y & = \sin(\theta) \sin(\phi)
+	\vec{n}_y & = \sin(\theta) \sin(\phi)\\
 .. math::
 	\vec{n}_z & = \cos(\theta)
 
-theta
+etheta
 ^^^^^^^^^^^^^^
 
 Description: Angle the normal vector of the fracture makes with the z-axis 
 
+Type: list of :ref:`nFamEll` floats 
 
+Example:
+
+.. code-block:: python
+
+    DFN.params['etheta']['value'] = [45, 78, 0] 
+    # Fracture Family 1 has a theta value of 45 degrees
+    # Fracture Family 2 has a theta value of 78 degrees
+    # Fracture Family 3 has a theta value of 0 degrees
+    
 .. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', and the value provided must be less than :math:`2 \pi`.  
  
+----
 
-phi
+
+ephi
 ^^^^^^^^^^^^^^
 
 Description: Angle that the projection of the normal vector of a fracture onto the x-y plane makes with the x-axis. 
+
+
+Type: list of :ref:`nFamEll` float 
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['ephi']['value'] =  [0, 56, 12] 
+    # Fracture Family 1 has a phi value of 0 degrees
+    # Fracture Family 2 has a phi value of 56 degrees
+    # Fracture Family 3 has a phi value of 12 degrees
+
+.. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', then the value provided must be less than :math:`2 \pi`.  
+ 
+
 
 ----
 
 Ellipse: Trend & Plunge
 ----------------------------------
-For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
+
+The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
 
 .. math::
-        \vec{n}_x & = -\sin(\text{trend}) \cos(\text{plunge})
+        \vec{n}_x & = \cos(\text{trend}) \cos(\text{plunge})\\
 .. math::        
-	\vec{n}_y & = -\cos(\text{trend}) \cos(\text{plunge})
+	\vec{n}_y & = \sin(\text{trend}) \cos(\text{plunge})\\
 .. math::
 	\vec{n}_z & = \sin(\text{trend})
 
 
+etrend
+^^^^^^^^^^^^^^^^
+
+Description: Trend of fracture families 
+
+Type: list of :ref:`nFamEll` float 
+
+Example 
+
+.. code-block:: python
+
+    DFN.params['etrend']['value'] = [0, 56, 12] 
+    # Fracture Family 1 has a trend value of 0 degrees
+    # Fracture Family 2 has a trend value of 56 degrees
+    # Fracture Family 3 has a trend value of 12 degrees
+
 .. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree') to use Trend  & Plunge
 
 
+----
+
+
+eplunge
+^^^^^^^^^^^^^^^^
+
+Description: Plunge of fracture families
+
+Type: list of :ref:`nFamEll` float 
+ 
+Example 
+
+.. code-block:: python
+
+    DFN.params['eplunge']['value'] = [0, 56, 12] 
+    # Fracture Family 1 has a plunge value of 0 degrees
+    # Fracture Family 2 has a plunge value of 56 degrees
+    # Fracture Family 3 has a plunge value of 12 degrees
+
+.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Trend  & Plunge
+
+
+----
+
 Ellipse: Dip & Strike
 ----------------------------------
-For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
+The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
 
 .. math::
-        \vec{n}_x & = \sin(\text{dip}) \cos(\text{strike})
+        \vec{n}_x & = \sin(\text{dip}) \sin(\text{strike})\\
 .. math::
-	    \vec{n}_y & = -\sin(\text{dip}) \sin(\text{strike})
+	\vec{n}_y & = -\sin(\text{dip}) \cos(\text{strike})\\
 .. math::
-	    \vec{n}_z & = \cos(\text{dip})
+	\vec{n}_z & = \cos(\text{dip})
 
----
+----
+
+estrike
+^^^^^^^^^^^^^^^^
+
+Description: Strike of fracture families
+
+Type: list of :ref:`nFamEll` float 
+ 
+Example 
+
+.. code-block:: python
+
+    DFN.params['estrike']['value'] = [0, 56, 12] 
+    # Fracture Family 1 has a strike value of 0 degrees
+    # Fracture Family 2 has a strike value of 56 degrees
+    # Fracture Family 3 has a strike value of 12 degrees
+
+.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Dip  & Strike
+
+
+----
+
+
+edip
+^^^^^^^^^^^^^^^^
+
+Description: Dip of fracture families
+
+Type: list of :ref:`nFamEll` float 
+ 
+Example 
+
+.. code-block:: python
+
+    DFN.params['edip']['value'] = [0, 56, 12] 
+    # Fracture Family 1 has a dip value of 0 degrees
+    # Fracture Family 2 has a dip value of 56 degrees
+    # Fracture Family 3 has a dip value of 12 degrees
+
+.. note:: :ref:`angleOption` must be set to degree (angleOption = 'degree')  to use Dip  & Strike
+
+
+----
 
 Ellipse: In Plane Rotation 
 ----------------------------------

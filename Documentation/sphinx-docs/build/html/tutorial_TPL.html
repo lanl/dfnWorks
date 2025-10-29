@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dfnWorks Tutorial for Truncated Power-Law (TPL) &mdash; dfnWorks unknown documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=3f1b9271"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index_docs.html" class="icon icon-home">
+            dfnWorks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">dfnWorks Tutorial for Truncated Power-Law (TPL)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial_TPL.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dfnworks-tutorial-for-truncated-power-law-tpl">
+<h1>dfnWorks Tutorial for Truncated Power-Law (TPL)<a class="headerlink" href="#dfnworks-tutorial-for-truncated-power-law-tpl" title="Link to this heading"></a></h1>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_3images.png"><img alt="alternate text" src="_images/tpl_3images.png" style="width: 720.0px; height: 405.0px;" />
+</a>
+</figure>
+<p>The TPL (Truncated Power-Law) is a type of distribution (‘tpl’, ‘log_normal’, ‘exp’, or ‘constant’) that defines the sample distribution for the fracture radius.</p>
+<p>This example uses add_fracture_family() to control parameters to create a set of fractures within a domain. Fracture families can also be created using add_user_fract() to define specific fractures or add_user_fract_from_file() to read fractures from a file.</p>
+<p>This example consists of one family of fractures whose sizes have a truncated power law distribution with a minimum radius of 1 meter and a maximum size of 10 meters.</p>
+<p>The following items are covered in this Tutorial:</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#tutorial-prerequisites" id="id4">Tutorial Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#dfnworks-tpl-overview" id="id5">dfnWorks TPL Overview</a></p></li>
+<li><p><a class="reference internal" href="#set-parameters" id="id6">Set Parameters</a></p></li>
+<li><p><a class="reference internal" href="#python-add-fracture-family" id="id7">Python add_fracture_family()</a></p>
+<ul>
+<li><p><a class="reference internal" href="#distribution" id="id8">distribution</a></p></li>
+<li><p><a class="reference internal" href="#alpha" id="id9">alpha</a></p></li>
+<li><p><a class="reference internal" href="#p32" id="id10">p32</a></p></li>
+<li><p><a class="reference internal" href="#shape-and-radius" id="id11">shape and radius</a></p></li>
+<li><p><a class="reference internal" href="#kappa-theta-phi" id="id12">kappa, theta, phi</a></p></li>
+<li><p><a class="reference internal" href="#hy-variable" id="id13">hy_variable</a></p></li>
+<li><p><a class="reference internal" href="#hy-function" id="id14">hy_function</a></p></li>
+<li><p><a class="reference internal" href="#hy-params" id="id15">hy_params</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#network-evaluations" id="id16">Network Evaluations</a></p>
+<ul>
+<li><p><a class="reference internal" href="#log-report" id="id17">Log Report</a></p></li>
+<li><p><a class="reference internal" href="#dfngen-report" id="id18">dfnGen Report</a></p></li>
+<li><p><a class="reference internal" href="#visual-inspection" id="id19">Visual Inspection</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#run-flow-model" id="id20">Run Flow Model</a></p></li>
+<li><p><a class="reference internal" href="#run-transport-model" id="id21">Run Transport Model</a></p></li>
+<li><p><a class="reference internal" href="#add-a-second-family" id="id22">Add a Second family</a></p></li>
+<li><p><a class="reference internal" href="#additional-resources" id="id23">Additional Resources</a></p></li>
+</ul>
+</nav>
+<section id="tutorial-prerequisites">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Tutorial Prerequisites</a><a class="headerlink" href="#tutorial-prerequisites" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.</p></li>
+<li><p>This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](<a class="reference external" href="https://lanl.github.io/dfnWorks/tutorial_intro.html">https://lanl.github.io/dfnWorks/tutorial_intro.html</a>)</p></li>
+</ul>
+<p>For install and setup instuctions, refer to the section at <a class="reference internal" href="setup.html#pydfnworks-setup"><span class="std std-ref">pydfnWorks install</span></a>.
+- TeX Live is needed to write the PDF report summary. Local servers use <code class="docutils literal notranslate"><span class="pre">`module</span> <span class="pre">load</span> <span class="pre">texlive`</span></code>
+- <a href="#id24"><span class="problematic" id="id25">Paraview_</span></a> is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing <a href="#id26"><span class="problematic" id="id27">Paraview_</span></a> can be found at <a class="reference external" href="http://www.paraview.org/download/">http://www.paraview.org/download/</a></p>
+</section>
+<section id="dfnworks-tpl-overview">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">dfnWorks TPL Overview</a><a class="headerlink" href="#dfnworks-tpl-overview" title="Link to this heading"></a></h2>
+<p>The Truncated Power-Law (TPL) option for stochastic generation of fractures allows spatially variable mesh resolution while enusring Delaunay triangulation for accuracy and stable solutions. Parameters are set by family groupings and include controls for distribution, orientation, and resolution.</p>
+<p>Understanding these parameters will help you effectively describe the geometry and orientation of fractures within your discrete fracture network in dfnWorks. By adjusting these settings, you can model complex geological configurations and accurately represent the flow behavior in fractured media.</p>
+<p>This tutorial’s main focus will be on <strong>dfnGen</strong> and how to use TPL parameters to generate a network. Evaluations of a network include reports, graphs, and visual inspection.
+See Module at <a class="reference internal" href="dfngen.html#dfngen-chapter"><span class="std std-ref">dfnGen</span></a> and python docs at <a class="reference internal" href="pydfnGen.html#dfnworks-python-chapter-dfngen"><span class="std std-ref">pydfnWorks: dfnGen</span></a></p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_mesh_material.png"><img alt="alternate text" src="_images/tpl_mesh_material.png" style="width: 636.0px; height: 508.5px;" />
+</a>
+</figure>
+<p>Simulations using dfnFlow and dfnTrans are run on the network and are viewed to further evaluate the network and results.</p>
+</section>
+<section id="set-parameters">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Set Parameters</a><a class="headerlink" href="#set-parameters" title="Link to this heading"></a></h2>
+<p>Open the script python <cite>driver.py</cite>. You can open with any text editor or use the unix command <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">driver.py</span></code> which will display the content to the screen.  Note the first line of the file imports the <cite>pydfnworks</cite> package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts.</p>
+<p>For this example there are 2 ways to run driver.py, this run will create and run simulations with one fracture family. A second fracture family is commented out, uncomment the output directory name and the portion to add_fracture_family and write results in second directory “output2”.</p>
+<p>This example will run both the flow model and particle tracks using the input files named here.</p>
+<p>The domain is a 15 meter cube with 0.1 set as smallest edge size.</p>
+<p>It is good practice to use ‘domainSizeIncrease’ to avoid edge density effects. This temporary domainSize increase for inserting fracture centers outside of the domain defined by domainSize. After generation is complete, the domain is truncated back to domainSize. First entry is expansion in x (east/west), second entry is expansion in y (North/South), and third entry is expansion in z (Top/Bottom).</p>
+<p>The parameter ‘boundaryFaces’ selects domain boundaries for flow. The generation will only keep clusters of fractures with connections to domain boundaries which are set to 1 as indicated by axis directions [ +X,-X,+Y,-Y,+Z,-Z].  The network will have fractures connecting to the left and right boundaries.</p>
+</section>
+<section id="python-add-fracture-family">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Python add_fracture_family()</a><a class="headerlink" href="#python-add-fracture-family" title="Link to this heading"></a></h2>
+<p>This example creates a single family network. The routine <strong>add_fracture_family()</strong> is assigns all the parameters for a fracture network filling the domain.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">add_fracture_family</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;ell&quot;</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;tpl&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.8</span><span class="p">,</span> <span class="n">p32</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">min_radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_radius</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">kappa</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">hy_variable</span><span class="o">=</span><span class="s1">&#39;aperture&#39;</span><span class="p">,</span> <span class="n">hy_function</span><span class="o">=</span><span class="s1">&#39;correlated&#39;</span><span class="p">,</span> <span class="n">number_of_points</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">hy_params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+<p>These parameters help define the characteristics and distribution of fractures within your discrete fracture network.</p>
+<section id="distribution">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">distribution</a><a class="headerlink" href="#distribution" title="Link to this heading"></a></h3>
+<p>The distribution parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:</p>
+<ul class="simple">
+<li><p><strong>‘tpl’</strong>: Truncated Power Law distribution.</p></li>
+<li><p><strong>‘log_normal’</strong>: Log-normal distribution.</p></li>
+<li><p><strong>‘exp’</strong>: Exponential distribution.</p></li>
+<li><p><strong>‘constant’</strong>: A constant value for the fracture radius.</p></li>
+</ul>
+</section>
+<section id="alpha">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">alpha</a><a class="headerlink" href="#alpha" title="Link to this heading"></a></h3>
+<p>This is a parameter used when the distribution is set to tpl. It indicates the power-law exponent of the truncated power-law distribution.
+Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.</p>
+</section>
+<section id="p32">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">p32</a><a class="headerlink" href="#p32" title="Link to this heading"></a></h3>
+<p>This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 relates to the number of fractures per unit volume or area.</p>
+</section>
+<section id="shape-and-radius">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">shape and radius</a><a class="headerlink" href="#shape-and-radius" title="Link to this heading"></a></h3>
+<p>The shape parameter defines the fracture family to <strong>‘rect’</strong> rectangle or <strong>‘ell’</strong> ellipse. Their sizes are set with <strong>‘min_radius’</strong> and <strong>‘max_radius’</strong></p>
+</section>
+<section id="kappa-theta-phi">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">kappa, theta, phi</a><a class="headerlink" href="#kappa-theta-phi" title="Link to this heading"></a></h3>
+<p>These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike.</p>
+<ul class="simple">
+<li><p><strong>‘kappa’</strong>: Sets concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.</p></li>
+<li><p><strong>‘theta’</strong> : This parameter defines the angle used to specify the orientation of fractures. For example  orientation set to 0 (the default) would represent horizontal fractures  while a value of π/2 (90 degrees) would indicate a vertical fracture.</p></li>
+<li><p><strong>‘phi’</strong> : Similar to theta, phi is used to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.  For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.</p></li>
+</ul>
+</section>
+<section id="hy-variable">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">hy_variable</a><a class="headerlink" href="#hy-variable" title="Link to this heading"></a></h3>
+<p>The hydraulic parameters hy_variable, hy_function, and hy_params—are essential for modeling how fluid flows through fractured media. By carefully selecting and defining each parameter, you can create a more accurate and realistic representation of subsurface flow behavior influenced by the fractures in your model.</p>
+<p>This hydraulic parameter specifies the variable to which values will be assigned for the fractures within the family. The options include:</p>
+<ul class="simple">
+<li><p><strong>‘aperture’</strong> :  The opening width of the fractures, which is critical for determining flow rates.</p></li>
+<li><p><strong>‘permeability’</strong> : A measure of how easily fluids can pass through the fractures.</p></li>
+<li><p><strong>‘transmissivity’</strong> : Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.</p></li>
+</ul>
+</section>
+<section id="hy-function">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">hy_function</a><a class="headerlink" href="#hy-function" title="Link to this heading"></a></h3>
+<p>This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose ‘correlated’.  The options include:</p>
+<ul class="simple">
+<li><p><strong>‘correlated’</strong> : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.</p></li>
+<li><p><strong>‘semi-correlated’</strong> : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.</p></li>
+<li><p><strong>‘constant’</strong> : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.</p></li>
+<li><p><strong>‘log-normal’</strong> : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.</p></li>
+</ul>
+</section>
+<section id="hy-params">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">hy_params</a><a class="headerlink" href="#hy-params" title="Link to this heading"></a></h3>
+<p>This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:</p>
+<p>If hy_function is ‘correlated’ : Expected syntax: {“alpha”: value, “beta”: value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.</p>
+<p>If hy_function is ‘semi-correlated’ : Expected syntax: {“alpha”: value, “beta”: value, “sigma”: value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.</p>
+<p>If hy_function is ‘constant’ : Expected syntax: {“mu”: value}</p>
+<p>For more details on fracture famililies and a complete list of parameters and functions see [pydfnworks: dfnGen](<a class="reference external" href="https://lanl.github.io/dfnWorks/pydfnGen.html">https://lanl.github.io/dfnWorks/pydfnGen.html</a>)</p>
+</section>
+</section>
+<section id="network-evaluations">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">Network Evaluations</a><a class="headerlink" href="#network-evaluations" title="Link to this heading"></a></h2>
+<p>The most immediate feedback for your created network are text reports written to the log file. Additional graphs and statistics can be generated into a nice PDF report with plots.</p>
+<p>The following commands will check for errors in the parameters and setup, create the fracture network, writee at PDF report, then triangulate and intersect fractures into a Delaunay mesh.</p>
+<p><em>Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Add ```DFN.set_flow_solver(“FEHM”)``` before mesh_netork.</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">check_input</span><span class="p">()</span>
+<span class="n">DFN</span><span class="o">.</span><span class="n">create_network</span><span class="p">()</span>
+<span class="n">DFN</span><span class="o">.</span><span class="n">output_report</span><span class="p">()</span>
+<span class="n">DFN</span><span class="o">.</span><span class="n">mesh_network</span><span class="p">(</span><span class="n">min_dist</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_resolution_factor</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="log-report">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Log Report</a><a class="headerlink" href="#log-report" title="Link to this heading"></a></h3>
+<p>See output.log</p>
+<p>Observe screen output as dfnWorks is running, error checks and setup results are displayed. This is the first place to check that your network is as expected. The screen output is also written to root_name.log. For this example the output will look like the following.</p>
+<p>While dfnWorks is running, you will see extensive reporting to the screen. This will alert you to errors or missing files. When finished, a report is written to to file <cite>output.log</cite>. This is the first place to check if there are any issues. Look for the first occurrence of Errors as later Errors are likely caused by the first. Warnings may exist and can usually be ignored.</p>
+<p>A list of dfnWorks files and their descriptions are at <a class="reference internal" href="output.html#output-chapter"><span class="std std-ref">dfnWorks Files</span></a>.</p>
+<p>The log will write a summary that includes default and user defined parameters. Check this is what was expectted for your setup. For this example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52,217<span class="w"> </span>INFO<span class="w"> </span>Checking<span class="w"> </span>Input<span class="w"> </span>File<span class="w"> </span>Complete
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,167<span class="w"> </span>INFO<span class="w"> </span><span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Starting<span class="w"> </span>DFNGen
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Expecting<span class="w"> </span>Theta<span class="w"> </span>and<span class="w"> </span>phi<span class="w"> </span><span class="k">for</span><span class="w"> </span>orientations
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>h:<span class="w"> </span><span class="m">0</span>.100000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Shape<span class="w"> </span>Families:
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Ellipse<span class="w"> </span>Family<span class="w"> </span><span class="m">1</span>:
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Number<span class="w"> </span>of<span class="w"> </span>Vertices:<span class="w"> </span><span class="m">8</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Aspect<span class="w"> </span>Ratio:<span class="w"> </span><span class="m">1</span>.000000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>P32<span class="w"> </span><span class="o">(</span>Fracture<span class="w"> </span>Intensity<span class="o">)</span><span class="w"> </span>Target:<span class="w"> </span><span class="m">1</span>.000000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Beta<span class="w"> </span>Distribution<span class="w"> </span><span class="o">(</span>Rotation<span class="w"> </span>Around<span class="w"> </span>Normal<span class="w"> </span>Vector<span class="o">)</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span>2PI<span class="o">)</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Theta:<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span>rad,<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span>deg
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Phi:<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span>rad,<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span>deg
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Kappa:<span class="w"> </span><span class="m">1</span>.000000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Layer:<span class="w"> </span>Entire<span class="w"> </span>domain
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Region:<span class="w"> </span>Entire<span class="w"> </span>domain
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Distribution:<span class="w"> </span>Truncated<span class="w"> </span>Power-Law
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Alpha:<span class="w"> </span><span class="m">1</span>.800000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Minimum<span class="w"> </span>Radius:<span class="w"> </span><span class="m">1</span>.000000m
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Maximum<span class="w"> </span>Radius:<span class="w"> </span><span class="m">10</span>.000000m
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Family<span class="w"> </span>Insertion<span class="w"> </span>Probability:<span class="w"> </span><span class="m">1</span>.000000
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Estimating<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>fractures<span class="w"> </span>needed...
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Estimated<span class="w"> </span><span class="m">167</span><span class="w"> </span>fractures<span class="w"> </span><span class="k">for</span><span class="w"> </span>Ellipse<span class="w"> </span>family<span class="w"> </span><span class="m">1</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>P32<span class="w"> </span>For<span class="w"> </span>Family<span class="w"> </span><span class="m">1</span><span class="w"> </span>Completed
+</pre></div>
+</div>
+<p>When fractures are generated, they are checked to ensure intersections and that parameters are satisfied. Fractures are rejected if they are isolated, have edges too short or too close, or outside boundary. When the network is created, summary information helps to describe the result.</p>
+<p>P32 is used in discrete fracture network (DFN) modeling and is a measure of fracture abundance in a rock mass, representing the total area of fractures per unit volume. P32 is calculated by summing the areas of all fractures within a given volume and dividing by that volume.</p>
+<p>The final P32 of 1.000912, while slightly exceeding the target of 1.000000, indicates that the simulation results are generally satisfactory, showing good agreement with the intended fracture density. Further adjustments can be made if absolute conformity is necessary, but the results suggest successful modeling of the fracture network within acceptable bounds.</p>
+<p>Examine the generated fracture network visually and statistically to ensure that the density and distribution of fractures align with geological expectations.</p>
+<p>For this example the log output will look similar to this.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span><span class="o">========================================================</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w">             </span>Network<span class="w"> </span>Generation<span class="w"> </span>Complete
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span><span class="o">========================================================</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Version<span class="w"> </span>of<span class="w"> </span>DFNGen:<span class="w"> </span><span class="m">2</span>.2
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Time<span class="w"> </span>Stamp:<span class="w"> </span>Thu<span class="w"> </span>May<span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="m">13</span>:26:52<span class="w"> </span><span class="m">2025</span>
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Final<span class="w"> </span>p32<span class="w"> </span>values<span class="w"> </span>per<span class="w"> </span>family:
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>Family<span class="w"> </span><span class="m">1</span><span class="w"> </span>target<span class="w"> </span><span class="nv">P32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.000000,<span class="w"> </span>Final<span class="w"> </span><span class="nv">P32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.000912
+<span class="o">[</span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:52<span class="o">]</span><span class="w"> </span>INFO:<span class="w"> </span>________________________________________________________
+</pre></div>
+</div>
+</section>
+<section id="dfngen-report">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">dfnGen Report</a><a class="headerlink" href="#dfngen-report" title="Link to this heading"></a></h3>
+<p>Created by DFN.output_report()
+see output_output_report.pdf  and directory dfnGen_output_report</p>
+<p>A PDF output report is written for the network. Plots of the fracture lengths, locations, orientations are produced for each family. Files are written into “output_dir/family_{id}/”. Information about the whole network are also created and written into “output_dir/network/” Final output report is named “jobname”_output_report.pdf</p>
+<p><em>User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.</em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,194<span class="w"> </span>INFO<span class="w"> </span>Creating<span class="w"> </span>Report<span class="w"> </span>of<span class="w"> </span>DFN<span class="w"> </span>generation
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,194<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Gathering<span class="w"> </span>Network<span class="w"> </span>Information
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,196<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>There<span class="w"> </span>is<span class="w"> </span><span class="m">1</span><span class="w"> </span>Fracture<span class="w"> </span>Family
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,200<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>There<span class="w"> </span>are<span class="w"> </span><span class="m">119</span><span class="w"> </span>fractures<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>domain
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,201<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>There<span class="w"> </span>are<span class="w"> </span><span class="m">46</span><span class="w"> </span>fractures<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>final<span class="w"> </span>network
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:53,209<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Plotting<span class="w"> </span>Information
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:56,949<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Plotting<span class="w"> </span>Fracture<span class="w"> </span>Radii<span class="w"> </span>Distributions
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:58,940<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Plotting<span class="w"> </span>Rose<span class="w"> </span>Diagrams<span class="w"> </span>and<span class="w"> </span>Stereonets
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:26:58,985<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Plotting<span class="w"> </span>Densities
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:02,448<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Combing<span class="w"> </span>Images<span class="w"> </span>and<span class="w"> </span>Making<span class="w"> </span>PDF
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:02,449<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Making<span class="w"> </span>Table<span class="w"> </span>of<span class="w"> </span>Contents
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,588<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Output<span class="w"> </span>report<span class="w"> </span>is<span class="w"> </span>written<span class="w"> </span>into<span class="w"> </span>output_output_report.pdf
+</pre></div>
+</div>
+<p>When working with dfnWorks, the generated reports provide valuable insights into the created discrete fracture network (DFN). Below are descriptions of the different visualizations commonly included, such as the plot of fracture radii distribution, Rose Diagrams, Stereonets, and density plots.</p>
+<ul class="simple">
+<li><p>Radii Distribution : This plot displays the distribution of radii of the fractures within the network. It typically shows the frequency of fractures against their corresponding radii on the x-axis.  A normal distribution might indicate that most fractures are of average size, while very few are extremely small or large.  A truncated power law could suggest that smaller fractures are more common, with larger fractures being rarer.</p></li>
+<li><p>Rose Diagrams : A Rose Diagram (or Rose Plot) represents the directional distribution of fractures. It visualizes the number of fractures or their orientations in relation to a specified reference direction. This can help identify preferred orientations in the fracture network.  Peaks in the diagram indicate directions with a higher concentration of fractures.</p></li>
+<li><p>Stereonets : A Stereonet plots the orientations of fractures in a three-dimensional context, often represented on a two-dimensional plane. It allows for a clearer understanding of how fractures are situated in space with respect to their dip and strike.  Patterns may reveal structural controls on fracture formation, like fault systems or fold axes.</p></li>
+<li><p>Density Plot : A density plot visualizes the concentration of fractures in space, often represented as a 2D or 3D distribution of fracture density per unit area or volume.  High-density regions suggest areas with greater connectivity and potential for fluid movement, while low-density areas might correspond to barriers against flow.</p></li>
+</ul>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="_images/tpl_report_page_2.png"><img alt="alternate text" src="_images/tpl_report_page_2.png" style="width: 1343.0px; height: 903.0px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>dfnWorks routine DFN.output_report() creates a PDF summary of the network similar to this image.</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="visual-inspection">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Visual Inspection</a><a class="headerlink" href="#visual-inspection" title="Link to this heading"></a></h3>
+<p>Created by DFN.mesh_network()
+Meshed network to be used by simulations.
+See full_mesh.inp (or reduced_mesh.inp)</p>
+<p>If the network has been successfully triangulated and merged, the mesh will be written to an AVS format mesh file. The output log will look like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,589<span class="w"> </span>INFO<span class="w"> </span>Meshing<span class="w"> </span>DFN<span class="w"> </span>using<span class="w"> </span>LaGriT<span class="w"> </span>:<span class="w"> </span>Starting
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,608<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Variable<span class="w"> </span>Mesh<span class="w"> </span>Resolution<span class="w"> </span>Selected
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,608<span class="w"> </span>INFO<span class="w"> </span>***<span class="w"> </span>Minimum<span class="w"> </span>distance<span class="w"> </span><span class="o">[</span>m<span class="o">]</span><span class="w"> </span>from<span class="w"> </span>intersection<span class="w"> </span>with<span class="w"> </span>constant<span class="w"> </span>resolution<span class="w"> </span>h/2<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.1
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,608<span class="w"> </span>INFO<span class="w"> </span>***<span class="w"> </span>Maximum<span class="w"> </span>distance<span class="w"> </span><span class="o">[</span>m<span class="o">]</span><span class="w"> </span>from<span class="w"> </span>intersection<span class="w"> </span>variable<span class="w"> </span>resolution<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.5
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:06,608<span class="w"> </span>INFO<span class="w"> </span>***<span class="w"> </span>Upper<span class="w"> </span>bound<span class="w"> </span>on<span class="w"> </span>resolution<span class="w"> </span><span class="o">[</span>m<span class="o">]</span><span class="w"> </span>:<span class="w"> </span><span class="m">1</span>.00
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:16,061<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>The<span class="w"> </span>primary<span class="w"> </span>mesh<span class="w"> </span><span class="k">in</span><span class="w"> </span>full_mesh.inp<span class="w"> </span>has<span class="w"> </span><span class="m">36138</span><span class="w"> </span>nodes<span class="w"> </span>and<span class="w"> </span><span class="m">74279</span><span class="w"> </span>triangular<span class="w"> </span>elements
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:16,794<span class="w"> </span>INFO<span class="w"> </span>Meshing<span class="w"> </span>DFN<span class="w"> </span>using<span class="w"> </span>LaGriT<span class="w"> </span>:<span class="w"> </span>Complete
+</pre></div>
+</div>
+<p>View the mesh attributes to check parameters.
+Materials are the fractures generated 1 through n.
+Property evol_one are the element volumes
+Property dfield is the linear distance from intersections and is used for element size changes.</p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_material.png" alt="Figure Materials" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_evol_one.png" alt="Figure Volume" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_mesh_dfield.png" alt="Figure dfield" style="width: 100%;">
+    </div>
+
+</div><p>You can adjust color maps and opacity for views that help show the meshed network.
+See examples in file <a class="reference external" href="tpl_paraview_examples.rst">tpl_paraview_examples.rst</a></p>
+</section>
+</section>
+<section id="run-flow-model">
+<h2><a class="toc-backref" href="#id20" role="doc-backlink">Run Flow Model</a><a class="headerlink" href="#run-flow-model" title="Link to this heading"></a></h2>
+<p>The pydfnworks command <cite>dfn_flow()</cite> is used to run the simulation. This can provide insights into the behavior of fluids within the fractured network.</p>
+<p>See Module at <a class="reference internal" href="dfnflow.html#dfnflow-chapter"><span class="std std-ref">dfnFlow</span></a> and python docs at <a class="reference internal" href="pydfnFlow.html#dfnworks-python-chapter-dfnflow"><span class="std std-ref">pydfnWorks: dfnFlow</span></a></p>
+<p>See PFLOTRAN user manaul at <a class="reference external" href="https://www.pflotran.org/documentation/user_guide/user_guide.html">https://www.pflotran.org/documentation/user_guide/user_guide.html</a></p>
+<p>View the PFLOTRAN input deck defined by dfnFlow_file ‘dfn_explicit.in’. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the <a href="#id1"><span class="problematic" id="id2">*</span></a>.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5.</p>
+<p>As the driver runs PFLOTRAN you will see information about the command line calling PFLOTRAN and information about the output files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:17,476<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Running<span class="w"> </span>PFLOTRAN
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:17,481<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Running:<span class="w"> </span>/home/jhyman/src/petsc/arch-linux-c-opt/bin/mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">12</span><span class="w"> </span>/home/jhyman/src/pflotran/src/pflotran/pflotran<span class="w"> </span>-pflotranin<span class="w"> </span>dfn_explicit.in
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,210<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Processing<span class="w"> </span>file:<span class="w"> </span>dfn_explicit-000.vtk
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,302<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Processing<span class="w"> </span>file:<span class="w"> </span>dfn_explicit-001.vtk
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,377<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Parsing<span class="w"> </span>PFLOTRAN<span class="w"> </span>output<span class="w"> </span><span class="nb">complete</span>
+</pre></div>
+</div>
+<p>The simulation results can be viewed with vtk files written in the directory output/parsed_vtk</p>
+<p>Read dfn_explicit-000.vtk see permeability and Liquid Pressure at time 0
+Read dfn_explicit-001.vtk for Liquid Pressure at time 1</p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_permeability.png" alt="permeability" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_liq_press_vtk0.png" alt="Figure Volume" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_flow_liq_press_vtk1.png" alt="Figure dfield" style="width: 100%;">
+    </div>
+
+</div></section>
+<section id="run-transport-model">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">Run Transport Model</a><a class="headerlink" href="#run-transport-model" title="Link to this heading"></a></h2>
+<p>dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.
+See the particle tracking controls in the dfnTrans_file ‘PTDFN_control.dat’.</p>
+<p>See Module at <a class="reference internal" href="dfntrans.html#dfntrans-chapter"><span class="std std-ref">dfnTrans</span></a> and python docs at <a class="reference internal" href="pydfnTrans.html#dfnworks-python-chapter-dfntrans"><span class="std std-ref">pydfnTrans: dfnGen</span></a></p>
+<p>As in the flow simulation, in-flow is set to left (-X boundary) and out-flow at right (+X boundary). Input files generated during dfnGen are found in the output directory and included in the particle control file. There are a number of options for inserting particles. For this example 1000 particles are distributed according to in-flow.</p>
+<p>As dfnTrans finishes output information is written.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:23,021<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>dfnTrans<span class="w"> </span>is<span class="w"> </span>running<span class="w"> </span>from:<span class="w"> </span>PTDFN_control.dat
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:28:32,671<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Combining<span class="w"> </span>Particle<span class="w"> </span>avs<span class="w"> </span>files<span class="w"> </span>into<span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span>file
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:28:32,710<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Running:<span class="w"> </span>/n/modules/Ubuntu-20.04-x86_64/lagrit-gcc-13.2.0/v3.3.3/exodus/lagrit<span class="w"> </span>&lt;<span class="w"> </span>combine_avs.lgi<span class="w"> </span>-log<span class="w"> </span>combine_avs.lgi.log<span class="w"> </span>-out<span class="w"> </span>combine_avs.lgi.out
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:29:44,627<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>LaGriT<span class="w"> </span>script<span class="w"> </span>combine_avs.lgi<span class="w"> </span>ran<span class="w"> </span>successfully
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:29:44,627<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Particles<span class="w"> </span>are<span class="w"> </span><span class="k">in</span><span class="w"> </span>all_particle.inp
+</pre></div>
+</div>
+<p>Generate particle tracks with call….</p>
+<p>NOTE: There are a thousand particle tracks, these aree  merged into a single file “all_particles.inp” by adding the command <code class="docutils literal notranslate"><span class="pre">`DFN.dfn_trans(combine_avs</span> <span class="pre">=</span> <span class="pre">True)`</span></code></p>
+<div style="display: flex; justify-content: space-between;">
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_1000.png" alt="particles" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_aperature_mesh.png" alt="aperature" style="width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+        <img src="figures/tpl_part_time_threshold_.005.png" alt="time threshold .005" style="width: 100%;">
+    </div>
+
+</div></section>
+<section id="add-a-second-family">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">Add a Second family</a><a class="headerlink" href="#add-a-second-family" title="Link to this heading"></a></h2>
+<p>Once this network is working well, a more complicated version can be created by adding more families with different paramters from the first.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/tpl_f2_families.png"><img alt="alternate text" src="_images/tpl_f2_families.png" style="width: 2002.0px; height: 1336.0px;" />
+</a>
+</figure>
+<p>Now you are familar with the main driver.py script to create a network and run simulations. As you become more familiar with the setup, you can start experimenting with different fracture characteristics, domain sizes, and simulation parameters to further explore subsurface flow dynamics in fractured media.</p>
+</section>
+<section id="additional-resources">
+<h2><a class="toc-backref" href="#id23" role="doc-backlink">Additional Resources</a><a class="headerlink" href="#additional-resources" title="Link to this heading"></a></h2>
+<p>There are more demo runs in the <cite>dfnWorks/examples</cite> directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here.</p>
+<ul class="simple">
+<li><p>4_user_rects (4_user_defined_rectangles): The example used in this tutorial.</p></li>
+<li><p>4_user_ell_uniform (4_user_defined_ellipses): User defined elliptical fractures.</p></li>
+<li><p>exp (exponential_dist): Use parameters for two families of fractures with an exponential distribution of fracture size.</p></li>
+<li><p>lognormal (lognormal_dist): Use parameters for two families of fractures with a lognormal distribution of fracture size.</p></li>
+<li><p>TPL (truncated_power_law_dist): Use parameters for two families of fractures with a truncated power-law distribution of fracture size.</p></li>
+</ul>
+<p>See a description of these 5 examples at <a class="reference internal" href="examples.html#examples"><span class="std std-ref">pydfnWorks examples</span></a>.</p>
+<p>All examples are available from github at <a class="reference external" href="https://github.com/lanl/dfnWorks/tree/master/examples">DFNWorks Examples</a></p>
+<p>For a short description of all examples see <a class="reference external" href="https://github.com/lanl/dfnWorks/tree/master/examples/README.md">Examples README file</a></p>
+<p>For Additional Resources you can browse the online docs including examples, module descriptions, and the pydfnworks code descriptions.
+The Publications are a good source of applications and discussions. Consider joining community forums and user groups for support and to share experiences with dfnWorks users.</p>
+<p>Feel free to reach out if you have any questions or need further assistance with your simulation!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

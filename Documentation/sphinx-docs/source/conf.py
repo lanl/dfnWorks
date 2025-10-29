@@ -17,16 +17,13 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os, sys, subprocess, re
-import sys
-sys.path.insert(0, os.path.abspath('../../pydfnworks'))
-import pydfnworks
 
 #sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/pydfnworks/'))
+#sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/pydfnworks'))
 sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/'))
 
 import pydfnworks
-latex_additional_files = ['figures/dfnworks_logo.png']
+#latex_additional_files = ['dfnworks_logo.png']
 
 # -- General configuration ------------------------------------------------
 
@@ -72,11 +69,15 @@ author = u'EES-16, Subsurface Flow and Transport'
 # built documents.
 #
 
+release_path = "../../../pydfnworks/release.py"
 release_globals = {}
 
-version = pydfnworks.__version__
-release = f"{pydfnworks.__version__} (Released {pydfnworks.__release_date__})"
+with open(release_path, "r") as f:
+    exec(f.read(), release_globals)
 
+release = release_globals.get("version", "unknown")
+
+version = release + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 #decode = lambda x : x.decode(sys.stdout.encoding) if isinstance(x,bytes) else x
 
 #dfnWorks_branch=decode(subprocess.check_output('git symbolic-ref --short HEAD',shell=True).rstrip())
@@ -86,7 +87,9 @@ release = f"{pydfnworks.__version__} (Released {pydfnworks.__release_date__})"
 #dfnWorks_latest_tag=decode(subprocess.check_output('git tag -l \'v*\'', shell=True)).split()[-1].rstrip()
 #dfnWorks_latest_tag_ver=dfnWorks_latest_tag.replace('v',' ')
 
+#version = version + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 
+#release = dfnWorks_latest_tag
 
 
 
@@ -172,7 +175,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-html_logo = 'figures/dfnworks_logo.png' 
+#html_logo = 'dfnworks_logo.png' 
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -366,8 +369,3 @@ texinfo_domain_indices = False
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
-
-# Optional: install date for HTML templates
-html_context = {
-    'install_date': pydfnworks.__install_date__,
-}
