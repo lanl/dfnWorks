@@ -233,6 +233,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'orientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'disableFram': {
             'type':
             bool,
@@ -440,6 +450,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'eorientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'ebeta': {
             'type':
             float,
@@ -560,27 +580,11 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'eOrientationDistribution':
-        {
-            'type':
-            str,
-            'list':
-            True,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
-
         'ekappa': {
             'type':
             float,
             'list':
             True,
-            'required':
-            False,
             'list_length':
             None,
             'value':
@@ -920,6 +924,8 @@ def load_parameters(self):
             str,
             'list':
             True,
+            'required':
+            False,
             'list_length':
             None,
             'value':

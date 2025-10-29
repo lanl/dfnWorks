@@ -87,8 +87,8 @@ void printVertices(T *vert, int numVertices) {
     Arg 3: z
     Return: Magnitude of {x,y,z}  */
 inline double magnitude(double x, double y, double z) {
-    std::string logString = "Magnitude using x, y, z: " + to_string(x) + ", " + to_string(y) + ", "+ to_string(z) + " making: "+ to_string(x*x + y*y + z*z);
-    logger.writeLogFile(INFO,  logString);
+    //std::string logString = "Magnitude using x, y, z: " + to_string(x) + ", " + to_string(y) + ", "+ to_string(z) + " making: "+ to_string(x*x + y*y + z*z);
+    //logger.writeLogFile(INFO,  logString);
     return std::sqrt(x*x + y*y + z*z);
 }
 

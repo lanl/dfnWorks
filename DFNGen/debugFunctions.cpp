@@ -171,7 +171,7 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
     
     for(unsigned int i = 0; i < shapeFamilies.size(); i++) {
         //name(rect or ell) and number of family
-        logString = shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + ":\n";
+        logString = "\n\n" + shapeType(shapeFamilies[i]) + " Family " + to_string(getFamilyNumber(i, shapeFamilies[i].shapeFamily)) + ":\n";
         logger.writeLogFile(INFO,  logString);
         
         // Print vertice number
@@ -218,6 +218,10 @@ void printShapeFams(std::vector<Shape> &shapeFamilies) {
             logger.writeLogFile(INFO,  logString);
         }
         
+        // distribution type
+        logString = "Orientation Distribution: " + shapeFamilies[i].orientation_distribution + "\n";
+        logger.writeLogFile(INFO,  logString);
+
         // kappa
         logString = "Kappa: " + to_string(shapeFamilies[i].kappa )  + "\n";
         logger.writeLogFile(INFO,  logString);

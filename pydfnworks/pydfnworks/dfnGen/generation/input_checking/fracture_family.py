@@ -94,13 +94,9 @@ def fracture_family_dictionary():
             'Value for constant angle of rotation around the normal vector'
         },
         'orientation_distribution': {
-            'type': bool,
-            'value': {
-                'fisher': False,
-                'bingham': False,
-            },
-            'description':
-            'Type of orientation distribution'
+            'type': str,
+            'value': None,
+            'description': 'Type of orientation distribution ("fisher" or "bingham")'
         },
         #fisher distribution
         'fisher': {
@@ -113,9 +109,7 @@ def fracture_family_dictionary():
                 'dip': None,
                 'trend': None,
                 'plunge': None,
-                'kappa': None,
-                'kappa1': None,
-                'kappa2': None
+                'kappa': None
             },
             'description':
             'Parameters theta, phi, and kappa for Fisher distribution'
@@ -131,7 +125,6 @@ def fracture_family_dictionary():
                 'dip': None,
                 'trend': None,
                 'plunge': None,
-                'kappa': None,
                 'kappa1': None,
                 'kappa2': None
             },
@@ -254,10 +247,10 @@ def print_family_information(self, family_number):
 def add_fracture_family(self,
                         shape,
                         distribution,
+                        orientation_distribution,
                         kappa=None,
                         kappa1=None,
                         kappa2=None,
-                        orientation_distribution='fisher',
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -398,9 +391,11 @@ def add_fracture_family(self,
         family['bingham']['value']['dip'] = dip
         family['bingham']['value']['trend'] = trend
         family['bingham']['value']['plunge'] = plunge
-        family['bingham']['value']['kappa'] = None
+        family['bingham']['value']['kappa'] = 0
         family['bingham']['value']['kappa1'] = kappa1
         family['bingham']['value']['kappa2'] = kappa2
+        info = f"Orientation_distribution of {family['orientation_distribution']['value']}.\n"
+        self.print_log(info,'info')
 
     elif orientation_distribution.lower() == 'fisher':
         family['fisher']['value']['theta'] = theta
@@ -410,8 +405,10 @@ def add_fracture_family(self,
         family['fisher']['value']['trend'] = trend
         family['fisher']['value']['plunge'] = plunge
         family['fisher']['value']['kappa'] = kappa
-        family['fisher']['value']['kappa1'] = None 
-        family['fisher']['value']['kappa2'] = None 
+        family['fisher']['value']['kappa1'] = 0 
+        family['fisher']['value']['kappa2'] = 0
+        info = f"Orientation_distribution of {family['orientation_distribution']['value']}.\n"
+        self.print_log(info,'info')
 
     else:
         error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"

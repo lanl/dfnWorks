@@ -136,6 +136,8 @@ extern float *e_p32Targets;
 extern float *r_p32Targets;
 extern float removeFracturesLessThan;
 extern std::string polygonFile;
+extern int orientation_distribution;
+extern int *eorientation_distribution;
 extern std::vector<Point> vertices;
 extern Logger logger;
 

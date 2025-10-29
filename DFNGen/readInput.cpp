@@ -17,6 +17,7 @@
 #include "generatingPoints.h"
 #include "structures.h"
 #include "logFile.h"
+#include <algorithm>
 
 using std::cout;
 using std::endl;
@@ -120,6 +121,7 @@ bool *ebetaDistribution;
         1: Constant angle (specefied below by 'rbeta')*/
 bool *rbetaDistribution;
 
+int *eorientation_distribution;
 /*! False - User ellipses will be inserted first
     True  - User rectangles will be inserted first*/
 bool insertUserRectanglesFirst;
@@ -814,6 +816,9 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "ebetaDistribution:");
         ebetaDistribution = new bool[nFamEll];
         getInputAry(inputFile, ebetaDistribution, nFamEll);
+        searchVar(inputFile, "eorientation_distribution:");
+        eorientation_distribution = new int[nFamEll];
+        getInputAry(inputFile, eorientation_distribution, nFamEll);
         searchVar(inputFile, "eLayer:");
         eLayer = new int[nFamEll];
         getInputAry(inputFile, eLayer, nFamEll);
@@ -934,6 +939,19 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.layer = eLayer[i];
         newShapeFam.region = eRegion[i];
         generateTheta(newShapeFam.thetaList, newShapeFam.aspectRatio, newShapeFam.numPoints);
+
+        if (eorientation_distribution[i] == 1) {
+            newShapeFam.orientation_distribution = "bingham";
+            newShapeFam.kappa = 0;
+            logString = "The orientation_distribution is: Bingham\n";
+            logger.writeLogFile(INFO,  logString);
+        } else {
+            newShapeFam.orientation_distribution = "fisher";
+            newShapeFam.kappa2 = 0;
+            newShapeFam.kappa1 = 0;
+            logString = "The orientation_distribution is: Fisher\n";
+            logger.writeLogFile(INFO,  logString);
+        }
         
         if (ebetaDistribution[i] == 1 ) { // If constant user defined beta option
             newShapeFam.betaDistribution = 1;
@@ -942,7 +960,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         } else {
             newShapeFam.betaDistribution = 0;
         }
-        
+
         // dist options:1 = lognormal, 2= truncated power-law, 3= exponential, 4=constant
         switch (edistr[i]) {
         case 1: // Lognormal
@@ -985,6 +1003,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     if (nFamEll > 0 ) {
         // Can now delete/free the memory for these arrays
         delete[] ebetaDistribution;
+        delete[] eorientation_distribution;
         delete[] edistr;
         delete[] easpect;
         delete[] enumPoints;

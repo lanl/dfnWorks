@@ -1632,4 +1632,3 @@ void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<P
     bottomFile.close();
 }
 
-

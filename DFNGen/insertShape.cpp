@@ -275,7 +275,24 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
     // Fisher distribution / get normal vector
-    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
+    double *norm = nullptr;
+          
+    if (shapeFam.orientation_distribution == "bingham") {
+        norm = binghamDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa1,
+            shapeFam.kappa2,
+            generator
+        );
+    } else {
+        norm = fisherDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa,
+            generator
+        );
+    }
     double mag = magnitude(norm[0], norm[1], norm[2]);
     
     if (mag < 1 - eps || mag > 1 + eps) {
