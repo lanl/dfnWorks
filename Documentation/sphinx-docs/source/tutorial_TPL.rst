@@ -1,3 +1,4 @@
+
 dfnWorks Tutorial for Truncated Power-Law (TPL)
 ================================================
 
@@ -29,10 +30,10 @@ Tutorial Prerequisites
 --------------------------
 
 - For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.
+- For install and setup instuctions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
 - This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](https://lanl.github.io/dfnWorks/tutorial_intro.html) 
-For install and setup instuctions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
 - TeX Live is needed to write the PDF report summary. Local servers use ``module load texlive``
-- Paraview_ is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
+- Paraview is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
 
 
 
