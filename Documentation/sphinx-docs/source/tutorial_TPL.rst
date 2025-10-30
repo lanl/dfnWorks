@@ -1,4 +1,3 @@
-
 dfnWorks Tutorial for Truncated Power-Law (TPL)
 ================================================
 
@@ -320,8 +319,8 @@ When working with dfnWorks, the generated reports provide valuable insights into
 
 
 .. figure:: figures/tpl_report_page_2.png
-   :scale: 50 %
-   :alt: alternate text
+   :width: 450px 
+   :alt: PDF report page 2 
    :align: center
 
 
@@ -350,34 +349,31 @@ If the network has been successfully triangulated and merged, the mesh will be w
 
 
 
-View the mesh attributes to check parameters. 
-Materials are the fractures generated 1 through n.
-Property evol_one are the element volumes
-Property dfield is the linear distance from intersections and is used for element size changes.
+View the mesh attributes to check parameters. The following images from Paraview show mesh attributes:
+ 
+-   Materials are the fractures generated 1 through n.
+-   Property evol_one are the element volumes
+-   Property dfield is the linear distance from intersections and is used for element size changes.
 
 
 
-.. raw:: html
+.. figure:: figures/tpl_mesh_material.png
+   :width: 500px
+   :alt: Mesh Materials 
+   :align: center
 
-    <div style="display: flex; justify-content: space-between;">
+.. figure:: figures/tpl_mesh_evol_one.png
+   :width: 500px
+   :alt: Mesh Volumes
+   :align: center
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_mesh_material.png" alt="Figure Materials" style="width: 100%;">
-        </div>
-
-        <div style="flex: 1;">
-            <img src="figures/tpl_mesh_evol_one.png" alt="Figure Volume" style="width: 100%;">
-        </div>
-
-        <div style="flex: 1;">
-            <img src="figures/tpl_mesh_dfield.png" alt="Figure dfield" style="width: 100%;">
-        </div>
-
-    </div>
+.. figure:: figures/tpl_mesh_dfield.png
+   :width: 500px
+   :alt: Mesh dfield 
+   :align: center
 
 
-You can adjust color maps and opacity for views that help show the meshed network.
-See examples in file `tpl_paraview_examples.rst <tpl_paraview_examples.rst>`_ 
+You can adjust color maps and opacity for views that help display the meshed network for evaluations. Paraview is used for these views.  See more Paraview images in `tpl_paraview_examples.rst <tpl_paraview_examples.rst>`_ 
 
 
 Run Flow Model
@@ -403,29 +399,29 @@ As the driver runs PFLOTRAN you will see information about the command line call
     2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
 
 
-The simulation results can be viewed with vtk files written in the directory output/parsed_vtk
+The simulation results can be viewed with vtk files written in the directory output/parsed_vtk. The following images were created with Paraview:
 
-Read dfn_explicit-000.vtk see permeability and Liquid Pressure at time 0
-Read dfn_explicit-001.vtk for Liquid Pressure at time 1
+-  Read dfn_explicit-000.vtk select  Permeability at time 0
+-  Read dfn_explicit-000.vtk select  Liquid Pressure at time 0
+-  Read dfn_explicit-001.vtk select  Liquid Pressure at time 1
 
 
-.. raw:: html
+.. figure:: figures/tpl_flow_permeability.png
+   :width: 500px
+   :alt: Mesh Permability time 0 
+   :align: center
 
-    <div style="display: flex; justify-content: space-between;">
+.. figure:: figures/tpl_flow_liq_press_vtk0.png
+   :width: 500px
+   :alt: Mesh Liquid Pressure time 0 
+   :align: center
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_flow_permeability.png" alt="permeability" style="width: 100%;">
-        </div>
+.. figure:: figures/tpl_flow_liq_press_vtk1.png
+   :width: 500px
+   :alt: Mesh Liquid Pressure time 1 
+   :align: center
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_flow_liq_press_vtk0.png" alt="Figure Volume" style="width: 100%;">
-        </div>
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_flow_liq_press_vtk1.png" alt="Figure dfield" style="width: 100%;">
-        </div>
-
-    </div>
 
 
 Run Transport Model
@@ -452,27 +448,32 @@ As dfnTrans finishes output information is written.
     2025-05-22 13:29:44,627 INFO --> Particles are in all_particle.inp
 
 
-Generate particle tracks with call....
 
 NOTE: There are a thousand particle tracks, these aree  merged into a single file "all_particles.inp" by adding the command ```DFN.dfn_trans(combine_avs = True)``` 
 
-.. raw:: html
 
-    <div style="display: flex; justify-content: space-between;">
+The following Paraview images were created by displaying the particle paths along with the mesh. 
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_part_1000.png" alt="particles" style="width: 100%;">
-        </div>
+-   Display all particle paths colored by imt material value indicating particle number.
+-   Display all particle paths with opaque mesh and colored by aperture
+-   Display particle paths with time threshold .005 with opaque mesh colored by Liquid Pressure
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_part_aperature_mesh.png" alt="aperature" style="width: 100%;">
-        </div>
 
-        <div style="flex: 1;">
-            <img src="figures/tpl_part_time_threshold_.005.png" alt="time threshold .005" style="width: 100%;">
-        </div>
+.. figure:: figures/tpl_part_1000.png
+   :width: 500px
+   :alt: particles id material 
+   :align: center
 
-    </div>
+.. figure:: figures/tpl_part_aperature_mesh.png
+   :width: 500px
+   :alt: aperature 
+   :align: center
+
+.. figure:: figures/tpl_part_time_threshold_.005.png
+   :width: 500px
+   :alt: time threshold .005 
+   :align: center
+
 
 
 Add a Second family
@@ -482,8 +483,8 @@ Once this network is working well, a more complicated version can be created by 
 
 
 .. figure:: figures/tpl_f2_families.png
-   :scale: 100 %
-   :alt: alternate text
+   :scale: 50 %
+   :alt: 2 family mesh 
    :align: center
 
 
