@@ -8,7 +8,7 @@ dfnWorks Tutorial for Truncated Power-Law (TPL)
    :align: center
 
 
-The TPL (Truncated Power-Law) is a type of distribution ('tpl', 'log_normal', 'exp', or 'constant') that defines the sample distribution for the fracture radius.
+The TPL (Truncated Power-Law) is a type of distribution (``tpl``, ``log_normal``, ``exp``, or ``constant``) that defines the sample distribution for the fracture radius.
 
 This example uses add_fracture_family() to control parameters to create a set of fractures within a domain. Fracture families can also be created using add_user_fract() to define specific fractures or add_user_fract_from_file() to read fractures from a file. 
 
@@ -31,7 +31,7 @@ Tutorial Prerequisites
 - For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.
 - This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](https://lanl.github.io/dfnWorks/tutorial_intro.html) 
 For install and setup instuctions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
-- TeX Live is needed to write the PDF report summary. Local servers use ```module load texlive```
+- TeX Live is needed to write the PDF report summary. Local servers use ``module load texlive``
 - Paraview_ is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
 
 
@@ -43,7 +43,7 @@ The Truncated Power-Law (TPL) option for stochastic generation of fractures allo
 
 Understanding these parameters will help you effectively describe the geometry and orientation of fractures within your discrete fracture network in dfnWorks. By adjusting these settings, you can model complex geological configurations and accurately represent the flow behavior in fractured media.
 
-This tutorial's main focus will be on **dfnGen** and how to use TPL parameters to generate a network. Evaluations of a network include reports, graphs, and visual inspection. 
+This tutorial's main focus will be on **dfnGen** and how to use **TPL** parameters to generate a network. Evaluations of a network include reports, graphs, and visual inspection. 
 See Module at :ref:`dfnGen <dfngen-chapter>` and python docs at :ref:`pydfnWorks: dfnGen <dfnWorks-python-chapter-dfnGen>`
 
 
@@ -61,7 +61,7 @@ Set Parameters
 
 Open the script python `driver.py`. You can open with any text editor or use the unix command ``cat driver.py`` which will display the content to the screen.  Note the first line of the file imports the `pydfnworks` package. This allows the user to run dfnWorks from the command line and call dfnWorks within other python scripts.
 
-For this example there are 2 ways to run driver.py, this run will create and run simulations with one fracture family. A second fracture family is commented out, uncomment the output directory name and the portion to add_fracture_family and write results in second directory "output2".
+For this example there are 2 ways to run driver.py, this run will create and run simulations with one fracture family. A second fracture family is commented out, uncomment the output directory name and the portion to add_fracture_family and write results in second directory `output2`.
 
 This example will run both the flow model and particle tracks using the input files named here.
 
@@ -79,9 +79,9 @@ This example will run both the flow model and particle tracks using the input fi
 
 The domain is a 15 meter cube with 0.1 set as smallest edge size. 
 
-It is good practice to use 'domainSizeIncrease' to avoid edge density effects. This temporary domainSize increase for inserting fracture centers outside of the domain defined by domainSize. After generation is complete, the domain is truncated back to domainSize. First entry is expansion in x (east/west), second entry is expansion in y (North/South), and third entry is expansion in z (Top/Bottom). 
+It is good practice to use ``domainSizeIncrease`` to avoid edge density effects. This temporary domainSize increase for inserting fracture centers outside of the domain defined by domainSize. After generation is complete, the domain is truncated back to domainSize. First entry is expansion in x (east/west), second entry is expansion in y (North/South), and third entry is expansion in z (Top/Bottom). 
 
-The parameter 'boundaryFaces' selects domain boundaries for flow. The generation will only keep clusters of fractures with connections to domain boundaries which are set to 1 as indicated by axis directions [ +X,-X,+Y,-Y,+Z,-Z].  The network will have fractures connecting to the left and right boundaries.
+The parameter ``boundaryFaces`` selects domain boundaries for flow. The generation will only keep clusters of fractures with connections to domain boundaries which are set to 1 as indicated by axis directions [ +X,-X,+Y,-Y,+Z,-Z].  The network will have fractures connecting to the left and right boundaries.
 
 
 .. code-block:: python
@@ -102,7 +102,7 @@ Python add_fracture_family()
 -----------------------------
 
 
-This example creates a single family network. The routine **add_fracture_family()** is assigns all the parameters for a fracture network filling the domain.
+This example creates a single family network. The routine ``add_fracture_family()``  assigns all the parameters for a fracture network filling the domain.
 
 .. code-block:: python
 
@@ -123,10 +123,10 @@ distribution
 
 The distribution parameter defines the statistical distribution from which the fracture radii will be sampled. Options include:
 
-- **'tpl'**: Truncated Power Law distribution.
-- **'log_normal'**: Log-normal distribution.
-- **'exp'**: Exponential distribution.
-- **'constant'**: A constant value for the fracture radius.
+- **tpl**: Truncated Power Law distribution.
+- **log_normal**: Log-normal distribution.
+- **exp**: Exponential distribution.
+- **constant**: A constant value for the fracture radius.
 
 
 alpha 
@@ -145,7 +145,7 @@ This represents the fracture intensity for the family. It is applicable when usi
 shape and radius 
 ~~~~~~~~~~~~~
 
-The shape parameter defines the fracture family to **'rect'** rectangle or **'ell'** ellipse. Their sizes are set with **'min_radius'** and **'max_radius'**
+The shape parameter defines the fracture family to **rect** rectangle or **ell** ellipse. Their sizes are set with **min_radius** and **max_radius**
 
 
 kappa, theta, phi
@@ -153,9 +153,9 @@ kappa, theta, phi
 
 These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike. 
 
-- **'kappa'**: Sets concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.
-- **'theta'** : This parameter defines the angle used to specify the orientation of fractures. For example  orientation set to 0 (the default) would represent horizontal fractures  while a value of π/2 (90 degrees) would indicate a vertical fracture.
-- **'phi'** : Similar to theta, phi is used to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.  For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
+- **kappa**: Sets concentration parameter for the von Mises-Fisher distribution, which is used for modeling directionality of fractures. Higher values indicate a tighter clustering of the fracture orientations around the mean direction.
+- **theta** : This parameter defines the angle used to specify the orientation of fractures. For example  orientation set to 0 (the default) would represent horizontal fractures  while a value of π/2 (90 degrees) would indicate a vertical fracture.
+- **phi** : Similar to theta, phi is used to specify the azimuthal angle of the fracture in spherical coordinates. This angle defines the rotation around the vertical axis.  For example, a value of 0 for phi would mean the fracture is pointing along the positive x-axis, while a value of π/2 would indicate it’s pointing along the positive y-axis.
 
 
 hy_variable
@@ -165,9 +165,9 @@ The hydraulic parameters hy_variable, hy_function, and hy_params—are essential
 
 This hydraulic parameter specifies the variable to which values will be assigned for the fractures within the family. The options include:
 
-- **'aperture'** :  The opening width of the fractures, which is critical for determining flow rates.
-- **'permeability'** : A measure of how easily fluids can pass through the fractures.
-- **'transmissivity'** : Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.
+- **aperture** :  The opening width of the fractures, which is critical for determining flow rates.
+- **permeability** : A measure of how easily fluids can pass through the fractures.
+- **transmissivity** : Represents the ability of the fractured medium to transmit fluid, influenced by both aperture and permeability.
 
 
 hy_function
@@ -176,10 +176,10 @@ hy_function
 
 This parameter describes the relationship between the chosen hydraulic variable and the radius of the fractures. Select the appropriate function depending on the relationship you wish to model. For example, if you expect that larger fractures will have higher permeabilities, you might choose 'correlated'.  The options include:
 
-- **'correlated'** : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
-- **'semi-correlated'** : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
-- **'constant'** : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
-- **'log-normal'** : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
+- **correlated** : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
+- **semi-correlated** : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
+- **constant** : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
+- **log-normal** : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
 
 
 hy_params
@@ -188,11 +188,11 @@ hy_params
 
 This parameter provides the necessary values that define the hydraulic function chosen. The structure of hy_params will vary depending on the hydraulic function selected:
 
-If hy_function is 'correlated' : Expected syntax: {"alpha": value, "beta": value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
+If hy_function is **correlated** : Expected syntax: {"alpha": value, "beta": value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
 
-If hy_function is 'semi-correlated' : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
+If hy_function is **semi-correlated** : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
 
-If hy_function is 'constant' : Expected syntax: {"mu": value}
+If hy_function is **constant** : Expected syntax: {"mu": value}
 
 
 For more details on fracture famililies and a complete list of parameters and functions see [pydfnworks: dfnGen](https://lanl.github.io/dfnWorks/pydfnGen.html)
@@ -207,7 +207,7 @@ The most immediate feedback for your created network are text reports written to
 
 The following commands will check for errors in the parameters and setup, create the fracture network, writee at PDF report, then triangulate and intersect fractures into a Delaunay mesh.
 
-*Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Add ```DFN.set_flow_solver("FEHM")``` before mesh_netork.* 
+*Important if using FEHM: PFLOTRAN is the default, set the solver type to ensure the appropriate files and formats are written for the simulation. Before mesh_network add* ``DFN.set_flow_solver("FEHM")``. 
 
 
 .. code-block:: python
@@ -379,14 +379,14 @@ You can adjust color maps and opacity for views that help display the meshed net
 Run Flow Model
 ---------------
 
-The pydfnworks command `dfn_flow()` is used to run the simulation. This can provide insights into the behavior of fluids within the fractured network.
+The pydfnworks command ``dfn_flow()`` is used to run the simulation. This can provide insights into the behavior of fluids within the fractured network.
 
 See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
 See PFLOTRAN user manaul at https://www.pflotran.org/documentation/user_guide/user_guide.html
 
-View the PFLOTRAN input deck defined by dfnFlow_file 'dfn_explicit.in'. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the *.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
+View the PFLOTRAN input deck defined by dfnFlow_file `dfn_explicit.in`. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the *.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
 
 As the driver runs PFLOTRAN you will see information about the command line calling PFLOTRAN and information about the output files.  
 
@@ -428,7 +428,7 @@ Run Transport Model
 --------------------
 
 dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.
-See the particle tracking controls in the dfnTrans_file 'PTDFN_control.dat'.  
+See the particle tracking controls in the dfnTrans_file `PTDFN_control.dat`.  
 
 See Module at :ref:`dfnTrans <dfntrans-chapter>` and python docs at :ref:`pydfnTrans: dfnGen <dfnWorks-python-chapter-dfnTrans>`
 
@@ -449,7 +449,7 @@ As dfnTrans finishes output information is written.
 
 
 
-NOTE: There are a thousand particle tracks, these aree  merged into a single file "all_particles.inp" by adding the command ```DFN.dfn_trans(combine_avs = True)``` 
+NOTE: There are a thousand particle tracks, these aree  merged into a single file "all_particles.inp" by adding the command ``DFN.dfn_trans(combine_avs = True)`` 
 
 
 The following Paraview images were created by displaying the particle paths along with the mesh. 
@@ -480,6 +480,8 @@ Add a Second family
 ---------------------
 
 Once this network is working well, a more complicated version can be created by adding more families with different paramters from the first.
+
+The image below shows the resulting network with 2 fracture families. The mesh is colored by the fracture family_id with blue family 1, and the new family 2 colored yellow.
 
 
 .. figure:: figures/tpl_f2_families.png
