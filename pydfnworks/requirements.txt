@@ -1,6 +1,5 @@
 numpy
 networkx
-python-ternary
 h5py
 scipy
 matplotlib
