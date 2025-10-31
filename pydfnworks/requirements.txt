@@ -1,8 +1,4 @@
-vtk
-pyvista
 numpy
-shapely
-geopandas
 networkx
 python-ternary
 h5py
@@ -13,5 +9,3 @@ fpdf
 seaborn
 pyvtk
 mpmath
-pyyaml
-tqdm
