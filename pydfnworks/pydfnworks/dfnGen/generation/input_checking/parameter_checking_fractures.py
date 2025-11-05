@@ -1,3 +1,13 @@
+"""
+Module for checking DFN fracture family parameters in pydfnworks.
+
+This module provides functions to validate various DFN parameters related to
+fracture family definitions, including aspect ratios, number of points,
+layer/region assignments, orientation options, and distribution parameters.
+
+.. note::
+   These functions will exit the program if any inconsistencies are found.
+"""
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.dfnGen.generation.input_checking.parameter_checking_distributions import *
 from pydfnworks.general.logging import local_print_log
@@ -6,15 +16,18 @@ from numpy import pi
 
 
 def check_aspect(params, prefix):
-    """ Check the aspect of the rectangle or ellipse families matches the number of families requested and is a positive value
+    """Check that each family’s aspect ratio is defined and positive.
+    
+    Verifies that the list of aspect ratios matches the number of
+    families requested and that all values are greater than zero.
 
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+                    Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -35,12 +48,15 @@ def check_aspect(params, prefix):
 
 
 def check_enum_points(params):
-    """ Check that the value of enumPoints for each ellipse family is an integer greater than 4
+    """Check that enumPoints for each ellipse family is an integer ≥ 4.
+
+    Ensures the number of defining vertices for each ellipse family
+    meets the minimum required (4) and matches the number of families.
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
 
     Returns
     ---------
@@ -48,7 +64,7 @@ def check_enum_points(params):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
     key = 'enumPoints'
     hf.check_none(key, params[key]['value'])
@@ -57,14 +73,17 @@ def check_enum_points(params):
 
 
 def check_layers_fracture(params, prefix):
-    """ Checks that the number of layers is each family is correct. Checks that the layers index is a known index. 
+    """Validate layer assignments for each fracture family.
+
+    Checks that the number of layer indices matches the number of families
+    and that each index falls within the valid range [0, numOfLayers].
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+            Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -72,7 +91,7 @@ def check_layers_fracture(params, prefix):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
 
     key = prefix + "Layer"
@@ -86,14 +105,17 @@ def check_layers_fracture(params, prefix):
 
 
 def check_regions_fracture(params, prefix):
-    """ Checks that the number of regions is each family is correct. Checks that the region index is a known index. 
+    """Validate region assignments for each fracture family.
+
+    Checks that the number of region indices matches the number of families
+    and that each index falls within the valid range [0, numOfRegions]. 
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+            Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -101,7 +123,7 @@ def check_regions_fracture(params, prefix):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
 
     key = prefix + "Region"
@@ -115,14 +137,17 @@ def check_regions_fracture(params, prefix):
 
 
 def check_regions_and_layers_fracture(params, prefix):
-    """ Checks that families are only defined in either a region or a layer or the whole domain.
+    """Ensure each family is defined in only one layer or region.
+
+    Verifies that no family simultaneously specifies both a layer > 0
+    and a region > 0.
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+            Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -130,7 +155,7 @@ def check_regions_and_layers_fracture(params, prefix):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
@@ -144,13 +169,14 @@ def check_regions_and_layers_fracture(params, prefix):
 
 
 def convert_angleOption_value(params):
-    """ Changes angleOption value from 'radians' to 0 or 'degrees' to 1
-    This change is required for dfnGen
+    """Convert angleOption from 'radian'/'degree' to 0/1 for DFNGen.
+
+    This conversion is required by the DFNGen backend.
 
     Parameters
     ------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
 
     Returns
     ---------
@@ -158,6 +184,7 @@ def convert_angleOption_value(params):
 
     Notes
     -------
+        Exits program if the value is not 'radian' or 'degree'.
     """
     angle_option = params['angleOption']['value']
     if angle_option == 'radian':
@@ -173,14 +200,18 @@ def convert_angleOption_value(params):
 
 
 def check_orientations(params, prefix):
-    """ Checks orientation options. If using trend/plunge, degrees must be used. If using spherical, radians are okay as well. Checks that values are within acceptable ranges. 
+    """Validate orientation parameters for each family.
+
+    Ensures that theta/phi (spherical), trend/plunge, or dip/strike
+    are provided consistently and within valid ranges, and that
+    kappa/kappa2 values are in [0, 100].
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+            Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -188,11 +219,12 @@ def check_orientations(params, prefix):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
         'nFamRect']['value']
+
     angle_option_key = 'angleOption'
 
     if params["orientationOption"]["value"] == 0:
@@ -234,24 +266,66 @@ def check_orientations(params, prefix):
                     hf.print_error(
                         f"\"{key}\" entry {i+1} has value {val} which is outside of acceptable parameter range [0,360). "
                     )
+
     #check kappa
-    key = prefix + 'kappa'
-    hf.check_none(key, params[key]['value'])
-    hf.check_length(key, params[key]['value'], num_families)
-    hf.check_values(key, params[key]['value'], 0, 100)
+    if params["orientation_distribution"]["value"] == "fisher":
+        key = prefix + 'kappa'
+        if key in params and params[key]['value'] is not None:
+            hf.check_none(key, params[key]['value'])
+            hf.check_length(key, params[key]['value'], num_families)
+            hf.check_values(key, params[key]['value'], 0, 100)
+    elif params["orientation_distribution"]["value"] == "bingham":
 
+        # k1_key = prefix + 'kappa1'
+        # if k1_key in params and params[k1_key]['value'] is not None:
+        #     hf.check_none(k1_key, params[k1_key]['value'])
+        #     hf.check_length(k1_key, params[k1_key]['value'], num_families)
+        #     hf.check_values(k1_key, params[k1_key]['value'], -100, 0)
 
+        # k2_key = prefix + 'kappa2'
+        # if k2_key in params and params[k2_key]['value'] is not None:
+        #     hf.check_none(k2_key, params[k2_key]['value'])
+        #     hf.check_length(k2_key, params[k2_key]['value'], num_families)
+        #     hf.check_values(k2_key, params[k2_key]['value'], -100, 0)
+
+        k1_key = prefix + 'kappa1'
+        k2_key = prefix + 'kappa2'
+
+        k1_val = params.get(k1_key, {}).get('value')
+        k2_val = params.get(k2_key, {}).get('value')
+
+        print(k1_val,k2_val)
+        if k1_val is not None and k2_val is not None:
+            hf.check_none(k1_key, k1_val)
+            hf.check_length(k1_key, k1_val, num_families)
+            hf.check_values(k1_key, k1_val, -100, 0)
+
+            hf.check_none(k2_key, k2_val)
+            hf.check_length(k2_key, k2_val, num_families)
+            hf.check_values(k2_key, k2_val, -100, 0)
+        else:
+            missing = []
+            if k1_val is None:
+                missing.append(k1_key)
+            if k2_val is None:
+                missing.append(k2_key)
+            hf.print_error(
+                f"Missing required parameter(s): {', '.join(missing)}. "
+                f"Both {k1_key} and {k2_key} must be provided and not None."
+            )
+                
 def check_beta_distribution(params, prefix):
-    """
-    Verifies both the "ebetaDistribution" and "rBetaDistribution". If either contain any flags    indicating constant angle (1) then the corresponding "ebeta" and/or "rbeta" parameters are 
-    also verified. 
+    """Validate beta distribution flags and values.
+
+    If any families specify a constant beta (value 1), ensures
+    that corresponding beta angles are defined and within range.
     
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         prefix : string
-            either 'e' or 'r' for ellipse or rectangle
+            Either 'e' for ellipse or 'r' for rectangle.
 
     Returns
     ---------
@@ -259,7 +333,7 @@ def check_beta_distribution(params, prefix):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
 
     shape = "ellipse" if prefix == 'e' else "rectangle"
@@ -294,13 +368,15 @@ def check_beta_distribution(params, prefix):
 
 
 def cross_check(params):
-    """ Cross check parameters to make sure they are consistent across DFN. Checks that all angle parameters are degree/radians.
+    """Ensure consistency of angleOption across ellipse and rectangle families.
+
+    Verifies that both 'eAngleOption' and 'rAngleOption' match.
 
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
 
     Returns
     ---------
@@ -308,7 +384,7 @@ def cross_check(params):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
 
     keys = ['AngleOption']
@@ -320,14 +396,17 @@ def cross_check(params):
 
 
 def check_fracture_params(params, shape):
-    """ Checks parameters of each fracture family and shape type. Used for both rectangles and ellipses.
+    """Run all checks for a given fracture family shape.
+
+    Executes the full suite of validation functions for either
+    ellipse or rectangle families.
 
     Parameters
     -------------
         params : dict
-            parameter dictionary
+            The DFN parameter dictionary.
         shape : string
-            ellipse or rectangle
+            Either 'ellipse' or 'rectangle'.
 
     Returns
     ---------
@@ -335,7 +414,7 @@ def check_fracture_params(params, shape):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        Exits program if inconsistencies are found.
     """
 
     if shape == "ellipse":

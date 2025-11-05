@@ -11,10 +11,14 @@
 
 /**************************************************************************/
 /********************  Discretize Intersection  ***************************/
-/*! Discretizes intersetion
-    Arg 1: End point 1, array of three doubles {x, y, z}
-    Arg 2: End point 2, array of three doubles {x, y, z}
-    Return: List of 3D points of the discretized nodes, including end points */
+/*!
+ * \brief Discretizes a line segment by generating points along its intersection.
+ *
+ * \param pt1 End point 1, array of three doubles {x, y, z}
+ * \param pt2 End point 2, array of three doubles {x, y, z}
+ * \param dist Distance between endpoints of the line segment.
+ * \return List of 3D points of the discretized nodes, including end points.
+ */
 std::vector<Point> discretizeLineOfIntersection(double *pt1, double *pt2, double dist) {
     std::vector<Point> pointsList;
     
@@ -60,11 +64,14 @@ std::vector<Point> discretizeLineOfIntersection(double *pt1, double *pt2, double
 
 /**************************************************************************/
 /*********************** Parametric Line Function *************************/
-/*! Returns a point on the line/vector v at point t,  0 <= t <= 1
-    Arg 1: Array of three doubles {x, y, z}, vector of line segment
-    Arg 2: Array of three doubles {x, y, z}, end point on line
-    Arg 3: t, 0<= t <= 1
-    Return: Point on line */
+/*!
+ * \brief Returns a point on a parametric line at a given parameter t.
+ *
+ * \param v Array of three doubles {x, y, z}, direction vector of the line segment.
+ * \param point Array of three doubles {x, y, z}, start point of the line.
+ * \param t Parameter value, 0 <= t <= 1.
+ * \return Point on the line corresponding to parameter t.
+ */
 Point lineFunction3D(double *v, double *point, double t) {
     Point pt;
     pt.x = point[0] + v[0] * t;
@@ -91,8 +98,6 @@ void anglesToNormal(double angleOne, double angleTwo, double v1[3]) {
     *       - angleOne = dip (angle from horizontal plane)
     *       - angleTwo = strike (azimuth of strike direction)
     *
-    * If an invalid orientationOption is provided, the function defaults to
-    * returning the z-axis vector (0, 0, 1).
     *
     * @param angleOne First orientation angle (meaning depends on orientationOption).
     * @param angleTwo Second orientation angle (meaning depends on orientationOption).
@@ -100,46 +105,43 @@ void anglesToNormal(double angleOne, double angleTwo, double v1[3]) {
     */
 
     if (orientationOption == 0) {
-        // Spherical Coordinates (theta, phi)
-        v1[0] = std::sin(angleOne) * std::cos(angleTwo);
-        v1[1] = std::sin(angleOne) * std::sin(angleTwo);
-        v1[2] = std::cos(angleOne);
+        // Spherical Coordinates
+        // angleOne = Theta
+        // angleTwo = Phi
+        v1[0] = sin(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * sin(angleTwo);
+        v1[2] = cos(angleOne);
     } else if (orientationOption == 1) {
         // Trend and Plunge
-        // trend -> angleOne
-        // plunge -> angleTwo
-        // Upward-pointing normal (negated from the standard downward pole)
-        v1[0] = -sin(angleOne) * cos(angleTwo);
-        v1[1] = -cos(angleOne) * cos(angleTwo); 
+        // angleOne = Trend
+        // angleTwo = Plunge
+        v1[0] = cos(angleOne) * cos(angleTwo);
+        v1[1] = sin(angleOne) * cos(angleTwo);
         v1[2] = sin(angleTwo);
-
     } else if (orientationOption == 2) {
         // Dip and Strike
-        // dip -> angleOne
-        // strike -> angleTwo
-        v1[0] =  sin(angleOne) * cos(angleTwo); // X (East)
-        v1[1] = -sin(angleOne) * sin(angleTwo); // Y (North)
-        v1[2] =  cos(angleOne);  // Z (up)
-    } else {
-        // Default to Z-axis if invalid option
-        v1[0] = 0.0;
-        v1[1] = 0.0;
-        v1[2] = 1.0;
+        // angleOne = Dip
+        // angleTwo = Strike
+        v1[0] = sin(angleOne) * cos(angleTwo);
+        v1[1] = -sin(angleOne) * sin(angleTwo);
+        v1[2] = cos(angleOne);
     }
+
 }
 
 /**************************************************************************/
 /****** Fisher Distributions for Generating polygons Normal Vectors *******/
-/*! Creates and returns an x,y,z array of doubles using Fisher distribution.
-
-    NOTE: Uses new[] to return an array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE
-
-    Arg 1: theta, the angle the normal vector makes with the z-axis
-    Arg 2: phi, the angle the projection of the normal onto the x-y plane makes with the x-axis
-    Arg 3: kappa, parameter for the Fisher distribnShaprutions
-    Arg 4: Random generator, see std c++ <random> library
-    Return: A Fisher distribution array {x, y, z}. Used for random generation of
-    polygon normal vectors. */
+/*!
+ * \brief Creates and returns an x,y,z array of doubles using the Fisher distribution.
+ *
+ * \note Uses new[] to return an array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE.
+ *
+ * \param angleOne The angle theta that the normal vector makes with the z-axis.
+ * \param angleTwo The angle phi that the projection of the normal onto the x-y plane makes with the x-axis.
+ * \param kappa Concentration parameter for the Fisher distribution.
+ * \param generator Random number generator, see std C++ <random> library.
+ * \return A Fisher distribution array {x, y, z}. Used for random generation of polygon normal vectors.
+ */
 double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::mt19937_64 &generator) {
     double ck = (std::exp(kappa) - std::exp(-kappa)) / kappa;
     double v1[3];
@@ -208,18 +210,110 @@ double *fisherDistribution(double angleOne, double angleTwo, double kappa, std::
     return vec;
 }
 
+/**************************************************************************/
+/********** Bingham Distribution for Generating polygons Normal Vectors ***********/
+/*!
+ * \brief Creates and returns an x,y,z array of doubles using the Bingham distribution.
+ *
+ * \note Uses new[] to return an array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE.
+ *
+ * \param angleOne The first angle (theta/trend/dip) depending on orientationOption.
+ * \param angleTwo The second angle (phi/plunge/strike) depending on orientationOption.
+ * \param kappa1 First concentration parameter for the Bingham distribution.
+ * \param kappa2 Second concentration parameter for the Bingham distribution.
+ * \param generator Random number generator, see std C++ <random> library.
+ * \return A Bingham distribution array {x, y, z}. Used for random generation of polygon normal vectors.
+ */
+double* binghamDistribution(double angleOne,
+                            double angleTwo,
+                            double kappa1,
+                            double kappa2,
+                            std::mt19937_64 &generator)
+{
+    // 1) Build the “mode” direction v1 exactly like your Fisher code:
+    double v1[3];
+    anglesToNormal(angleOne, angleTwo, v1);
+
+    // 2) Compute rotation R that takes (0,0,1) → v1 (same as yours):
+    double u[3] = {0,0,1};
+    double *xProd = crossProduct(u, v1);
+    double R[9];
+    const double eps = 1e-12;
+    if (!(std::abs(xProd[0])<=eps && std::abs(xProd[1])<=eps && std::abs(xProd[2])<=eps)) {
+        double sinA = sqrt(xProd[0]*xProd[0] + xProd[1]*xProd[1] + xProd[2]*xProd[2]);
+        double cosA = dotProduct(u, v1);
+        double v[9] = {
+            0,       -xProd[2],  xProd[1],
+            xProd[2], 0,        -xProd[0],
+           -xProd[1], xProd[0],  0
+        };
+        double scalar = (1.0 - cosA) / (sinA*sinA);
+        // compute v² = v * v:
+        double v2[9];
+        for (int i=0;i<3;i++) for(int j=0;j<3;j++){
+            v2[3*i+j] = v[3*i+0]*v[0*3+j] + v[3*i+1]*v[1*3+j] + v[3*i+2]*v[2*3+j];
+            v2[3*i+j] *= scalar;
+        }
+        // R = I + v + v²
+        R[0]=1+v[0]+v2[0]; R[1]=   v[1]+v2[1]; R[2]=   v[2]+v2[2];
+        R[3]=   v[3]+v2[3]; R[4]=1+v[4]+v2[4]; R[5]=   v[5]+v2[5];
+        R[6]=   v[6]+v2[6]; R[7]=   v[7]+v2[7]; R[8]=1+v[8]+v2[8];
+    } else {
+        // already aligned
+        R[0]=1; R[1]=0; R[2]=0;
+        R[3]=0; R[4]=1; R[5]=0;
+        R[6]=0; R[7]=0; R[8]=1;
+    }
+    delete[] xProd;
+
+    // 3) Rejection‐sample in the local frame:
+    //    x_local ~ Uniform(S²), accept with prob ∝ exp(k1·x² + k2·y²).
+    std::uniform_real_distribution<double> unif01(0.0,1.0);
+    std::uniform_real_distribution<double> phiDist(0.0, 2.0*M_PI);
+    // const double M = std::exp(std::max(kappa1, kappa2));
+    const double M = std::exp(std::max({0.0, kappa1, kappa2}));
+
+    double xL[3];
+    while (true) {
+        double z   = unif01(generator)*2.0 - 1.0;
+        double phi = phiDist(generator);
+        double r   = std::sqrt(1.0 - z*z);
+        xL[0] = r * std::cos(phi);  // local x
+        xL[1] = r * std::sin(phi);  // local y
+        xL[2] = z;                  // local z
+
+        // Bingham density up to normalizing constant
+        double w = kappa1 * xL[0]*xL[0] + kappa2 * xL[1]*xL[1];
+
+        // Valid acceptance probability in [0,1]
+        if (unif01(generator) <= std::exp(w) / M)
+            break;
+    }
+
+    // 4) Rotate into global frame and return
+    double *vec = new double[3];
+    vec[0] = R[0]*xL[0] + R[1]*xL[1] + R[2]*xL[2];
+    vec[1] = R[3]*xL[0] + R[4]*xL[1] + R[5]*xL[2];
+    vec[2] = R[6]*xL[0] + R[7]*xL[1] + R[8]*xL[2];
+    return vec;
+}
 
 /**************************************************************************/
 /******************* Returns random TRANSLATION ***************************/
-/*! Uses new[] to pass a vector/array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE
-    Arg 1: Random generator, see std c++ <random> library
-    Arg 2: minimum x for random x
-    Arg 3: maximum x for random x
-    Arg 4: maximum y for random y
-    Arg 5: minimum y for random y
-    Arg 6: maximum z for random z
-    Arg 7: minimum z for random z
-    Return: Pointer to random ranslation, array of three doubles {x, y, z} */
+/*!
+ * \brief Returns a random translation vector.
+ *
+ * \note Uses new[] to return an array. NEED TO USE delete[] TO FREE THE MEMORY AFTER USE.
+ *
+ * \param generator Random number generator, see std C++ <random> library.
+ * \param xMin Minimum x value for random generation.
+ * \param xMax Maximum x value for random generation.
+ * \param yMin Minimum y value for random generation.
+ * \param yMax Maximum y value for random generation.
+ * \param zMin Minimum z value for random generation.
+ * \param zMax Maximum z value for random generation.
+ * \return Pointer to a random translation array of three doubles {x, y, z}.
+ */
 double *randomTranslation(std::mt19937_64 &generator, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) {
     double *t = new double[3];
     // Setup for getting random x location
@@ -237,15 +331,15 @@ double *randomTranslation(std::mt19937_64 &generator, float xMin, float xMax, fl
 
 /**************************************************************************/
 /*******************  Truncated Power-Law  ********************************/
-/*!Distrubution function for truncated power-law
-    randomNum must be between 0 and 1
-    This distribution should be sampled uniformly between 0 and 1 to
-    produce a truncated power-law distribution
-    Arg 1: Random variable between 0 and 1
-    Arg 2: Minimum number which can be returned from the distribution
-    Arg 3: Maximum number which can be returned from the distribution
-    Arg 4: Power-law's alpha
-    Return: Random float adhering to the truncated power law distribution */
+/*!
+ * \brief Computes a random value following a truncated power-law distribution.
+ *
+ * \param randomNum Random variable between 0 and 1, sampled uniformly.
+ * \param min Minimum value that can be returned by the distribution.
+ * \param max Maximum value that can be returned by the distribution.
+ * \param alpha Power-law exponent.
+ * \return Random float adhering to the truncated power-law distribution.
+ */
 float truncatedPowerLaw(float randomNum, float min, float max, float alpha) {
     float temp = 1 - randomNum + (randomNum * std::pow((min / max), alpha));
     temp = min * std::pow(temp, (-1 / alpha));
@@ -255,11 +349,15 @@ float truncatedPowerLaw(float randomNum, float min, float max, float alpha) {
 
 /**************************************************************************/
 /**********  Generates Theta Array for Generating Ellipses  ***************/
-/*! Integrate diff eq for theta as function of arc length using RK2
-    Used once for each ell family, saves theta array to shape structures
-    Arg 1: OUTPUT, Theta array used for ellipse generation
-    Arg 2: Aspect ratio of ellipse family
-    Arg 3: Number of points being used for ellipse family */
+/*!
+ * \brief Generates an array of theta values by integrating the differential equation as a function of arc length using RK2.
+ *
+ * \note Allocates memory for thetaArray using new[]; caller must delete[] when done.
+ *
+ * \param thetaArray [out] Reference to the output theta array used for ellipse generation.
+ * \param aspectRatio Aspect ratio of the ellipse family.
+ * \param nPoints Number of points for the ellipse family.
+ */
 void generateTheta(float * &thetaArray, float aspectRatio, int nPoints) {
     // a = x radius
     // b = y radius
@@ -288,15 +386,18 @@ void generateTheta(float * &thetaArray, float aspectRatio, int nPoints) {
 
 /**************************************************************************/
 /**************************************************************************/
-/*! Used for sort() in generateRadiiLists()
-    Compares two floats.
+/*!
+ * \brief Comparison function for sorting floats in descending order.
+ *
+ * \param i First float.
+ * \param j Second float.
+ * \return true if i > j, false otherwise.
 
     Arg 1: float i
     Arg 2: float j
     Return: True if i > j
             False otherwise */
+            
 bool greaterThan(float i, float j) {
     return (i > j);
 }
-
-
