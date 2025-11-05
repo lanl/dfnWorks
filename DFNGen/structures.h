@@ -1,13 +1,18 @@
+/*!
+    \file polyStruct.h
+    \brief Contains definitions of data structures for polygons, points, intersections, and related statistics in DFNGen.
+*/
 #ifndef _polyStruct_h_
 #define _polyStruct_h_
 #include <vector>
 #include <cmath>
+#include <string>
 
 
 /**************************************************************************************/
 /**************************************************************************************/
 /*!
-    The Poly structre is used to create and store fracrures/polygons.
+    The Poly structure is used to create and store fractures/polygons.
 */
 struct Poly {
     /*! Number of nodes/vertices in the polygon.*/
@@ -97,7 +102,7 @@ struct Poly {
     /*! List of indices to the permanent intersection array ('intPts' in main()) which belong to this polygon. */
     std::vector<unsigned int> intersectionIndex;
     
-    // Constructor
+    /*! Constructor. */
     Poly();
 };
 
@@ -105,9 +110,11 @@ struct Poly {
 
 /**************************************************************************************/
 /**************************************************************************************/
-/*! Structure for 3D points/vertices. Constructor is overloaded for either creating
-    a poing with uninitialized variables, or variables x, y, and z during object
-    creation. */
+/*! 
+    Structure for 3D points/vertices. Constructor is overloaded for either creating
+    a point with uninitialized variables, or variables x, y, and z during object
+    creation.
+*/
 struct Point {
     double x;
     double y;
@@ -117,22 +124,29 @@ struct Point {
     Point(double _x, double _y, double _z);
 };
 
+
+
+
+/**************************************************************************************/
+/**************************************************************************************/
+/*!
+    Holds rejection information for user-defined fractures.
+*/
 struct RejectedUserFracture {
-    int id;
-    int userFractureType;
+    int id;                 /*!< Fracture identifier. */
+    int userFractureType;   /*!< Type code of user-defined fracture. */
     RejectedUserFracture();
 };
 
 /**************************************************************************************/
 /**************************************************************************************/
-/*! Intersections structure.
-    This structure contains all data pertaining to
-    one intersection. This includes the IDs for both
-    intersecting fractures, the intersection end points,
-    a list of references to any triple intersection points existing
-    on the intersection, and a flag denotting whether or not
-    the intersection has been shortened by shrinkIntersection()
-    during FRAM. */
+/*!
+    Intersections structure.
+    Contains all data pertaining to one intersection, including the IDs of both
+    intersecting fractures, the intersection end points, any triple intersection
+    points on the intersection, and a flag indicating whether the intersection
+    has been shortened by shrinkIntersection().
+*/
 struct IntPoints {
     /*! Fracture 1, index of fracture in the accpeted polygons list that this
         intersection belongs to ('fract1' and 'fract2' are in no particular order).*/
@@ -221,13 +235,15 @@ struct FractureGroups {
 
 /**************************************************************************************/
 /**************************************************************************************/
-// GroupData works in conjunction with 'FractureGroups'
-// GroupData keeps track of which group numbers ('groupNum' in above struct)
-// Connect to which boundaries. When a cluster of fractures bridges two
-// groups/clusters, One of the groups 'valid' bool is set to 0 (not valid).
-// The fractures whos valid bool becomes 0 are moved to the other group
-// In the 'GroupData' structure array, FractureGroups.groupNum-1 is the index
-// to the corresponding GroupData struct in the GroupData array.
+/*!
+ GroupData works in conjunction with 'FractureGroups'
+ GroupData keeps track of which group numbers ('groupNum' in above struct)
+ Connect to which boundaries. When a cluster of fractures bridges two
+ groups/clusters, One of the groups 'valid' bool is set to 0 (not valid).
+ The fractures whos valid bool becomes 0 are moved to the other group
+ In the 'GroupData' structure array, FractureGroups.groupNum-1 is the index
+ to the corresponding GroupData struct in the GroupData array.
+*/
 struct GroupData {
     /*! Number of polygons in group. */
     unsigned int size;
@@ -250,7 +266,9 @@ struct GroupData {
 
 /**************************************************************************************/
 /**************************************************************************************/
-/*! Rejection reason counters. */
+/*!
+    Rejection reason counters for DFN generation.
+*/
 struct RejectionReasons {
     /*! Rejections due to intersection of length less than h.*/
     unsigned long long int shortIntersection;
@@ -275,9 +293,9 @@ struct RejectionReasons {
 
 /**************************************************************************************/
 /**************************************************************************************/
-// TODO: Make singleton
-/*! Program and DFN statisistics structure. Keeps various statistics, including
-    fracture cluster information, about the DFN being generated. */
+/*!
+    Program and DFN statistics collected during generation.
+*/
 struct Stats {
 
     /*! Counters for the number of polygons/fractures accepted by each stochastic
@@ -457,12 +475,17 @@ struct Shape {
         This is the trend of Rectangle fracture orientation. */
     double angleTwo;
     
+    std::string orientation_distribution;
+
     /*! Parameter for fisher distributions. The
         bigger, the more similar (less diverging) are the
         rectangular familiy's normal vectors. */
     double kappa;
-    
-    
+
+    /*! Concentration Parameters for Bingham distributions. */
+    double kappa1;
+    double kappa2;
+     
     /**************** Distribution Variables *********************/
     /*************************************************************/
     /*! Value between 0 and 1. Input to distrubution which will generate the user's defined
@@ -522,7 +545,16 @@ struct Shape {
     Shape(); // Constructor
 };
 
+/*!
+  \brief Prints the data of a Poly object for debugging.
+  \param poly Reference to the Poly object to print.
+*/
 void printPolyData(struct Poly &Poly);
+
+/*!
+  \brief Prints the contents of a Stats object for debugging.
+  \param obj Pointer to the Stats object to print.
+*/
 void printStats(struct stats *obj);
 
 #endif
