@@ -222,18 +222,18 @@ def create_family_text(family):
         text += f'\t - Min. Radius: {family["Minimum Radius (m)"]} m, Max. Radius: {family["Maximum Radius (m)"]} m\n'
     if "Kappa2" in keys:
         if "Theta-deg" in keys:
-            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+            text += f'Bingham Distribution\nOrientation - Kappa1: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}\nTheta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
         elif "Trend-deg" in keys:
-            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
+            text += f'Bingham Distribution\nOrientation - Kappa1: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}\nTrend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
         elif "Dip-deg" in keys:
-            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
+            text += f'Bingham Distribution\nOrientation - Kappa1: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}\nDip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
     else:
         if "Theta-deg" in keys:
-            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}\nTheta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
         elif "Trend-deg" in keys:
-            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}\nTrend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
         elif "Dip-deg" in keys:
-            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}\nDip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
     if "P32 (Fracture Intensity) Target" in keys:
         text += f'Target P32: {family["P32 (Fracture Intensity) Target"]}, Final P32: {family["Post-Iso Fracture Intensity (P32)"]}'
     else:
