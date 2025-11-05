@@ -75,6 +75,7 @@ def dump_params(params, output_file):
                     writer.write(f"{key}: 1 \n")
                 else:
                     writer.write(f"{key}: 0 \n")
+            
             else:
                 writer.write(f"{key}: {params[key]['value']} \n")
         else:
