@@ -233,6 +233,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'orientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'disableFram': {
             'type':
             bool,
@@ -440,6 +450,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'eorientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'ebeta': {
             'type':
             float,
@@ -565,6 +585,34 @@ def load_parameters(self):
             float,
             'list':
             True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'ekappa1': {
+            'type':
+            float,
+            'list':
+            True,
+            'required':
+            False,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'ekappa2': {
+            'type':
+            float,
+            'list':
+            True,
+            'required':
+            False,
             'list_length':
             None,
             'value':
@@ -870,7 +918,46 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'rOrienationDistribution':
+        {
+            'type':
+            str,
+            'list':
+            True,
+            'required':
+            False,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'rkappa': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa1': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa2': {
             'type':
             float,
             'list':

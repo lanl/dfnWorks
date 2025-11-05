@@ -1,3 +1,7 @@
+"""
+.. module:: fracture_family_utils
+   :synopsis: Create and manage fracture family dictionaries for DFN generation.
+"""
 import sys
 
 
@@ -10,7 +14,7 @@ def fracture_family_dictionary():
 
     Returns
     --------
-        family : dictionary
+        family : dict
             fracture family dictionary for specified family
             
     Notes
@@ -31,7 +35,7 @@ def fracture_family_dictionary():
             'value':
             None,
             'description':
-            'Probabiliy of occurence for the family of of stochastically generated fractures'
+            'Probability of occurrence for the family of stochastically generated fractures'
         },
         'type': {
             'type':
@@ -77,7 +81,9 @@ def fracture_family_dictionary():
             'value':
             False,
             'description':
-            'Prescribe a rotation around each fractures normal vector, with the fracture centered on the x-y plane at the origin\nFalse:Uniform distribution on [0,2pi)\nTrue:Constant rotation specified by beta'
+            'Prescribe a rotation around each fracture\'s normal vector, with the fracture centered on the x-y plane at the origin\n'
+            'False: Uniform distribution on [0,2π)\n'
+            'True: Constant rotation specified by beta'
         },
         'beta': {
             'type':
@@ -86,6 +92,11 @@ def fracture_family_dictionary():
             None,
             'description':
             'Value for constant angle of rotation around the normal vector'
+        },
+        'orientation_distribution': {
+            'type': str,
+            'value': None,
+            'description': 'Type of orientation distribution ("fisher" or "bingham")'
         },
         #fisher distribution
         'fisher': {
@@ -101,7 +112,24 @@ def fracture_family_dictionary():
                 'kappa': None
             },
             'description':
-            '3 parameters theta, phi, and kappa for fisher distribution'
+            'Parameters theta, phi, and kappa for Fisher distribution'
+        },
+        #bingham distribution
+        'bingham': {
+            'type':
+            float,
+            'value': {
+                'theta': None,
+                'phi': None,
+                'strike': None,
+                'dip': None,
+                'trend': None,
+                'plunge': None,
+                'kappa1': None,
+                'kappa2': None
+            },
+            'description':
+            'Parameters theta, phi, kappa1, and kappa2 for Bingham distribution'
         },
         'distribution': {
             'type': bool,
@@ -112,14 +140,14 @@ def fracture_family_dictionary():
                 'constant': False
             },
             'description':
-            'Type of distibution fracture radii are sampled from'
+            'Type of distribution fracture radii are sampled from'
         },
         'tpl': {
             'type': float,
             'value': {
                 'alpha': None
             },
-            'description': 'Parameter for truncated power-law distibution'
+            'description': 'Parameter for truncated power-law distribution'
         },
         'log_normal': {
             'type': float,
@@ -127,7 +155,7 @@ def fracture_family_dictionary():
                 'mean': None,
                 'std': None
             },
-            'description': 'Parameters for log normal distribution'
+            'description': 'Parameters for log-normal distribution'
         },
         'exp': {
             'type': float,
@@ -174,7 +202,10 @@ def fracture_family_dictionary():
                 'value':
                 None,
                 'description':
-                'if correlated {"alpha":float, "beta":float},\nif semi-correlated {"alpha":float, "beta":float, "sigma":float},\nif constant {"mu":float},\nif log-normal {"mu":float,"sigma":float}'
+                'if correlated {"alpha":float, "beta":float},\n'
+                'if semi-correlated {"alpha":float, "beta":float, "sigma":float},\n'
+                'if constant {"mu":float},\n'
+                'if log-normal {"mu":float,"sigma":float}'
             }
         }
     }
@@ -182,21 +213,20 @@ def fracture_family_dictionary():
 
 
 def print_family_information(self, family_number):
-    """Creates a fracture family dictionary
+    """Print fracture family parameters to the terminal screen.
 
         Parameters
-        --------------
-            self : DFN object
-
-            family_number : the id of the fracture family information to be returned
+        ----------
+            self : DFN
+            The DFN object.
         
         Returns
         --------
-            Prints fracture family parameters to terminal screen
+            None
 
         Notes
         ---------
-        None
+            None
         """
 
     if len(self.fracture_families) > 0:
@@ -217,7 +247,10 @@ def print_family_information(self, family_number):
 def add_fracture_family(self,
                         shape,
                         distribution,
-                        kappa,
+                        orientation_distribution,
+                        kappa=None,
+                        kappa1=None,
+                        kappa2=None,
                         family_number=None,
                         probability=None,
                         p32=None,
@@ -349,13 +382,37 @@ def add_fracture_family(self,
     ## Orienation
     family['beta_distribution']['value'] = beta_distribution
     family['beta']['value'] = beta
-    family['fisher']['value']['theta'] = theta
-    family['fisher']['value']['phi'] = phi
-    family['fisher']['value']['strike'] = strike
-    family['fisher']['value']['dip'] = dip
-    family['fisher']['value']['trend'] = trend
-    family['fisher']['value']['plunge'] = plunge
-    family['fisher']['value']['kappa'] = kappa
+    family['orientation_distribution']['value'] = orientation_distribution.lower()
+
+    if orientation_distribution.lower() == 'bingham':
+        family['bingham']['value']['theta'] = theta
+        family['bingham']['value']['phi'] = phi
+        family['bingham']['value']['strike'] = strike
+        family['bingham']['value']['dip'] = dip
+        family['bingham']['value']['trend'] = trend
+        family['bingham']['value']['plunge'] = plunge
+        family['bingham']['value']['kappa'] = 0
+        family['bingham']['value']['kappa1'] = kappa1
+        family['bingham']['value']['kappa2'] = kappa2
+        info = f"Orientation_distribution of {family['orientation_distribution']['value']}.\n"
+        self.print_log(info,'info')
+
+    elif orientation_distribution.lower() == 'fisher':
+        family['fisher']['value']['theta'] = theta
+        family['fisher']['value']['phi'] = phi
+        family['fisher']['value']['strike'] = strike
+        family['fisher']['value']['dip'] = dip
+        family['fisher']['value']['trend'] = trend
+        family['fisher']['value']['plunge'] = plunge
+        family['fisher']['value']['kappa'] = kappa
+        family['fisher']['value']['kappa1'] = 0 
+        family['fisher']['value']['kappa2'] = 0
+        info = f"Orientation_distribution of {family['orientation_distribution']['value']}.\n"
+        self.print_log(info,'info')
+
+    else:
+        error = f"Unknown orientation distribution '{orientation_distribution}'. Must be 'fisher' or 'bingham'. Exiting.\n"
+        self.print_log(error, 'error')
 
     ## Set and check orientation option
     # note orientationOption = 0 --> theta/phi

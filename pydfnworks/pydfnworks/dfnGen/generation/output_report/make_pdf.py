@@ -1,9 +1,9 @@
 """
-  :filename: make_pdf.py
-  :synopsis: Combines figures and network information to make the output report pdf
-  :version: 1.0
-  :maintainer: Jeffrey Hyman 
-  :moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
+:filename: make_pdf.py
+:synopsis: Combines figures and network information to make the output report pdf
+:version: 1.0
+:maintainer: Jeffrey Hyman 
+:moduleauthor: Jeffrey Hyman <jhyman@lanl.gov>
 """
 
 from fpdf import FPDF
@@ -23,17 +23,35 @@ from pydfnworks.general.logging import local_print_log
 
 
 class PDF(FPDF):
+    """
+    Custom PDF class for dfnGen output report, extending FPDF to include
+    a consistent header and footer for each page.
+    """
     global name
 
     def header(self):
-        # Add Logos
+        """
+        Override of FPDF.header()
+
+        Adds logos and a title to the top of each page.
+
+        The dfnWorks logo is placed at the top-left, the LANL footer logo
+        at the top-right, and the report title with the job name is centered.
+        """
         self.image(dfnworks_image_black, x=5, y=8, w=50)
         self.set_font('Times', 'B', 18)
         self.text(x=100, y=10, txt=f'dfnGen Output Report: {name}')
         self.image(lanl_image, x=240, y=2, w=50)
 
-    # Page footer
     def footer(self):
+        """
+        Override of FPDF.footer()
+
+        Adds a page number at the bottom-center of each page.
+
+        Positions the cursor 1.5 cm from the bottom, sets an italic font, 
+        and writes 'Page X'.
+        """
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
@@ -43,20 +61,20 @@ class PDF(FPDF):
 
 
 def add_table_of_contents(params, pdf):
-    """ Creates Table of contents
+    """Creates the Table of Contents page in the PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        pdf : fpdf object
-            Current working pdf
+        params : dict
+            General dictionary of output report parameters. Contains information
+            on number of families, output directory, and verbosity.
+        pdf : FPDF
+            The current PDF object to which the TOC will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+        FPDF
+            The PDF object with the TOC page appended.
 
     Notes
     ------
@@ -83,17 +101,17 @@ def add_table_of_contents(params, pdf):
 
 
 def create_network_text(params):
-    """ Creates block text for the entire network.
+    """Creates the descriptive text block for the overall network summary.
     
     Parameters
     -------------
         params : dictionary
-            Output report dictionary containing general parameters. See output_report for more details
+            Output report dictionary containing general network parameters.
 
     Returns
     -----------
         text : string
-            Block of text with information about the network. 
+            A multi-line string detailing job name, counts, P30/P32 metrics, and domain extents.
 
     Notes
     --------
@@ -123,19 +141,20 @@ Domain (m)\n\
 
 
 def add_network_page(params, pdf):
-    """ Add page about the entire network
+    """Adds the network summary page to the PDF.
+
     Parameters
     ------------
         params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
+            General dictionary of output report parameters.
         
-        pdf : fpdf object
-            Current working pdf
+        pdf : FPDF
+            The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+        FPDF
+            The PDF object with the network summary page appended.
 
     Notes
     ------
@@ -171,18 +190,18 @@ def add_network_page(params, pdf):
 
 
 def create_family_text(family):
-    """ Creates block text for one family
+    """Creates the descriptive text block for a single fracture family.
     
 
     Parameters
     -------------
         family : dictionary
-            Fracture family dictionary
+            Dictionary of parameters for the fracture family.
 
     Returns
     -----------
         text : string
-            Block of text with information about the family. 
+            A multi-line string detailing counts, shape, distribution parameters, orientation, and P32 results. 
 
     Notes
     --------
@@ -201,13 +220,20 @@ def create_family_text(family):
         text += f'\t - lambda: {family["Lambda"]}\n'
     if dist != "Constant":
         text += f'\t - Min. Radius: {family["Minimum Radius (m)"]} m, Max. Radius: {family["Maximum Radius (m)"]} m\n'
-    if "Theta-deg" in keys:
-        text += f'Orientation - Kappa: {family["Kappa"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
-    elif "Trend-deg" in keys:
-        text += f'Orientation - Kappa: {family["Kappa"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
-    elif "Dip-deg" in keys:
-        text += f'Orientation - Kappa: {family["Kappa"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
-
+    if "Kappa2" in keys:
+        if "Theta-deg" in keys:
+            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+        elif "Trend-deg" in keys:
+            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
+        elif "Dip-deg" in keys:
+            text += f'Bingham Distribution\nOrientation - Kappa: {family["Kappa1"]}, Kappa2: {family["Kappa2"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
+    else:
+        if "Theta-deg" in keys:
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Theta-deg: {family["Theta-deg"]}, Phi-deg: {family["Phi-deg"]}\n'
+        elif "Trend-deg" in keys:
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Trend-deg: {family["Trend-deg"]}, Plunge-deg: {family["Plunge-deg"]}\n'
+        elif "Dip-deg" in keys:
+            text += f'Fisher Distribution\nOrientation - Kappa: {family["Kappa"]}, Dip-deg: {family["Dip-deg"]}, Strike-deg: {family["Strike-deg"]}\n'
     if "P32 (Fracture Intensity) Target" in keys:
         text += f'Target P32: {family["P32 (Fracture Intensity) Target"]}, Final P32: {family["Post-Iso Fracture Intensity (P32)"]}'
     else:
@@ -216,26 +242,23 @@ def create_family_text(family):
 
 
 def add_family_page(params, family, i, pdf):
-    """ Add page about fracture family. 
+    """Adds a page for a single fracture family to the PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        family : dictionary 
-            Dictionary of information about a fracture family
-        
+        params : dict
+            General dictionary of output report parameters.
+        family : dict
+            Dictionary of information about a specific fracture family.
         i : int
-            Fracture family id
-        
-        pdf : fpdf object
-            Current working pdf
+            Family index (1-based) used for titling and file paths.
+        pdf : FPDF
+            The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+        FPDF
+            The PDF object with the family page appended.
 
     Notes
     ------
@@ -267,20 +290,19 @@ def add_family_page(params, family, i, pdf):
 
 
 def add_fram_page(params, pdf):
-    """ Add Page about FRAM information 
+    """Adds a page displaying FRAM algorithm information.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-        
-        pdf : fpdf object
-            Current working pdf
+        params : dict
+            General dictionary of output report parameters.
+        pdf : FPDF
+            The current PDF object to which the page will be added.
 
     Returns
     ---------
-        pdf : fpdf object
-            Current working pdf
+        FPDF
+            The PDF object with the FRAM information page appended.
 
     Notes
     ------
@@ -300,20 +322,16 @@ def add_fram_page(params, pdf):
 
 
 def make_pdf(params, families, fractures):
-    """ Combines plots and information to make the final output report pdf. 
+    """Combines plots and information to generate the final output report PDF.
 
     Parameters
     ------------
-        params : dictionary
-            General dictionary of output analysis code. Contains information on number of families, number of fractures, and colors.
-
-        
-        families: list of fracture family dictionaries
-            Created by get_family_information
-
-        
-        fractures: list of fracture dictionaries   
-            Created by get_fracture_information
+        params : dict
+            General dictionary of output report parameters.
+        families : list of dict
+            List of fracture family dictionaries, as returned by get_family_information().
+        fractures : list of dict
+            List of fracture dictionaries, as returned by get_fracture_information().
 
     Returns
     --------
@@ -321,7 +339,7 @@ def make_pdf(params, families, fractures):
 
     Notes
     -------
-        None
+        The generated PDF is written to '{jobname}_output_report.pdf' in the current directory.
 
     """
 
