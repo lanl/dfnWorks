@@ -105,28 +105,32 @@ void anglesToNormal(double angleOne, double angleTwo, double v1[3]) {
     */
 
     if (orientationOption == 0) {
-        // Spherical Coordinates
-        // angleOne = Theta
-        // angleTwo = Phi
-        v1[0] = sin(angleOne) * cos(angleTwo);
-        v1[1] = sin(angleOne) * sin(angleTwo);
-        v1[2] = cos(angleOne);
+        // Spherical Coordinates (theta, phi)
+        v1[0] = std::sin(angleOne) * std::cos(angleTwo);
+        v1[1] = std::sin(angleOne) * std::sin(angleTwo);
+        v1[2] = std::cos(angleOne);
     } else if (orientationOption == 1) {
         // Trend and Plunge
-        // angleOne = Trend
-        // angleTwo = Plunge
-        v1[0] = cos(angleOne) * cos(angleTwo);
-        v1[1] = sin(angleOne) * cos(angleTwo);
+        // trend -> angleOne
+        // plunge -> angleTwo
+        // Upward-pointing normal (negated from the standard downward pole)
+        v1[0] = -sin(angleOne) * cos(angleTwo);
+        v1[1] = -cos(angleOne) * cos(angleTwo); 
         v1[2] = sin(angleTwo);
+
     } else if (orientationOption == 2) {
         // Dip and Strike
-        // angleOne = Dip
-        // angleTwo = Strike
-        v1[0] = sin(angleOne) * cos(angleTwo);
-        v1[1] = -sin(angleOne) * sin(angleTwo);
-        v1[2] = cos(angleOne);
+        // dip -> angleOne
+        // strike -> angleTwo
+        v1[0] =  sin(angleOne) * cos(angleTwo); // X (East)
+        v1[1] = -sin(angleOne) * sin(angleTwo); // Y (North)
+        v1[2] =  cos(angleOne);  // Z (up)
+    } else {
+        // Default to Z-axis if invalid option
+        v1[0] = 0.0;
+        v1[1] = 0.0;
+        v1[2] = 1.0;
     }
-
 }
 
 /**************************************************************************/
