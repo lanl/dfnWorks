@@ -28,6 +28,7 @@ def dump_params(params, output_file):
 
     keys = params.keys()
     for key in keys:
+        print(key)
         if params[key]['value'] is not None:
             if key == 'layers':
                 writer.write(key + ': \n')

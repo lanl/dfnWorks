@@ -810,6 +810,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'rorientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        }, 
         'rbeta': {
             'type':
             float,
