@@ -293,6 +293,15 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
         elif orientation_dist == 'bingham':
             # pad ekappa so lists stay in sync
             write_value_to_params(params, 'kappa',  {'kappa':  0.0}, 'kappa',  fracture_type_prefix, value_flag=True)
+            
+    elif fracture_type_prefix == 'r':  # same idea applies to 'r' if you add rectangles
+        if orientation_dist == 'fisher':
+            # pad ekappa1/ekappa2 so lists stay in sync
+            write_value_to_params(params, 'kappa1', {'kappa1': 0.0}, 'kappa1', fracture_type_prefix, value_flag=True)
+            write_value_to_params(params, 'kappa2', {'kappa2': 0.0}, 'kappa2', fracture_type_prefix, value_flag=True)
+        elif orientation_dist == 'bingham':
+            # pad ekappa so lists stay in sync
+            write_value_to_params(params, 'kappa',  {'kappa':  0.0}, 'kappa',  fracture_type_prefix, value_flag=True)
     else:
         hf.print_error(f"Unknown orientation_distribution: {orientation_dist}")
 
