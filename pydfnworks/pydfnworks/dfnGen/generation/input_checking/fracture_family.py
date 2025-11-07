@@ -247,7 +247,7 @@ def print_family_information(self, family_number):
 def add_fracture_family(self,
                         shape,
                         distribution,
-                        orientation_distribution,
+                        orientation_distribution="fisher",
                         kappa=None,
                         kappa1=None,
                         kappa2=None,
