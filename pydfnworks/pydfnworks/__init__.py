@@ -59,7 +59,3 @@ __install_date__ = get_install_date()
 import pydfnworks.general
 from pydfnworks.general import *
 
-
-# __all__ = ["dfnGen", "dfnGen", "dfnFlow", "dfnTrans"]
-
-
