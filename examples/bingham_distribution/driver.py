@@ -102,7 +102,6 @@ DFN.add_fracture_family(shape="ell",
                             "alpha": 10**-5,
                             "beta": 0.5
                         })
-
 ## Uncomment this to test Fisher and Bingham together 
 DFN.add_fracture_family(shape="ell",
                         distribution="tpl",
@@ -121,7 +120,12 @@ DFN.add_fracture_family(shape="ell",
                             "beta": 0.5
                         })
 
+
+
 DFN.make_working_directory(delete=True)
 DFN.check_input()
+exit() 
+
+
 DFN.create_network()
 DFN.output_report()

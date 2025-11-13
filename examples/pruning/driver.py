@@ -71,24 +71,28 @@ DFN.dump_fractures(H, "2-core.dat")
 # plot the 2 core of the graph
 DFN.plot_graph(H, output_name="dfn_2_core")
 DFN.to_pickle()
+del DFN
 
 ## Create a second DFN object for the backbone
 os.chdir(home)
-jobname = os.getcwd() + "/output_backbone/"
+jobname = os.getcwd() + os.sep + "output_backbone"
 src_path = os.getcwd() + '/output_prune/'
-BACKBONE = DFNWORKS(jobname=jobname, pickle_file=src_path + 'output_prune.pkl')
+BACKBONE = DFNWORKS(jobname=jobname, 
+                    pickle_file = src_path + 'output_prune.pkl')
 BACKBONE.prune_file = src_path + "/backbone.dat"
 BACKBONE.path = src_path
+BACKBONE.jobname = jobname
+BACKBONE.local_jobname = "output_backbone" 
 BACKBONE.make_working_directory(delete=True)
 BACKBONE.visual_mode = True
 BACKBONE.mesh_network()
 
-os.chdir(home)
-jobname = os.getcwd() + "/output_2-core/"
-src_path = os.getcwd() + '/output_prune/'
-CORE = DFNWORKS(jobname=jobname, pickle_file=src_path + 'output_prune.pkl')
-CORE.prune_file = src_path + "/2-core.dat"
-CORE.path = src_path
-CORE.make_working_directory(delete=True)
-CORE.visual_mode = True
-CORE.mesh_network()
+# os.chdir(home)
+# jobname = os.getcwd() + "/output_2-core/"
+# src_path = os.getcwd() + '/output_prune/'
+# CORE = DFNWORKS(jobname=jobname, pickle_file=src_path + 'output_prune.pkl')
+# CORE.prune_file = src_path + "/2-core.dat"
+# CORE.path = src_path
+# CORE.make_working_directory(delete=True)
+# CORE.visual_mode = True
+# CORE.mesh_network()
