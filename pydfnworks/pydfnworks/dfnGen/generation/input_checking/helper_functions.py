@@ -126,7 +126,7 @@ def check_length(key, value, desired_length):
     ---------
         None
     """
-    # print(value, len(value))
+    print(value, len(value))
     if len(value) != desired_length:
         print_error(
             f"\"{key}\" has defined {len(value)} value(s) but there is(are) {desired_length} families. Please define one {key} for each family."
