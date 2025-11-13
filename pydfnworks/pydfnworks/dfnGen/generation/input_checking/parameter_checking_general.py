@@ -259,10 +259,10 @@ def check_family_prob(params):
         total = sum(values)
         if total != 1:
             hf.print_warning(
-                "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
+                "* 'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
             params['famProb']['value'] = [x / total for x in values]
-            local_print_log(f"--> New Values: {params['famProb']['value']}")
+            local_print_log(f"--> New Values: {params['famProb']['value']}\n")
 
 
 def check_no_dep_flags(params):
@@ -325,20 +325,20 @@ def check_fram(params):
 
     if params['disableFram']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['framOn']['value'] = False
 
     if not params['framOn']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['disableFram']['value'] = True
 
     if params['framOn']['value']:
         if params['rFram']['value']:
             hf.print_warning(
-                "Running with rFRAM. Mesh will not be perfectly conforming."
+                "* Running with rFRAM. Mesh will not be perfectly conforming."
             ) 
 
 
