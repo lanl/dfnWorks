@@ -1554,7 +1554,11 @@ void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double 
     tempPoint3.z = 0.5 * (tempPoint1.z + tempPoint2.z);
     double curLength = 0;
     curLength = euclideanDistance(tempPoint1, tempPoint2);
-    fp << fract1  << " " << fract2 << std::setprecision(10) << " " << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " " << curLength << "\n";
+    fp << std::scientific << std::setprecision(12);
+    fp << fract1 << " " << fract2 << " "
+       << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " "
+       << curLength << "\n";
+    // fp << fract1  << " " << fract2 << std::setprecision(10) << " " << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " " << curLength << "\n";
 }
 
 /* writeBoundaryfiles() ******************************************************************/
