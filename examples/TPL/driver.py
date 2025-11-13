@@ -52,6 +52,7 @@ DFN.add_fracture_family(
     alpha=1.8,
     min_radius=1.0,
     max_radius=10.0,
+    orientation_distribution = "fisher",
     kappa=1.0,
     theta=0.0,
     phi=0.0,
