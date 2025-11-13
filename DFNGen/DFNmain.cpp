@@ -353,7 +353,16 @@ int main (int argc, char **argv) {
                         shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / regionVol[shapeFamilies[familyIndex].region - 1];
                     }
                     
-                    if (stopCondition == 1) {
+                    if (std::isnan(shapeFamilies[familyIndex].currentP32)){
+                        logString =  "!!! Current P32 is Nan !!!\nshapeFamilies[familyIndex].layer = " + to_string(shapeFamilies[familyIndex].layer) + " shapeFamilies[familyIndex].region = " + to_string(shapeFamilies[familyIndex].region) + " newPoly.area and domVol = " + to_string(newPoly.area) + " " + to_string(domVol);
+                        logger.writeLogFile(INFO,  logString);
+                        std::cout << "Encountered a non number p32\n";
+                        std::exit(1);   // exit with status code 1 (non-zero = error)
+                        return 0;
+                    }
+
+
+                    if (stopCondition == 1 ) {
                         // If the last inserted pologon met the p32 reqirement, set that familiy to no longer
                         // insert any more fractures. ajust the CDF and familiy probabilites to account for this
                         if (shapeFamilies[familyIndex].currentP32 >= shapeFamilies[familyIndex].p32Target ) {

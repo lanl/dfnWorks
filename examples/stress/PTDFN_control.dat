@@ -120,7 +120,7 @@ aperture: yes  //DFN aperture
 aperture_type: frac //aperture is giving per cell (type "cell") 
 //    or per fracture (type "frac")
 // for now we use an aperture giving per fracture
-aperture_file: stress_aperture.dat
+aperture_file: aperture.dat
 
 /************* TIME DOMAIN RANDOM WALK ******************************/
 tdrw: no 

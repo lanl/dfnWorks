@@ -408,7 +408,7 @@ def compute_fracture_p21(self):
     for i in range(1, self.num_frac + 1):
         total_length = _get_intersection_length(i, df)
         self.p21[i - 1] = total_length / self.surface_area[i - 1]
-        print(f"Fracture ID: {i:3d} | P21: {self.p21[i - 1]:.2e}")
+        # print(f"Fracture ID: {i:3d} | P21: {self.p21[i - 1]:.2e}")
 
     # Also create a DataFrame view for convenience
     self.p21_table = pd.DataFrame({

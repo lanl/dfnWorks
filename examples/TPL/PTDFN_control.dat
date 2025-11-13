@@ -106,7 +106,7 @@ init_matrix: no
 
 /*****  particles positions distributed according to in-flow flux weight *********/
 init_fluxw: yes
-init_totalnumber: 1000 
+init_totalnumber: 100 
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 
