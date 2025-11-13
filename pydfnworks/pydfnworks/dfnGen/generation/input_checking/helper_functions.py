@@ -37,7 +37,7 @@ def print_warning(warning_string):
     -----
         None
     """
-    warning_string = f"--> Warning while parsing input\n\n{warning_string}\nBe Careful out there\n"
+    warning_string = f"--> Warning while parsing input\n\n{warning_string}\n* Be careful out there *\n"
     local_print_log(warning_string,'warning')
 
 def curly_to_list(curly_list):
