@@ -1,9 +1,14 @@
-#"""
-#   :synopsis: Driver run file for TPL example
-#   :version: 2.0
-#   :maintainer: Jeffrey Hyman
-#.. moduleauthor:: Jeffrey Hyman <jhyman@lanl.gov>
-#"""
+# Pruning Example Summary
+# This example demonstrates the complete workflow of DFN generation, analysis, and pruning using the truncated power law (TPL) fracture size distribution in pydfnworks. It shows how to configure domain parameters, add multiple fracture families, and generate a discrete fracture network (DFN). The script constructs a network graph representation of the DFN, identifies and extracts the hydraulic backbone (i.e., the connected flow network), and then prunes the original DFN to retain only those flow-connected fractures. Finally, it rebuilds and meshes the pruned backbone network for further simulation or visualization.
+
+# Key steps illustrated include:
+# 	•	Setting up the DFNWORKS environment and parameters
+# 	•	Adding fracture families with TPL size distributions
+# 	•	Generating and graphing the DFN
+# 	•	Computing and visualizing the flow backbone
+# 	•	Saving and reloading the DFN from a pickle file
+# 	•	Creating and meshing the pruned DFN for downstream modeling
+
 
 from pydfnworks import *
 import os
@@ -60,16 +65,11 @@ DFN.create_network()
 G = DFN.create_graph("fracture", "left", "right")
 # Plot the graph based on the DFN
 DFN.plot_graph(G, output_name="full_dfn")
-# Isolate the 2-Core of the graph
-H = DFN.k_shortest_paths_backbone(G, 1, 's', 't')
+# remove dead-end features from network
+H = DFN.current_flow_threshold(G, 's', 't', weight = None, thrs = 1e-16)
 DFN.dump_fractures(H, "backbone.dat")
 DFN.plot_graph(H, output_name="backbone")
 
-H = nx.k_core(G, 2)
-# Dump out fractures in the 2-Core
-DFN.dump_fractures(H, "2-core.dat")
-# plot the 2 core of the graph
-DFN.plot_graph(H, output_name="dfn_2_core")
 DFN.to_pickle()
 del DFN
 
@@ -83,17 +83,6 @@ BACKBONE.prune_file = src_path + "/backbone.dat"
 BACKBONE.path = src_path
 BACKBONE.jobname = jobname + os.sep
 BACKBONE.local_jobname = "output_backbone" 
+BACKBONE.visual_mode = True 
 BACKBONE.make_working_directory(delete=True)
-BACKBONE.visual_mode = True
 BACKBONE.mesh_network()
-BACKBONE.clean_up_files_after_prune() 
-
-# os.chdir(home)
-# jobname = os.getcwd() + "/output_2-core/"
-# src_path = os.getcwd() + '/output_prune/'
-# CORE = DFNWORKS(jobname=jobname, pickle_file=src_path + 'output_prune.pkl')
-# CORE.prune_file = src_path + "/2-core.dat"
-# CORE.path = src_path
-# CORE.make_working_directory(delete=True)
-# CORE.visual_mode = True
-# CORE.mesh_network()
