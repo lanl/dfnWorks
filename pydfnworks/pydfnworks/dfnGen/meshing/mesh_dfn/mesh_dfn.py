@@ -153,7 +153,7 @@ def mesh_network(self,
         lgs.define_zones()
 
     if self.prune_file:
-        self.clean_up_files_after_prune()
+        self.clean_up_after_prune()
 
     self.gather_mesh_information()
 
