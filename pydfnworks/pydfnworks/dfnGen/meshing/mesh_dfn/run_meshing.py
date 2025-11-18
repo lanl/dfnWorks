@@ -429,6 +429,8 @@ def mesh_fractures_header(self, quiet=True):
         if self.check_for_missing_edges():
             return True
 
+    self.print_log("* No meshing issues detected. Heck yeah!")
+    self.print_log('=' * 80)
 
 def check_for_missing_edges(self):
     """ Checks for missing edges that can occur with relaxed FRAM.
@@ -575,7 +577,7 @@ def merge_the_fractures(ncpu):
     pool.terminate()
     elapsed = timeit.default_timer() - tic
     local_print_log(
-        f"--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds.\n"
+        f"--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds."
     )
     for output in outputs:
         if output:
@@ -598,7 +600,7 @@ def merge_final_mesh():
     -----------------
         None
     """
-    local_print_log('=' * 80)
+
     local_print_log("--> Starting Final Merge")
     tic = timeit.default_timer()
     mh.run_lagrit_script('lagrit_scripts/merge_network.lgi',
@@ -656,10 +658,12 @@ def merge_network(self):
         This is a driver function that class sub-functions. More details are in those sub-functions. 
     
     """
-    self.print_log("Merging the mesh: Starting")
+    local_print_log('=' * 80)
+    self.print_log("* Merging the mesh: Starting")
     self.create_merge_poly_scripts()
     self.create_final_merge_script()
     merge_the_fractures(self.ncpu)
     merge_final_mesh()
     check_for_final_mesh(self.visual_mode)
-    self.print_log("Merging the mesh: Complete")
+    self.print_log("* Merging the mesh: Complete")
+    local_print_log('=' * 80)
