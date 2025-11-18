@@ -144,8 +144,6 @@ finish
     self.num_frac = len(self.fracture_list)
     self.print_log("--> Done editting intersection files")
 
-
-
 def edit_params(self):
     """
     Edit and rewrite the ``params.txt`` file with updated fracture information.
@@ -750,7 +748,7 @@ def clean_up_after_prune(self, dump_files=False):
     --------
     clean_up_files_after_prune : Regenerates all DFN output files after pruning.
     """
-    
+
     self.print_log(f"\n--> Modifying DFN based on fractures in {self.prune_file}")
     self.keep_list = np.sort(np.genfromtxt(self.prune_file).astype(int))
     self.fracture_list = self.keep_list
