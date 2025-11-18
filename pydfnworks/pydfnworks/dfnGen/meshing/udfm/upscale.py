@@ -16,16 +16,17 @@ import math as m
 import glob
 import pickle
 
-
-def upscale(self, mat_perm, mat_por, path='../'):
+def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
     """ Generate permeabilities and porosities based on output of map2continuum.
 
     Parameters
     ----------
         self : object
             DFN Class 
+        
         mat_perm : float 
             Matrix permeability (in m^2)
+        
         mat_por: float
             Matrix porosity
 
@@ -33,10 +34,13 @@ def upscale(self, mat_perm, mat_por, path='../'):
     -------
         perm_fehm.dat : text file
             Contains permeability data for FEHM input
+        
         rock_fehm.dat : text file
             Contains rock properties data for FEHM input
+        
         mesh_permeability.h5 : h5 file
             Contains permeabilites at each node for PFLOTRAN input
+        
         mesh_porosity.h5 : h5 file
             Contains porosities at each node for PFLOTRAN input               
         
@@ -260,6 +264,8 @@ def upscale(self, mat_perm, mat_por, path='../'):
     self.print_log("Generating permeability and porosity for octree mesh: Finished")
     self.print_log('=' * 80)
 
+    if tag_mesh:
+        self.add_variable_to_mesh(variable="frac", variable_file="tag_frac.dat", mesh_file_in="octree_dfn.inp", node_based=True)        
 
 #def upscale_cleanup():
 #    files_to_remove = [

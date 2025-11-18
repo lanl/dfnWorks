@@ -17,24 +17,47 @@ import numpy as np
 class DFNWORKS():
     '''
     Class for DFN Generation and meshing
-    
-    Attributes:
-        * jobname: name of job, also the folder where output files are stored
-        * ncpu: number of CPUs used in the job
-        * dfnGen file: the name of the dfnGen input file
-        * dfnFlow file: the name of the dfnFlow input file
-        * dfnTrans file: the name of the dfnFlow input file
-        * local prefix: indicates that the name contains only the most local directory
-        * vtk_file: the name of the VTK file
-        * inp_file: the name of the INP file
-        * uge_file: the name of the UGE file
-        * mesh_type: the type of mesh
-        * perm_file: the name of the file containing permeabilities 
-        * aper_file: the name of the file containing apertures 
-        * perm_cell file: the name of the file containing cell permeabilities 
-        * aper_cell_file: the name of the file containing cell apertures
-        * freeze: indicates whether the class attributes can be modified
-        * h : FRAM length scale 
+    Parameters
+    ----------
+        jobname: name of job, also the folder where output files are stored
+        
+        ncpu: number of CPUs used in the job
+        
+        dfnGen file: the name of the dfnGen input file
+        
+        dfnFlow file: the name of the dfnFlow input file
+        
+        dfnTrans file: the name of the dfnFlow input file
+        
+        local prefix: indicates that the name contains only the most local directory
+        
+        vtk_file: the name of the VTK file
+        
+        inp_file: the name of the INP file
+        
+        uge_file: the name of the UGE file
+        
+        mesh_type: the type of mesh
+        
+        perm_file: the name of the file containing permeabilities 
+        
+        aper_file: the name of the file containing apertures 
+        
+        perm_cell file: the name of the file containing cell permeabilities 
+        
+        aper_cell_file: the name of the file containing cell apertures
+        
+        freeze: indicates whether the class attributes can be modified
+        
+        h : FRAM length scale 
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        None
     '''
 
     from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
@@ -49,7 +72,8 @@ class DFNWORKS():
     import pydfnworks.dfnGen
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input, print_domain_parameters
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.generation.process_generator_output import parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data, compute_fracture_p21
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
@@ -90,13 +114,14 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
     # dfnTrans
     import pydfnworks.dfnTrans
     from pydfnworks.dfnTrans.transport import dfn_trans, copy_dfn_trans_files, run_dfn_trans, create_dfn_trans_links, check_dfn_trans_run_files
+    from pydfnworks.dfnTrans.combine_avs_trajectories import combine_avs_trajectories 
 
     # dfnGraph
     import pydfnworks.dfnGraph
@@ -123,10 +148,8 @@ class DFNWORKS():
                  cell_based_aperture=False,
                  store_polygon_data=True,
                  pickle_file=None,
-                 log_filename="dfnWorks",
+                 log_filename=None,
                  log_time=True):
-                 #log_filename=None,
-                 #log_time=False):
         
         ## initialize variables 
         self.num_frac = int
@@ -229,7 +252,12 @@ class DFNWORKS():
         self.print_log("--> Creating DFN Object: Complete" )
 
     def __del__(self):
-        self.print_log(f"--> {self.local_jobname} completed/exited " )
+        try:
+            print(f"--> {self.local_jobname} completed/exited " )
+            pass
+        except Exception:
+            print("--> Job completed/exited")
+            pass
 
 #         elapsed = time() - self.start_time
 #         time_sec = elapsed

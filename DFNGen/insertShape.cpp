@@ -12,18 +12,16 @@
 
 /**************************************************************************/
 /*****************  Generate Polygon/Fracture  ****************************/
-/*! Generates a polygon based on a stochastic fracture shape family
-    NOTE: Function does not create bouding box. The bouding box has to be
-          created after fracture truncation
-    Arg 1: Shape family to generate fracture from
-    Arg 2: Random generator, see std <random> c++ library
-    Arg 3: Distributions class, currently used only for exponential dist.
-    Arg 4: Index of 'shapeFam' (arg 1) in the shapeFamilies array in main()
-    Arg 5: True - Use pre-calculated fracture radii list to pull radii from
-           False - Generate random radii every time (used in dryRun()
-                   which estimates number of fractures needed when using
-                   p32 option and generates the radii lists)
-    Return: Random polygon/fracture based from 'shapeFam' */
+/*!
+ * \brief Generates a polygon based on a stochastic fracture shape family.
+ *
+ * \param shapeFam Shape family to generate fracture from.
+ * \param generator Random generator, see std::mt19937_64.
+ * \param distributions Distributions class, currently used only for exponential distribution.
+ * \param familyIndex Index of \p shapeFam in the shapeFamilies array.
+ * \param useList If true, use pre-calculated fracture radii list; if false, generate random radii each time.
+ * \return A \c Poly struct representing the generated polygon/fracture.
+ */
 struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Distributions &distributions, int familyIndex, bool useList) {
     // New polygon to build
     struct Poly newPoly;
@@ -156,19 +154,39 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     // Assumes polygon on x-y plane
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
-    // Fisher distribution / get normal vector
-    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
-    double mag = magnitude(norm[0], norm[1], norm[2]);
     
-    if (mag < 1 - eps || mag > 1 + eps) {
-        normalize(norm); // Ensure norm is normalized
+
+    // Fisher vs. Bingham normal: pick one, then normalize & rotate
+    double* norm = nullptr;
+
+    if (shapeFam.orientation_distribution == "bingham") {
+        norm = binghamDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa1,
+            shapeFam.kappa2,
+            generator
+        );
+    } else {
+        norm = fisherDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa,
+            generator
+        );
     }
-    
-    applyRotation3D(newPoly, norm); // Rotate vertices to norm (new normal)
-    // Save newPoly's new normal vector
+
+    double mag = magnitude(norm[0], norm[1], norm[2]);
+
+    if (std::abs(mag - 1.0) > eps) {
+        normalize(norm);
+    }
+
+    applyRotation3D(newPoly, norm);
     newPoly.normal[0] = norm[0];
     newPoly.normal[1] = norm[1];
     newPoly.normal[2] = norm[2];
+
     delete[] norm;
     double *t;
     
@@ -209,17 +227,16 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
 
 /**************************************************************************/
 /*************  Generate Polygon/Fracture With Given Radius  **************/
-/*! Similar to generatePoly() except the radius is passed to the function.
-    Generates a polygon
-    Shape (ell or rect) still comes from the shapes' familiy
-    NOTE: Function does not create bouding box. The bouding box has to be
-          created after fracture truncation
-    Arg 1: Radius for polygon
-    Arg 2: Shape family to generate fracture from
-    Arg 3: Random generator, see std <random> c++ library
-    Arg 4: Distributions class, currently used only for exponential dist.
-    Arg 5: Index of 'shapeFam' (arg 1) in the shapeFamilies array in main()
-    Return: Polygond with radius passed in arg 1 and shape based on 'shapeFam' */
+/*!
+ * \brief Similar to generatePoly(), but uses a provided radius.
+ *
+ * \param radius Radius for the polygon.
+ * \param shapeFam Shape family to generate fracture from.
+ * \param generator Random generator, see std::mt19937_64.
+ * \param distributions Distributions class, currently used only for exponential distribution.
+ * \param familyIndex Index of \p shapeFam in the shapeFamilies array.
+ * \return A \c Poly struct representing the generated polygon/fracture with the given radius.
+ */
 struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::mt19937_64 &generator, Distributions &distributions, int familyIndex) {
     // New polygon to build
     struct Poly newPoly;
@@ -258,7 +275,24 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     // Angle must be in rad
     applyRotation2D(newPoly, beta);
     // Fisher distribution / get normal vector
-    double *norm = fisherDistribution(shapeFam.angleOne, shapeFam.angleTwo, shapeFam.kappa, generator);
+    double *norm = nullptr;
+          
+    if (shapeFam.orientation_distribution == "bingham") {
+        norm = binghamDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa1,
+            shapeFam.kappa2,
+            generator
+        );
+    } else {
+        norm = fisherDistribution(
+            shapeFam.angleOne,
+            shapeFam.angleTwo,
+            shapeFam.kappa,
+            generator
+        );
+    }
     double mag = magnitude(norm[0], norm[1], norm[2]);
     
     if (mag < 1 - eps || mag > 1 + eps) {
@@ -386,12 +420,13 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
 // }
 
 /**************  Initialize Rectangular Vertices  *****************/
-/*! Initializes vertices for rectangular poly using radius (1/2 x length)
-    and aspcet ratio. (xradius = radius, yradius = radius * aspectRatio)
-    Poly will be on x-y plane
-    Arg 1: Polygon to initialize vertices
-    Arg 2: Radius (1/2 x dimension length)
-    Arg 3: Aspect ratio */
+/*!
+ * \brief Initializes vertices for a rectangular polygon using radius and aspect ratio.
+ *
+ * \param newPoly Polygon to initialize vertices for.
+ * \param radius Half the rectangle's length.
+ * \param aspectRatio Ratio of y-radius to x-radius.
+ */
 void initializeRectVertices(struct Poly &newPoly, float radius, float aspectRatio) {
     double x = radius;
     double y = radius * aspectRatio;
@@ -416,10 +451,15 @@ void initializeRectVertices(struct Poly &newPoly, float radius, float aspectRati
 
 /****************************************************************/
 /************* Initialize Ellipse Vertices **********************/
-/*! Initializes ellipse vertices on x-y plane
-    Arg 1: Poly to initialize
-    Arg 2: Radius (xradius = radius. yradius = radius * aspectRatio)
-    Arg 3: Aspect ratio */
+/*!
+ * \brief Initializes vertices for an elliptical polygon on the x-y plane.
+ *
+ * \param newPoly Polygon to initialize vertices for.
+ * \param radius x-radius of the ellipse.
+ * \param aspectRatio y-radius factor relative to x-radius.
+ * \param thetaList Array of theta values for each vertex.
+ * \param numPoints Number of points (vertices) in the ellipse.
+ */
 void initializeEllVertices(struct Poly &newPoly, float radius, float aspectRatio, float *thetaList, int numPoints) {
     newPoly.xradius = radius;
     newPoly.yradius = radius * aspectRatio;
@@ -436,13 +476,13 @@ void initializeEllVertices(struct Poly &newPoly, float radius, float aspectRatio
 
 /**********************************************************************/
 /********************  Retranslate Polygon  ***************************/
-/*! Re-translate poly
-    Re-initializes/re-builds (if needed) polygon at origin and translates to
-    new position preserving its size, shape, and normal vector
-    This helps hit target distributions since we reject less
-    Arg 1: Polygon
-    Arg 2: Shape family structure which Polygon belongs to
-    Arg 3: Random Generator */
+/*!
+ * \brief Re-translates a polygon: either moves it randomly or rebuilds if truncated.
+ *
+ * \param newPoly Polygon to re-translate.
+ * \param shapeFam Shape family struct which \p newPoly belongs to.
+ * \param generator Random number generator for translation.
+ */
 void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_64 &generator) {
     if (newPoly.truncated == 0) {
         // If poly isn't truncated we can skip a lot of steps such
@@ -612,10 +652,13 @@ bool p32Complete(int size) {
 
 /***************************************************************************/
 /**********************  Print Rejection Reson  ****************************/
-/*! Function prints fracture rejection reasons to user based on reject code
-    Currtenly only used for user defined fractures.
-    Arg 1: Rejection code
-    Arg 2: Poly which was rejected */
+/**********************  Print Rejection Reason  ****************************/
+/*!
+ * \brief Prints fracture rejection reasons based on reject code.
+ *
+ * \param rejectCode Integer code indicating the reason for rejection.
+ * \param newPoly The \c Poly struct that was rejected.
+ */
 void printRejectReason(int rejectCode, struct Poly newPoly) {
     std::string logString;
     
@@ -679,21 +722,14 @@ void printRejectReason(int rejectCode, struct Poly newPoly) {
 
 
 /******************************************************************/
-/*********************  Get Family Number *************************/
-/*! Turns the global family number into a number the user can more
-    easily understand. The shapeFamily array contains both rectangle
-    and ellipse families.
-    For example: If shapeFamilies array has 3 families of ellipse
-    families and 3 families of rectangle families: {ell, ell, ell, rect, rect, rect}
-    If we want the local family number for index 3, it will return family 1, meaning
-    the first rectangular family. This function is used in conjuntion with shapeType().
-
-    Arg 1: Family index which family belings to
-           in main()'s 'shapeFamilies' array
-    Arg 2: Rectangle or ellipse family
-           0 - Ellipse
-           1 - Rectangle */
-int getFamilyNumber(int familyIndex, int familyShape) {
+/*********************  Get Family Number  *************************/
+/*!
+ * \brief Converts global family index into a local family number for user.
+ *
+ * \param familyIndex Index in the shapeFamilies array.
+ * \param familyShape Shape identifier: 0 = Ellipse, 1 = Rectangle.
+ * \return Local (1-based) family number within its shape category.
+ */int getFamilyNumber(int familyIndex, int familyShape) {
     if (familyShape != 0) { // if not ellipse family
         return familyIndex - nFamEll + 1;
     } else {
@@ -704,8 +740,12 @@ int getFamilyNumber(int familyIndex, int familyShape) {
 
 /******************************************************************/
 /********************  Print Shape Type  **************************/
-/*! Print type of family (ellipse or rectangle)
-    Arg 1: Shape family */
+/*!
+ * \brief Returns the shape family type as a string.
+ *
+ * \param shapeFam Shape family struct.
+ * \return "Ellipse" if \p shapeFam.shapeFamily == 0, otherwise "Rectangular".
+ */
 std::string shapeType(struct Shape &shapeFam) {
     if (shapeFam.shapeFamily == 0) {
         return "Ellipse";
@@ -715,13 +755,13 @@ std::string shapeType(struct Shape &shapeFam) {
 }
 
 /******************************************************************/
-/************  Get Max Fracture Radii From Family  ****************/
-/*! Returns the largest fracture radii defined by the user for
-    a fracture family.
-    This function is used for the 'forceLargeFractures' option
-    in the input file
-    Arg 1: Shape family
-    Return: User's maximum radii for shapeFam (arg 1) */
+/************  Get Max Fracture Radius From Family  ****************/
+/*!
+ * \brief Returns the largest fracture radius defined by the user for a shape family.
+ *
+ * \param shapeFam Shape family struct.
+ * \return Maximum radius (logMax, max, expMax, or constRadi) based on distributionType.
+ */
 double getLargestFractureRadius(Shape &shapeFam) {
     switch (shapeFam.distributionType) {
     case 1: // Log-normal

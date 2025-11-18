@@ -3,12 +3,28 @@ from pydfnworks.general.logging import local_print_log
 
 def dump_params(params, output_file):
     """ Write the parameters from the verbose input file back to a simplified input file.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        output_file : string
+            output file name
+
+    Returns 
+    ------------
+        None
+
+    Notes
+    -------------
+        None
+
     """
-    local_print_log(f"--> Writing parameters to file {output_file}")
+    local_print_log(f"\n--> Writing parameters to file {output_file} : Starting")
     try:
         writer = open(output_file, 'w')
     except:
-        hf.print_error("Check that the path of your output file is valid.")
+        hf.print_error(f"Check that the path of your output file is valid. {output_file}")
 
     keys = params.keys()
     for key in keys:
@@ -59,7 +75,9 @@ def dump_params(params, output_file):
                     writer.write(f"{key}: 1 \n")
                 else:
                     writer.write(f"{key}: 0 \n")
+            
             else:
                 writer.write(f"{key}: {params[key]['value']} \n")
         else:
             writer.write(key + ": {}\n")
+    local_print_log(f"--> Writing parameters to file {output_file} : Complete")

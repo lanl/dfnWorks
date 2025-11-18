@@ -21,6 +21,7 @@ def check_dudded_points(dudded, hard=False):
     ---------
         dudded : int 
             Expected number of dudded points from params.txt
+        
         hard : bool
             If hard is false, up to 1% of nodes in the mesh can be missed. If hard is True, no points can be missed. 
     Returns
@@ -75,10 +76,10 @@ def gather_mesh_information(self):
     
     Parameters
     ----------
-        local_jobname : string
-            Name of current DFN job (not path) 
-    visual_mode : bool
-        Determines is reduced_mesh or full_mesh is dumped
+        self : DFN object
+
+        visual_mode : bool
+            Determines is reduced_mesh or full_mesh is dumped
 
     Returns
     -------
@@ -118,6 +119,7 @@ def create_mesh_links(self, path):
     Parameters
     ----------
         self : DFN object
+        
         path : string
             Path to where meshing files are located
 
@@ -170,6 +172,7 @@ def inp2gmv(self, inp_file=None):
     ----------
         self : object
             DFN Class
+        
         inp_file : str
             Name of inp file if not an attribure of self
 
@@ -279,11 +282,12 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
 
     Parameters
     -----------
-    ----------
         lagrit_file : string
             Name of LaGriT script to run
+        
         output_file : string
             Name of file to dump LaGriT output
+        
         quiet : bool
             If false, information will be printed to screen.
 
@@ -291,6 +295,9 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
     ----------
         failure: int
             If the run was successful, then 0 is returned. 
+
+    Notes
+    ------
 
     """
     if output_file == None:
@@ -309,7 +316,19 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
 
 
 def setup_meshing_directory():
+    """
+    Parameters
+    -----------
+        None
 
+    Returns
+    ----------
+        None
+
+    Notes
+    ------
+
+    """
     dirs = ["lagrit_scripts", "lagrit_logs"]
     for d in dirs:
         try:
@@ -334,6 +353,7 @@ def cleanup_meshing_files():
     Notes
     -----
     Only runs if cleanup is true
+
     """
     local_print_log("--> Cleaning up directory after meshing")
     batch_files_to_remove = [
@@ -377,12 +397,16 @@ def compute_mesh_slope_and_intercept(h, min_dist, max_dist,
     -------------------
         h : float
             FRAM h scale. Mesh resolution along intersections is h/2
+        
         min_dist : float
             Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h
+        
         max_dist : float
             Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h
+        
         max_resolution_factor : float
             Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
+        
         uniform_mesh : bool
             Boolean for uniform mesh resolution
 
@@ -390,6 +414,7 @@ def compute_mesh_slope_and_intercept(h, min_dist, max_dist,
     -------------------
         slope : float 
             slope of the linear function of the mesh resolution
+        
         intercept : float 
             Intercept of the linear function of the mesh resolution 
 
@@ -397,7 +422,6 @@ def compute_mesh_slope_and_intercept(h, min_dist, max_dist,
     Notes
     -------------------
 
-    
     """
     local_print_log("--> Computing mesh resolution function")
     if uniform_mesh:

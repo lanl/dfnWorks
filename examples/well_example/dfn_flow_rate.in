@@ -84,9 +84,6 @@ REGION All
   /
 END 
 
-REGION pinned 
-  FILE pinned.ex
-END
 
 REGION inflow
   FILE well_inject.ex
@@ -128,23 +125,12 @@ SOURCE_SINK outflow
     REGION outflow 
 END
 
-FLOW_CONDITION pinned
-  TYPE
-    LIQUID_PRESSURE dirichlet
-  /
-  LIQUID_PRESSURE 1.01325d6
-END
 
 #=========================== condition couplers ===============================
 # initial condition
 INITIAL_CONDITION
   FLOW_CONDITION initial
   REGION All
-END
-
-BOUNDARY_CONDITION INFLOW 
-  FLOW_CONDITION pinned
-  REGION inflow
 END
 
 #=========================== stratigraphy couplers ============================

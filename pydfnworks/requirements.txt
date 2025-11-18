@@ -1,8 +1,10 @@
-# requirements.txt
-#
-# installs dependencies from ./setup.py, and the package itself,
-# editable mode (comment/uncomment desired install)
-# -e . --user
-
-# normally
-.
+numpy
+networkx
+h5py
+scipy
+matplotlib
+mplstereonet
+fpdf
+seaborn
+pyvtk
+mpmath

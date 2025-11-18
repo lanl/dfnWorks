@@ -20,12 +20,15 @@ def create_parameter_mlgi_file(fracture_list, h, slope=2.0, refine_dist=0.5):
     
     Parameters
     ----------
-        num_poly : int
-            Number of polygons
+        fracture_list : list of int
+            List of fracture numbers in the DFN
+
         h : float 
             Meshing length scale
+        
         slope : float 
             Slope of coarsening function, default = 2
+        
         refine_dist : float 
             Distance used in coarsening function, default = 0.5
 
@@ -527,14 +530,22 @@ def create_merge_poly_files(ncpu, num_poly, fracture_list, h, visual_mode,
     ----------
         ncpu : int 
             Number of Processors used for meshing
+
+        num_poly : int
+            Number of polygons
+        
         fracture_list : list of int
             List of fracture numbers in the DFN
+        
         h : float 
             Meshing length scale
+        
         visual_mode : bool
             If True, reduced_mesh.inp will be output. If False, full_mesh.inp is output
+        
         domain : dict
             Dictionary of x,y,z domain size
+        
         flow_solver : string
             Name of target flow solver (Changes output files)
 

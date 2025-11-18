@@ -7,25 +7,45 @@ class Poisson_Variables():
             those, that are used by multiple functions.
             Parameters
             ---------
+                self : object 
+                    DFN Class
+                
+                fracture_id : int
+                    Fracture ID number 
+                
                 path_to_polygons : string
                     path to the file containing the vertices of the polygon to be sampled
+                
                 path_to_intersections : string
                     path to the intersections-file
+                
                 H : float
                     double the min distance of the system. defined in params.txx
+                
                 R : float
                     Range over which the min-distance between nodes increases (in units of H)
                     named max_dist in mesh_dfn.py
+                
                 A : float
                     slope of min-distance. Named slope in mesh_dfn.py
+                
                 F : float
                     Range of constant min-distance around an intersection (in units of H). 
                     Named min_dist in mesh_dfn.py
+                
                 concurrent_samples : int
                     number of new candidates sampled around an accepted node at a time.
+                
                 occupancy_factor : float
                     side length of the occupancy grid is given by H/occupancy_factor
                     named grid_size in mesh_dfn.py
+                
+                well_flag : bool
+
+                Returns
+                ---------
+                    None
+
                 Notes
                 -----
         """

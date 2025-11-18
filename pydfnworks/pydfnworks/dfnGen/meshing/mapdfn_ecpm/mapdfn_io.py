@@ -2,7 +2,8 @@ import numpy as np
 from h5py import File
 import itertools
 import time
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log 
+
 
 def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
                      porosity, cell_fracture_id, matrix_on, h5origin):
@@ -18,19 +19,62 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
         cell_size : int
 
-        k_iso : float 
+        k_iso : numpy array
+            numpy array of isotropic permeability for each cell in the ECPM. 
 
-        k_aniso 
+        k_aniso : numpy array
+            Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+
+        matrix_perm : float
+            permeability of the matrix cells
+
+        porosity : numpy array
+            porosity values in the domain cells
+        
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+        matrix_on: bool
+
+        h5origin : list
 
     Returns
     ------------------
+        x : numpy array
+            x values
+        
+        y : numpy array
+            y values
+        
+        z : numpy array
+            z values
+        
+        fracture_id : int
+            fracture index
+        
+        khdf5 : numpy array
+            k iso values
+        
+        kx : numpy array
+            k aniso values
+        
+        ky : numpy array
+            k aniso values
+        
+        kz : numpy array
+            k aniso values
+        
+        phdf5 : numpy array
+            porosity values
+        
+        idx_array : numpy array
+        
+        mat_array : numpy array
 
 
     Notes
     ------------------
 
-     
-    
     """
 
     # h5origin = [x - y for x, y in zip(domain_origin, domain_origin)]
@@ -86,18 +130,47 @@ def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
 
 
 def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
-                   k_aniso, porosity, matrix_perm, tortuosity_factor, matrix_on, h5origin):
+                   k_aniso, porosity, matrix_perm, tortuosity_factor,
+                   matrix_on, h5origin):
     """ Write informaiton into h5 files for pflotran run. 
 
     Parameters
-    ----------------
+    ------------------
+        filenames : string
+            filenames
 
+        nx : int 
 
+        ny : int 
+
+        nz : int 
+
+        cell_size : int
+
+        cell_fracture_id : dict
+            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell
+
+        k_iso : numpy array
+            numpy array of isotropic permeability for each cell in the ECPM.
+
+        k_aniso : numpty array
+            Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.
+
+        porosity : numpy array
+            porosity values in the domain cells
+
+        matrix_perm : float
+            permeability of the matrix cells
+
+        tortuosity_factor : float
+
+        matrix_on: bool
+
+        h5origin : list
 
     Returns
-    ------------
-
-
+    ------------------
+        None
 
     Notes
     -----------
@@ -108,10 +181,9 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
     #x, y, z, material_id, khdf5, kx, ky, kz, phdf5, h5origin, idx_array, mat_array = create_h5_arrays(
     #    origin, domain_origin, nx, ny, nz, cell_size, k_iso, k_aniso,
     #    matrix_perm, porosity, cell_fracture_id)
-
     x, y, z, material_id, khdf5, kx, ky, kz, phdf5, idx_array, mat_array = create_h5_arrays(
         nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm, porosity,
-        cell_fracture_id, matrix_on)
+        cell_fracture_id, matrix_on, h5origin)
     local_print_log("** Dumping h5 files **")
     t0 = time.time()
 
@@ -144,7 +216,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Permeability')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -152,7 +224,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=khdf5)  #does this matter that it is also called data?
 
@@ -164,7 +236,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Porosity')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -172,7 +244,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset('Data', data=phdf5)
 
     # Write tortuosity as a gridded dataset for use with PFLOTRAN.
@@ -183,7 +255,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Tortuosity')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -191,7 +263,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset('Data', data=tortuosity_factor / phdf5)
 
     # Write anisotropic permeability as a gridded dataset for use with PFLOTRAN.
@@ -202,7 +274,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityX')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -210,14 +282,14 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=kx)  #does this matter that it is also called data?
 
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityY')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -225,14 +297,14 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=ky)  #does this matter that it is also called data?
 
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityZ')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -240,7 +312,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=kz)  #does this matter that it is also called data?
 

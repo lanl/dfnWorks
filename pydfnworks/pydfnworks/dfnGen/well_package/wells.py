@@ -16,6 +16,7 @@ def tag_well_in_mesh(self, wells):
     -----------
         self : object
             DFN Class
+        
         well: Dictionary
             Dictionary of information about the well that contains the following attributes
 
@@ -31,9 +32,11 @@ def tag_well_in_mesh(self, wells):
 
             well["r"] : float 
                 radius of the well
+    
     Returns
     --------
         None
+    
     Notes
     --------
         Wells can be a list of well dictionaries
@@ -190,6 +193,9 @@ def expand_well(self,well):
 
     Parameters    
     -----------
+        self : object
+            DFN Class
+
         well:
             dictionary of information about the well. Contains the following:
 
@@ -462,6 +468,7 @@ def get_well_zone(well, inp_file):
     -----------
         self : object
             DFN Class
+        
         well:
             dictionary of information about the well. Contains the following:
 
@@ -548,6 +555,7 @@ def find_well_intersection_points(self, wells):
     -----------
         self : object
             DFN Class
+        
         well:
             dictionary of information about the well. Contains the following:
 
@@ -600,6 +608,9 @@ def run_find_well_intersection_points(self, well):
 
     Parameters    
     -----------
+        self : object
+            DFN Class
+
         well:
             dictionary of information about the well. Contains the following:
 
@@ -805,6 +816,9 @@ def well_point_of_intersection(self, well):
 
     Parameters    
     -----------
+        self : object
+            DFN Class
+
         well:
             dictionary of information about the well. Contains the following:
 
@@ -938,8 +952,10 @@ def get_segments(well_line_file):
     --------
         pts : list
             list of dictionaries of intersection points. dictionary contains fracture id and x,y,z coordinates
+        
         elems: list of dictionaries
             Information about elements of the discretized well that intersect the DFN
+        
         fracture_list : list
             list of fractures that the well intersects
 
@@ -1033,6 +1049,7 @@ def rotation_matrix(normalA, normalB):
     -----------
         normalA : numpy array
             normal vector
+        
         normalB : numpy array
             normal vector
               
@@ -1106,6 +1123,7 @@ def rotate_point(p, R):
     -----------
         p : numpy array
             point in 3D space
+        
         R : numpy array
             Rotation matrix
     Returns
@@ -1131,6 +1149,7 @@ def cleanup_wells(self, wells):
     -----------
         self : object
             DFN Class
+        
         well:
             dictionary of information about the well. Contains the following:
 

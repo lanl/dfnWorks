@@ -16,8 +16,10 @@ def create_variable_file(variable, variable_file, matid_file="materialid.dat"):
     -----------
         variable : string
             name of variable
+        
         variable_file : string
             name of file containing variable files. Must be a single column where each line corresponds to that fracture number. 
+        
         matid_file : string
             name of materialid file produced by large. Normally produced by run_meshing.
 
@@ -53,10 +55,13 @@ def create_lagrit_append_script(variable, variable_file, mesh_file_in,
     -----------
         variable : string
             name of variable
+        
         variable_file : string
             name of file containing variable files. Must be a single column where each line corresponds to that node number in the mesh
+        
         mesh_file_in : string
             Name of source mesh file
+        
         mesh_file_out : string
             Name of Target mesh file
     Returns
@@ -96,14 +101,19 @@ def add_variable_to_mesh(self,
     -----------
         self : object
             DFN Class
+        
         variable : string
             name of variable
+        
         variable_file : string
             name of file containing variable files. Must be a single column where each line corresponds to that node number in the mesh
+        
         mesh_file_in : string
             Name of source mesh file
+        
         mesh_file_out : string
             Name of Target mesh file.  If no name if provide, mesh_file_in will be used
+        
         node_based : bool
             Set to True if variable_file contains node-based values, Set to False 
             if variable_file provide fracture based values

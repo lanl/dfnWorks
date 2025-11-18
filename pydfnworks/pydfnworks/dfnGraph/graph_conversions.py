@@ -18,8 +18,10 @@ def intersection_to_fracture(G, inflow, outflow):
     ----------
         G: NetworkX Graph
             Intersection graph, where nodes correspond to fracture intersections.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
 
@@ -76,8 +78,10 @@ def fracture_to_intersection(G, inflow, outflow):
     ----------
         G: NetworkX Graph
             Fracture graph, where nodes correspond to fractures.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
 
@@ -135,10 +139,13 @@ def convert_graph(G, inflow, outflow, output):
             Either a fracture graph, where nodes correspond to fractures,
             or an intersection graph, where nodes correspond to fracture
             intersections.
+        
         inflow: str
             Name of inflow boundary
+        
         outflow: str
             Name of outflow boundary
+        
         output: str
             Output type of the graph conversion. 
             Accepted values include "fracture", "frac", or "f" to call

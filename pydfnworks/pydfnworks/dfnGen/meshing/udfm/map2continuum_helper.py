@@ -8,8 +8,10 @@ def in_domain(self, point, buffer = 0):
     Parameters
     ---------------
         self : DFN object
+        
         point : numpy array
             x,y,z coordinates of point
+        
         buffer : float
             buffer zone from the boundary. If non-zero, then it is determiend with the point is within the domain shrunk by the buffer zone
 
@@ -67,14 +69,22 @@ def gather_points(self):
             name = f'fracture-{i+1}'
             num_pts = len(self.polygons[name])
             point = self.polygons[name][0]
-            j = 0
-            while not self.in_domain(point, self.h*10**-3):
-                j +=1 
+            found = False
+            for j in range(num_pts):
                 point = self.polygons[name][j]
-                if j == num_pts:
-                    self.print_log(f'--> Warning. Fracture {i+1} has a center and all vertices either outside the domain or on the boundary. Could be a problem.', 'warning')
+                if self.in_domain(point, self.h*10**-3):
+                    points[i] = point
+                    found = True 
                     break
-            points[i] = point
+            if not found:
+                self.print_log(f'--> Warning. Fracture {i+1} has a center and all vertices either outside the domain or on the boundary. Could be a problem.', 'warning')
+                print(f"Center: {self.centers[i]}")
+                for j in range(num_pts):
+                    point = self.polygons[name][j]
+                    print(f"Points: {point}")
+                self.print_log(f'--> Change the generation seed, or domain parameters (domainSizeIncrease) and try again ', 'error')
+
+
 
     self.print_log("--> Gathering points on fractures : Complete\n")
     return points 

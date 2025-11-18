@@ -22,6 +22,7 @@ def edit_intersection_files(self):
     ---------
         self.num_frac : int 
             Number of Fractures in the original DFN
+        
         fracture_list :list of int
             List of fractures to keep in the DFN
 

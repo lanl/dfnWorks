@@ -1,4 +1,6 @@
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
+from pydfnworks.general.logging import local_print_log
+
 import numpy as np
 
 
@@ -21,7 +23,7 @@ def check_distributions(params, prefix):
     ---------
         Exits program is inconsistencies are found.
     """
-
+    local_print_log("\n--> Checking Length Distributions: Starting")
     key = prefix + "distr"
     shape = "ellipse" if prefix == 'e' else "rectangle"
     num_families = params['nFamEll']['value'] if prefix == 'e' else params[
@@ -66,6 +68,7 @@ def check_distributions(params, prefix):
                 hf.check_none(dist_key, params[dist_key]['value'])
                 hf.check_length(dist_key, params[dist_key]['value'], cnt)
             check_constant_dist(params, prefix, shape, cnt)
+    local_print_log("--> Checking Length Distributions: Complete")
 
 
 def check_lognormal_dist(params, prefix, shape, cnt):
@@ -78,6 +81,10 @@ def check_lognormal_dist(params, prefix, shape, cnt):
             parameter dictionary
         prefix : string
             either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
 
     Returns
     ---------
@@ -85,7 +92,7 @@ def check_lognormal_dist(params, prefix, shape, cnt):
 
     Notes
     ---------
-        Exits program is inconsistencies are found.
+        None
     """
     #print(f"checking log normal {shape}")
     for i in range(cnt):
@@ -124,6 +131,25 @@ def check_lognormal_dist(params, prefix, shape, cnt):
 def check_tpl_dist(params, prefix, shape, cnt):
     """
     Verifies parameters for truncated power law distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     #print(f"checking tpl {shape}")
     for i in range(cnt):
@@ -144,6 +170,25 @@ def check_tpl_dist(params, prefix, shape, cnt):
 def check_exponential_dist(params, prefix, shape, cnt):
     """
     Verifies parameters for exponential distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     #print(f"checking exp {shape}")
     for i in range(cnt):
@@ -165,10 +210,30 @@ def check_exponential_dist(params, prefix, shape, cnt):
 
 def check_constant_dist(params, prefix, shape, cnt):
     """
-    Verifies parameters for constant distribution of fractures
+    Verifies parameters for constant distribution of fractures.
+
+     Parameters
+    -------------
+        params : dict
+            parameter dictionary
+        prefix : string
+            either 'e' or 'r' for ellipse or rectangle
+        shape: string
+            The shape of the fracture
+        cnt : int
+            The maximum range of the loop.
+
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
     """
     # print(f"checking constant {shape}")
     for i in range(cnt):
         value = params[prefix + "const"]["value"][i]
         hf.check_values(prefix + "const", value, 0)
         hf.check_min_frac_size(params, value)
+

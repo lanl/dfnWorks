@@ -11,8 +11,15 @@ def valid(self, name, path, path_type):
     """" Check that path is valid for a executable
     Parameters
     ----------
+        self : object
+            DFN Class
+
         name : string
             Path to file or executable
+
+        path : string
+            path to executable
+
         path_type : string
             Path type can either be an executable or a directory
 
@@ -50,15 +57,20 @@ def compile_dfn_exe(self,path):
     """Compile executables used in the DFN workflow including: DFNGen, DFNTrans, correct_uge, correct_stor, mesh_checking. The executables LaGriT, PFLOTRAN, and FEHM are not compiled in this function
     Parameters
     ----------
+        self : object
+            DFN Class
+
         directory : string
-            Path to dfnWorks executable 
+
+        Path : string
+            path to dfnWorks executable
     Returns
     -------
         None
-    
+
     Notes
     -----
-        This function is only called if an executable is not found. 
+        This function is only called if an executable is not found.
 """
 
     self.print_log(f"Compiling {path}" )
@@ -70,11 +82,12 @@ def compile_dfn_exe(self,path):
 
 
 def print_paths(self):
-    """ Print enviromental variable paths to screen 
-    
+    """ Print enviromental variable paths to screen
+
     Parameters
     -------------
-        None
+        self : object
+            DFN Class
 
     Returns
     -------------
@@ -98,12 +111,16 @@ def print_paths(self):
 
 def define_paths(self):
     """ Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
+
     Parameters
     ----------
-        None
+        self : object
+            DFN Class
+
     Returns
     -------
         None
+
     Notes
     -----
         Environmental variables are set to executables
@@ -113,15 +130,17 @@ def define_paths(self):
     # THESE PATHS MUST BE SET BY THE USER.
     # ================================================
 
-    self.print_log("--> Loading and checking dfnWorks dependency paths" )
+    self.print_log("--> Loading and checking dfnWorks dependency paths." )
     # Either write paths to ~/.dfnworksrc in a JSON format...
     if os.path.isfile(DFNPARAMS):
+        self.print_log(f"--> {DFNPARAMS} found.\n")
         with open(DFNPARAMS, 'r') as f:
             env_paths = json.load(f)
     # Or, change the paths here
     else:
+        self.print_log("--> Warning. ~/.dfnworksrc not found. Checking for environmantal variables.",  'warning')
         env_paths = {
-            'dfnworks_PATH': None, 
+            'dfnworks_PATH': None,
             'PETSC_DIR': None,
             'PETSC_ARCH': None,
             'PFLOTRAN_EXE': None,
@@ -163,7 +182,7 @@ def define_paths(self):
         os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
         self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
     else:
-        self.print_log("Warning. No FEHM path provided.",  'warning')
+        self.print_log("--> Warning. No FEHM path provided.",  'warning')
 
     # LaGriT executable
     if env_paths['LAGRIT_EXE']:
@@ -188,17 +207,12 @@ def define_paths(self):
          self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
     self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
 
-    os.environ['CORRECT_UGE_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_uge_correct/correct_uge'
-    if not os.path.isfile(os.environ['CORRECT_UGE_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_uge_correct/')
-    self.valid('CORRECT_UGE_EXE', os.environ['CORRECT_UGE_EXE'], "executable")
-
-    os.environ['CORRECT_STOR_EXE'] = os.environ[
-        'dfnworks_PATH'] + 'C_stor_correct/correct_stor'
-    if not os.path.isfile(os.environ['CORRECT_STOR_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'C_stor_correct/')
-    self.valid('CORRECT_STOR_EXE', os.environ['CORRECT_STOR_EXE'], "executable")
+    os.environ['CORRECT_VOLUME_EXE'] = os.environ[
+        'dfnworks_PATH'] + 'CPP_correct_volumes/correct_volume'
+    if not os.path.isfile(os.environ['CORRECT_VOLUME_EXE']):
+         self.compile_dfn_exe(os.environ['dfnworks_PATH'] +
+                        'CPP_correct_volumes/')
+    self.valid('CORRECT_VOLUME_EXE', os.environ['CORRECT_VOLUME_EXE'], "executable")
 
     os.environ['CONNECT_TEST_EXE'] = os.environ[
         'dfnworks_PATH'] + 'DFN_Mesh_Connectivity_Test/ConnectivityTest'
@@ -207,5 +221,5 @@ def define_paths(self):
                         'DFN_Mesh_Connectivity_Test/')
     self.valid('CONNECT_TEST_EXE', os.environ['CONNECT_TEST_EXE'], "executable")
 
-    self.print_paths() 
+    self.print_paths()
     self.print_log("--> Loading and checking dfnWorks dependency paths successful")

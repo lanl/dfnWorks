@@ -31,6 +31,7 @@ def cleanup_failed_run(fracture_id, digits):
     ----------
         fracture_id : int
             Current Fracture ID number
+        
         digits : int
             Number of digits in total number of fractures
 
@@ -103,8 +104,10 @@ def create_symbolic_links(fracture_id, digits, visual_mode):
     --------------------
         fracture_id : int 
             fracture index
+        
         digits : int
             number of digits in total number of fractures
+        
         visual_mode : bool
             Boolean to toggle vis mode on/off. Creates reduced_mesh.inp if true
 
@@ -162,12 +165,18 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
     ----------
         fracture_id : int
             Current Fracture ID number
+        
         visual_mode : bool
             True/False for reduced meshing
+        
         num_frac : int 
             Total Number of Fractures in the DFN
+        
         r_fram : boolean
             relaxed fram
+
+        quiet : boolean
+            toggles for quiet mode.
 
     Returns
     -------
@@ -313,10 +322,18 @@ def mesh_fractures_header(self, quiet=True):
 
     Parameters
     ----------
+        self : object 
+            DFN Class
+
+        quiet : bool
+            toggle quite mode. Default is True
+
         fracture_list : list
             Fractures to be meshed
+        
         visual_mode : bool
             True/False for reduced meshing
+        
         num_frac : int
             Total Number of Fractures
 
@@ -485,6 +502,9 @@ def merge_worker(job, quiet=True):
         job : int
             job number
 
+        quiet : bool
+            toggle quite mode. Default is True
+
     Returns
     -------
         bool : True if failed / False if successful
@@ -518,10 +538,13 @@ def merge_the_fractures(ncpu):
     ----------
         num_frac : int
             Number of Fractures
+        
         ncpu : int
             Number of Processors
+        
         n_jobs : int
             Number of mesh pieces
+        
         visual_mode : bool
             True/False for reduced meshing
 
@@ -593,6 +616,7 @@ def check_for_final_mesh(visual_mode):
     --------------------
         visual_mode : bool
             True/False for reduced meshing
+    
     Returns
     -----------------
         None

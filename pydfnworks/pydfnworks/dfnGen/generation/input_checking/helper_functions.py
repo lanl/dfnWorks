@@ -6,8 +6,17 @@ from pydfnworks.general.logging import print_log, local_print_log
 def print_error(error_string):
     """ print an error
     
-    Args:
+    Parameters
+    ------------
         errString (str): a string describing the error
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+        None
     """
     error = f"\nError while parsing input\n\n{error_string}\n\nProgram terminated.\n"
     local_print_log(error,'error')
@@ -16,10 +25,19 @@ def print_error(error_string):
 def print_warning(warning_string):
     """ print warning
     
-    Args:
+    Parameters
+    ------------
         warnStinrg (str): a string with the warning
+
+    Returns
+    ---------
+        None
+
+    Notes
+    -----
+        None
     """
-    warning_string = f"--> Warning while parsing input\n\n{warning_string}\nBe Careful out there\n"
+    warning_string = f"--> Warning while parsing input\n\n{warning_string}\n* Be careful out there *\n"
     local_print_log(warning_string,'warning')
 
 def curly_to_list(curly_list):
@@ -67,6 +85,22 @@ def has_curlys(line, key):
 
 
 def check_none(key, value):
+    """ Checks value and if None, prints an error.
+
+    Parameters
+    -------------
+        key : string
+            name of key on line
+        value : Any
+
+    Returns
+    ----------
+        None 
+
+    Notes 
+    ---------
+        None
+    """
     if value == None:
         print_error(
             f"\"{key}\" was not defined. Please define one {key} for each family."
@@ -74,7 +108,25 @@ def check_none(key, value):
 
 
 def check_length(key, value, desired_length):
+    """ Check the length of value and compares it to desired_length. If they are unequal an error is given.
 
+    Parameters
+    -------------
+        key : string
+            name of key on line
+        value : Any
+        desired_length : Any
+            desired length of value
+
+    Returns
+    ----------
+        None
+
+    Notes 
+    ---------
+        None
+    """
+    # print(value, len(value))
     if len(value) != desired_length:
         print_error(
             f"\"{key}\" has defined {len(value)} value(s) but there is(are) {desired_length} families. Please define one {key} for each family."
@@ -82,7 +134,26 @@ def check_length(key, value, desired_length):
 
 
 def check_values(key, value, min_val=None, max_val=None):
+    """ Compares value to specified min_val and max_val. Gives an error if out of range.
 
+    Parameters
+    -------------
+        key : string
+            name of key on line
+        value : Any
+        min_val : Any
+            Default None. Specifies the minimum value.
+        max_val : Any
+            Default None. Specifies the maximum value.
+
+    Returns
+    ----------
+        None 
+
+    Notes 
+    ---------
+        None
+    """
     if type(value) is list:
         for i, val in enumerate(value):
             if min_val is not None:
@@ -109,7 +180,21 @@ def check_values(key, value, min_val=None, max_val=None):
 
 
 def get_groups(line, key):
-    """ extract values between { and } 
+    """ extract values between { and }
+
+    Parameters
+    -------------
+        key : string
+            name of key on line
+        value : Any
+
+    Returns
+    ----------
+        value_list : list of extracted values.
+
+    Notes 
+    ---------
+        None
     """
     curlyGroup = re.compile('({.*?})')
     groups = re.findall(curlyGroup, line)
@@ -123,6 +208,25 @@ def get_groups(line, key):
 
 def check_min_max(min_val, max_val, i, dist):
     """ Checks that the minimum parameter for a family is not greater or equal to the maximum parameter.
+
+    Parameters
+    -------------
+        min_val : Any
+            Default None. Specifies the minimum value.
+        max_val : Any
+            Default None. Specifies the maximum value.
+        i : Any
+            index entry number
+        dist : Any
+            shape log-normal
+
+    Returns
+    ----------
+        None
+
+    Notes 
+    ---------
+        None
     """
     if min_val == max_val:
         local_print_log(
@@ -137,6 +241,22 @@ def check_min_max(min_val, max_val, i, dist):
 def check_mean(mean_param, min_param, max_param):
     """ Warns the user if the minimum value of a parameter is greater than the family's mean value, or if the
     maximum value of the parameter is less than the family's mean value.
+
+    Parameters
+    -------------
+        mean_param : Any
+            Specifies the mean parameter value.
+        min_param : Any
+            Specifies the minimum parameter value.
+        max_param : Any
+            Specifies the maximum parameter value.
+    Returns
+    ----------
+        None
+
+    Notes 
+    ---------
+        None
     """
     for minV, meanV in zip(self.value_of(minParam), self.value_of(meanParam)):
         if minV > meanV:
@@ -152,6 +272,20 @@ def check_mean(mean_param, min_param, max_param):
 
 def check_min_frac_size(params, value):
     """ Corrects the minimum fracture size if necessary, by looking at the values in valList.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary.
+        value : Any
+        
+    Returns
+    ----------
+        None
+
+    Notes 
+    ---------
+        None
     """
 
     if params['minimum_fracture_size']['value'] == None:

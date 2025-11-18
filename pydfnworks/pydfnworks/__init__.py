@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 """
 pydfnWorks
@@ -33,17 +34,9 @@ Released under the GPL License
     Satish Karra < satkarra@lanl.gov>
     
 """
-from pydfnworks import release
 
-__author__ = '%s <%s>\n%s <%s>\n%s <%s>' % \
-    (release.authors['Hyman'] + release.authors['Livingston'] +
-        release.authors['Karra'])
 
-__license__ = release.license
-
-__date__ = release.date
-
-__version__ = release.version
+__author__ = "EES-16, Los Alamos National Laboratory"
 
 __bibtex__ = """@article{hyman2015dfnworks,
   title={dfnWorks: A discrete fracture network framework for modeling subsurface flow and transport},
@@ -56,7 +49,13 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
-import pydfnworks.dfnGen
+__version__ = "2.9.5"
+
+__release_date__ = "2025-11-13"
+
+from ._install_info import get_install_date
+__install_date__ = get_install_date()
 
 import pydfnworks.general
 from pydfnworks.general import *
+

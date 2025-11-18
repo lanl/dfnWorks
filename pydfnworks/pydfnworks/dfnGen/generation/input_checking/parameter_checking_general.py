@@ -151,8 +151,9 @@ def check_rejects_per_fracture(rejectsPerFracture):
 
     Parameters
     -------------
-        seed : dict
-            seed entry of params dictionary
+        rejectsPerFracture : int
+            If fracture is rejected, it will be re-translated to a new position this number of times.
+    
     Returns
     ---------
         None
@@ -258,14 +259,27 @@ def check_family_prob(params):
         total = sum(values)
         if total != 1:
             hf.print_warning(
-                "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
+                "* 'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
             params['famProb']['value'] = [x / total for x in values]
-            local_print_log(f"--> New Values: {params['famProb']['value']}")
+            local_print_log(f"--> New Values: {params['famProb']['value']}\n")
 
 
 def check_no_dep_flags(params):
-    """ Check for dependency flags. Not sure this does anything."""
+    """ Check for dependency flags.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Not sure this does anything.
+    """
     no_dependancy_flags = [
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'ecpmOutput', 'tripleIntersections',
@@ -280,9 +294,20 @@ def check_no_dep_flags(params):
 
 
 def check_fram(params):
-    ''' Checks for consistency in FRAM on/off. 
-    
-    '''
+    """ Checks for consistency in FRAM on/off.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        None
+    """
 
     if params['disableFram']['value'] == None and params['framOn'][
             'value'] == None:
@@ -300,20 +325,20 @@ def check_fram(params):
 
     if params['disableFram']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['framOn']['value'] = False
 
     if not params['framOn']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['disableFram']['value'] = True
 
     if params['framOn']['value']:
         if params['rFram']['value']:
             hf.print_warning(
-                "Running with rFRAM. Mesh will not be perfectly conforming."
+                "* Running with rFRAM. Mesh will not be perfectly conforming."
             ) 
 
 
@@ -594,7 +619,20 @@ def check_polygon_boundary_general(params):
 
 
 def check_user_defined(params):
+    """ Check the user definined parameters.
 
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Exits program is inconsistencies are found.
+    """
     user_files = [("userEllipsesOnOff", "UserEll_Input_File_Path"),
                   ("userRectanglesOnOff", "UserRect_Input_File_Path"),
                   ("userRecByCoord", "RectByCoord_Input_File_Path"),
@@ -610,6 +648,20 @@ def check_user_defined(params):
 
 
 def check_general(params):
+    """ Check the general parameters.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Exits program is inconsistencies are found.
+    """
     local_print_log(f"--> Checking General Parameters: Starting")
     check_stop_condition(params)
     check_domain(params)

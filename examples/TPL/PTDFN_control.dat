@@ -46,7 +46,7 @@ If it's like a straight line, then the output is less frequent (in case of
 "out_curv:yes", if "no",  the output file will contain every time step) */
 out_curv: yes 
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs: no 
+out_avs: yes 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no 
 out_fract: no
@@ -106,7 +106,7 @@ init_matrix: no
 
 /*****  particles positions distributed according to in-flow flux weight *********/
 init_fluxw: yes
-init_totalnumber: 1000 
+init_totalnumber: 100 
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 

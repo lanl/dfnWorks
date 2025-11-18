@@ -51,6 +51,10 @@ class Particle():
         self.cp_adv_time = []
         self.cp_tdrw_time = []
         self.cp_pathline_length = []
+        # self.cp_x1 = []
+        # self.cp_x2 = []
+
+ 
         self.velocity = []
         self.lengths = []
         self.times = []
@@ -65,14 +69,21 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+            
             x0 : float
                 current location
+            
             t1 : float
                 previous time step
+            
             t2 : float
                 next time step
+            
             x1 : float
                 previous location
+            
             x2 : float
                 next location
 
@@ -88,6 +99,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 
@@ -131,6 +145,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 
@@ -148,10 +165,13 @@ class Particle():
             x1 = G.nodes[self.curr_node][self.direction]
             x2 = G.nodes[self.next_node][self.direction]
             tau = self.interpolate_time(x0, t1, t2, x1, x2)
+            self.cp_adv_time.append(tau)
             ## interpolate pathline distance to control plane
             l1 = self.length
             l2 = self.length + self.delta_l
-            l0 = self.interpolate_time(x0, l1, l2, x1, x2) 
+            l0 = self.interpolate_time(x0, l1, l2, x1, x2)
+            self.cp_pathline_length.append(l0)
+
             ##print(l1,l2,l0)
 
             # print(f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}")
@@ -163,8 +183,11 @@ class Particle():
                 error = "Error. Interpolated negative travel time."
                 self.print_log(error,'error')
             # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
-            self.cp_adv_time.append(tau)
-            self.cp_pathline_length.append(self.length)
+            # self.cp_adv_time.append(tau)
+            # self.cp_pathline_length.append(l0)
+            # self.cp_x1.append(x1)
+            # self.cp_x2.append(x2)
+
             if self.tdrw_flag:
                 t1 = self.total_time
                 t2 = self.total_time + self.delta_t_md + self.delta_t
@@ -184,6 +207,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             particle object
 
         Returns
@@ -205,6 +231,17 @@ class Particle():
         # self.fracs.append(self.frac)
 
     def cleanup_frac_seq(self):
+        """ Cleanup
+
+        Parameters
+        ----------
+            self : object
+                DFN Class
+
+        Returns
+        -------
+            None
+        """
         frac_seq = [self.frac_seq[0]]
         for frac in self.frac_seq:
             if frac != frac_seq[-1]:
@@ -217,6 +254,9 @@ class Particle():
 
         Parameters
         ----------
+            self : object
+                DFN Class
+
             G : NetworkX graph
                 graph obtained from graph_flow
 

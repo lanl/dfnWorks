@@ -15,7 +15,7 @@ from pydfnworks.general.logging import local_print_log
 
 
 def convert_to_trend_and_plunge(normal_vectors):
-    """ Convert Fracture normal vectors to trend and plunge
+    """ Convert fracture normal vectors to trend and plunge
 
     Parameters
     -----------
@@ -25,36 +25,79 @@ def convert_to_trend_and_plunge(normal_vectors):
     Returns
     ----------
         trends : numpy array
-            Array of fracture trends 
-        plunge : numpy array
-            Array of fracture plunge
+            Array of fracture trends (0–360° azimuths)
+        
+        plunges : numpy array
+            Array of fracture plunges (0–90° below horizontal)
 
     Notes
     -------
-        Conversion is based on the information found at http://www.geo.cornell.edu/geology/faculty/RWA/structure-lab-manual/chapter-2.pdf 
-
+        - Trend: azimuth (clockwise from North) of horizontal projection
+        - Plunge: angle below horizontal
+        - Assumes input coordinates are (East, North, Up)
     """
+    # Normalize all vectors
+    norms = np.linalg.norm(normal_vectors, axis=1)
+    if np.any(norms == 0):
+        raise ValueError("Zero-length vector found in normal_vectors.")
+    normal_vectors = normal_vectors / norms[:, np.newaxis]
 
-    # break up normal vector components
-    n_1 = normal_vectors[:, 0]
-    n_2 = normal_vectors[:, 1]
-    n_3 = normal_vectors[:, 2]
+    # Break up components
+    x = normal_vectors[:, 0]  # East
+    y = normal_vectors[:, 1]  # North
+    z = normal_vectors[:, 2]  # Up
 
-    # calculate trends and plunges
-    trends = np.zeros(len(n_1))
-    plunges = np.zeros(len(n_1))
-    for i in range(len(n_1)):
-        plunges[i] = m.degrees(m.asin(n_3[i]))
-        if n_1[i] > 0.0:
-            trends[i] = m.degrees(m.atan(n_2[i] / n_1[i]))
-        elif n_1[i] < 0.0:
-            trends[i] = 180.0 + m.degrees(m.atan(n_2[i] / n_1[i]))
-        elif n_1[i] == 0.0 and n_2[i] >= 0.0:
-            trends[i] = 90.0
-        elif n_1[i] == 0.0 and n_2[i] < 0.0:
-            trends[i] = 270.0
+    # Plunge (positive downward)
+    plunges = np.degrees(np.arcsin(-z))
+
+    # Trend (azimuth)
+    trends = np.degrees(np.arctan2(x, y))
+    trends[trends < 0] += 360.0
 
     return trends, plunges
+
+# def convert_to_trend_and_plunge(normal_vectors):
+#     """ Convert Fracture normal vectors to trend and plunge
+
+#     Parameters
+#     -----------
+#         normal_vectors : numpy array
+#             Array of fracture normal vectors (n-fractures x 3)
+
+#     Returns
+#     ----------
+#         trends : numpy array
+#             Array of fracture trends 
+        
+#         plunge : numpy array
+#             Array of fracture plunge
+
+#     Notes
+#     -------
+#         Conversion is based on the information found at http://www.geo.cornell.edu/geology/faculty/RWA/structure-lab-manual/chapter-2.pdf 
+
+#     """
+
+#     # break up normal vector components
+#     n_1 = normal_vectors[:, 0]
+#     n_2 = normal_vectors[:, 1]
+#     n_3 = normal_vectors[:, 2]
+
+#     # calculate trends and plunges
+#     trends = np.zeros(len(n_1))
+#     plunges = np.zeros(len(n_1))
+#     for i in range(len(n_1)):
+#         plunges[i] = m.degrees(m.asin(n_3[i]))
+#         if n_1[i] > 0.0:
+#             trends[i] = m.degrees(m.atan(n_2[i] / n_1[i]))
+#         elif n_1[i] < 0.0:
+#             trends[i] = 180.0 + m.degrees(m.atan(n_2[i] / n_1[i]))
+#         elif n_1[i] == 0.0 and n_2[i] >= 0.0:
+#             trends[i] = 90.0
+#         elif n_1[i] == 0.0 and n_2[i] < 0.0:
+#             trends[i] = 270.0
+
+#     return trends, plunges
 
 
 def plot_fracture_orientations(params, families, fractures):

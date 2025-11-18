@@ -5,17 +5,20 @@ from time import time
 import subprocess
 
 
-def dfn_trans(self):
-    """Primary driver for dfnTrans. 
+def dfn_trans(self, combine_avs = False):
+    """ Primary driver for dfnTrans. 
 
     Parameters
     ---------
         self : object
             DFN Class 
-   
+
+        combine_avs : bool
+            If True, then all avs files for particle trajectories are combined into a single avs file 
+
     Returns
     --------
-        Nonie
+        None
     """
     self.print_log('=' * 80)
     self.print_log("dfnTrans Starting")
@@ -25,6 +28,8 @@ def dfn_trans(self):
     self.check_dfn_trans_run_files()
     self.run_dfn_trans()
     delta_time = time() - tic
+    if combine_avs:
+        self.combine_avs_trajectories() 
     self.dump_time('Process: dfnTrans', delta_time)
     self.print_log('=' * 80)
     self.print_log("dfnTrans Complete")
@@ -83,6 +88,7 @@ def create_dfn_trans_links(self, path='../'):
     ---------
         self : object 
             DFN Class
+        
         path : string 
             Absolute path to primary directory. 
    
@@ -329,8 +335,10 @@ def check_dfn_trans_run_files(self):
 
         else:
             if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
-                error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
-                self.print_log(error, 'error')
+                self.dump_hydraulic_values(format = "FEHM")
+                if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
+                    error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
+                    self.print_log(error, 'error')
 
     else:
         if params["thickness:"] == None:
@@ -338,3 +346,7 @@ def check_dfn_trans_run_files(self):
             self.print_log(error, 'error')
 
     self.print_log("--> Checking Initial Conditions Complete")
+
+    self.dfnTrans_params = params 
+    print(self.dfnTrans_params)
+    
