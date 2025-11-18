@@ -81,11 +81,12 @@ BACKBONE = DFNWORKS(jobname=jobname,
                     pickle_file = src_path + 'output_prune.pkl')
 BACKBONE.prune_file = src_path + "/backbone.dat"
 BACKBONE.path = src_path
-BACKBONE.jobname = jobname
+BACKBONE.jobname = jobname + os.sep
 BACKBONE.local_jobname = "output_backbone" 
 BACKBONE.make_working_directory(delete=True)
 BACKBONE.visual_mode = True
 BACKBONE.mesh_network()
+BACKBONE.clean_up_files_after_prune() 
 
 # os.chdir(home)
 # jobname = os.getcwd() + "/output_2-core/"
