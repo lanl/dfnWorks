@@ -75,7 +75,7 @@ WORKDIR $APP_PATH
 
 RUN ["rm","-Rf","correct_volume/","DFNGen/","DFNTrans/",\
      "DFN_Mesh_Connectivity_Test/","pydfnworks/",".git",".gitignore",\
-     "internal/","docker/","scripts/","Dockerfile", "Documentation/","pysimfrac"]
+     "internal/","docker/","scripts/","Dockerfile", "Documentation/", "CPP_correct_volumes"]
 
 # RUN ["apt","install","texlive-latex-extra"]
 # Run bash on container launch
