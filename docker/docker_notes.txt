@@ -8,14 +8,14 @@ If no space left on device run
 4. docker rm $(docker ps -q -f 'status=exited')
 
 to build core deps
-docker build -t dfn-deps -f docker/build-core.dockerfile .
+docker buildx build --platform linux/amd64,linux/arm64 -t dfn-deps:latest -f docker/build-core.dockerfile ./
 
 ## docker build -t dfn-deps -f docker/build-core.dockerfile .//
 
-to build dfnWorks
-docker build -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
+to build multi-arch dfnWorks
+docker buildx build --platform linux/amd64,linux/arm64 -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
 
-to push to docker 
+to push multi-arch docker 
 docker login --username=hymanjd
 docker push ees16/dfnworks:latest
 

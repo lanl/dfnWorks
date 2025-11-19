@@ -14,7 +14,7 @@ This container is intended to be updated infrequently.
 
 **Usage:**
 
-    docker build -t dfn-deps -f docker/build-core.dockerfile ./
+    docker buildx build --platform linux/amd64,linux/arm64 -t dfn-deps:latest -f docker/build-core.dockerfile ./
 
 ### `build-dfnworks.dockerfile`
 
@@ -39,6 +39,6 @@ docker tag #image_id ees16/dfnworks:<v2.*>
 
 **Usage:**
 
-    docker build -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
+    docker buildx build --platform linux/amd64,linux/arm64 -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
 
 

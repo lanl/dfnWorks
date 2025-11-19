@@ -12,6 +12,8 @@ FROM ubuntu:latest
 # MAINTAINER Daniel Livingston <livingston@lanl.gov>
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
+# TARGETARCH is set by Docker BuildKit (e.g., amd64, arm64)
+ARG TARGETARCH
 
 # ENV http_proxy=http://proxyout.lanl.gov:8080
 # ENV HTTP_PROXY=http://proxyout.lanl.gov:8080

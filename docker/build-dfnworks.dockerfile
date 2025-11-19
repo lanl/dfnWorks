@@ -11,6 +11,8 @@ FROM dfn-deps:latest
 # MAINTAINER 
 ENV APP_PATH=/dfnWorks/
 WORKDIR $APP_PATH
+# TARGETARCH is set by Docker BuildKit (e.g., amd64, arm64)
+ARG TARGETARCH
 
 #ENV https_proxy=
 #ENV http_proxy=
