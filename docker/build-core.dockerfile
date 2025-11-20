@@ -27,25 +27,79 @@ ARG TARGETARCH
 
 RUN ["sed","-i","-e","s|disco|focal|g","/etc/apt/sources.list"]
 # 2. Add pre-required packages
-RUN ["apt-get","update","-y"]
+# RUN ["apt-get","update","-y"]
+# ENV DEBIAN_FRONTEND=noninteractive
+# RUN ["apt-get","install","-y","build-essential","python3.12","gfortran","gfortran-12","cmake","git", "wget","libz-dev","m4","bison","texlive-latex-extra"]
+
+# RUN ["apt-get","install","-y","python3-pip","python3-tk","vim","curl","pkg-config","openssh-client"]
+
+# RUN ["apt-get","install","-y","openssh-server","nano","emacs","gcc-12","g++-12", "libcurl4-openssl-dev",\
+#         "texlive","texlive-fonts-recommended","dvipng","cm-super","texlive-latex-extra","python3-numpy"] 
+
 ENV DEBIAN_FRONTEND=noninteractive
-RUN ["apt-get","install","-y","build-essential","python3.12","gfortran","gfortran-12","cmake","git",\
-        "wget","libz-dev","m4","bison","python3.12","texlive-latex-extra",\
-        "python3-pip","python3-tk","vim","curl","pkg-config","openssh-client",\
-        "openssh-server","nano","emacs","gcc-12","g++-12", "libcurl4-openssl-dev",\
-        "texlive","texlive-fonts-recommended","dvipng","cm-super","texlive-latex-extra","python3-numpy"] 
 
+# update indexes
+RUN ["apt-get","update","-y"]
 
-RUN ["apt-get","install","-y","python3-setuptools","python3-numpy","python3-h5py",\
-    "python3-matplotlib","python3-scipy","python3-networkx",\
-    "python3-rich","python3-fpdf","python3-rich","python3-seaborn",\
-    "python3-mpmath"]
+# base tools and headers
+RUN ["apt-get","install","-y", \
+     "build-essential","cmake","git","wget","curl","pkg-config", \
+     "ca-certificates","zlib1g-dev","m4","bison",\
+     "libcurl4-openssl-dev",\
+     "vim","nano","emacs",\
+     "openssh-client","openssh-server"]
+
+# python stack
+RUN ["apt-get","install","-y",\
+     "python3.12","python3-pip","python3-tk","python3-numpy"]
+
+# fortran and specific compilers
+RUN ["apt-get","install","-y",\
+     "gfortran","gfortran-12","gcc-12","g++-12"]
+
+# latex and friends
+RUN ["apt-get","install","-y",\
+     "texlive","texlive-fonts-recommended","texlive-latex-extra","dvipng","cm-super"]
+
+# refresh trust store for tls
+RUN ["/usr/sbin/update-ca-certificates"]
+
+# set gcc g++ gfortran default to version 12
+RUN ["update-alternatives","--install","/usr/bin/gcc","gcc","/usr/bin/gcc-12","120"]
+RUN ["update-alternatives","--install","/usr/bin/g++","g++","/usr/bin/g++-12","120"]
+RUN ["update-alternatives","--install","/usr/bin/gfortran","gfortran","/usr/bin/gfortran-12","120"]
+
+# verify versions
+RUN ["gcc","--version"]
+RUN ["g++","--version"]
+RUN ["gfortran","--version"]
+RUN ["python3.12","--version"]
+
+# prove the ca bundle exists then test git tls
+RUN ["bash","-lc","ls -l /etc/ssl/certs/ca-certificates.crt | cat"]
+RUN ["git","config","--system","http.sslCAInfo","/etc/ssl/certs/ca-certificates.crt"]
+
+# clean up apt cache to shrink image
+RUN ["bash","-lc","apt-get clean && rm -rf /var/lib/apt/lists/*"]
+
+RUN ["pip","install","--break-system-packages","setuptools"]
+RUN ["pip","install","--break-system-packages","numpy"]
+RUN ["pip","install","--break-system-packages","h5py"]
+RUN ["pip","install","--break-system-packages","matplotlib"]
+RUN ["pip","install","--break-system-packages","scipy"]
+RUN ["pip","install","--break-system-packages","rich"]
+RUN ["pip","install","--break-system-packages","fpdf"]
+RUN ["pip","install","--break-system-packages","rich"]
+RUN ["pip","install","--break-system-packages","seaborn"]
+RUN ["pip","install","--break-system-packages","mpmath"]
 
 RUN ["pip","install","--break-system-packages","mplstereonet"]
 RUN ["pip","install","--break-system-packages","pyvtk"]
 RUN ["pip","install","--break-system-packages","datetime"]
 RUN ["pip","install","--break-system-packages","latex"]
 RUN ["pip","install","--break-system-packages","matplotlib"]
+RUN ["pip","install","--break-system-packages","datetime"]
+RUN ["pip","install","--break-system-packages","latex"]
 
 
 # RUN ["apt-get","install","-y","python3-setuptools","python3-numpy","python3-h5py",\
@@ -70,31 +124,54 @@ ENV gfortran="gfortran-10"
 # # RUN git config --global url."https://github.com/".insteadOf git@github.com:
 # # ---------------------------------------------------------------------------- #
 
+# refresh indexes
+# RUN ["apt-get","update","-y"]
+
+# install git and certs
+# RUN ["apt-get","install","-y","git","ca-certificates"]
+
+# # refresh the trust store
+# RUN ["update-ca-certificates"]
+# # if PATH issues ever appear, use the absolute path:
+# # RUN ["/usr/sbin/update-ca-certificates"]
+
+# RUN ["/usr/sbin/update-ca-certificates"]
+
+# # prove the bundle exists and is nonempty
+# RUN ["bash","-lc","ls -l /etc/ssl/certs/ca-certificates.crt && head -n 3 /etc/ssl/certs/ca-certificates.crt"]
+
+# # belt and suspenders
+# ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+# RUN ["git","config","--system","http.sslCAInfo","/etc/ssl/certs/ca-certificates.crt"]
+
+# # verify TLS
+# RUN ["git","ls-remote","https://gitlab.com/petsc/petsc.git"]
+
 # # 3.2 Install and configure PETSc
-RUN ["git","clone","https://gitlab.com/petsc/petsc.git","lib/petsc"]
+RUN ["git","clone","https://gitlab.com/petsc/petsc","lib/petsc"]
 WORKDIR $APP_PATH/lib/petsc
-RUN ["git","checkout","v3.21.4"]
+RUN ["git","checkout","v3.24.0"]
 
 ENV PETSC_DIR=/dfnWorks/lib/petsc
 ENV PETSC_ARCH=arch-linux2-c-debug
 
 #RUN ./configure --CFLAGS='-O3' --CXXFLAGS='-O3' --FFLAGS='-O3' --with-debugging=no --download-mpich=yes --download-hdf5=yes --download-hdf5-fortran-bindings=yes --download-fblaslapack=yes --download-metis=yes --download-parmetis=yes
 
-RUN ./configure --with-cc=gcc --with-cxx=g++ --with-fc=gfortran --CFLAGS='-g -O0' --CXXFLAGS='-g -O0' --FFLAGS='-g -O0 -Wno-unused-function -ffree-line-length-none' --with-clanguage=c --with-debug=1 --with-shared-libraries=0 --download-hdf5 --download-hdf5-fortran-bindings --download-metis --download-parmetis --download-fblaslapack --download-mpich=http://www.mpich.org/static/downloads/3.2/mpich-3.2.tar.gz --download-hypre
+# RUN ./configure --with-cc=gcc --with-cxx=g++ --with-fc=gfortran --CFLAGS='-g -O0' --CXXFLAGS='-g -O0' --FFLAGS='-g -O0 -Wno-unused-function -ffree-line-length-none' --with-clanguage=c --with-debug=1 --with-shared-libraries=0 --download-hdf5 --download-hdf5-fortran-bindings --download-metis --download-parmetis --download-fblaslapack --download-mpich=http://www.mpich.org/static/downloads/3.2/mpich-3.2.tar.gz --download-hypre
 # RUN ./configure PETSC_ARCH=petsc-arch --CFLAGS='-g -O0' --CXXFLAGS='-g -O0' --FFLAGS='-g -O0 -Wno-unused-function' --with-clanguage=c --with-debug=1 --with-shared-libraries=0 --download-hdf5 --download-metis --download-parmetis --download-fblaslapack --download-hypre
 
-RUN make
+RUN ./configure --with-cc=gcc --with-cxx=g++ --with-fc=gfortran --COPTFLAGS='-O3' --CXXOPTFLAGS='-O3' --FOPTFLAGS='-O3 -Wno-unused-function' --with-debugging=no --download-hdf5=yes --download-hdf5-fortran-bindings=yes --download-fblaslapack=yes --download-metis=yes --download-parmetis=yes --download-mpich=yes
+
+RUN make PETSC_DIR=/dfnWorks/lib/petsc PETSC_ARCH=arch-linux2-c-debug all
 
 #
 WORKDIR $APP_PATH
 
 # # 3.3 Install and configure PFLOTRAN
-RUN git clone --branch v6.0 --depth 1 https://bitbucket.org/pflotran/pflotran
+RUN git clone https://bitbucket.org/pflotran/pflotran
 WORKDIR $APP_PATH/pflotran/src/pflotran
 
-RUN FFLAGS="-g -O0 -Wno-unused-function -ffree-line-length-none" \
-    FCFLAGS="-g -O0 -Wno-unused-function -ffree-line-length-none" \
-    make pflotran
+RUN make pflotran
 WORKDIR $APP_PATH
 RUN ["mv","pflotran/src/pflotran/pflotran","bin/pflotran"]
 RUN ["rm","-Rf","pflotran/"]
@@ -116,12 +193,12 @@ ENV RSYNC_PROXY=http://proxyout.lanl.gov:8080
 RUN ["rm","-Rf","LaGriT/"] 
 RUN ["git","clone","https://github.com/hymanjd/LaGriT.git"]
 WORKDIR $APP_PATH/LaGriT
-RUN ./install-exodus.sh
+# RUN ./install-exodus.sh
 WORKDIR $APP_PATH/LaGriT
 RUN ["mkdir","build"]
 WORKDIR $APP_PATH/LaGriT/build
-# RUN ["cmake",".."]
-RUN ["cmake","..", "-DLAGRIT_BUILD_EXODUS=ON"]
+RUN ["cmake",".."]
+#RUN ["cmake","..", "-DLAGRIT_BUILD_EXODUS=ON"]
 RUN ["make"]
 WORKDIR $APP_PATH
 RUN ["mv","LaGriT/build/lagrit","bin/lagrit"]
@@ -153,9 +230,6 @@ RUN echo filetype plugin indent on >> ~/.vimrc
 RUN echo set tabstop=4 >> ~/.vimrc
 RUN echo set shiftwidth=4 >> ~/.vimrc
 RUN echo set expandtab >> ~/.vimrc
-
-
-
 
 # # # Run bash on container launch
 CMD ["bash"]

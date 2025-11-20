@@ -40,11 +40,11 @@ RUN ["pip","install","--break-system-packages","-r","requirements.txt"]
 RUN ["pip","install","--break-system-packages","."]
 WORKDIR $APP_PATH
 
-WORKDIR $APP_PATH/CPP_correct_volumes
-RUN ["make","clean"]
-RUN ["make"]
-RUN ["cp","correct_volume","../bin/correct_volume"]
-WORKDIR $APP_PATH
+# WORKDIR $APP_PATH/CPP_correct_volumes
+# RUN ["make","clean"]
+# RUN ["make"]
+# RUN ["cp","correct_volume","../bin/correct_volume"]
+# WORKDIR $APP_PATH
 
 WORKDIR $APP_PATH/DFNGen
 RUN ["make","clean"]

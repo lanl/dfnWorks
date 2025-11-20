@@ -22,6 +22,10 @@ This Dockerfile constructs the final dfnWorks container, using
 the `build-core` container as a starting image. 
 
 
+**Usage:**
+
+    docker buildx build --platform linux/amd64,linux/arm64 -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
+
 
 
 ## Trouble shooting
@@ -36,9 +40,5 @@ docker login --username=<username>
 docker push ees16/dfnworks:latest
 
 docker tag #image_id ees16/dfnworks:<v2.*>
-
-**Usage:**
-
-    docker buildx build --platform linux/amd64,linux/arm64 -t ees16/dfnworks:latest -f docker/build-dfnworks.dockerfile ./
 
 
