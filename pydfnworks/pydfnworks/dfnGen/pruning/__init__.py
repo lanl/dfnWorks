@@ -1,1 +1,2 @@
-import pydfnworks.dfnGen.pruning.prune_mesh_scripts
+import pydfnworks.dfnGen.pruning.prepare_for_pruning
+import pydfnworks.dfnGen.pruning.cleanup_after_prune
