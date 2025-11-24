@@ -13,9 +13,11 @@ import multiprocessing as mp
 
 # pydfnworks graph modules modules
 import pydfnworks.dfnGraph.particle_io as io
-from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
 from pydfnworks.dfnGraph.particle_class import Particle
 from pydfnworks.general.logging import local_print_log
+
+from pydfnworks.dfnGraph.graph_tdrw import _check_tdrw_params, _set_up_limited_matrix_diffusion
+from pydfnworks.dfnGraph.graph_transport_setup_functions import _create_neighbor_list, _get_initial_posititions, _check_control_planes
 
 
 def track_particle(data, verbose=False):
@@ -47,12 +49,18 @@ def track_particle(data, verbose=False):
             f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
         )
 
-    particle = Particle(data["particle_number"], data["initial_position"],
-                        data["tdrw_flag"], data["matrix_porosity"],
-                        data["matrix_diffusivity"], data["fracture_spacing"],
-                        data["trans_prob"], data["transfer_time"],
-                        data["cp_flag"], data["control_planes"],
-                        data["direction"])
+    particle = Particle(particle_number = data["particle_number"], 
+                        ip = data["initial_position"],
+                        tdrw_flag = data["tdrw_flag"], 
+                        tdrw_model = data["tdrw_model"],
+                        matrix_porosity = data["matrix_porosity"],
+                        matrix_diffusivity = data["matrix_diffusivity"], 
+                        fracture_spacing = data["fracture_spacing"],
+                        transfer_time = data["transfer_time"],
+                        trans_prob = data["trans_prob"], 
+                        cp_flag = data["cp_flag"], 
+                        control_planes = data["control_planes"],
+                        direction = data["direction"])
 
     # # get current process information
     global nbrs_dict
@@ -65,181 +73,6 @@ def track_particle(data, verbose=False):
     return particle
 
 
-def get_initial_posititions(G, initial_positions, nparticles):
-    """ Distributes initial particle positions 
-
-        Parameters
-        ----------
-                
-            G : NetworkX graph 
-                obtained from graph_flow
-
-            initial_positions : str
-                distribution of initial conditions. options are uniform and flux (flux-weighted)
-
-            nparticles : int
-                requested number of particles
-
-        Returns
-        -------
-            ip : numpy array
-                array nparticles long. Each element is the initial position for each particle
-
-        """
-
-    inlet_nodes = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
-    cnt = len(inlet_nodes)
-    local_print_log(f"--> There are {cnt} inlet nodes")
-    if cnt == 0:
-        error = "Error. There are no nodes in the inlet.\nExiting"
-        local_print_log(error, 'error')
-
-    # Uniform Distribution for particles
-    if initial_positions == "uniform":
-        local_print_log("--> Using uniform initial positions.")
-        ip = np.zeros(nparticles).astype(int)
-        n = int(np.ceil(nparticles / cnt))
-        local_print_log(f"--> {n} particles will be placed at every inflow node.\n")
-        ## this could be cleaned up using clever indexing
-        inflow_idx = 0
-        inflow_cnt = 0
-        for i in range(nparticles):
-            ip[i] = inlet_nodes[inflow_idx]
-            inflow_cnt += 1
-            if inflow_cnt >= n:
-                inflow_idx += 1
-                inflow_cnt = 0
-
-    ## flux weighted initial positions for particles
-    elif initial_positions == "flux":
-        local_print_log("--> Using flux-weighted initial positions.\n")
-        flux = np.zeros(cnt)
-        for i, u in enumerate(inlet_nodes):
-            for v in G.successors(u):
-                flux[i] += G.edges[u, v]['flux']
-        flux /= flux.sum()
-        flux_cnts = [np.ceil(nparticles * i) for i in flux]
-        nparticles = int(sum(flux_cnts))
-        ip = np.zeros(nparticles).astype(int)
-        ## Populate ip with Flux Cnts
-        ## this could be cleaned up using clever indexing
-        inflow_idx = 0
-        inflow_cnt = 0
-        for i in range(nparticles):
-            ip[i] = inlet_nodes[inflow_idx]
-            inflow_cnt += 1
-            if inflow_cnt >= flux_cnts[inflow_idx]:
-                inflow_idx += 1
-                inflow_cnt = 0
-
-    # Throw error if unknown initial position is provided
-    else:
-        error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
-        local_print_log(error, 'error')
-
-    return ip, nparticles
-
-
-def create_neighbor_list(G):
-    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
-
-    Parameters
-    ----------
-        G: NetworkX graph 
-            Directed Graph obtained from output of graph_flow
-
-    Returns
-    -------
-        dict : nested dictionary.
-
-    Notes
-    -----
-        dict[n]['child'] is a list of vertices downstream to vertex n
-        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
-    """
-
-    nbrs_dict = {}
-
-    for u in nx.nodes(G):
-
-        if G.nodes[u]['outletflag']:
-            continue
-
-        node_list = []
-        prob_list = []
-        nbrs_dict[u] = {}
-
-        for v in G.successors(u):
-            node_list.append(v)
-            prob_list.append(G.edges[u, v]['vol_flow_rate'])
-
-        if node_list:
-            nbrs_dict[u]['child'] = node_list
-            nbrs_dict[u]['prob'] = np.asarray(prob_list) / sum(prob_list)
-        else:
-            nbrs_dict[u]['child'] = None
-            nbrs_dict[u]['prob'] = None
-
-    return nbrs_dict
-
-
-def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
-    """ Check that the provided tdrw values are physiscal
-
-
-    Parameters
-    ----------
-        G: NetworkX graph 
-            Directed Graph obtained from output of graph_flow
-
-    Returns
-    -------
-        dict : nested dictionary.
-
-    Notes
-    -----
-        dict[n]['child'] is a list of vertices downstream to vertex n
-        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
-    
-    """
-
-    if matrix_porosity is None:
-        error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
-        local_print_log(error, 'error')
-    elif matrix_porosity < 0 or matrix_porosity > 1:
-        error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
-        local_print_log(error, 'error')
-    if matrix_diffusivity is None:
-        error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
-        local_print_log(error, 'error')
-
-    if fracture_spacing is not None:
-        if fracture_spacing <= 0:
-            error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
-            local_print_log(error, 'error')
-
-
-def check_control_planes(control_planes, direction):
-    control_plane_flag = False
-    if not type(control_planes) is list:
-        error = f"Error. provided controls planes are not a list\n"
-        local_print_log(error, 'error')
-    else:
-        # add None to indicate the end of the control plane list
-        control_plane_flag = True
-
-    if direction is None:
-        error = f"Error. Primary direction not provided. Required for control planes\n"
-        local_print_log(error, 'error')
-    elif direction not in ['x', 'y', 'z']:
-        error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
-        local_print_log(error, 'error')
-
-    local_print_log(f"--> Control Planes: {control_planes}")
-    local_print_log(f"--> Direction: {direction}")
-    return control_plane_flag
-
-
 def run_graph_transport(self,
                         G,
                         nparticles,
@@ -249,6 +82,7 @@ def run_graph_transport(self,
                         initial_positions="uniform",
                         dump_traj=False,
                         tdrw_flag=False,
+                        tdrw_model = 'infinite',
                         matrix_porosity=None,
                         matrix_diffusivity=None,
                         fracture_spacing=None,
@@ -320,57 +154,63 @@ def run_graph_transport(self,
         self.print_log(error, 'error')
 
     self.print_log("--> Running Graph Particle Tracking")
-    
-    # Check parameters for TDRW
-    if tdrw_flag:
-        check_tdrw_params(matrix_porosity, matrix_diffusivity,
-                          fracture_spacing)
-        self.print_log(
-            f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
-        )
 
     if control_planes is None:
         control_plane_flag = False
     else:
-        control_plane_flag = check_control_planes(
+        control_plane_flag = _check_control_planes(
             control_planes=control_planes, direction=direction)
     self.print_log(f"--> Control Plane Flag {control_plane_flag}")
 
     self.print_log("--> Creating downstream neighbor list")
     global nbrs_dict
-    nbrs_dict = create_neighbor_list(G)
+    nbrs_dict = _create_neighbor_list(G)
 
     self.print_log("--> Getting initial Conditions")
-    ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
-
+    ip, nparticles = _get_initial_posititions(G, initial_positions, nparticles)
     self.print_log(f"--> Starting particle tracking for {nparticles} particles")
 
     if dump_traj:
         self.print_log(f"--> Writing trajectory information to file")
 
-    if fracture_spacing is not None:
-        self.print_log(f"--> Using limited matrix block size for TDRW")
-        self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-        trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
-                                                     matrix_porosity,
-                                                     matrix_diffusivity)
-        # This doesn't change for the system.
-        # Transfer time diffusing between fracture blocks
-        transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
+    # Check parameters for TDRW
+    if tdrw_flag:
+        _check_tdrw_params(matrix_porosity, matrix_diffusivity,
+                          fracture_spacing, tdrw_model)
+        
+        if tdrw_model in ("roubinet", "dentz"):
+            self.print_log(f"--> Using limited matrix block size for TDRW")
+            self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
+            transfer_time, trans_prob = _set_up_limited_matrix_diffusion(G,
+                                                        tdrw_model,
+                                                        fracture_spacing,
+                                                        matrix_porosity,
+                                                        matrix_diffusivity) 
     else:
         trans_prob = None
         transfer_time = None
+
     ## main loop
+    print("Here")
     if self.ncpu == 1:
         tic = timeit.default_timer()
         particles = []
         for i in range(nparticles):
             if i % 1000 == 0:
                 self.print_log(f"--> Starting particle {i} out of {nparticles}")
-            particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
-                                matrix_diffusivity, fracture_spacing,
-                                trans_prob, transfer_time, control_plane_flag,
-                                control_planes, direction)
+            particle = Particle(particle_number = i, 
+                                ip = ip[i], 
+                                tdrw_flag = tdrw_flag, 
+                                tdrw_model = tdrw_model, 
+                                matrix_porosity = matrix_porosity,
+                                matrix_diffusivity = matrix_diffusivity, 
+                                fracture_spacing = fracture_spacing,
+                                transfer_time = transfer_time, 
+                                trans_prob = trans_prob,
+                                cp_flag = control_plane_flag,
+                                control_planes = control_planes, 
+                                direction = direction)
+            
             particle.track(G, nbrs_dict)
             particles.append(particle)
 

@@ -15,11 +15,15 @@ class Particle():
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
 
-    from pydfnworks.dfnGraph.graph_tdrw import unlimited_matrix_diffusion, limited_matrix_diffusion
+    from pydfnworks.dfnGraph.tdrw_infinite import unlimited_matrix_diffusion
+    from pydfnworks.dfnGraph.tdrw_finite_dentz import unlimited_matrix_diffusion_dentz
+    from pydfnworks.dfnGraph.tdrw_finite_roubinet import limited_matrix_diffusion_roubinet 
 
-    def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
-                 matrix_diffusivity, fracture_spacing, trans_prob,
-                 transfer_time, cp_flag, control_planes, direction):
+
+    def __init__(self, particle_number, ip, tdrw_flag, tdrw_model, matrix_porosity,
+                 matrix_diffusivity, fracture_spacing, transfer_time, 
+                 trans_prob, cp_flag, control_planes, direction):
+        
         self.particle_number = particle_number
         self.ip = ip
         self.curr_node = ip
@@ -39,6 +43,7 @@ class Particle():
         self.matrix_porosity = matrix_porosity
         self.matrix_diffusivity = matrix_diffusivity
         self.fracture_spacing = fracture_spacing
+        self.tdrw_model = tdrw_model
         self.trans_prob = trans_prob
         self.transfer_time = transfer_time
         self.cp_flag = cp_flag
@@ -51,9 +56,6 @@ class Particle():
         self.cp_adv_time = []
         self.cp_tdrw_time = []
         self.cp_pathline_length = []
-        # self.cp_x1 = []
-        # self.cp_x2 = []
-
  
         self.velocity = []
         self.lengths = []
@@ -273,11 +275,13 @@ class Particle():
                 self.cleanup_frac_seq()
                 break
 
-            if self.tdrw_flag:
-                if self.fracture_spacing is None:
-                    self.unlimited_matrix_diffusion(G)
-                else:
-                    self.limited_matrix_diffusion(G)
+            if self.tdrw_flag: 
+                    if self.tdrw_model == "roubinet":
+                        self.limited_matrix_diffusion_roubinet(G)
+                    elif self.tdrw_model == "dentz":
+                        self.limited_matrix_diffusion_roubinet(G)
+                    elif self.tdrw_model == "infinite":
+                        self.unlimited_matrix_diffusion(G)
 
             if self.cp_flag:
                 self.cross_control_plane(G)
