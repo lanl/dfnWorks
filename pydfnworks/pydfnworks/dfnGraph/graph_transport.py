@@ -49,18 +49,21 @@ def track_particle(data, verbose=False):
             f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
         )
 
-    particle = Particle(particle_number = data["particle_number"], 
-                        ip = data["initial_position"],
-                        tdrw_flag = data["tdrw_flag"], 
-                        tdrw_model = data["tdrw_model"],
-                        matrix_porosity = data["matrix_porosity"],
-                        matrix_diffusivity = data["matrix_diffusivity"], 
-                        fracture_spacing = data["fracture_spacing"],
-                        transfer_time = data["transfer_time"],
-                        trans_prob = data["trans_prob"], 
-                        cp_flag = data["cp_flag"], 
-                        control_planes = data["control_planes"],
-                        direction = data["direction"])
+    try:
+        particle = Particle(particle_number = data["particle_number"], 
+                            ip = data["initial_position"],
+                            tdrw_flag = data["tdrw_flag"], 
+                            tdrw_model = data["tdrw_model"],
+                            matrix_porosity = data["matrix_porosity"],
+                            matrix_diffusivity = data["matrix_diffusivity"], 
+                            fracture_spacing = data["fracture_spacing"],
+                            transfer_time = data["transfer_time"],
+                            trans_prob = data["trans_prob"], 
+                            cp_flag = data["cp_flag"], 
+                            control_planes = data["control_planes"],
+                            direction = data["direction"])
+    except Exception as e:
+        local_print_log(f"Issue initializing particle {e}", "warning")
 
     # # get current process information
     global nbrs_dict
@@ -88,7 +91,8 @@ def run_graph_transport(self,
                         fracture_spacing=None,
                         control_planes=None,
                         direction=None,
-                        cp_filename='control_planes'):
+                        cp_filename='control_planes',
+                        verbose = False):
     """ Run  particle tracking on the given NetworkX graph
 
     Parameters
@@ -185,14 +189,16 @@ def run_graph_transport(self,
                                                         tdrw_model,
                                                         fracture_spacing,
                                                         matrix_porosity,
-                                                        matrix_diffusivity) 
+                                                        matrix_diffusivity)
+        else:
+            trans_prob = None
+            transfer_time = None           
     else:
         trans_prob = None
         transfer_time = None
 
-    ## main loop
-    print("Here")
     if self.ncpu == 1:
+        self.print_log("--> Running in Serial")
         tic = timeit.default_timer()
         particles = []
         for i in range(nparticles):
@@ -245,6 +251,7 @@ def run_graph_transport(self,
             data["particle_number"] = i
             data["initial_position"] = ip[i]
             data["tdrw_flag"] = tdrw_flag
+            data["tdrw_model"] = tdrw_model
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             data["fracture_spacing"] = fracture_spacing
@@ -254,7 +261,7 @@ def run_graph_transport(self,
             data["control_planes"] = control_planes
             data["direction"] = direction
             pool.apply_async(track_particle,
-                             args=(data, ),
+                             args=(data, verbose),
                              callback=gather_output)
 
         pool.close()
