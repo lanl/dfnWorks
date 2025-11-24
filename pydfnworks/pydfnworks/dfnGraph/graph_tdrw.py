@@ -4,6 +4,7 @@ import mpmath as mp
 
 from pydfnworks.general.logging import local_print_log
 import pydfnworks.dfnGraph.tdrw_finite_roubinet as roubinet  
+import pydfnworks.dfnGraph.tdrw_finite_dentz as dentz
 
 def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, tdrw_model):
     """ Check that the provided tdrw values are physiscal
@@ -35,7 +36,7 @@ def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, td
             "error"
         )
     else:
-        local_print_log(f"--> Matrix porosity value: {matrix_porosity:.2f}")
+        local_print_log(f"--> Matrix porosity value: {matrix_porosity:.2f} [-]")
 
     # --- Matrix Diffusivity ---
     if matrix_diffusivity is None:
@@ -43,7 +44,7 @@ def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, td
     elif matrix_diffusivity <= 0:
         local_print_log(f"Error: Non-positive matrix_diffusivity={matrix_diffusivity}. Exiting program.", "error")
     else:
-        local_print_log(f"--> Matrix diffusivity value: {matrix_diffusivity:.2e}")
+        local_print_log(f"--> Matrix diffusivity value: {matrix_diffusivity:.2e} [m^2/s]")
 
     # --- TDRW Model Selection ---
     if tdrw_model is None:
@@ -61,7 +62,7 @@ def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, td
         elif fracture_spacing <= 0:
             local_print_log(f"Error: Non-positive fracture_spacing={fracture_spacing}. Exiting program.", "error")
         else:
-            local_print_log(f"--> Fracture spacing value: {fracture_spacing:.2e}")
+            local_print_log(f"--> Fracture spacing value: {fracture_spacing:.2e} [m]")
     else:
         local_print_log(
             f"Error: Unknown TDRW model '{tdrw_model}'. Valid options are 'infinite', 'roubinet', or 'dentz' (case-sensitive).",
@@ -121,10 +122,8 @@ def _set_up_limited_matrix_diffusion(G,tdrw_model,
                                             fracture_spacing, eps, num_pts)
         transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
     elif tdrw_model == "dentz":
-        local_print_log("Using Dentz Model for finite Matrix Diffusion") 
-        transfer_time = None
-        trans_prob = None 
-
+        # local_print_log("Using Dentz Model for finite Matrix Diffusion") 
+        transfer_time, trans_prob = dentz._make_inverse_cdf_spline_for_times()
     else:
         trans_prob = None
         transfer_time = None
