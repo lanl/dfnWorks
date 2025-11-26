@@ -30,12 +30,12 @@ def Psi_pdf(t, eps, method="dehoog", h=None):
     return mp.invertlaplace(psi_star, t, method=method)
 
 
-def _make_inverse_cdf_spline_for_times(num_samples = 50, eps = 1e-3, precision = 40):
+def _make_inverse_cdf_spline_for_times(num_samples = 100, eps = 1e-4, precision = 40):
     # --- compute CDF and PDF values ---
     mp.mp.dps = precision
     num_samples = num_samples
     eps = mp.mpf(eps)
-    times = [10**x for x in np.linspace(-8, 1, num_samples)]
+    times = [10**x for x in np.linspace(-8, 3, num_samples)]
 
     cdf_vals = np.zeros(num_samples, dtype=float)
 
@@ -76,7 +76,7 @@ def limited_matrix_diffusion_dentz(self,G):
 
     # print(self.total_time,self.advect_time,self.matrix_diffusion_time)
     # print("\nsegment limited sampling")
-    eps = 1e-3
+    eps = 1e-4
     # print(self.advect_time, self.delta_t )
     # b = (2*self.delta_t) / self.beta
     b = G.edges[self.curr_node, self.next_node]['b']
@@ -93,11 +93,12 @@ def limited_matrix_diffusion_dentz(self,G):
     # print(f"n: {n}")
     xi = np.random.uniform(size = n)
     # print(xi)
+    # 
     tmp = self.tau_D * np.interp(xi, self.trans_prob, self.transfer_time)
     # print("*")
     # print(self.transfer_time)
     # print(self.trans_prob)
-    print(tmp)
+    # print(tmp)
     # exit(1) 
     # tmp = self.tau_D * self.inv_spline(xi)
     self.delta_t_md = tmp.sum() 
