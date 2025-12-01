@@ -83,6 +83,7 @@ def mesh_network(self,
             f"Loading list of fractures to remain in network from {self.prune_file}"
         )
         self.fracture_list = sort(genfromtxt(self.prune_file).astype(int))
+        self.num_frac = len(self.fracture_list)
         self.print_log("--> Retaining Fractures: ")
         self.print_log(self.fracture_list)
         if self.path:
@@ -153,7 +154,7 @@ def mesh_network(self,
         lgs.define_zones()
 
     if self.prune_file:
-        self.clean_up_files_after_prune()
+        self.clean_up_after_prune()
 
     self.gather_mesh_information()
 
