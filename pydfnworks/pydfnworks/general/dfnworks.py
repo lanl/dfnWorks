@@ -72,7 +72,8 @@ class DFNWORKS():
     import pydfnworks.dfnGen
 
     from pydfnworks.dfnGen.generation.input_checking.check_input import check_input, print_domain_parameters
-    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network, parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data
+    from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
+    from pydfnworks.dfnGen.generation.process_generator_output import parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data, compute_fracture_p21
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
     from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
@@ -87,7 +88,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
     from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
     from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
-    from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
+    
+    from pydfnworks.dfnGen.pruning.cleanup_after_prune import clean_up_files_after_prune, edit_params, write_poly_info, edit_radii_final, edit_normal_vectors, edit_translations, write_surface_area, edit_polygons, clean_up_after_prune
+    from pydfnworks.dfnGen.pruning.prepare_for_pruning import edit_intersection_files
+
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     # udfm meshing functions 
@@ -113,7 +117,7 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
@@ -188,6 +192,10 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
+
+            if not self.jobname.endswith('/'):
+                self.jobname += os.sep 
+
             if not log_filename:
                 self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
             else:
@@ -195,8 +203,8 @@ class DFNWORKS():
             self.initialize_log_file(time = log_time)
             now = datetime.now()
             self.start_time = now
-            statement = f"Starting at {now}"
-            self.print_log(statement )
+            statement = f"--> Created DFN Object at {now}"
+            self.print_log(statement)
         else:
             self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
             self.local_jobname = "dfnWorks_output"

@@ -7,7 +7,8 @@ import timeit
 import pandas as pd
 
 
-verbose = False
+verbose = True 
+# verbose = False 
 
 if not os.path.isdir('example_outputs'):
     os.mkdir('example_outputs')
@@ -16,7 +17,6 @@ else:
     os.mkdir('example_outputs')
 
 home = os.getcwd()
-
 
 try:
     examples_dirs = [sys.argv[1]]
@@ -30,6 +30,7 @@ except:
     examples_dirs.sort()
 
 print(examples_dirs)
+
 start_time = timeit.default_timer()
 
 df = pd.DataFrame(columns=['Name', 'Pass/Fail', 'Time', 'Error'])
@@ -47,11 +48,11 @@ for i,d in enumerate(examples_dirs):
         if os.path.isfile('output.log'):
             os.remove('output.log')
             #print(f"--> Removing output.log file from {d}")
-        driver_file = glob.glob("*py")
+        driver_file = glob.glob("driver.py")
         if verbose:
-            cmd = f"python {driver_file[0]}"
+            cmd = f"python3.11 {driver_file[0]}"
         else:
-            cmd = f"python {driver_file[0]} > {home}/example_outputs/{d}.out"
+            cmd = f"python3.11 {driver_file[0]} > {home}/example_outputs/{d}.out"
         print(cmd)
         tic = timeit.default_timer()
         subprocess.call(cmd, shell=True)

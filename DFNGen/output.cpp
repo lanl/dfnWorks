@@ -17,18 +17,19 @@
 #include "readInputFunctions.h" // error check for file open checkIfOpen()
 #include "logFile.h"
 
-//NOTE: do not use std::endl for new lines when writing to files. This will flush the output buffer. Use '\n'
-
+// NOTE: do not use std::endl for new lines when writing to files. This will flush the output buffer. Use '\n'
 /* void writeOutput() ************************************************************************/
-/*! Writes all output for DFNGen
-    Arg 1: c syle string (char array) path to output folder
-    Arg 2: std::vector Poly array of all accepted polygons
-    Arg 3: std::vector Intersection array of all intersections from accepted polygons
-    Arg 4: std::vector Point array of all accpeted triple intersection points
-    Arg 5: Stats strcuture, running program statistucs (see definition in structures.h)
-    Arg 6: std::vector of unsigned int - indices into the Poly array of accepted polgons
-           which remain after isolated fractures (polys) were removed
-    Arg 7: std::vector Shape - Family structure array  of all stocastic families defined by user input */
+/*!
+ * \brief Writes all output files for DFNGen.
+ *
+ * \param outputFolder Path to output folder (C-style string).
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param intPts Vector of all intersections from accepted polygons.
+ * \param triplePoints Vector of all accepted triple intersection points.
+ * \param pstats Stats structure with running program statistics.
+ * \param finalFractures Vector of indices into \p acceptedPoly remaining after isolated fractures removed.
+ * \param shapeFamilies Vector of stochastic shape families defined by user input.
+ */
 void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, struct Stats &pstats, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies) {
     std::string output = outputFolder;
     std::string dfnGenExtension = "/dfnGen_output";
@@ -143,17 +144,14 @@ void writeOutput(char* outputFolder, std::vector<Poly> &acceptedPoly, std::vecto
 
 
 /* void writePoints() ************************************************************************/
-/*! Helper function for writing discretized intersections
-    Function writes n points to file
-    Arg 1: Output file stream object (file we are writing to)
-    Arg 2: std::vector Point array (discretized points)
-    Arg 3: Index to point to start output to file.
-           ARG 3 USAGE EAMPLE: When discretizing points, the program can discretize from an end
-           point to a triple intersection point, and then from the triple intersection point to
-           another end point. This means you have two arrays of points. The last point in the first
-           array will be the same as the first point in the second array. In this situation, you
-           would set start = 1 while writing the second array to avoid duplicate points in the output
-    Arg 4: Counter of poitns written. Used to rember at which node a new intersection starts */
+/*!
+ * \brief Writes a sequence of discretized intersection points to a file stream.
+ *
+ * \param output Output file stream to write to.
+ * \param points Vector of discretized points.
+ * \param start Starting index in \p points to avoid duplicate endpoints.
+ * \param count Reference to global point counter.
+ */
 void writePoints(std::ostream &output, std::vector<Point> &points, int start, unsigned int &count) {
     int n = points.size();
     
@@ -165,15 +163,16 @@ void writePoints(std::ostream &output, std::vector<Point> &points, int start, un
 }
 
 /* finishWritingIntFile() ********************************************************************/
-/*! Helper function for writing discretized intersection points
-    Writes header and line connections after points have been written
-    Arg 1: Output file stream object (intersection file)
-    Arg 2: Number, or index, of fracture whos intersection is being written
-    Arg 3: Number of intersection points on fracture
-    Arg 4: Number of intersections on fracture
-    Arg 5: std:vector array of node numbers which start an intersection. Used to generate "line"
-           connections in intersection inp files
-    Arg 6: std::vector array of fracture id's (indices) who intersect fract1 (arg 2) */
+/*!
+ * \brief Writes header and line connections for an intersection file after point data.
+ *
+ * \param fractIntFile Output file stream for the intersection .inp file.
+ * \param fract1 Fracture number being written.
+ * \param numPoints Total number of intersection points.
+ * \param numIntersections Number of individual intersections on the fracture.
+ * \param intStart Vector of start-node indices for each intersection segment.
+ * \param intersectingFractures Vector of fracture IDs that intersect \p fract1.
+ */
 void finishWritingIntFile(std::ostream &fractIntFile, int fract1, int numPoints, int numIntersections,
                           std::vector<unsigned int> &intStart, std::vector<unsigned int> &intersectingFractures) {
     unsigned int count = 1;
@@ -228,20 +227,13 @@ bool DIR_exists(const char *path) {
 
 
 /* adjustIntFractIds() **********************************************************************/
-/*! Adjust the intersectins fracture numbers. The finalFracture list is the indexes of the final polygons.
-    If finalFractures = {4, 2, 8}, the fracture ID's must be 1, 2, 3 respectively. Easiest way
-    is to adjust the fracture ID's in the corresponding intersections first, before writing output files
-    Use the negative value to keep to not loose track of what fracture id's are what (prevent aliasing).
-
-    EXAMPLE: For triple intersections, each intersection lists three fractures which intersect.
-    Say fractures 1, 5, and 6 intersect and once adjusted the the fracture IDs become 1, 4, and 5.
-    We access the intersection structure through the polygons, so for this particular
-    intersection structure, it will be accessed three times (once for each polygon). If we adjust ID 5 to be id 4 during
-    the second access, then during the thrid access, ID 4 may be aliasing another ID and be adjusted again.
-    To prevent this, we use the negative value to prevent aliasing.
-    Arg 1: std::vector of indices to allPolys array of fractures left after isolated fracture removal
-    Arg 2: std::vector of all accepted polygons
-    Arg 3: std::vector of all intersections */
+/*!
+ * \brief Adjusts intersection fracture IDs to new sequential IDs based on the finalFractures list.
+ *
+ * \param finalFractures Vector of indices of final accepted fractures.
+ * \param allPolys Vector of all polygons (accepted).
+ * \param intPts Vector of intersection structures.
+ */
 void adjustIntFractIDs(std::vector<unsigned int> &finalFractures, std::vector<Poly> &allPolys, std::vector<IntPoints> &intPts) {
     //go through all final fractures
     for (unsigned int i = 0; i < finalFractures.size(); i++) {
@@ -261,17 +253,16 @@ void adjustIntFractIDs(std::vector<unsigned int> &finalFractures, std::vector<Po
 
 
 /* writeIntersectionFiles() ******************************************************************/
-/*! Writes intersection inp files to output folder
-    Rotates intersections, and triple intersection points to x-y plane
-    Also rotates polygons to x-y plane to save on computation during writePolysInp()
-    Rotating polygons here increases performance as we do not need to recalculate rotation matricies
-    Arg 1: std::vector array of indices to fractures (Arg 2) remaining after isolated
-           fracture removal
-    Arg 2: std::vector array of all accepted fractures (before isolated fracture removal)
-    Arg 3: std::vector array of all intersections
-    Arg 4: std::vector array all triple intersection points
-    Arg 5: Path to intersections folder
-    Arg 6: Stats strcture. DFNGen running program stats (keeps track of total intersecion node count) */
+/*!
+ * \brief Writes intersection .inp files by rotating fractures and discretizing intersections.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param intPts Vector of all intersection structures.
+ * \param triplePoints Vector of all accepted triple intersection points.
+ * \param intersectionFolder Path to folder for intersection files.
+ * \param pstats Stats structure tracking node counts and other metrics.
+ */
 void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::vector<Point> &triplePoints, std::string intersectionFolder, struct Stats &pstats) {
     Point tempPoint1, tempPoint2; // Keeps track of current un-rotated points we are working with
     std::string logString = "Writing Intersection Files\n";
@@ -446,10 +437,12 @@ void writeIntersectionFiles(std::vector<unsigned int> &finalFractures, std::vect
 }
 
 /* rotateFractures() **************************************************************************/
-/*! Rotates all fractures to x-y plane.
-    Used only for reduced mesh, otherwise fractures are rotated while writing intersections
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures */
+/*!
+ * \brief Rotates all fractures to the x-y plane (for reduced mesh).
+ *
+ * \param finalFractures Vector of indices of accepted fractures.
+ * \param acceptedPoly Vector of all accepted polygons.
+ */
 void rotateFractures(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly) {
     for (unsigned int i = 0; i < finalFractures.size(); i++) {
         if (acceptedPoly[finalFractures[i]].XYPlane == true) {
@@ -463,10 +456,13 @@ void rotateFractures(std::vector<unsigned int> &finalFractures, std::vector<Poly
 }
 
 /* writePolysInp() ****************************************************************************/
-/*! Writes polys.inp file containing all polygon (fracture) vertice and connectivity data
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes a single polys.inp file containing all polygon vertex and connectivity data.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::ofstream polyOutput;
     std::string polyOutputFile = output + "/polys.inp";
@@ -515,10 +511,13 @@ void writePolysInp_old(std::vector<unsigned int> &finalFractures, std::vector<Po
 }
 
 /* writePolys() ****************************************************************************/
-/*! Parses and writes all poly_x.inp files containing polygon (fracture) vertice and connectivity data
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the combined polygons.dat file listing all polygons.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::ofstream polyOutput;
     std::string logString = "Writing Polygon Files\n";
@@ -551,10 +550,13 @@ void writePolys(std::vector<unsigned int> &finalFractures, std::vector<Poly> &ac
 }
 
 /* writePolysInp() ****************************************************************************/
-/*! Parses and writes all poly_x.inp files containing polygon (fracture) vertice and connectivity data
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes individual poly_*.inp files, one per polygon.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::ofstream polyOutput;
     std::string logString = "Writing poly inp files\n";
@@ -588,11 +590,16 @@ void writePolysInp(std::vector<unsigned int> &finalFractures, std::vector<Poly> 
 }
 
 /* writeParamsFile() **************************************************************************/
-/*! Writes params.txt
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: std::vector array of fracture families
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes the params.txt file containing run parameters.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param shapeFamilies Vector of all fracture shape families.
+ * \param pstats Stats structure for program statistics.
+ * \param triplePoints Vector of triple intersection points.
+ * \param output Path to output folder.
+ */
 void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<Shape> &shapeFamilies, Stats &pstats, std::vector<Point> &triplePoints, std::string &output) {
     std::ofstream params;
     std::string paramsOutputFile = output + "/../params.txt";
@@ -655,10 +662,13 @@ void writeParamsFile(std::vector<unsigned int> &finalFractures, std::vector<Poly
 
 
 /* writeRadiiFile() ***************************************************************************/
-/*! Writes radii.dat (Radii Data)
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the radii.dat file listing radii for each fracture.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string logString = "Writing Radii File (radii.dat)\n";
     logger.writeLogFile(INFO,  logString);
@@ -697,10 +707,13 @@ void writeRadiiFile(std::vector<unsigned int> &finalFractures, std::vector<Poly>
 
 
 /* writeFractureTranslations() ****************************************************************/
-/*! Wrtes translations file (translations.dat)
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the translations.dat file listing translation vectors for each fracture.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeFractureTranslations(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string logString = "Writing Fracture Translations File (translations.dat)\n";
     logger.writeLogFile(INFO,  logString);
@@ -738,11 +751,13 @@ void writeFractureTranslations(std::vector<unsigned int> &finalFractures, std::v
 }
 
 /* writeFinalPolyRadii() **********************************************************************/
-/*! Deprecated Function
-    Writes final radii file (after isoloated fractures have been removed)
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the radii_Final.dat file listing radii after isolated and cluster removal.
+ *
+ * \param finalFractures Vector of indices of final accepted fractures.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string file = output + "/radii_Final.dat";
     std::ofstream radiiFinal;
@@ -762,11 +777,13 @@ void writeFinalPolyRadii(std::vector<unsigned int> &finalFractures, std::vector<
 }
 
 /* writeFinalPolyArea() **********************************************************************/
-/*! Deprecated Function
-    Writes final radii file (after isoloated fractures have been removed)
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the surface_area_Final.dat file listing polygon surface areas after removal.
+ *
+ * \param finalFractures Vector of indices of final accepted fractures.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeFinalPolyArea(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string file = output + "/surface_area_Final.dat";
     std::ofstream areaFinal;
@@ -784,11 +801,12 @@ void writeFinalPolyArea(std::vector<unsigned int> &finalFractures, std::vector<P
 
 
 /* writeAllAcceptedRadii() ********************************************************************/
-/*! Deprecated Function
-    Writes radii file (radii_AllAccepted.dat) for all accepted fractures before isolated fracture removal
-    Arg 1: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 2: std::vector array of all accetped fractures
-    Arg 3: Path to output folder */
+/*!
+ * \brief Writes the radii_AllAccepted.dat file listing radii before any removal.
+ *
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeAllAcceptedRadii(std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string file = output + "/radii_AllAccepted.dat";
     std::ofstream radiiAcpt;
@@ -807,13 +825,13 @@ void writeAllAcceptedRadii(std::vector<Poly> &acceptedPoly, std::string &output)
 
 
 /* writeAllAcceptedRadii_OfFamily() ***********************************************************/
-/*! Writes radii file (radii_AllAccepted_Fam_#.dat) for all accepted
-    fractures BEFORE isolated fracture removal (one file per family)
-    Arg 1: Family number for which radii file will be written for
-           -2 - User Rectangles, -1 - User Ellipses, Family# >= 0 - Family in order of 'FamProb' in input file
-    Arg 2: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 3: std::vector array of all accetped fractures
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes radii_AllAccepted_Fam_#.dat for each family before removal.
+ *
+ * \param familyNum Family number (-2=userRect, -1=userEll, >=0 stochastic).
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeAllAcceptedRadii_OfFamily(int familyNum, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string fileName = output + "/radii_AllAccepted_Fam_" + std::to_string(familyNum + 1) + ".dat";
     std::ofstream file;
@@ -833,13 +851,14 @@ void writeAllAcceptedRadii_OfFamily(int familyNum, std::vector<Poly> &acceptedPo
 }
 
 /* writeAllAcceptedRadii_OfFamily() ***********************************************************/
-/*! Writes radii file (radii_AllAccepted_Fam_#.dat) for all accepted
-    fractures AFTER isolated fracture removal (one file per family)
-    Arg 1: Family number for which radii file will be written for
-           -2 - User Rectangles, -1 - User Ellipses, Family# >= 0 - Family in order of 'FamProb' in input file
-    Arg 2: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 3: std::vector array of all accetped fractures
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes radii_Final_Fam_#.dat for each family after removal.
+ *
+ * \param finalFractures Vector of indices of final accepted fractures.
+ * \param familyNum Family number (-2=userRect, -1=userEll, >=0 stochastic).
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param output Path to output folder.
+ */
 void writeFinalRadii_OfFamily(std::vector<unsigned int> &finalFractures, int familyNum, std::vector<Poly> &acceptedPoly, std::string &output) {
     std::string fileName = output + "/radii_Final_Fam_" + std::to_string(familyNum + 1) + ".dat";
     std::ofstream file;
@@ -859,13 +878,16 @@ void writeFinalRadii_OfFamily(std::vector<unsigned int> &finalFractures, int fam
 }
 
 
-/* writeAllAcceptedRadii_OfFamily() ***********************************************************/
-/*! Writes triple intersection points to file (triple_Points.dat)
-    Arg 1: std::vector array of all triple intersection points
-    Arg 2: std::vector array of indices of fractures left after isolated fracture removal
-    Arg 3: std::vector array of all accetped fractures
-    Arg 4: std::vector array of all intersections
-    Arg 5: Path to output folder */
+/* writeTriplePts() ***********************************************************/
+/*!
+ * \brief Writes unique triple intersection points to triple_points.dat.
+ *
+ * \param triplePoints Vector of all triple intersection points.
+ * \param finalFractures Vector of indices of final accepted fractures.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param intPts Vector of all intersection structures.
+ * \param output Path to output folder.
+ */
 void writeTriplePts(std::vector<Point> &triplePoints, std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::string &output) {
     std::string fileName = output + "/triple_points.dat";
     std::ofstream file;
@@ -926,9 +948,12 @@ void writeTriplePts(std::vector<Point> &triplePoints, std::vector<unsigned int> 
 
 
 /* writeRejectionStats() **********************************************************************/
-/*! Write rejections.dat, rejection statistics
-    Arg 1: Stats structure of program statistics
-    Arg 2: Path to output folder */
+/*!
+ * \brief Writes rejections.dat with counts of rejection reasons.
+ *
+ * \param pstats Stats structure containing rejection counts.
+ * \param output Path to output folder.
+ */
 void writeRejectionStats(Stats &pstats, std::string &output) {
     std::string logString = "Writing Rejection Statistics File (rejections.dat)\n";
     logger.writeLogFile(INFO,  logString);
@@ -946,10 +971,13 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     file.close();
 }
 
-/* writeRejectionStats() **********************************************************************/
-/*! Write rejections.dat, rejection statistics
-    Arg 1: Stats structure of program statistics
-    Arg 2: Path to output folder */
+/* writeUserRejectedFractureInformation() **********************************************************************/
+/*!
+ * \brief Writes userFractureRejections.dat listing user-defined fractures rejected.
+ *
+ * \param pstats Stats structure containing user rejection info.
+ * \param output Path to output folder.
+ */
 void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
     if (pstats.rejectedUserFracture.size() > 0) {
         std::string logString = "Writing User Fracture Rejection File (userFractureRejections.dat)\n";
@@ -969,9 +997,12 @@ void writeUserRejectedFractureInformation(Stats &pstats, std::string &output) {
 }
 
 /* writeShapeFams() ***************************************************************************/
-/*! Writes families.dat, Shape families definition file
-    Arg 1: std::vector array of all fracture shape families
-    Arg 2: Path to output folder */
+/*!
+ * \brief Writes families.dat defining each shape family’s parameters.
+ *
+ * \param shapeFamilies Vector of all fracture shape families.
+ * \param output Path to output folder.
+ */
 void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
     double radToDeg = 180 / M_PI;
     std::string logString = "Writing Family Definitions File (families.dat)\n";
@@ -1048,7 +1079,19 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
         }
         
         // kappa
-        file << "Kappa: " << shapeFamilies[i].kappa << endl;
+        if (shapeFamilies[i].kappa) {
+            file << "Kappa:  " << shapeFamilies[i].kappa  << std::endl;
+        }
+
+        // kappa1
+        if (shapeFamilies[i].kappa1) {
+            file << "Kappa1:  " << shapeFamilies[i].kappa1  << std::endl;
+        }
+
+        // Write Kappa2 only if ekappa2 was set
+        if (shapeFamilies[i].kappa2) {
+            file << "Kappa2: " << shapeFamilies[i].kappa2 << std::endl;
+        }
         
         // Print layer family belongs to
         if (shapeFamilies[i].layer == 0) {
@@ -1106,9 +1149,11 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
 
 
 /* makeDIR() **********************************************************************************/
-/*! Creates a directory
-    If dir already exists, the directoy will not be overwritten
-    Arg 1: Path to directory to be created */
+/*!
+ * \brief Creates a directory; removes existing first if present.
+ *
+ * \param dir Path to directory.
+ */
 void makeDIR(const char *dir) {
     std::string logString;
     
@@ -1138,11 +1183,14 @@ void makeDIR(const char *dir) {
 
 
 /* writeConnectivity() **********************************************************************************/
-/*! Writes fracture connectivity edge graph
-    Arg 1: Array of indices to polys in 'acceptedPoly' which are left after isolated fracture removal
-    Arg 2: Array off all polygons in DFN before isolated fracture removal
-    Arg 3: Array of all intersections in DFN
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes connectivity.dat listing adjacent fractures for each fracture.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param intPts Vector of all intersection structures.
+ * \param output Path to output folder.
+ */
 void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts, std::string &output) {
     std::string logString = "Writing Connectivity Data (connectivity.dat)\n";
     logger.writeLogFile(INFO,  logString);
@@ -1184,12 +1232,14 @@ void writeConnectivity(std::vector<unsigned int> &finalFractures, std::vector<Po
 
 
 /* writeRotationData() ******************************************************************************/
-/*! Writes poly_info.dat
-    Writes fracture rotation data. Also includes shape families each fracture belongs to.
-    Arg 1: Array off all polygons in DFN before isolated fracture removal
-    Arg 2: Array of indices to polys in 'acceptedPoly' which are left after isolated fracture removal
-    Arg 3: Array of all fracture shape families
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes poly_info.dat containing rotation info for each fracture.
+ *
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param shapeFamilies Vector of all fracture shape families.
+ * \param output Path to output folder.
+ */
 void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output) {
     std::ofstream file;
     std::string fileOutputFile = output + "/../poly_info.dat";
@@ -1255,12 +1305,14 @@ void writeRotationData(std::vector<Poly> &acceptedPoly, std::vector<unsigned int
 }
 
 /* writeNormalVectors() ******************************************************************************/
-/*! Writes normal_vectors.dat
-    Writes fracture rotation data. Also includes shape families each fracture belongs to.
-    Arg 1: Array off all polygons in DFN before isolated fracture removal
-    Arg 2: Array of indices to polys in 'acceptedPoly' which are left after isolated fracture removal
-    Arg 3: Array of all fracture shape families
-    Arg 4: Path to output folder */
+/*!
+ * \brief Writes normal_vectors.dat containing each fracture’s normal vector.
+ *
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param shapeFamilies Vector of all fracture shape families.
+ * \param output Path to output folder.
+ */
 void writeNormalVectors(std::vector<Poly> &acceptedPoly, std::vector<unsigned int> &finalFractures, std::vector<Shape> &shapeFamilies, std::string output) {
     std::ofstream file;
     std::string fileOutputFile = output + "/normal_vectors.dat";
@@ -1282,14 +1334,12 @@ void writeNormalVectors(std::vector<Poly> &acceptedPoly, std::vector<unsigned in
 }
 
 /* writeRejectsPerAttempt()**************************************************************************/
-/*! Writes rejectsPerAttempt.dat
-    Outputs a file that contains a list of integers of the number
-    of attempts per fracture.
-    For example, if the 5th number in the list is 100, it means that
-    it took 100 fracture insertion attemps for before the 5th fracture
-    was accepted.
-    Arg 1: Stats structure, program statistics
-    Arg 2: Path to output*/
+/*!
+ * \brief Writes rejectsPerAttempt.dat listing insertion attempts per fracture.
+ *
+ * \param pstats Stats structure containing reject attempt counts.
+ * \param output Path to output folder.
+ */
 void writeRejectsPerAttempt(Stats &pstats, std::string &output) {
     std::ofstream file;
     std::string fileOutputFile = output + "/rejectsPerAttempt.dat";
@@ -1306,11 +1356,13 @@ void writeRejectsPerAttempt(Stats &pstats, std::string &output) {
 }
 
 /* writeGraphData() ******************************************************************/
-/*! Writes graph data files to intersections_list.dat and fracture_info.dat
-    Arg 1: std::vector array of indices to fractures (Arg 2) remaining after isolated
-           fracture removal
-    Arg 2: std::vector array of all accepted fractures (before isolated fracture removal)
-    Arg 3: std::vector array of all intersections*/
+/*!
+ * \brief Writes graph data files: intersection_list.dat and fracture_info.dat.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ * \param intPts Vector of all intersection structures.
+ */
 void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly, std::vector<IntPoints> &intPts) {
     double domainX = domainSize[0] * .5;
     double domainY = domainSize[1] * .5;
@@ -1475,16 +1527,19 @@ void writeGraphData(std::vector<unsigned int> &finalFractures, std::vector<Poly>
 }
 
 /* writeMidPoint() ******************************************************************/
-/*! Writes mid point and length of line defined by x1,y1,z1 and x2,y2,z2 into file fp
-    Arg 1: std::ofstream file to write informatino into
-    Arg 2: int fracture 1
-    Arg 3: int fracture 2
-    Arg 4: double x1 x coordinate of first endpoint
-    Arg 5: double y1 y coordinate of first endpoint
-    Arg 6: double z1 z coordinate of first endpoint
-    Arg 7: double x2 x coordinate of second endpoint
-    Arg 8: double y2 y coordinate of second endpoint
-    Arg 9: double z2 z coordinate of second endpoint */
+/*!
+ * \brief Writes a single midpoint and line length entry to a file.
+ *
+ * \param fp Output file stream.
+ * \param fract1 First fracture ID.
+ * \param fract2 Second fracture ID.
+ * \param x1 X coordinate of first endpoint.
+ * \param y1 Y coordinate of first endpoint.
+ * \param z1 Z coordinate of first endpoint.
+ * \param x2 X coordinate of second endpoint.
+ * \param y2 Y coordinate of second endpoint.
+ * \param z2 Z coordinate of second endpoint.
+ */
 
 void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double y1, double z1, double x2, double y2, double z2) {
     Point tempPoint1, tempPoint2, tempPoint3; // Keeps track of current un-rotated points we are working with
@@ -1499,14 +1554,20 @@ void writeMidPoint(std::ofstream &fp, int fract1, int fract2, double x1, double 
     tempPoint3.z = 0.5 * (tempPoint1.z + tempPoint2.z);
     double curLength = 0;
     curLength = euclideanDistance(tempPoint1, tempPoint2);
-    fp << fract1  << " " << fract2 << std::setprecision(10) << " " << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " " << curLength << "\n";
+    fp << std::scientific << std::setprecision(12);
+    fp << fract1 << " " << fract2 << " "
+       << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " "
+       << curLength << "\n";
+    // fp << fract1  << " " << fract2 << std::setprecision(10) << " " << tempPoint3.x << " " << tempPoint3.y << " " << tempPoint3.z << " " << curLength << "\n";
 }
 
 /* writeBoundaryfiles() ******************************************************************/
-/*! Writes fracture numbers into ASCII files corresponding to which boundary they touch
-    Arg 1: std::vector array of indices to fractures (Arg 2) remaining after isolated
-           fracture removal
-    Arg 2: std::vector array of all accepted fractures (before isolated fracture removal)*/
+/*!
+ * \brief Writes boundary files listing fractures touching each domain boundary.
+ *
+ * \param finalFractures Vector of indices of accepted fractures after isolation removal.
+ * \param acceptedPoly Vector of all accepted polygons.
+ */
 void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<Poly> &acceptedPoly) {
     std::string logString = "Writing Boundary Files\n";
     logger.writeLogFile(INFO,  logString);
@@ -1574,5 +1635,4 @@ void writeBoundaryFiles(std::vector<unsigned int> &finalFractures, std::vector<P
     topFile.close();
     bottomFile.close();
 }
-
 
