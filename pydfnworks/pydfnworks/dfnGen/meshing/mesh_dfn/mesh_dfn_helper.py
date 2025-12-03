@@ -335,8 +335,9 @@ def setup_meshing_directory():
             if os.path.isdir(d):
                 shutil.rmtree(d)
             os.mkdir(d)
-        except:
-            local_print_log(f"Unable to make directory {d}",'error')
+        except Execption as e:
+            local_print_log(e) 
+            local_print_log(f"Unable to make directory {d}",'warning')
 
 
 def cleanup_meshing_files():
