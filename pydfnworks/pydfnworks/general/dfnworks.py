@@ -88,7 +88,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
     from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
     from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
-    from pydfnworks.dfnGen.meshing.mesh_dfn.prune_mesh_scripts import edit_intersection_files, clean_up_files_after_prune
+    
+    from pydfnworks.dfnGen.pruning.cleanup_after_prune import clean_up_files_after_prune, edit_params, write_poly_info, edit_radii_final, edit_normal_vectors, edit_translations, write_surface_area, edit_polygons, clean_up_after_prune
+    from pydfnworks.dfnGen.pruning.prepare_for_pruning import edit_intersection_files
+
     from pydfnworks.dfnGen.meshing.add_attribute_to_mesh import add_variable_to_mesh
 
     # udfm meshing functions 
@@ -189,6 +192,10 @@ class DFNWORKS():
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
+
+            if not self.jobname.endswith('/'):
+                self.jobname += os.sep 
+
             if not log_filename:
                 self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
             else:
@@ -196,8 +203,8 @@ class DFNWORKS():
             self.initialize_log_file(time = log_time)
             now = datetime.now()
             self.start_time = now
-            statement = f"Starting at {now}"
-            self.print_log(statement )
+            statement = f"--> Created DFN Object at {now}"
+            self.print_log(statement)
         else:
             self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
             self.local_jobname = "dfnWorks_output"
