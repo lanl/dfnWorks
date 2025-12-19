@@ -37,8 +37,8 @@ Install Date: {__install_date__}
 Run time : {datetime.datetime.now()}
 
 This program was prepared at Los Alamos National Laboratory (LANL),
-Earth and Environmental Sciences Division, Computational Earth
-Science Group (EES-16), Subsurface Flow and Transport Team.
+Earth and Environmental Sciences Division.
+
 All rights in the program are reserved by the DOE and LANL.
 Permission is granted to the public to copy and use this software
 without charge, provided that this Notice and any statement of
