@@ -1,5 +1,5 @@
 __author__ = "Jeffrey Hyman"
-__version__ = "2.8"
+__version__ = "2.9.6"
 __maintainer__ = "Jeffrey Hyman"
 __email__ = "jhyman@lanl.gov"
 """
@@ -64,7 +64,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable, check_input_paths
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
@@ -188,45 +188,32 @@ class DFNWORKS():
         self.prune_file = prune_file
         self.logging = True
         self.store_polygon_data = store_polygon_data
+        self.pickle_filename = pickle_file
 
+        ## Job name
         if jobname:
             self.jobname = jobname
             self.local_jobname = ntpath.basename(self.jobname)
-
-            if not self.jobname.endswith('/'):
-                self.jobname += os.sep 
-
-            if not log_filename:
-                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
-            else:
-                self.log_filename = os.getcwd() + os.sep + log_filename
-            self.initialize_log_file(time = log_time)
-            now = datetime.now()
-            self.start_time = now
-            statement = f"--> Created DFN Object at {now}"
-            self.print_log(statement)
         else:
             self.jobname = os.getcwd() + os.sep + "dfnWorks_output"
             self.local_jobname = "dfnWorks_output"
-            if not log_filename:
-                self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
-            else:
-                self.log_filename = os.getcwd() + os.sep + log_filename
-            self.initialize_log_file(time = log_time)
-            now = datetime.now()
-            self.start_time = now
-            statement = f"Starting at {now}"
-            self.print_log(statement ) 
+        # Log file 
+        if not log_filename:
+            self.log_filename = os.getcwd() + os.sep + self.local_jobname + ".log" 
+        else:
+            self.log_filename = os.getcwd() + os.sep + log_filename
+
+        self.initialize_log_file(time = log_time)
+        now = datetime.now()
+        self.start_time = now
+        statement = f"Starting at {now}"
+        self.print_log(statement) 
 
         ## check is define_paths has been run yet
         if not 'dfnworks_PATH' in os.environ:
             self.legal()
             self.print_log("--> Creating DFN Object: Starting" )
             self.define_paths()
-
-        if pickle_file:
-            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
-            self.from_pickle(pickle_file)
 
         if dfnGen_file:
             self.dfnGen_file = dfnGen_file
@@ -251,12 +238,25 @@ class DFNWORKS():
             self.dfnTrans_file = None
             self.local_dfnTrans_file = None
 
+        if pickle_file:
+            self.print_log(f"--> Loading DFN from pickled object file {pickle_file}" )
+            self.from_pickle()
+            # overwrite jobname information from pickle file
+            self.jobname = jobname 
+            self.local_jobname = ntpath.basename(self.jobname) 
+            self.path = path
+            self.prune_file = prune_file
+
         self.ncpu = ncpu
         self.params, self.mandatory_params = self.load_parameters()
-        self.print_log("\n--> Creating DFN Object: Starting")
+        # self.print_log("\n--> Creating DFN Object: Starting")
         self.start_time = time()
         self.print_parameters()
+      # check paths
+        self.check_input_paths() 
+
         self.print_log("--> Creating DFN Object: Complete" )
+
 
     def __del__(self):
         try:
@@ -280,150 +280,149 @@ class DFNWORKS():
 # '''
 #         self.print_log(output)
 
-def commandline_options():
-    """Read command lines for use in dfnWorks.
+# def commandline_options():
+#     """Read command lines for use in dfnWorks.
 
-    Parameters
-    ----------
-        None
+#     Parameters
+#     ----------
+#         None
 
-    Returns
-    ---------
-        options : argparse function
-            command line options
+#     Returns
+#     ---------
+#         options : argparse function
+#             command line options
 
-    Notes
-    ---------
-        Options:
-            -name : string
-                Path to working directory (Mandatory)
-            -ncpu : int
-                Number of CPUS (Optional, default=4)
-            -input : string
-                Input file with paths to run files (Mandatory if the next three options are not specified)
-            -prune_file : string
-                Absolute path to the prune Input File
-            -path : string
-                Path to another DFN run that you want to base the current run from
-            -cell : bool
-                True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
-    """
+#     Notes
+#     ---------
+#         Options:
+#             -name : string
+#                 Path to working directory (Mandatory)
+#             -ncpu : int
+#                 Number of CPUS (Optional, default=4)
+#             -input : string
+#                 Input file with paths to run files (Mandatory if the next three options are not specified)
+#             -prune_file : string
+#                 Absolute path to the prune Input File
+#             -path : string
+#                 Path to another DFN run that you want to base the current run from
+#             -cell : bool
+#                 True/False Set True for use with cell based aperture and permeabuility (Optional, default=False)
+#     """
 
-    import argparse
+#     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Command Line Arguments for dfnWorks")
-    parser.add_argument("-name",
-                        "--jobname",
-                        default="",
-                        type=str,
-                        help="jobname")
-    parser.add_argument("-ncpu",
-                        "--ncpu",
-                        default=4,
-                        type=int,
-                        help="Number of CPUs")
-    parser.add_argument("-input",
-                        "--input_file",
-                        default="",
-                        type=str,
-                        help="input file with paths to run files")
-    parser.add_argument("-path",
-                        "--path",
-                        default="",
-                        type=str,
-                        help="Path to directory for sub-network runs")
-    parser.add_argument("-cell",
-                        "--cell",
-                        default=False,
-                        action="store_true",
-                        help="Binary For Cell Based Apereture / Perm")
-    parser.add_argument("-prune_file",
-                        "--prune_file",
-                        default="",
-                        type=str,
-                        help="Path to prune DFN list file")
-    options = parser.parse_args()
-    if options.jobname == "":
-        error = "Error: Jobname is required. Exiting.\n"
-        sys.stderr.write(error)
-        self.print_log(error, "critical")
-        sys.exit(1)
-    return options
-
-
-def create_dfn():
-    '''Parse command line inputs and input files to create and populate dfnworks class
-
-    Parameters
-    ----------
-        None
-
-    Returns
-    -------
-        DFN : object
-            DFN class object populated with information parsed from the command line. Information about DFN class is in dfnworks.py
-
-    Notes
-    -----
-    None
-    '''
-
-    options = commandline_options()
-
-    self.print_log("Command Line Inputs:")
-    self.print_log(options)
+#     parser = argparse.ArgumentParser(
+#         description="Command Line Arguments for dfnWorks")
+#     parser.add_argument("-name",
+#                         "--jobname",
+#                         default="",
+#                         type=str,
+#                         help="jobname")
+#     parser.add_argument("-ncpu",
+#                         "--ncpu",
+#                         default=4,
+#                         type=int,
+#                         help="Number of CPUs")
+#     parser.add_argument("-input",
+#                         "--input_file",
+#                         default="",
+#                         type=str,
+#                         help="input file with paths to run files")
+#     parser.add_argument("-path",
+#                         "--path",
+#                         default="",
+#                         type=str,
+#                         help="Path to directory for sub-network runs")
+#     parser.add_argument("-cell",
+#                         "--cell",
+#                         default=False,
+#                         action="store_true",
+#                         help="Binary For Cell Based Apereture / Perm")
+#     parser.add_argument("-prune_file",
+#                         "--prune_file",
+#                         default="",
+#                         type=str,
+#                         help="Path to prune DFN list file")
+#     options = parser.parse_args()
+#     if options.jobname == "":
+#         error = "Error: Jobname is required. Exiting.\n"
+#         sys.stderr.write(error)
+#         sys.exit(1)
+#     return options
 
 
-    now = datetime.now()
+# def create_dfn():
+#     '''Parse command line inputs and input files to create and populate dfnworks class
 
-    if options.input_file == "":
-        error = "ERROR!!! Input file must be provided.\n"
-        sys.stderr.write(error)
-        self.print_log(error, "error")
-        sys.exit(1)
-    else:
+#     Parameters
+#     ----------
+#         None
 
-        self.print_log("--> Reading Input from " + options.input_file)
-    dfnGen_file = None
-    dfnFlow_file = None
-    dfnTrans_file = None
+#     Returns
+#     -------
+#         DFN : object
+#             DFN class object populated with information parsed from the command line. Information about DFN class is in dfnworks.py
 
-    self.print_log(f"--> Reading run files from {options.input_file}")
-    with open(options.input_file, "r") as f:
-        for i, line in enumerate(f.readlines()):
-            line = line.rstrip('\n')
-            line = line.split()
-            try:
-                if "dfnGen" in line:
-                    dfnGen_file = line[1]
-                    self.print_log(f'--> dfnGen input file: {dfnGen_file}' )
-                elif "dfnFlow" in line:
-                    dfnFlow_file = line[1]
-                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
-                elif "dfnTrans" in line:
-                    dfnTrans_file = line[1]
-                    self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
-                elif "dfnFlow" in line:
-                    dfnFlow_file = line[1]
-                    self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
-                elif "dfnTrans" in line:
-                    dfnTrans_file = line[1]
-                    self.print_log('--> dfnTrans input file: ', dfnTrans_file)
-            except:
-                error = f"Error Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
-                sys.stderr.write(error, "error")
+#     Notes
+#     -----
+#     None
+#     '''
+
+#     options = commandline_options()
+
+#     self.print_log("Command Line Inputs:")
+#     self.print_log(options)
 
 
-    if not options.path:
-        if not options.path.endswith('/'):
-            options.path += os.sep
-    DFN = DFNWORKS(jobname=options.jobname,
-                   ncpu=options.ncpu,
-                   dfnGen_file=dfnGen_file,
-                   dfnFlow_file=dfnFlow_file,
-                   dfnTrans_file=dfnTrans_file,
-                   prune_file=options.prune_file,
-                   path=options.path,
-                   cell_based_aperture=options.cell)
-    return DFN
+#     now = datetime.now()
+
+#     if options.input_file == "":
+#         error = "ERROR!!! Input file must be provided.\n"
+#         sys.stderr.write(error)
+#         self.print_log(error, "error")
+#         sys.exit(1)
+#     else:
+
+#         self.print_log("--> Reading Input from " + options.input_file)
+#     dfnGen_file = None
+#     dfnFlow_file = None
+#     dfnTrans_file = None
+
+#     self.print_log(f"--> Reading run files from {options.input_file}")
+#     with open(options.input_file, "r") as f:
+#         for i, line in enumerate(f.readlines()):
+#             line = line.rstrip('\n')
+#             line = line.split()
+#             try:
+#                 if "dfnGen" in line:
+#                     dfnGen_file = line[1]
+#                     self.print_log(f'--> dfnGen input file: {dfnGen_file}' )
+#                 elif "dfnFlow" in line:
+#                     dfnFlow_file = line[1]
+#                     self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
+#                 elif "dfnTrans" in line:
+#                     dfnTrans_file = line[1]
+#                     self.print_log(f'--> dfnTrans input file: {dfnTrans_file}' )
+#                 elif "dfnFlow" in line:
+#                     dfnFlow_file = line[1]
+#                     self.print_log(f'--> dfnFlow input file: {dfnFlow_file}' )
+#                 elif "dfnTrans" in line:
+#                     dfnTrans_file = line[1]
+#                     self.print_log('--> dfnTrans input file: ', dfnTrans_file)
+#             except:
+#                 error = f"Error Reading {options.input_file}\nUnknown line: {line} on line number {i}\n"
+#                 sys.stderr.write(error, "error")
+
+
+#     if not options.path:
+#         if not options.path.endswith('/'):
+#             options.path += os.sep
+#     DFN = DFNWORKS(jobname=options.jobname,
+#                    ncpu=options.ncpu,
+#                    dfnGen_file=dfnGen_file,
+#                    dfnFlow_file=dfnFlow_file,
+#                    dfnTrans_file=dfnTrans_file,
+#                    prune_file=options.prune_file,
+#                    path=options.path,
+#                    cell_based_aperture=options.cell)
+#     return DFN
