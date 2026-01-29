@@ -75,7 +75,10 @@ class DFNWORKS():
     from pydfnworks.dfnGen.generation.generator import dfn_gen, make_working_directory, create_network
     from pydfnworks.dfnGen.generation.process_generator_output import parse_params_file, gather_dfn_gen_output, assign_hydraulic_properties, grab_polygon_data, compute_fracture_p21
     from pydfnworks.dfnGen.generation.output_report.gen_output import output_report
-    from pydfnworks.dfnGen.generation.hydraulic_properties import generate_hydraulic_values, dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info, set_fracture_hydraulic_values
+
+    from pydfnworks.dfnGen.generation.hydraulic.dfn_methods import generate_hydraulic_values, set_fracture_hydraulic_values
+    from pydfnworks.dfnGen.generation.hydraulic.io import dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info
+
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
     from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
