@@ -50,9 +50,9 @@ for i,d in enumerate(examples_dirs):
             #print(f"--> Removing output.log file from {d}")
         driver_file = glob.glob("driver.py")
         if verbose:
-            cmd = f"python3.11 {driver_file[0]}"
+            cmd = f"python3.13 {driver_file[0]}"
         else:
-            cmd = f"python3.11 {driver_file[0]} > {home}/example_outputs/{d}.out"
+            cmd = f"python3.13 {driver_file[0]} > {home}/example_outputs/{d}.out"
         print(cmd)
         tic = timeit.default_timer()
         subprocess.call(cmd, shell=True)
