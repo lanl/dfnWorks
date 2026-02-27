@@ -6,6 +6,7 @@
 #include "computationalGeometry.h"
 #include "input.h"
 #include "vectorFunctions.h"
+#include "layers.h"
 #include <string>
 #include "logFile.h"
 
@@ -213,7 +214,7 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
         //logger.writeLogFile(INFO,  logString);
     } else {
         t = randomTranslation(generator, -1, 1, -1, 1, -1, 1);
-        std::string logString = "ERROR!!!\nLayer and Region both defined for this Family.\nExiting Program\n";
+        std::string logString = "Error. \nLayer and Region both defined for this Family.\nExiting Program\n";
         logger.writeLogFile(ERROR,  logString);
         exit(1);
     }
@@ -221,6 +222,14 @@ struct Poly generatePoly(struct Shape &shapeFam, std::mt19937_64 &generator, Dis
     // Translate - will also set translation vector in poly structure
     translate(newPoly, t);
     delete[] t;
+
+    // Clip fracture to its assigned layer's Z boundaries if layerConformingFractures is enabled.
+    // layerTruncation() is a no-op when shapeFam.layer == 0 or the flag is off.
+    // Layer truncation is applied here (before domainTruncation in the caller) so that
+    // the tighter layer Z planes are enforced first; domainTruncation then handles X/Y
+    // and any residual Z overhang from domainSizeIncrease.
+    layerTruncation(newPoly, shapeFam.layer);
+
     return newPoly;
 }
 
@@ -334,6 +343,10 @@ struct Poly generatePoly_withRadius(double radius, struct Shape &shapeFam, std::
     // Translate - will also set translation vector in poly structure
     translate(newPoly, t);
     delete[] t;
+
+    // Clip fracture to its assigned layer's Z boundaries (see generatePoly for rationale).
+    layerTruncation(newPoly, shapeFam.layer);
+
     return newPoly;
 }
 
@@ -530,6 +543,9 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
         // Translate - will also set translation vector in poly structure
         translate(newPoly, t);
         delete[] t;
+
+        // Re-clip to layer boundaries after retranslation.
+        layerTruncation(newPoly, shapeFam.layer);
     } else { // Poly was truncated, need to rebuild the polygon
         delete[] newPoly.vertices; // Delete truncated vertices
         newPoly.vertices = new double[shapeFam.numPoints * 3];
@@ -619,6 +635,9 @@ void reTranslatePoly(struct Poly &newPoly, struct Shape &shapeFam, std::mt19937_
         
         translate(newPoly, t);
         delete[] t;
+
+        // Re-clip to layer boundaries after rebuild and retranslation.
+        layerTruncation(newPoly, shapeFam.layer);
     }
 }
 

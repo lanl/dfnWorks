@@ -3,6 +3,7 @@
 #include <stdlib.h> // remove dir
 #include <algorithm>
 #include "input.h"
+#include "layers.h"
 #include <iostream>
 #include "structures.h"
 #include "vectorFunctions.h"
@@ -966,6 +967,10 @@ void writeRejectionStats(Stats &pstats, std::string &output) {
     file << "Close to Edge: " << pstats.rejectionReasons.closeToEdge << "\n";
     file << "Vertex Close to Edge: " << pstats.rejectionReasons.closePointToEdge << "\n";
     file << "Outside of Domain: " << pstats.rejectionReasons.outside << "\n";
+    if (layerConformingFractures && numOfLayers > 0) {
+        file << "  Note: 'Outside of Domain' includes fractures clipped to fewer than 3 vertices\n";
+        file << "  by layer boundary truncation (layerConformingFractures enabled).\n";
+    }
     file << "Triple Intersection: " << pstats.rejectionReasons.triple << " \n";
     file << "Intersections Too Close: " << pstats.rejectionReasons.interCloseToInter << "\n";
     file.close();
@@ -1100,6 +1105,7 @@ void writeShapeFams(std::vector<Shape> &shapeFamilies, std::string &output) {
             int idx = (shapeFamilies[i].layer - 1) * 2;
             file << "Layer Number: " << shapeFamilies[i].layer << "\n";
             file << "Layer: {" << layers[idx] << "," << layers[idx + 1] << "}" << endl;
+            file << "Layer Conforming: " << (layerConformingFractures ? "enabled" : "disabled") << endl;
         }
         
         // Print layer family belongs to

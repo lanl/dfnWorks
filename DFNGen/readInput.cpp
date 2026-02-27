@@ -561,6 +561,12 @@ float *layers;
     which layers were listed.*/
 float *layerVol;
 
+/*! Controls whether fractures assigned to a layer are truncated to conform
+    to that layer's Z boundaries.
+        True  (1) - Fractures are clipped at layer boundaries (default).
+        False (0) - Fractures may extend beyond their assigned layer. */
+bool layerConformingFractures = true;
+
 /*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
     Layers numbered > 0 correspond to layers defined above (see 'Layers:').
@@ -666,7 +672,15 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         logString = "\n";
         logger.writeLogFile(INFO,  logString);
     }
-    
+
+    searchVar(inputFile, "layerConformingFractures:");
+    inputFile >> layerConformingFractures;
+
+    if (numOfLayers > 0) {
+        logString = "Layer conforming fractures: " + std::string(layerConformingFractures ? "enabled" : "disabled") + "\n";
+        logger.writeLogFile(INFO, logString);
+    }
+
     searchVar(inputFile, "numOfRegions:");
     inputFile >> numOfRegions;
     

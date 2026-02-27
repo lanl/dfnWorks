@@ -15,6 +15,7 @@
 #include "clusterGroups.h"
 #include "mathFunctions.h"
 #include "domain.h"
+#include "layers.h"
 #include "computationalGeometry.h"
 #include "generatingPoints.h"
 #include "distributions.h"
@@ -484,6 +485,7 @@ int main (int argc, char **argv) {
     file << "            Network Generation Complete\n";
     file << "========================================================\n";
     file << "Version of DFNGen: 2.2\n";
+    file << "Layer Conforming Fractures: " << (layerConformingFractures ? "enabled" : "disabled") << "\n";
     std::time_t result = std::time(nullptr);
     file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
     logString =  "========================================================\n";
@@ -493,6 +495,8 @@ int main (int argc, char **argv) {
     logString =  "========================================================\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Version of DFNGen: 2.2\n";
+    logger.writeLogFile(INFO,  logString);
+    logString =  "Layer Conforming Fractures: " + std::string(layerConformingFractures ? "enabled" : "disabled") + "\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Time Stamp: " + std::string(std::asctime(std::localtime(&result))) + "\n";
     logger.writeLogFile(INFO,  logString);
