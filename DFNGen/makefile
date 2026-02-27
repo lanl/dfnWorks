@@ -1,3 +1,4 @@
+
 CXX = g++ 
 CXXFLAGS  = -std=c++11 -O3 -lm -Wall -g
 
@@ -5,6 +6,8 @@ CXXFLAGS  = -std=c++11 -O3 -lm -Wall -g
 # that lists the exact headers that .cpp included. -MP adds phony targets
 # for headers so a deleted header doesn't cause a spurious error.
 DEPFLAGS = -MMD -MP
+
+DFNGEN_VERSION = 2.3
 
 OBJS = DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o \
        readInput.o readInputFunctions.o output.o insertUserRects.o \
@@ -19,6 +22,7 @@ OBJS = DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o \
 
 DFNGen: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o DFNGen $(OBJS)
+	@echo "$(DFNGEN_VERSION)" > .dfngen_version
 
 # Single pattern rule covers all translation units.
 # $< is the .cpp file; DEPFLAGS writes the .d file as a side effect.
@@ -26,4 +30,4 @@ DFNGen: $(OBJS)
 	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 clean:
-	rm -f DFNGen $(OBJS) $(OBJS:.o=.d)
+	rm -f DFNGen $(OBJS) $(OBJS:.o=.d) .dfngen_version
