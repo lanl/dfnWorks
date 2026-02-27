@@ -163,6 +163,16 @@ def load_parameters(self):
             'description':
             "Type: Set of numOfLayers arrays with two elements. {zMin, zMax}\nDefines the lower and upper limits for each layer. The first layer listed is layer 1, the second is layer 2, etc. Every stochastic families *must* be assigned to a layer. If the family is assigned to layer 0, then the family in generated through the entire domain.\n"
         },
+        'layerConformingFractures': {
+            'type':
+            bool,
+            'list':
+            False,
+            'value':
+            True,
+            'description':
+            "Type <boolean>\nIf True (default), fracture polygons assigned to a layer will be clipped to that layer's Z boundaries. Vertices outside the layer are removed and new vertices are inserted at the layer plane. Fractures clipped to fewer than 3 vertices are rejected. If False, fracture centers are still sampled within the layer but polygon vertices may extend beyond the layer boundaries.\nOnly has effect when numOfLayers > 0."
+        },
         'numOfRegions': {
             'type':
             int,
@@ -1314,7 +1324,7 @@ def load_parameters(self):
     }
 
     mandatory = {
-        'stopCondition', 'domainSize', 'numOfLayers', 'numOfRegions',
+        'stopCondition', 'domainSize', 'numOfLayers', 'layerConformingFractures', 'numOfRegions',
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'tripleIntersections',
         'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
