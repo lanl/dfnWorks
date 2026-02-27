@@ -10,6 +10,13 @@
  * When layerConformingFractures is enabled, fractures assigned to a layer
  * are clipped to that layer's +Z and -Z boundaries using the same
  * Sutherland-Hodgman half-space clipping algorithm used in domainTruncation().
+ *
+ * Three modes are supported via the integer layerConformingFractures:
+ *   0 - Disabled: fractures extend freely beyond layer boundaries.
+ *   1 - Perfect conforming: fractures are clipped exactly at the layer boundary.
+ *   2 - Soft conforming: fractures are clipped at the layer boundary + 2h,
+ *       preserving a small overhang that maintains geometric intersections
+ *       with fractures in the adjacent layer for flow connectivity.
  ******************************************************************************/
 
 /*!
@@ -22,7 +29,7 @@
  *
  * This function is a no-op if:
  *   - \p layerIndex is 0 (fracture belongs to the full domain), or
- *   - \p layerConformingFractures is false.
+ *   - \p layerConformingFractures is 0 (disabled).
  *
  * \param newPoly     Polygon to be clipped (modified in place).
  * \param layerIndex  1-based index into the global \c layers[] array.

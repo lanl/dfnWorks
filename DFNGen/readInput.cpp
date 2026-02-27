@@ -565,7 +565,7 @@ float *layerVol;
     to that layer's Z boundaries.
         True  (1) - Fractures are clipped at layer boundaries (default).
         False (0) - Fractures may extend beyond their assigned layer. */
-bool layerConformingFractures = true;
+int layerConformingFractures = 1;
 
 /*  Defines which domain, or layer, the family belongs to.
     Layer 0 is the entire domain ('domainSize').
@@ -677,7 +677,10 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     inputFile >> layerConformingFractures;
 
     if (numOfLayers > 0) {
-        logString = "Layer conforming fractures: " + std::string(layerConformingFractures ? "enabled" : "disabled") + "\n";
+        std::string lcfMode = (layerConformingFractures == 0) ? "disabled" :
+                              (layerConformingFractures == 1) ? "perfect conforming" :
+                              "soft conforming (2h overhang)";
+        logString = "Layer conforming fractures: " + lcfMode + "\n";
         logger.writeLogFile(INFO, logString);
     }
 

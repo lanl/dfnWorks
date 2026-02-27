@@ -485,7 +485,10 @@ int main (int argc, char **argv) {
     file << "            Network Generation Complete\n";
     file << "========================================================\n";
     file << "Version of DFNGen: 2.2\n";
-    file << "Layer Conforming Fractures: " << (layerConformingFractures ? "enabled" : "disabled") << "\n";
+    std::string lcfMode = (layerConformingFractures == 0) ? "disabled" :
+                          (layerConformingFractures == 1) ? "perfect conforming" :
+                          "soft conforming (2h overhang)";
+    file << "Layer Conforming Fractures: " << lcfMode << "\n";
     std::time_t result = std::time(nullptr);
     file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
     logString =  "========================================================\n";
@@ -496,7 +499,7 @@ int main (int argc, char **argv) {
     logger.writeLogFile(INFO,  logString);
     logString =  "Version of DFNGen: 2.2\n";
     logger.writeLogFile(INFO,  logString);
-    logString =  "Layer Conforming Fractures: " + std::string(layerConformingFractures ? "enabled" : "disabled") + "\n";
+    logString =  "Layer Conforming Fractures: " + lcfMode + "\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Time Stamp: " + std::string(std::asctime(std::localtime(&result))) + "\n";
     logger.writeLogFile(INFO,  logString);

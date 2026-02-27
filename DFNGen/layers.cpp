@@ -139,7 +139,7 @@ static int clipAgainstPlane(Poly &newPoly, double normal[3], double point[3]) {
 bool layerTruncation(Poly &newPoly, int layerIndex) {
 
     // No-op: full domain or layer conforming disabled
-    if (layerIndex == 0 || !layerConformingFractures || numOfLayers == 0) {
+    if (layerIndex == 0 || layerConformingFractures == 0 || numOfLayers == 0) {
         return false;
     }
 
@@ -156,7 +156,14 @@ bool layerTruncation(Poly &newPoly, int layerIndex) {
         zBottom = tmp;
     }
 
-    // Quick check: are all vertices already inside the layer?
+    // Mode 2: soft conforming — allow fractures to hang over the layer
+    // boundary by 2h. This preserves geometric intersections with fractures
+    // in the adjacent layer that are needed for flow connectivity.
+    double overhang = (layerConformingFractures == 2) ? 2.0 * h : 0.0;
+    zTop    += overhang;
+    zBottom -= overhang;
+
+    // Quick check: are all vertices already inside the (possibly expanded) layer?
     bool needsClipping = false;
     for (int k = 0; k < newPoly.numberOfNodes; k++) {
         double z = newPoly.vertices[k * 3 + 2];
@@ -247,10 +254,11 @@ bool layerTruncation(Poly &newPoly, int layerIndex) {
 
     newPoly.numberOfNodes = nNodes;
 
-    std::string logString = "Layer truncation applied: layer " + to_string(layerIndex)
-                            + " z=[" + to_string(zBottom) + ", " + to_string(zTop)
-                            + "], vertices after clipping: " + to_string(nNodes) + "\n";
-    logger.writeLogFile(DEBUG, logString);
+    // std::string logString = "Layer truncation applied: layer " + to_string(layerIndex)
+    //                         + " z=[" + to_string(zBottom) + ", " + to_string(zTop) + "]"
+    //                         + (overhang > 0.0 ? " (2h overhang applied)" : "")
+    //                         + ", vertices after clipping: " + to_string(nNodes) + "\n";
+    // logger.writeLogFile(DEBUG, logString);
 
     return false; // Accept
 }

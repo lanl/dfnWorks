@@ -122,7 +122,7 @@ extern float *econst;
 extern float *rconst;
 extern float *layers;
 extern float *layerVol;
-extern bool layerConformingFractures;
+extern int layerConformingFractures;
 extern int *rLayer;
 extern int *eLayer;
 extern float *regions;
