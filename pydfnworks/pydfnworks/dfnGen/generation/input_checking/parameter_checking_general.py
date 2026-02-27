@@ -423,7 +423,7 @@ def check_fram(params):
 
 
 def check_layer_conforming(params):
-    """Check that layerConformingFractures is a valid boolean.
+    """Check that layerConformingFractures is 0, 1, or 2.
 
     Parameters
     -------------
@@ -436,15 +436,18 @@ def check_layer_conforming(params):
     Notes
     ---------
         Only called when numOfLayers > 0.
+        0 = disabled
+        1 = perfect conforming (clip exactly at layer boundary)
+        2 = soft conforming (clip at layer boundary +/- 2h)
     """
     key = 'layerConformingFractures'
     hf.check_none(key, params[key]['value'])
-    if params[key]['value'] not in [True, False]:
+    if params[key]['value'] not in [0, 1, 2]:
         hf.print_error(
-            f'"{key}" must be True or False. Value provided: {params[key]["value"]}'
+            f'"{key}" must be 0 (disabled), 1 (perfect conforming), or 2 (soft conforming, 2h overhang). Value provided: {params[key]["value"]}'
         )
-    status = "enabled" if params[key]['value'] else "disabled"
-    local_print_log(f"--> Layer conforming fractures: {status}")
+    modes = {0: "disabled", 1: "perfect conforming", 2: "soft conforming (2h overhang)"}
+    local_print_log(f"--> Layer conforming fractures: {modes[params[key]['value']]}")
 
 
 def check_layers_general(params):

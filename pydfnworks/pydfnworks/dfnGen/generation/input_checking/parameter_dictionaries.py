@@ -165,13 +165,13 @@ def load_parameters(self):
         },
         'layerConformingFractures': {
             'type':
-            bool,
+            int,
             'list':
             False,
             'value':
-            True,
+            1,
             'description':
-            "Type <boolean>\nIf True (default), fracture polygons assigned to a layer will be clipped to that layer's Z boundaries. Vertices outside the layer are removed and new vertices are inserted at the layer plane. Fractures clipped to fewer than 3 vertices are rejected. If False, fracture centers are still sampled within the layer but polygon vertices may extend beyond the layer boundaries.\nOnly has effect when numOfLayers > 0."
+            "Type <int>\nControls how fracture polygons assigned to a layer are clipped at layer Z boundaries.\n  0: Disabled. Fracture centers are sampled within the layer but vertices may extend freely beyond layer boundaries.\n  1: Perfect conforming. Vertices are clipped exactly at the layer Z boundaries.\n  2: Soft conforming. Vertices are clipped at the layer boundary +/- 2h, preserving a small overhang that maintains geometric intersections with fractures in the adjacent layer for flow connectivity.\nDefault is 1. Only has effect when numOfLayers > 0."
         },
         'numOfRegions': {
             'type':
@@ -1324,7 +1324,7 @@ def load_parameters(self):
     }
 
     mandatory = {
-        'stopCondition', 'domainSize', 'numOfLayers', 'layerConformingFractures', 'numOfRegions',
+        'stopCondition', 'domainSize', 'numOfLayers', 'numOfRegions',
         'outputAllRadii', 'outputFinalRadiiPerFamily',
         'outputAcceptedRadiiPerFamily', 'tripleIntersections',
         'printRejectReasons', 'disableFram', 'visualizationMode', 'seed',
