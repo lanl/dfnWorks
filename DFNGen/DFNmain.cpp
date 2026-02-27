@@ -484,7 +484,7 @@ int main (int argc, char **argv) {
     file << "========================================================\n";
     file << "            Network Generation Complete\n";
     file << "========================================================\n";
-    file << "Version of DFNGen: 2.2\n";
+    file << "Version of DFNGen: 2.3\n";
     std::string lcfMode = (layerConformingFractures == 0) ? "disabled" :
                           (layerConformingFractures == 1) ? "perfect conforming" :
                           "soft conforming (2h overhang)";
