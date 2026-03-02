@@ -60,7 +60,7 @@ class DFNWORKS():
         None
     '''
 
-    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
+    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe, check_dfngen_version
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success

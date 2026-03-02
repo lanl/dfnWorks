@@ -1,76 +1,73 @@
-#CMake
+# CMake
 *CMakeFiles*
 *.cmake
-*FracMan_interface*
 
-#macOS folder config
-*DS_Store
+# macOS
+*.DS_Store
 
-pydfnworks/pydfnworks/only_gen_output.py
-pydfnworks/pydfnworks.egg-info
+# Python
+*.pyc
+*.egg
+*.egg-info
+*.egg-info/*
+*.ipynb_checkpoints/*
 
-# dfnWorks Executables
+# Build artifacts
+*.slo
+*.lo
+*.o
+*.d
+*.obj
+*.gch
+*.pch
+*.so
+*.dylib
+*.dll
+*.mod
+*.smod
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app
+
+# dfnWorks build outputs
+DFNGen/DFNGen
 DFNTrans/DFNTrans
 DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
 C_uge_correct/correct_uge
 C_stor_correct/correct_stor
 DFN_Mesh_Connectivity_Test/ConnectivityTest
-DFNGen/DFNGen
 CPP_correct_volumes/correct_volume
 
+# Documentation
 Documentation/sphinx-docs/build/*
-
 */build/*
 */dist/*
-*.egg
 
-pydfnworks/pydfnworks.egg-info/*
+# Logs
+*.log
 
-*.pdf
-!dfnWorks.pdf
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-*.pyc
-
-# Other
+# Editor and OS artifacts
 *~
 *.nfs*
 *.swp
+.vscode/
 
-# Log Files
-*.log
-
-*.ipynb_checkpoints/*
-examples/TPL/output_rfram/*
-.vscode 
-.vscode/* 
+# pydfnworks
+pydfnworks/pydfnworks/only_gen_output.py
 pydfnworks/pydfnworks/.install_date
+
+# PDFs (except project root dfnWorks.pdf)
+*.pdf
+!dfnWorks.pdf
+
+# Examples
+examples/TPL/output_rfram/*
+
+# Misc
+*FracMan_interface*
+DFNGen/.dfngen_version
