@@ -50,13 +50,20 @@ Go up into the pydfnworks sub-directory:
 
 Compile The pydfnWorks Package & Install on Your Local Machine:
    
-    $ pip install -r requirements.txt . 
+    $ pip install -r requirements.txt 
+    $ pip install . 
 
-or  
+If you are on a shared system, please use  
 
     $ pip install -r requirements.txt --user .
-
+    $ pip install . --user 
+    
 if you don't have admin privileges.
+
+If this produces an error, then try 
+
+    $ python setup.py install -r requirements.txt
+    $ python setup.py install --user
 
 **Note that the python version needs to be consistent with the current release**
 
@@ -115,4 +122,5 @@ very helpful for visualizing dfnWorks simulations.
 
 Instructions for downloading and installing Paraview_ can be found at 
 http://www.paraview.org/download/ 
+
 

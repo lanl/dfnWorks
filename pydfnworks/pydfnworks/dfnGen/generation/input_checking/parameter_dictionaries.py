@@ -163,6 +163,16 @@ def load_parameters(self):
             'description':
             "Type: Set of numOfLayers arrays with two elements. {zMin, zMax}\nDefines the lower and upper limits for each layer. The first layer listed is layer 1, the second is layer 2, etc. Every stochastic families *must* be assigned to a layer. If the family is assigned to layer 0, then the family in generated through the entire domain.\n"
         },
+        'layerConformingFractures': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            1,
+            'description':
+            "Type <int>\nControls how fracture polygons assigned to a layer are clipped at layer Z boundaries.\n  0: Disabled. Fracture centers are sampled within the layer but vertices may extend freely beyond layer boundaries.\n  1: Perfect conforming. Vertices are clipped exactly at the layer Z boundaries.\n  2: Soft conforming. Vertices are clipped at the layer boundary +/- 2h, preserving a small overhang that maintains geometric intersections with fractures in the adjacent layer for flow connectivity.\nDefault is 1. Only has effect when numOfLayers > 0."
+        },
         'numOfRegions': {
             'type':
             int,

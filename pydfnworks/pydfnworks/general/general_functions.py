@@ -12,7 +12,34 @@ import sys
 from pydfnworks.general.logging import local_print_log
 
 
+def check_input_paths(self):
 
+    self.print_log("* Checking input paths: Starting")
+
+    if not self.jobname.endswith(os.sep):
+       self.jobname += os.sep 
+
+    if self.path:
+        if not self.path.endswith(os.sep):
+            self.path += os.sep
+
+    if self.prune_file:
+        if not os.path.isfile(self.prune_file):
+            self.print_log(f'Prune file path is not valid:\n{self.prune_file}\n', 'error')
+
+    if self.dfnFlow_file:
+        if not os.path.isfile(self.dfnFlow_file):
+            self.print_log(f'dfnFlow file path is not valid:\n{self.dfnFlow_file}\n', 'error')
+
+    if self.dfnTrans_file:
+        if not os.path.isfile(self.dfnTrans_file):
+            self.print_log(f'dfnTrans control file path  is not valid:\n{self.dfnTrans_file}\n', 'error') 
+
+    if self.pickle_filename:
+        if not os.path.isfile(self.pickle_filename):
+            self.print_log(f'Pickle file path is not valid:\n{self.pickle_filename}\n', 'error')
+
+    self.print_log("* Checking input paths: Complete")
 
 def call_executable(self, command):
     ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.
@@ -66,7 +93,6 @@ def print_parameters(self):
 def go_home(self):
     os.chdir(self.jobname)
     self.print_log(f"--> Current directory is {os.getcwd()}")
-
 
 def dump_time(self, function_name, time):
     '''Write run time for a funcion to the jobname_run_time.txt file
@@ -148,9 +174,6 @@ def print_run_time(self):
     #        print(name[i-1]+"\t"+"*"tmp)
     self.print_log("\n")
 
-
-
-
 def to_pickle(self, filename=None):
     """ Saves the DFN object into a pickle format
 
@@ -193,7 +216,7 @@ def to_pickle(self, filename=None):
         self.print_log(f'--> Pickling DFN object to {pickle_filename} : Complete')
 
 
-def from_pickle(self, filename):
+def from_pickle(self):
     """ Loads the DFN object from a pickle format
 
     Parameters
@@ -212,11 +235,11 @@ def from_pickle(self, filename):
         Best if used with DFNWORKS(pickle_file = <filename>)
     """
     import pickle
-    self.print_log(f"--> Loading DFN from {filename}")
-    if os.path.isfile(filename):
-        tmp = pickle.load(open(filename, "rb"))
+    self.print_log(f"--> Loading DFN from {self.pickle_filename}")
+    if os.path.isfile(self.pickle_filename):
+        tmp = pickle.load(open(self.pickle_filename, "rb"))
         self.__dict__ = tmp.__dict__.copy()
     else:
-        error = f"Error. Cannot find pickle file {filename}.\nExiting program.\n"
+        error = f"Error. Cannot find pickle file {self.pickle_filename}.\nExiting program.\n"
         self.print_log(error, 'critical')
         

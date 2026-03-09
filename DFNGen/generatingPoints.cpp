@@ -299,6 +299,14 @@ double* binghamDistribution(double angleOne,
     vec[0] = R[0]*xL[0] + R[1]*xL[1] + R[2]*xL[2];
     vec[1] = R[3]*xL[0] + R[4]*xL[1] + R[5]*xL[2];
     vec[2] = R[6]*xL[0] + R[7]*xL[1] + R[8]*xL[2];
+
+    // ---- NEW: force vector into chosen hemisphere (e.g. z <= 0) ----
+    if (vec[2] > 0.0) {
+        vec[0] = -vec[0];
+        vec[1] = -vec[1];
+        vec[2] = -vec[2];
+    }
+
     return vec;
 }
 
