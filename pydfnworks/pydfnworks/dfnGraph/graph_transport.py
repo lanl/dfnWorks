@@ -183,7 +183,7 @@ def run_graph_transport(self,
         _check_tdrw_params(matrix_porosity, matrix_diffusivity,
                           fracture_spacing, tdrw_model, tdrw_filename)
         
-        if tdrw_model in ("roubinet", "dentz", "from_file"):
+        if tdrw_model in ("roubinet", "dentz", "annulus", "from_file"):
             self.print_log(f"--> Using limited matrix block size for TDRW")
             self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
             transfer_time, trans_prob = _set_up_limited_matrix_diffusion(G = G,

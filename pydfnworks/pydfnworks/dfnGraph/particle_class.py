@@ -17,7 +17,8 @@ class Particle():
 
     from pydfnworks.dfnGraph.tdrw_infinite import unlimited_matrix_diffusion
     from pydfnworks.dfnGraph.tdrw_finite_dentz import limited_matrix_diffusion_dentz
-    from pydfnworks.dfnGraph.tdrw_finite_roubinet import limited_matrix_diffusion_roubinet 
+    from pydfnworks.dfnGraph.tdrw_finite_roubinet import limited_matrix_diffusion_roubinet
+    from pydfnworks.dfnGraph.tdrw_finite_annulus import limited_matrix_diffusion_annulus
 
     def __init__(self, particle_number, ip, tdrw_flag, tdrw_model, 
                  matrix_porosity,
@@ -64,8 +65,11 @@ class Particle():
         self.coords = []
 
         if tdrw_model == "dentz":
-            # self.tau_D = self.fracture_spacing**2/(self.matrix_diffusivity*self.matrix_porosity) 
-            self.tau_D = self.fracture_spacing**2/(self.matrix_diffusivity) 
+            self.tau_D = self.fracture_spacing**2 / (self.matrix_diffusivity)
+
+        elif tdrw_model == "annulus":
+            # tauD = w^2 / D where w is the annular gap width (fracture_spacing)
+            self.tau_D = self.fracture_spacing**2 / (self.matrix_diffusivity)
 
     def initalize(self,G):
         self.frac = (G.nodes[self.curr_node]['frac'][1])
@@ -178,21 +182,12 @@ class Particle():
             l0 = self.interpolate_time(x0, l1, l2, x1, x2)
             self.cp_pathline_length.append(l0)
 
-            ##print(l1,l2,l0)
-
-            # print(f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}")
             if tau < 0:
-
                 self.print_log(
                     f"control plane: {x0:0.2f}, x1: {x1:0.2f}, x2:{x2:0.2f}, t1: {t1:0.2e}. t2: {t2:0.2e}, tau: {tau:0.2e}"
                 )
                 error = "Error. Interpolated negative travel time."
                 self.print_log(error,'error')
-            # print(f"--> crossed control plane at {control_planes[cp_index]} {direction} at time {tau}")
-            # self.cp_adv_time.append(tau)
-            # self.cp_pathline_length.append(l0)
-            # self.cp_x1.append(x1)
-            # self.cp_x2.append(x2)
 
             if self.tdrw_flag:
                 t1 = self.total_time
@@ -203,7 +198,7 @@ class Particle():
                 self.cp_tdrw_time.append(tau)
 
             self.cp_index += 1
-            # if we're crossed all the control planes, turn off cp flag for this particle
+            # if we've crossed all the control planes, turn off cp flag for this particle
             if self.cp_index >= len(self.control_planes):
                 self.cp_flag = False
                 break
@@ -234,7 +229,6 @@ class Particle():
         self.lengths.append(self.delta_l)
         self.times.append(self.delta_t)
         self.coords.append(self.curr_coords)
-        # self.fracs.append(self.frac)
 
     def cleanup_frac_seq(self):
         """ Cleanup
@@ -275,18 +269,19 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
-                # self.update()
                 self.cleanup_frac_seq()
                 break
 
-            if self.tdrw_flag: 
+            if self.tdrw_flag:
                 if self.tdrw_model == "roubinet":
                     self.limited_matrix_diffusion_roubinet(G)
                 elif self.tdrw_model == "dentz":
                     self.limited_matrix_diffusion_dentz(G)
+                elif self.tdrw_model == "annulus":
+                    self.limited_matrix_diffusion_annulus(G)
                 elif self.tdrw_model == "infinite":
                     self.unlimited_matrix_diffusion(G)
-                
+
             if self.cp_flag:
                 self.cross_control_plane(G)
             self.update()
