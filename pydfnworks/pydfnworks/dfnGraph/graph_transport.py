@@ -237,7 +237,7 @@ def run_graph_transport(self,
             io.dump_trajectories(particles, 1)
 
     if self.ncpu > 1:
-        self.print_log(f"--> Using {self.ncpu} processors")
+        self.print_log(f"--> Building initial data")
 
         # build input data list for all particles
         all_data = []
@@ -261,6 +261,8 @@ def run_graph_transport(self,
         particles = []
         chunksize = max(1, nparticles // (4 * self.ncpu))
 
+        self.print_log("--> Starting main loop")
+        self.print_log(f"--> Using {self.ncpu} processors")
         with mp.Pool(min(self.ncpu, nparticles)) as pool:
             for i, particle in enumerate(pool.imap_unordered(
                     track_particle, all_data, chunksize=chunksize)):
