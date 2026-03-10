@@ -9,7 +9,7 @@
 *.pyc
 *.egg
 *.egg-info
-*.egg-info/*
+pydfnworks/*.egg-info/*
 *.ipynb_checkpoints/*
 
 # Build artifacts

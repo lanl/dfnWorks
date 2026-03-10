@@ -20,27 +20,27 @@ from pydfnworks.dfnGraph.graph_tdrw import _check_tdrw_params, _set_up_limited_m
 from pydfnworks.dfnGraph.graph_transport_setup_functions import _create_neighbor_list, _get_initial_posititions, _check_control_planes
 
 
-def track_particle(data, verbose=False):
+def track_particle(args):
     """ Tracks a single particle through the graph
 
-        all input parameters are in the dictionary named data 
+        all input parameters are packed into a single tuple (data, verbose)
+        for compatibility with multiprocessing.Pool.imap_unordered.
 
         Parameters
         ----------
-            data : dict
-                Dictionary of parameters the includes particle_number, initial_position, 
-                tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes,
-                 direction, G, and nbrs_dict. 
-
-            verbose : bool
-                Toggles verbosity 
+            args : tuple
+                (data, verbose) where data is a dict containing particle_number,
+                initial_position, tdrw_flag, matrix_porosity, matrix_diffusivity,
+                cp_flag, control_planes, direction, G, and nbrs_dict;
+                and verbose is a bool toggling verbosity.
 
         Returns
         -------
             particle : object
-                Particle will full trajectory
+                Particle with full trajectory
 
     """
+    data, verbose = args
     if verbose:
         p = mp.current_process()
         _, cpu_id = p.name.split("-")
@@ -238,17 +238,9 @@ def run_graph_transport(self,
 
     if self.ncpu > 1:
         self.print_log(f"--> Using {self.ncpu} processors")
-        ## Prepare input data
-        inputs = []
 
-        tic = timeit.default_timer()
-        pool = mp.Pool(min(self.ncpu, nparticles))
-
-        particles = []
-
-        def gather_output(output):
-            particles.append(output)
-
+        # build input data list for all particles
+        all_data = []
         for i in range(nparticles):
             data = {}
             data["particle_number"] = i
@@ -263,13 +255,18 @@ def run_graph_transport(self,
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
-            pool.apply_async(track_particle,
-                             args=(data, verbose),
-                             callback=gather_output)
+            all_data.append((data, verbose))
 
-        pool.close()
-        pool.join()
-        pool.terminate()
+        tic = timeit.default_timer()
+        particles = []
+        chunksize = max(1, nparticles // (4 * self.ncpu))
+
+        with mp.Pool(min(self.ncpu, nparticles)) as pool:
+            for i, particle in enumerate(pool.imap_unordered(
+                    track_particle, all_data, chunksize=chunksize)):
+                particles.append(particle)
+                if i % 1000 == 0:
+                    self.print_log(f"--> Completed {i} out of {nparticles} particles")
 
         elapsed = timeit.default_timer() - tic
         self.print_log(
