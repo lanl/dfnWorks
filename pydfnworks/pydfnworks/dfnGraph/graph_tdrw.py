@@ -1,12 +1,15 @@
 import numpy as np
 from scipy import special
 import mpmath as mp
+import os 
 
 from pydfnworks.general.logging import local_print_log
 import pydfnworks.dfnGraph.tdrw_finite_roubinet as roubinet  
 import pydfnworks.dfnGraph.tdrw_finite_dentz as dentz
+import pydfnworks.dfnGraph.tdrw_finite_from_file as from_file
 
-def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, tdrw_model):
+
+def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, tdrw_model, tdrw_filename):
     """ Check that the provided tdrw values are physiscal
 
 
@@ -63,6 +66,14 @@ def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, td
             local_print_log(f"Error: Non-positive fracture_spacing={fracture_spacing}. Exiting program.", "error")
         else:
             local_print_log(f"--> Fracture spacing value: {fracture_spacing:.2e} [m]")
+    elif tdrw_model == "from_file":
+        if tdrw_filename is None:
+            local_print_log(f"Error. TDRW Filename not provides", "error")
+ 
+        if not os.path.isfile(tdrw_filename):
+            local_print_log(f"Error. File not found: {tdrw_filename}", "error")
+
+        local_print_log(f"--> Sampling matrix diffusion time from: {tdrw_filename}.") 
     else:
         local_print_log(
             f"Error: Unknown TDRW model '{tdrw_model}'. Valid options are 'infinite', 'roubinet', or 'dentz' (case-sensitive).",
@@ -71,12 +82,14 @@ def _check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing, td
 
     local_print_log("")  # clean trailing newline   
     
-def _set_up_limited_matrix_diffusion(G,tdrw_model,
+def _set_up_limited_matrix_diffusion(G,
+                                    tdrw_model,
                                     fracture_spacing,
                                     matrix_porosity,
                                     matrix_diffusivity,
                                     eps=1e-16,
-                                    num_pts=100):
+                                    num_pts=100,
+                                    tdrw_filename = None):
     """ Sets up transition probabilities for limited block size matrix diffusion
     
     Parameters
@@ -124,6 +137,8 @@ def _set_up_limited_matrix_diffusion(G,tdrw_model,
     elif tdrw_model == "dentz":
         # local_print_log("Using Dentz Model for finite Matrix Diffusion") 
         transfer_time, trans_prob = dentz._make_inverse_cdf_spline_for_times()
+    elif tdrw_model == "from_file":
+        transfer_time, trans_prob = from_file._load_finite_time_cdf(tdrw_filename)
     else:
         trans_prob = None
         transfer_time = None

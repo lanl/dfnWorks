@@ -89,6 +89,7 @@ def run_graph_transport(self,
                         matrix_porosity=None,
                         matrix_diffusivity=None,
                         fracture_spacing=None,
+                        tdrw_filename = None, 
                         control_planes=None,
                         direction=None,
                         cp_filename='control_planes',
@@ -180,16 +181,18 @@ def run_graph_transport(self,
     # Check parameters for TDRW
     if tdrw_flag:
         _check_tdrw_params(matrix_porosity, matrix_diffusivity,
-                          fracture_spacing, tdrw_model)
+                          fracture_spacing, tdrw_model, tdrw_filename)
         
-        if tdrw_model in ("roubinet", "dentz"):
+        if tdrw_model in ("roubinet", "dentz", "from_file"):
             self.print_log(f"--> Using limited matrix block size for TDRW")
             self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-            transfer_time, trans_prob = _set_up_limited_matrix_diffusion(G,
-                                                        tdrw_model,
-                                                        fracture_spacing,
-                                                        matrix_porosity,
-                                                        matrix_diffusivity)
+            transfer_time, trans_prob = _set_up_limited_matrix_diffusion(G = G,
+                                                        tdrw_model = tdrw_model,
+                                                        fracture_spacing = fracture_spacing,
+                                                        matrix_porosity = matrix_porosity,
+                                                        matrix_diffusivity = matrix_diffusivity,
+                                                        tdrw_filename = tdrw_filename)
+            # np.savetxt("my_cdf.dat", np.c_[transfer_time,trans_prob])
         else:
             trans_prob = None
             transfer_time = None           
