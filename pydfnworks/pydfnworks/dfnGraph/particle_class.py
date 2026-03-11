@@ -68,7 +68,9 @@ class Particle():
             self.tau_D = self.fracture_spacing**2 / (self.matrix_diffusivity)
 
         elif tdrw_model == "annulus":
-            # tauD = w^2 / D where w is the annular gap width (fracture_spacing)
+            # tau_D = tau1 = r1^2 / D where r1 = fracture_spacing is the outer
+            # (reflecting) radius of the cylindrical matrix block. Matches the
+            # tau1 = 1e0 reference timescale in the Laplace-domain solution.
             self.tau_D = self.fracture_spacing**2 / (self.matrix_diffusivity)
 
     def initalize(self,G):

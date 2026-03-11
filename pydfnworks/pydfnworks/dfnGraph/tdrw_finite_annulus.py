@@ -3,51 +3,117 @@ import numpy as np
 import mpmath as mp
 
 
-def Psi_star_annulus(lmbda, eps):
-    # Laplace transform of the CDF for diffusion return time in an annulus
-    # Geometry: absorbing wall at one end, reflecting wall at the other
-    # eps = r'/w, dimensionless release position from the absorbing wall (0 < eps <= 1)
-    # F(s) = [ exp(-eps*q) + exp(-(2-eps)*q) ] / [ (1 + exp(-2q)) * s ]
-    # where q = sqrt(s * tauD);  tauD absorbed into s at call time (s -> s*tauD)
-    sqrt_l = mp.sqrt(lmbda)
-    numerator   = mp.exp(-eps * sqrt_l) + mp.exp(-(2 - eps) * sqrt_l)
-    denominator = (1 + mp.exp(-2 * sqrt_l)) * lmbda
-    return numerator / denominator
+def Psi_star_annulus(lmbda, eps, tau0, tau1):
+    # Laplace transform of the CDF for diffusion return time in a cylindrical annulus
+    #
+    # Geometry: cylindrical annulus with inner radius r0 (absorbing, fracture-matrix
+    # interface) and outer radius r1 (reflecting, block interior).
+    # A particle is released at r' = r0*(1+eps), just inside the absorbing wall.
+    #
+    # Parameters:
+    #   eps  = (r' - r0) / r1   dimensionless release position  (0 < eps << 1)
+    #   tau0 = r0^2 / D         inner-radius diffusion timescale
+    #   tau1 = r1^2 / D         outer-radius diffusion timescale
+    #
+    # Bessel functions: mpmath besseli / besselk
+    #   mpmath.besseli(n, x) = In(x)    (modified Bessel, first kind)
+    #   mpmath.besselk(n, x) = Kn(x)    (modified Bessel, second kind)
+    #
+    # Stability switch: when |s*tau1| > 100 the unscaled Bessels overflow.
+    # Use explicitly scaled forms:
+    #   Ie(n,x) = exp(-x) * In(x)   ->   mp.besseli(n,x) * mp.exp(-x)
+    #   Ke(n,x) = exp(x)  * Kn(x)   ->   mp.besselk(n,x) * mp.exp(x)
+    # with compensating exponential prefactors so the ratio stays finite.
+    #
+    # F_cdf(s) = F_psi(s) / s
+
+    eps  = mp.mpf(eps)
+    tau0 = mp.mpf(tau0)
+    tau1 = mp.mpf(tau1)
+
+    arg0     = mp.sqrt(lmbda * tau0)       # sqrt(s * tau0)
+    arg0_eps = (1 + eps) * arg0            # (1+eps) * sqrt(s * tau0)
+    arg1     = mp.sqrt(lmbda * tau1)       # sqrt(s * tau1)
+
+    if abs(complex(lmbda * tau1)) > 100:
+        # scaled Bessels with explicit exponential prefactors
+        # matches MATLAB besseli(n,x,1) and besselk(n,x,1)
+        I0e_eps = mp.besseli(0, arg0_eps) * mp.exp(-arg0_eps)
+        K0e_eps = mp.besselk(0, arg0_eps) * mp.exp( arg0_eps)
+        I0e_0   = mp.besseli(0, arg0)     * mp.exp(-arg0)
+        K0e_0   = mp.besselk(0, arg0)     * mp.exp( arg0)
+        I1e_1   = mp.besseli(1, arg1)     * mp.exp(-arg1)
+        K1e_1   = mp.besselk(1, arg1)     * mp.exp( arg1)
+
+        # numerator: exp((2+eps)*sqrt(s*tau0) - 2*sqrt(s*tau1)) * I0e_eps * K1e_1
+        #          + exp(-eps*sqrt(s*tau0)) * K0e_eps * I1e_1
+        exp_num1 = mp.exp((2 + eps) * arg0 - 2 * arg1)
+        exp_num2 = mp.exp(-eps * arg0)
+        numerator = exp_num1 * I0e_eps * K1e_1 + exp_num2 * K0e_eps * I1e_1
+
+        # denominator: exp(2*sqrt(s*tau0) - 2*sqrt(s*tau1)) * I0e_0 * K1e_1
+        #            + K0e_0 * I1e_1
+        exp_den     = mp.exp(2 * arg0 - 2 * arg1)
+        denominator = exp_den * I0e_0 * K1e_1 + K0e_0 * I1e_1
+
+    else:
+        # standard unscaled Bessel functions, safe for |s*tau1| <= 100
+        I0_eps = mp.besseli(0, arg0_eps)
+        K0_eps = mp.besselk(0, arg0_eps)
+        I0_0   = mp.besseli(0, arg0)
+        K0_0   = mp.besselk(0, arg0)
+        I1_1   = mp.besseli(1, arg1)
+        K1_1   = mp.besselk(1, arg1)
+
+        numerator   = I0_eps * K1_1 + K0_eps * I1_1
+        denominator = I0_0   * K1_1 + K0_0   * I1_1
+
+    return numerator / (denominator * lmbda)
 
 
-def Psi_cdf_annulus(t, eps, method="dehoog"):
+def Psi_pdf_star_annulus(lmbda, eps, tau0, tau1):
+    # Laplace transform of the first-passage time PDF
+    # psi*(s) = s * F_cdf(s)  (removes the 1/s factor)
+    return Psi_star_annulus(lmbda, eps, tau0, tau1) * lmbda
+
+
+def Psi_cdf_annulus(t, eps, tau0, tau1, method="dehoog"):
     # Inverse Laplace transform of Psi_star_annulus at time t
     # Returns cumulative return-time distribution P(T_return <= t)
     if t <= 0:
         return mp.mpf("0.0")
-    F = lambda s: Psi_star_annulus(s, eps)
+    F = lambda s: Psi_star_annulus(s, eps, tau0, tau1)
     return mp.invertlaplace(F, t, method=method)
 
 
-def Psi_pdf_annulus(t, eps, method="dehoog"):
-    # Density psi(t) = d/dt Psi(t), the first-passage time PDF
-    # Inverts the PDF Laplace transform directly for accuracy
-    # psi*(s) = [ exp(-eps*q) + exp(-(2-eps)*q) ] / (1 + exp(-2q))
+def Psi_pdf_annulus(t, eps, tau0, tau1, method="dehoog"):
+    # Inverse Laplace transform of the first-passage time density psi(t)
+    # Inverts psi*(s) directly for accuracy
     if t <= 0:
         return mp.mpf("0.0")
-    psi_star = lambda s: (mp.exp(-eps * mp.sqrt(s)) + mp.exp(-(2 - eps) * mp.sqrt(s))) / (1 + mp.exp(-2 * mp.sqrt(s)))
-    return mp.invertlaplace(psi_star, t, method=method)
+    F = lambda s: Psi_pdf_star_annulus(s, eps, tau0, tau1)
+    return mp.invertlaplace(F, t, method=method)
 
 
-def _make_inverse_cdf_annulus(num_samples=100, eps=1e-4, precision=40):
-    # Precompute the inverse CDF table for annulus return-time sampling
+def _make_inverse_cdf_annulus(num_samples=100, eps=1e-2, tau0=1e-4, tau1=1e0, precision=40):
+    # Precompute the inverse CDF table for cylindrical annulus return-time sampling
+    #
+    # Default parameters match InvLaplace.m:
+    #   eps  = 1e-2   dimensionless release position (r'-r0)/r1
+    #   tau0 = 1e-4   inner-radius timescale r0^2/D  (dimensionless, tau0/tau1)
+    #   tau1 = 1e0    outer-radius timescale r1^2/D  (reference, = 1)
+    #
     # Returns (times, cdf_vals) arrays for use with np.interp
     mp.mp.dps = precision
-    eps = mp.mpf(eps)
-    times = [10**x for x in np.linspace(-8, 3, num_samples)]
 
+    times    = [10**x for x in np.linspace(-8, 3, num_samples)]
     cdf_vals = np.zeros(num_samples, dtype=float)
 
     for i, t in enumerate(times):
-        cdf_vals[i] = float(Psi_cdf_annulus(t, eps, method="dehoog"))
+        cdf_vals[i] = float(Psi_cdf_annulus(t, eps, tau0, tau1, method="dehoog"))
 
     # sort by cdf value to build the inverse CDF (cdf -> time) lookup
-    order = np.argsort(cdf_vals)
+    order      = np.argsort(cdf_vals)
     cdf_sorted = np.clip(cdf_vals[order], 0, 1)
     t_sorted   = np.maximum(np.array(times)[order], 0)
 
@@ -59,7 +125,7 @@ def _make_inverse_cdf_annulus(num_samples=100, eps=1e-4, precision=40):
 
 
 def limited_matrix_diffusion_annulus(self, G):
-    """ Matrix diffusion with finite annular block geometry
+    """ Matrix diffusion with finite cylindrical annular block geometry
 
     Parameters
     ----------
@@ -72,15 +138,22 @@ def limited_matrix_diffusion_annulus(self, G):
 
     Notes
     -----
-        Samples diffusion return times from a finite annular matrix block
-        with one absorbing boundary (fracture-matrix interface) and one
-        reflecting boundary (block interior).
+        Samples diffusion return times from a finite cylindrical annular
+        matrix block. The inner radius r0 is the absorbing fracture-matrix
+        interface; the outer radius r1 is the reflecting block interior.
+        A particle is released at r' = r0*(1 + eps), just inside the
+        absorbing wall.
 
-        The dimensionless release position eps = r'/w is fixed at 1e-4,
-        placing the particle just inside the absorbing wall.
+        The Laplace-domain solution uses modified Bessel functions I0, I1,
+        K0, K1 from the cylindrical geometry, unlike the slab (Dentz) model
+        which uses hyperbolic functions.
 
-        tauD = w^2 / D_matrix sets the diffusion timescale; it is stored
-        on the particle as self.tau_D and used to rescale sampled times.
+        Two diffusion timescales parameterize the geometry:
+            tau0 = r0^2 / D   (inner radius timescale)
+            tau1 = r1^2 / D   (outer radius timescale)
+
+        tau1 is stored on the particle as self.tau_D and used to rescale
+        dimensionless sampled return times to physical times [s].
 
         The inverse CDF table (self.transfer_time, self.trans_prob) must
         be precomputed via _make_inverse_cdf_annulus and attached to the
@@ -89,10 +162,10 @@ def limited_matrix_diffusion_annulus(self, G):
         All other parameters are attached to the particle class.
     """
 
-    eps = 1e-4
+    eps = 1e-2
     b = G.edges[self.curr_node, self.next_node]['b']
 
-    # trapping rate into the matrix block
+    # trapping rate into the cylindrical matrix block
     gamma = (2 * self.matrix_porosity * self.matrix_diffusivity) / (b * eps * self.fracture_spacing)
 
     # average number of trapping events during this advective step
@@ -102,7 +175,8 @@ def limited_matrix_diffusion_annulus(self, G):
     n = np.random.poisson(average_number_of_trapping_events)
 
     # sample uniform random variables and map to return times via inverse CDF
-    xi = np.random.uniform(size=n)
+    # self.tau_D = r1^2 / D rescales dimensionless times to physical times
+    xi  = np.random.uniform(size=n)
     tmp = self.tau_D * np.interp(xi, self.trans_prob, self.transfer_time)
 
     self.delta_t_md = tmp.sum()
