@@ -263,12 +263,19 @@ def run_graph_transport(self,
 
         self.print_log("--> Starting main loop")
         self.print_log(f"--> Using {self.ncpu} processors")
+        log_interval = max(1,int(nparticles * 0.025))
+         
         with mp.Pool(min(self.ncpu, nparticles)) as pool:
+            completed = 0
+            next_log = log_interval
             for i, particle in enumerate(pool.imap_unordered(
                     track_particle, all_data, chunksize=chunksize)):
                 particles.append(particle)
-                if i % 1000 == 0:
-                    self.print_log(f"--> Completed {i} out of {nparticles} particles")
+                completed += 1
+                if completed >= next_log:
+                    percentage = 100 * completed/nparticles
+                    self.print_log(f"--> Completed {completed} out of {nparticles} particles\t({percentage:0.2f}%)")
+                    next_log += log_interval
 
         elapsed = timeit.default_timer() - tic
         self.print_log(
