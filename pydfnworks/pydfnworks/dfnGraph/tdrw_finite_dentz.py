@@ -1,63 +1,84 @@
-
-
-from scipy.interpolate import PchipInterpolator
 import numpy as np
-import matplotlib.pyplot as plt
-import mpmath as mp
+from math import factorial
 
 
-def Psi_star(lmbda, eps):
-    # Laplace transform of the CDF Ψ*_ε(λ)
-    # eps must satisfy 0 < eps < 1 for a slab of unit width in the note
-    sqrt_l = mp.sqrt(lmbda)
-    return mp.cosh((1 - eps) * sqrt_l) / (lmbda * mp.cosh(sqrt_l))
-
-def Psi_cdf(t, eps, method="dehoog"):
-    # Inverse Laplace transform of Ψ*_ε at time t
-    # method can be "dehoog" or "talbot"
-    if t <= 0:
-        return mp.mpf("0.0")
-    F = lambda s: Psi_star(s, eps)
-    return mp.invertlaplace(F, t, method=method)
-
-def Psi_pdf(t, eps, method="dehoog", h=None):
-    # Density ψ_ε(t) = d/dt Ψ_ε(t)
-    # You can either invert ψ*_ε directly or differentiate the CDF numerically
-    # This version inverts ψ*_ε for accuracy
-    if t <= 0:
-        return mp.mpf("0.0")
-    psi_star = lambda s: mp.cosh((1 - eps) * mp.sqrt(s)) / mp.cosh(mp.sqrt(s))
-    return mp.invertlaplace(psi_star, t, method=method)
+def _stehfest_coefficients(N=16):
+    # Compute Stehfest coefficients V_i for i = 1 ... N. N must be even.
+    if N % 2 != 0:
+        raise ValueError("Stehfest N must be even.")
+    M = N // 2
+    V = np.zeros(N)
+    for i in range(1, N + 1):
+        total = 0.0
+        for k in range(int((i + 1) // 2), min(i, M) + 1):
+            num = (k ** M) * factorial(2 * k)
+            den = (factorial(M - k) * factorial(k) * factorial(k - 1)
+                   * factorial(i - k) * factorial(2 * k - i))
+            total += num / den
+        V[i - 1] = ((-1) ** (i + M)) * total
+    return V
 
 
-def _make_inverse_cdf_spline_for_times(num_samples = 100, eps = 1e-4, precision = 40):
-    # --- compute CDF and PDF values ---
-    mp.mp.dps = precision
-    num_samples = num_samples
-    eps = mp.mpf(eps)
-    times = [10**x for x in np.linspace(-8, 3, num_samples)]
+def Psi_star(s, eps):
+    # Laplace transform of the slab CDF Psi*_eps(s)
+    # cosh((1-eps)*sqrt(s)) / (s * cosh(sqrt(s)))
+    #
+    # Scaled form to avoid cosh overflow at large s:
+    # cosh((1-eps)*q) / cosh(q) = exp(-eps*q) * (1 + exp(-2*(1-eps)*q)) / (1 + exp(-2*q))
+    # where q = sqrt(s). Both exp terms decay for large q so no overflow.
+    q = np.sqrt(s)
+    num = np.exp(-eps * q) * (1.0 + np.exp(-2.0 * (1.0 - eps) * q))
+    den = 1.0 + np.exp(-2.0 * q)
+    return num / (den * s)
 
-    cdf_vals = np.zeros(num_samples, dtype=float)
 
-    for i, t in enumerate(times):
-        cdf_vals[i] = float(Psi_cdf(t, eps, method="dehoog"))
+def Psi_pdf_star(s, eps):
+    # Laplace transform of the slab first-passage time PDF
+    # psi*(s) = s * Psi*(s)
+    return Psi_star(s, eps) * s
 
-    # --- build inverse CDF spline (t vs cdf) ---
-    order = np.argsort(cdf_vals)
+
+def _stehfest_invert(F, t_arr, V, **kwargs):
+    # Invert F at times t_arr using the Stehfest algorithm
+    # f(t) ≈ (ln2/t) * sum_i V_i * F(i*ln2/t)
+    ln2 = np.log(2.0)
+    f   = np.zeros(len(t_arr))
+    for idx, ti in enumerate(t_arr):
+        s_vals = np.array([(i + 1) * ln2 / ti for i in range(len(V))])
+        f[idx] = (ln2 / ti) * np.dot(V, F(s_vals, **kwargs))
+    return f
+
+
+def _make_inverse_cdf_spline_for_times(num_samples=100, eps=1e-4, stehfest_n=16):
+    # Precompute the inverse CDF table for slab (Dentz) return-time sampling
+    #
+    # Replaces the original mpmath.invertlaplace implementation with
+    # Stehfest inversion in double precision -- orders of magnitude faster.
+    #
+    # Scaled cosh formulation avoids overflow for all s values.
+    # t_min=1e-10 ensures Stehfest samples s >> 1/eps^2 for correct
+    # early-time behavior (eps=1e-4 requires s ~ 1e8, t ~ ln2/1e8 ~ 1e-9).
+    #
+    # Returns (times, cdf_vals) arrays for use with np.interp
+
+    V     = _stehfest_coefficients(stehfest_n)
+    times = np.logspace(-10, 3, num_samples)
+
+    cdf_vals = _stehfest_invert(Psi_star, times, V, eps=eps)
+
+    # sort by cdf value to build the inverse CDF (cdf -> time) lookup
+    order      = np.argsort(cdf_vals)
     cdf_sorted = np.clip(cdf_vals[order], 0, 1)
-    t_sorted = np.maximum(np.array(times)[order], 0)
+    t_sorted   = np.maximum(times[order], 0)
 
-    # remove duplicates
+    # remove duplicate cdf values to ensure monotone interpolation
     cdf_unique, idx = np.unique(cdf_sorted, return_index=True)
     t_unique = np.asarray(t_sorted[idx])
 
-    finite_md_times = t_unique
-    finite_md_cdf = cdf_unique
-
-    return finite_md_times, finite_md_cdf 
+    return t_unique, cdf_unique
 
 
-def limited_matrix_diffusion_dentz(self,G):
+def limited_matrix_diffusion_dentz(self, G):
     """ Matrix diffusion with limited block size
 
     Parameters
@@ -74,37 +95,20 @@ def limited_matrix_diffusion_dentz(self,G):
         All parameters are attached to the particle class 
     """
 
-    # print(self.total_time,self.advect_time,self.matrix_diffusion_time)
-    # print("\nsegment limited sampling")
     eps = 1e-4
-    # print(self.advect_time, self.delta_t )
-    # b = (2*self.delta_t) / self.beta
     b = G.edges[self.curr_node, self.next_node]['b']
-    # print(f"b: {b_eff}")
-    # # traping rate 
-    gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b * eps * self.fracture_spacing)
-    # gamma = (2*self.matrix_porosity*self.matrix_diffusivity)/(b * eps) 
-    #print(f"gamma: {gamma}")
-    # average number of trapping events in gamma * advective time
+
+    # trapping rate
+    gamma = (2 * self.matrix_porosity * self.matrix_diffusivity) / (b * eps * self.fracture_spacing)
+
+    # average number of trapping events during this advective step
     average_number_of_trapping_events = self.delta_t * gamma
-    #print(f"average_number_of_trapping_events: {average_number_of_trapping_events}")
-    # number of trapping events in sampled from a poisson distribution
+
+    # sample number of trapping events from Poisson distribution
     n = np.random.poisson(average_number_of_trapping_events)
-    # print(f"n: {n}")
-    xi = np.random.uniform(size = n)
-    # print(xi)
-    # 
+
+    # sample uniform random variables and map to return times via inverse CDF
+    xi  = np.random.uniform(size=n)
     tmp = self.tau_D * np.interp(xi, self.trans_prob, self.transfer_time)
-    # print("*")
-    # print(self.transfer_time)
-    # print(self.trans_prob)
-    # print(tmp)
-    # exit(1) 
-    # tmp = self.tau_D * self.inv_spline(xi)
-    self.delta_t_md = tmp.sum() 
-    #print(self.delta_t_md)
-    #print("\n")
-    # self.total_time = self.advect_time + self.matrix_diffusion_time
-    #print(self.total_time,self.advect_time,self.matrix_diffusion_time)
 
-
+    self.delta_t_md = tmp.sum()
