@@ -9,6 +9,7 @@ import shutil
 import ntpath
 from time import time
 import numpy as np
+from pathlib import Path
 
 
 def correct_uge_file(self):
@@ -538,7 +539,9 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     grid_file = self.vtk_file
 
-    files = glob.glob('*-[0-9][0-9][0-9].vtk')
+    # Grab all vtk files
+    base_filename = Path(self.local_dfnFlow_file).stem
+    files = glob.glob(f"{base_filename}*.vtk")
     files.sort()
 
     with open(grid_file, 'r') as f:
