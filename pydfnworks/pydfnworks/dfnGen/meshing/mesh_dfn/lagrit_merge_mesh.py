@@ -57,7 +57,7 @@ cmo / delete / mo_{1}
     lagrit_input_2 = '# Writing out merged fractures\n'
     if not self.visual_mode:
         lagrit_input_2 += """
-mo / addatt/ cmo_tmp / volume / evol_all
+cmo / addatt / cmo_tmp / volume / evol_all
 math / sum / cmo_tmp / evol_sum / 1 0 0 / cmo_tmp / evol_all """
     lagrit_input_2 += """ 
 cmo select cmo_tmp
@@ -81,6 +81,9 @@ finish
         # self.print_log(f"cpu: {cpu}")
         # self.print_log(current_fractures)
         frac_index += part_size
+        # skip CPUs that received no fractures
+        if not current_fractures:
+            continue
         # write script to merge them in batch
         with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
             for frac_id in current_fractures:
@@ -117,6 +120,8 @@ cmo / delete / cmo_tmp
     """
     with open('lagrit_scripts/merge_network.lgi', 'w') as f:
         for j in range(1, self.ncpu + 1):
+            if not os.path.isfile(f'lagrit_scripts/merge_part_{j}.lgi'):
+                continue
             f.write(lagrit_input.format(j))
 
         # Append meshes complete
