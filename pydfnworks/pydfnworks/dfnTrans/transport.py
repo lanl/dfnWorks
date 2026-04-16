@@ -25,7 +25,8 @@ def dfn_trans(self, combine_avs = False):
     self.print_log('=' * 80)
     tic = time()
     self.copy_dfn_trans_files()
-    self.check_dfn_trans_run_files()
+    # self.check_dfn_trans_run_files()
+    self.dump_hydraulic_values() 
     self.run_dfn_trans()
     delta_time = time() - tic
     if combine_avs:

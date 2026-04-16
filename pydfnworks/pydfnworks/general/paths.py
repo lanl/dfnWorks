@@ -204,12 +204,14 @@ def define_paths(self):
     self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
     self.check_dfngen_version()
 
-    os.environ[
-        'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
-    if not os.path.isfile(os.environ['DFNTRANS_EXE']):
-         self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
-    self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
-
+    # os.environ[
+    #     'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
+    # if not os.path.isfile(os.environ['DFNTRANS_EXE']):
+    #      self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
+    # self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
+    os.environ['DFNTRANS_EXE'] = '/Users/jhyman/src/dfnTrans2.0/build/dfntrans'
+    self.valid('dfntrans', os.environ['DFNTRANS_EXE'], "executable")
+            
     os.environ['CORRECT_VOLUME_EXE'] = os.environ[
         'dfnworks_PATH'] + 'CPP_correct_volumes/correct_volume'
     if not os.path.isfile(os.environ['CORRECT_VOLUME_EXE']):

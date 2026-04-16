@@ -148,7 +148,7 @@ def add_fracture_source(self, G, source):
                 if f2 == 's':
                     nodes_to_remove.append(u)
 
-        self.print_log("--> Removing nodes: ", nodes_to_remove)
+        self.print_log(f"--> Removing nodes: {nodes_to_remove}", 'info')
         G.remove_nodes_from(nodes_to_remove)
 
         # add new source node
@@ -198,7 +198,7 @@ def add_fracture_target(self, G, target):
     """
 
     if not type(target) == list:
-        source = [target]
+        target = [target]
 
     self.print_log("--> Adding new target connections", 'warning')
     self.print_log("--> Warning old target will be removed!!!", 'warning')
@@ -225,7 +225,7 @@ def add_fracture_target(self, G, target):
                 if f2 == 't':
                     nodes_to_remove.append(u)
 
-        self.print_log("--> Removing nodes: ", nodes_to_remove)
+        self.print_log(f"--> Removing nodes: {nodes_to_remove}", 'info')
         G.remove_nodes_from(nodes_to_remove)
 
         # add new target node

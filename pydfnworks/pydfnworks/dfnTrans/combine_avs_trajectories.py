@@ -7,12 +7,12 @@ def combine_avs_trajectories(self):
 
     self.print_log('--> Combining Particle avs files into a single file')
 
-    print(self.dfnTrans_params)
+    # print(self.dfnTrans_params)
 
-    os.chdir(self.jobname + os.sep +  self.dfnTrans_params["out_dir:"] + os.sep + self.dfnTrans_params["out_path:"])
+    os.chdir(self.jobname + os.sep +  'dfntrans_output' + os.sep + 'avs_files')
     print(os.getcwd())
 
-    particle_filenames = sorted(glob.glob("part*inp"))
+    particle_filenames = sorted(glob.glob("particle*inp"))
 
     if len(particle_filenames) > 0:
         lagrit_script = ""
