@@ -82,8 +82,8 @@ finish
         # self.print_log(current_fractures)
         frac_index += part_size
         # skip CPUs that received no fractures
-        if not current_fractures:
-            continue
+        # if not current_fractures:
+        #     continue
         # write script to merge them in batch
         with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
             for frac_id in current_fractures:
