@@ -82,8 +82,8 @@ finish
         # self.print_log(current_fractures)
         frac_index += part_size
         # skip CPUs that received no fractures
-        if not current_fractures:
-            continue
+        # if not current_fractures:
+        #     continue
         # write script to merge them in batch
         with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
             for frac_id in current_fractures:
@@ -148,9 +148,6 @@ reorder / mo_all / ikey
 cmo / DELATT / mo_all / ikey
 resetpts / itp 
 
-
-
-
 # Dump out zone files
 define / XMAX / {0.5*self.domain['x'] - eps:0.12e}
 define / XMIN / {-0.5*self.domain['x'] + eps:0.12e} 
@@ -193,6 +190,12 @@ trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.para
 
 boundary_components 
 #dump / full_mesh.gmv / mo_all
+
+# Dump connectivity information
+# Needed for dfnTrans2.0
+dump / elem_adj_node / node_connect.dat / mo_all
+dump / elem_adj_elem / elem_connect.dat / mo_all
+
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
 """
