@@ -1,0 +1,76 @@
+# dfnTrans 2.0 control file — three_fractures example
+
+# ── Mesh ──────────────────────────────────────────────────────────────────────
+# Files produced by dfnGen / LaGriT. Paths are relative to the run directory.
+[mesh]
+paramsFile   = "params.txt"
+polyInfoFile = "poly_info.dat"
+inpFile      = "full_mesh.inp"
+nodeConnFile = "node_connect.dat"
+elemConnFile = "elem_connect.dat"
+
+# ── Flow ──────────────────────────────────────────────────────────────────────
+# solver: "pflotran" (default) | "fehm"
+[flow]
+solver       = "pflotran"
+darcyVelFile = "darcyvel_001.dat"
+cellInfoFile = "cellinfo_001.dat"
+UGEFile      = "full_mesh_vol_area.uge"
+inFlowFile   = "boundary_left_w.ex"
+outFlowFile  = "boundary_right_e.ex"
+
+# ── Particles ─────────────────────────────────────────────────────────────────
+# initialPositions: "uniform" (default) | "flux_weighted" | "point"
+# intersectionRule: "complete_mixing" (default) | "streamline" | "streamline_hull2"
+#   streamline       = Hull rule 1: preferential routing at discontinuous junctions
+#   streamline_hull2 = Hull rule 2: complete mixing at discontinuous junctions
+# timeUnits:        "seconds" (default) | "minutes" | "hours" | "days" | "years"
+[particles]
+initialPositions  = "uniform"
+numberOfParticles = 10
+dx                = 0.1
+intersectionRule  = "complete_mixing"
+numberTimeSteps   = 10000
+timeStepFactor    = 0.1
+seed              = 1
+timeUnits         = "seconds"
+
+# ── Physics ───────────────────────────────────────────────────────────────────
+[physics]
+porosity   = 1.0
+density    = 997.73
+saturation = 1.0
+
+# ── Aperture ──────────────────────────────────────────────────────────────────
+# type: "node_file" (default) | "fracture_file" | "constant"
+# When type = "constant", set: constant = <value>
+[aperture]
+type = "node_file"
+file = "aperture.dat"
+
+# ── TDRW (matrix diffusion) ───────────────────────────────────────────────────
+# Uncomment porosity and diffCoeff when enabled = true
+[tdrw]
+enabled = false
+# porosity  = 0.01
+# diffCoeff = 1e-10
+
+# ── Output ────────────────────────────────────────────────────────────────────
+# flowDirection (for control planes): "x" | "y" | "z"
+[output]
+directory            = "dfntrans_output"
+particleFile         = "particleInfo.dat"
+trajectoriesDir      = "trajectories"
+dump3DVelocity       = false
+velocityFile         = "velocity3D.dat"
+dumpGrid             = false
+dumpInitialPositions = false
+dumpCurv             = true 
+curvTol            = 1e-5    # RDP tolerance; only used when dumpCurv = true
+dumpAVS              = true 
+dumpTrajectories     = false
+dumpFractures        = false
+dumpControlPlanes    = false
+# controlPlanesDir   = "control_planes"
+# controlPlaneSpacing = 1.0
+# flowDirection       = "x"
