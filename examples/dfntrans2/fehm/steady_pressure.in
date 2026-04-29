@@ -1,0 +1,60 @@
+title:   Water only into Jeffrey Fracture Mesh
+#----
+#-----------    TO CHANGE Reynolds number, change either pressure gradient or permeability
+#-----------     Remember, FEHM dumps vectors of volumetric flux 
+#                   so true velocity is volumetric flux divided by porosity
+perm 
+   1 0 0  1.e-8 1.e-8 1.e-8 
+
+# Initial pressure 1 MPa and temp 20 C
+pres 
+  1  0 0  1.  20. 1 
+    
+# porosity 0.1      
+rock 
+    1  0  0  2800.  800. 0.01
+    
+cond 
+ 1 0 0  0.5 0.5 0.5  
+ 
+#------------------------- 
+time 
+ 1.e-3  10.0e0  50000    1  2001  3     
+ 
+#-------------- Gravity turned off
+ctrl 
+-80  1.e-5   8  100 gmres 
+  1  0  0    2 
+  0 
+  1.0   0  1. 
+  80   1.5  1.e-8   1e8 
+  0  +1
+iter 
+  1.e-5 1.e-5 1.e-3 -1.e-3 1.2 
+  0 0 0 0  19400. 
+#
+#  nodes on zones 4 6 3 5 
+node
+  4
+  180 190  8  480
+#
+zone
+file
+allboundaries.zone
+#
+#   Flow fixing 2 MPa on zone 3 and 1 MPa on zone 5 with 20C fixed for inflow
+flow
+ -3 0 0 2.0 -20. 1e-1
+ -5 0 0 1.0 -20. 1e-1 
+
+cont
+vtk  5000  10 
+geom
+liq
+pres
+saturation
+perm
+formatted
+end
+stop 
+

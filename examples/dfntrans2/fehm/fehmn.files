@@ -1,0 +1,19 @@
+input: steady_pressure.in 
+gridf: full_mesh.fehmn
+outp:  run.out
+rsto:  run.fin
+check: run.chk
+root:  run
+error: run.err
+stor:  full_mesh_vol_area.stor
+
+all
+0
+
+
+# replace dfn stor file with lagrit stor file
+# stor:  full_mesh_vol_area.stor
+# dfn generated stor file many NAN values 
+# stor:  full_mesh.stor
+
+
