@@ -130,10 +130,16 @@ def mesh_network(self,
     # # ##### FOR SERIAL DEBUG ######
 
     # ### Parallel runs
-    # if there are more processors than fractures,
+    # LaGriT meshing parallelism cannot exceed the number of fractures.
+    # Cap ncpu for meshing only; restore the original value afterwards so that
+    # downstream steps (dfnTrans OpenMP, PFLOTRAN MPI) receive the user's
+    # originally requested CPU count.
+    _ncpu_requested = self.ncpu
     if self.ncpu > self.num_frac:
         self.print_log(
-            "More processors than fractures requested.\nResetting ncpu to num_frac","warning"
+            f"More processors ({self.ncpu}) than fractures ({self.num_frac}) requested. "
+            "Capping ncpu to num_frac for meshing; original value will be restored.",
+            "warning"
         )
         self.ncpu = self.num_frac
 
@@ -142,6 +148,10 @@ def mesh_network(self,
 
     # ### Parallel runs
     self.merge_network()
+
+    # Restore the originally requested CPU count so downstream pipeline
+    # steps (dfnTrans, PFLOTRAN) use what the user intended.
+    self.ncpu = _ncpu_requested
 
     ## checking and clean up
     if (not self.visual_mode and not self.prune_file and not self.r_fram):

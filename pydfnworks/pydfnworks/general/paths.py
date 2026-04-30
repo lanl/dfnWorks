@@ -209,7 +209,7 @@ def define_paths(self):
     # if not os.path.isfile(os.environ['DFNTRANS_EXE']):
     #      self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
     # self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
-    os.environ['DFNTRANS_EXE'] = '/Users/jhyman/src/dfnTrans2.0/build/dfntrans'
+    os.environ['DFNTRANS_EXE'] = '/Users/hymanjd/src/dfnTrans2.0/build/dfntrans'
     self.valid('dfntrans', os.environ['DFNTRANS_EXE'], "executable")
             
     os.environ['CORRECT_VOLUME_EXE'] = os.environ[

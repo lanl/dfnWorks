@@ -58,7 +58,9 @@ def call_executable(self, command):
 
     '''
     print(f"Executing {command}")
-    subprocess.call(command, shell = True)
+    env = os.environ.copy()
+    env["OMP_NUM_THREADS"] = str(self.ncpu)
+    subprocess.call(command, shell = True, env=env)
 
 
 def print_parameters(self):
