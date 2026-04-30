@@ -77,10 +77,8 @@ def run_dfn_trans(self):
     None
     """
     tic = time()
-    env = os.environ.copy()
-    env["OMP_NUM_THREADS"] = str(self.ncpu)
-    self.print_log(f"--> Launching dfnTrans with OMP_NUM_THREADS={self.ncpu}")
-    subprocess.run([os.environ['DFNTRANS_EXE'], self.local_dfnTrans_file], env=env)
+    cmd = os.environ['DFNTRANS_EXE'] + ' ' + self.local_dfnTrans_file
+    self.call_executable(cmd)
     self.dump_time("Function: DFNTrans ", time() - tic)
 
 
