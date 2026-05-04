@@ -12,6 +12,93 @@ Functions for using FEHM in dfnWorks
 import os
 from time import time
 
+def write_boundary_zone_file(self, filenames=None, directions=None, axes=None, 
+                             flow_boundaries="flow_boundaries.zone"):
+    """Processes zone files for particle tracking. All zone files are combined into a single output file.
+    
+    Parameters
+    ----------
+        filenames : list of str, optional
+            List of zone filenames to combine in order. If provided, used directly.
+        directions : list of str, optional
+            List of directions to combine. Valid options: 'top', 'bottom', 'left', 
+            'right', 'front', 'back'. Maps to boundary_*.zone files automatically.
+        axes : list of str, optional
+            List of axis directions to combine. Valid options: '+x', '-x', '+y', 
+            '-y', '+z', '-z'. Maps to boundary_*.zone files automatically.
+        flow_boundaries : str
+            Output filename for the combined zone file.
+    Returns
+    -------
+        None
+    Notes
+    -----
+        Provide exactly one of `filenames`, `directions`, or `axes`.
+        Axis convention: +x=right, -x=left, +y=front, -y=back, +z=top, -z=bottom.
+        The first file keeps its header but drops the last 2 lines.
+        Middle files drop the first line and last 2 lines.
+        The last file drops only the first line.
+    """
+    # map directions to actual filenames
+    direction_map = {
+        'top':    'boundary_top.zone',
+        'bottom': 'boundary_bottom.zone',
+        'left':   'boundary_left_w.zone',
+        'right':  'boundary_right_e.zone',
+        'front':  'boundary_front_n.zone',
+        'back':   'boundary_back_s.zone',
+    }
+    # map axis directions to actual filenames
+    axis_map = {
+        '+x': 'boundary_right_e.zone',
+        '-x': 'boundary_left_w.zone',
+        '+y': 'boundary_front_n.zone',
+        '-y': 'boundary_back_s.zone',
+        '+z': 'boundary_top.zone',
+        '-z': 'boundary_bottom.zone',
+    }
+    
+    provided = sum(x is not None for x in (filenames, directions, axes))
+    if provided == 0:
+        raise ValueError("Must provide one of `filenames`, `directions`, or `axes`.")
+    if provided > 1:
+        raise ValueError("Provide only one of `filenames`, `directions`, or `axes`.")
+    
+    if directions is not None:
+        invalid = [d for d in directions if d not in direction_map]
+        if invalid:
+            raise ValueError(f"Invalid direction(s): {invalid}. "
+                             f"Valid options: {list(direction_map.keys())}")
+        filenames = [direction_map[d] for d in directions]
+    
+    if axes is not None:
+        invalid = [a for a in axes if a not in axis_map]
+        if invalid:
+            raise ValueError(f"Invalid axis/axes: {invalid}. "
+                             f"Valid options: {list(axis_map.keys())}")
+        filenames = [axis_map[a] for a in axes]
+    
+    with open(flow_boundaries, "w") as fall:
+        # copy all but last 2 lines of the first file
+        fzone = open(filenames[0], "r")
+        lines = fzone.readlines()
+        lines = lines[:-2]
+        fzone.close()
+        fall.writelines(lines)
+        # copy all but first and last 2 lines of the middle files
+        for filename in filenames[1:-1]:
+            with open(filename, "r") as fzone:
+                lines = fzone.readlines()
+                lines = lines[1:-2]
+            fall.writelines(lines)
+        # copy all but first line of the last file
+        fzone = open(filenames[-1], "r")
+        lines = fzone.readlines()
+        lines = lines[1:]
+        fzone.close()
+        fall.writelines(lines)
+
+
 def parse_stor_file(filepath):
     """
     Parse a LaGriT-formatted ASCII STOR file into its structured data blocks.
@@ -319,15 +406,15 @@ def fehm(self):
     elapsed = time() - tic
     self.print_log(f"Time Required {elapsed} Seconds")
     self.print_log('=' * 80)
-    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
-    if os.path.exists(correct_volume_file):
-        self.print_log(f"--> Printing correct volumes output file:")
-        self.print_log(f"filename: {correct_volume_file}")
-        try:
-            with open(correct_volume_file, 'r') as file:
-                for line in file:
-                    self.print_log(line.strip())
-        except FileNotFoundError:
-            self.print_log(f"File not found: {correct_volume_file}")
-        except Exception as e:
-            self.print_log(f"An error occurred: {e}")
+    # correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
+    # if os.path.exists(correct_volume_file):
+    #     self.print_log(f"--> Printing correct volumes output file:")
+    #     self.print_log(f"filename: {correct_volume_file}")
+    #     try:
+    #         with open(correct_volume_file, 'r') as file:
+    #             for line in file:
+    #                 self.print_log(line.strip())
+    #     except FileNotFoundError:
+    #         self.print_log(f"File not found: {correct_volume_file}")
+    #     except Exception as e:
+    #         self.print_log(f"An error occurred: {e}")
