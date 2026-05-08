@@ -27,10 +27,10 @@ outFlowFile  = "boundary_right_e.ex"
 # timeUnits:        "seconds" (default) | "minutes" | "hours" | "days" | "years"
 [particles]
 initialPositions  = "uniform"
-numberOfParticles = 10
-dx                = 0.1
+numberOfParticles = 10000
+dx                = 0.001
 intersectionRule  = "complete_mixing"
-numberTimeSteps   = 10000
+numberTimeSteps   = 1000000
 timeStepFactor    = 0.1
 seed              = 1
 timeUnits         = "seconds"
@@ -67,7 +67,7 @@ dumpGrid             = false
 dumpInitialPositions = false
 dumpCurv             = true 
 curvTol            = 1e-5    # RDP tolerance; only used when dumpCurv = true
-dumpAVS              = true 
+dumpAVS              = false 
 dumpTrajectories     = false
 dumpFractures        = false
 dumpControlPlanes    = false

@@ -11,7 +11,7 @@ import os
 src_path = os.getcwd()
 jobname = src_path + "/output"
 dfnFlow_file = src_path + '/dfn_explicit.in'
-dfnTrans_file = src_path + '/dfntrans-control-file.dat'
+dfnTrans_file = src_path + '/dfntrans.toml'
 
 DFN = DFNWORKS(jobname,
                dfnFlow_file=dfnFlow_file,
@@ -54,4 +54,4 @@ DFN.create_network()
 
 DFN.mesh_network()
 DFN.dfn_flow()
-DFN.dfn_trans(combine_avs = True)
+DFN.dfn_trans()

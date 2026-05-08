@@ -18,8 +18,7 @@ jobname = os.getcwd() + "/output2"
 
 # These are the input files for PFLOTRAN Flow and Particles
 dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
-dfnTrans_file = os.getcwd() + '/PTDFN_control.dat'
-dfnTrans_file = os.getcwd()  + '/dfntrans-control-file.dat'
+dfnTrans_file = os.getcwd()  + '/dfntrans.toml'
 
 
 DFN = DFNWORKS(jobname,
@@ -53,13 +52,13 @@ DFN.add_fracture_family(
     distribution="tpl",
     alpha=1.8,
     min_radius=1.0,
-    max_radius=10.0,
+    max_radius=20.0,
     orientation_distribution = "fisher",
     kappa=1.0,
     theta=0.0,
     phi=0.0,
     #aspect=2,
-    p32=1,
+    p32=0.5,
     hy_variable='aperture',
     hy_function='correlated',
     number_of_points=8,
@@ -93,24 +92,23 @@ DFN.add_fracture_family(
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
-print(DFN.centers)
-print(DFN.perm)
 
-DFN.output_report()
+# DFN.output_report()
 
 
 # This will mesh the network for use in simulations
-DFN.mesh_network(min_dist=1, max_dist=5, max_resolution_factor=10)
+DFN.mesh_network()
 
 # CHECK the mesh before simulations
 # exit()
 
 # run PFLOTRAN flow simulation
-DFN.lagrit2pflotran(boundary_cell_area= 10**3)
+DFN.lagrit2pflotran()
 DFN.pflotran()
+DFN.parse_pflotran_vtk_python() 
 DFN.pflotran_cleanup()
 DFN.effective_perm(inflow_pressure=2e6, outflow_pressure=1e6, boundary_file='boundary_left_w.ex', direction='x', darcy_vel_file='darcyvel.dat')
 
 # run particle simulation and combine 1000 part*inp files
-DFN.dfn_trans(combine_avs = True)
+DFN.dfn_trans()
 
