@@ -52,6 +52,10 @@ DFN.create_network()
 DFN.set_flow_solver("FEHM")
 DFN.mesh_network()
 DFN.correct_stor_file()
+
+files = ['boundary_left_w.zone','boundary_right_e.zone']
+
+DFN.write_boundary_zone_file(files, flow_boundary_filename = "allboundaries.zone")
 DFN.fehm()
 
 

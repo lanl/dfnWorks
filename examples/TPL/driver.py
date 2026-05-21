@@ -13,8 +13,8 @@ import numpy as np
 # Change output and uncomment 2nd family for 2 family network
 
 # Define directory for output
-jobname = os.getcwd() + "/output"
-#jobname = os.getcwd() + "/output2"
+# jobname = os.getcwd() + "/output"
+jobname = os.getcwd() + "/output2"
 
 # These are the input files for PFLOTRAN Flow and Particles
 dfnFlow_file = os.getcwd() + '/dfn_explicit.in'
@@ -91,7 +91,11 @@ DFN.add_fracture_family(
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
+print(DFN.centers)
+print(DFN.perm)
+
 DFN.output_report()
+
 
 # This will mesh the network for use in simulations
 DFN.mesh_network(min_dist=1, max_dist=5, max_resolution_factor=10)
@@ -100,6 +104,11 @@ DFN.mesh_network(min_dist=1, max_dist=5, max_resolution_factor=10)
 # exit()
 
 # run PFLOTRAN flow simulation
+DFN.lagrit2pflotran(boundary_cell_area= 10**3)
+DFN.pflotran()
+DFN.pflotran_cleanup()
+DFN.effective_perm(inflow_pressure=2e6, outflow_pressure=1e6, boundary_file='boundary_left_w.ex', direction='x', darcy_vel_file='darcyvel.dat')
+exit() 
 DFN.dfn_flow()
 
 # run particle simulation and combine 1000 part*inp files
