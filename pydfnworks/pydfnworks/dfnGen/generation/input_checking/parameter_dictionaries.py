@@ -275,6 +275,12 @@ def load_parameters(self):
             'value': False,
             'description': 'Toggle for rFRAM on/off. '
         },
+        'disableShorteningIntersections': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'If True, reject fractures whose intersection would be shortened by shrinkIntersection(). Avoids non-conformal cells at the cost of more rejections.'
+        },
         'radiiListIncrease': {
             'type':
             float,

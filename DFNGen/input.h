@@ -15,6 +15,7 @@ extern float radiiListIncrease;
 extern double eps;
 extern bool disableFram;
 extern bool rFram;
+extern bool disableShorteningIntersections;
 extern bool visualizationMode;
 extern bool tripleIntersections;
 extern bool boundaryFaces[6];
