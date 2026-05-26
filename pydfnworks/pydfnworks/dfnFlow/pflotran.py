@@ -547,7 +547,7 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
     with open(grid_file, 'r') as f:
         grid = f.readlines()[3:]
 
-    out_dir = 'parsed_vtk'
+    out_dir = 'pflotran_vtk_outputs'
 
     for line in grid:
         if 'POINTS' in line:
@@ -621,7 +621,7 @@ def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
     (via inp2vtk_python if not already produced). Solution data is read
     from PFLOTRAN's main HDF5 output, which contains one group per time
     step. Every dataset present in a time group is written to the
-    corresponding parsed_vtk/<base>-NNN.vtk file as POINT_DATA scalars.
+    corresponding pflotran_vtk_outputs/<base>-NNN.vtk file as POINT_DATA scalars.
 
     Parameters
     ----------
@@ -644,7 +644,7 @@ def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
           (spaces and brackets become underscores).
         - Integer datasets are written with `int` scalar type; everything
           else is written as `float`.
-        - Output files land in ./parsed_vtk/ to mirror parse_pflotran_vtk_python.
+        - Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.
     """
     self.print_log('--> Parsing PFLOTRAN HDF5 output with Python')
 
@@ -678,7 +678,7 @@ def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
     if num_points is None:
         self.print_log(f"Could not find POINTS line in {grid_file}", 'error')
 
-    out_dir = 'parsed_vtk'
+    out_dir = 'pflotran_vtk_outputs'
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
