@@ -579,3 +579,165 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
                 f.write(line)
         os.remove(file)
     self.print_log('--> Parsing PFLOTRAN output complete')
+
+
+def _sanitize_vtk_field_name(name):
+    """ Sanitize an HDF5 dataset name so it is a valid legacy VTK SCALARS field name.
+
+    Replaces whitespace and bracket characters with underscores, collapses
+    repeated underscores, and trims leading/trailing underscores.
+    Example: 'Liquid Pressure [Pa]' -> 'Liquid_Pressure_Pa'
+    """
+    out = []
+    for ch in name:
+        if ch.isalnum() or ch == '_':
+            out.append(ch)
+        else:
+            out.append('_')
+    sanitized = ''.join(out)
+    # collapse repeated underscores
+    while '__' in sanitized:
+        sanitized = sanitized.replace('__', '_')
+    return sanitized.strip('_') or 'field'
+
+
+def _time_group_index(group_name):
+    """ Extract the integer time index from a PFLOTRAN HDF5 time group name.
+
+    PFLOTRAN writes top-level groups like '   0 Time  0.00000E+00 d',
+    '   1 Time  1.00000E+02 d', etc. The first whitespace-delimited token
+    is the time index.
+    """
+    try:
+        return int(group_name.strip().split()[0])
+    except (ValueError, IndexError):
+        return None
+
+
+def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
+    """ Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.
+
+    The mesh is taken from a VTK file derived from the .inp mesh
+    (via inp2vtk_python if not already produced). Solution data is read
+    from PFLOTRAN's main HDF5 output, which contains one group per time
+    step. Every dataset present in a time group is written to the
+    corresponding parsed_vtk/<base>-NNN.vtk file as POINT_DATA scalars.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+        h5_file : string
+            Path to the PFLOTRAN HDF5 output file. If empty, defaults to
+            '<local_dfnFlow_file stem>.h5' in the current directory.
+        grid_vtk_file : string
+            Path to a VTK file containing the mesh. If empty, inp2vtk_python
+            is invoked to produce one from self.inp_file.
+
+    Returns
+    --------
+        None
+
+    Notes
+    --------
+        - Dataset names are sanitized for legacy VTK compatibility
+          (spaces and brackets become underscores).
+        - Integer datasets are written with `int` scalar type; everything
+          else is written as `float`.
+        - Output files land in ./parsed_vtk/ to mirror parse_pflotran_vtk_python.
+    """
+    self.print_log('--> Parsing PFLOTRAN HDF5 output with Python')
+
+    if self.flow_solver != "PFLOTRAN":
+        self.print_log("Error. Wrong flow solver requested\n", 'error')
+
+    # Resolve the mesh VTK
+    if grid_vtk_file:
+        self.vtk_file = grid_vtk_file
+    elif not getattr(self, 'vtk_file', None) or not os.path.exists(self.vtk_file):
+        self.inp2vtk_python()
+    grid_file = self.vtk_file
+
+    # Resolve the HDF5 file
+    if not h5_file:
+        h5_file = f"{Path(self.local_dfnFlow_file).stem}.h5"
+    if not os.path.exists(h5_file):
+        self.print_log(f"PFLOTRAN HDF5 file not found: {h5_file}", 'error')
+    self.print_log(f"--> Reading HDF5 data from {h5_file}")
+
+    # Read mesh block from the existing VTK (skip the 3 header lines so we
+    # can swap in our own header; matches parse_pflotran_vtk_python).
+    with open(grid_file, 'r') as f:
+        grid = f.readlines()[3:]
+
+    num_points = None
+    for line in grid:
+        if 'POINTS' in line:
+            num_points = line.strip().split()[1]
+            break
+    if num_points is None:
+        self.print_log(f"Could not find POINTS line in {grid_file}", 'error')
+
+    out_dir = 'parsed_vtk'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
+    base = Path(self.local_dfnFlow_file).stem
+    header_lines = [
+        '# vtk DataFile Version 2.0\n',
+        'PFLOTRAN output\n',
+        'ASCII\n',
+    ]
+
+    with h5py.File(h5_file, 'r') as h5:
+        # Keep only the time-step groups (skip anything that doesn't parse).
+        time_groups = []
+        for name in h5.keys():
+            if not isinstance(h5[name], h5py.Group):
+                continue
+            idx = _time_group_index(name)
+            if idx is None:
+                continue
+            time_groups.append((idx, name))
+        time_groups.sort(key=lambda x: x[0])
+
+        if not time_groups:
+            self.print_log(
+                f"No PFLOTRAN time-step groups found in {h5_file}", 'error')
+
+        for idx, group_name in time_groups:
+            group = h5[group_name]
+            out_path = os.path.join(out_dir, f"{base}-{idx:03d}.vtk")
+            self.print_log(f"--> Writing {out_path}")
+            with open(out_path, 'w') as f:
+                for line in header_lines:
+                    f.write(line)
+                for line in grid:
+                    f.write(line)
+                f.write('\n')
+                f.write(f"POINT_DATA {num_points}\n")
+
+                for dset_name in group.keys():
+                    dset = group[dset_name]
+                    if not isinstance(dset, h5py.Dataset):
+                        continue
+                    values = np.asarray(dset[()]).ravel()
+                    if values.size != int(num_points):
+                        self.print_log(
+                            f"Skipping '{dset_name}' in time group {idx}: "
+                            f"size {values.size} != {num_points} mesh points")
+                        continue
+                    field = _sanitize_vtk_field_name(dset_name)
+                    if np.issubdtype(values.dtype, np.integer):
+                        scalar_type = 'int'
+                        fmt = '%d'
+                    else:
+                        scalar_type = 'float'
+                        fmt = '%.8e'
+                    f.write(f"SCALARS {field} {scalar_type} 1\n")
+                    f.write("LOOKUP_TABLE default\n")
+                    for v in values:
+                        f.write(fmt % v)
+                        f.write('\n')
+
+    self.print_log('--> Parsing PFLOTRAN HDF5 output complete')

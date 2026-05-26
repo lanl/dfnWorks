@@ -34,24 +34,32 @@ def set_flow_solver(self, flow_solver):
         self.print_log(error, 'error')
 
 
-def dfn_flow(self, dump_vtk=True):
+def dfn_flow(self, dump_vtk=True, dump_h5=False):
     """ Run the dfnFlow portion of the workflow
-       
+
     Parameters
     ----------
         self : object
             DFN Class
-        
+
         dump_vtk : bool
-            True - Write out vtk files for flow solutions 
-            False  - Does not write out vtk files for flow solutions 
- 
+            True - Parse PFLOTRAN VTK output into parsed_vtk/ via
+                   parse_pflotran_vtk_python (default).
+            False - Skip VTK parsing.
+        dump_h5 : bool
+            True - Parse PFLOTRAN HDF5 output into parsed_vtk/ via
+                   parse_pflotran_h5. Mesh comes from the .inp via
+                   inp2vtk_python; data come from <base>.h5.
+            False - Skip HDF5 parsing (default).
+
     Returns
     ---------
 
     Notes
     --------
-    Information on individual functions is found therein 
+    Information on individual functions is found therein.
+    dump_vtk and dump_h5 are independent; both can be True to produce
+    parsed output from each source.
     """
 
     self.print_log('=' * 80)
@@ -68,6 +76,8 @@ def dfn_flow(self, dump_vtk=True):
 
         if dump_vtk:
             self.parse_pflotran_vtk_python()
+        if dump_h5:
+            self.parse_pflotran_h5()
         self.pflotran_cleanup()
 
     elif self.flow_solver == "FEHM":
