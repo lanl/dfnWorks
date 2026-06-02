@@ -60,7 +60,7 @@ class DFNWORKS():
         None
     '''
 
-    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe
+    from pydfnworks.general.paths import define_paths, print_paths, valid, compile_dfn_exe, check_dfngen_version
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
@@ -120,7 +120,7 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 

@@ -422,6 +422,34 @@ def check_fram(params):
 #                         params['constantPermeability']['value'], 0)
 
 
+def check_layer_conforming(params):
+    """Check that layerConformingFractures is 0, 1, or 2.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Only called when numOfLayers > 0.
+        0 = disabled
+        1 = perfect conforming (clip exactly at layer boundary)
+        2 = soft conforming (clip at layer boundary +/- 2h)
+    """
+    key = 'layerConformingFractures'
+    hf.check_none(key, params[key]['value'])
+    if params[key]['value'] not in [0, 1, 2]:
+        hf.print_error(
+            f'"{key}" must be 0 (disabled), 1 (perfect conforming), or 2 (soft conforming, 2h overhang). Value provided: {params[key]["value"]}'
+        )
+    modes = {0: "disabled", 1: "perfect conforming", 2: "soft conforming (2h overhang)"}
+    local_print_log(f"--> Layer conforming fractures: {modes[params[key]['value']]}")
+
+
 def check_layers_general(params):
     """ Check the number of layers provided matching the requested number. Checks boundaries of layers that they are within the domain.
 
@@ -676,6 +704,7 @@ def check_general(params):
 
     if params['numOfLayers']['value'] > 0:
         check_layers_general(params)
+        check_layer_conforming(params)
     if params['numOfRegions']['value'] > 0:
         check_regions_general(params)
     if params['polygonBoundaryFlag']['value']:

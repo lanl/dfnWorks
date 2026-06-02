@@ -2,7 +2,7 @@ import math as m
 import numpy as np
 
 # from pydfnworks
-from pydfnworks.dfnGen.generation.hydraulic_properties import convert
+from pydfnworks.dfnGen.generation.hydraulic.conversions import convert
 
 
 def stress_based_apertures(self,

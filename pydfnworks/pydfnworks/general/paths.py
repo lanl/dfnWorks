@@ -6,6 +6,8 @@ import json
 DFNPARAMS = '~/.dfnworksrc'
 DFNPARAMS = os.path.expanduser(DFNPARAMS)
 
+DFNGEN_REQUIRED_VERSION = "2.3"
+
 
 def valid(self, name, path, path_type):
     """" Check that path is valid for a executable
@@ -196,8 +198,9 @@ def define_paths(self):
         # Directories
         os.environ['DFNGEN_EXE'] = os.environ['dfnworks_PATH'] + 'DFNGen/DFNGen'
         if not os.path.isfile(os.environ['DFNGEN_EXE']):
-            compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
-            valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
+            self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNGen/')
+        self.valid('DFNGen', os.environ['DFNGEN_EXE'], "executable")
+        self.check_dfngen_version()
 
         os.environ[
             'DFNTRANS_EXE'] = os.environ['dfnworks_PATH'] + 'DFNTrans/DFNTrans'
@@ -228,7 +231,7 @@ def define_paths(self):
         ### for DOCKER
         os.environ['dfnworks_PATH']  = '/dfnWorks/bin/'
         os.environ['DFNGEN_EXE'] = '/dfnWorks/bin/DFNGen'
-        os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/DFNTrans'
+        os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/dfntrans'
         os.environ['CORRECT_UGE_EXE'] = '/dfnWorks/bin/correct_uge'
         os.environ['CORRECT_STOR_EXE'] = '/dfnWorks/bin/correct_stor'
         os.environ['CONNECT_TEST_EXE'] = '/dfnWorks/bin/ConnectivityTest'
@@ -240,3 +243,48 @@ def define_paths(self):
 
     self.print_paths() 
     self.print_log("--> Loading and checking dfnWorks dependency paths successful")
+
+
+def check_dfngen_version(self):
+    """Check that the compiled DFNGen binary matches the required version.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+        Version is written to DFNGen/.dfngen_version by the makefile at
+        build time. If the file is missing or the version does not match
+        DFNGEN_REQUIRED_VERSION, an error is raised and the program exits.
+    """
+    version_file = os.path.join(
+        os.environ['dfnworks_PATH'], 'DFNGen', '.dfngen_version'
+    )
+    if not os.path.isfile(version_file):
+        error = (
+            f"Error: DFNGen version file not found at {version_file}.\n"
+            f"Please rebuild DFNGen (cd DFNGen && make).\nExiting\n"
+        )
+        self.print_log(error, 'critical')
+        sys.exit(1)
+
+    with open(version_file, 'r') as f:
+        installed_version = f.read().strip()
+
+    if installed_version != DFNGEN_REQUIRED_VERSION:
+        error = (
+            f"Error: DFNGen version mismatch.\n"
+            f"  Required : {DFNGEN_REQUIRED_VERSION}\n"
+            f"  Installed: {installed_version}\n"
+            f"Please rebuild DFNGen (cd DFNGen && make).\nExiting\n"
+        )
+        self.print_log(error, 'critical')
+        sys.exit(1)
+
+    self.print_log(f"--> DFNGen version {installed_version} verified.")

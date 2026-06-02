@@ -11,6 +11,7 @@
 from pydfnworks import *
 import os
 from scipy.optimize import minimize_scalar
+import numpy as np
 
 def get_p10(p32):
 
