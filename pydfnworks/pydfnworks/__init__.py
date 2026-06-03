@@ -48,7 +48,7 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
-__version__ = "2.10.0"
+__version__ = "2.10.1"
 
 __release_date__ = "02-27-2026"
 
