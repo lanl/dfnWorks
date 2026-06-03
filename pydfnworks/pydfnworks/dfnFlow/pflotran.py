@@ -67,6 +67,9 @@ def correct_uge_file(self):
             vol = float(parts[4])
             idx = id - 1 if cell_based else material_ids[id - 1] - 1
             vol *= aperture[idx]
+            ## This should only get trigged if rfram is on. 
+            if vol < 0:
+                vol = abs(vol)
             cell_lines.append(
                 f"{id}\t{parts[1]}\t{parts[2]}\t{parts[3]}\t{vol:0.12e}\n"
             )
