@@ -231,7 +231,7 @@ def define_paths(self):
         ### for DOCKER
         os.environ['dfnworks_PATH']  = '/dfnWorks/bin/'
         os.environ['DFNGEN_EXE'] = '/dfnWorks/bin/DFNGen'
-        os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/dfntrans'
+        os.environ['DFNTRANS_EXE'] = '/dfnWorks/bin/DFNTrans'
         os.environ['CORRECT_UGE_EXE'] = '/dfnWorks/bin/correct_uge'
         os.environ['CORRECT_STOR_EXE'] = '/dfnWorks/bin/correct_stor'
         os.environ['CONNECT_TEST_EXE'] = '/dfnWorks/bin/ConnectivityTest'
@@ -239,7 +239,7 @@ def define_paths(self):
         os.environ['FEHM_EXE'] = '/dfnWorks/bin/fehm' 
         os.environ['LAGRIT_EXE'] = '/dfnWorks/bin/lagrit'
         os.environ['PETSC_DIR'] = '/dfnWorks/lib/petsc'
-        os.environ['PETSC_ARCH'] = 'arch-linux2-c-debug'
+        os.environ['PETSC_ARCH'] = 'arch-linux-c-opt'
 
     self.print_paths() 
     self.print_log("--> Loading and checking dfnWorks dependency paths successful")

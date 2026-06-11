@@ -46,7 +46,7 @@ If it's like a straight line, then the output is less frequent (in case of
 "out_curv:yes", if "no",  the output file will contain every time step) */
 out_curv: yes 
 /* output into avs file (GMV visualization, Paraview visualization) */
-out_avs:  yes 
+out_avs: yes 
 /* output into trajectories ascii files (veloc+posit+cell+fract+time) */
 out_traj: no 
 out_fract: no
@@ -56,7 +56,7 @@ out_fract: no
 out_filetemp: no
 
 /************* output directories *************************************/
-out_dir: traj /* path and name of directory where all the particle 
+out_dir: dfnTrans_output /* path and name of directory where all the particle 
                      tracking results will be written*/
 
 
@@ -65,7 +65,7 @@ out_path: trajectories /*name of directory where all particle
 
 /* name of resultant file (in out_dir path), which contains total travel time and 
 				final positions of particles */
-out_time: partime
+out_time: partime.dat
 
 /*************** Intersection Mixing Rule **********************************/
 /****streamline_routing: if yes - streamline routing is the selected subgrid process
@@ -76,7 +76,7 @@ streamline_routing: no
 /****init_nf: if yes - the same number of particles (init_partn) will be placed 
      on every boundary fracture edge on in-flow boundary, 
      equidistant from each other ****/
-init_nf: yes 
+init_nf: no
 init_partn: 10
 
 /****init_eqd: if yes - particles will be placed on the same distance from
@@ -101,21 +101,12 @@ init_random: no
 // total number of particles
 in_randpart: 100    
 
-/**** all particles are seed randomly over matrix, 
-     they will start travel in DFN from the node/cell that is closest to
-     their initial position in rock matrix ***************************/
-      
 init_matrix: no
-// to obtain these files, run python script RandomPositGener.py
-inm_coord: ParticleInitCoordR.dat
-inm_nodeID: ClosestNodeR.inp
-inm_porosity: 0.02
-inm_diffcoeff: 1.0e-12
 
-/*****  particles positions according to in-flow flux weight *********/
-init_fluxw: no //turn on this input option (don't forget to turn off rest of PARTICLES INITIAL POSITIONS options)
-init_totalnumber: 100
 
+/*****  particles positions distributed according to in-flow flux weight *********/
+init_fluxw: yes
+init_totalnumber: 100 
 
 /****************** FLOW AND FRACTURE PARAMETERS **********************/
 porosity: 1.0 // porosity 
@@ -152,7 +143,7 @@ seed: 337799
 /*** virtual Control planes will be build in the direction of flow. 
 Once particle crosses the control plane, it's position, velocity, time 
 will output to an ascii file. ****/ 
-ControlPlane: yes 
+ControlPlane: no
 
 /* the path and directory name with all particles output files */
 control_out: outcontroldir

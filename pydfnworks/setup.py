@@ -38,7 +38,6 @@ setup(
         "matplotlib",
         "networkx",
         "fpdf",
-        "pyvista",
         "mplstereonet",
         "seaborn",
         "pyvtk",
