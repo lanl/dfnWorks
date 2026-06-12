@@ -123,7 +123,7 @@ class DFNWORKS():
     from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
-    from pydfnworks.dfnFlow.tough import lagrit_to_tough, convert_uge_to_tough
+    from pydfnworks.dfnFlow.tough import lagrit_to_tough, convert_uge_to_tough, tough
 
 
     # dfnTrans

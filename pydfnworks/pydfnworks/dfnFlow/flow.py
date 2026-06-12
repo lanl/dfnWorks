@@ -26,7 +26,7 @@ def set_flow_solver(self, flow_solver):
     Default is PFLOTRAN 
 
 """
-    if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
+    if flow_solver == "FEHM" or flow_solver == "PFLOTRAN" or flow_solver == "TOUGH":
         self.print_log(f"Using flow solver {flow_solver}")
         self.flow_solver = flow_solver
     else:

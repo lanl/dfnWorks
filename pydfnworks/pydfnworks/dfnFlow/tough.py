@@ -17,6 +17,9 @@ import math
 from pathlib import Path
 from typing import Iterable
 from time import time
+import shutil
+import os 
+import subprocess
 
 
 # ---------------------------------------------------------------------------
@@ -139,7 +142,9 @@ def euclidean_distance(point_a: Iterable[float], point_b: Iterable[float]) -> fl
 
 def convert_uge_to_tough(self,
     input_filename,  
-    output_filename
+    output_filename,
+    inflow = None, 
+    outflow = None,
 ) -> None:
     """Convert a DFNWorks UGE mesh file to a TOUGH2/TOUGH+ MESH file.
 
@@ -346,3 +351,56 @@ def lagrit_to_tough(self, tough_mesh_filename):
     # Step 2: Translate the UGE output to the TOUGH MESH format.
     self.convert_uge_to_tough('full_mesh_vol_area.uge', tough_mesh_filename) 
     self.print_log("--> Converting mesh file format to TOUGH mesh: Complete\n")
+
+
+
+def tough(self):
+    """ Run TOUGH. Copy TOUGH run file into working directory and run with ncpus
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+    Returns
+    ----------
+        None
+
+    Notes
+    ----------
+    """
+    self.print_log('=' * 80)
+    self.print_log("--> Running TOUGH Starting")
+    self.print_log('=' * 80)
+
+
+    if self.flow_solver != "TOUGH":
+        error = "Error. Wrong flow solver requested\n"
+        self.print_log(error, 'error')
+
+    try:
+        shutil.copy(os.path.abspath(self.dfnFlow_file),
+                    os.path.abspath(os.getcwd()))
+    except Exception as e:
+        error = f"--> Error. Unable to copy TOUGH input file\nError: {e}"
+        self.print_log(error, 'error')
+
+    # mpirun = os.environ['PETSC_DIR'] + '/' + os.environ[
+    #     'PETSC_ARCH'] + '/bin/mpiexec'
+
+    # if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
+    #     # PETSc did not install MPI. Hopefully, the user has their own MPI.
+    # mpirun = 'mpiexec'
+
+    # cmd = 'time mpiexec -n ' + str(self.ncpu) + \
+    #       ' ' + os.environ['TOUGH_EXE'] + self.local_dfnFlow_file
+
+    cmd = 'time ' + os.environ['TOUGH_EXE'] + ' ' + self.local_dfnFlow_file
+
+    self.print_log(f"--> Running: {cmd}")
+    subprocess.call(cmd, shell=True)
+
+    self.print_log('=' * 80)
+    self.print_log("--> Running TOUGH Complete")
+    self.print_log('=' * 80)
+    self.print_log("\n")

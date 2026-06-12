@@ -109,7 +109,7 @@ def print_paths(self):
     self.print_log(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
     self.print_log(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
     self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}\n")
-
+    self.print_log(f"* TOUGH_EXE: {os.environ['FEHM_EXE']}\n")
 
 def define_paths(self):
     """ Defines environmental variables for use in dfnWorks. The user must change these to match their workspace.
@@ -147,7 +147,8 @@ def define_paths(self):
             'PETSC_ARCH': None,
             'PFLOTRAN_EXE': None,
             'LAGRIT_EXE': None,
-            'FEHM_EXE': None
+            'FEHM_EXE': None,
+            'TOUGH_EXE': None
         }
 
     # Or, read the variables from the environment
@@ -192,6 +193,14 @@ def define_paths(self):
         self.valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
     else:
         self.print_log("--> Warning. No LaGriT path provided.",  'warning')
+
+    # LaGriT executable
+    if env_paths['TOUGH_EXE']:
+        os.environ['TOUGH_EXE'] = env_paths['TOUGH_EXE']
+        self.valid('TOUGH_EXE', os.environ['TOUGH_EXE'], "executable")
+    else:
+        self.print_log("--> Warning. No TOUGH EXE path provided.",  'warning')
+
 
     # ===================================================
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.

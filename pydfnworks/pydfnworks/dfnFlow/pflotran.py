@@ -35,10 +35,10 @@ def correct_uge_file(self):
         Logs and exits if the flow solver is not PFLOTRAN or if the `.uge` file does not exist.
     """
     self.print_log(
-        f'--> Starting: Correcting volumes with fracture apertures'
+        f'--> Starting: Correcting UGE volumes with fracture apertures'
     ) 
-    if self.flow_solver != "PFLOTRAN":
-        self.print_log("Error. Wrong flow solver requested\n", 'error')
+    #if self.flow_solver != "PFLOTRAN":
+    #    self.print_log("Error. Wrong flow solver requested\n", 'error')
 
     uge_file = self.inp_file[:-4] + '.uge'
     if not os.path.isfile(uge_file):
@@ -95,11 +95,12 @@ def correct_uge_file(self):
 
     elapsed = time() - t
     self.print_log(
-        f'--> Complete: Correcting UGE volumes with fracture apertures'
+        f'--> Complete: Correcting volumes with fracture apertures'
     ) 
     self.print_log(
         f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n'
     )
+    
 def lagrit2pflotran(self, boundary_cell_area = None):
     """  Takes output from LaGriT and processes it for use in PFLOTRAN.
     Calls the function write_perms_and_correct_volumes_areas() and zone2ex
