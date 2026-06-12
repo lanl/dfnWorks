@@ -54,5 +54,5 @@ DFN.mesh_network()
 DFN.set_flow_solver("TOUGH")
 
 tough_mesh_filename = "MESH"
-DFN.lagrit_to_tough(tough_mesh_filename)
+DFN.lagrit_to_tough(tough_mesh_filename, ['boundary_left_w.zone', 'boundary_right_e.zone' ])
 DFN.tough() 
