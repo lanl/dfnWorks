@@ -49,4 +49,5 @@ DFN.print_domain_parameters()
 DFN.create_network()
 DFN.mesh_network()
 
-DFN.lagrit_to_tough("MESH")
+tough_mesh_filename = "MESH"
+DFN.lagrit_to_tough(tough_mesh_filename)
