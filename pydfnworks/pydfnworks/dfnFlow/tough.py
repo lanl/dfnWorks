@@ -213,16 +213,12 @@ def convert_uge_to_tough(self,
 
     output_path = Path(output_filename)
 
-    # boundary_nodes = np.array([])
-    # if boundary_filenames is not None:
-    #     boundary_nodes = np.concatenate([self.load_zone_file_nodes(f) for f in boundary_filenames])
-
     boundary_nodes = np.array([]) if boundary_nodes is None else boundary_nodes
     if boundary_filenames is not None:
         boundary_nodes = np.concatenate([boundary_nodes] + [self.load_zone_file_nodes(f) for f in boundary_filenames])
-    print("--> Boundary nodes")
-    print(boundary_nodes)
-
+    if boundary_nodes.size > 0:
+        print("--> Boundary nodes")
+        print(boundary_nodes)
 
     # Placeholder for any unused floating-point field in the ELEME record.
     unknown = 0.0
@@ -259,6 +255,8 @@ def convert_uge_to_tough(self,
             # here because the loop counter i already tracks it.
             x, y, z = nums[1], nums[2], nums[3]
             volume = nums[4]
+            # Fix boundary node volume to large number, then they are held constant. 
+            # Probably need something different for more complex BC
             if i in boundary_nodes:
                 volume = 1e51
 
@@ -359,7 +357,7 @@ def convert_uge_to_tough(self,
 # High-level entry point
 # ---------------------------------------------------------------------------
 
-def lagrit_to_tough(self, tough_mesh_filename, boundary_filenames = None, boundary_nodes = None):
+def lagrit_to_tough(self, tough_mesh_filename = "MESH", boundary_filenames = None, boundary_nodes = None):
     """Convert a LaGriT-generated DFN mesh to a TOUGH MESH file.
 
     This is the primary public entry point for the TOUGH mesh conversion
