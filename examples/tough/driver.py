@@ -10,9 +10,11 @@ import os
 import subprocess
 
 src_path = os.getcwd()
-jobname = src_path + "/output"
+jobname = src_path + os.sep +  "output"
+tough_run_file = src_path + os.sep + "INFILE"
 
 DFN = DFNWORKS(jobname,
+               dfnFlow_file = tough_run_file,
                ncpu=4)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
@@ -49,5 +51,8 @@ DFN.print_domain_parameters()
 DFN.create_network()
 DFN.mesh_network()
 
+DFN.set_flow_solver("TOUGH")
+
 tough_mesh_filename = "MESH"
 DFN.lagrit_to_tough(tough_mesh_filename)
+DFN.tough() 
