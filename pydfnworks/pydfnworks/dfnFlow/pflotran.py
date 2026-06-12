@@ -35,7 +35,7 @@ def correct_uge_file(self):
         Logs and exits if the flow solver is not PFLOTRAN or if the `.uge` file does not exist.
     """
     self.print_log(
-        f'--> Starting: Correcting UGE volumes with fracture apertures'
+        f'--> Starting: Correcting volumes with fracture apertures'
     ) 
     if self.flow_solver != "PFLOTRAN":
         self.print_log("Error. Wrong flow solver requested\n", 'error')
@@ -417,9 +417,9 @@ def pflotran(self, transient=False, restart=False, restart_file=''):
     mpirun = os.environ['PETSC_DIR'] + '/' + os.environ[
         'PETSC_ARCH'] + '/bin/mpirun'
 
-    if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
-        # PETSc did not install MPI. Hopefully, the user has their own MPI.
-        mpirun = 'mpirun'
+    # if not (os.path.isfile(mpirun) and os.access(mpirun, os.X_OK)):
+    #     # PETSc did not install MPI. Hopefully, the user has their own MPI.
+    #     mpirun = 'mpirun'
 
     cmd = mpirun + ' -np ' + str(self.ncpu) + \
           ' ' + os.environ['PFLOTRAN_EXE'] + ' -pflotranin ' + self.local_dfnFlow_file
