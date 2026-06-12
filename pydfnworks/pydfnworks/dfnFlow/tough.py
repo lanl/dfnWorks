@@ -20,7 +20,19 @@ from time import time
 import shutil
 import os 
 import subprocess
+import numpy as np 
 
+def load_zone_file_nodes(self, zone_file):
+
+    self.print_log(f'--> Gather nodes from zone file: {zone_file}')
+    with open(zone_file, 'r') as fzone:
+        self.print_log('--> Reading boundary node ids')
+        node_array = fzone.read()
+        node_array = node_array.split()
+        num_nodes = int(node_array[4])
+        node_array = np.array(node_array[5:-1], dtype='int')
+    self.print_log('--> Finished reading zone file')
+    return node_array 
 
 # ---------------------------------------------------------------------------
 # Low-level parsing helpers
@@ -143,8 +155,7 @@ def euclidean_distance(point_a: Iterable[float], point_b: Iterable[float]) -> fl
 def convert_uge_to_tough(self,
     input_filename,  
     output_filename,
-    inflow = None, 
-    outflow = None,
+    boundary_filenames = None
 ) -> None:
     """Convert a DFNWorks UGE mesh file to a TOUGH2/TOUGH+ MESH file.
 
@@ -194,6 +205,11 @@ def convert_uge_to_tough(self,
 
     output_path = Path(output_filename)
 
+    boundary_nodes = np.array([])
+    if boundary_filenames is not None:
+        boundary_nodes = np.concatenate([self.load_zone_file_nodes(f) for f in boundary_filenames])
+    print("--> Boundary nodes")
+    print(boundary_nodes)
     # Placeholder for any unused floating-point field in the ELEME record.
     unknown = 0.0
     # Default rock-type label written into every ELEME record.
@@ -229,6 +245,9 @@ def convert_uge_to_tough(self,
             # here because the loop counter i already tracks it.
             x, y, z = nums[1], nums[2], nums[3]
             volume = nums[4]
+            if i in boundary_nodes:
+                volume = 1e51
+
             element_coordinates.append((x, y, z))
 
             element_name = tough_element_name(i)
@@ -326,7 +345,7 @@ def convert_uge_to_tough(self,
 # High-level entry point
 # ---------------------------------------------------------------------------
 
-def lagrit_to_tough(self, tough_mesh_filename):
+def lagrit_to_tough(self, tough_mesh_filename, boundary_filenames = None):
     """Convert a LaGriT-generated DFN mesh to a TOUGH MESH file.
 
     This is the primary public entry point for the TOUGH mesh conversion
@@ -349,7 +368,7 @@ def lagrit_to_tough(self, tough_mesh_filename):
     # Step 1: Run the LaGriT pipeline; produces full_mesh_vol_area.uge.
     self.correct_uge_file()
     # Step 2: Translate the UGE output to the TOUGH MESH format.
-    self.convert_uge_to_tough('full_mesh_vol_area.uge', tough_mesh_filename) 
+    self.convert_uge_to_tough('full_mesh_vol_area.uge', tough_mesh_filename, boundary_filenames) 
     self.print_log("--> Converting mesh file format to TOUGH mesh: Complete\n")
 
 
