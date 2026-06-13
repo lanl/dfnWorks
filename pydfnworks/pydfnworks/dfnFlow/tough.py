@@ -22,17 +22,16 @@ import os
 import subprocess
 import numpy as np 
 
-def load_zone_file_nodes(self, zone_file):
 
+def load_zone_file_nodes(self, zone_file):
     self.print_log(f'--> Gather nodes from zone file: {zone_file}')
     with open(zone_file, 'r') as fzone:
         self.print_log('--> Reading boundary node ids')
-        node_array = fzone.read()
-        node_array = node_array.split()
-        num_nodes = int(node_array[4])
-        node_array = np.array(node_array[5:-1], dtype='int')
+        node_array = fzone.read().split()
+        # num_nodes = int(node_array[4])
+        node_array = [int(n) for n in node_array[5:-1]]
     self.print_log('--> Finished reading zone file')
-    return node_array 
+    return node_array
 
 # ---------------------------------------------------------------------------
 # Low-level parsing helpers
@@ -213,10 +212,18 @@ def convert_uge_to_tough(self,
 
     output_path = Path(output_filename)
 
-    boundary_nodes = np.array([]) if boundary_nodes is None else boundary_nodes
+    # boundary_nodes = np.array([]) if boundary_nodes is None else boundary_nodes
+    # if boundary_filenames is not None:
+    #     boundary_nodes = np.concatenate([boundary_nodes] + [self.load_zone_file_nodes(f) for f in boundary_filenames])
+    # if boundary_nodes.size > 0:
+    #     print("--> Boundary nodes")
+    #     print(boundary_nodes)
+
+    boundary_nodes = [] if boundary_nodes is None else list(boundary_nodes)
     if boundary_filenames is not None:
-        boundary_nodes = np.concatenate([boundary_nodes] + [self.load_zone_file_nodes(f) for f in boundary_filenames])
-    if boundary_nodes.size > 0:
+        for f in boundary_filenames:
+            boundary_nodes.extend(self.load_zone_file_nodes(f))
+    if boundary_nodes:
         print("--> Boundary nodes")
         print(boundary_nodes)
 
