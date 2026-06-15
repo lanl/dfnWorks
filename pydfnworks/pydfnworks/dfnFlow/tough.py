@@ -120,8 +120,8 @@ def tough_element_name(index: int) -> str:
     first = chr(ord("A") + group_index // (26**2))
     second = chr(ord("A") + (group_index // 26) % 26)
     third = chr(ord("A") + group_index % 26)
-    return f"{first}{second}{third}{local_index:02d}"
-
+    # return f"{first}{second}{third}{local_index:02d}"
+    return f"{first}{second}{third}{local_index:2d}"
 
 # ---------------------------------------------------------------------------
 # Geometry helper
