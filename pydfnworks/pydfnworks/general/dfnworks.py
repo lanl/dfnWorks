@@ -124,6 +124,8 @@ class DFNWORKS():
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
     from pydfnworks.dfnFlow.tough import lagrit_to_tough, convert_uge_to_tough, tough, load_zone_file_nodes
+    from pydfnworks.dfnFlow.parse_tough_output import parse_tough_output
+
 
     # dfnTrans
     import pydfnworks.dfnTrans
