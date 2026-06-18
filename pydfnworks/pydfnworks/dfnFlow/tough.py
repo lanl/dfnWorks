@@ -433,7 +433,8 @@ def tough(self):
     # cmd = 'time mpiexec -n ' + str(self.ncpu) + \
     #       ' ' + os.environ['TOUGH_EXE'] + self.local_dfnFlow_file
 
-    cmd = 'time ' + os.environ['TOUGH_EXE'] + ' ' + self.local_dfnFlow_file
+    # cmd = 'time ' + os.environ['TOUGH_EXE'] + ' ' + self.local_dfnFlow_file
+    cmd = 'time ' + os.environ['TOUGH_EXE'] + ' <' + self.local_dfnFlow_file + '>' + self.local_dfnFlow_file + '.out'
 
     self.print_log(f"--> Running: {cmd}")
     subprocess.call(cmd, shell=True)
