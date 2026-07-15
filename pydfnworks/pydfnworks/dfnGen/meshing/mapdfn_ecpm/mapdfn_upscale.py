@@ -112,7 +112,9 @@ def mapdfn_perm_iso(num_cells, cell_fracture_id, perm, aperture, porosity, cell_
         # print(f"local_perm**(porosity[cell_id] : {local_perm**(porosity[cell_id])}")
         # geo_mean_perm = (matrix_perm**(1-porosity[cell_id])) * ( local_perm**porosity[cell_id])
         # print(f"geo-mean: {geo_mean_perm:0.2e}")
-        k_iso[cell_id] = max(matrix_perm, ( 1 - porosity[cell_id] ) * matrix_perm  + porosity[cell_id] * local_perm)
+        # local_perm is already the volume-weighted fracture contribution (b/d)*k_f;
+        # do not re-weight it by porosity (that double-counts the b/d volume fraction).
+        k_iso[cell_id] = max(matrix_perm, ( 1 - porosity[cell_id] ) * matrix_perm  + local_perm)
         # k_iso[cell_id] = max(geo_mean_perm, local_perm)
         # k_iso[cell_id] = local_perm 
     return k_iso
@@ -288,9 +290,11 @@ def mapdfn_perm_aniso(num_frac,
 
             ########
 
-        k_aniso[icell][0] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_x)
-        k_aniso[icell][1] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_y)
-        k_aniso[icell][2] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + porosity[icell] * k_aniso_z)
+        # k_aniso_{x,y,z} are already the volume-weighted fracture contributions (b/d)*k_f;
+        # do not re-weight by porosity (that double-counts the b/d volume fraction).
+        k_aniso[icell][0] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + k_aniso_x)
+        k_aniso[icell][1] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + k_aniso_y)
+        k_aniso[icell][2] = max(matrix_perm, ( 1 - porosity[icell]) * matrix_perm + k_aniso_z)
 
     return k_aniso
 

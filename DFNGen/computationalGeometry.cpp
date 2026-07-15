@@ -1291,13 +1291,10 @@ bool checkCloseEdge(Poly &poly1, IntPoints &intPts, double shrinkLimit, Stats &p
         }
     }
     
-#ifdef DISABLESHORTENINGINT
-    
-    if (intPts.intersectionShortened == true) {
+    if (disableShorteningIntersections && intPts.intersectionShortened == true) {
         return 1;
     }
-    
-#endif
+
     return 0;
 }
 
