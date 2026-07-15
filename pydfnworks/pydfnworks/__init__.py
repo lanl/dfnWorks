@@ -48,9 +48,9 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
-__version__ = "2.10.1"
+__version__ = "2.11.0"
 
-__release_date__ = "30-06-2026"
+__release_date__ = "15-07-2026"
 
 from ._install_info import get_install_date
 __install_date__ = get_install_date()
