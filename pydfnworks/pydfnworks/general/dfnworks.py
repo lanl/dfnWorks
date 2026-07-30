@@ -131,10 +131,13 @@ class DFNWORKS():
 
     # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, dump_json_graph, load_json_graph, plot_graph, dump_fractures, add_fracture_source, add_fracture_target
-    from pydfnworks.dfnGraph.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
-    from pydfnworks.dfnGraph.graph_flow import run_graph_flow, compute_dQ
-    from pydfnworks.dfnGraph.graph_transport import run_graph_transport
+    from pydfnworks.dfnGraph.construction.create_graph import create_graph
+    from pydfnworks.dfnGraph.construction.source_target import add_fracture_source, add_fracture_target
+    from pydfnworks.dfnGraph.io.serialization import dump_json_graph, load_json_graph, plot_graph, dump_fractures
+    from pydfnworks.dfnGraph.algorithms.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
+    from pydfnworks.dfnGraph.flow.graph_flow import run_graph_flow
+    from pydfnworks.dfnGraph.flow.metrics import compute_dQ
+    from pydfnworks.dfnGraph.transport.graph_transport import run_graph_transport
 
     def __init__(self,
                  jobname=None,

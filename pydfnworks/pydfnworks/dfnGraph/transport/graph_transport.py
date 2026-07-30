@@ -12,9 +12,9 @@ import numpy as np
 import multiprocessing as mp
 
 # pydfnworks graph modules modules
-import pydfnworks.dfnGraph.particle_io as io
-from pydfnworks.dfnGraph.graph_tdrw import set_up_limited_matrix_diffusion
-from pydfnworks.dfnGraph.particle_class import Particle
+import pydfnworks.dfnGraph.transport.io as io
+from pydfnworks.dfnGraph.transport.tdrw import set_up_limited_matrix_diffusion
+from pydfnworks.dfnGraph.transport.particle import Particle
 from pydfnworks.general.logging import local_print_log
 
 
@@ -440,7 +440,7 @@ def run_graph_transport(self,
         self.print_log("--> Graph Particle Tracking Completed Successfully.")
     else:
         self.print_log(
-            f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit"
+            f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit",
             'warning')
 
     # Clean up and delete the global versions

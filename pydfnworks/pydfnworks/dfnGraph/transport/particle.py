@@ -15,7 +15,7 @@ class Particle():
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
 
-    from pydfnworks.dfnGraph.graph_tdrw import unlimited_matrix_diffusion, limited_matrix_diffusion
+    from pydfnworks.dfnGraph.transport.tdrw import unlimited_matrix_diffusion, limited_matrix_diffusion
 
     def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
                  matrix_diffusivity, fracture_spacing, trans_prob,
