@@ -69,13 +69,14 @@ author = u'EES-16, Subsurface Flow and Transport'
 # built documents.
 #
 
-release_path = "../../../pydfnworks/pydfnworks/release.py"
-release_globals = {}
-
-with open(release_path, "r") as f:
-    exec(f.read(), release_globals)
-
-release = release_globals.get("version", "unknown")
+import re
+init_path = "../../../pydfnworks/pydfnworks/__init__.py"
+try:
+    with open(init_path, "r") as f:
+        _match = re.search(r'^__version__ = ["\']([^"\']+)["\']', f.read(), re.M)
+    release = _match.group(1) if _match else "unknown"
+except FileNotFoundError:
+    release = "unknown"
 
 version = release + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 #decode = lambda x : x.decode(sys.stdout.encoding) if isinstance(x,bytes) else x
