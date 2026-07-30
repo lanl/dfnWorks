@@ -5,8 +5,11 @@ import scipy.sparse
 import h5py
 
 # pydfnworks modules
-from pydfnworks.dfnGraph.intersection_graph import create_intersection_graph
-from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area, add_weight
+from pydfnworks.dfnGraph.construction.intersection_graph import create_intersection_graph
+from pydfnworks.dfnGraph.attributes.perm_area import add_perm, add_area, add_diameter, fracture_diameter
+from pydfnworks.dfnGraph.attributes.conductance import add_weight
+from pydfnworks.dfnGraph.algorithms.deconstruct import deconstruct_intersection_graph
+from pydfnworks.dfnGraph.flow.metrics import dump_graph_flow_values
 from pydfnworks.general.logging import local_print_log, print_log
 
 def get_laplacian_sparse_mat(G,
@@ -53,9 +56,12 @@ def get_laplacian_sparse_mat(G,
     return D, A
 
 
-def prepare_graph_with_attributes(inflow, outflow, G=None):
+def prepare_graph_with_attributes(inflow, outflow, G=None,
+                                  conductance_model="karra", diameter=None,
+                                  simplify=False, normal_vectors=None,
+                                  **conductance_kwargs):
     """ Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
-    
+
     Parameters
     ----------
         inflow : string
@@ -65,6 +71,26 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
             name of file containing list of DFN fractures on outflow boundary
 
         G : NetworkX graph
+
+        conductance_model : string
+            edge conductance model. 'karra' (default) or 'doolaeghe'. See
+            pydfnworks.dfnGraph.attributes.conductance.
+
+        diameter : array-like
+            per-fracture diameter (e.g. from attributes.perm_area.fracture_diameter).
+            Required when conductance_model == 'doolaeghe'.
+
+        simplify : bool
+            if True, remove crossing (redundant) edges per fracture via the
+            Doolaeghe et al. (2021) deconstructed-graph method. Requires
+            normal_vectors.
+
+        normal_vectors : array-like
+            per-fracture unit normals (e.g. self.normal_vectors). Required when
+            simplify is True.
+
+        **conductance_kwargs
+            forwarded to the conductance model (e.g. B, mp_correction).
 
     Returns
     -------
@@ -78,13 +104,26 @@ def prepare_graph_with_attributes(inflow, outflow, G=None):
         # need to add aperture
         add_perm(Gtilde)
         add_area(Gtilde)
-        add_weight(Gtilde)
 
     else:
         Gtilde = G
         #add_perm(Gtilde)
         #add_area(Gtilde)
-        add_weight(Gtilde)
+
+    if conductance_model == "doolaeghe":
+        if diameter is None:
+            local_print_log(
+                "Error. conductance_model='doolaeghe' requires per-fracture "
+                "diameter (see attributes.perm_area.fracture_diameter).", 'error')
+        add_diameter(Gtilde, diameter)
+    add_weight(Gtilde, model=conductance_model, **conductance_kwargs)
+
+    if simplify:
+        if normal_vectors is None:
+            local_print_log(
+                "Error. simplify=True requires normal_vectors "
+                "(pass normal_vectors=self.normal_vectors).", 'error')
+        deconstruct_intersection_graph(Gtilde, normal_vectors)
 
     for v in nx.nodes(Gtilde):
         Gtilde.nodes[v]['inletflag'] = False
@@ -170,6 +209,12 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
 
     local_print_log("--> Solving Linear System for pressure at nodes")
     pressure = scipy.sparse.linalg.spsolve(L, b)
+    if not np.all(np.isfinite(pressure)):
+        local_print_log(
+            "Error. Graph flow solve produced non-finite pressures. The system "
+            "is singular -- typically isolated nodes or zero-conductance edges "
+            "(e.g. from an over-aggressive conductance/simplification choice).",
+            'error')
     local_print_log("--> Updating graph edges with flow solution")
 
     for v in nx.nodes(G):
@@ -220,126 +265,6 @@ def solve_flow_on_graph(G, pressure_in, pressure_out, fluid_viscosity, phi):
     return H
 
 
-def compute_dQ(self, G):
-    """ Computes the DFN fracture intensity (p32) and flow channeling density indicator from the graph flow solution on G
-
-    Parameters
-    -----------------
-        self : object
-            DFN Class
-
-        G : networkX graph 
-            Output of run_graph_flow
-
-    Returns
-    ---------------
-        p32 : float
-            Fracture intensity
-        
-        dQ : float flow channeling density indicator 
-
-    Notes
-    ------------
-        For definitions of p32 and dQ along with a discussion see " Hyman, Jeffrey D. "Flow channeling in fracture networks: characterizing the effect of density on preferential flow path formation." Water Resources Research 56.9 (2020): e2020WR027986. "
-
-    """
-    self.print_log(
-        "--> Computing fracture intensity (p32) and flow channeling density indicator (dQ)"
-    )
-
-    fracture_surface_area = 2*self.surface_area
-    domain_volume = self.domain['x'] * self.domain['y'] * self.domain['z']
-
-    Qf = np.zeros(self.num_frac)
-    ## convert to undirected
-    H = G.to_undirected()
-    ## walk through fractures
-    for curr_frac in range(1, self.num_frac + 1):
-        # print(f"\nstarting on fracture {curr_frac}")
-        # Gather nodes on current fracture
-        current_nodes = []
-        for u, d in H.nodes(data=True):
-            for f in d["frac"]:
-                if f == curr_frac:
-                    current_nodes.append(u)
-        # cycle through nodes on the fracture and get the outgoing / incoming
-        # volumetric flow rates
-        for u in current_nodes:
-            neighbors = H.neighbors(u)
-            for v in neighbors:
-                if v not in current_nodes:
-                    # outgoing vol flow rate
-                    Qf[curr_frac - 1] += abs(H[u][v]['vol_flow_rate'])
-                    for f in H.nodes[v]['frac']:
-                        if f != curr_frac and f != 's' and f != 't':
-                            # incoming vol flow rate
-                            Qf[f - 1] += abs(H[u][v]['vol_flow_rate'])
-    # Divide by 1/2 to remove up double counting
-    Qf *= 0.5
-    p32 = fracture_surface_area.sum() / domain_volume
-    top = sum(fracture_surface_area * Qf)**2
-    bottom = sum(fracture_surface_area * Qf**2)
-    dQ = (1.0 / domain_volume) * (top / bottom)
-    self.print_log(f"--> P32: {p32:0.2e} [1/m]")
-    self.print_log(f"--> dQ: {dQ:0.2e} [1/m]")
-    self.print_log(f"--> Active surface percentage {100*dQ/p32:0.2f}")
-    self.print_log(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
-    self.print_log(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
-    self.print_log("--> Complete \n")
-    return p32, dQ, Qf
-
-
-def dump_graph_flow_values(G,graph_flow_filename):
-    """
-    Writes graph flow information to an h5 file named graph_flow_name.
-
-    Parameters
-    --------------------
-        G : NetworkX graph
-            graph with flow variables attached
-
-        graph_flow_filename : string
-            name of output file
-
-    Returns
-    ---------------
-        None
-
-    Notes
-    ---------------
-        name of graph_flow_filename is set in run_graph_flow for primary workflow. Default is graph_flow.hdf5 
-    
-    """
-
-    local_print_log(f'\n--> Writting flow variables into h5df file: {graph_flow_filename}')
-    local_print_log('--> Starting')
-    num_edges = G.number_of_edges()
-    velocity = np.zeros(num_edges)
-    lengths = np.zeros_like(velocity)
-    vol_flow_rate = np.zeros_like(velocity)
-    area = np.zeros_like(velocity)
-    aperture = np.zeros_like(velocity)
-    volume = np.zeros_like(velocity)
-
-    for i, val in enumerate(G.edges(data=True)):
-        u, v, d = val
-        velocity[i] = d['velocity']
-        lengths[i] = d['length']
-        vol_flow_rate[i] = d['vol_flow_rate']
-        area[i] = d['area']
-        aperture[i] = d['b']
-        volume[i] = area[i] * aperture[i]
-
-    with h5py.File(graph_flow_filename, "w") as f5file:
-        h5dset = f5file.create_dataset('velocity', data=velocity)
-        h5dset = f5file.create_dataset('length', data=lengths)
-        h5dset = f5file.create_dataset('vol_flow_rate', data=vol_flow_rate)
-        h5dset = f5file.create_dataset('area', data=area)
-        h5dset = f5file.create_dataset('aperture', data=aperture)
-        h5dset = f5file.create_dataset('volume', data=volume)
-    local_print_log('--> Complete')
-
-
 def run_graph_flow(self,
                    inflow,
                    outflow,
@@ -348,8 +273,12 @@ def run_graph_flow(self,
                    fluid_viscosity=8.9e-4,
                    phi=1,
                    G=None,
-                   graph_flow_name = "graph_flow.hdf5"):
-    """ Solve for pressure driven steady state flow on a graph representation of the DFN. 
+                   graph_flow_name = "graph_flow.hdf5",
+                   conductance_model="karra",
+                   diameter_from="area",
+                   simplify=False,
+                   **conductance_kwargs):
+    """ Solve for pressure driven steady state flow on a graph representation of the DFN.
 
     Parameters
     ----------
@@ -374,11 +303,27 @@ def run_graph_flow(self,
         phi : double
             Fracture porosity, default is 1 [-]
 
-        G : Input Graph 
+        G : Input Graph
+
+        conductance_model : string
+            edge conductance model, 'karra' (default) or 'doolaeghe'. See
+            pydfnworks.dfnGraph.attributes.conductance.
+
+        diameter_from : string
+            fracture-diameter source for the 'doolaeghe' model: 'area' (default,
+            area-equivalent 2*sqrt(surface_area/pi)) or 'max_radius'
+            (2*self.radii[:, 2]).
+
+        simplify : bool
+            if True, remove crossing (redundant) edges per fracture via the
+            Doolaeghe et al. (2021) deconstructed-graph method.
+
+        **conductance_kwargs
+            forwarded to the conductance model (e.g. B, mp_correction='additive').
 
     Returns
     -------
-        Gtilde : NetworkX graph 
+        Gtilde : NetworkX graph
             Gtilde is a directed acyclic graph with vertex pressures, fluxes, velocities, volumetric flow rates, and travel times
 
     """
@@ -389,14 +334,32 @@ def run_graph_flow(self,
     self.print_log(f"--> Outflow Pressure: {pressure_out} [Pa]")
     self.print_log(f"--> Fluid viscosity: {fluid_viscosity} [Pa*s]")
     self.print_log(f"--> Fracture Porosity: {phi} [-]")
+    self.print_log(f"--> Conductance model: {conductance_model}")
 
     if G == None:
-        self.print_log("\n--> No Graph provided, building one") 
+        self.print_log("\n--> No Graph provided, building one")
         G = self.create_graph("intersection", inflow, outflow)
     else:
-         self.print_log("\n--> Graph provided")        
+         self.print_log("\n--> Graph provided")
 
-    Gtilde = prepare_graph_with_attributes(inflow, outflow, G)
+    diameter = None
+    if conductance_model == "doolaeghe":
+        radii = self.radii[:, 2] if getattr(self, "radii", None) is not None else None
+        surface_area = getattr(self, "surface_area", None)
+        if diameter_from == "area" and surface_area is None and radii is not None:
+            self.print_log(
+                "--> Warning: surface_area unavailable; falling back to "
+                "diameter_from='max_radius'.", 'warning')
+            diameter_from = "max_radius"
+        diameter = fracture_diameter(surface_area=surface_area, radii=radii,
+                                     method=diameter_from)
+    normals = getattr(self, "normal_vectors", None)
+    Gtilde = prepare_graph_with_attributes(inflow, outflow, G,
+                                           conductance_model=conductance_model,
+                                           diameter=diameter,
+                                           simplify=simplify,
+                                           normal_vectors=normals,
+                                           **conductance_kwargs)
     Gtilde = solve_flow_on_graph(Gtilde, pressure_in, pressure_out,
                                  fluid_viscosity, phi)
 
