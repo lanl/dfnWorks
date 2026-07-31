@@ -393,7 +393,11 @@ def run_graph_transport(self,
         inputs = []
 
         tic = timeit.default_timer()
-        pool = mp.Pool(min(self.ncpu, nparticles))
+        # Particle tracking is Python-compute-bound, so real processes are
+        # needed. Use an explicit fork context: the previous global
+        # mp.set_start_method('fork') (in run_meshing) was removed, and the
+        # default 'spawn' on macOS would re-import unguarded driver scripts.
+        pool = mp.get_context("fork").Pool(min(self.ncpu, nparticles))
 
         particles = []
 

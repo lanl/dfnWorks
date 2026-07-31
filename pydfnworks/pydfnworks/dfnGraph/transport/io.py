@@ -127,7 +127,9 @@ def dump_trajectories(particles, num_cpu, single_file=True):
         if not os.path.isdir('trajectories'):
             os.mkdir('trajectories')
         tic = timeit.default_timer()
-        pool = mp.Pool(num_cpu)
+        # explicit fork context: see graph_transport.py -- the global
+        # set_start_method('fork') side effect was removed from run_meshing
+        pool = mp.get_context("fork").Pool(num_cpu)
         particles = pool.map(dump_trajectory, particles)
         pool.close()
         pool.join()
