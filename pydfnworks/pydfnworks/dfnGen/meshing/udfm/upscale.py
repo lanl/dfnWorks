@@ -197,10 +197,12 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
 
         if self.flow_solver == "FEHM":
             with open("perm_fehm.dat", "a") as f:
+                # kx ky kz from the tensor diagonal (was 3 copies of the
+                # isotropic maximum, which conducts across the fracture plane)
                 f.write(
                     str(i) + " " + str(i) + " " + "1" + " " +
-                    str(perm_var[i - 1]) + " " + str(perm_var[i - 1]) + " " +
-                    str(perm_var[i - 1]) + "\n")
+                    str(permX[i - 1]) + " " + str(permY[i - 1]) + " " +
+                    str(permZ[i - 1]) + "\n")
             with open("rock_fehm.dat", "a") as g:
                 g.write(
                     str(i) + " " + str(i) + " " + "1" + " " + "2165." + " " +
