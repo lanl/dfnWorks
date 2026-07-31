@@ -131,10 +131,15 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
                 perm_tensor += (phi * (b)**2 * Omega)
             perm_tensor *= 1. / 12
 
-            # Calculate eigenvalues
-            permX[i - 1] = np.linalg.eigvals(perm_tensor)[0]
-            permY[i - 1] = np.linalg.eigvals(perm_tensor)[1]
-            permZ[i - 1] = np.linalg.eigvals(perm_tensor)[2]
+            # Axis components of the permeability tensor. The diagonal equals
+            # the principal components projected onto the coordinate axes
+            # (sum_j lambda_j (v_j . e_i)^2): exact for fractures orthogonal to
+            # a coordinate axis (Sweeney et al. 2020, Fig. 1) and the natural
+            # projection otherwise. Note np.linalg.eigvals returns eigenvalues
+            # in arbitrary order, so it must not be used for X/Y/Z mapping.
+            permX[i - 1] = perm_tensor[0][0]
+            permY[i - 1] = perm_tensor[1][1]
+            permZ[i - 1] = perm_tensor[2][2]
 
             # Arithmetic average of matrix perm
             permX[i - 1] += (1 - phi_sum) * mat_perm
@@ -150,21 +155,23 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
 
             # See Sweeney et al. 2019 Computational Geoscience
             for j in range(len(f_dict[i])):
+                # track the angle closest to 45 degrees (largest staircase
+                # error). Store the distance-to-45, not the angle itself.
                 n1_temp = self.normal_vectors[f_dict[i][j][0] - 1][0]
-                theta1_t = m.degrees(m.acos(n1_temp)) % 90
+                theta1_t = m.degrees(m.acos(min(1.0, max(-1.0, n1_temp)))) % 90
                 if abs(theta1_t - 45) <= min_n1:
                     theta1 = theta1_t
-                    min_n1 = theta1_t
+                    min_n1 = abs(theta1_t - 45)
                 n2_temp = self.normal_vectors[f_dict[i][j][0] - 1][1]
-                theta2_t = m.degrees(m.acos(n2_temp)) % 90
+                theta2_t = m.degrees(m.acos(min(1.0, max(-1.0, n2_temp)))) % 90
                 if abs(theta2_t - 45) <= min_n2:
                     theta2 = theta2_t
-                    min_n2 = theta2_t
+                    min_n2 = abs(theta2_t - 45)
                 n3_temp = self.normal_vectors[f_dict[i][j][0] - 1][2]
-                theta3_t = m.degrees(m.acos(n3_temp)) % 90
+                theta3_t = m.degrees(m.acos(min(1.0, max(-1.0, n3_temp)))) % 90
                 if abs(theta3_t - 45) <= min_n3:
                     theta3 = theta3_t
-                    min_n3 = theta3_t
+                    min_n3 = abs(theta3_t - 45)
 
             sl = (2 * 2**(1. / 2) - 1) / -45.0
             b = 2 * 2**(1. / 2)
@@ -217,14 +224,15 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=perm_var)
 
-        #dataset_name = 'Perm_X'
-        #h5dset = h5file.create_dataset(dataset_name, data = permX)
-
-        #dataset_name = 'Perm_Y'
-        #h5set = h5file.create_dataset(dataset_name, data = permY)
-
-        #dataset_name = 'Perm_Z'
-        #h5set = h5file.create_dataset(dataset_name, data = permZ)
+        # Anisotropic components (Sweeney et al. 2020, Eq. 3 / Fig. 1). For
+        # networks where fractures are orthogonal to the coordinate axes these
+        # should be preferred over the isotropic maximum, which spuriously
+        # assigns the in-plane permeability to the fracture-normal direction.
+        # Use in PFLOTRAN with PERMEABILITY / ANISOTROPIC / DATASET perm and
+        # datasets permX/permY/permZ pointing at these names.
+        h5dset = h5file.create_dataset('PermeabilityX', data=permX)
+        h5dset = h5file.create_dataset('PermeabilityY', data=permY)
+        h5dset = h5file.create_dataset('PermeabilityZ', data=permZ)
         h5file.close()
 
         h5file = h5py.File(poros_filename, mode='w')
