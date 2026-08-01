@@ -1073,8 +1073,11 @@ def build_dict(self, num_poly, delete_files):
     """
     f_dict = {}
     for i in range(1, num_poly + 1):
-        imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 0]
-        area_sums = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 1]
+        # reshape so a single-row table (fracture intersecting one control
+        # volume) still indexes as 2D; genfromtxt returns 1D in that case
+        data = np.genfromtxt(f"area_sum{i}.table", skip_header=4).reshape(-1, 2)
+        imts = data[:, 0]
+        area_sums = data[:, 1]
         for j in range(len(imts)):
             if int(float(imts[j])) != (num_poly + 1) and float(
                     area_sums[j]) > 0:
