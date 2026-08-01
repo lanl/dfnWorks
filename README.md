@@ -82,7 +82,14 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 
 pydfnworks uses Python 3. We recommend using 
 the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``mplstereonet``, ``fpdf``, and ``re``.
+pydfnworks requires the following python modules: ``numpy``, ``networkx``,
+``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``,
+``pyvtk``, and ``mpmath``. They are listed in ``pydfnworks/requirements.txt`` and
+are installed automatically with pydfnworks, or can be installed directly with
+
+```bash
+pip install -r pydfnworks/requirements.txt
+```
 
 
 ### LaGriT
