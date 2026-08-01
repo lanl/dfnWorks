@@ -19,8 +19,11 @@ class Particle():
 
     def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
                  matrix_diffusivity, fracture_spacing, trans_prob,
-                 transfer_time, cp_flag, control_planes, direction):
+                 transfer_time, cp_flag, control_planes, direction, seed=0):
         self.particle_number = particle_number
+        # every particle gets its own independent random stream, derived from
+        # the DFN seed so the whole ensemble is reproducible (see track())
+        self.seed = seed
         self.ip = ip
         self.curr_node = ip
         self.curr_velocity = 0
@@ -264,7 +267,14 @@ class Particle():
         -------
             None
         """
-        np.random.seed(self.particle_number)
+        # Each particle needs its own seed: particles are tracked in forked
+        # worker processes, which would otherwise inherit and replay an
+        # identical random stream. Mixing the DFN seed with the particle number
+        # through a SeedSequence keeps the per-particle streams independent
+        # while making the ensemble reproducible from DFN.params['seed'].
+        particle_seed = np.random.SeedSequence(
+            [int(self.seed), int(self.particle_number)]).generate_state(1)[0]
+        np.random.seed(particle_seed)
         self.initalize(G)
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
