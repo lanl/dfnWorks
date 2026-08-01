@@ -52,7 +52,7 @@ def track_particle(data, verbose=False):
                         data["matrix_diffusivity"], data["fracture_spacing"],
                         data["trans_prob"], data["transfer_time"],
                         data["cp_flag"], data["control_planes"],
-                        data["direction"])
+                        data["direction"], data["seed"])
 
     # # get current process information
     global nbrs_dict
@@ -343,6 +343,13 @@ def run_graph_transport(self,
     self.print_log("--> Getting initial Conditions")
     ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
 
+    # DFN seed: each particle derives its own independent stream from this, so
+    # the ensemble is reproducible and controlled by DFN.params['seed'].
+    seed = getattr(self, "seed", None)
+    if seed is None:
+        seed = self.params['seed']['value'] if hasattr(self, "params") else 0
+    self.print_log(f"--> Particle random seeds derived from seed {seed}")
+
     self.print_log(f"--> Starting particle tracking for {nparticles} particles")
 
     if dump_traj:
@@ -370,7 +377,7 @@ def run_graph_transport(self,
             particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
                                 matrix_diffusivity, fracture_spacing,
                                 trans_prob, transfer_time, control_plane_flag,
-                                control_planes, direction)
+                                control_planes, direction, seed)
             particle.track(G, nbrs_dict)
             particles.append(particle)
 
@@ -417,6 +424,7 @@ def run_graph_transport(self,
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
+            data["seed"] = seed
             pool.apply_async(track_particle,
                              args=(data, ),
                              callback=gather_output)
