@@ -65,13 +65,13 @@ def print_log(self, statement, level = 'info'):
     # print("here")
     # logging.basicConfig(level=logging.DEBUG)
     if level == 'info':
-        print(statement)
+        print(statement, flush=True)
         logging.info(statement)
     elif level == 'debug':
-        print(statement)
+        print(statement, flush=True)
         logging.debug(statement)
     elif level == 'warning':
-        print(statement)
+        print(statement, flush=True)
         logging.warning(statement)
     elif level == 'error':
         logging.error(statement)
@@ -83,8 +83,8 @@ def print_log(self, statement, level = 'info'):
         sys.exit(1)
     else:
         tmp_statement = f"Unknown logging level requested: {level}. Using warning"
-        print(tmp_statement)
-        print(statement)
+        print(tmp_statement, flush=True)
+        print(statement, flush=True)
         logging.warning(tmp_statement)
         logging.warning(statement)
 
@@ -110,13 +110,13 @@ def local_print_log(statement, level = 'info'):
     '''
 
     if level == 'info':
-        print(statement)
+        print(statement, flush=True)
         logging.info(statement)
     elif level == 'debug':
-        print(statement)
+        print(statement, flush=True)
         logging.debug(statement)
     elif level == 'warning':
-        print(statement)
+        print(statement, flush=True)
         logging.warning(statement)
     elif level == 'error':
         logging.error(statement)
@@ -128,7 +128,7 @@ def local_print_log(statement, level = 'info'):
         sys.exit(1)
     else:
         tmp_statement = f"Unknown logging level requested: {level}. Using warning"
-        print(tmp_statement)
-        print(statement)
+        print(tmp_statement, flush=True)
+        print(statement, flush=True)
         logging.warning(tmp_statement)
         logging.warning(statement)

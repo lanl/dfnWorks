@@ -886,6 +886,11 @@ def _run_fracture_jobs(self, job, num_poly, phase_name):
         f"--> {phase_name}: running {num_poly} fracture jobs on "
         f"{num_workers} workers")
     failed = []
+    done = 0
+    # report every ~5%, but at least every job for small networks, so a long
+    # run never sits silent between the start and complete lines
+    stride = max(1, num_poly // 20)
+    start_time = time.time()
     with ThreadPoolExecutor(max_workers=num_workers) as pool:
         futures = {pool.submit(job, f): f for f in frac_ids}
         for future in as_completed(futures):
@@ -897,11 +902,22 @@ def _run_fracture_jobs(self, job, num_poly, phase_name):
                 self.print_log(
                     f"--> Error in {phase_name} job for fracture {f}:\n"
                     f"{traceback.format_exc()}", 'warning')
+            done += 1
+            if done % stride == 0 or done == num_poly:
+                elapsed = time.time() - start_time
+                rate = done / elapsed if elapsed > 0 else 0
+                eta = (num_poly - done) / rate if rate > 0 else 0
+                self.print_log(
+                    f"--> {phase_name}: {done}/{num_poly} "
+                    f"({100.0 * done / num_poly:.0f}%) "
+                    f"elapsed {elapsed:.0f}s, eta {eta:.0f}s")
     if failed:
         self.print_log(
             f"Error. {phase_name} failed for {len(failed)} fracture(s): "
             f"{sorted(failed)}. See warnings above for tracebacks.", 'error')
-    self.print_log(f"--> {phase_name}: complete")
+    self.print_log(
+        f"--> {phase_name}: complete ({num_poly} jobs in "
+        f"{time.time() - start_time:.0f}s)")
 
 
 def driver_interpolate_parallel(self, num_poly):
