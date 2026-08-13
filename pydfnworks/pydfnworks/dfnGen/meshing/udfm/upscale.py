@@ -16,7 +16,8 @@ import math as m
 import glob
 import pickle
 
-def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
+def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../',
+            matrix_on=True):
     """ Generate permeabilities and porosities based on output of map2continuum.
 
     Parameters
@@ -29,6 +30,15 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
         
         mat_por: float
             Matrix porosity
+
+        matrix_on : bool
+            If True (default) every control volume is active and matrix cells
+            carry mat_perm. If False, matrix cells are written to
+            materials.h5 with material id 0, which PFLOTRAN treats as
+            inactive, giving a fracture-only continuum (what mapdfn_ecpm
+            does by default). Use when mat_perm is comparable to the
+            network's effective permeability, or when benchmarking against a
+            DFN, which has no matrix at all.
 
     Returns
     -------
@@ -261,6 +271,19 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
     tag = tag.astype("uint8")
     # Add 1 since PFLOTRAN doesn't like mat id = 0
     tag += 1
+    if not matrix_on:
+        # Material id 0 makes PFLOTRAN drop the cell, leaving a
+        # fracture-only continuum. mapdfn_ecpm does this by default. It
+        # matters when mat_perm is comparable to the network's own effective
+        # permeability: a pervasive background then does not merely add its
+        # own flow, it bridges gaps between fracture clusters that would
+        # otherwise be dead ends. Requires STRATA FILE materials.h5 in the
+        # deck; fracture cells keep id 2, so decks that already declare
+        # ID 1 and ID 2 continue to work unchanged.
+        tag[perm_var <= mat_perm] = 0
+        self.print_log(
+            f"--> matrix_on = False: {(tag == 0).sum()} of {num_nodes} "
+            "control volumes tagged inactive (material id 0)")
     np.savetxt("tag_frac.dat", tag, '%d', delimiter=",")
     if self.flow_solver == "PFLOTRAN":
         # Save as h5
