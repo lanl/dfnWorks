@@ -128,8 +128,11 @@ def convert(x, source, target):
         case ("permeability", "aperture"):
             return np.sqrt(12.0 * x)
         case ("permeability", "transmissivity"):
+            # T = K b = (k rho g / mu) b.  Since k b = (b^2/12) b = b^3/12, this
+            # agrees with the aperture branch above; the extra /12 that used to
+            # be here made T a factor of 12 too small.
             b = np.sqrt(12.0 * x)
-            return (b * x * rho * g) / (12 * mu)
+            return (b * x * rho * g) / mu
         case ("transmissivity", "aperture"):
             return ((x * 12 * mu) / (rho * g))**(1 / 3)
         case ("transmissivity", "permeability"):

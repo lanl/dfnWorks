@@ -147,8 +147,11 @@ def convert(x, source, target):
         return b
 
     if source == "permeability" and target == "transmissivity":
+        # T = K b = (k rho g / mu) b.  Since k b = (b^2/12) b = b^3/12, this
+        # agrees with the aperture branch above; the extra /12 that used to be
+        # here made T a factor of 12 too small.
         b = np.sqrt((12.0 * x))
-        T = (b * x * rho * g) / (12 * mu)
+        T = (b * x * rho * g) / mu
         return T
 
     if source == "transmissivity" and target == "aperture":
