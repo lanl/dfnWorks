@@ -141,11 +141,6 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
             permY[i - 1] = perm_tensor[1][1]
             permZ[i - 1] = perm_tensor[2][2]
 
-            # Arithmetic average of matrix perm
-            permX[i - 1] += (1 - phi_sum) * mat_perm
-            permY[i - 1] += (1 - phi_sum) * mat_perm
-            permZ[i - 1] += (1 - phi_sum) * mat_perm
-
             # Correction factor
 
             # Actual value doesn't matter here, just needs to be high
@@ -180,9 +175,22 @@ def upscale(self, mat_perm, mat_por, tag_mesh=True, path='../'):
             cf_y = sl * abs(theta2 - 45) + b
             cf_z = sl * abs(theta3 - 45) + b
 
+            # The correction factor compensates for the staircase
+            # discretization of the FRACTURE, so it scales the fracture tensor
+            # only. The matrix background is added afterwards: intact rock is
+            # not staircased and must not be multiplied by cf. Applying cf to
+            # the sum (as this did) inflated the background by up to
+            # 2*sqrt(2) in every cell touching a fracture -- worst in cells
+            # where the fracture is near-perpendicular to an axis and the
+            # background is all that direction has.
             permX[i - 1] *= cf_x
             permY[i - 1] *= cf_y
             permZ[i - 1] *= cf_z
+
+            # Arithmetic average of matrix perm
+            permX[i - 1] += (1 - phi_sum) * mat_perm
+            permY[i - 1] += (1 - phi_sum) * mat_perm
+            permZ[i - 1] += (1 - phi_sum) * mat_perm
 
             perm_var[i - 1] = max(permX[i - 1], permY[i - 1], permZ[i - 1])
         else:
