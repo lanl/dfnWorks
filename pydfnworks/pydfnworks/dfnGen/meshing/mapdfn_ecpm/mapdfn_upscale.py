@@ -256,22 +256,28 @@ def mapdfn_perm_aniso(num_frac,
                 min_n3 = 1e6
 
                 for ifrac in cell_fracture_id[icell]:
-                    # normal = ellipses[ifrac]['normal']
-                    n1_temp = normal[0]
+                    # This used to read the `normal` left over from the
+                    # fracture loop above, so every cell got one constant
+                    # correction factor taken from the last fracture in the
+                    # network. Read this cell's fractures instead.
+                    cell_normal = normal_vectors[ifrac]
+                    # min_nX tracks the distance to 45 degrees (the worst
+                    # staircase case), not the angle itself.
+                    n1_temp = min(1.0, max(-1.0, cell_normal[0]))
                     theta1_t = m.degrees(m.acos(n1_temp)) % 90
                     if abs(theta1_t - 45) <= min_n1:
                         theta1 = theta1_t
-                        min_n1 = theta1_t
-                    n2_temp = normal[1]
+                        min_n1 = abs(theta1_t - 45)
+                    n2_temp = min(1.0, max(-1.0, cell_normal[1]))
                     theta2_t = m.degrees(m.acos(n2_temp)) % 90
                     if abs(theta2_t - 45) <= min_n2:
                         theta2 = theta2_t
-                        min_n2 = theta2_t
-                    n3_temp = normal[2]
+                        min_n2 = abs(theta2_t - 45)
+                    n3_temp = min(1.0, max(-1.0, cell_normal[2]))
                     theta3_t = m.degrees(m.acos(n3_temp)) % 90
                     if abs(theta3_t - 45) <= min_n3:
                         theta3 = theta3_t
-                        min_n3 = theta3_t
+                        min_n3 = abs(theta3_t - 45)
 
                 sl = (2 * 2**(1. / 2) - 1) / -45.0
                 b = 2 * 2**(1. / 2)
