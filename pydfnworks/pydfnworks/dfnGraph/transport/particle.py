@@ -15,11 +15,16 @@ class Particle():
         * frac_seq : Dictionary, contains information about fractures through which the particle went
     '''
 
-    from pydfnworks.dfnGraph.transport.tdrw import unlimited_matrix_diffusion, limited_matrix_diffusion
+    from pydfnworks.dfnGraph.transport.tdrw.infinite import unlimited_matrix_diffusion
+    from pydfnworks.dfnGraph.transport.tdrw.roubinet import limited_matrix_diffusion_roubinet
+    from pydfnworks.dfnGraph.transport.tdrw.dentz import limited_matrix_diffusion_dentz
+    from pydfnworks.dfnGraph.transport.tdrw.annulus import limited_matrix_diffusion_annulus
+    from pydfnworks.dfnGraph.transport.tdrw.from_file import limited_matrix_diffusion_from_file
 
-    def __init__(self, particle_number, ip, tdrw_flag, matrix_porosity,
-                 matrix_diffusivity, fracture_spacing, trans_prob,
-                 transfer_time, cp_flag, control_planes, direction, seed=0):
+    def __init__(self, particle_number, ip, tdrw_flag, tdrw_model,
+                 matrix_porosity, matrix_diffusivity, fracture_spacing,
+                 trans_prob, transfer_time, release_eps, cp_flag,
+                 control_planes, direction, seed=0):
         self.particle_number = particle_number
         # every particle gets its own independent random stream, derived from
         # the DFN seed so the whole ensemble is reproducible (see track())
@@ -42,8 +47,11 @@ class Particle():
         self.matrix_porosity = matrix_porosity
         self.matrix_diffusivity = matrix_diffusivity
         self.fracture_spacing = fracture_spacing
+        self.tdrw_model = tdrw_model
+        self.tau_D = None
         self.trans_prob = trans_prob
         self.transfer_time = transfer_time
+        self.release_eps = release_eps
         self.cp_flag = cp_flag
         self.control_planes = control_planes
         self.cp_index = 0
@@ -54,8 +62,15 @@ class Particle():
         self.cp_adv_time = []
         self.cp_tdrw_time = []
         self.cp_pathline_length = []
-        # self.cp_x1 = []
-        # self.cp_x2 = []
+
+        if tdrw_model in ("dentz", "annulus", "from_file"):
+            # Timescale rescaling dimensionless sampled return times to
+            # physical times: tau_D = B^2 / D with matrix half-width
+            # B = fracture_spacing / 2 (half the spacing between adjacent
+            # fractures, matching the roubinet model's convention). For the
+            # annulus model B is the outer (reflecting) radius r1.
+            half_width = self.fracture_spacing / 2
+            self.tau_D = half_width**2 / self.matrix_diffusivity
 
  
         self.velocity = []
@@ -200,7 +215,7 @@ class Particle():
                 self.cp_tdrw_time.append(tau)
 
             self.cp_index += 1
-            # if we're crossed all the control planes, turn off cp flag for this particle
+            # if we've crossed all the control planes, turn off cp flag for this particle
             if self.cp_index >= len(self.control_planes):
                 self.cp_flag = False
                 break
@@ -279,15 +294,24 @@ class Particle():
         while not self.exit_flag:
             self.advect(G, nbrs_dict)
             if self.exit_flag:
-                # self.update()
                 self.cleanup_frac_seq()
                 break
 
             if self.tdrw_flag:
-                if self.fracture_spacing is None:
+                if self.tdrw_model == "infinite":
                     self.unlimited_matrix_diffusion(G)
+                elif self.tdrw_model == "roubinet":
+                    self.limited_matrix_diffusion_roubinet(G)
+                elif self.tdrw_model == "dentz":
+                    self.limited_matrix_diffusion_dentz(G)
+                elif self.tdrw_model == "annulus":
+                    self.limited_matrix_diffusion_annulus(G)
+                elif self.tdrw_model == "from_file":
+                    self.limited_matrix_diffusion_from_file(G)
                 else:
-                    self.limited_matrix_diffusion(G)
+                    local_print_log(
+                        f"Error: Unknown TDRW model '{self.tdrw_model}' during tracking.",
+                        "error")
 
             if self.cp_flag:
                 self.cross_control_plane(G)

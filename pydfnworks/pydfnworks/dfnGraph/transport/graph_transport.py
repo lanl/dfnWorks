@@ -13,7 +13,7 @@ import multiprocessing as mp
 
 # pydfnworks graph modules modules
 import pydfnworks.dfnGraph.transport.io as io
-from pydfnworks.dfnGraph.transport.tdrw import set_up_limited_matrix_diffusion
+from pydfnworks.dfnGraph.transport.tdrw import check_tdrw_params, set_up_limited_matrix_diffusion, FINITE_MODELS
 from pydfnworks.dfnGraph.transport.particle import Particle
 from pydfnworks.general.logging import local_print_log
 
@@ -48,11 +48,13 @@ def track_particle(data, verbose=False):
         )
 
     particle = Particle(data["particle_number"], data["initial_position"],
-                        data["tdrw_flag"], data["matrix_porosity"],
-                        data["matrix_diffusivity"], data["fracture_spacing"],
-                        data["trans_prob"], data["transfer_time"],
-                        data["cp_flag"], data["control_planes"],
-                        data["direction"], data["seed"])
+                        data["tdrw_flag"], data["tdrw_model"],
+                        data["matrix_porosity"], data["matrix_diffusivity"],
+                        data["fracture_spacing"], data["trans_prob"],
+                        data["transfer_time"], data["release_eps"],
+                        data["cp_flag"],
+                        data["control_planes"], data["direction"],
+                        data["seed"])
 
     # # get current process information
     global nbrs_dict
@@ -183,42 +185,6 @@ def create_neighbor_list(G):
     return nbrs_dict
 
 
-def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing):
-    """ Check that the provided tdrw values are physiscal
-
-
-    Parameters
-    ----------
-        G: NetworkX graph 
-            Directed Graph obtained from output of graph_flow
-
-    Returns
-    -------
-        dict : nested dictionary.
-
-    Notes
-    -----
-        dict[n]['child'] is a list of vertices downstream to vertex n
-        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
-    
-    """
-
-    if matrix_porosity is None:
-        error = f"Error. Requested TDRW but no value for matrix_porosity was provided\n"
-        local_print_log(error, 'error')
-    elif matrix_porosity < 0 or matrix_porosity > 1:
-        error = f"Error. Requested TDRW but value for matrix_porosity provided is outside of [0,1]. Value provided {matrix_porosity}\n"
-        local_print_log(error, 'error')
-    if matrix_diffusivity is None:
-        error = f"Error. Requested TDRW but no value for matrix_diffusivity was provided\n"
-        local_print_log(error, 'error')
-
-    if fracture_spacing is not None:
-        if fracture_spacing <= 0:
-            error = f"Error. Non-positive value for fracture_spacing was provided.\nValue {fracture_spacing}\nExiting program"
-            local_print_log(error, 'error')
-
-
 def check_control_planes(control_planes, direction):
     control_plane_flag = False
     if not type(control_planes) is list:
@@ -249,9 +215,11 @@ def run_graph_transport(self,
                         initial_positions="uniform",
                         dump_traj=False,
                         tdrw_flag=False,
+                        tdrw_model='infinite',
                         matrix_porosity=None,
                         matrix_diffusivity=None,
                         fracture_spacing=None,
+                        tdrw_filename=None,
                         control_planes=None,
                         direction=None,
                         cp_filename='control_planes'):
@@ -283,14 +251,25 @@ def run_graph_transport(self,
         tdrw_flag : Bool
             if False, matrix_porosity and matrix_diffusivity are ignored
 
+        tdrw_model : string
+            Matrix diffusion model. Options: 'infinite' (default, unlimited
+            block size), 'roubinet', 'dentz', 'annulus' (finite block size),
+            or 'from_file' (return-time CDF read from tdrw_filename).
+
         matrix_porosity: float
             Matrix Porosity used in TDRW
 
         matrix_diffusivity: float
             Matrix Diffusivity used in TDRW (SI units m^2/s)
 
-        fracture_spaceing : float
-            finite block size for limited matrix diffusion
+        fracture_spacing : float
+            distance between adjacent parallel fractures [m]; the matrix
+            block half-width is fracture_spacing/2. Required for all finite
+            tdrw models
+
+        tdrw_filename : string
+            path to a two-column ASCII file (return times, CDF). Required
+            when tdrw_model is 'from_file'
 
         control_planes : list of floats
             list of control plane locations to dump travel times. Only in primary direction of flow. 
@@ -323,11 +302,15 @@ def run_graph_transport(self,
     
     # Check parameters for TDRW
     if tdrw_flag:
+        # Backward compatibility: older callers requested the limited block
+        # size model by providing fracture_spacing without naming a model.
+        if tdrw_model == 'infinite' and fracture_spacing is not None:
+            self.print_log(
+                "--> fracture_spacing provided without a finite tdrw_model. Using 'dentz' (default finite matrix diffusion model; pass tdrw_model='roubinet' for the pre-2.12 limited model).",
+                'warning')
+            tdrw_model = 'dentz'
         check_tdrw_params(matrix_porosity, matrix_diffusivity,
-                          fracture_spacing)
-        self.print_log(
-            f"--> Running particle transport with TDRW.\n--> Matrix porosity {matrix_porosity}.\n--> Matrix Diffusivity {matrix_diffusivity} m^2/s"
-        )
+                          fracture_spacing, tdrw_model, tdrw_filename)
 
     if control_planes is None:
         control_plane_flag = False
@@ -355,18 +338,20 @@ def run_graph_transport(self,
     if dump_traj:
         self.print_log(f"--> Writing trajectory information to file")
 
-    if fracture_spacing is not None:
+    if tdrw_flag and tdrw_model in FINITE_MODELS:
         self.print_log(f"--> Using limited matrix block size for TDRW")
         self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-        trans_prob = set_up_limited_matrix_diffusion(G, fracture_spacing,
-                                                     matrix_porosity,
-                                                     matrix_diffusivity)
-        # This doesn't change for the system.
-        # Transfer time diffusing between fracture blocks
-        transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
+        transfer_time, trans_prob, release_eps = set_up_limited_matrix_diffusion(
+            G,
+            tdrw_model,
+            fracture_spacing,
+            matrix_porosity,
+            matrix_diffusivity,
+            tdrw_filename=tdrw_filename)
     else:
         trans_prob = None
         transfer_time = None
+        release_eps = None
     ## main loop
     if self.ncpu == 1:
         tic = timeit.default_timer()
@@ -374,10 +359,12 @@ def run_graph_transport(self,
         for i in range(nparticles):
             if i % 1000 == 0:
                 self.print_log(f"--> Starting particle {i} out of {nparticles}")
-            particle = Particle(i, ip[i], tdrw_flag, matrix_porosity,
-                                matrix_diffusivity, fracture_spacing,
-                                trans_prob, transfer_time, control_plane_flag,
-                                control_planes, direction, seed)
+            particle = Particle(i, ip[i], tdrw_flag, tdrw_model,
+                                matrix_porosity, matrix_diffusivity,
+                                fracture_spacing, trans_prob, transfer_time,
+                                release_eps,
+                                control_plane_flag, control_planes, direction,
+                                seed)
             particle.track(G, nbrs_dict)
             particles.append(particle)
 
@@ -407,20 +394,32 @@ def run_graph_transport(self,
         pool = mp.get_context("fork").Pool(min(self.ncpu, nparticles))
 
         particles = []
+        # log progress every 2.5% of completed particles
+        log_interval = max(1, int(nparticles * 0.025))
+        progress = {"completed": 0, "next_log": log_interval}
 
         def gather_output(output):
             particles.append(output)
+            progress["completed"] += 1
+            if progress["completed"] >= progress["next_log"]:
+                percentage = 100 * progress["completed"] / nparticles
+                self.print_log(
+                    f"--> Completed {progress['completed']} out of {nparticles} particles\t({percentage:0.2f}%)"
+                )
+                progress["next_log"] += log_interval
 
         for i in range(nparticles):
             data = {}
             data["particle_number"] = i
             data["initial_position"] = ip[i]
             data["tdrw_flag"] = tdrw_flag
+            data["tdrw_model"] = tdrw_model
             data["matrix_porosity"] = matrix_porosity
             data["matrix_diffusivity"] = matrix_diffusivity
             data["fracture_spacing"] = fracture_spacing
             data["transfer_time"] = transfer_time
             data["trans_prob"] = trans_prob
+            data["release_eps"] = release_eps
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction
