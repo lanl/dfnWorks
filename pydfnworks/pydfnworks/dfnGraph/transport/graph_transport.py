@@ -305,7 +305,7 @@ def run_graph_transport(self,
         # size model by providing fracture_spacing without naming a model.
         if tdrw_model == 'infinite' and fracture_spacing is not None:
             self.print_log(
-                "--> fracture_spacing provided without a finite tdrw_model. Using 'dentz' (default finite matrix diffusion model; pass tdrw_model='roubinet' for the pre-2.11 limited model).",
+                "--> fracture_spacing provided without a finite tdrw_model. Using 'dentz' (default finite matrix diffusion model; pass tdrw_model='roubinet' for the pre-2.12 limited model).",
                 'warning')
             tdrw_model = 'dentz'
         check_tdrw_params(matrix_porosity, matrix_diffusivity,
