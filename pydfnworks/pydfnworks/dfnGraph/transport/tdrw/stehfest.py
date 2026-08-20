@@ -92,13 +92,15 @@ def build_inverse_cdf_table(F_cdf, times, stehfest_n=16, **kwargs):
     V = stehfest_coefficients(stehfest_n)
     cdf_vals = stehfest_invert(F_cdf, times, V, **kwargs)
 
-    # sort by cdf value to build the inverse CDF (cdf -> time) lookup
-    order = np.argsort(cdf_vals)
-    cdf_sorted = np.clip(cdf_vals[order], 0, 1)
-    t_sorted = np.maximum(times[order], 0)
+    # Enforce monotonicity with a running maximum along the time axis. This
+    # preserves the (time, cdf) pairing; sorting by cdf value instead would
+    # scramble pairs wherever Stehfest ringing exceeds the spacing between
+    # adjacent cdf values, which biases sampled return times high and gets
+    # worse -- not better -- as the table is refined.
+    cdf_mono = np.maximum.accumulate(np.clip(cdf_vals, 0.0, 1.0))
 
     # remove duplicate cdf values to ensure monotone interpolation
-    cdf_unique, idx = np.unique(cdf_sorted, return_index=True)
-    t_unique = np.asarray(t_sorted[idx])
+    cdf_unique, idx = np.unique(cdf_mono, return_index=True)
+    t_unique = np.asarray(times[idx])
 
     return t_unique, cdf_unique

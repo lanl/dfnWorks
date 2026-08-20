@@ -64,9 +64,12 @@ class Particle():
 
         if tdrw_model in ("dentz", "annulus", "from_file"):
             # Timescale rescaling dimensionless sampled return times to
-            # physical times. For the annulus model this is tau1 = r1^2 / D
-            # where r1 = fracture_spacing is the outer (reflecting) radius.
-            self.tau_D = self.fracture_spacing**2 / self.matrix_diffusivity
+            # physical times: tau_D = B^2 / D with matrix half-width
+            # B = fracture_spacing / 2 (half the spacing between adjacent
+            # fractures, matching the roubinet model's convention). For the
+            # annulus model B is the outer (reflecting) radius r1.
+            half_width = self.fracture_spacing / 2
+            self.tau_D = half_width**2 / self.matrix_diffusivity
 
  
         self.velocity = []

@@ -57,7 +57,7 @@ def get_laplacian_sparse_mat(G,
 
 
 def prepare_graph_with_attributes(inflow, outflow, G=None,
-                                  conductance_model="karra", diameter=None,
+                                  conductance_model="doolaeghe", diameter=None,
                                   simplify=False, normal_vectors=None,
                                   **conductance_kwargs):
     """ Create a NetworkX graph, prepare it for flow solve by equipping edges with  attributes, renumber vertices, and tag vertices which are on inlet or outlet
@@ -274,7 +274,7 @@ def run_graph_flow(self,
                    phi=1,
                    G=None,
                    graph_flow_name = "graph_flow.hdf5",
-                   conductance_model="karra",
+                   conductance_model="doolaeghe",
                    diameter_from="area",
                    simplify=False,
                    **conductance_kwargs):
@@ -306,7 +306,7 @@ def run_graph_flow(self,
         G : Input Graph
 
         conductance_model : string
-            edge conductance model, 'karra' (default) or 'doolaeghe'. See
+            edge conductance model, 'doolaeghe' (default) or 'karra'. See
             pydfnworks.dfnGraph.attributes.conductance.
 
         diameter_from : string

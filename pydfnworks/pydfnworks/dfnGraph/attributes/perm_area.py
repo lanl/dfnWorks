@@ -2,6 +2,8 @@ import numpy as np
 import networkx as nx
 import sys
 
+from pydfnworks.general.logging import local_print_log
+
 
 
 def add_perm(G):

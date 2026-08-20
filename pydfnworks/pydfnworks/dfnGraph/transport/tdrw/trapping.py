@@ -38,9 +38,14 @@ def poisson_trapping_diffusion_time(particle, G, eps):
     """
     b = G.edges[particle.curr_node, particle.next_node]['b']
 
-    # trapping rate into the matrix block
+    # trapping rate into the matrix block. The matrix half-width is half the
+    # spacing between adjacent fractures (matching the roubinet model's
+    # interpretation of fracture_spacing), and the factor 2/b converts the
+    # full edge aperture to the half-aperture of the two-sided exchange:
+    # gamma = phi_m * D_m / (b_f * eps * B) with b_f = b/2, B = spacing/2.
+    half_width = particle.fracture_spacing / 2
     gamma = (2 * particle.matrix_porosity * particle.matrix_diffusivity) / (
-        b * eps * particle.fracture_spacing)
+        b * eps * half_width)
 
     # average number of trapping events during this advective step
     average_number_of_trapping_events = particle.delta_t * gamma

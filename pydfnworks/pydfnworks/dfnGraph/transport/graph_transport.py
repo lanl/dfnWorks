@@ -262,8 +262,9 @@ def run_graph_transport(self,
             Matrix Diffusivity used in TDRW (SI units m^2/s)
 
         fracture_spacing : float
-            finite block size for limited matrix diffusion. Required for all
-            finite tdrw models
+            distance between adjacent parallel fractures [m]; the matrix
+            block half-width is fracture_spacing/2. Required for all finite
+            tdrw models
 
         tdrw_filename : string
             path to a two-column ASCII file (return times, CDF). Required
@@ -304,9 +305,9 @@ def run_graph_transport(self,
         # size model by providing fracture_spacing without naming a model.
         if tdrw_model == 'infinite' and fracture_spacing is not None:
             self.print_log(
-                "--> fracture_spacing provided without a finite tdrw_model. Using 'roubinet' (previous default for limited matrix diffusion).",
+                "--> fracture_spacing provided without a finite tdrw_model. Using 'dentz' (default finite matrix diffusion model; pass tdrw_model='roubinet' for the pre-2.11 limited model).",
                 'warning')
-            tdrw_model = 'roubinet'
+            tdrw_model = 'dentz'
         check_tdrw_params(matrix_porosity, matrix_diffusivity,
                           fracture_spacing, tdrw_model, tdrw_filename)
 

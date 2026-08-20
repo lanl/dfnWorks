@@ -5,6 +5,7 @@
 """
 
 import os
+import numpy as np
 
 from pydfnworks.general.logging import local_print_log
 import pydfnworks.dfnGraph.transport.tdrw.infinite as infinite
@@ -33,8 +34,9 @@ def check_tdrw_params(matrix_porosity, matrix_diffusivity, fracture_spacing,
             Effective diffusivity of the rock matrix [m^2/s]
 
         fracture_spacing : float
-            Characteristic matrix block half-width / fracture spacing [m]
-            Required for finite matrix models.
+            Distance between adjacent parallel fractures [m]; the matrix
+            block half-width is fracture_spacing/2. Required for finite
+            matrix models.
 
         tdrw_model : str
             Name of the TDRW matrix diffusion model. Valid options:
@@ -146,7 +148,8 @@ def set_up_limited_matrix_diffusion(G,
             'roubinet', 'dentz', 'annulus', 'from_file'.
 
         fracture_spacing : float
-            Characteristic matrix block half-width [m]. Required for all
+            Distance between adjacent parallel fractures [m]; the matrix
+            block half-width is fracture_spacing/2. Required for all
             finite models.
 
         matrix_porosity : float
@@ -195,10 +198,22 @@ def set_up_limited_matrix_diffusion(G,
         transfer_time, trans_prob = dentz.make_inverse_cdf(num_samples=num_pts)
 
     elif tdrw_model == "annulus":
-        # annulus model: absorbing wall at fracture-matrix interface,
-        # reflecting wall at block interior; eps fixed inside the module
+        # annulus model: absorbing wall at fracture-matrix interface
+        # (r0 = aperture/2), reflecting wall at block interior
+        # (r1 = fracture_spacing/2); eps fixed inside the module.
+        # A single table is used for the whole network, built with a
+        # representative r0 from the geometric mean of the edge apertures.
+        b_edges = np.array([d['b'] for _, _, d in G.edges(data=True)])
+        b_rep = float(np.exp(np.log(b_edges).mean()))
+        r0 = b_rep / 2
+        r1 = fracture_spacing / 2
+        tau0_ratio = (r0 / r1)**2
+        local_print_log(
+            f"--> Annulus geometry: representative r0 = {r0:0.2e} m "
+            f"(geometric-mean aperture / 2), r1 = {r1:0.2e} m, "
+            f"(r0/r1)^2 = {tau0_ratio:0.2e}")
         transfer_time, trans_prob = annulus.make_inverse_cdf(
-            num_samples=num_pts)
+            num_samples=num_pts, tau0_ratio=tau0_ratio)
 
     elif tdrw_model == "from_file":
         transfer_time, trans_prob = from_file.load_finite_time_cdf(

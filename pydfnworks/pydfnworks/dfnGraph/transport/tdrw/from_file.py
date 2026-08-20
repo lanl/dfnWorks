@@ -23,7 +23,7 @@ def load_finite_time_cdf(tdrw_filename):
     ----------
         tdrw_filename : str
             Path to a two-column ASCII file. Column 1: dimensionless return
-            times (rescaled by tau_D = fracture_spacing^2 / matrix_diffusivity
+            times (rescaled by tau_D = (fracture_spacing/2)^2 / matrix_diffusivity
             during transport). Column 2: cumulative probabilities in [0, 1],
             strictly increasing.
 
@@ -65,6 +65,6 @@ def limited_matrix_diffusion_from_file(self, G):
         All parameters are attached to the particle class. The inverse CDF
         table (self.transfer_time, self.trans_prob) is loaded from file by
         load_finite_time_cdf during transport setup. Sampled times are
-        rescaled by tau_D = fracture_spacing^2 / matrix_diffusivity.
+        rescaled by tau_D = (fracture_spacing/2)^2 / matrix_diffusivity.
     """
     self.delta_t_md = poisson_trapping_diffusion_time(self, G, RELEASE_EPS)

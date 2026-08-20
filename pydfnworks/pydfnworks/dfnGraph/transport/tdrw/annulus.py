@@ -12,8 +12,9 @@ from scipy.special import ive, kve, iv, kv
 from pydfnworks.dfnGraph.transport.tdrw.stehfest import build_inverse_cdf_table
 from pydfnworks.dfnGraph.transport.tdrw.trapping import poisson_trapping_diffusion_time
 
-# Dimensionless release position (r' - r0)/r1 next to the absorbing wall.
-# The sampler's trapping rate and the inverse CDF table must use the same value.
+# Dimensionless release position (r' - r0)/r0 next to the absorbing inner
+# wall, so the release point is r' = r0*(1 + eps). The sampler's trapping
+# rate and the inverse CDF table must use the same value.
 RELEASE_EPS = 1e-2
 
 
@@ -30,7 +31,7 @@ def Psi_star_annulus(s, eps, tau0, tau1):
             Laplace variable values.
 
         eps : float
-            (r' - r0) / r1, dimensionless release position.
+            (r' - r0) / r0, dimensionless release position.
 
         tau0 : float
             r0^2 / D, inner-radius diffusion timescale.
@@ -89,26 +90,46 @@ def Psi_pdf_star_annulus(s, eps, tau0, tau1):
     return Psi_star_annulus(s, eps, tau0, tau1) * s
 
 
-def make_inverse_cdf(num_samples=100, eps=RELEASE_EPS, tau0=1e-4, tau1=1e3,
+def make_inverse_cdf(num_samples=100, eps=RELEASE_EPS, tau0_ratio=1e-7,
                      stehfest_n=16):
     """ Precompute the inverse CDF table for cylindrical annulus return-time sampling.
 
-    Parameters match Marco Dentz's InvLaplace.m defaults:
-    eps = 1e-2 dimensionless release position (r'-r0)/r1;
-    tau0 = 1e-4 inner-radius timescale r0^2/D;
-    tau1 = 1e3 outer-radius timescale r1^2/D.
+    The table is built in dimensionless time units of tau1 = r1^2/D (tau1 = 1
+    in the Laplace-domain solution), so sampled values are rescaled to
+    physical times by multiplying with the particle's tau_D = r1^2/D.
 
-    The time range starts at 1e-10 to ensure Stehfest samples large enough s
-    for correct early-time behavior (requires s >> (1/eps)^2 / tau0).
+    Parameters
+    ----------
+        num_samples : int
+            Number of points in the logspace time array. Default 100.
+
+        eps : float
+            Dimensionless release position (r'-r0)/r0. Default RELEASE_EPS.
+
+        tau0_ratio : float
+            Geometry ratio tau0/tau1 = (r0/r1)^2 with r0 the fracture-matrix
+            interface radius (half the aperture) and r1 the outer block
+            radius (half the fracture spacing).
+
+        stehfest_n : int
+            Number of Stehfest coefficients. Default 16.
+
+    Notes
+    -----
+        The time range starts well below eps^2 * tau0_ratio so Stehfest
+        samples large enough s for correct early-time behavior
+        (requires s >> (1/eps)^2 / tau0).
 
     Returns
     -------
         (times, cdf_vals) : tuple of np.ndarray
-            Inverse CDF lookup arrays for use with np.interp.
+            Inverse CDF lookup arrays (times in units of tau1) for use
+            with np.interp.
     """
-    times = np.logspace(-10, 2, num_samples)
+    t_lo = max(1e-16, 0.01 * eps**2 * tau0_ratio)
+    times = np.logspace(np.log10(t_lo), 1, num_samples)
     return build_inverse_cdf_table(Psi_star_annulus, times, stehfest_n=stehfest_n,
-                                   eps=eps, tau0=tau0, tau1=tau1)
+                                   eps=eps, tau0=tau0_ratio, tau1=1.0)
 
 
 def limited_matrix_diffusion_annulus(self, G):
