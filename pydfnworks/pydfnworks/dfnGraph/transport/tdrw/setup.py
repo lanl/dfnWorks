@@ -6,6 +6,7 @@
 
 import os
 import numpy as np
+import networkx as nx
 
 from pydfnworks.general.logging import local_print_log
 import pydfnworks.dfnGraph.transport.tdrw.infinite as infinite
@@ -179,12 +180,19 @@ def set_up_limited_matrix_diffusion(G,
             Dentz/annulus/from_file: array of cumulative probabilities
             corresponding to transfer_time.
 
+        release_eps : float or None
+            Dimensionless release position used to build the table; the
+            trapping rate must use the same value. For dentz it is chosen
+            adaptively (see dentz.choose_release_eps). None for roubinet,
+            which has no release-position parameter.
+
     Notes
     -----
         The returned arrays are used with np.interp to map uniform random
         samples to return times during particle transport. See
         limited_matrix_diffusion_* functions in each model module.
     """
+    release_eps = None
     if tdrw_model == "roubinet":
         b_min, b_max, tf_min, tf_max = roubinet.get_aperture_and_time_limits(G)
         trans_prob = roubinet.transfer_probabilities(b_min, b_max, tf_min,
@@ -195,7 +203,29 @@ def set_up_limited_matrix_diffusion(G,
         transfer_time = fracture_spacing**2 / (2 * matrix_diffusivity)
 
     elif tdrw_model == "dentz":
-        transfer_time, trans_prob = dentz.make_inverse_cdf(num_samples=num_pts)
+        # The slab TDRW only reproduces the continuum solution for
+        # retardation times well beyond (release_eps * B)^2 / D_m, so the
+        # release position shrinks with the block half-width. The
+        # characteristic advective time is the fastest source-to-target
+        # path; using the fastest (rather than a typical) path keeps the
+        # artifact below the earliest arrivals.
+        t_char = characteristic_advective_time(G)
+        half_width = fracture_spacing / 2
+        release_eps = dentz.choose_release_eps(t_char, half_width,
+                                               matrix_diffusivity)
+        artifact_time = (release_eps * half_width)**2 / matrix_diffusivity
+        local_print_log(
+            f"--> Dentz release position eps = {release_eps:0.2e} "
+            f"(characteristic advective time {t_char:0.2e} s, "
+            f"artifact timescale {artifact_time:0.2e} s)")
+        if release_eps == dentz.MIN_RELEASE_EPS:
+            local_print_log(
+                "--> Warning: Dentz release eps hit its floor "
+                f"({dentz.MIN_RELEASE_EPS:0.0e}); breakthrough curves are "
+                "only accurate for retardation times "
+                f">~ {artifact_time:0.2e} s.", "warning")
+        transfer_time, trans_prob = dentz.make_inverse_cdf(
+            num_samples=num_pts, eps=release_eps)
 
     elif tdrw_model == "annulus":
         # annulus model: absorbing wall at fracture-matrix interface
@@ -212,10 +242,12 @@ def set_up_limited_matrix_diffusion(G,
             f"--> Annulus geometry: representative r0 = {r0:0.2e} m "
             f"(geometric-mean aperture / 2), r1 = {r1:0.2e} m, "
             f"(r0/r1)^2 = {tau0_ratio:0.2e}")
+        release_eps = annulus.RELEASE_EPS
         transfer_time, trans_prob = annulus.make_inverse_cdf(
             num_samples=num_pts, tau0_ratio=tau0_ratio)
 
     elif tdrw_model == "from_file":
+        release_eps = from_file.RELEASE_EPS
         transfer_time, trans_prob = from_file.load_finite_time_cdf(
             tdrw_filename)
 
@@ -223,4 +255,35 @@ def set_up_limited_matrix_diffusion(G,
         trans_prob = None
         transfer_time = None
 
-    return transfer_time, trans_prob
+    return transfer_time, trans_prob, release_eps
+
+
+def characteristic_advective_time(G):
+    """ Characteristic advective time of the flow network [s]: the fastest
+    advective source-to-target path. Falls back to the smallest positive
+    edge travel time if no path exists (conservative: a smaller value only
+    tightens the adaptive release position).
+
+    Parameters
+    ----------
+        G : networkX graph
+            Graph provided by graph_flow, with edge attribute 'time' and
+            virtual source 's' / target 't' vertices.
+
+    Returns
+    -------
+        t_char : float
+            Characteristic advective time [s].
+    """
+    try:
+        return nx.shortest_path_length(
+            G, 's', 't', weight=lambda u, v, d: d.get('time', 0.0))
+    except (nx.NetworkXNoPath, nx.NodeNotFound):
+        times = np.array(
+            [d.get('time', 0.0) for _, _, d in G.edges(data=True)])
+        times = times[times > 0]
+        if len(times) == 0:
+            local_print_log(
+                "Error: cannot determine a characteristic advective time: "
+                "no positive edge travel times in the graph.", "error")
+        return float(times.min())

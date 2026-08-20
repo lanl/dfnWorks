@@ -23,8 +23,8 @@ class Particle():
 
     def __init__(self, particle_number, ip, tdrw_flag, tdrw_model,
                  matrix_porosity, matrix_diffusivity, fracture_spacing,
-                 trans_prob, transfer_time, cp_flag, control_planes,
-                 direction, seed=0):
+                 trans_prob, transfer_time, release_eps, cp_flag,
+                 control_planes, direction, seed=0):
         self.particle_number = particle_number
         # every particle gets its own independent random stream, derived from
         # the DFN seed so the whole ensemble is reproducible (see track())
@@ -51,6 +51,7 @@ class Particle():
         self.tau_D = None
         self.trans_prob = trans_prob
         self.transfer_time = transfer_time
+        self.release_eps = release_eps
         self.cp_flag = cp_flag
         self.control_planes = control_planes
         self.cp_index = 0

@@ -35,7 +35,8 @@ from math import factorial
 # Import the module under test
 # ---------------------------------------------------------------------------
 
-from pydfnworks.dfnGraph.transport.tdrw.dentz import Psi_star, make_inverse_cdf
+from pydfnworks.dfnGraph.transport.tdrw.dentz import (
+    Psi_star, make_inverse_cdf, choose_release_eps)
 from pydfnworks.dfnGraph.transport.tdrw.stehfest import (
     stehfest_coefficients as _stehfest_coefficients, )
 
@@ -321,6 +322,67 @@ def test_mean_matrix_time():
           f"E[t_matrix] = {mean_md:.4e}  (expected 1e-5 to 10)")
 
 # ---------------------------------------------------------------------------
+# Test 7: Field-scale parameters with adaptive release position
+# ---------------------------------------------------------------------------
+
+def test_field_scale_adaptive_eps():
+    """ Large matrix blocks at field-scale diffusivity: the fixed release
+    position eps=1e-4 fails here (its artifact scale (eps*B)^2/D lands in
+    the observation window and most particles get zero trapping events).
+    choose_release_eps must shrink eps enough to reproduce Sudicky-Frind.
+    Reference CDF via mpmath Talbot inversion: Stehfest smears the sharp
+    BTC front and cannot be used as the reference at these times. """
+    print("\nTest 7: Field-scale parameters + adaptive release position")
+    import mpmath as mp
+
+    phi_m, D_m, b_f = 0.01, 1e-14, 2e-5
+    spacing = 276.0
+    B = spacing / 2
+    tau_adv = 1e8
+    tau_D = B ** 2 / D_m
+    N = 100_000
+
+    eps = choose_release_eps(tau_adv, B, D_m)
+    check("Adaptive eps engages (eps < 1e-4)", eps < 1e-4,
+          f"eps = {eps:.3e}")
+    artifact = (eps * B) ** 2 / D_m
+    check("Artifact timescale << tau_adv", artifact < 0.01 * tau_adv,
+          f"(eps*B)^2/D = {artifact:.2e} s, tau_adv = {tau_adv:.2e} s")
+
+    t_table, cdf_table = _make_inverse_cdf_spline_for_times(eps=eps)
+    gamma = phi_m * D_m / (b_f * eps * B)
+    n_avg = gamma * tau_adv
+    check("Mean trapping events >= 1", n_avg >= 1.0,
+          f"n_avg = {n_avg:.2f}")
+
+    np.random.seed(7)
+    n_all = np.random.poisson(n_avg, N)
+    xi = np.random.uniform(0, 1, int(n_all.sum()))
+    t_trap = tau_D * np.interp(xi, cdf_table, t_table)
+    pid = np.repeat(np.arange(N), n_all)
+    t_mc = tau_adv + np.bincount(pid, weights=t_trap, minlength=N)
+
+    def SF_talbot(t):
+        F = lambda s: mp.e ** (-tau_adv * (s + (phi_m / b_f)
+                                           * mp.sqrt(s * D_m)
+                                           * mp.tanh(B * mp.sqrt(s / D_m)))) / s
+        return float(mp.invertlaplace(F, t, method='talbot'))
+
+    t_check = np.logspace(np.log10(1.1 * tau_adv),
+                          np.log10(3000 * tau_adv), 15)
+    sf = np.clip([SF_talbot(t) for t in t_check], 0, 1)
+    t_s = np.sort(t_mc)
+    mc = np.interp(t_check, t_s, np.arange(1, N + 1) / N)
+    mask = (sf > 0.01) & (sf < 0.995)
+    max_dev = float(np.max(np.abs(mc - sf)[mask]))
+    check("MC CDF within 3% of Sudicky-Frind (Talbot) at field scale",
+          max_dev < 0.03,
+          f"max |MC_CDF - SF_CDF| = {max_dev:.4f}  (tolerance 0.03)")
+    print(f"         eps={eps:.2e}  n_avg={n_avg:.1f}  "
+          f"artifact={artifact:.2e} s")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -336,6 +398,7 @@ if __name__ == "__main__":
     test_gamma_formula()
     test_monte_carlo_vs_sudicky_frind()
     test_mean_matrix_time()
+    test_field_scale_adaptive_eps()
 
     n_pass = sum(p for _, p in RESULTS)
     n_fail = len(RESULTS) - n_pass

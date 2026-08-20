@@ -67,4 +67,5 @@ def limited_matrix_diffusion_from_file(self, G):
         load_finite_time_cdf during transport setup. Sampled times are
         rescaled by tau_D = (fracture_spacing/2)^2 / matrix_diffusivity.
     """
-    self.delta_t_md = poisson_trapping_diffusion_time(self, G, RELEASE_EPS)
+    eps = self.release_eps if self.release_eps is not None else RELEASE_EPS
+    self.delta_t_md = poisson_trapping_diffusion_time(self, G, eps)

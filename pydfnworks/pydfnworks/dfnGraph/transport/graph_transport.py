@@ -51,7 +51,8 @@ def track_particle(data, verbose=False):
                         data["tdrw_flag"], data["tdrw_model"],
                         data["matrix_porosity"], data["matrix_diffusivity"],
                         data["fracture_spacing"], data["trans_prob"],
-                        data["transfer_time"], data["cp_flag"],
+                        data["transfer_time"], data["release_eps"],
+                        data["cp_flag"],
                         data["control_planes"], data["direction"],
                         data["seed"])
 
@@ -340,7 +341,7 @@ def run_graph_transport(self,
     if tdrw_flag and tdrw_model in FINITE_MODELS:
         self.print_log(f"--> Using limited matrix block size for TDRW")
         self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
-        transfer_time, trans_prob = set_up_limited_matrix_diffusion(
+        transfer_time, trans_prob, release_eps = set_up_limited_matrix_diffusion(
             G,
             tdrw_model,
             fracture_spacing,
@@ -350,6 +351,7 @@ def run_graph_transport(self,
     else:
         trans_prob = None
         transfer_time = None
+        release_eps = None
     ## main loop
     if self.ncpu == 1:
         tic = timeit.default_timer()
@@ -360,6 +362,7 @@ def run_graph_transport(self,
             particle = Particle(i, ip[i], tdrw_flag, tdrw_model,
                                 matrix_porosity, matrix_diffusivity,
                                 fracture_spacing, trans_prob, transfer_time,
+                                release_eps,
                                 control_plane_flag, control_planes, direction,
                                 seed)
             particle.track(G, nbrs_dict)
@@ -416,6 +419,7 @@ def run_graph_transport(self,
             data["fracture_spacing"] = fracture_spacing
             data["transfer_time"] = transfer_time
             data["trans_prob"] = trans_prob
+            data["release_eps"] = release_eps
             data["cp_flag"] = control_plane_flag
             data["control_planes"] = control_planes
             data["direction"] = direction

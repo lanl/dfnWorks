@@ -166,4 +166,5 @@ def limited_matrix_diffusion_annulus(self, G):
 
         All other parameters are attached to the particle class.
     """
-    self.delta_t_md = poisson_trapping_diffusion_time(self, G, RELEASE_EPS)
+    eps = self.release_eps if self.release_eps is not None else RELEASE_EPS
+    self.delta_t_md = poisson_trapping_diffusion_time(self, G, eps)
