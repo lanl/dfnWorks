@@ -33,3 +33,20 @@ this version.
 
 The surrogate call takes about 100 microseconds, so the DFN generation and
 well intersection dominate the run time.
+
+## Running on another machine
+
+Check out the branch and reinstall pydfnworks so the new `pydfnworks.thermal`
+subpackage is picked up, then run the verification scripts:
+
+    git fetch origin && git checkout feature/thermal-mpf-surrogate
+    cd pydfnworks && pip install -e . && python tests/thermal/run_thermal_verification.py
+
+Then run this example from its directory:
+
+    python driver.py
+
+`thermal_spacing_optimization` needs dfnGen and LaGriT (well intersections on
+a reduced mesh); `thermal_graph_transport` needs only dfnGen. Both write their
+CSV files and `spacing_optimization.png` into `output/`. Neither needs
+PFLOTRAN or FEHM.
