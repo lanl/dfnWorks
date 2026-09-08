@@ -20,6 +20,7 @@ Contents:
    pydfnTrans
    pydfnGraph
    pydfnWorks-well
+   pydfnThermal
    dfngen
    dfnflow
    dfntrans

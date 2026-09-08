@@ -114,6 +114,16 @@
     Create rectangle fractures and run FEHM simulation using PFLOTRAN flow solutions as input. Various options for particles are used.
 
 
+- ### thermal_graph_transport
+
+    Heat extraction on a graph representation of a DFN, built on the graph_transport example: graph flow, graph particle transport with TDRW driven by thermal properties (pydfnworks.thermal.dfn_heat mapping), and the Gringarten spacing surrogate and optimizer on geometry read from the flow graph. No meshing.
+
+
+- ### thermal_spacing_optimization
+
+    Hydraulic fracture spacing optimization with the pydfnworks.thermal heat-extraction surrogate (Gringarten multiple parallel fractures model). Generates a FORGE-representative DFN, places an injection/production lateral pair with the well package, takes the fracture count and height the injection lateral sees from the DFN, and writes Q(t) for the best spacing and objective vs. spacing for several objectives. No flow or transport simulation.
+
+
 - ### TPL (Truncated Power-Law)
 
     This example consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6.
