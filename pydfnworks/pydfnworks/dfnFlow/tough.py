@@ -434,7 +434,12 @@ def tough(self):
     #       ' ' + os.environ['TOUGH_EXE'] + self.local_dfnFlow_file
 
     # cmd = 'time ' + os.environ['TOUGH_EXE'] + ' ' + self.local_dfnFlow_file
-    cmd = 'time ' + os.environ['TOUGH_EXE'] + ' <' + self.local_dfnFlow_file + '>' + self.local_dfnFlow_file + '.out'
+    # cmd = 'time ' + os.environ['TOUGH_EXE'] + ' <' + self.local_dfnFlow_file + '>' + self.local_dfnFlow_file + '.out'
+
+    # self.print_log(f"--> Running: {cmd}")
+    # subprocess.call(cmd, shell=True)
+
+    cmd = 'time ( ' + os.environ['TOUGH_EXE'] + ' <' + self.local_dfnFlow_file + ' | tee ' + self.local_dfnFlow_file + '.out )'
 
     self.print_log(f"--> Running: {cmd}")
     subprocess.call(cmd, shell=True)
