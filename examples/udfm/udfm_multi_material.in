@@ -32,6 +32,21 @@ DATASET Permeability
   FILENAME mesh_permeability.h5
 END
 
+DATASET permX
+  FILENAME mesh_permeability.h5
+  HDF5_DATASET_NAME PermeabilityX
+END
+
+DATASET permY
+  FILENAME mesh_permeability.h5
+  HDF5_DATASET_NAME PermeabilityY
+END
+
+DATASET permZ
+  FILENAME mesh_permeability.h5
+  HDF5_DATASET_NAME PermeabilityZ
+END
+
 DATASET Porosity
   FILENAME mesh_porosity.h5
 END
@@ -43,7 +58,8 @@ MATERIAL_PROPERTY fracture
   TORTUOSITY 0.5d0
   CHARACTERISTIC_CURVES default
   PERMEABILITY
-    DATASET Permeability
+    ANISOTROPIC
+    DATASET perm
   /
 END
 
@@ -54,7 +70,8 @@ MATERIAL_PROPERTY matrix
   TORTUOSITY 0.5d0
   CHARACTERISTIC_CURVES default
   PERMEABILITY
-    DATASET Permeability
+    ANISOTROPIC
+    DATASET perm
   /
 END
 

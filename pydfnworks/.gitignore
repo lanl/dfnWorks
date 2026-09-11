@@ -1,0 +1,25 @@
+# This directory doubles as a Python venv when pydfnworks is installed
+# in-place. Ignore the venv- and build-generated files, but keep the
+# package source (./pydfnworks/, ./bin/*.py, etc.) tracked.
+
+# Python venv
+pyvenv.cfg
+include/
+lib/
+lib64/
+bin/python*
+bin/pip*
+bin/activate*
+bin/Activate.ps1
+
+# Build / install artifacts
+build/
+dist/
+*.egg-info/
+
+# Bytecode and caches
+__pycache__/
+*.py[cod]
+
+# OS / editor cruft
+.DS_Store
