@@ -11,7 +11,8 @@ import math as m
 import mplstereonet
 import matplotlib.pyplot as plt
 import random
-from pydfnworks.general.logging import local_print_log 
+from pydfnworks.dfnGen.generation.orientations import normals_to_strike_dip
+from pydfnworks.general.logging import local_print_log
 
 def get_normal_vectors(fam, fractures):
     """
@@ -63,82 +64,6 @@ def get_normal_vectors(fam, fractures):
     for i, j in enumerate(fam["fracture list - final"]):
         normal_vectors[i, :] = fractures[j]["normal"]
     return normal_vectors
-
-def normalise_normals_to_lower_hemisphere(normals):
-    """
-    Ensures that all normal vectors are in the lower hemisphere by flipping any
-    vector with a positive z-component.
-
-    This is useful for plotting poles or orientations on lower-hemisphere
-    stereonets, ensuring consistency in directional statistics.
-
-    Parameters
-    ----------
-    normals : array-like
-        A (N, 3) array of normal vectors. Each row is expected to be a 3D vector.
-
-    Returns
-    -------
-    np.ndarray
-        A (N, 3) array of normal vectors, all adjusted to point into the lower hemisphere
-        (i.e., z-component ≤ 0).
-    """ 
-    normals = np.asarray(normals, float)
-    # Assuming z is "up". Flip any normal with positive z
-    flip = normals[:, 2] > 0
-    normals[flip] *= -1.0
-    return normals
-
-# ---------- Geometry helpers ----------
-def normals_to_strike_dip(normals):
-    """
-    Convert plane normals to strike and dip (right-hand rule).
-
-    Parameters
-    ----------
-    normals : (N, 3) array-like
-        Normal vectors (nx, ny, nz) in a right-handed ENU system
-        (x=East, y=North, z=Up). Need not be normalized.
-
-    Returns
-    -------
-    strikes : (N,) ndarray
-        Strike azimuths in degrees, clockwise from North, 0–360.
-    dips : (N,) ndarray
-        Dip angles from horizontal in degrees, 0–90.
-    dip_dirs : (N,) ndarray
-        Dip directions (azimuth of down-dip line) in degrees, 0–360.
-    """
-    normals = normalise_normals_to_lower_hemisphere(normals)
-
-    n = np.asarray(normals, dtype=float)
-    if n.ndim == 1:
-        n = n[np.newaxis, :]
-
-    # Normalize
-    n /= np.linalg.norm(n, axis=1)[:, np.newaxis]
-
-    nx = n[:, 0]
-    ny = n[:, 1]
-    nz = n[:, 2]
-
-    # Dip: angle between plane and horizontal
-    dip = np.degrees(np.arctan2(np.sqrt(nx**2 + ny**2), np.abs(nz)))
-
-    # Dip direction: opposite horizontal projection of normal
-    # Using atan2(East, North) to get azimuth clockwise from North
-    dx = -nx
-    dy = -ny
-    dip_dir = np.degrees(np.arctan2(dx, dy)) % 360.0
-
-    # Strike: 90° CCW from dip direction (right-hand rule)
-    strike = (dip_dir - 90.0) % 360.0
-    # convert type 
-    strike = np.asarray(strike, float)
-    dip = np.asarray(dip, float)
-    dip_dir = np.asarray(dip_dir, float)
-
-    return strike, dip, dip_dir
 
 
 def plot_rose_diagram(ax, strikes_deg, color):

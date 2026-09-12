@@ -60,7 +60,7 @@ def intersection_to_fracture(G, inflow, outflow):
     #Project onto fractures
     Gp = nx.projected_graph(Gp, Gp.fractures)
 
-    from pydfnworks.dfnGraph import create_fracture_graph
+    from pydfnworks.dfnGraph.construction.fracture_graph import create_fracture_graph
     F = create_fracture_graph(inflow, outflow)
     #Induced subgraph of F
     Gp = F.subgraph(Gp.nodes)
@@ -102,7 +102,7 @@ def fracture_to_intersection(G, inflow, outflow):
     Gp.fractures = [n for n in Gp.nodes]
     Gp.intersections = set() 
 
-    from pydfnworks.dfnGraph import create_intersection_graph
+    from pydfnworks.dfnGraph.construction.intersection_graph import create_intersection_graph
     I = create_intersection_graph(inflow, outflow)
 
     #Relabel intersections so as not to conflict with fracture ids

@@ -114,6 +114,8 @@ def gather_dfn_gen_output(self):
     self.surface_area = np.genfromtxt('dfnGen_output/surface_area_Final.dat', skip_header=1)
     ## load normal vectors
     self.normal_vectors = np.genfromtxt('dfnGen_output/normal_vectors.dat')
+    ## strike / dip of the fracture planes and trend / plunge of their poles
+    self.get_fracture_orientations()
     # Get fracture centers
     centers = []
     with open('dfnGen_output/translations.dat', "r") as fp:
