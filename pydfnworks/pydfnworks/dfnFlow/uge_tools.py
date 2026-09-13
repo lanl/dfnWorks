@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """UGE-correction utilities for dfnWorks / PFLOTRAN.
 
 All functions that read, validate, and correct an explicit-unstructured-grid
@@ -6,27 +5,37 @@ All functions that read, validate, and correct an explicit-unstructured-grid
 replaced by its absolute value if negative, by a fill value if it is ``NaN`` or
 ``+/-inf``, and otherwise left unchanged.
 
+Correcting a bad value is only defensible when the mesh is *almost* conforming.
+Degenerate cells are an artifact of the relaxed meshing constraints used by rFram
+(see :mod:`pydfnworks.dfnGen.meshing.mesh_dfn`), and they show up mostly in dense
+networks and around triple intersections. So the module enforces a policy before
+it corrects anything:
+
+    * rFram off and any invalid value  -> hard error. A conforming mesh has no
+      business producing negative or non-finite coefficients; that is a meshing
+      failure, not an artifact to paper over.
+    * more than ``BAD_FRACTION_LIMIT`` of the cells *or* of the connections
+      invalid -> hard error, regardless of rFram. The two fractions are tested
+      independently against their own totals.
+    * otherwise -> correct, and log every offending cell and connection.
+
 Contents
 --------
-    classify_fix, scan_fills
-        Low-level helpers implementing the validity rule and the fill estimate.
+    classify_fix, scan_uge, scan_fills
+        Low-level helpers implementing the validity rule, the mesh-wide scan,
+        and the fill estimate.
     fix_uge_volumes, fix_stream
-        Standalone, byte-faithful fixer usable as a function or from the CLI.
+        Byte-faithful fixer: a clean file round-trips unchanged, and only the
+        corrected lines are rewritten.
     correct_uge_file
         dfnWorks method. ``dim=3`` aperture-converts ``full_mesh.uge`` into
-        ``full_mesh_vol_area.uge``; ``dim=2`` keeps ``full_mesh.uge``. When
-        ``self.r_fram`` is True the raw values are sanitized first.
+        ``full_mesh_vol_area.uge``; ``dim=2`` keeps ``full_mesh.uge``. The mesh
+        is always scanned and the policy above is always enforced.
     lagrit2pflotran
         dfnWorks method. Forwards ``dim`` to :func:`correct_uge_file`.
-
-Command line
-------------
-    python3.11 uge_tools.py full_mesh.uge --in-place
 """
-import argparse
 import math
 import os
-import sys
 import tempfile
 from time import time
 from collections import namedtuple
@@ -34,9 +43,20 @@ from collections import namedtuple
 CELL_FMT = "%10d  % .12E  % .12E  % .12E  % .12E"          # id  x y z  volume
 CONN_FMT = "%10d %10d  % .12E  % .12E  % .12E  % .12E"     # id1 id2  fx fy fz  area
 
+#: Largest fraction of invalid cells (or of invalid connections) that may be
+#: corrected. Above this the mesh is rejected instead of repaired.
+BAD_FRACTION_LIMIT = 0.01
+
 Result = namedtuple("Result", ["cell_negative", "cell_nonfinite",
                                "conn_negative", "conn_nonfinite",
                                "vol_fill", "area_fill"])
+
+#: Outcome of :func:`scan_uge`. ``bad_cells`` holds ``(id, x, y, z, volume,
+#: kind)`` tuples and ``bad_conns`` holds ``(id1, id2, area, kind)`` tuples, with
+#: ``kind`` as returned by :func:`classify_fix`.
+ScanResult = namedtuple("ScanResult", ["path", "vol_fill", "area_fill",
+                                       "n_cells", "n_conns",
+                                       "bad_cells", "bad_conns"])
 
 
 def classify_fix(x, fill):
@@ -67,11 +87,17 @@ def classify_fix(x, fill):
     return x, None
 
 
-def scan_fills(input_path, strategy="min"):
-    """Estimate per-column fill values from the finite, positive entries.
+def scan_uge(input_path, strategy="min"):
+    """Scan a ``.uge`` file for invalid values and estimate per-column fills.
 
-    Makes a single sequential pass with O(1) memory, tracking the running
-    minimum, sum, and count of valid volumes (CELLS) and areas (CONNECTIONS).
+    Makes a single sequential pass, tracking the running minimum, sum, and count
+    of the valid volumes (CELLS) and areas (CONNECTIONS), and recording every
+    entry that :func:`classify_fix` flags. Memory is O(number of invalid
+    entries), not O(mesh).
+
+    Every offending entry is recorded rather than only the first few: the caller
+    reports them all, and the policy decisions downstream (see
+    :func:`correct_uge_file`) only ever let a small fraction through.
 
     Parameters
     ----------
@@ -80,6 +106,80 @@ def scan_fills(input_path, strategy="min"):
         strategy : str
             ``'min'`` (default) uses the smallest finite positive value in each
             column; ``'mean'`` uses the mean of the finite positive values.
+
+    Returns
+    -------
+        ScanResult
+            ``(path, vol_fill, area_fill, n_cells, n_conns, bad_cells,
+            bad_conns)``. A fill is ``None`` when its column holds no finite
+            positive value to derive one from (an empty or wholly invalid
+            column); it is the caller's job to reject such a mesh.
+
+    Raises
+    ------
+        ValueError
+            If ``strategy`` is not recognised.
+
+    Notes
+    -----
+        A volume or area of exactly ``0.0`` is neither flagged nor used as a
+        fill candidate, matching :func:`classify_fix`, which passes it through
+        unchanged.
+    """
+    v_min = a_min = math.inf
+    v_tot = a_tot = 0.0
+    v_cnt = a_cnt = 0
+    n_conns = 0
+    bad_cells = []
+    bad_conns = []
+    with open(input_path) as f:
+        n_cells = int(f.readline().split()[-1])
+        for _ in range(n_cells):
+            cols = f.readline().split()
+            v = float(cols[4])
+            _, kind = classify_fix(v, 0.0)
+            if kind is not None:
+                bad_cells.append((int(cols[0]), float(cols[1]), float(cols[2]),
+                                  float(cols[3]), v, kind))
+            elif v > 0.0:
+                v_min = min(v_min, v); v_tot += v; v_cnt += 1
+        conn = f.readline().split()
+        if conn and conn[0].upper() == "CONNECTIONS":
+            n_conns = int(conn[-1])
+            for _ in range(n_conns):
+                cols = f.readline().split()
+                a = float(cols[5])
+                _, kind = classify_fix(a, 0.0)
+                if kind is not None:
+                    bad_conns.append((int(cols[0]), int(cols[1]), a, kind))
+                elif a > 0.0:
+                    a_min = min(a_min, a); a_tot += a; a_cnt += 1
+
+    def pick(mn, tot, cnt):
+        if cnt == 0:
+            return None
+        if strategy == "min":
+            return mn
+        if strategy == "mean":
+            return tot / cnt
+        raise ValueError(f"unknown strategy {strategy!r} (use 'min', 'mean', or a number)")
+
+    return ScanResult(input_path, pick(v_min, v_tot, v_cnt),
+                      pick(a_min, a_tot, a_cnt), n_cells, n_conns,
+                      bad_cells, bad_conns)
+
+
+def scan_fills(input_path, strategy="min"):
+    """Estimate per-column fill values from the finite, positive entries.
+
+    Thin wrapper on :func:`scan_uge` for callers that only need the fills.
+
+    Parameters
+    ----------
+        input_path : str
+            Path to the ``.uge`` file.
+        strategy : str
+            ``'min'`` (default) or ``'mean'``.
 
     Returns
     -------
@@ -93,34 +193,10 @@ def scan_fills(input_path, strategy="min"):
             If no finite positive volume exists to derive a fill from, or if
             ``strategy`` is not recognised.
     """
-    v_min = a_min = math.inf
-    v_tot = a_tot = 0.0
-    v_cnt = a_cnt = 0
-    with open(input_path) as f:
-        n = int(f.readline().split()[-1])
-        for _ in range(n):
-            v = float(f.readline().split()[4])
-            if math.isfinite(v) and v > 0.0:
-                v_min = min(v_min, v); v_tot += v; v_cnt += 1
-        conn = f.readline().split()
-        if conn and conn[0].upper() == "CONNECTIONS":
-            for _ in range(int(conn[-1])):
-                a = float(f.readline().split()[5])
-                if math.isfinite(a) and a > 0.0:
-                    a_min = min(a_min, a); a_tot += a; a_cnt += 1
-    if v_cnt == 0:
+    res = scan_uge(input_path, strategy)
+    if res.vol_fill is None:
         raise ValueError("no finite positive volumes to derive a fill value from")
-
-    def pick(mn, tot, cnt):
-        if cnt == 0:
-            return None
-        if strategy == "min":
-            return mn
-        if strategy == "mean":
-            return tot / cnt
-        raise ValueError(f"unknown strategy {strategy!r} (use 'min', 'mean', or a number)")
-
-    return pick(v_min, v_tot, v_cnt), pick(a_min, a_tot, a_cnt)
+    return res.vol_fill, res.area_fill
 
 
 def fix_stream(fin, fout, vol_fill, area_fill):
@@ -208,9 +284,11 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min"):
         output_path : str, optional
             Destination path. If ``None`` (default) the file is corrected in
             place via an atomic temp-file-then-replace.
-        nan_fill : str or float
+        nan_fill : str, float, or tuple
             Fill strategy for NaN/inf entries: ``'min'`` (default), ``'mean'``,
-            or an explicit number applied to both columns.
+            an explicit number applied to both columns, or an explicit
+            ``(vol_fill, area_fill)`` pair. Passing a pair skips the scan, for
+            callers that have already run :func:`scan_uge`.
 
     Returns
     -------
@@ -224,10 +302,13 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min"):
         A clean file is returned byte-for-byte identical; only corrected lines
         are rewritten.
     """
-    try:
-        vol_fill = area_fill = float(nan_fill)
-    except (TypeError, ValueError):
-        vol_fill, area_fill = scan_fills(input_path, nan_fill)
+    if isinstance(nan_fill, (tuple, list)):
+        vol_fill, area_fill = nan_fill
+    else:
+        try:
+            vol_fill = area_fill = float(nan_fill)
+        except (TypeError, ValueError):
+            vol_fill, area_fill = scan_fills(input_path, nan_fill)
 
     if output_path is None:
         d = os.path.dirname(os.path.abspath(input_path))
@@ -245,6 +326,122 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min"):
 # --------------------------------------------------------------------------- #
 # dfnWorks methods
 # --------------------------------------------------------------------------- #
+def _fracture_of(self, cell_id):
+    """Fracture (material) id for a cell, or ``None`` when unavailable.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class.
+        cell_id : int
+            One-based cell id from the ``.uge`` file.
+
+    Returns
+    -------
+        int or None
+    """
+    try:
+        return int(self.material_ids[cell_id - 1])
+    except (AttributeError, IndexError, TypeError, ValueError):
+        return None
+
+
+def _report_scan(self, res):
+    """Log every invalid coefficient and enforce the correction policy.
+
+    Writes one line per offending cell and per offending connection to both the
+    screen and the log (``print_log`` at ``info`` level does both), then decides
+    whether the mesh may be corrected:
+
+      * rFram off and anything invalid -> hard error.
+      * invalid cells or invalid connections above :data:`BAD_FRACTION_LIMIT` of
+        their own total -> hard error, regardless of rFram.
+      * otherwise -> return, and let the caller apply the correction.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class. Uses ``self.r_fram``, ``self.print_log``, and (when
+            available) ``self.material_ids`` to name the fracture a cell is on.
+        res : ScanResult
+            Output of :func:`scan_uge`.
+
+    Returns
+    -------
+        bool
+            True if a correction must be applied, False if the mesh is clean.
+
+    Notes
+    -----
+        Exits the run via ``print_log(..., 'error')`` when the mesh is rejected.
+        The offending entries are dumped *before* that decision, so the listing
+        is available in both the pass and the fail case.
+    """
+    n_bad_cells = len(res.bad_cells)
+    n_bad_conns = len(res.bad_conns)
+    if not n_bad_cells and not n_bad_conns:
+        return False
+
+    cell_frac = n_bad_cells / res.n_cells if res.n_cells else 0.0
+    conn_frac = n_bad_conns / res.n_conns if res.n_conns else 0.0
+
+    self.print_log(
+        f"--> Invalid geometric coefficients in {res.path}: "
+        f"{n_bad_cells} of {res.n_cells} cells ({100 * cell_frac:0.4f}%), "
+        f"{n_bad_conns} of {res.n_conns} connections ({100 * conn_frac:0.4f}%)",
+        "warning")
+
+    if n_bad_cells:
+        self.print_log("--> Invalid cells:")
+        for cid, x, y, z, vol, kind in res.bad_cells:
+            frac = _fracture_of(self, cid)
+            self.print_log(
+                f"      cell {cid:>10d}  fracture {frac if frac is not None else '?':>6}"
+                f"  x {x: .12e}  y {y: .12e}  z {z: .12e}"
+                f"  volume {vol: .12e}  [{kind}]")
+
+    if n_bad_conns:
+        self.print_log("--> Invalid connections:")
+        for id1, id2, area, kind in res.bad_conns:
+            f1 = _fracture_of(self, id1)
+            f2 = _fracture_of(self, id2)
+            self.print_log(
+                f"      cells {id1:>10d} -> {id2:>10d}"
+                f"  fractures {f1 if f1 is not None else '?'} -> "
+                f"{f2 if f2 is not None else '?'}"
+                f"  area {area: .12e}  [{kind}]")
+
+    if not self.r_fram:
+        self.print_log(
+            "Error. Invalid geometric coefficients in the UGE file with rFram "
+            "turned off.\nWith rFram off the mesh is expected to conform, so "
+            "negative or non-finite volumes and areas indicate a meshing "
+            "failure rather than a relaxed-constraint artifact, and are not "
+            "corrected. See the listing above for the offending cells and "
+            "connections.\nExiting\n", "error")
+
+    over = []
+    if cell_frac > BAD_FRACTION_LIMIT:
+        over.append(f"cells {100 * cell_frac:0.4f}%")
+    if conn_frac > BAD_FRACTION_LIMIT:
+        over.append(f"connections {100 * conn_frac:0.4f}%")
+    if over:
+        self.print_log(
+            f"Error. Invalid geometric coefficients exceed the "
+            f"{100 * BAD_FRACTION_LIMIT:0.2f}% limit ({'; '.join(over)}).\n"
+            "The correction is only defensible for a handful of degenerate "
+            "cells; at this level the flow solution would not be trustworthy. "
+            "Remesh (smaller h, or a less dense network) rather than "
+            "correcting. This is common in dense networks and around triple "
+            "intersections.\nExiting\n", "error")
+
+    self.print_log(
+        f"--> rFram is on and both fractions are below "
+        f"{100 * BAD_FRACTION_LIMIT:0.2f}%; correcting "
+        "(negative -> absolute value, NaN/inf -> smallest positive value).")
+    return True
+
+
 def correct_uge_file(self, dim=3):
     """Correct the LaGriT ``.uge`` file for the PFLOTRAN flow solver.
 
@@ -254,10 +451,13 @@ def correct_uge_file(self, dim=3):
         multiplies cell volumes by aperture and connection areas by the mean
         aperture, writing ``<inp>_vol_area.uge``. ``dim=2`` keeps the raw
         ``<inp>.uge`` as the active mesh (no aperture conversion).
-      * ``self.r_fram`` controls validity sanitization. When True, raw values are
-        passed through :func:`classify_fix` (negative -> abs, NaN/inf -> smallest
-        positive fill) *before* any aperture scaling. This is where the
-        degenerate cells produced by relaxed meshing constraints are repaired.
+      * the mesh is *always* scanned for invalid coefficients first, and
+        :func:`_report_scan` decides what happens. Every offending cell and
+        connection is written to the screen and the log. A correction (negative
+        -> abs, NaN/inf -> smallest positive fill, applied *before* any aperture
+        scaling) is only made when ``self.r_fram`` is True and fewer than
+        :data:`BAD_FRACTION_LIMIT` of the cells *and* of the connections are
+        invalid. Otherwise the run exits with an error.
 
     In all cases ``self.uge_file`` is set to the file PFLOTRAN should read.
 
@@ -292,7 +492,23 @@ def correct_uge_file(self, dim=3):
         self.print_log("Error. Cannot find uge file\nExiting\n", "error")
 
     t = time()
-    c_neg = c_bad = k_neg = k_bad = 0
+
+    # Scan before writing anything: the policy below can reject the mesh, and
+    # the dim=3 branch streams its output as it reads, so the counts have to be
+    # in hand first.
+    scan = scan_uge(raw_uge, "min")
+    fix = _report_scan(self, scan)      # exits the run if the mesh is rejected
+
+    if fix and scan.vol_fill is None and any(k == "nonfinite"
+                                             for *_, k in scan.bad_cells):
+        self.print_log(
+            "Error. NaN or inf cell volumes but no finite positive volume to "
+            "derive a fill value from.\nExiting\n", "error")
+    if fix and scan.area_fill is None and any(k == "nonfinite"
+                                              for *_, k in scan.bad_conns):
+        self.print_log(
+            "Error. NaN or inf connection areas but no finite positive area to "
+            "derive a fill value from.\nExiting\n", "error")
 
     if dim == 3:
         out_uge = self.inp_file[:-4] + "_vol_area.uge"
@@ -300,19 +516,14 @@ def correct_uge_file(self, dim=3):
         material_ids = self.material_ids
         cell_based = self.cell_based_aperture
 
-        vol_fill = area_fill = None
-        if self.r_fram:
-            vol_fill, area_fill = scan_fills(raw_uge, "min")
-
         with open(raw_uge, "r") as fin, open(out_uge, "w") as fout:
             cell_header = fin.readline(); fout.write(cell_header)
             cell_lines = []
             for _ in range(int(cell_header.split()[-1])):
                 parts = fin.readline().split(None, 5)
                 cid = int(parts[0]); vol = float(parts[4])
-                if self.r_fram:
-                    vol, kind = classify_fix(vol, vol_fill)
-                    c_neg += kind == "negative"; c_bad += kind == "nonfinite"
+                if fix:
+                    vol, _ = classify_fix(vol, scan.vol_fill)
                 idx = cid - 1 if cell_based else material_ids[cid - 1] - 1
                 vol *= aperture[idx]
                 cell_lines.append(f"{cid}\t{parts[1]}\t{parts[2]}\t{parts[3]}\t{vol:0.12e}\n")
@@ -323,9 +534,8 @@ def correct_uge_file(self, dim=3):
             for _ in range(int(conn_header.split()[-1])):
                 parts = fin.readline().split(None, 6)
                 id1 = int(parts[0]); id2 = int(parts[1]); area = float(parts[5])
-                if self.r_fram:
-                    area, kind = classify_fix(area, area_fill)
-                    k_neg += kind == "negative"; k_bad += kind == "nonfinite"
+                if fix:
+                    area, _ = classify_fix(area, scan.area_fill)
                 avg_ap = 0.5 * (aperture[material_ids[id1 - 1] - 1] +
                                 aperture[material_ids[id2 - 1] - 1])
                 area *= avg_ap
@@ -333,14 +543,11 @@ def correct_uge_file(self, dim=3):
             fout.writelines(conn_lines)
         self.uge_file = out_uge
     else:
-        if self.r_fram:
-            res = fix_uge_volumes(raw_uge, nan_fill="min")     # atomic in-place
-            c_neg, c_bad, k_neg, k_bad = (res.cell_negative, res.cell_nonfinite,
-                                          res.conn_negative, res.conn_nonfinite)
+        if fix:
+            # atomic in-place; reuse the fills already found by the scan
+            fix_uge_volumes(raw_uge,
+                            nan_fill=(scan.vol_fill, scan.area_fill))
         self.uge_file = raw_uge
 
-    if self.r_fram:
-        self.print_log(f"--> rFram sanitize: cells {c_neg} neg / {c_bad} NaN-inf, "
-                       f"conns {k_neg} neg / {k_bad} NaN-inf")
     self.print_log(f"--> Complete: UGE file -> {self.uge_file} ({time() - t:0.3f} s)")
 
