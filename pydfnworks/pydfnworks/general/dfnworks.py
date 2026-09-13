@@ -46,10 +46,8 @@ class DFNWORKS():
         perm_cell file: the name of the file containing cell permeabilities 
         
         aper_cell_file: the name of the file containing cell apertures
-        
-        freeze: indicates whether the class attributes can be modified
-        
-        h : FRAM length scale 
+
+        h : FRAM length scale
 
     Returns
     -------
