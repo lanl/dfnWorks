@@ -14,6 +14,9 @@ it corrects anything:
     * rFram off and any invalid value  -> hard error. A conforming mesh has no
       business producing negative or non-finite coefficients; that is a meshing
       failure, not an artifact to paper over.
+    * rFram unknown (``DFN.r_fram is None``, i.e. no parameter file was parsed,
+      as on a flow-only restart) and any invalid value -> hard error asking for
+      it to be set. "Unknown" must not quietly become "off" or "on".
     * more than ``BAD_FRACTION_LIMIT`` of the cells *or* of the connections
       invalid -> hard error, regardless of rFram. The two fractions are tested
       independently against their own totals.
@@ -363,6 +366,9 @@ def _report_scan(self, res):
         self : object
             DFN Class. Uses ``self.r_fram``, ``self.print_log``, and (when
             available) ``self.material_ids`` to name the fracture a cell is on.
+            ``self.r_fram`` of ``None`` means "not known" -- it is only set when
+            a dfnGen parameter file has been parsed -- and is an error rather
+            than a silent "off".
         res : ScanResult
             Output of :func:`scan_uge`.
 
@@ -411,7 +417,18 @@ def _report_scan(self, res):
                 f"{f2 if f2 is not None else '?'}"
                 f"  area {area: .12e}  [{kind}]")
 
-    if not self.r_fram:
+    r_fram = getattr(self, "r_fram", None)
+    if r_fram is None:
+        self.print_log(
+            "Error. Invalid geometric coefficients in the UGE file, but it is "
+            "not known whether rFram was used to build this mesh.\nDFN.r_fram "
+            "is set from the dfnGen parameter file during dfn_gen; on a "
+            "flow-only restart from an existing mesh it is never set, so the "
+            "correction cannot be authorised automatically. Set DFN.r_fram "
+            "explicitly (True or False) before calling lagrit2pflotran.\n"
+            "Exiting\n", "error")
+
+    if not r_fram:
         self.print_log(
             "Error. Invalid geometric coefficients in the UGE file with rFram "
             "turned off.\nWith rFram off the mesh is expected to conform, so "

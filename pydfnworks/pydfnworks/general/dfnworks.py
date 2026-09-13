@@ -168,6 +168,11 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
+        # Set from params['rFram'] by parse_params_file() during dfn_gen. Stays
+        # None on a flow-only restart from an existing mesh, where no params
+        # file was read; correct_uge_file() treats None as "unknown" rather than
+        # assuming rFram was off.
+        self.r_fram = None
 
         self.aper_cell_file = 'aper_node.dat'
         self.perm_cell_file = 'perm_node.dat'
