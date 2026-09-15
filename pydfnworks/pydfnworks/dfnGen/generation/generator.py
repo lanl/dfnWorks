@@ -136,6 +136,9 @@ def create_network(self):
     After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. 
     '''
     self.print_log('--> Running DFNGEN')
+    # seed the pydfnworks generators (NumPy / random) before any Python-side
+    # randomness is drawn, e.g. in assign_hydraulic_properties() below
+    self.set_seed()
     os.chdir(self.jobname)
     cmd = os.environ[
         'DFNGEN_EXE'] + ' ' + 'dfnGen_output/' + self.local_dfnGen_file[:

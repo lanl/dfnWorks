@@ -5,24 +5,9 @@ import sys
 import time
 from itertools import combinations
 
-from pydfnworks.dfnGraph.graph_attributes import add_perm, add_area
+from pydfnworks.dfnGraph.attributes.perm_area import add_perm, add_area
+from pydfnworks.dfnGraph.construction.boundary import boundary_index
 from pydfnworks.general.logging import local_print_log
-
-def boundary_index(bc_name):
-    """Determine boundary index in intersections_list.dat from name."""
-    bc_dict = {
-        "top":    -1,
-        "bottom": -2,
-        "left":   -3,
-        "front":  -4,
-        "right":  -5,
-        "back":   -6
-    }
-    try:
-        return bc_dict[bc_name]
-    except KeyError:
-        local_print_log(f"Error. Unknown boundary condition: {bc_name}", 'error')
-        sys.exit(1)
 
 def create_intersection_graph(inflow, outflow,
                               intersection_file="dfnGen_output/intersection_list.dat"):

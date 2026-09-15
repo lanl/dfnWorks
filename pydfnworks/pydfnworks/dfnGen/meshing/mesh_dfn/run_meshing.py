@@ -10,11 +10,10 @@ import os
 import sys
 import timeit
 import glob
+import threading
 
 import numpy as np
-import multiprocessing as mp
-
-mp.set_start_method("fork")
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from shutil import copy, rmtree
 from numpy import genfromtxt
@@ -193,12 +192,10 @@ def mesh_fracture(fracture_id, visual_mode, num_frac, r_fram, quiet):
 
     """
 
-    # get current process information
+    # get current worker information (thread name is e.g. 'mesh_worker_3')
     try:
-        p = mp.current_process()
-        _, cpu_id = p.name.split("-")
-        cpu_id = int(cpu_id)
-    except:
+        cpu_id = int(threading.current_thread().name.split("_")[-1])
+    except (ValueError, IndexError):
         cpu_id = 1
 
     # get leading digits
@@ -354,38 +351,48 @@ def mesh_fractures_header(self, quiet=True):
         f"--> Triangulating {self.num_frac} fractures using {self.ncpu} processors\n"
     )
 
-    pool = mp.Pool(min(self.num_frac, self.ncpu))
+    # The per-fracture work is subprocess-bound (LaGriT + connectivity check),
+    # so a thread pool gives full parallelism (the GIL is released during
+    # subprocess waits) without the fork()/spawn() hazards of multiprocessing
+    # (forked children deadlocking on inherited locks on macOS left these jobs
+    # hanging forever). Fractures are submitted largest-first (LPT) so a big
+    # fracture at the tail cannot serialize the run.
     result_list = []
 
-    def log_result(result):
-        # This is called whenever foo_pool(i) returns a result.
-        # result_list is modified only by the main process, not the pool workers.
-        result_list.append(result)
-        if result[1] != 0:
-            pool.terminate()
-            # If a run fails, kill all other processes, and clean up the directory
-            names = [
-                "poly_*.inp",
-                "mesh_poly_*.lgi",
-                "parameters_*.mlgi",
-                "intersections_*.inp",
-            ]
-            for name in names:
-                files_to_remove = glob.glob(name)
-                for f in files_to_remove:
-                    os.remove(f)
+    fracture_list = list(self.fracture_list)
+    surface_area = getattr(self, "surface_area", None)
+    if surface_area is not None and len(surface_area) >= max(fracture_list):
+        fracture_list.sort(key=lambda f: -surface_area[f - 1])
 
-    # get leading digits
-    digits = len(str(self.num_frac))
-
-    for i in self.fracture_list:
-        pool.apply_async(mesh_fracture,
-                         args=(i, self.visual_mode, self.num_frac, self.r_fram,
-                               quiet),
-                         callback=log_result)
-
-    pool.close()
-    pool.join()
+    num_workers = max(1, min(len(fracture_list), self.ncpu))
+    with ThreadPoolExecutor(max_workers=num_workers,
+                            thread_name_prefix="mesh_worker") as pool:
+        futures = {
+            pool.submit(mesh_fracture, i, self.visual_mode, self.num_frac,
+                        self.r_fram, quiet): i
+            for i in fracture_list
+        }
+        for future in as_completed(futures):
+            result = future.result()
+            result_list.append(result)
+            if result[1] != 0:
+                # A fracture failed: cancel pending jobs (in-flight LaGriT
+                # runs finish, then are ignored) and clean up the directory.
+                for f_pending in futures:
+                    f_pending.cancel()
+                names = [
+                    "poly_*.inp",
+                    "mesh_poly_*.lgi",
+                    "parameters_*.mlgi",
+                    "intersections_*.inp",
+                ]
+                for name in names:
+                    for f in glob.glob(name):
+                        try:
+                            os.remove(f)
+                        except OSError:
+                            pass
+                break
 
     elapsed = timeit.default_timer() - t_all
     self.print_log('--> Triangulating Polygons: Complete\n')
@@ -570,11 +577,10 @@ def merge_the_fractures(ncpu):
 
     jobs = range(1, ncpu + 1)
     tic = timeit.default_timer()
-    pool = mp.Pool(ncpu)
-    outputs = pool.map(merge_worker, jobs)
-    pool.close()
-    pool.join()
-    pool.terminate()
+    # merge_worker only waits on a LaGriT subprocess -> thread pool suffices
+    with ThreadPoolExecutor(max_workers=ncpu,
+                            thread_name_prefix="merge_worker") as pool:
+        outputs = list(pool.map(merge_worker, jobs))
     elapsed = timeit.default_timer() - tic
     local_print_log(
         f"--> Initial merging complete. Time elapsed: {elapsed:.2e} seconds."
