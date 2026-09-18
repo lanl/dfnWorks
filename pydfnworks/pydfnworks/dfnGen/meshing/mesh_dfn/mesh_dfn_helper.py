@@ -315,6 +315,44 @@ def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
         return failure
 
 
+def run_lagrit(self, lagrit_file, output_file=None, quiet=False):
+    """
+    Runs LaGriT
+
+    Parameters
+    -----------
+        lagrit_file : string
+            Name of LaGriT script to run
+        
+        output_file : string
+            Name of file to dump LaGriT output
+        
+        quiet : bool
+            If false, information will be printed to screen.
+
+    Returns
+    ----------
+        failure: int
+            If the run was successful, then 0 is returned. 
+
+    Notes
+    ------
+
+    """
+    if output_file == None:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} -log {lagrit_file}.log -out {lagrit_file}.out"
+    else:
+        cmd = f"{os.environ['LAGRIT_EXE']} < {lagrit_file} -log {output_file}.log -out {output_file}.out > {output_file}.dump"
+    if not quiet:
+        self.print_log(f"--> Running: {cmd}")
+    failure = subprocess.call(cmd, shell=True)
+    if failure:
+        self.print_log(f"LaGriT script {lagrit_file} failed to run properly", "error")
+    else:
+        if not quiet:
+            self.print_log(f"--> LaGriT script {lagrit_file} ran successfully")
+        return failure
+
 def setup_meshing_directory():
     """
     Parameters
