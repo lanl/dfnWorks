@@ -3,3 +3,4 @@ import pydfnworks.dfnGen.meshing.udfm
 import pydfnworks.dfnGen.meshing.poisson_disc
 import pydfnworks.dfnGen.meshing.mapdfn_ecpm
 import pydfnworks.dfnGen.meshing.dfm 
+import pydfnworks.dfnGen.meshing.edfn
