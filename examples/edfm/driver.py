@@ -7,7 +7,6 @@
 
 from pydfnworks import *
 import os
-from build_hex_dfn_lgi import write_lagrit_script
 
 src_path = os.getcwd()
 jobname = src_path + "/output"
@@ -53,28 +52,7 @@ DFN.create_network()
 
 DFN.mesh_network(uniform_mesh = True)
 
-lx = DFN.params['domainSize']['value'][0]
-ly = DFN.params['domainSize']['value'][1] 
-lz = DFN.params['domainSize']['value'][2]
-
-nx = 5
-ny = 5
-nz = 5 
-epsilon = 1e-4 
-
-write_lagrit_script(
-        nx=nx,
-        ny=ny,
-        nz=nz,
-        lx=lx,
-        ly=ly,
-        lz=lz,
-        epsilon=epsilon,
-    )
-
-
-
-DFN.run_lagrit("build_hex_dfn.lgi")
+DFN.mesh_edfn(nx=5, ny=5, nz=5)
 
 DFN.lagrit2pflotran()
 
