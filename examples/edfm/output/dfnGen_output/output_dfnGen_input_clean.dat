@@ -98,7 +98,7 @@ rExpMin: {}
 rExpMax: {}
 rconst: {}
 userRectanglesOnOff: 1 
-UserRect_Input_File_Path: /Users/jhyman/Desktop/EDFM/output//dfnGen_output/user_defined_rect.dat 
+UserRect_Input_File_Path: /Users/hymanjd/src/dfnWorks/examples/edfm/output//dfnGen_output/user_defined_rect.dat 
 userRecByCoord: 0 
 RectByCoord_Input_File_Path: {}
 userEllByCoord: 0 
