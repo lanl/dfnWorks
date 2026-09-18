@@ -238,8 +238,8 @@ def process_edfn_output(self):
         Sets self.edfn_dfn_to_matrix : numpy array, length num DFN nodes, entry i is the matrix node
         containing DFN node i+1 (1-based ids).
         Sets self.edfn_matrix_to_dfn : dict, matrix node id -> numpy array of DFN node ids.
-        matrix_to_dfn_nodes.dat has one line per matrix node that contains DFN nodes:
-        matrix_id  num_dfn_nodes  dfn_id_1 dfn_id_2 ...
+        matrix_to_dfn_nodes.dat has three '#' header lines, then one line per matrix node that
+        contains DFN nodes: matrix_id  num_dfn_nodes  dfn_id_1 dfn_id_2 ...
 
     """
     self.print_log("--> Processing EDFN output")
@@ -261,6 +261,9 @@ def process_edfn_output(self):
         self.edfn_matrix_to_dfn[int(m)] = dfn_id[cv_id == m]
 
     with open("matrix_to_dfn_nodes.dat", "w") as fp:
+        fp.write("# DFN nodes contained in each matrix (tet mesh) node's Voronoi cell\n")
+        fp.write(f"# num_matrix_nodes {len(self.edfn_matrix_to_dfn)} num_dfn_nodes {len(dfn_id)}\n")
+        fp.write("# matrix_id num_dfn_nodes dfn_id_1 dfn_id_2 ...\n")
         for m, nodes in self.edfn_matrix_to_dfn.items():
             fp.write(f"{m} {len(nodes)} " + " ".join(str(n) for n in nodes) + "\n")
 
