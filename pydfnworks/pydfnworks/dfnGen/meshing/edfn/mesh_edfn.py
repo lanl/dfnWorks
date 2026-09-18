@@ -141,10 +141,7 @@ dump / avs2 / DFN_OUT / MODFN
 # ---------------------------------------------------
 cmo / select / MODFN
 cmo / modatt / MODFN / isn / ioflag / l
-cmo / modatt / MODFN / x_four / ioflag / l
-cmo / modatt / MODFN / fac_n / ioflag / l
 cmo / modatt / MODFN / dfield / ioflag / l
-cmo / modatt / MODFN / rf_field / ioflag / l
 cmo / modatt / MODFN / a_b / ioflag / l
 cmo / modatt / MODFN / b_a / ioflag / l
 cmo / modatt / MODFN / xnorm / ioflag / l
@@ -156,10 +153,6 @@ cmo / modatt / MODFN / numbnd / ioflag / l
 cmo / modatt / MODFN / id_numb / ioflag / l
 cmo / modatt / MODFN / itp / ioflag / l
 cmo / modatt / MODFN / icr / ioflag / l
-cmo / modatt / MODFN / meshid / ioflag / l
-cmo / modatt / MODFN / id_n_1 / ioflag / l
-cmo / modatt / MODFN / id_n_2 / ioflag / l
-cmo / modatt / MODFN / pt_gtg / ioflag / l
 cmo / modatt / MODFN / imt1 / ioflag / l
 dump / avs2 / CV_OUT / MODFN / 0 0 2 0
 
