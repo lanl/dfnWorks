@@ -116,7 +116,7 @@ class DFNWORKS():
 
     from pydfnworks.dfnGen.meshing.dfm.mesh_dfm import mesh_dfm
 
-    from pydfnworks.dfnGen.meshing.edfn.mesh_edfn import mesh_edfn, write_edfn_lagrit_script
+    from pydfnworks.dfnGen.meshing.edfn.mesh_edfn import mesh_edfn, write_edfn_lagrit_script, process_edfn_output
 
     # dfnFlow
     import pydfnworks.dfnFlow

@@ -7,6 +7,7 @@
 
 import os
 import sys
+import numpy as np
 
 
 def write_edfn_lagrit_script(self, nx, ny, nz):
@@ -117,6 +118,7 @@ quality
 # Read DFN mesh
 # ---------------------------------------------------
 read / avs / DFN_FILE / MODFN
+cmo / set_id / MODFN / node / dfn_id
 
 cmo / status / brief
 cmo / printatt / MODFN / -xyz- / minmax
@@ -137,7 +139,7 @@ dump / avs2 / TET_OUT / MOTET
 dump / avs2 / DFN_OUT / MODFN
 
 # ---------------------------------------------------
-# Dump cv_id per DFN node (hide the other node attributes)
+# Dump dfn_id, cv_id per DFN node (hide the other node attributes)
 # ---------------------------------------------------
 cmo / select / MODFN
 cmo / modatt / MODFN / isn / ioflag / l
@@ -196,7 +198,8 @@ def mesh_edfn(self, nx, ny, nz):
     Notes
     --------------
         Output files: build_hex_dfn.lgi, hex_mesh.inp, tet_mesh.inp, dfn_mesh_tagged.inp,
-        matrix_cells.dat (cv_id per DFN node), matrix_outside.zone, matrix.uge
+        matrix_cells.dat (dfn_id, cv_id per DFN node), matrix_to_dfn_nodes.dat (DFN nodes per matrix node),
+        matrix_outside.zone, matrix.uge
 
     """
     self.print_log('=' * 80)
@@ -211,7 +214,55 @@ def mesh_edfn(self, nx, ny, nz):
 
     lagrit_file = self.write_edfn_lagrit_script(nx, ny, nz)
     self.run_lagrit(lagrit_file)
+    self.process_edfn_output()
 
     self.print_log('=' * 80)
     self.print_log("Creating EDFN matrix mesh using LaGriT : Complete")
     self.print_log('=' * 80)
+
+
+def process_edfn_output(self):
+    """ Reads matrix_cells.dat (dfn_id, cv_id per DFN node) written by LaGriT, builds the inverse map
+    from matrix node to the DFN nodes it contains, and writes it to matrix_to_dfn_nodes.dat.
+
+    Parameters
+    ------------------
+        self : DFN object
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    --------------
+        Sets self.edfn_dfn_to_matrix : numpy array, length num DFN nodes, entry i is the matrix node
+        containing DFN node i+1 (1-based ids).
+        Sets self.edfn_matrix_to_dfn : dict, matrix node id -> numpy array of DFN node ids.
+        matrix_to_dfn_nodes.dat has one line per matrix node that contains DFN nodes:
+        matrix_id  num_dfn_nodes  dfn_id_1 dfn_id_2 ...
+
+    """
+    self.print_log("--> Processing EDFN output")
+
+    with open("matrix_cells.dat", "r") as fp:
+        fp.readline()  # avs header, node count is not filled in for attribute-only dumps
+        num_att = int(fp.readline().split()[0])
+        names = [fp.readline().split(",")[0].strip() for _ in range(num_att)]
+        data = np.loadtxt(fp, dtype=int, ndmin=2)
+
+    dfn_id = data[:, names.index("dfn_id")]
+    cv_id = data[:, names.index("cv_id")]
+
+    order = np.argsort(dfn_id)
+    self.edfn_dfn_to_matrix = cv_id[order]
+
+    self.edfn_matrix_to_dfn = {}
+    for m in np.unique(cv_id):
+        self.edfn_matrix_to_dfn[int(m)] = dfn_id[cv_id == m]
+
+    with open("matrix_to_dfn_nodes.dat", "w") as fp:
+        for m, nodes in self.edfn_matrix_to_dfn.items():
+            fp.write(f"{m} {len(nodes)} " + " ".join(str(n) for n in nodes) + "\n")
+
+    self.print_log(f"--> {len(dfn_id)} DFN nodes mapped into {len(self.edfn_matrix_to_dfn)} matrix nodes")
+    self.print_log("--> Wrote matrix_to_dfn_nodes.dat")
