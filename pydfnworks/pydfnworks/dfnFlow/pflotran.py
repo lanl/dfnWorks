@@ -203,8 +203,8 @@ def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
 
     # loop through zone files
     if zone_file == 'all':
-        zone_files = ['boundary_front_n.zone', 'boundary_back_s.zone', 'boundary_left_w.zone', 'boundary_right_e.zone', 'boundary_top.zone', 'boundary_bottom.zone']
-        face_names = ['north', 'south', 'west', 'east', 'top', 'bottom']
+        zone_files = ['boundary_front_s.zone', 'boundary_back_n.zone', 'boundary_left_w.zone', 'boundary_right_e.zone', 'boundary_top.zone', 'boundary_bottom.zone']
+        face_names = ['south', 'north', 'west', 'east', 'top', 'bottom']
     else:
         if zone_file == '':
             error = 'Error: Please provide boundary zone filename!\n'

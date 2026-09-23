@@ -175,7 +175,7 @@ pset / left_w / attribute/ xic/ 1,0,0 /lt / XMIN
 pset / left_w / zone / FOUT/ ascii / ZONE
 
 define / ZONE / 4
-define / FOUT / boundary_front_n
+define / FOUT / boundary_front_s
 pset / front_n / attribute/ yic / 1,0,0 / gt / YMAX
 pset / front_n / zone / FOUT/ ascii / ZONE
 
@@ -185,7 +185,7 @@ pset / right_e / attribute/ xic / 1,0,0/ gt / XMAX
 pset / right_e / zone / FOUT/ ascii / ZONE
 
 define / ZONE / 6
-define / FOUT / boundary_back_s
+define / FOUT / boundary_back_n
 pset / back_s / attribute/ yic/ 1,0,0 / lt / YMIN
 pset / back_s / zone / FOUT/ ascii / ZONE
 

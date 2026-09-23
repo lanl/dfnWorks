@@ -8,7 +8,7 @@
 import os
 import sys
 import numpy as np
-
+import shutil
 
 def write_edfn_lagrit_script(self, nx, ny, nz):
     """ Writes the LaGriT script build_hex_dfn.lgi for the hex+DFN workflow. Domain size and center are taken from the DFN object.
@@ -135,7 +135,7 @@ cmo / printatt / MODFN / cv_id / minmax
 # Dump inspection files
 # ---------------------------------------------------
 dump / avs2 / HEX_OUT / MOHEX
-dump / avs2 / TET_OUT / MOTET
+# dump / avs2 / TET_OUT / MOTET
 dump / avs2 / DFN_OUT / MODFN
 
 # ---------------------------------------------------
@@ -178,47 +178,6 @@ finish
 
     return lagrit_file
 
-
-def mesh_edfn(self, nx, ny, nz):
-    """ Builds a hex matrix mesh over the domain, converts it to tets, tags each DFN node with the
-    ID of the tet node whose Voronoi cell contains it, and dumps the matrix boundary zones and
-    PFLOTRAN .uge. The DFN must already be meshed (DFN.mesh_network()). Runs in the job directory.
-
-    Parameters
-    ------------------
-        self : DFN object
-
-        nx, ny, nz : int
-            Number of hex mesh nodes per axis
-
-    Returns
-    ---------------
-        None
-
-    Notes
-    --------------
-        Output files: build_hex_dfn.lgi, hex_mesh.inp, tet_mesh.inp, dfn_mesh_tagged.inp,
-        matrix_cells.dat (dfn_id, cv_id per DFN node), matrix_to_dfn_nodes.dat (DFN nodes per matrix node),
-        matrix_outside.zone, matrix.uge
-
-    """
-    self.print_log('=' * 80)
-    self.print_log("Creating EDFN matrix mesh using LaGriT : Starting")
-    self.print_log('=' * 80)
-
-    if not os.path.isfile("full_mesh.inp"):
-        error = "Error. full_mesh.inp not found. Mesh the DFN first (DFN.mesh_network()).\nExiting program."
-        self.print_log(error, 'critical')
-        sys.stderr.write(error)
-        sys.exit(1)
-
-    lagrit_file = self.write_edfn_lagrit_script(nx, ny, nz)
-    self.run_lagrit(lagrit_file)
-    self.process_edfn_output()
-
-    self.print_log('=' * 80)
-    self.print_log("Creating EDFN matrix mesh using LaGriT : Complete")
-    self.print_log('=' * 80)
 
 
 def process_edfn_output(self):
@@ -269,3 +228,57 @@ def process_edfn_output(self):
 
     self.print_log(f"--> {len(dfn_id)} DFN nodes mapped into {len(self.edfn_matrix_to_dfn)} matrix nodes")
     self.print_log("--> Wrote matrix_to_dfn_nodes.dat")
+
+
+def mesh_edfn(self, nx, ny, nz, output_dir = "edfn"):
+    """ Builds a hex matrix mesh over the domain, converts it to tets, tags each DFN node with the
+    ID of the tet node whose Voronoi cell contains it, and dumps the matrix boundary zones and
+    PFLOTRAN .uge. The DFN must already be meshed (DFN.mesh_network()). Runs in the job directory.
+
+    Parameters
+    ------------------
+        self : DFN object
+
+        nx, ny, nz : int
+            Number of hex mesh nodes per axis
+
+    Returns
+    ---------------
+        None
+
+    Notes
+    --------------
+        Output files: build_hex_dfn.lgi, hex_mesh.inp, tet_mesh.inp, dfn_mesh_tagged.inp,
+        matrix_cells.dat (dfn_id, cv_id per DFN node), matrix_to_dfn_nodes.dat (DFN nodes per matrix node),
+        matrix_outside.zone, matrix.uge
+
+    """
+    self.print_log('=' * 80)
+    self.print_log("Creating EDFN matrix mesh using LaGriT : Starting")
+    self.print_log('=' * 80)
+
+    if not os.path.isfile("full_mesh.inp"):
+        error = "Error. full_mesh.inp not found. Mesh the DFN first (DFN.mesh_network()).\nExiting program."
+        self.print_log(error, 'critical')
+        sys.stderr.write(error)
+        sys.exit(1)
+
+    lagrit_file = self.write_edfn_lagrit_script(nx, ny, nz)
+    self.run_lagrit(lagrit_file)
+    self.process_edfn_output()
+
+    self.lagrit2pflotran()
+
+    os.rename('full_mesh_vol_area.uge', 'fracture.uge')
+
+    os.mkdir(output_dir)
+
+    files_to_move = ["fracture.uge", "matrix.uge", "fracture_outside.zone", 
+                    "matrix_outside.zone", "matrix_cells.dat", "matrix_to_dfn_nodes.dat"]
+
+    for filename in files_to_move:
+        shutil.copyfile(filename, f'{output_dir}/{filename}')
+       
+    self.print_log('=' * 80)
+    self.print_log("Creating EDFN matrix mesh using LaGriT : Complete")
+    self.print_log('=' * 80)
