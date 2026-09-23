@@ -16,7 +16,7 @@ def set_flow_solver(self, flow_solver):
             DFN Class
         
         flow_solver: string  
-            Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN
+            Name of flow solver. Currently supported flow solvers are FEHM, PFLOTRAN and MOOSE
 
     Returns
     ---------
@@ -26,11 +26,11 @@ def set_flow_solver(self, flow_solver):
     Default is PFLOTRAN 
 
 """
-    if flow_solver == "FEHM" or flow_solver == "PFLOTRAN":
+    if flow_solver in ("FEHM", "PFLOTRAN", "MOOSE"):
         self.print_log(f"Using flow solver {flow_solver}")
         self.flow_solver = flow_solver
     else:
-        error = f"Error: Unknown flow solver requested {flow_solver}\nCurrently supported flow solvers are FEHM and PFLOTRAN\nExiting dfnWorks\n"
+        error = f"Error: Unknown flow solver requested {flow_solver}\nCurrently supported flow solvers are FEHM, PFLOTRAN and MOOSE\nExiting dfnWorks\n"
         self.print_log(error, 'error')
 
 
@@ -84,6 +84,9 @@ def dfn_flow(self, dump_vtk=True, dump_h5=False):
         self.print_log(f"Using flow solver: {self.flow_solver}")
         self.correct_stor_file()
         self.fehm()
+
+    elif self.flow_solver == "MOOSE":
+        self.moose()
 
     delta_time = time() - tic_flow
     self.dump_time('Process: dfnFlow', delta_time)

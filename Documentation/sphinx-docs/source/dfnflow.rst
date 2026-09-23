@@ -157,3 +157,49 @@ Below is a sample input file. Refer to the PFLOTRAN user manual at http://www.pf
 	END
 
 	END_SUBSURFACE
+
+MOOSE / Falcon
+--------------
+
+To launch an existing MOOSE input deck with Falcon, select ``MOOSE`` as the
+flow solver. The job directory must exist before launching::
+
+    from pydfnworks import DFNWORKS
+
+    dfn = DFNWORKS(
+        jobname="/absolute/path/to/existing/job",
+        dfnFlow_file="/absolute/path/to/input.in",
+        flow_solver="MOOSE",
+        ncpu=96,
+    )
+    dfn.dfn_flow()
+
+For an existing DFN object, use ``dfn.set_flow_solver("MOOSE")`` and assign
+``dfn.dfnFlow_file`` to the absolute input-deck path before calling
+``dfn.dfn_flow()`` or ``dfn.moose()``.
+
+The launcher copies the input deck into the job directory and runs
+``mpiexec -n <ncpu> <executable> -i <input basename>`` there. It prepares a
+child Bash login shell by purging modules when the module command is available,
+unsetting the ``mpirun`` function and ``LD_LIBRARY_PATH``, sourcing Conda,
+setting ``OPENBLAS_NUM_THREADS`` and ``OMP_NUM_THREADS`` to 1, and activating
+``falcon-moose``. The calling Python process keeps its environment.
+
+Defaults and environment overrides are:
+
+* ``MOOSE_EXE``: ``~/projects/falcon/falcon-opt``
+* ``MOOSE_CONDA_SH``: ``~/miniforge/etc/profile.d/conda.sh``
+* ``MOOSE_CONDA_ENV``: ``falcon-moose``
+
+Direct calls can also override these with
+``dfn.moose(executable=..., conda_sh=..., conda_env=...)``.
+Solver output streams to the terminal or batch-job log. A failed launch or
+solver run raises an exception instead of reporting successful completion.
+Run within a scheduler allocation with enough resources for ``ncpu`` ranks.
+
+This integration launches a prepared MOOSE model. It does not convert dfnWorks
+meshes or material/boundary data into a MOOSE model, or parse MOOSE output for
+dfnTrans. Mesh files, included input files, and other relative dependencies
+must be available in the job directory at the paths used by the copied deck.
+The ``dump_vtk`` and ``dump_h5`` options of ``dfn_flow`` apply only to PFLOTRAN;
+MOOSE output is controlled by the input deck.
