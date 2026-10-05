@@ -274,14 +274,136 @@ def _write_pvd(pvd_file: Path, datasets: list[tuple[float, str]]) -> None:
 
 
 # ---------------------------------------------------------------------------
+# TOUGH output readers
+# ---------------------------------------------------------------------------
+
+def _parse_tough_tecplot(tecplot_file) -> tuple[list[str], list[tuple[float, np.ndarray]]]:
+    """Read all ZONE blocks from a TOUGH3 / TOUGH+ Tecplot file.
+
+    Returns
+    -------
+    tuple
+        ``(variables, zones)`` where ``zones`` is a list of
+        ``(simulation_time, data)`` with ``data`` of shape ``(n_pts, n_vars)``.
+    """
+    variables: list[str] = []
+    # Each entry: (simulation_time, data_array shape (n_pts, n_vars))
+    zones: list[tuple[float, np.ndarray]] = []
+
+    with open(tecplot_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].strip()
+        upper = stripped.upper()
+
+        # ---- VARIABLES header ---------------------------------------- #
+        if upper.startswith('VARIABLES'):
+            variables = _parse_tecplot_variables(stripped)
+            i += 1
+            continue
+
+        # ---- ZONE block ---------------------------------------------- #
+        if upper.startswith('ZONE'):
+            header = _parse_tecplot_zone_header(stripped)
+            zone_time = _extract_zone_time(header.get('T', '0'))
+
+            # I= (ordered) takes priority; fall back to N= (unstructured).
+            n_pts = header.get('I') or header.get('N', 0)
+            n_ele = header.get('E', 0)  # 0 for ordered zones
+            zonetype = header.get('ZONETYPE', 'FEBRICK')
+            nodes_per_ele = _ZONETYPE_NODES.get(zonetype, 8)
+            n_vars = len(variables)
+            i += 1
+
+            # Accumulate data tokens regardless of line wrapping.
+            tokens: list[str] = []
+            while len(tokens) < n_pts * n_vars and i < len(lines):
+                tokens.extend(lines[i].split())
+                i += 1
+            data = np.array(tokens[:n_pts * n_vars], dtype=float).reshape(n_pts, n_vars)
+
+            # Skip connectivity block (unstructured zones only).
+            if n_ele > 0:
+                conn_needed = n_ele * nodes_per_ele
+                conn_tokens: list[str] = []
+                while len(conn_tokens) < conn_needed and i < len(lines):
+                    conn_tokens.extend(lines[i].split())
+                    i += 1
+
+            zones.append((zone_time, data))
+            continue
+
+        i += 1
+
+    return variables, zones
+
+
+def _is_tough_csv(tough_file) -> bool:
+    """Return True if ``tough_file`` looks like TOUGH3 CSV output (``OUTPUT_ELEME.csv``)."""
+    if Path(tough_file).suffix.lower() == '.csv':
+        return True
+    with open(tough_file, 'r', encoding='utf-8') as f:
+        first = f.readline().strip()
+    return first.startswith('"') and ',' in first
+
+
+def _parse_tough_csv(csv_file) -> tuple[list[str], list[tuple[float, np.ndarray]]]:
+    """Read TOUGH3 CSV element output (``OUTPUT_ELEME.csv``).
+
+    Expected layout::
+
+        "ELEM","X","Y","Z","ROCK","PRES",...     <- variable names
+        "","(M)","(M)","(M)","","(PA)",...      <- units
+        "TIME [sec]  0.18884456E+08"            <- starts each timestep
+        "AAA 1", -0.25E+003, ..., 0.10E-001     <- one row per element
+
+    The leading ``ELEM`` column (element name) is dropped.
+
+    Returns
+    -------
+    tuple
+        ``(variables, zones)`` where ``zones`` is a list of
+        ``(simulation_time, data)`` with ``data`` of shape ``(n_rows, n_vars)``.
+    """
+    variables: list[str] = []
+    zones: list[tuple[float, np.ndarray]] = []
+    zone_time = None
+    rows: list[list[float]] = []
+
+    with open(csv_file, 'r', encoding='utf-8') as f:
+        names = [v.strip().strip('"').strip() for v in f.readline().split(',')]
+        variables = names[1:]  # drop ELEM
+        f.readline()  # units line
+        for line in f:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped.upper().startswith('"TIME'):
+                if zone_time is not None:
+                    zones.append((zone_time, np.array(rows, dtype=float)))
+                zone_time = _extract_zone_time(stripped.split(']', 1)[-1])
+                rows = []
+                continue
+            fields = stripped.split(',')
+            rows.append([float(v) for v in fields[1:]])
+
+    if zone_time is not None:
+        zones.append((zone_time, np.array(rows, dtype=float)))
+    return variables, zones
+
+
+# ---------------------------------------------------------------------------
 # Main class method
 # ---------------------------------------------------------------------------
 
 def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None:
-    """Parse TOUGH3 Tecplot output into a per-timestep VTU/PVD time series.
+    """Parse TOUGH3 Tecplot or CSV output into a per-timestep VTU/PVD time series.
 
-    Reads all ``ZONE`` blocks from a TOUGH3 (or TOUGH+) Tecplot output file
-    — one zone per output time — and writes:
+    Reads all ``ZONE`` blocks from a TOUGH3 (or TOUGH+) Tecplot output file,
+    or all ``"TIME [sec] ..."`` blocks from a TOUGH3 CSV file
+    (``OUTPUT_ELEME.csv``) — one block per output time — and writes:
 
     - ``tough_vtk_outputs/<base>-NNNN.vtu`` for each timestep
     - ``tough_vtk_outputs/tough.pvd`` ParaView collection with correct time values
@@ -296,8 +418,9 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     self:
         The parent DFNWorks object.
     tecplot_file:
-        Path to the TOUGH Tecplot output file.  Defaults to
-        ``<local_dfnFlow_file stem>.dat``.
+        Path to the TOUGH Tecplot or CSV output file.  Files ending in
+        ``.csv`` (or whose first line is quoted, comma-separated names) are
+        read as TOUGH3 CSV.  Defaults to ``Plot_Data_Elem``.
     inp_file:
         Path to the AVS/UCD mesh file.  Defaults to ``self.inp_file``
         (``full_mesh.inp``).
@@ -338,7 +461,7 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
         tecplot_file = 'Plot_Data_Elem'
     if not os.path.exists(tecplot_file):
         self.print_log(f"TOUGH Tecplot file not found: {tecplot_file}", 'error')
-    self.print_log(f"--> Reading Tecplot data from {tecplot_file}")
+    self.print_log(f"--> Reading TOUGH output from {tecplot_file}")
 
     # ------------------------------------------------------------------ #
     # Output directory
@@ -348,66 +471,31 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     base = Path(tecplot_file).stem
 
     # ------------------------------------------------------------------ #
-    # Parse the Tecplot file
+    # Parse the TOUGH output (Tecplot or CSV)
     # ------------------------------------------------------------------ #
-    variables: list[str] = []
-    coord_indices: set[int] = set()
-    # Each entry: (simulation_time, data_array shape (n_pts, n_vars))
-    zones: list[tuple[float, np.ndarray]] = []
-
-    with open(tecplot_file, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-
-    i = 0
-    while i < len(lines):
-        stripped = lines[i].strip()
-        upper = stripped.upper()
-
-        # ---- VARIABLES header ---------------------------------------- #
-        if upper.startswith('VARIABLES'):
-            variables = _parse_tecplot_variables(stripped)
-            coord_indices = {
-                j for j, v in enumerate(variables)
-                if v.split('(')[0].strip().upper() in ('X', 'Y', 'Z')
-            }
-            i += 1
-            continue
-
-        # ---- ZONE block ---------------------------------------------- #
-        if upper.startswith('ZONE'):
-            header = _parse_tecplot_zone_header(stripped)
-            zone_time = _extract_zone_time(header.get('T', '0'))
-
-            # I= (ordered) takes priority; fall back to N= (unstructured).
-            n_pts = header.get('I') or header.get('N', 0)
-            n_ele = header.get('E', 0)  # 0 for ordered zones
-            zonetype = header.get('ZONETYPE', 'FEBRICK')
-            nodes_per_ele = _ZONETYPE_NODES.get(zonetype, 8)
-            n_vars = len(variables)
-            i += 1
-
-            # Accumulate data tokens regardless of line wrapping.
-            tokens: list[str] = []
-            while len(tokens) < n_pts * n_vars and i < len(lines):
-                tokens.extend(lines[i].split())
-                i += 1
-            data = np.array(tokens[:n_pts * n_vars], dtype=float).reshape(n_pts, n_vars)
-
-            # Skip connectivity block (unstructured zones only).
-            if n_ele > 0:
-                conn_needed = n_ele * nodes_per_ele
-                conn_tokens: list[str] = []
-                while len(conn_tokens) < conn_needed and i < len(lines):
-                    conn_tokens.extend(lines[i].split())
-                    i += 1
-
-            zones.append((zone_time, data))
-            continue
-
-        i += 1
+    if _is_tough_csv(tecplot_file):
+        variables, zones = _parse_tough_csv(tecplot_file)
+    else:
+        variables, zones = _parse_tough_tecplot(tecplot_file)
+    coord_indices = {
+        j for j, v in enumerate(variables)
+        if v.split('(')[0].strip().upper() in ('X', 'Y', 'Z')
+    }
 
     if not zones:
         self.print_log(f"No zones found in {tecplot_file}", 'error')
+
+    # Check that output rows follow the INP node ordering.
+    xyz_idx = sorted(coord_indices)
+    first = zones[0][1]
+    if len(xyz_idx) == 3 and first.shape[0] == len(mesh['points']):
+        pts = np.asarray(mesh['points'])
+        # TOUGH MESH coordinates are written at reduced precision.
+        tol = 1e-3 * max(np.ptp(pts, axis=0).max(), 1.0)
+        if not np.allclose(first[:, xyz_idx], pts, atol=tol):
+            self.print_log("TOUGH output coordinates do not match INP node "
+                           "coordinates; element order may differ from node order",
+                           'warning')
 
     # ------------------------------------------------------------------ #
     # Write one VTU per zone and collect PVD entries
