@@ -14,6 +14,7 @@
 """
 
 import math
+from collections import Counter
 from pathlib import Path
 from typing import Iterable
 from time import time
@@ -185,6 +186,60 @@ def euclidean_distance(point_a: Iterable[float], point_b: Iterable[float]) -> fl
 
 
 # ---------------------------------------------------------------------------
+# ISOT (permeability index) assignment
+# ---------------------------------------------------------------------------
+
+def _resolve_isot(rock1, rock2, vec, isot_pairs, isot_materials, isot_default) -> int:
+    """Return the CONNE ISOT value (1, 2 or 3) for one connection.
+
+    Rules are applied in order:
+
+    1. ``isot_pairs``: an entry for the (unordered) pair of rock names.
+    2. ``isot_materials``: per-rock values. If only one rock is listed, its
+       value is used; if both are listed they must agree.
+    3. ``isot_default``: an int, or ``"geometric"`` to use the dominant
+       component of the centroid-to-centroid vector (x→1, y→2, z→3).
+
+    Parameters
+    ----------
+    rock1, rock2:
+        Rock-type names of the two connected elements.
+    vec:
+        Vector from element 1 centroid to element 2 centroid.
+    isot_pairs:
+        Dict keyed by ``frozenset`` of rock names (already normalized).
+    isot_materials:
+        Dict keyed by rock name (already normalized).
+    isot_default:
+        ``"geometric"`` or an int in {1, 2, 3}.
+
+    Raises
+    ------
+    ValueError
+        If both rocks are listed in ``isot_materials`` with different values
+        and no ``isot_pairs`` entry resolves the pair.
+    """
+    pair = frozenset((rock1, rock2))
+    if pair in isot_pairs:
+        return isot_pairs[pair]
+
+    values = {isot_materials[r] for r in pair if r in isot_materials}
+    if len(values) == 1:
+        return values.pop()
+    if len(values) > 1:
+        raise ValueError(
+            f"Conflicting ISOT for connection {rock1}-{rock2}: isot_materials "
+            f"gives {sorted(values)}. Add an isot_pairs entry for "
+            f"({rock1!r}, {rock2!r}) to resolve it."
+        )
+
+    if isot_default == "geometric":
+        components = [abs(v) for v in vec]
+        return components.index(max(components)) + 1
+    return isot_default
+
+
+# ---------------------------------------------------------------------------
 # Main conversion routine
 # ---------------------------------------------------------------------------
 
@@ -196,14 +251,10 @@ def convert_uge_to_tough(self,
     material_ids=None,
     material_names=None,
     default_rock_type="DFNMM",
+    isot_pairs=None,
+    isot_materials=None,
+    isot_default="geometric",
 ) -> None:
-
-# def convert_uge_to_tough(self,
-#     input_filename,  
-#     output_filename,
-#     boundary_filenames = None,
-#     boundary_nodes = np.array([]),  
-# ) -> None:
     """Convert a DFNWorks UGE mesh file to a TOUGH2/TOUGH+ MESH file.
 
     Reads the binary ``CELLS`` and ``CONNECTIONS`` sections from a
@@ -224,8 +275,9 @@ def convert_uge_to_tough(self,
     CONNE block
     -----------
     Each line encodes one connection between two adjacent elements.  The
-    permeability index (``conx_ki``) is fixed at 1 so that TOUGH uses the
-    first permeability value defined in its input file for every connection.
+    permeability index ISOT selects which of ``PER(1..3)`` in the ROCKS
+    block TOUGH uses for the connection, see ``isot_pairs`` /
+    ``isot_materials`` / ``isot_default`` below.
     The gravitational cosine ``beta`` is the cosine of the angle between the
     vertical (−z) direction and the vector joining the two element centroids.
 
@@ -269,6 +321,28 @@ def convert_uge_to_tough(self,
         ``material_ids``/``material_names`` (or for every element, if
         ``material_ids`` is omitted). Default ``"DFNMM"``. Must also be at
         most 5 characters.
+    isot_pairs:
+        Optional dict mapping a pair of materials to an ISOT value, e.g.
+        ``{("FRAC", "INJ"): 3}``. Pair order does not matter, and a pair of
+        the same material (``("FRAC", "FRAC")``) covers connections within
+        that material. Checked first.
+    isot_materials:
+        Optional dict mapping one material to an ISOT value, e.g.
+        ``{"FRAC": 3, "INJ": 2}``. Used when no ``isot_pairs`` entry matches
+        and at least one of the two elements is listed. If both elements are
+        listed with different values a ``ValueError`` is raised, add an
+        ``isot_pairs`` entry for that pair.
+    isot_default:
+        ISOT for connections not covered above. ``"geometric"`` (default)
+        uses the dominant direction of the centroid-to-centroid vector
+        (x→1, y→2, z→3). An int (1, 2 or 3) is used for every remaining
+        connection; ``isot_default=1`` with no dicts reproduces the original
+        ISOT=1 everywhere.
+
+        Keys of ``isot_pairs`` / ``isot_materials`` may be rock-type names or
+        material ids (looked up in ``material_names``). Note that ISOT is
+        applied to both elements of a connection, e.g. ``{"FRAC": 3}`` makes
+        matrix-fracture connections use the matrix rock's ``PER(3)`` too.
 
     Notes
     -----
@@ -339,13 +413,43 @@ def convert_uge_to_tough(self,
                 f"rock-type name, there is no silent fallback for unmapped ids."
             )
 
-    # Permeability index: TOUGH uses the ki-th permeability value from the
-    # input file for this connection.  Set to 1 so all connections share the
-    # first (and typically only) permeability entry.
-    conx_ki = 1
+    # Permeability index (ISOT): TOUGH uses PER(ISOT) from the ROCKS block
+    # for each connection. Normalize keys to rock names and validate values.
+    if (isot_pairs or isot_materials) and material_ids is None:
+        raise ValueError("isot_pairs/isot_materials require material_ids and material_names")
+    known_rocks = set(material_names.values()) if material_names else set()
+    known_rocks.add(default_rock_type)
+
+    def _to_rock(key):
+        name = material_names.get(key, key) if material_names else key
+        if name not in known_rocks:
+            raise ValueError(
+                f"ISOT material {key!r} is not in material_names or default_rock_type; "
+                f"known rock types are {sorted(known_rocks)}"
+            )
+        return name
+
+    def _check_isot(value, where):
+        if value not in (1, 2, 3):
+            raise ValueError(f"ISOT must be 1, 2 or 3, got {value!r} for {where}")
+        return value
+
+    isot_pairs = {
+        frozenset((_to_rock(a), _to_rock(b))): _check_isot(v, (a, b))
+        for (a, b), v in (isot_pairs or {}).items()
+    }
+    isot_materials = {
+        _to_rock(k): _check_isot(v, k) for k, v in (isot_materials or {}).items()
+    }
+    if isot_default != "geometric":
+        _check_isot(isot_default, "isot_default")
+    isot_counts = Counter()
+
     # Accumulated (x, y, z) centroids; indexed by 0-based element number so
     # that connection lookup is element_coordinates[conxname - 1].
     element_coordinates: list[tuple[float, float, float]] = []
+    # Rock-type name per element, same indexing, used for ISOT lookup.
+    element_rocks: list[str] = []
 
     with input_path.open("r", encoding="utf-8") as fin, output_path.open(
         "w", encoding="utf-8", newline="\n"
@@ -400,6 +504,7 @@ def convert_uge_to_tough(self,
                 rock_type = material_names[mid] if mid is not None else default_rock_type
             else:
                 rock_type = material_names[material_ids[i - 1]]
+            element_rocks.append(rock_type)
 
             # TOUGH ELEME record layout (fixed-width columns):
             #   cols  1– 5  element name
@@ -466,22 +571,36 @@ def convert_uge_to_tough(self,
             if abs(beta) < 1.0e-5:
                 beta = 0.0
 
+            rock1 = element_rocks[conxname1 - 1]
+            rock2 = element_rocks[conxname2 - 1]
+            isot = _resolve_isot(rock1, rock2, point2_to_1,
+                                 isot_pairs, isot_materials, isot_default)
+            isot_counts[(tuple(sorted((rock1, rock2))), isot)] += 1
+
             # TOUGH CONNE record layout (fixed-width columns):
             #   cols  1– 5  element name 1
             #   cols  6–10  element name 2
-            #   cols 11–30  permeability index (integer, right-aligned)
+            #   cols 11–30  permeability index ISOT (integer, right-aligned)
             #   cols 31–40  distance d1: centroid 1 → face [m]
             #   cols 41–50  distance d2: centroid 2 → face [m]
             #   cols 51–60  interface area [m²]
             #   cols 61–69  gravitational cosine beta (signed)
             fout.write(
                 f"{element_name1:5s}{element_name2:5s}"
-                f"{conx_ki:20d}{conx_d1:10.4e}{conx_d2:10.4e}"
+                f"{isot:20d}{conx_d1:10.4e}{conx_d2:10.4e}"
                 f"{area:10.4e}{beta:+9.3e}\n"
             )
 
         # Blank line signals the end of the CONNE block to TOUGH.
         fout.write("\n")
+
+    self.print_log(f"--> Number of elements (ELEME): {num_ele}")
+    self.print_log(f"--> Number of connections (CONNE): {num_con}")
+    self.print_log("--> ISOT assignment (connections per material pair)")
+    for pair in sorted({p for p, _ in isot_counts}):
+        counts = "  ".join(f"ISOT={k}: {isot_counts[(pair, k)]}"
+                           for k in (1, 2, 3) if isot_counts[(pair, k)])
+        self.print_log(f"    {'-'.join(pair):<13s} {counts}")
     self.print_log("--> Complete: Converting UGE mesh file format to TOUGH mesh")
 
     elapsed = time() - t
@@ -763,7 +882,8 @@ def remove_incon_block(self, infile_path, output_path=None):
 # ---------------------------------------------------------------------------
 
 def lagrit_to_tough(self, tough_mesh_filename = "MESH", boundary_filenames = None, boundary_nodes = None,
-                     material_ids = None, material_names = None, default_rock_type = "DFNMM"):
+                     material_ids = None, material_names = None, default_rock_type = "DFNMM",
+                     isot_pairs = None, isot_materials = None, isot_default = "geometric"):
     """Convert a LaGriT-generated DFN mesh to a TOUGH MESH file.
 
     This is the primary public entry point for the TOUGH mesh conversion
@@ -785,13 +905,17 @@ def lagrit_to_tough(self, tough_mesh_filename = "MESH", boundary_filenames = Non
         Passed straight through to ``convert_uge_to_tough``, see there for
         details, in particular for how to assign different rock types to
         different elements via ``material_ids``/``material_names``.
+    isot_pairs, isot_materials, isot_default:
+        Per-connection ISOT assignment, passed straight through to
+        ``convert_uge_to_tough``, see there for the rules.
     """
     self.print_log("\n--> Converting mesh file format to TOUGH mesh: Starting\n")
     # Step 1: Run the LaGriT pipeline; produces full_mesh_vol_area.uge.
     self.correct_uge_file()
     # Step 2: Translate the UGE output to the TOUGH MESH format.
     self.convert_uge_to_tough('full_mesh_vol_area.uge', tough_mesh_filename, boundary_filenames, boundary_nodes,
-                               material_ids, material_names, default_rock_type)
+                               material_ids, material_names, default_rock_type,
+                               isot_pairs, isot_materials, isot_default)
     self.print_log("--> Converting mesh file format to TOUGH mesh: Complete\n")
 
 
