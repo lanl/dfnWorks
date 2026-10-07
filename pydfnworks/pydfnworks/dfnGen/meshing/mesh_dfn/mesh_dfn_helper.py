@@ -370,7 +370,7 @@ def cleanup_meshing_files():
             if os.path.isdir(d):
                 shutil.rmtree(d)
         except:
-            local_print_log(f"Unable to remove directory {d}", 'error')
+            local_print_log(f"Unable to remove directory {d}", 'warning')
 
     files_to_remove = ['user_resolution.mlgi']
     for filename in files_to_remove:
