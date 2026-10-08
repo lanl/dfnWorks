@@ -119,7 +119,8 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
+    from pydfnworks.dfnFlow.uge_tools import correct_uge_file 
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
@@ -165,6 +166,11 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
+        # Set from params['rFram'] by parse_params_file() during dfn_gen. Stays
+        # None on a flow-only restart from an existing mesh, where no params
+        # file was read; correct_uge_file() treats None as "unknown" rather than
+        # assuming rFram was off.
+        self.r_fram = None
 
         self.aper_cell_file = 'aper_node.dat'
         self.perm_cell_file = 'perm_node.dat'
