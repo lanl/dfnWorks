@@ -1,4 +1,3 @@
-import os
 import numpy as np
 
 
@@ -67,31 +66,26 @@ finish
 
     # get leading digits
     digits = len(str(self.num_frac))
-    part_size = int(
-        max(np.floor(self.num_frac / self.ncpu) + 1, 1)
-    )  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
+    # split the fractures into n_jobs non-empty parts whose sizes differ by at most one
+    n_jobs = max(1, min(self.ncpu, len(self.fracture_list)))
+    parts = np.array_split(np.asarray(self.fracture_list), n_jobs)
+    self.n_merge_jobs = n_jobs
 
-    self.print_log(f"--> There are {part_size} fractures in each part")
+    self.print_log(
+        f"--> {n_jobs} merge parts with {len(parts[-1])} to {len(parts[0])} fractures in each part"
+    )
 
-    frac_index = 0
-    for cpu in range(self.ncpu):
-        # grab the fractures for this cpu
-        current_fractures = list(self.fracture_list[frac_index:frac_index +
-                                                    part_size])
-        # self.print_log(f"cpu: {cpu}")
-        # self.print_log(current_fractures)
-        frac_index += part_size
-        # skip CPUs that received no fractures
-        # if not current_fractures:
-        #     continue
+    for job, current_fractures in enumerate(parts, start=1):
         # write script to merge them in batch
-        with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
+        with open(f'lagrit_scripts/merge_part_{job}.lgi', 'w') as fout:
             for frac_id in current_fractures:
+                frac_id = int(frac_id)
                 filename = f'mesh_{frac_id:0{digits}d}.lg'
                 fout.write(lagrit_input.format(filename, frac_id))
-            fout.write(lagrit_input_2.format(cpu + 1))
+            fout.write(lagrit_input_2.format(job))
 
     self.print_log("--> Writting merge scripts: Complete ")
+    return n_jobs
 
 
 def create_final_merge_script(self):
@@ -119,9 +113,7 @@ addmesh / merge / mo_all / mo_all / cmo_tmp
 cmo / delete / cmo_tmp 
     """
     with open('lagrit_scripts/merge_network.lgi', 'w') as f:
-        for j in range(1, self.ncpu + 1):
-            if not os.path.isfile(f'lagrit_scripts/merge_part_{j}.lgi'):
-                continue
+        for j in range(1, self.n_merge_jobs + 1):
             f.write(lagrit_input.format(j))
 
         # Append meshes complete
