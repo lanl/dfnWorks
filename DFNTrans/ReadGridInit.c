@@ -67,7 +67,7 @@ The memory is allocated for data structures: NODE, CELL, FRACTURE */
     
     if (node1 != nnodes) {
         printf("The number of nodes in inp file is not equal to number of nodes in stor file. \n");
-        return 1;
+        return;
     }
     
     fclose(fps);

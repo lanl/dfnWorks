@@ -1,6 +1,6 @@
 CC=gcc
 
-CFLAGS =  -lm -Wall -g -O3
+CFLAGS =  -lm -Wall -g -O3 -std=gnu17 -Wno-error=implicit-function-declaration 
 
 OBJECTS= main.o ReadGridInit.o  RotateFracture.o VelocityReconstruction.o TrackingPart.o InitialPartPositions.o output.o
 
