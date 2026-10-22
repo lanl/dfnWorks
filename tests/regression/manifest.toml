@@ -115,6 +115,9 @@ timeout = 600
 [cases.tdrw]
 tier = "modest"
 source = "tdrw"
+# One connection on fracture 39 is a degenerate Voronoi edge (area -1.3e-7 at
+# h = 0.1, cocircular quad); uge_tools accepts it as zero with a WARNING line
+# in output.log. See "Known gaps" in README.md.
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 

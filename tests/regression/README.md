@@ -106,11 +106,19 @@ exist) are derived from the stages; add `requires = [...]` to override.
   PFLOTRAN runs, the finite-matrix-diffusion TDRW sweep on a graph, and the
   p32-calibration network at h = 1 m.
 
-Known gaps: `tdrw` fails the rFram-off UGE check on one near-degenerate
-connection (area -1.3e-7 at h = 0.1, well above round-off); it stays in the
-manifest so the failure is visible until the example or the policy changes.
-`stress` compares flow but not transport, because its ~50-particle DFNTrans
-run is not reproducible run to run.
+Known gaps: `stress` compares flow but not transport, because its
+~50-particle DFNTrans run is not reproducible run to run.
+
+`tdrw` is a worked example of the UGE policy's degenerate-edge tier: its mesh
+has one connection on fracture 39 (cells 17034 and 17036) whose Voronoi edge
+comes out as -1.3e-7 at h = 0.1. The two triangle angles opposite that edge sum
+to 180.0001 degrees, so the four nodes are cocircular to within LaGriT's
+reconnection tolerance and the edge length is zero with an arbitrary sign. The
+same mesh's smallest *positive* areas (1e-6 to 5e-6) come from the same kind of
+quad. `uge_tools` accepts negative areas with |area| <= 1e-5 h as degenerate
+edges (logged as a WARNING, one line per connection, left unchanged) rather
+than failing the rFram-off check, so the case runs through PFLOTRAN and
+DFNTrans. A value more negative than that still fails with rFram off.
 
 Examples whose drivers live only on feature branches (tough, dfntrans2,
 edfm_tpl, thermal_graph_transport, thermal_spacing_optimization) are not in the

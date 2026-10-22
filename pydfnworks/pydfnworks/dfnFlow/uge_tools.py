@@ -18,6 +18,24 @@ known the absolute :data:`ROUNDOFF_ABS` is used for both. See
 :func:`roundoff_tolerances`. A value below ``-tolerance`` (e.g. ``-1e-3``) is a
 genuine negative and is handled exactly as before.
 
+A second, larger tolerance applies to connection areas only. A connection area
+in the raw file is the length of the Voronoi edge dual to a triangle edge, which
+is ``L/2 * (cot a + cot b)`` for the two angles ``a`` and ``b`` opposite that
+edge. When the four nodes around the edge are cocircular (``a + b = 180``) the
+edge has zero length and both diagonals of the quad are Delaunay; LaGriT's
+``connect``/``recon`` in-circle test has its own tolerance, so a quad that is
+cocircular to within that tolerance may keep either diagonal and the computed
+length comes out as a tiny value of either sign, typically ``1e-7`` to ``1e-5``
+times ``h`` (far above floating-point round-off, far below the shortest real
+Voronoi edge). This happens in perfectly conforming meshes, in the smoothed
+interior of a fracture, with rFram off. Such a value is classified as a
+degenerate edge rather than an invalid coefficient: it is accepted as zero and
+left unchanged, but unlike round-off it is listed in the log, one line per
+connection. The tolerance is :data:`DEGENERATE_REL` times ``h``
+(:data:`DEGENERATE_ABS` when ``h`` is unknown); see
+:func:`degenerate_tolerance`. Cell volumes get no such tier: a Voronoi cell of
+a conforming mesh has no near-zero-area configuration of this kind.
+
 Correcting a bad value is only defensible when the mesh is *almost* conforming.
 Degenerate cells are an artifact of the relaxed meshing constraints used by rFram
 (see :mod:`pydfnworks.dfnGen.meshing.mesh_dfn`), and they show up mostly in dense
@@ -37,9 +55,10 @@ it corrects anything:
 
 Contents
 --------
-    roundoff_tolerances, classify_fix, scan_uge, scan_fills
-        Low-level helpers implementing the round-off tolerance, the validity
-        rule, the mesh-wide scan, and the fill estimate.
+    roundoff_tolerances, degenerate_tolerance, classify_fix, scan_uge, scan_fills
+        Low-level helpers implementing the round-off and degenerate-edge
+        tolerances, the validity rule, the mesh-wide scan, and the fill
+        estimate.
     fix_uge_volumes, fix_stream
         Byte-faithful fixer: a clean file round-trips unchanged, and only the
         corrected lines are rewritten.
@@ -78,6 +97,23 @@ ROUNDOFF_REL = 1e-8
 #: (1e-16 to 1e-14) for metre-scale meshes with a margin of 100x.
 ROUNDOFF_ABS = 1e-12
 
+#: Degenerate-edge tolerance relative to the mesh resolution ``h``, for
+#: connection areas only. A negative connection area with
+#: ``|area| <= DEGENERATE_REL * h`` is a zero-length Voronoi edge whose sign was
+#: decided by LaGriT's in-circle tolerance (the four surrounding nodes are
+#: cocircular to within that tolerance; see the module docstring). It is
+#: accepted as zero and listed, not rejected and not corrected. 1e-5 is three
+#: decades above :data:`ROUNDOFF_REL` and one decade below the shortest real
+#: Voronoi edge seen in a conforming mesh (about 1e-4 h); the degenerate edges
+#: observed so far are 1e-6 h to 1e-5 h in magnitude, of either sign.
+DEGENERATE_REL = 1e-5
+
+#: Absolute degenerate-edge tolerance used when ``h`` is unknown. Keeps the
+#: 1000x ratio to :data:`ROUNDOFF_ABS`; it is deliberately conservative, since
+#: without ``h`` there is no scale to judge a tiny negative against. Set
+#: ``DFN.h`` on a flow-only restart to get the ``h``-scaled classification.
+DEGENERATE_ABS = 1e-9
+
 Result = namedtuple("Result", ["cell_negative", "cell_nonfinite",
                                "conn_negative", "conn_nonfinite",
                                "vol_fill", "area_fill"])
@@ -87,12 +123,16 @@ Result = namedtuple("Result", ["cell_negative", "cell_nonfinite",
 #: ``kind`` as returned by :func:`classify_fix`. ``vol_tol`` and ``area_tol``
 #: are the round-off tolerances the scan was made with, and ``roundoff_cells``
 #: / ``roundoff_conns`` count the negative entries that fell inside them (and
-#: were therefore accepted as zero).
+#: were therefore accepted as zero). ``degen_tol`` is the degenerate-edge
+#: tolerance and ``degenerate_conns`` holds ``(id1, id2, area)`` tuples for the
+#: negative connection areas with ``area_tol < |area| <= degen_tol`` (accepted
+#: as zero-length Voronoi edges; see :func:`degenerate_tolerance`).
 ScanResult = namedtuple("ScanResult", ["path", "vol_fill", "area_fill",
                                        "n_cells", "n_conns",
                                        "bad_cells", "bad_conns",
                                        "vol_tol", "area_tol",
-                                       "roundoff_cells", "roundoff_conns"])
+                                       "roundoff_cells", "roundoff_conns",
+                                       "degen_tol", "degenerate_conns"])
 
 
 def roundoff_tolerances(h=None):
@@ -114,6 +154,33 @@ def roundoff_tolerances(h=None):
             and math.isfinite(h) and h > 0.0:
         return ROUNDOFF_REL * h * h, ROUNDOFF_REL * h
     return ROUNDOFF_ABS, ROUNDOFF_ABS
+
+
+def degenerate_tolerance(h=None):
+    """Degenerate-edge tolerance for connection areas.
+
+    A negative connection area no larger than this in magnitude is a
+    zero-length Voronoi edge (the surrounding quad is cocircular to within
+    LaGriT's in-circle tolerance, so either diagonal is Delaunay) and not an
+    invalid coefficient. See the module docstring.
+
+    Parameters
+    ----------
+        h : float or None
+            Mesh resolution. ``None`` (or anything that is not a positive
+            finite number) selects the absolute fallback.
+
+    Returns
+    -------
+        float
+            ``DEGENERATE_REL * h`` when ``h`` is known, else
+            :data:`DEGENERATE_ABS`. Always at least the round-off tolerance
+            for areas from :func:`roundoff_tolerances`.
+    """
+    if isinstance(h, (int, float)) and not isinstance(h, bool) \
+            and math.isfinite(h) and h > 0.0:
+        return max(DEGENERATE_REL * h, ROUNDOFF_REL * h)
+    return max(DEGENERATE_ABS, ROUNDOFF_ABS)
 
 
 def classify_fix(x, fill, tol=0.0):
@@ -169,14 +236,16 @@ def scan_uge(input_path, strategy="min", h=None):
             column; ``'mean'`` uses the mean of the finite positive values.
         h : float, optional
             Mesh resolution, used to set the round-off tolerances via
-            :func:`roundoff_tolerances`. ``None`` selects the absolute
-            fallback :data:`ROUNDOFF_ABS`.
+            :func:`roundoff_tolerances` and the degenerate-edge tolerance via
+            :func:`degenerate_tolerance`. ``None`` selects the absolute
+            fallbacks :data:`ROUNDOFF_ABS` and :data:`DEGENERATE_ABS`.
 
     Returns
     -------
         ScanResult
             ``(path, vol_fill, area_fill, n_cells, n_conns, bad_cells,
-            bad_conns, vol_tol, area_tol, roundoff_cells, roundoff_conns)``.
+            bad_conns, vol_tol, area_tol, roundoff_cells, roundoff_conns,
+            degen_tol, degenerate_conns)``.
             A fill is ``None`` when its column
             holds no finite positive value to derive one from (an empty or
             wholly invalid column); it is the caller's job to reject such a
@@ -192,9 +261,12 @@ def scan_uge(input_path, strategy="min", h=None):
         A volume or area whose magnitude is within the round-off tolerance
         (including exactly ``0.0``) is neither flagged nor used as a fill
         candidate, matching :func:`classify_fix`, which passes it through
-        unchanged.
+        unchanged. A negative area beyond the round-off tolerance but within
+        the degenerate-edge tolerance is recorded in ``degenerate_conns`` and
+        otherwise treated the same way: accepted, not a fill candidate.
     """
     vol_tol, area_tol = roundoff_tolerances(h)
+    degen_tol = degenerate_tolerance(h)
     v_min = a_min = math.inf
     v_tot = a_tot = 0.0
     v_cnt = a_cnt = 0
@@ -202,6 +274,7 @@ def scan_uge(input_path, strategy="min", h=None):
     n_conns = 0
     bad_cells = []
     bad_conns = []
+    degenerate_conns = []
     with open(input_path) as f:
         n_cells = int(f.readline().split()[-1])
         for _ in range(n_cells):
@@ -222,7 +295,9 @@ def scan_uge(input_path, strategy="min", h=None):
                 cols = f.readline().split()
                 a = float(cols[5])
                 _, kind = classify_fix(a, 0.0, area_tol)
-                if kind is not None:
+                if kind == "negative" and a >= -degen_tol:
+                    degenerate_conns.append((int(cols[0]), int(cols[1]), a))
+                elif kind is not None:
                     bad_conns.append((int(cols[0]), int(cols[1]), a, kind))
                 elif a > area_tol:
                     a_min = min(a_min, a); a_tot += a; a_cnt += 1
@@ -240,7 +315,8 @@ def scan_uge(input_path, strategy="min", h=None):
 
     return ScanResult(input_path, pick(v_min, v_tot, v_cnt),
                       pick(a_min, a_tot, a_cnt), n_cells, n_conns,
-                      bad_cells, bad_conns, vol_tol, area_tol, v_ro, a_ro)
+                      bad_cells, bad_conns, vol_tol, area_tol, v_ro, a_ro,
+                      degen_tol, degenerate_conns)
 
 
 def scan_fills(input_path, strategy="min", h=None):
@@ -293,8 +369,11 @@ def fix_stream(fin, fout, vol_fill, area_fill, vol_tol=0.0, area_tol=0.0):
         area_fill : float or None
             Fill value for NaN/inf connection areas.
         vol_tol, area_tol : float
-            Round-off tolerances passed to :func:`classify_fix`; entries within
-            them are written verbatim and not counted. Default ``0.0``.
+            Tolerances passed to :func:`classify_fix`; entries within them are
+            written verbatim and not counted. Default ``0.0``. Callers that
+            want degenerate edges left alone pass
+            :func:`degenerate_tolerance` as ``area_tol``, as
+            :func:`fix_uge_volumes` does.
 
     Returns
     -------
@@ -369,8 +448,11 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min", h=None):
             ``(vol_fill, area_fill)`` pair. Passing a pair skips the scan, for
             callers that have already run :func:`scan_uge`.
         h : float, optional
-            Mesh resolution for the round-off tolerances (see
-            :func:`roundoff_tolerances`); ``None`` uses :data:`ROUNDOFF_ABS`.
+            Mesh resolution for the tolerances: volumes use the round-off
+            tolerance from :func:`roundoff_tolerances`, areas the
+            degenerate-edge tolerance from :func:`degenerate_tolerance`
+            (which contains the round-off one). ``None`` uses the absolute
+            fallbacks.
 
     Returns
     -------
@@ -382,7 +464,7 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min", h=None):
     Notes
     -----
         A clean file is returned byte-for-byte identical; only corrected lines
-        are rewritten.
+        are rewritten. Round-off values and degenerate edges count as clean.
     """
     if isinstance(nan_fill, (tuple, list)):
         vol_fill, area_fill = nan_fill
@@ -391,7 +473,8 @@ def fix_uge_volumes(input_path, output_path=None, nan_fill="min", h=None):
             vol_fill = area_fill = float(nan_fill)
         except (TypeError, ValueError):
             vol_fill, area_fill = scan_fills(input_path, nan_fill, h)
-    vol_tol, area_tol = roundoff_tolerances(h)
+    vol_tol, _ = roundoff_tolerances(h)
+    area_tol = degenerate_tolerance(h)
 
     if output_path is None:
         d = os.path.dirname(os.path.abspath(input_path))
@@ -456,10 +539,11 @@ def _mesh_h(self):
 def _report_scan(self, res):
     """Log every invalid coefficient and enforce the correction policy.
 
-    Writes the round-off tolerance the scan used, then one line per offending
-    cell and per offending connection, to both the screen and the log
-    (``print_log`` at ``info`` level does both), then decides whether the mesh
-    may be corrected:
+    Writes the round-off tolerance the scan used, one line per degenerate
+    edge (accepted, see :func:`degenerate_tolerance`), then one line per
+    offending cell and per offending connection, to both the screen and the
+    log (``print_log`` at ``info`` level does both), then decides whether the
+    mesh may be corrected:
 
       * rFram off and anything invalid -> hard error.
       * invalid cells or invalid connections above :data:`BAD_FRACTION_LIMIT` of
@@ -494,6 +578,25 @@ def _report_scan(self, res):
             f"|volume| <= {res.vol_tol:.3e} and {res.roundoff_conns} negative "
             f"connection areas with |area| <= {res.area_tol:.3e} in {res.path} "
             "are zero to working precision and were accepted as valid.")
+
+    if res.degenerate_conns:
+        self.print_log(
+            f"--> Degenerate Voronoi edges: {len(res.degenerate_conns)} negative "
+            f"connection areas with {res.area_tol:.3e} < |area| <= "
+            f"{res.degen_tol:.3e} in {res.path}. The four nodes around each "
+            "of these triangle edges are cocircular to within LaGriT's "
+            "in-circle tolerance, so the dual Voronoi edge has zero length and "
+            "its sign is set by which diagonal the reconnection kept. They are "
+            "accepted as zero (left unchanged) and are not counted as invalid:",
+            "warning")
+        for id1, id2, area in res.degenerate_conns:
+            f1 = _fracture_of(self, id1)
+            f2 = _fracture_of(self, id2)
+            self.print_log(
+                f"      cells {id1:>10d} -> {id2:>10d}"
+                f"  fractures {f1 if f1 is not None else '?'} -> "
+                f"{f2 if f2 is not None else '?'}"
+                f"  area {area: .12e}  [degenerate edge]")
 
     n_bad_cells = len(res.bad_cells)
     n_bad_conns = len(res.bad_conns)
@@ -554,6 +657,7 @@ def _report_scan(self, res):
             "failure rather than a relaxed-constraint artifact, and are not "
             "corrected. Values within the round-off tolerance "
             f"(|volume| <= {res.vol_tol:.3e}, |area| <= {res.area_tol:.3e}) "
+            f"and degenerate Voronoi edges (|area| <= {res.degen_tol:.3e}) "
             "were already excluded. See the listing above for the offending "
             "cells and connections.\nExiting\n", "error")
 
@@ -595,8 +699,10 @@ def correct_uge_file(self, dim=3):
         scaling) is only made when ``self.r_fram`` is True and fewer than
         :data:`BAD_FRACTION_LIMIT` of the cells *and* of the connections are
         invalid. Otherwise the run exits with an error. Values within the
-        round-off tolerance (:func:`roundoff_tolerances` of ``self.h``) count
-        as zero, not as invalid, in every branch.
+        round-off tolerance (:func:`roundoff_tolerances` of ``self.h``) and
+        connection areas within the degenerate-edge tolerance
+        (:func:`degenerate_tolerance`) count as zero, not as invalid, in every
+        branch, and are written out unchanged.
 
     In all cases ``self.uge_file`` is set to the file PFLOTRAN should read.
 
@@ -677,7 +783,7 @@ def correct_uge_file(self, dim=3):
                 parts = fin.readline().split(None, 6)
                 id1 = int(parts[0]); id2 = int(parts[1]); area = float(parts[5])
                 if fix:
-                    area, _ = classify_fix(area, scan.area_fill, scan.area_tol)
+                    area, _ = classify_fix(area, scan.area_fill, scan.degen_tol)
                 avg_ap = 0.5 * (aperture[material_ids[id1 - 1] - 1] +
                                 aperture[material_ids[id2 - 1] - 1])
                 area *= avg_ap
