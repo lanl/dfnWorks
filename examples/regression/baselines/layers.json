@@ -1,0 +1,28 @@
+{
+  "case": "layers",
+  "created": "2026-10-22T09:36:23",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 89,
+    "gen.intersection_length": 166.213,
+    "gen.intersections_shortened": 17,
+    "gen.isolated_removed": 117,
+    "gen.n_intersections": 125,
+    "gen.p30": 0.356,
+    "gen.p32": 3.12875,
+    "gen.rejected": 1238,
+    "gen.retranslated": 11982,
+    "gen.surface_area": 782.187,
+    "gen.triple_points": 0,
+    "mesh.elements": 87963,
+    "mesh.nodes": 44476,
+    "pflotran.dfn_explicit.global_water_mass_kg": 3.02833662,
+    "pflotran.dfn_explicit.inflow_water_mass_kg": -0.0,
+    "pflotran.dfn_explicit.inflow_water_mass_kg_d": 5699.1692,
+    "pflotran.dfn_explicit.outflow_water_mass_kg": -0.0,
+    "pflotran.dfn_explicit.outflow_water_mass_kg_d": -1055013.76
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 17.04
+}
