@@ -280,11 +280,7 @@ def dump_h5_files(self):
         h5dset = h5file.create_dataset(dataset_name, data=iarray)
         self.print_log('--> Creating permeability array')
         self.print_log('--> Note: This script assumes isotropic permeability')
-        if self.cell_based_aperture: 
-            self.perm_cell = np.genfromtxt(self.perm_cell_file, skip_header = 1)[:,1]
-        else: 
-            for i in range(self.num_nodes):
-                self.perm_cell[i] = self.perm[self.material_ids[i] - 1]
+        self.set_perm_cell()
         self.print_log('--> Writting Permeability')
         dataset_name = 'Permeability'
         h5dset = h5file.create_dataset(dataset_name, data=self.perm_cell)

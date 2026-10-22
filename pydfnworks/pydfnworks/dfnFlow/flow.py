@@ -34,6 +34,55 @@ def set_flow_solver(self, flow_solver):
         self.print_log(error, 'error')
 
 
+def set_perm_cell(self, cell_based=None):
+    """ Build the per-cell permeability array self.perm_cell, one value per mesh node in UGE CELLS order.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
+        cell_based : bool or None
+            If False, permeability is fracture based: each cell takes the permeability of its fracture, self.perm[material_id - 1].
+            If True, permeability is cell based: read from column 2 of self.perm_cell_file.
+            If None (default), use self.cell_based_aperture.
+
+    Returns
+    ---------
+        perm_cell : numpy array
+            Permeability of each cell. Also stored as self.perm_cell.
+
+    Notes
+    --------
+        Shared by the PFLOTRAN and TOUGH writers so both see the same permeability field.
+        Fracture based requires self.material_ids (read from materialid.dat during meshing) and self.perm.
+    """
+    if cell_based is None:
+        cell_based = self.cell_based_aperture
+
+    if cell_based:
+        self.print_log(f"--> Building cell based permeability from {self.perm_cell_file}")
+        if not os.path.isfile(self.perm_cell_file):
+            self.print_log(f"Error. Cannot find cell permeability file {self.perm_cell_file}\n", 'error')
+        perm_cell = np.genfromtxt(self.perm_cell_file, skip_header=1)[:, 1]
+    else:
+        self.print_log("--> Building fracture based permeability from material ids")
+        if not isinstance(self.material_ids, (list, np.ndarray)):
+            self.print_log("Error. material ids are not loaded. Read materialid.dat before building cell permeability\n", 'error')
+        material_ids = np.asarray(self.material_ids, dtype=int)
+        perm = np.asarray(self.perm)
+        if material_ids.min() < 1 or material_ids.max() > len(perm):
+            self.print_log(f"Error. material ids range from {material_ids.min()} to {material_ids.max()}, but there are {len(perm)} fracture permeabilities\n", 'error')
+        perm_cell = perm[material_ids - 1]
+
+    if len(perm_cell) != self.num_nodes:
+        self.print_log(f"Error. Built {len(perm_cell)} cell permeabilities, but the mesh has {self.num_nodes} nodes\n", 'error')
+
+    self.print_log(f"--> Cell permeability: {len(perm_cell)} cells, min {perm_cell.min():0.4e}, max {perm_cell.max():0.4e}")
+    self.perm_cell = perm_cell
+    return self.perm_cell
+
+
 def dfn_flow(self, dump_vtk=True, dump_h5=False):
     """ Run the dfnFlow portion of the workflow
 
