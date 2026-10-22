@@ -1,0 +1,23 @@
+{
+  "case": "faults",
+  "created": "2026-10-22T09:18:58",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 2,
+    "gen.intersection_length": 125.317,
+    "gen.intersections_shortened": 0,
+    "gen.isolated_removed": 0,
+    "gen.n_intersections": 1,
+    "gen.p30": 2e-06,
+    "gen.p32": 0.0476101,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 47610.1,
+    "gen.triple_points": 0,
+    "mesh.elements": 7,
+    "mesh.nodes": 11
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 1.81
+}

@@ -1,0 +1,33 @@
+{
+  "case": "two_fracture_case",
+  "created": "2026-10-22T09:16:51",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "dfntrans.length_mean": 2.2431561840086998,
+    "dfntrans.n_particles": 10,
+    "dfntrans.total_number_p": 10,
+    "dfntrans.travel_time.mean": 1.8661245821700997e-07,
+    "dfntrans.travel_time.p10": 1.6698906226057e-07,
+    "dfntrans.travel_time.p50": 1.8640612240569998e-07,
+    "dfntrans.travel_time.p90": 2.0385367820975002e-07,
+    "gen.final_fractures": 2,
+    "gen.intersection_length": 0.2,
+    "gen.intersections_shortened": 0,
+    "gen.isolated_removed": 0,
+    "gen.n_intersections": 1,
+    "gen.p30": 1.0,
+    "gen.p32": 2.2,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 4.4,
+    "gen.triple_points": 0,
+    "mesh.elements": 1364,
+    "mesh.nodes": 755,
+    "pflotran.keff": 6.64072e-14,
+    "pflotran.mass_rate": 0.0372327,
+    "pflotran.pflotran.global_water_mass_kg": 0.219513423
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 3.68
+}

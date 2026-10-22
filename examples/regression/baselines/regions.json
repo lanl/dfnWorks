@@ -1,0 +1,23 @@
+{
+  "case": "regions",
+  "created": "2026-10-22T09:20:49",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 107,
+    "gen.intersection_length": 599.484,
+    "gen.intersections_shortened": 67,
+    "gen.isolated_removed": 238,
+    "gen.n_intersections": 209,
+    "gen.p30": 0.013375,
+    "gen.p32": 0.801411,
+    "gen.rejected": 58,
+    "gen.retranslated": 1121,
+    "gen.surface_area": 6411.29,
+    "gen.triple_points": 0,
+    "mesh.elements": 225,
+    "mesh.nodes": 439
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 9.84
+}

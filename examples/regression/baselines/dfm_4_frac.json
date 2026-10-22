@@ -1,0 +1,25 @@
+{
+  "case": "dfm_4_frac",
+  "created": "2026-10-22T09:17:43",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "dfm.elements": 43509,
+    "dfm.nodes": 8533,
+    "gen.final_fractures": 4,
+    "gen.intersection_length": 3.0,
+    "gen.intersections_shortened": 0,
+    "gen.isolated_removed": 0,
+    "gen.n_intersections": 3,
+    "gen.p30": 4.0,
+    "gen.p32": 6.2,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 6.2,
+    "gen.triple_points": 0,
+    "mesh.elements": 1388,
+    "mesh.nodes": 773
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 4.19
+}

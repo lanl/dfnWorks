@@ -71,3 +71,8 @@ examples/TPL/output_rfram/*
 # Misc
 *FracMan_interface*
 DFNGen/.dfngen_version
+
+# Regression suite scratch and reports
+examples/regression/_runs/
+examples/regression/latest_report.html
+examples/*/output*/

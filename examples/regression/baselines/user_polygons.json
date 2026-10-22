@@ -1,0 +1,28 @@
+{
+  "case": "user_polygons",
+  "created": "2026-10-22T09:18:56",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 9,
+    "gen.intersection_length": 132.274,
+    "gen.intersections_shortened": 7,
+    "gen.isolated_removed": 0,
+    "gen.n_intersections": 13,
+    "gen.p30": 0.001125,
+    "gen.p32": 0.435433,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 3483.46,
+    "gen.triple_points": 0,
+    "mesh.elements": 22149,
+    "mesh.nodes": 10431,
+    "pflotran.dfn_explicit.global_water_mass_kg": 1.50503626,
+    "pflotran.dfn_explicit.inflow_water_mass_kg": -0.0,
+    "pflotran.dfn_explicit.inflow_water_mass_kg_d": 0.473469452,
+    "pflotran.dfn_explicit.outflow_water_mass_kg": -0.0,
+    "pflotran.dfn_explicit.outflow_water_mass_kg_d": -0.473468995
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 4.0
+}

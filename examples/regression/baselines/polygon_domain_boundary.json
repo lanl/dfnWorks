@@ -1,0 +1,23 @@
+{
+  "case": "polygon_domain_boundary",
+  "created": "2026-10-22T09:20:00",
+  "git": "fe199315",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 401,
+    "gen.intersection_length": 15798.3,
+    "gen.intersections_shortened": 558,
+    "gen.isolated_removed": 308,
+    "gen.n_intersections": 527,
+    "gen.p30": 0.000401,
+    "gen.p32": 0.243105,
+    "gen.rejected": 9473,
+    "gen.retranslated": 92661,
+    "gen.surface_area": 243105.0,
+    "gen.triple_points": 0,
+    "mesh.elements": 272663,
+    "mesh.nodes": 126322
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 29.08
+}
