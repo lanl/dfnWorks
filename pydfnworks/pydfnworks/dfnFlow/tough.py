@@ -244,22 +244,27 @@ def _resolve_isot(rock1, rock2, vec, isot_pairs, isot_materials, isot_default) -
 # ---------------------------------------------------------------------------
 
 def convert_uge_to_tough(self,
-    input_filename,  
-    output_filename,
-    boundary_filenames=None,
-    boundary_nodes=None,  
+    input_filename,
+    output_filename="MESH",
+    boundary_nodes=None,
     material_ids=None,
     material_names=None,
     default_rock_type="DFNMM",
     isot_pairs=None,
     isot_materials=None,
     isot_default="geometric",
+    perm_cell=None,
 ) -> None:
-    """Convert a DFNWorks UGE mesh file to a TOUGH2/TOUGH+ MESH file.
+    """Convert a DFNWorks UGE mesh file to a TOUGH3 MESH file.
 
-    Reads the binary ``CELLS`` and ``CONNECTIONS`` sections from a
-    ``full_mesh_vol_area.uge`` file produced by DFNWorks/LaGriT and writes the
-    corresponding ``ELEME`` and ``CONNE`` blocks required by the TOUGH simulator.
+    Reads the ``CELLS`` and ``CONNECTIONS`` sections from a UGE file and
+    writes the corresponding ``ELEME`` and ``CONNE`` blocks required by TOUGH.
+
+    This is a plain file writer: everything it needs is passed in explicitly,
+    nothing is read off the DFN object, so it works on any UGE file. For the
+    normal dfnWorks workflow use ``lagrit_to_tough``, which gathers the
+    boundary nodes, material ids and permeabilities from the DFN and calls
+    this.
 
     ELEME block
     -----------
@@ -269,8 +274,7 @@ def convert_uge_to_tough(self,
     overridden).  Pass ``material_ids``/``material_names`` to assign
     different rock types to different elements instead, see below.
     Boundary elements (e.g. injection/production wells) are set to a large
-    volume (1 × 10⁵¹) automatically when listed in ``boundary_nodes``/
-    ``boundary_filenames``.
+    volume (1 × 10⁵¹) automatically when listed in ``boundary_nodes``.
 
     CONNE block
     -----------
@@ -288,14 +292,13 @@ def convert_uge_to_tough(self,
     input_filename:
         Path to the source UGE file (typically ``full_mesh_vol_area.uge``).
     output_filename:
-        Destination path for the TOUGH ``MESH`` file.
+        Destination path for the TOUGH ``MESH`` file. Default ``"MESH"``.
+    boundary_nodes:
+        Iterable of 1-based node ids whose element volume is set to 1e51 so
+        their state stays fixed.
     material_ids:
         Optional per-element material id, used to look up each element's
-        rock-type name in ``material_names``. If omitted (left as
-        ``None``), falls back to ``self.material_ids`` when the DFN object
-        has that attribute set, that's the normal way this gets supplied,
-        pass it explicitly here only to override that for one call.
-        Two forms are accepted:
+        rock-type name in ``material_names``. Two forms are accepted:
 
         * A dense list/array with exactly ``num_ele`` entries (one per
           element, in the same order as the UGE ``CELLS`` section, i.e.
@@ -343,6 +346,14 @@ def convert_uge_to_tough(self,
         material ids (looked up in ``material_names``). Note that ISOT is
         applied to both elements of a connection, e.g. ``{"FRAC": 3}`` makes
         matrix-fracture connections use the matrix rock's ``PER(3)`` too.
+    perm_cell:
+        Optional permeability per element [m^2], in UGE ``CELLS`` order,
+        written into the PMX field (ELEME cols 41-50). If ``None`` (default),
+        PMX is left blank and TOUGH uses the ROCKS permeability. PMX is
+        written as an absolute permeability, which TOUGH3 accepts only when
+        the ROCKS block has no ``SEED`` record and every value is below
+        1e-4. PMX is written for every element, boundary elements included,
+        since a blank PMX on the first element makes TOUGH3 ignore the field.
 
     Notes
     -----
@@ -362,20 +373,9 @@ def convert_uge_to_tough(self,
 
     output_path = Path(output_filename)
 
-    # boundary_nodes = np.array([]) if boundary_nodes is None else boundary_nodes
-    # if boundary_filenames is not None:
-    #     boundary_nodes = np.concatenate([boundary_nodes] + [self.load_zone_file_nodes(f) for f in boundary_filenames])
-    # if boundary_nodes.size > 0:
-    #     print("--> Boundary nodes")
-    #     print(boundary_nodes)
-
-    boundary_nodes = [] if boundary_nodes is None else list(boundary_nodes)
-    if boundary_filenames is not None:
-        for f in boundary_filenames:
-            boundary_nodes.extend(self.load_zone_file_nodes(f))
+    boundary_nodes = set() if boundary_nodes is None else {int(n) for n in boundary_nodes}
     if boundary_nodes:
-        print("--> Boundary nodes")
-        print(boundary_nodes)
+        self.print_log(f"--> Boundary nodes (volume set to 1e51): {len(boundary_nodes)}")
 
     # Placeholder for any unused floating-point field in the ELEME record.
     unknown = 0.0
@@ -386,11 +386,6 @@ def convert_uge_to_tough(self,
                 f"Rock-type name {name!r} is invalid: TOUGH ELEME/ROCKS "
                 f"names must be a string of 1-5 characters."
             )
-
-    # If not passed explicitly, fall back to DFN.material_ids, since that's
-    # where this is generally set for a given DFN.
-    if material_ids is None:
-        material_ids = getattr(self, "material_ids", None)
 
     _validate_rock_name(default_rock_type)
     material_ids_is_dict = isinstance(material_ids, dict)
@@ -445,6 +440,18 @@ def convert_uge_to_tough(self,
         _check_isot(isot_default, "isot_default")
     isot_counts = Counter()
 
+    # Per-element permeability for the PMX field.
+    pmx = perm_cell is not None
+    if pmx:
+        perm_cell = np.asarray(perm_cell, dtype=float)
+        if not np.all(np.isfinite(perm_cell)) or perm_cell.min() <= 0:
+            raise ValueError("PMX requires every cell permeability to be finite and positive")
+        if perm_cell.max() >= 1.0e-4:
+            raise ValueError(
+                f"PMX max permeability {perm_cell.max():0.4e} is >= 1e-4; TOUGH3 "
+                f"does not read values that large as an absolute permeability"
+            )
+
     # Accumulated (x, y, z) centroids; indexed by 0-based element number so
     # that connection lookup is element_coordinates[conxname - 1].
     element_coordinates: list[tuple[float, float, float]] = []
@@ -468,6 +475,12 @@ def convert_uge_to_tough(self,
                 f"material_ids list must have exactly one entry per element, in "
                 f"the same order as the UGE file. Use a dict keyed by element "
                 f"index instead if you only want to specify a subset."
+            )
+
+        if perm_cell is not None and len(perm_cell) != num_ele:
+            raise ValueError(
+                f"perm_cell has {len(perm_cell)} entries, but the mesh has "
+                f"{num_ele} elements (from the UGE CELLS header)"
             )
 
         for i in range(1, num_ele + 1):
@@ -510,14 +523,15 @@ def convert_uge_to_tough(self,
             #   cols  1– 5  element name
             #   cols  6–20  rock-type label (right-aligned in a 15-char field)
             #   cols 21–30  element volume [m³]
-            #   cols 31–39  unused float (set to 0.0)
-            #   cols 40–49  unused/blank field
-            #   cols 50–58  x-coordinate [m]
-            #   cols 59–67  y-coordinate [m]
-            #   cols 68–76  z-coordinate [m]
+            #   cols 31–40  AHTX, unused float (set to 0.0)
+            #   cols 41–50  PMX, permeability [m²] from perm_cell, else blank
+            #   cols 51–60  x-coordinate [m]
+            #   cols 61–70  y-coordinate [m]
+            #   cols 71–80  z-coordinate [m]
+            pmx_field = f"{perm_cell[i - 1]:10.4E}" if pmx else f"{'':10s}"
             fout.write(
                 f"{element_name:5s}{rock_type:>15s}"
-                f"{volume:10.4E}{unknown:+9.3E}{'':10s}"
+                f"{volume:10.4E}{unknown:+9.3E}{pmx_field}"
                 f"{x:+9.3E}{y:+9.3E}{z:+9.3E}\n"
             )
 
@@ -596,6 +610,15 @@ def convert_uge_to_tough(self,
 
     self.print_log(f"--> Number of elements (ELEME): {num_ele}")
     self.print_log(f"--> Number of connections (CONNE): {num_con}")
+    if pmx:
+        geo_mean = np.exp(np.mean(np.log(perm_cell)))
+        self.print_log(
+            f"--> PMX written as absolute permeability: {num_ele} elements, "
+            f"min {perm_cell.min():0.4e}, max {perm_cell.max():0.4e}, "
+            f"geometric mean {geo_mean:0.4e}"
+        )
+    else:
+        self.print_log("--> PMX left blank, TOUGH uses the ROCKS permeability")
     self.print_log("--> ISOT assignment (connections per material pair)")
     for pair in sorted({p for p, _ in isot_counts}):
         counts = "  ".join(f"ISOT={k}: {isot_counts[(pair, k)]}"
@@ -881,41 +904,83 @@ def remove_incon_block(self, infile_path, output_path=None):
 # High-level entry point
 # ---------------------------------------------------------------------------
 
-def lagrit_to_tough(self, tough_mesh_filename = "MESH", boundary_filenames = None, boundary_nodes = None,
-                     material_ids = None, material_names = None, default_rock_type = "DFNMM",
-                     isot_pairs = None, isot_materials = None, isot_default = "geometric"):
-    """Convert a LaGriT-generated DFN mesh to a TOUGH MESH file.
+def lagrit_to_tough(self, dim=3, output_filename="MESH",
+                    boundary_filenames=None, boundary_nodes=None,
+                    material_ids=None, material_names=None,
+                    default_rock_type="DFNMM",
+                    isot_pairs=None, isot_materials=None,
+                    isot_default="geometric", pmx=False):
+    """Build the TOUGH3 MESH file for a meshed DFN.
 
-    This is the primary public entry point for the TOUGH mesh conversion
-    workflow.  It chains two steps:
+    This is the public entry point for the TOUGH workflow, the counterpart of
+    ``lagrit2pflotran``. It gathers everything the MESH needs from the DFN
+    object, then hands it to ``convert_uge_to_tough``, which only writes the
+    file:
 
-    1. ``correct_uge_file()`` – runs the existing LaGriT-to-PFLOTRAN pipeline,
-       which produces ``full_mesh_vol_area.uge`` as a side effect.
-    2. ``convert_uge_to_tough()`` – translates that UGE file into the TOUGH
-       ``MESH`` format at *tough_mesh_filename*.
+    1. ``correct_uge_file(dim)`` corrects the LaGriT UGE file and sets
+       ``self.uge_file`` to the mesh to convert.
+    2. Boundary nodes: the union of ``boundary_nodes`` and the node ids in
+       every zone file in ``boundary_filenames``.
+    3. Rock types: ``self.material_ids`` (or ``material_ids``) is used only
+       when ``material_names`` is given; otherwise every element gets
+       ``default_rock_type``.
+    4. PMX: if ``pmx`` is True, per-cell permeability from
+       ``self.set_perm_cell()``, the same field PFLOTRAN uses.
 
     Parameters
     ----------
     self:
-        The parent DFNWorks object.  Must expose ``print_log``,
-        ``lagrit2pflotran``, and ``convert_uge_to_tough`` methods.
-    tough_mesh_filename:
-        Destination path for the output TOUGH ``MESH`` file.
-    boundary_filenames, boundary_nodes, material_ids, material_names, default_rock_type:
-        Passed straight through to ``convert_uge_to_tough``, see there for
-        details, in particular for how to assign different rock types to
-        different elements via ``material_ids``/``material_names``.
+        The parent DFNWorks object.
+    dim:
+        Problem dimension passed to ``correct_uge_file``. ``3`` (default)
+        scales volumes and areas by aperture, ``2`` keeps the raw UGE file.
+    output_filename:
+        Destination path for the TOUGH ``MESH`` file. Default ``"MESH"``.
+    boundary_filenames:
+        Iterable of zone-file paths whose nodes are held fixed (volume 1e51).
+    boundary_nodes:
+        Iterable of additional 1-based node ids to hold fixed.
+    material_ids:
+        Overrides ``self.material_ids`` for the rock-type lookup, see
+        ``convert_uge_to_tough`` for the accepted forms. Ignored unless
+        ``material_names`` is given.
+    material_names:
+        Mapping of material id -> rock-type name (at most 5 characters).
+        If omitted, every element gets ``default_rock_type``.
+    default_rock_type:
+        Rock-type name for elements without a material name. Default
+        ``"DFNMM"``.
     isot_pairs, isot_materials, isot_default:
-        Per-connection ISOT assignment, passed straight through to
-        ``convert_uge_to_tough``, see there for the rules.
+        Per-connection ISOT assignment, see ``convert_uge_to_tough``.
+    pmx:
+        If True, write per-cell permeability into the ELEME PMX field as an
+        absolute permeability (TOUGH3, no ``SEED`` record in ROCKS). Default
+        False leaves PMX blank.
     """
     self.print_log("\n--> Converting mesh file format to TOUGH mesh: Starting\n")
-    # Step 1: Run the LaGriT pipeline; produces full_mesh_vol_area.uge.
-    self.correct_uge_file()
-    # Step 2: Translate the UGE output to the TOUGH MESH format.
-    self.convert_uge_to_tough('full_mesh_vol_area.uge', tough_mesh_filename, boundary_filenames, boundary_nodes,
-                               material_ids, material_names, default_rock_type,
-                               isot_pairs, isot_materials, isot_default)
+
+    self.correct_uge_file(dim=dim)
+
+    nodes = set() if boundary_nodes is None else {int(n) for n in boundary_nodes}
+    for zone_file in boundary_filenames or []:
+        nodes.update(self.load_zone_file_nodes(zone_file))
+
+    if material_names is not None and material_ids is None:
+        material_ids = self.material_ids
+    elif material_names is None:
+        material_ids = None
+
+    perm_cell = self.set_perm_cell() if pmx else None
+
+    self.convert_uge_to_tough(self.uge_file, output_filename,
+                              boundary_nodes=nodes,
+                              material_ids=material_ids,
+                              material_names=material_names,
+                              default_rock_type=default_rock_type,
+                              isot_pairs=isot_pairs,
+                              isot_materials=isot_materials,
+                              isot_default=isot_default,
+                              perm_cell=perm_cell)
     self.print_log("--> Converting mesh file format to TOUGH mesh: Complete\n")
 
 

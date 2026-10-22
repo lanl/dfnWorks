@@ -492,7 +492,7 @@ def correct_uge_file(self, dim=3):
     Notes
     -----
         Assumes the following instance variables exist:
-          - ``self.flow_solver`` (str): must be ``"PFLOTRAN"``.
+          - ``self.flow_solver`` (str): ``"PFLOTRAN"`` or ``"TOUGH"``.
           - ``self.inp_file`` (str): used to derive the ``.uge`` file name.
           - ``self.r_fram`` (bool): whether the feature-rejection mesher was used.
           - ``self.material_ids`` (list[int]): material id per cell.
@@ -501,7 +501,8 @@ def correct_uge_file(self, dim=3):
           - ``self.print_log`` (callable): logging method.
     """
     self.print_log("--> Starting: Correcting UGE file")
-    if self.flow_solver != "PFLOTRAN":
+    # lagrit_to_tough also uses the corrected UGE file to build the TOUGH MESH
+    if self.flow_solver not in ("PFLOTRAN", "TOUGH"):
         self.print_log("Error. Wrong flow solver requested\n", "error")
 
     raw_uge = self.inp_file[:-4] + ".uge"

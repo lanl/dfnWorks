@@ -24,7 +24,7 @@ DFN.add_user_fract(shape='rect',
                    radii=0.6,
                    translation=[-0.4, 0, 0],
                    normal_vector=[0, 0, 1],
-                   permeability=1.0e-12)
+                   permeability=3.0e-12)
 
 DFN.add_user_fract(shape='rect',
                    radii=1.0,
@@ -53,6 +53,7 @@ DFN.mesh_network()
 
 
 DFN.set_flow_solver("TOUGH")
-DFN.lagrit_to_tough()
-DFN.tough() 
-DFN.parse_tough_output() 
+# All fractures share one ROCKS record; per-cell permeability goes in ELEME PMX
+DFN.lagrit_to_tough(pmx=True)
+# DFN.tough()
+# DFN.parse_tough_output()
