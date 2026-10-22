@@ -23,6 +23,9 @@ STAGE_REQUIRES = {
     "dfntrans": ["dfntrans"],
     "graph_flow": [],
     "graph_transport": [],
+    "udfm": ["lagrit"],
+    "ecpm": [],
+    "stress": [],
 }
 
 
@@ -127,6 +130,7 @@ def requires_for_stages(stages):
     """Flatten STAGE_REQUIRES for a list of stages, preserving order, no duplicates."""
     seen = []
     for stage in stages:
+        stage = stage.partition(":")[0]          # 'gen:output_prune' -> 'gen'
         for key in STAGE_REQUIRES.get(stage, []):
             if key not in seen:
                 seen.append(key)

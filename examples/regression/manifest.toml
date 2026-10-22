@@ -6,7 +6,9 @@
 # output_dir   basename of the DFN jobname inside the copy (default "output")
 # stages       which metric extractors / expected outputs apply:
 #              gen, report, mesh, mesh_visual, dfm, pflotran, fehm, dfntrans,
-#              graph_flow, graph_transport
+#              graph_flow, graph_transport, udfm, ecpm, stress.
+#              "stage:dir" reads that stage's files from <scratch>/<dir>
+#              instead of output_dir (for drivers with several job dirs).
 # requires     preflight keys; derived from stages unless given
 # expect_files extra glob patterns (relative to scratch) that must exist
 # tolerances   {metric_or_stage = rel_tol} overrides of harness/compare.py defaults
@@ -102,3 +104,95 @@ tier = "baseline"
 source = "../graph_transport"
 stages = ["gen", "graph_flow", "graph_transport"]
 timeout = 600
+
+# ---------------------------------------------------------------- modest
+# One case per optional workflow: FEHM, TDRW, stress apertures, UDFM
+# upscaling, pruning, wells, PFLOTRAN restart, hydraulic-property functions,
+# Bingham orientations. Each runs in a few minutes at most.
+
+[cases.tdrw]
+tier = "modest"
+source = "../tdrw"
+stages = ["gen", "mesh", "pflotran", "dfntrans"]
+timeout = 900
+
+[cases.stress]
+tier = "modest"
+source = "../stress"
+# DFNTrans seeds only ~50 particles here (init_eqd) and the count that exits
+# varies run to run (47 vs 50 on the same machine), so transport is checked
+# for presence only; flow and the stress-adjusted fields are compared.
+stages = ["gen", "mesh", "stress", "pflotran"]
+expect_files = ["output/**/partime*"]
+timeout = 900
+
+[cases.well_example]
+tier = "modest"
+source = "../well_example"
+stages = ["gen", "mesh", "pflotran"]
+timeout = 900
+
+[cases.fehm_example]
+tier = "modest"
+source = "../fehm_example"
+stages = ["gen", "mesh", "fehm"]
+timeout = 900
+
+[cases.ade_example]
+tier = "modest"
+source = "../ade_example"
+stages = ["gen", "mesh", "pflotran"]
+timeout = 900
+
+[cases.hy_test]
+tier = "modest"
+source = "../hy_test"
+stages = ["gen", "report"]
+expect_files = ["**/aperture_distributions.png"]
+timeout = 900
+
+[cases.udfm]
+tier = "modest"
+source = "../udfm"
+stages = ["gen", "mesh_visual", "udfm", "pflotran:output/octree"]
+timeout = 900
+
+[cases.pruning]
+tier = "modest"
+source = "../pruning"
+output_dir = "output_prune"
+stages = ["gen:output_prune", "mesh_visual:output_backbone"]
+expect_files = ["output_prune/backbone.dat", "output_prune/output_prune.pkl"]
+timeout = 900
+
+[cases.bingham_distribution]
+tier = "modest"
+source = "../bingham_distribution"
+stages = ["gen", "report"]
+timeout = 1200
+
+# ---------------------------------------------------------------- advanced
+# Large or long workflows: mapdfn ECPM on a km-scale network, finite matrix
+# diffusion TDRW sweeps on a graph, p32 calibration network.
+
+[cases.calibrate_p32_from_p10]
+tier = "advanced"
+source = "../calibrate_p32_from_p10"
+driver = "make_network.py"
+stages = ["gen", "report", "mesh_visual"]
+timeout = 1800
+
+[cases.mapdfn]
+tier = "advanced"
+source = "../mapdfn"
+stages = ["gen", "ecpm", "pflotran:output/mapdfn_ecpm"]
+timeout = 1800
+
+[cases.finite_matrix_diffusion]
+tier = "advanced"
+source = "../finite_matrix_diffusion"
+driver = "forsmark_percolation_comparison.py"
+output_dir = "forsmark_pc_1_seed101"
+stages = ["gen", "graph_flow", "graph_transport"]
+expect_files = ["**/fmd_run_matrix.csv"]
+timeout = 3600

@@ -119,13 +119,39 @@ def pflotran_metrics(outdir, scratch):
     return metrics, missing
 
 
+_FEHM_END = re.compile(r"simulation ended:\s+days\s+([-+0-9.Ee]+)\s+timesteps\s+(\d+)")
+_FEHM_NR = re.compile(r"total N-R iterations\s*=\s*(\d+)")
+_FEHM_CONS = re.compile(r"Conservation Errors:\s+([-+0-9.Ee]+)\s+\(mass\),\s+([-+0-9.Ee]+)\s+\(energy\)")
+
+
 def fehm_metrics(outdir):
+    """Size of the FEHM stor file plus the run summary at the end of the FEHM *.out."""
+    metrics, missing = {}, []
     stor = Path(outdir) / "full_mesh_vol_area.stor"
-    if not stor.is_file():
-        return {}, ["full_mesh_vol_area.stor"]
-    with open(stor) as fp:
-        n = sum(1 for _ in fp)
-    return {"fehm.stor_lines": n}, []
+    if stor.is_file():
+        with open(stor) as fp:
+            metrics["fehm.stor_lines"] = sum(1 for _ in fp)
+    else:
+        missing.append("full_mesh_vol_area.stor")
+    outs = [p for p in glob.glob(str(Path(outdir) / "*.out"))
+            if not Path(p).name.endswith(".lgi.out")]
+    if not outs:
+        missing.append("FEHM *.out")
+    for out in outs:
+        text = Path(out).read_text(errors="replace")
+        m = _FEHM_END.search(text)
+        if m:
+            metrics["fehm.end_days"] = float(m.group(1))
+            metrics["fehm.timesteps"] = int(m.group(2))
+        m = _FEHM_NR.search(text)
+        if m:
+            metrics["fehm.nr_iterations"] = int(m.group(1))
+        m = _FEHM_CONS.search(text)
+        if m:
+            metrics["fehm.mass_conservation_error"] = float(m.group(1))
+        if "fehm.timesteps" not in metrics:
+            missing.append(f"{Path(out).name} (no 'simulation ended' summary)")
+    return metrics, missing
 
 
 def _percentiles(prefix, values):
@@ -194,10 +220,111 @@ def report_check(outdir):
     return {}, ([] if hits else ["*_output_report.pdf"])
 
 
-def collect(stages, scratch, outdir):
-    """Run every extractor named in `stages`. Returns (metrics, missing)."""
+def _h5_stats(path, prefix, limit=12):
+    """Size and mean of every numeric dataset in an HDF5 file (first `limit`)."""
+    import h5py
+    metrics = {}
+    with h5py.File(path, "r") as f5:
+        names = []
+        f5.visititems(lambda name, obj: names.append(name) if isinstance(obj, h5py.Dataset) else None)
+        for name in sorted(names)[:limit]:
+            if name.lower().endswith(("id", "ids")):      # cell/material ids: not a result
+                continue
+            arr = np.asarray(f5[name])
+            if arr.dtype.kind not in "fiu" or arr.size == 0:
+                continue
+            key = f"{prefix}.{_slug(name)}"
+            metrics[f"{key}.n"] = int(arr.size)
+            metrics[f"{key}.mean"] = float(arr.astype(float).mean())
+    return metrics
+
+
+def _first(scratch, pattern):
+    hits = sorted(glob.glob(str(Path(scratch) / "**" / pattern), recursive=True))
+    return hits[0] if hits else None
+
+
+def udfm_metrics(scratch):
+    """Octree continuum mesh (map_to_continuum) and upscaled properties (upscale)."""
     metrics, missing = {}, []
-    for stage in stages:
+    octree = _first(scratch, "octree_dfn.inp")
+    if octree:
+        nodes, elems = _inp_header(octree)
+        metrics.update({"udfm.octree_nodes": nodes, "udfm.octree_elements": elems})
+    else:
+        missing.append("octree_dfn.inp")
+    for name in ("mesh_permeability.h5", "mesh_porosity.h5"):
+        path = _first(scratch, name)
+        if path:
+            metrics.update(_h5_stats(path, "udfm." + name[:-3]))
+        else:
+            missing.append(name)
+    return metrics, missing
+
+
+def ecpm_metrics(scratch):
+    """mapdfn ECPM property fields (anisotropic_k.h5, porosity.h5, tortuosity.h5)."""
+    metrics, missing = {}, []
+    for name in ("anisotropic_k.h5", "porosity.h5", "tortuosity.h5"):
+        path = _first(scratch, name)
+        if path:
+            metrics.update(_h5_stats(path, "ecpm." + name[:-3]))
+        else:
+            missing.append(name)
+    return metrics, missing
+
+
+def _dat_last_column(path):
+    """Last numeric column of a whitespace table, tolerating a header line."""
+    for skip in (0, 1):
+        try:
+            data = np.loadtxt(path, skiprows=skip, ndmin=2)
+            if data.size:
+                return data[:, -1]
+        except Exception:  # noqa: BLE001
+            continue
+    return None
+
+
+def stress_metrics(outdir):
+    """Fields left by stress_based_apertures + the final dump_hydraulic_values.
+
+    aperture.dat / perm.dat are per fracture (after the stress adjustment);
+    stress_aper_by_node.dat is the per-node aperture written onto the mesh.
+    """
+    metrics, missing = {}, []
+    for name in ("aperture.dat", "perm.dat", "stress_aper_by_node.dat"):
+        path = Path(outdir) / name
+        col = _dat_last_column(path) if path.is_file() else None
+        if col is None:
+            missing.append(name)
+            continue
+        key = "stress." + name[:-4]
+        metrics[f"{key}.n"] = int(col.size)
+        metrics[f"{key}.mean"] = float(col.mean())
+        metrics[f"{key}.min"] = float(col.min())
+        metrics[f"{key}.max"] = float(col.max())
+    return metrics, missing
+
+
+def split_stage(stage):
+    """'gen' -> ('gen', None); 'gen:output_prune' -> ('gen', 'output_prune')."""
+    name, _, subdir = stage.partition(":")
+    return name, (subdir or None)
+
+
+def collect(stages, scratch, outdir):
+    """Run every extractor named in `stages`. Returns (metrics, missing).
+
+    A stage may be written ``name:dir`` to read that stage's files from
+    ``<scratch>/<dir>`` instead of the case's default output directory, for
+    drivers that write more than one job directory.
+    """
+    metrics, missing = {}, []
+    default_outdir = outdir
+    for spec in stages:
+        stage, subdir = split_stage(spec)
+        outdir = Path(scratch) / subdir if subdir else default_outdir
         if stage == "gen":
             m, miss = gen_metrics(outdir)
         elif stage == "mesh":
@@ -218,8 +345,16 @@ def collect(stages, scratch, outdir):
             m, miss = graph_transport_metrics(scratch)
         elif stage == "report":
             m, miss = report_check(outdir)
+        elif stage == "udfm":
+            m, miss = udfm_metrics(scratch)
+        elif stage == "ecpm":
+            m, miss = ecpm_metrics(scratch)
+        elif stage == "stress":
+            m, miss = stress_metrics(outdir)
         else:
             raise ValueError(f"unknown stage {stage!r}")
+        if subdir:
+            miss = [f"{subdir}/{x}" for x in miss]
         metrics.update(m)
         missing.extend(miss)
     return metrics, missing

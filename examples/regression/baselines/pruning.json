@@ -1,0 +1,23 @@
+{
+  "case": "pruning",
+  "created": "2026-10-22T09:58:06",
+  "git": "3346e91b",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 212,
+    "gen.intersection_length": 840.393,
+    "gen.intersections_shortened": 94,
+    "gen.isolated_removed": 467,
+    "gen.n_intersections": 328,
+    "gen.p30": 0.013568,
+    "gen.p32": 0.623465,
+    "gen.rejected": 7,
+    "gen.retranslated": 1073,
+    "gen.surface_area": 9741.64,
+    "gen.triple_points": 0,
+    "mesh.elements": 411,
+    "mesh.nodes": 561
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 3.47
+}

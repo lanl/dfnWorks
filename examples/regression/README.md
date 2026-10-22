@@ -46,11 +46,18 @@ deleted unless `--keep` is given.
 | mesh / mesh_visual | `full_mesh.inp` / `reduced_mesh.inp` header | nodes, elements |
 | dfm | `dfm_tet_mesh.inp` header | nodes, elements |
 | pflotran | `*-mas.dat` last row, `*_effective_perm.txt` | mass balance columns, k_eff |
-| fehm | `full_mesh_vol_area.stor` | line count |
+| fehm | `full_mesh_vol_area.stor`, FEHM `*.out` | stor line count; end time, timesteps, Newton iterations, mass conservation error |
 | dfntrans | `partime*`, `TotalNumberP` | particle count, travel-time mean/p10/p50/p90, mean path length |
 | graph_flow | `graph_flow.hdf5` | edge count, total flow rate, total volume |
-| graph_transport | `<partime>.hdf5` | particle count, travel-time mean/p10/p50/p90 |
+| graph_transport | `<partime>.hdf5` | particle count, travel-time mean/p10/p50/p90 (one set per partime file) |
 | report | `*_output_report.pdf` | presence only |
+| udfm | `octree_dfn.inp`, `mesh_permeability.h5`, `mesh_porosity.h5` | octree nodes/elements, size and mean of each upscaled field |
+| ecpm | `anisotropic_k.h5`, `porosity.h5`, `tortuosity.h5` | size and mean of each mapdfn ECPM field |
+| stress | `aperture.dat`, `perm.dat`, `stress_aper_by_node.dat` | count, mean, min, max of the stress-adjusted per-fracture and per-node fields |
+
+A stage may be written `name:dir` (e.g. `gen:output_prune`) to read that
+stage's files from `<scratch>/<dir>` rather than `output_dir`, for drivers that
+write more than one job directory.
 
 4. `harness/compare.py` checks each metric against `baselines/<case>.json`.
    Integers must match exactly; floats use a relative tolerance per stage
@@ -86,9 +93,25 @@ exist) are derived from the stages; add `requires = [...]` to override.
 
 ## Tiers
 
-- **baseline**: one deterministic case per generator feature and mesh mode;
-  the cheapest cases carry the full gen → mesh → PFLOTRAN → DFNTrans chain.
-- **modest** (planned): FEHM, TDRW, stress apertures, UDFM upscaling, pruning,
-  wells, PFLOTRAN restart transport, dense networks.
-- **advanced** (planned): mapdfn ECPM, finite matrix diffusion, p32
-  calibration, and scale-up networks.
+- **baseline** (default, ~3 min): one deterministic case per generator feature
+  and mesh mode; the cheapest cases carry the full gen → mesh → PFLOTRAN →
+  DFNTrans chain.
+- **modest**: one case per optional workflow: TDRW transport, stress-based
+  apertures, wells, FEHM, PFLOTRAN restart (ade_example), hydraulic-property
+  functions (hy_test), UDFM octree upscaling, graph pruning to a backbone, and
+  Bingham orientations.
+- **advanced**: the long ones: mapdfn ECPM on a km-scale network with two
+  PFLOTRAN runs, the finite-matrix-diffusion TDRW sweep on a graph, and the
+  p32-calibration network at h = 1 m.
+
+Known gaps: `tdrw` fails the rFram-off UGE check on one near-degenerate
+connection (area -1.3e-7 at h = 0.1, well above round-off); it stays in the
+manifest so the failure is visible until the example or the policy changes.
+`stress` compares flow but not transport, because its ~50-particle DFNTrans
+run is not reproducible run to run.
+
+Examples whose drivers live only on feature branches (tough, dfntrans2,
+edfm_tpl, thermal_graph_transport, thermal_spacing_optimization) are not in the
+manifest; add them when those branches merge. `calibrate_p32.py` in
+calibrate_p32_from_p10 is also left out: it wraps generation in an optimiser
+and has no fixed run length.

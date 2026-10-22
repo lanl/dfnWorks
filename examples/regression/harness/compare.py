@@ -14,6 +14,9 @@ DEFAULT_REL_TOL = {
     "dfntrans": 1e-3,
     "graph_flow": 1e-6,
     "graph_transport": 1e-6,
+    "udfm": 1e-6,
+    "ecpm": 1e-6,
+    "stress": 1e-6,
 }
 ABS_TOL = 1e-300  # only there so two true zeros compare equal
 

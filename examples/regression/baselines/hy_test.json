@@ -1,0 +1,21 @@
+{
+  "case": "hy_test",
+  "created": "2026-10-22T09:57:50",
+  "git": "3346e91b",
+  "host": "Jeffreys-MacBook-Pro.local",
+  "metrics": {
+    "gen.final_fractures": 1571,
+    "gen.intersection_length": 158594.0,
+    "gen.intersections_shortened": 0,
+    "gen.isolated_removed": 0,
+    "gen.n_intersections": 43545,
+    "gen.p30": 0.100544,
+    "gen.p32": 10.0209,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 156577.0,
+    "gen.triple_points": 0
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 17.54
+}
