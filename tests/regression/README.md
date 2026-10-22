@@ -5,7 +5,7 @@ files it leaves behind, compares scalar metrics against committed baselines,
 and writes a self-contained HTML report.
 
 ```bash
-cd examples/regression
+cd tests/regression
 python3 run_regression.py                 # baseline tier (default)
 python3 run_regression.py --tier modest   # baseline + modest (tiers are cumulative)
 python3 run_regression.py --only TPL exp  # a subset of cases
@@ -33,7 +33,8 @@ deleted unless `--keep` is given.
 
 ## How a case runs
 
-1. The example directory named by `source` in `manifest.toml` is copied into
+1. The example directory named by `source` in `manifest.toml` (a name under
+   `examples/`, or a `./` path relative to the manifest) is copied into
    `_runs/<timestamp>/<case>/`, minus any old `output*/` dirs, logs and legacy
    `*_example/` folders.
 2. `python3 driver.py` runs in that copy with stdin closed (so no interactive
@@ -83,7 +84,8 @@ Add a block to `manifest.toml`:
 ```toml
 [cases.my_case]
 tier = "modest"
-source = "../my_example"        # or "cases/my_case" for a driver that is not an example
+source = "my_example"           # a directory under examples/
+# source = "./cases/my_case"    # or a driver kept under tests/regression/
 stages = ["gen", "mesh", "pflotran"]
 timeout = 900
 ```

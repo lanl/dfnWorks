@@ -28,6 +28,7 @@ REPO_ROOT = HERE.parents[1]
 TIER_ORDER = ["baseline", "modest", "advanced"]
 RUNS_DIR = HERE / "_runs"
 BASELINES_DIR = HERE / "baselines"
+EXAMPLES_ROOT = REPO_ROOT / "examples"
 
 
 def git_info():
@@ -45,6 +46,9 @@ def load_manifest(path):
     with open(path, "rb") as fp:
         data = tomllib.load(fp)
     defaults = data.get("defaults", {})
+    examples_root = Path(defaults.pop("examples_root", EXAMPLES_ROOT))
+    if not examples_root.is_absolute():
+        examples_root = (path.parent / examples_root).resolve()
     cases = []
     for name, spec in data.get("cases", {}).items():
         case = {"name": name, **defaults, **spec}
@@ -54,7 +58,14 @@ def load_manifest(path):
         case.setdefault("expect_files", [])
         case.setdefault("tolerances", {})
         case.setdefault("requires", pf.requires_for_stages(case["stages"]))
-        case["source"] = (HERE / case["source"]).resolve()
+        src = Path(case["source"])
+        if src.is_absolute():
+            pass                                    # as given
+        elif case["source"].startswith(("./", "../")):
+            src = path.parent / src                 # relative to the manifest
+        else:
+            src = examples_root / src               # an example directory name
+        case["source"] = src.resolve()
         cases.append(case)
     return cases
 

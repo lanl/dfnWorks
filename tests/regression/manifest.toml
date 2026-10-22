@@ -1,7 +1,9 @@
 # dfnWorks regression cases.
 #
 # tier         baseline | modest | advanced  (tiers are cumulative when run)
-# source       directory copied to scratch, relative to this file
+# source       example directory copied to scratch: a name under <repo>/examples
+#              (or [defaults] examples_root), or "./..." relative to this file,
+#              or an absolute path
 # driver       script run with cwd = scratch copy (default driver.py)
 # output_dir   basename of the DFN jobname inside the copy (default "output")
 # stages       which metric extractors / expected outputs apply:
@@ -23,85 +25,85 @@ timeout = 600
 
 [cases.4_user_rects]
 tier = "baseline"
-source = "../4_user_rects"
+source = "4_user_rects"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
 timeout = 300
 
 [cases.4_user_ell_uniform]
 tier = "baseline"
-source = "../4_user_ell_uniform"
+source = "4_user_ell_uniform"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
 timeout = 300
 
 [cases.two_fracture_case]
 tier = "baseline"
-source = "../two_fracture_case"
+source = "two_fracture_case"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
 timeout = 300
 
 [cases.dfm_4_frac]
 tier = "baseline"
-source = "../dfm_4_frac"
+source = "dfm_4_frac"
 stages = ["gen", "mesh", "dfm"]
 timeout = 600
 
 [cases.TPL]
 tier = "baseline"
-source = "../TPL"
+source = "TPL"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 
 [cases.exp]
 tier = "baseline"
-source = "../exp"
+source = "exp"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 
 [cases.lognormal]
 tier = "baseline"
-source = "../lognormal"
+source = "lognormal"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 
 [cases.constant]
 tier = "baseline"
-source = "../constant"
+source = "constant"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 
 [cases.user_polygons]
 tier = "baseline"
-source = "../user_polygons"
+source = "user_polygons"
 stages = ["gen", "mesh", "pflotran"]
 timeout = 600
 
 [cases.faults]
 tier = "baseline"
-source = "../faults"
+source = "faults"
 stages = ["gen", "mesh_visual"]
 timeout = 300
 
 [cases.regions]
 tier = "baseline"
-source = "../regions"
+source = "regions"
 stages = ["gen", "report", "mesh_visual"]
 timeout = 600
 
 [cases.layers]
 tier = "baseline"
-source = "../layers"
+source = "layers"
 stages = ["gen", "mesh", "report", "pflotran"]
 timeout = 900
 
 [cases.polygon_domain_boundary]
 tier = "baseline"
-source = "../polygon_domain_boundary"
+source = "polygon_domain_boundary"
 stages = ["gen", "mesh"]
 timeout = 600
 
 [cases.graph_transport]
 tier = "baseline"
-source = "../graph_transport"
+source = "graph_transport"
 stages = ["gen", "graph_flow", "graph_transport"]
 timeout = 600
 
@@ -112,13 +114,13 @@ timeout = 600
 
 [cases.tdrw]
 tier = "modest"
-source = "../tdrw"
+source = "tdrw"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
 timeout = 900
 
 [cases.stress]
 tier = "modest"
-source = "../stress"
+source = "stress"
 # DFNTrans seeds only ~50 particles here (init_eqd) and the count that exits
 # varies run to run (47 vs 50 on the same machine), so transport is checked
 # for presence only; flow and the stress-adjusted fields are compared.
@@ -128,38 +130,38 @@ timeout = 900
 
 [cases.well_example]
 tier = "modest"
-source = "../well_example"
+source = "well_example"
 stages = ["gen", "mesh", "pflotran"]
 timeout = 900
 
 [cases.fehm_example]
 tier = "modest"
-source = "../fehm_example"
+source = "fehm_example"
 stages = ["gen", "mesh", "fehm"]
 timeout = 900
 
 [cases.ade_example]
 tier = "modest"
-source = "../ade_example"
+source = "ade_example"
 stages = ["gen", "mesh", "pflotran"]
 timeout = 900
 
 [cases.hy_test]
 tier = "modest"
-source = "../hy_test"
+source = "hy_test"
 stages = ["gen", "report"]
 expect_files = ["**/aperture_distributions.png"]
 timeout = 900
 
 [cases.udfm]
 tier = "modest"
-source = "../udfm"
+source = "udfm"
 stages = ["gen", "mesh_visual", "udfm", "pflotran:output/octree"]
 timeout = 900
 
 [cases.pruning]
 tier = "modest"
-source = "../pruning"
+source = "pruning"
 output_dir = "output_prune"
 stages = ["gen:output_prune", "mesh_visual:output_backbone"]
 expect_files = ["output_prune/backbone.dat", "output_prune/output_prune.pkl"]
@@ -167,7 +169,7 @@ timeout = 900
 
 [cases.bingham_distribution]
 tier = "modest"
-source = "../bingham_distribution"
+source = "bingham_distribution"
 stages = ["gen", "report"]
 timeout = 1200
 
@@ -177,20 +179,20 @@ timeout = 1200
 
 [cases.calibrate_p32_from_p10]
 tier = "advanced"
-source = "../calibrate_p32_from_p10"
+source = "calibrate_p32_from_p10"
 driver = "make_network.py"
 stages = ["gen", "report", "mesh_visual"]
 timeout = 1800
 
 [cases.mapdfn]
 tier = "advanced"
-source = "../mapdfn"
+source = "mapdfn"
 stages = ["gen", "ecpm", "pflotran:output/mapdfn_ecpm"]
 timeout = 1800
 
 [cases.finite_matrix_diffusion]
 tier = "advanced"
-source = "../finite_matrix_diffusion"
+source = "finite_matrix_diffusion"
 driver = "forsmark_percolation_comparison.py"
 output_dir = "forsmark_pc_1_seed101"
 stages = ["gen", "graph_flow", "graph_transport"]

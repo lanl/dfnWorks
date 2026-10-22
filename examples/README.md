@@ -1,10 +1,10 @@
 # Regression testing
 
-Every example here doubles as a regression case. Run the suite from
-`examples/regression/` (see its README for tiers, baselines and the HTML report):
+Every example here doubles as a regression case; the suite lives in
+`tests/regression/` (see its README for tiers, baselines and the HTML report):
 
 ```bash
-cd examples/regression && python3 run_regression.py
+cd tests/regression && python3 run_regression.py
 ```
 
 

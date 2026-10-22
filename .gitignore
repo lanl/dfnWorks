@@ -73,6 +73,6 @@ examples/TPL/output_rfram/*
 DFNGen/.dfngen_version
 
 # Regression suite scratch and reports
-examples/regression/_runs/
-examples/regression/latest_report.html
+tests/regression/_runs/
+tests/regression/latest_report.html
 examples/*/output*/
