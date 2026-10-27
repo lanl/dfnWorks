@@ -1,58 +1,102 @@
-<Test>: Gas
-MEMORY         
-'REAL_GAS+H2O'
-   2    3   2  .FALSE.                       ! NumCom, NumEq, NumPhases, binary_diffusion
-'Cartesian'   12000   37000    5  .FALSE. .FALSE. ! coordinate_system, Max_NumElem,Max_NumConx, ElemNameLength, active_conx_only, boundaries_in_matrix
-   2                                          ! MaxNum_SS
-   5                                          ! MaxNum_Media
-.FALSE.  .TRUE.  .FALSE.  'Saturation'        ! element_by_element_properties, porosity_perm_dependence, scaled_capillary_pressure, Option_tortuosity_CompuMethod
-.FALSE.  'Continuous'                         ! coupled_geochemistry, property_update = 'Continuous', 'Iteration', 'Timestep'
-.FALSE.  'XXX'  'Continuous'  0               ! coupled_geomechanics, geomechanical_code_name, property_update, num_geomech_param
-ROCKS----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8----*----9----*---10
-DFNMM    8    2.65e3       0.3  1.00E-12  1.00E-15  1.00E-15       3.0     1000.
-     1.e-9               1.5e0  0.00E+00  1.00E+05              5.0e-2     3.0e0     0.0e0     1.5e1  
-    3           .300       .05 
-    9
-&Slippage_Turbulence_Info  MediumKnudsenFlow_F = .F., MediumTurbulentFlow_F = .F., 
-                           MediumKlinkFlow_F   = .F., Option_KlinkenbergParam = 'C-REF'
-                           /
- 
-REAL_GAS+H2O*----2----*----3----*----4----*----5----*----6----*----7----*----8
-&NonDarcian_Flow_Specifications   turbulent_flow_F    = .FALSE.,
-                                  Knudsen_diffusion_F = .FALSE.,
-                                  slippage_effects_F  = .FALSE.
-                                  /
-&Gas_Specifications  number_of_component_gases   = 1,   
-                     component_gas_name          = 'H2', 10*' ',  
-                     component_gas_mole_fraction = 1.0d0, 11*0.0d0
-                     gas_cubic_EOS = 'PR',   
-                     sorbed_gas_F  = .FALSE.,
-                     variable_gas_composition_F = .TRUE.
-                     /
-<<<
+four_fracture_example: Pressure gradient in 4 fracture network
+ROCKS----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
+DFNMM         2650.0      0.35 1.000E-12 1.000E-12 1.000E-12
+
+    1            0.2                 0.8
+    1            0.0       0.0       1.0
+
+RPCAP----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
+    7            0.5       0.2       1.0       0.0
+    7            0.5      0.15     0.001    1.0e10       1.0
+
+PARAM----1--MOP(123456789012345678901234)---*----5----*----6----*----7----*----8
+ 8 2 100       1100000000000000400001000
+            1000.0  1.000E-01                          10.0
+ 1.000E-07
+             1.0E+06                20.                 
+     
 START----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
-----*----1 MOP: 123456789*123456789*1234 ---*----5----*----6----*----7----*----8
-PARAM----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8----*----9----*---10----*---11
-10 0-999    -999100030090020100500903000   0.00E-5                     1000  100     
-             2.765E6    1.0e00     1.0e2                 0.0             
-     1.E-5     1.E00                                  1.0e-8            Aqu         1.0e-3    1.0e-5    1.0e-3
-             8.00e06          1.00000e-5             200.0e0                     
-SOLVR----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
-3  Z1   O0    1.0e-2    1.0e-8 
-    
-TIMES----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
-   50   50
-   8.640E2   1.728E3   2.592E3   3.456E3   4.320E3   5.184E3   6.048E3   6.912E3
-   7.776E3   8.640E3   9.504E3   1.037E4   1.123E4   1.210E4   1.296E4   1.382E4
-   1.469E4   1.555E4   1.642E4   1.728E4   1.814E4   1.901E4   1.987E4   2.074E4
-   2.160E4   2.246E4   2.333E4   2.419E4   2.506E4   2.592E4   2.678E4   2.765E4
-   2.851E4   2.938E4   3.024E4   3.110E4   3.197E4   3.283E4   3.370E4   3.456E4
-   3.542E4   3.629E4   3.715E4   3.802E4   3.888E4   3.974E4   4.061E4   4.147E4
-   4.234E4   4.320E4
+
+INDOM----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
 
 INCON----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
+AAA 1    0    0
+          2.0000E+06                20.0
+AAA 2    0    0
+          2.0000E+06                20.0
+AAA 3    0    0
+          2.0000E+06                20.0
+AAA 4    0    0
+          2.0000E+06                20.0
+AAA 5    0    0
+          2.0000E+06                20.0
+AAA 6    0    0
+          2.0000E+06                20.0
+AAA 7    0    0
+          2.0000E+06                20.0
+AAA 8    0    0
+          2.0000E+06                20.0
+AAA 9    0    0
+          2.0000E+06                20.0
+AAA10    0    0
+          2.0000E+06                20.0
+AAA11    0    0
+          2.0000E+06                20.0
+AAE37    0    0
+          1.0000E+06                20.0
+AAE38    0    0
+          1.0000E+06                20.0
+AAE39    0    0
+          1.0000E+06                20.0
+AAE40    0    0
+          1.0000E+06                20.0
+AAE41    0    0
+          1.0000E+06                20.0
+AAE42    0    0
+          1.0000E+06                20.0
+AAE43    0    0
+          1.0000E+06                20.0
+AAE44    0    0
+          1.0000E+06                20.0
+AAE45    0    0
+          1.0000E+06                20.0
+AAE46    0    0
+          1.0000E+06                20.0
+AAE47    0    0
+          1.0000E+06                20.0
+AAE48    0    0
+          1.0000E+06                20.0
+AAF51    0    0
+          1.0000E+06                20.0
+AAF52    0    0
+          1.0000E+06                20.0
+AAF53    0    0
+          1.0000E+06                20.0
+AAF54    0    0
+          1.0000E+06                20.0
+AAF55    0    0
+          1.0000E+06                20.0
+AAF56    0    0
+          1.0000E+06                20.0
+AAF57    0    0
+          1.0000E+06                20.0
+AAF58    0    0
+          1.0000E+06                20.0
+AAF59    0    0
+          1.0000E+06                20.0
+AAF60    0    0
+          1.0000E+06                20.0
+AAF61    0    0
+          1.0000E+06                20.0
+AAF62    0    0
+          1.0000E+06                20.0
 
-GENER----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8 
-AAA 1Inj01                         COM1    1.00E-74.25794E05
+OUTPU----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8
+CSV
+    4
+COORDINATE
+PRESSURE                 1
+POROSITY
+ABSOLUTE                 0
 
 ENDCY----1----*----2----*----3----*----4----*----5----*----6----*----7----*----8

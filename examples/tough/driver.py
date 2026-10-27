@@ -7,10 +7,9 @@
 
 from pydfnworks import *
 import os
-import subprocess
 
 src_path = os.getcwd()
-jobname = src_path + os.sep +  "output"
+jobname = src_path + "/output"
 tough_run_file = src_path + os.sep + "INFILE"
 
 DFN = DFNWORKS(jobname,
@@ -24,7 +23,7 @@ DFN.add_user_fract(shape='rect',
                    radii=0.6,
                    translation=[-0.4, 0, 0],
                    normal_vector=[0, 0, 1],
-                   permeability=3.0e-12)
+                   permeability=1.0e-12)
 
 DFN.add_user_fract(shape='rect',
                    radii=1.0,
@@ -48,12 +47,19 @@ DFN.add_user_fract(shape='rect',
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.print_domain_parameters()
+
 DFN.create_network()
+
 DFN.mesh_network()
 
+DFN.correct_uge_file()
 
-DFN.set_flow_solver("TOUGH")
-# All fractures share one ROCKS record; per-cell permeability goes in ELEME PMX
-DFN.lagrit_to_tough(pmx=True)
-# DFN.tough()
-# DFN.parse_tough_output()
+DFN.lagrit_to_tough(pmx = True, boundary_filenames = ['boundary_left_w.zone', 
+                                                  'boundary_right_e.zone'])
+
+DFN.set_flow_solver("TOUGH") 
+
+DFN.tough() 
+
+# DFN.dfn_flow()
+# DFN.dfn_trans()
