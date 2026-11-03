@@ -184,7 +184,6 @@ pset / back_s / zone / FOUT/ ascii / ZONE
 trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
 
 boundary_components 
-#dump / full_mesh.gmv / mo_all
 dump / full_mesh.inp / mo_all
 dump / lagrit / full_mesh.lg / mo_all
 """
@@ -192,7 +191,7 @@ dump / lagrit / full_mesh.lg / mo_all
                 self.print_log(f"--> Dumping output for {self.flow_solver}")
                 lagrit_input += """
     dump / pflotran / full_mesh / mo_all / nofilter_zero
-    dump / stor / full_mesh / mo_all / ascii
+    # dump / stor / full_mesh / mo_all / ascii
         """
             elif self.flow_solver == "FEHM":
                 self.print_log(f"--> Dumping output for {self.flow_solver}")
@@ -205,6 +204,15 @@ dump / lagrit / full_mesh.lg / mo_all
     dump / zone_imt / full_mesh / mo_all
     # and then we subtract 6 back 
     math / subtract / mo_all / imt1 / 1,0,0 / mo_all / imt1 / 6
+    """
+            elif self.flow_solver == "MOOSE":
+                self.print_log(f"--> Dumping output for {self.flow_solver}")
+                lagrit_input += """
+    cmo/printatt/-def-/ndimensions_geom
+    cmo/printatt/-def-/ndimensions_topo
+    cmo/setatt/-def-/ndimensions_geom/3
+
+    dump / exo / full_mesh.exo / mo_all 
     """
             lagrit_input += f""" 
     # Dump out Material ID Dat file
