@@ -10,9 +10,11 @@ import os
 
 src_path = os.getcwd()
 jobname = src_path + "/output"
-
+dfnflow_file = f"{src_path}/th_transient.i"
 DFN = DFNWORKS(jobname,
-               ncpu=32)
+               ncpu=4,
+               dfnFlow_file = dfnflow_file,
+               flow_solver = "MOOSE")
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
 DFN.params['h']['value'] = 0.1
@@ -46,12 +48,6 @@ DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.print_domain_parameters()
 
-# define_paths()
 DFN.create_network()
 DFN.mesh_network(uniform_mesh=True)
-DFN.mesh_dfm()
-
-DFN.set_flow_solver("MOOSE")
-DFN.dfnFlow_file = "/project/simdata4/ajz/dfnWorks/examples/dfn_moose/th_transient.i"
-DFN.ncpu = 4
 DFN.dfn_flow()
