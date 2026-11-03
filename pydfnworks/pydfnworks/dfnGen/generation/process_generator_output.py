@@ -153,7 +153,8 @@ def gather_dfn_gen_output(self):
     self.fracture_info = np.genfromtxt('dfnGen_output/fracture_info.dat', skip_header = 1)
     
     # get intersection_list
-    self.intersection_list = np.genfromtxt('dfnGen_output/intersection_list.dat', skip_header = 1)
+    # reshape keeps a 2D (n, 6) array when the file has zero or one intersection
+    self.intersection_list = np.genfromtxt('dfnGen_output/intersection_list.dat', skip_header = 1).reshape(-1, 6)
     
     # get boundary_files
     self.back = read_boundaries('dfnGen_output/back.dat')

@@ -668,7 +668,7 @@ def merge_network(self):
     self.print_log("* Merging the mesh: Starting")
     self.create_merge_poly_scripts()
     self.create_final_merge_script()
-    merge_the_fractures(self.ncpu)
+    merge_the_fractures(self.n_merge_jobs)
     merge_final_mesh()
     check_for_final_mesh(self.visual_mode)
     self.print_log("* Merging the mesh: Complete")
