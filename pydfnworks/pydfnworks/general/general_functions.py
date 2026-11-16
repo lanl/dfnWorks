@@ -5,9 +5,12 @@ from time import time
 import subprocess
 import io
 import logging
+import random
 import select
 import subprocess
 import sys
+
+import numpy as np
 
 from pydfnworks.general.logging import local_print_log
 
@@ -40,6 +43,70 @@ def check_input_paths(self):
             self.print_log(f'Pickle file path is not valid:\n{self.pickle_filename}\n', 'error')
 
     self.print_log("* Checking input paths: Complete")
+
+def set_seed(self, seed=None):
+    ''' Initialize the pydfnworks pseudorandom number generators (NumPy and the
+    Python random module) from the DFN seed.
+
+    Parameters
+    -----------------
+        self : object
+            DFN Class
+
+        seed : int
+            Seed to initialize the generators with. If None (default), the value
+            of self.params['seed']['value'] is used.
+
+    Returns
+    -------------
+        seed : int
+            The seed the generators were initialized with.
+
+    Notes
+    -------------
+        1. Randomness on the Python side of dfnWorks (hydraulic property
+        distributions, Poisson-disc meshing, plot sub-sampling) is drawn from
+        these two global generators, so seeding them makes those values
+        reproducible from run to run.
+
+        2. Following the dfnGen convention, a seed of 0 means "seed off the
+        clock", i.e. produce a unique realization. In that case a seed is drawn
+        from system entropy and reported, so the pydfnworks-side values can be
+        reproduced later by setting DFN.params['seed']['value'] to the reported
+        number.
+
+        3. This does not change the seed used by the dfnGen executable. That
+        seed is read from the input file written by check_input().
+    '''
+    if seed is None:
+        seed = self.params['seed']['value']
+    seed = int(seed)
+
+    if seed < 0:
+        self.print_log(
+            f"Error. seed must be non-negative. Value provided: {seed}",
+            'error')
+
+    if seed == 0:
+        # dfnGen convention: 0 means seed off the clock (unique realization).
+        # Draw one explicitly so the values used can be reported and repeated.
+        seed = random.SystemRandom().randint(1, 2**32 - 1)
+        self.print_log(
+            "--> seed is 0, pydfnworks random number generators are seeded off the clock"
+        )
+        self.print_log(
+            f"--> Set DFN.params['seed']['value'] = {seed} to reproduce these values"
+        )
+    else:
+        self.print_log(
+            f"--> Initializing pydfnworks random number generators with seed {seed}"
+        )
+
+    np.random.seed(seed)
+    random.seed(seed)
+    self.seed = seed
+    return seed
+
 
 def call_executable(self, command):
     ''' Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.

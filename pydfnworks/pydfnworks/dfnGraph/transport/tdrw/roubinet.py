@@ -1,8 +1,11 @@
+
 import numpy as np
 from scipy import special
 import mpmath as mp
 
 from pydfnworks.general.logging import local_print_log
+from pydfnworks.dfnGraph.transport.tdrw.infinite import t_diff_unlimited
+
 
 def get_fracture_segments(transfer_time,
                           fracture_length,
@@ -63,36 +66,6 @@ def get_fracture_segments(transfer_time,
         # otherwise, get the number of segments of length segment_length on the edge
         num_segments = int(np.ceil(fracture_length / segment_length))
         return segment_length, num_segments
-
-
-def t_diff_unlimited(a, tf, xi):
-    """
-    This function returns one  diffusion time sample for a and tf assuming an unlimited matrix block size.  This is used throughout the limited block size sampling technique. 
-    
-    Parameters
-    -------------------
-        a : double
-         Constant parameter describing retention in the matrix. a = (matrix_porosity*matrix_diffusion)/aperture_length
-        
-        tf : double
-            Advective travel time
-        
-        xi : float
-            value between [0,1)
-   
-    Returns
-    --------------
-        t_diff : float
-            Total time diffusing the matrix
-            
-    Notescx
-    -------------
-        For a random sample, sample xi from U[0,1). 
-        
-    """
-
-    return ((a * tf) / special.erfcinv(xi))**2
-
 
 def transition_probability_cdf(t_min, t_max, frac_spacing, matrix_diffusivity,
                                num_pts):
@@ -240,9 +213,6 @@ def transfer_probabilities(b_min,
     a_max = (matrix_porosity * np.sqrt(matrix_diffusivity)) / b_min
     # sample at the largest value of tf, with sample ~ 1
     t_diff_ub = t_diff_unlimited(a_max, tf_max, 1 - eps)
-    # if t_diff_ub > 1e30:
-    #     print(f"ub too high {t_diff_ub} changing to 1e30")
-    #     t_diff_ub = 1e30
 
     local_print_log(
         f"--> Initial bounds for diffusion times. Min: {t_diff_lb:0.2e}, Max: {t_diff_ub:0.2e}"
@@ -282,8 +252,6 @@ def transfer_probabilities(b_min,
 
     #convert to as dictionary
     trans_prob = {"times": times, "cdf": trans_cdf}
-    # print(times)
-    # print(trans_cdf)
     return trans_prob
 
 
@@ -433,58 +401,7 @@ def get_aperture_and_time_limits(G):
     return b_min, b_max, t_min, t_max
 
 
-def set_up_limited_matrix_diffusion(G,
-                                    frac_spacing,
-                                    matrix_porosity,
-                                    matrix_diffusivity,
-                                    eps=1e-16,
-                                    num_pts=100):
-    """ Sets up transition probabilities for limited block size matrix diffusion
-    
-    Parameters
-    ---------------------
-        G : networkX graph  
-            Graph provided by graph_flow modules
-
-        fracture_length : float
-            Length of the current edge segment in the graph [m]
-
-        matrix_porosity: float
-            Matrix Porosity 
-
-        matrix_diffusivity : float
-            Matrix Diffusivity value  [m^2/s]
-
-        eps : float 
-            Default - 1e-16
-
-        num_pts : int 
-            Number of points in the logspace array between t_min and t_max
- 
-
-    Returns
-    -------------
-        trans_prob : dictionary 
-            Dictionary elements
-            times : np.array
-                Array of diffusion times 
-            prob_cdf : np.array
-                Array of cummulative probabilities. They only go to 0.5
-
-    Notes
-    --------------------
-        None
-
-    """
-
-    b_min, b_max, tf_min, tf_max = get_aperture_and_time_limits(G)
-    trans_prob = transfer_probabilities(b_min, b_max, tf_min, tf_max,
-                                        matrix_porosity, matrix_diffusivity,
-                                        frac_spacing, eps, num_pts)
-    return trans_prob
-
-
-def limited_matrix_diffusion(self, G):
+def limited_matrix_diffusion_roubinet(self, G):
     """ Matrix diffusion with limited block size
 
     Parameters
@@ -516,25 +433,4 @@ def limited_matrix_diffusion(self, G):
                                                num_segments)
 
 
-def unlimited_matrix_diffusion(self, G):
-    """ Matrix diffusion with unlimited block size
 
-    Parameters
-    ----------
-        G : NetworkX graph
-            graph obtained from graph_flow
-
-    Returns
-    ----------
-        None
-
-    Notes
-    -----------
-        All parameters are attached to the particle class 
-
-    """
-
-    b = G.edges[self.curr_node, self.next_node]['b']
-    a_nondim = self.matrix_porosity * np.sqrt(self.matrix_diffusivity) / b
-    xi = np.random.uniform(size=1, low=0, high=1)[0]
-    self.delta_t_md = ((a_nondim * self.delta_t / special.erfcinv(xi))**2)

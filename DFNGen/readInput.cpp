@@ -54,6 +54,11 @@ bool visualizationMode;
 be perfectly conforming*/
 bool rFram;
 
+/*! If true, reject fractures whose intersection was shortened by
+    shrinkIntersection(). Avoids non-conformal cells at the cost of more
+    rejections. Replaces the compile-time DISABLESHORTENINGINT macro. */
+bool disableShorteningIntersections;
+
 /*! Accept or reject triple intersections
         False - Off (Reject)
         True  - On  (Accept)*/
@@ -727,10 +732,18 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     
     searchVar(inputFile, "rFram:");
     inputFile >> rFram;
-    
+
 
     if (rFram == true) {
         logString = "Running with relaxed FRAM. Mesh may not be fully conforming\n";
+        logger.writeLogFile(INFO,  logString);
+    }
+
+    searchVar(inputFile, "disableShorteningIntersections:");
+    inputFile >> disableShorteningIntersections;
+
+    if (disableShorteningIntersections == true) {
+        logString = "Intersection shortening DISABLED. Shortened intersections will be rejected.\n";
         logger.writeLogFile(INFO,  logString);
     }
 

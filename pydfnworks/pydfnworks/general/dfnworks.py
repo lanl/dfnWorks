@@ -46,10 +46,8 @@ class DFNWORKS():
         perm_cell file: the name of the file containing cell permeabilities 
         
         aper_cell_file: the name of the file containing cell apertures
-        
-        freeze: indicates whether the class attributes can be modified
-        
-        h : FRAM length scale 
+
+        h : FRAM length scale
 
     Returns
     -------
@@ -64,7 +62,7 @@ class DFNWORKS():
     from pydfnworks.general.legal import legal
 
     from pydfnworks.general.images import failure, success
-    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable, check_input_paths
+    from pydfnworks.general.general_functions import dump_time, print_run_time, print_parameters, go_home, to_pickle, from_pickle,  call_executable, check_input_paths, set_seed
     from pydfnworks.general.logging import initialize_log_file, print_log
 
 
@@ -80,6 +78,7 @@ class DFNWORKS():
     from pydfnworks.dfnGen.generation.hydraulic.io import dump_hydraulic_values, dump_aperture, dump_perm, dump_transmissivity, dump_fracture_info
 
     from pydfnworks.dfnGen.generation.stress import stress_based_apertures
+    from pydfnworks.dfnGen.generation.orientations import get_fracture_orientations
     from pydfnworks.dfnGen.generation.input_checking.parameter_dictionaries import load_parameters
     from pydfnworks.dfnGen.generation.input_checking.fracture_family import add_fracture_family, print_family_information
     from pydfnworks.dfnGen.generation.input_checking.add_fracture_family_to_params import write_fracture_families, reorder_fracture_families
@@ -120,7 +119,8 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files, correct_uge_file
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
+    from pydfnworks.dfnFlow.uge_tools import correct_uge_file 
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
 
@@ -131,10 +131,13 @@ class DFNWORKS():
 
     # dfnGraph
     import pydfnworks.dfnGraph
-    from pydfnworks.dfnGraph.dfn2graph import create_graph, dump_json_graph, load_json_graph, plot_graph, dump_fractures, add_fracture_source, add_fracture_target
-    from pydfnworks.dfnGraph.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
-    from pydfnworks.dfnGraph.graph_flow import run_graph_flow, compute_dQ
-    from pydfnworks.dfnGraph.graph_transport import run_graph_transport
+    from pydfnworks.dfnGraph.construction.create_graph import create_graph
+    from pydfnworks.dfnGraph.construction.source_target import add_fracture_source, add_fracture_target
+    from pydfnworks.dfnGraph.io.serialization import dump_json_graph, load_json_graph, plot_graph, dump_fractures
+    from pydfnworks.dfnGraph.algorithms.pruning import k_shortest_paths_backbone, greedy_edge_disjoint, current_flow_threshold
+    from pydfnworks.dfnGraph.flow.graph_flow import run_graph_flow
+    from pydfnworks.dfnGraph.flow.metrics import compute_dQ
+    from pydfnworks.dfnGraph.transport.graph_transport import run_graph_transport
 
     def __init__(self,
                  jobname=None,
@@ -163,6 +166,11 @@ class DFNWORKS():
         self.visual_mode = bool
         self.dudded_points = int
         self.domain = {'x': 0, 'y': 0, 'z': 0}
+        # Set from params['rFram'] by parse_params_file() during dfn_gen. Stays
+        # None on a flow-only restart from an existing mesh, where no params
+        # file was read; correct_uge_file() treats None as "unknown" rather than
+        # assuming rFram was off.
+        self.r_fram = None
 
         self.aper_cell_file = 'aper_node.dat'
         self.perm_cell_file = 'perm_node.dat'

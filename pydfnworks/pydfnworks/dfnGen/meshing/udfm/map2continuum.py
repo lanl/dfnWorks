@@ -9,11 +9,12 @@ import os
 import sys
 import subprocess
 import shutil
+import traceback
 import numpy as np
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pydfnworks.dfnGen.meshing.mesh_dfn import mesh_dfn_helper as mh
 from pydfnworks.general.logging import local_print_log
 import time
-import multiprocessing as mp
 import pickle
 
 
@@ -839,97 +840,116 @@ def lagrit_strip(num_poly):
         os.remove(f"ex_area{i}.table")
 
 
-def driver_interpolate_parallel(self, num_poly):
-    """ This function drives the parallelization of the area sums upscaling.
-    
+def _fracture_work_order(self, num_poly):
+    """ Return fracture ids ordered largest-surface-area first (LPT
+    scheduling), so a large fracture submitted late cannot serialize the tail
+    of a parallel phase. Falls back to natural order if areas are unavailable.
+    """
+    frac_ids = list(range(1, int(num_poly) + 1))
+    surface_area = getattr(self, "surface_area", None)
+    if surface_area is not None and len(surface_area) >= num_poly:
+        frac_ids.sort(key=lambda f: -surface_area[f - 1])
+    return frac_ids
+
+
+def _run_fracture_jobs(self, job, num_poly, phase_name):
+    """ Run a per-fracture job over all fractures in a thread pool.
+
+    The per-fracture work (upscale_parallel / interpolate_parallel) only
+    writes small text files and waits on LaGriT subprocesses, so threads give
+    full parallelism (the GIL is released during subprocess waits) without the
+    fork()/spawn() hazards of multiprocessing: no forked children that can
+    deadlock on inherited locks (macOS), exceptions propagate to the caller,
+    and an unguarded driver script cannot re-execute.
+
     Parameters
     ----------
         self : object
             DFN Class
-        
+
+        job : callable
+            function of a single fracture id
+
+        num_poly : int
+            Number of fractures
+
+        phase_name : string
+            label used in progress / error messages
+
+    Returns
+    -------
+        None. Calls print_log(..., 'error') (which exits) if any job failed.
+    """
+    frac_ids = _fracture_work_order(self, num_poly)
+    num_workers = max(1, min(int(self.ncpu), int(num_poly)))
+    self.print_log(
+        f"--> {phase_name}: running {num_poly} fracture jobs on "
+        f"{num_workers} workers")
+    failed = []
+    with ThreadPoolExecutor(max_workers=num_workers) as pool:
+        futures = {pool.submit(job, f): f for f in frac_ids}
+        for future in as_completed(futures):
+            f = futures[future]
+            try:
+                future.result()
+            except Exception:
+                failed.append(f)
+                self.print_log(
+                    f"--> Error in {phase_name} job for fracture {f}:\n"
+                    f"{traceback.format_exc()}", 'warning')
+    if failed:
+        self.print_log(
+            f"Error. {phase_name} failed for {len(failed)} fracture(s): "
+            f"{sorted(failed)}. See warnings above for tracebacks.", 'error')
+    self.print_log(f"--> {phase_name}: complete")
+
+
+def driver_interpolate_parallel(self, num_poly):
+    """ This function drives the parallelization of the area sums upscaling.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+
         num_poly : int
             Number of fractures
 
     Returns
     -------
         None
-    
+
     Notes
     -----
         None
- 
+
     """
-    frac_index = range(1, int(num_poly + 1))
-    number_of_task = len(frac_index)
-    number_of_processes = self.ncpu
-    tasks_to_accomplish = mp.Queue()
-    tasks_that_are_done = mp.Queue()
-    processes = []
-
-    for i in range(number_of_task):
-        tasks_to_accomplish.put(i + 1)
-
-    # Creating processes
-    for w in range(number_of_processes):
-        p = mp.Process(target=worker_interpolate,
-                       args=(tasks_to_accomplish, tasks_that_are_done))
-        processes.append(p)
-        p.start()
-        tasks_to_accomplish.put('STOP')
-
-    for p in processes:
-        p.join()
-
-    while not tasks_that_are_done.empty():
-        self.print_log(tasks_that_are_done.get())
-
+    _run_fracture_jobs(self, interpolate_parallel, num_poly,
+                       "Fracture interpolation")
     return True
 
 
 def driver_parallel(self, num_poly):
     """ This function drives the parallelization of the area sums upscaling.
-    
+
     Parameters
     ----------
         self : object
             DFN Class
-        
+
         num_poly : int
             Number of fractures
 
     Returns
     -------
         None
-    
+
     Notes
     -----
         None
- 
+
     """
-    frac_index = range(1, int(num_poly + 1))
-    number_of_task = len(frac_index)
-    number_of_processes = self.ncpu
-    tasks_to_accomplish = mp.Queue()
-    tasks_that_are_done = mp.Queue()
-    processes = []
-
-    for i in range(number_of_task):
-        tasks_to_accomplish.put(i + 1)
-
-    # Creating processes
-    for w in range(number_of_processes):
-        p = mp.Process(target=worker,
-                       args=(tasks_to_accomplish, tasks_that_are_done))
-        processes.append(p)
-        p.start()
-        tasks_to_accomplish.put('STOP')
-
-    for p in processes:
-        p.join()
-
-    while not tasks_that_are_done.empty():
-        self.print_log(tasks_that_are_done.get())
-
+    _run_fracture_jobs(self, upscale_parallel, num_poly, "Area-sum upscaling")
     return True
 
 
@@ -981,71 +1001,21 @@ def upscale_parallel(f_id):
     mh.run_lagrit_script(
         f"driver{f_id}.lgi",
         f"lagrit_logs/driver{f_id}",
+        quiet=True,
     )
+    # run_lagrit_script does not raise on failure; verify the expected output
+    # exists so a failed job surfaces here instead of as a missing file in
+    # build_dict.
+    if not os.path.isfile(f"area_sum{f_id}.table"):
+        raise RuntimeError(
+            f"LaGriT area-sum upscaling for fracture {f_id} did not produce "
+            f"area_sum{f_id}.table. See lagrit_logs/driver{f_id}.log")
     # Delete files
     os.remove(f"ex_xyz{f_id}_2.inp")
     os.remove(f"ex_area{f_id}_2.table")
     os.remove(f"frac{f_id}.inp")
     shutil.copy(f"driver{f_id}.lgi", "lagrit_scripts")
     os.remove(f"driver{f_id}.lgi")
-
-
-def worker(tasks_to_accomplish, tasks_that_are_done):
-    """ Worker function for python parallel. See multiprocessing module 
-    documentation for details.
-
-    Parameters
-    ----------
-        tasks_to_accomplish : ?
-            Processes still in queue 
-        
-        tasks_that_are_done : ?
-            Processes complete
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-        None
- 
-    """
-    try:
-        for f_id in iter(tasks_to_accomplish.get, 'STOP'):
-            upscale_parallel(f_id)
-    except:
-        pass
-    return True
-
-
-def worker_interpolate(tasks_to_accomplish, tasks_that_are_done):
-    """ Worker function for python parallel. See multiprocessing module 
-    documentation for details.
-
-    Parameters
-    ----------
-        tasks_to_accomplish : ?
-            Processes still in queue 
-        
-        tasks_that_are_done : ?
-            Processes complete
-
-    Returns
-    -------
-        None
-
-    Notes
-    -----
-        None
- 
-    """
-    try:
-        for f_id in iter(tasks_to_accomplish.get, 'STOP'):
-            interpolate_parallel(f_id)
-    except:
-        pass
-    return True
 
 
 def interpolate_parallel(f_id):
@@ -1065,7 +1035,16 @@ def interpolate_parallel(f_id):
     """
 
     mh.run_lagrit_script(f"driver_frac{f_id}.lgi",
-                         f"lagrit_logs/driver_frac{f_id}")
+                         f"lagrit_logs/driver_frac{f_id}",
+                         quiet=True)
+    # run_lagrit_script does not raise on failure; verify the expected
+    # outputs exist so a failed job surfaces here instead of downstream.
+    for outfile in (f"frac{f_id}.inp", f"ex_xyz{f_id}.table",
+                    f"ex_area{f_id}.table"):
+        if not os.path.isfile(outfile):
+            raise RuntimeError(
+                f"LaGriT interpolation for fracture {f_id} did not produce "
+                f"{outfile}. See lagrit_logs/driver_frac{f_id}.log")
     shutil.copy(f"driver_frac{f_id}.lgi", "lagrit_scripts")
     os.remove(f"driver_frac{f_id}.lgi")
 
@@ -1094,8 +1073,11 @@ def build_dict(self, num_poly, delete_files):
     """
     f_dict = {}
     for i in range(1, num_poly + 1):
-        imts = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 0]
-        area_sums = np.genfromtxt(f"area_sum{i}.table", skip_header=4)[:, 1]
+        # reshape so a single-row table (fracture intersecting one control
+        # volume) still indexes as 2D; genfromtxt returns 1D in that case
+        data = np.genfromtxt(f"area_sum{i}.table", skip_header=4).reshape(-1, 2)
+        imts = data[:, 0]
+        area_sums = data[:, 1]
         for j in range(len(imts)):
             if int(float(imts[j])) != (num_poly + 1) and float(
                     area_sums[j]) > 0:

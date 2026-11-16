@@ -2,7 +2,7 @@ import networkx as nx
 import numpy as np
 from itertools import islice
 
-from pydfnworks.dfnGraph.intersection_graph import boundary_index
+from pydfnworks.dfnGraph.construction.boundary import boundary_index
 from pydfnworks.general.logging import local_print_log, print_log
 
 def create_bipartite_graph(
