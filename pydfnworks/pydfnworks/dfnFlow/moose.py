@@ -59,10 +59,11 @@ exec mpiexec -n "$2" -bind-to core "$3" -i "$4" --n-threads=1
 """
     command = ["bash", "-lc", script, "dfnworks-moose", str(env_sh),
                str(int(self.ncpu)), str(executable), destination.name]
-    self.print_log("--> Native MOOSE environment: " + str(env_sh))
-    self.print_log("--> Running MOOSE: " + shlex.join(
+    self.print_log(f"--> Native MOOSE environment: {env_sh}")
+    mpi_command = shlex.join(
         ["mpiexec", "-n", str(int(self.ncpu)), "-bind-to", "core",
-         str(executable), "-i", destination.name, "--n-threads=1"]))
+         str(executable), "-i", destination.name, "--n-threads=1"])
+    self.print_log(f"--> Running MOOSE: {mpi_command}")
     started = time()
     try:
         subprocess.run(command, cwd=str(job), check=True)
