@@ -9,56 +9,58 @@ DFNPARAMS = os.path.expanduser(DFNPARAMS)
 DFNGEN_REQUIRED_VERSION = "2.3"
 
 
-def valid(self, name, path, path_type):
-    """" Check that path is valid for a executable
+def valid(self, name, path, path_type, fatal=True):
+    """ Check that a path is valid
+
     Parameters
     ----------
         self : object
             DFN Class
 
         name : string
-            Path to file or executable
+            Name of the path variable, e.g., LAGRIT_EXE
 
         path : string
-            path to executable
+            path to check
 
         path_type : string
-            Path type can either be an executable or a directory
+            "executable", "file", or "directory"
+
+        fatal : bool
+            If True (default), exit when the path is invalid. If False, print
+            a warning to the screen and log and keep going.
 
     Returns
     -------
-        0 if paths are valid
+        True if the path is valid, False otherwise (when fatal is False)
 
     Notes
     -----
-        If file is not found, file is not an executable, or directory does not exists then program exits
+        Used with fatal=False for paths read from ~/.dfnworksrc
     """
 
+    error = None
     if path_type == "executable":
         if not os.path.isfile(path):
-            error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
-            self.print_log(error,  'critical')
-            # sys.stderr.write(error)
-            sys.exit(1)
-        else:
-            if not os.access(path, os.X_OK):
-                error = f"Error checking {name}\n{path} is not an executable.\nPlease check file permissions.\nExiting\n"
-                self.print_log(error,  'critical')
-                sys.stderr.write(error)
-                sys.exit(1)
-
-    if path_type == "file":
+            error = f"{name}: {path} is not a valid path to a file name."
+        elif not os.access(path, os.X_OK):
+            error = f"{name}: {path} is not an executable. Please check file permissions."
+    elif path_type == "file":
         if not os.path.isfile(path):
-            error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
-            self.print_log(error,  'critical')
-            sys.exit(1)
-
-    if path_type == "directory":
+            error = f"{name}: {path} is not a valid path to a file name."
+    elif path_type == "directory":
         if not os.path.isdir(path):
-            error = f"Error checking {name}\n{path} is not a directory.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
-            self.print_log(error,  'critical')
-            sys.stderr.write(error)
-            sys.exit(1)
+            error = f"{name}: {path} is not a directory."
+
+    if error is None:
+        return True
+
+    error += "\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc."
+    if fatal:
+        self.print_log(f"Error checking {error}\nExiting\n", 'critical')
+        sys.exit(1)
+    self.print_log(f"--> Warning. {error}", 'warning')
+    return False
 
 
 def compile_dfn_exe(self,path):
@@ -109,14 +111,10 @@ def print_paths(self):
 
     self.print_log("dfnWorks paths:")
     self.print_log("---------------")
-    self.print_log(f"* dfnworks_PATH: {os.environ['dfnworks_PATH']}")
-    self.print_log(f"* LAGRIT_EXE: {os.environ['LAGRIT_EXE']}")
-    self.print_log(f"* PETSC_DIR: {os.environ['PETSC_DIR']}")
-    self.print_log(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
-    self.print_log(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
-    self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}")
-    self.print_log(f"* MOOSE_EXE: {os.environ.get('MOOSE_EXE', '')}")
-    self.print_log(f"* MOOSE_ENV_SH: {os.environ.get('MOOSE_ENV_SH', '')}\n")
+    for name in ['dfnworks_PATH', 'LAGRIT_EXE', 'PETSC_DIR', 'PETSC_ARCH',
+                 'PFLOTRAN_EXE', 'FEHM_EXE', 'MOOSE_EXE', 'MOOSE_ENV_SH']:
+        self.print_log(f"* {name}: {os.environ.get(name, 'NOT SET')}")
+    self.print_log("")
 
 
 def define_paths(self):
@@ -149,72 +147,37 @@ def define_paths(self):
     # Or, change the paths here
     else:
         self.print_log("--> Warning. ~/.dfnworksrc not found. Checking for environmantal variables.",  'warning')
-        env_paths = {
-            'dfnworks_PATH': None,
-            'PETSC_DIR': None,
-            'PETSC_ARCH': None,
-            'PFLOTRAN_EXE': None,
-            'LAGRIT_EXE': None,
-            'FEHM_EXE': None,
-            'MOOSE_EXE': None,
-            'MOOSE_ENV_SH': None
-        }
+        env_paths = {}
 
-    # Or, read the variables from the environment
-    for envVar in env_paths:
-        if env_paths[envVar] == '':
-            env_paths[envVar] = os.environ.get(envVar, '')
-
-    # the dfnworks  repository
-    if env_paths['dfnworks_PATH']:
-        os.environ['dfnworks_PATH'] = env_paths['dfnworks_PATH']
-        self.valid("dfnworks_PATH", os.environ['dfnworks_PATH'], "directory")
-    else:
-        error = f"Error. dfnWorks path not provided. Must be set to the github cloned repo.\nExiting\n"
-        self.print_log(error,  'critical')
-    # PETSC paths
-    if env_paths['PETSC_DIR']:
-        os.environ['PETSC_DIR'] = env_paths['PETSC_DIR']
-        os.environ['PETSC_ARCH'] = env_paths['PETSC_ARCH']
-        self.valid('PETSC_DIR', os.environ['PETSC_DIR'], "directory")
-        self.valid('PETSC_ARCH',
-              os.environ['PETSC_DIR'] + os.sep + os.environ['PETSC_ARCH'],
-              "directory")
-    else:
-        self.print_log("--> Warning. No PETSC Directory provided.",  'warning')
-
-    # PFLOTRAN path
-    if env_paths['PETSC_DIR']:
-        os.environ['PFLOTRAN_EXE'] = env_paths['PFLOTRAN_EXE']
-        self.valid('PFLOTRAN_EXE', os.environ['PFLOTRAN_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No PFLOTRAN path provided.",  'warning')
-
-    if env_paths['FEHM_EXE']:
-        os.environ['FEHM_EXE'] = env_paths['FEHM_EXE']
-        self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No FEHM path provided.",  'warning')
-
-    # MOOSE / Falcon executable and optional shell script that sets up its
-    # runtime environment (modules, compilers, MPI). Older ~/.dfnworksrc
-    # files may not include these keys.
-    if env_paths.get('MOOSE_EXE'):
-        os.environ['MOOSE_EXE'] = os.path.expanduser(env_paths['MOOSE_EXE'])
-        self.valid('MOOSE_EXE', os.environ['MOOSE_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No MOOSE path provided.",  'warning')
-
-    if env_paths.get('MOOSE_ENV_SH'):
-        os.environ['MOOSE_ENV_SH'] = os.path.expanduser(env_paths['MOOSE_ENV_SH'])
-        self.valid('MOOSE_ENV_SH', os.environ['MOOSE_ENV_SH'], "file")
-
-    # LaGriT executable
-    if env_paths['LAGRIT_EXE']:
-        os.environ['LAGRIT_EXE'] = env_paths['LAGRIT_EXE']
-        self.valid('LAGRIT_EXE', os.environ['LAGRIT_EXE'], "executable")
-    else:
-        self.print_log("--> Warning. No LaGriT path provided.",  'warning')
+    # Each path is read from ~/.dfnworksrc, falling back to an environment
+    # variable of the same name. A missing or invalid dfnworks_PATH exits;
+    # anything else is a warning so runs that do not need it can continue.
+    user_paths = [
+        ('dfnworks_PATH', 'directory'),
+        ('PETSC_DIR', 'directory'),
+        ('PETSC_ARCH', 'directory'),
+        ('PFLOTRAN_EXE', 'executable'),
+        ('LAGRIT_EXE', 'executable'),
+        ('FEHM_EXE', 'executable'),
+        ('MOOSE_EXE', 'executable'),
+        ('MOOSE_ENV_SH', 'file'),
+    ]
+    for name, path_type in user_paths:
+        path = env_paths.get(name) or os.environ.get(name)
+        # dfnworks_PATH is required. Everything else is a warning.
+        fatal = (name == 'dfnworks_PATH')
+        if not path:
+            if fatal:
+                self.print_log(f"Error. dfnworks_PATH not found in {DFNPARAMS} or the environment. Must be set to the github cloned repo.\nExiting\n", 'critical')
+                sys.exit(1)
+            self.print_log(f"--> Warning. {name} not found in {DFNPARAMS} or the environment.", 'warning')
+            continue
+        path = os.path.expanduser(path)
+        os.environ[name] = path
+        # PETSC_ARCH is a subdirectory of PETSC_DIR
+        if name == 'PETSC_ARCH':
+            path = os.path.join(os.environ.get('PETSC_DIR', ''), path)
+        self.valid(name, path, path_type, fatal=fatal)
 
     # ===================================================
     # THESE PATHS ARE AUTOMATICALLY SET. DO NOT CHANGE.
