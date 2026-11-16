@@ -1,8 +1,8 @@
 {
   "case": "bingham_distribution",
-  "created": "2026-10-22T09:58:27",
-  "git": "3346e91b",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:04:26",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 5751,
     "gen.intersection_length": 78372.2,
@@ -17,5 +17,5 @@
     "gen.triple_points": 0
   },
   "pydfnworks": "2.12.1",
-  "time_s": 21.68
+  "time_s": 13.43
 }

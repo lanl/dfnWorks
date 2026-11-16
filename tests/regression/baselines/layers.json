@@ -1,8 +1,8 @@
 {
   "case": "layers",
-  "created": "2026-10-22T09:36:23",
-  "git": "fe199315",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:05:18",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 89,
     "gen.intersection_length": 166.213,
@@ -15,14 +15,14 @@
     "gen.retranslated": 11982,
     "gen.surface_area": 782.187,
     "gen.triple_points": 0,
-    "mesh.elements": 87963,
-    "mesh.nodes": 44476,
-    "pflotran.dfn_explicit.global_water_mass_kg": 3.02833662,
-    "pflotran.dfn_explicit.inflow_water_mass_kg": -0.0,
-    "pflotran.dfn_explicit.inflow_water_mass_kg_d": 5699.1692,
-    "pflotran.dfn_explicit.outflow_water_mass_kg": -0.0,
-    "pflotran.dfn_explicit.outflow_water_mass_kg_d": -1055013.76
+    "mesh.elements": 88245,
+    "mesh.nodes": 44653,
+    "pflotran.dfn_explicit.global_water_mass_kg": 3.02822408,
+    "pflotran.dfn_explicit.inflow_water_mass_kg": -42174806.7,
+    "pflotran.dfn_explicit.inflow_water_mass_kg_y": 31199.7928,
+    "pflotran.dfn_explicit.outflow_water_mass_kg": -42060259.6,
+    "pflotran.dfn_explicit.outflow_water_mass_kg_y": -31200.0481
   },
   "pydfnworks": "2.12.1",
-  "time_s": 17.04
+  "time_s": 13.31
 }

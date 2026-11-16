@@ -1,18 +1,18 @@
 {
   "case": "mapdfn",
-  "created": "2026-10-22T10:00:50",
-  "git": "3346e91b",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:05:14",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
-    "ecpm.anisotropic_k.permeabilityx_data.mean": 2.410681648760821e-13,
+    "ecpm.anisotropic_k.permeabilityx_data.mean": 2.4106816487608217e-13,
     "ecpm.anisotropic_k.permeabilityx_data.n": 125000,
     "ecpm.anisotropic_k.permeabilityy_data.mean": 6.135261156566482e-13,
     "ecpm.anisotropic_k.permeabilityy_data.n": 125000,
     "ecpm.anisotropic_k.permeabilityz_data.mean": 3.675318014074611e-13,
     "ecpm.anisotropic_k.permeabilityz_data.n": 125000,
-    "ecpm.porosity.porosity_data.mean": 0.060961330333209336,
+    "ecpm.porosity.porosity_data.mean": 0.06096133033320933,
     "ecpm.porosity.porosity_data.n": 125000,
-    "ecpm.tortuosity.tortuosity_data.mean": 202.49931471629998,
+    "ecpm.tortuosity.tortuosity_data.mean": 202.4993147163,
     "ecpm.tortuosity.tortuosity_data.n": 125000,
     "gen.final_fractures": 1064,
     "gen.intersection_length": 112701.0,
@@ -38,5 +38,5 @@
     "pflotran.cpm_transport.outflow_water_mass_kg_y": -2286421.9
   },
   "pydfnworks": "2.12.1",
-  "time_s": 88.73
+  "time_s": 24.1
 }

@@ -1,8 +1,8 @@
 {
   "case": "calibrate_p32_from_p10",
-  "created": "2026-10-22T09:59:21",
-  "git": "3346e91b",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:04:50",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 2070,
     "gen.intersection_length": 98676.4,
@@ -19,5 +19,5 @@
     "mesh.nodes": 8887
   },
   "pydfnworks": "2.12.1",
-  "time_s": 37.0
+  "time_s": 23.34
 }

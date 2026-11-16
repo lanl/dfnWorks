@@ -1,8 +1,8 @@
 {
   "case": "pruning",
-  "created": "2026-10-22T09:58:06",
-  "git": "3346e91b",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:04:12",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 212,
     "gen.intersection_length": 840.393,
@@ -19,5 +19,5 @@
     "mesh.nodes": 561
   },
   "pydfnworks": "2.12.1",
-  "time_s": 3.47
+  "time_s": 2.53
 }

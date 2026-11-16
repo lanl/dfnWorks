@@ -1,8 +1,8 @@
 {
   "case": "ade_example",
-  "created": "2026-10-22T09:57:32",
-  "git": "3346e91b",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:03:52",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 15,
     "gen.intersection_length": 62.7857,
@@ -15,20 +15,20 @@
     "gen.retranslated": 48,
     "gen.surface_area": 891.93,
     "gen.triple_points": 0,
-    "mesh.elements": 47570,
-    "mesh.nodes": 23605,
-    "pflotran.dfn_explicit.dt_tran_s": 0.201956716,
-    "pflotran.dfn_explicit.global_tracer_mol": 1.86784528e-09,
+    "mesh.elements": 47744,
+    "mesh.nodes": 23701,
+    "pflotran.dfn_explicit.dt_tran_s": 0.202990766,
+    "pflotran.dfn_explicit.global_tracer_mol": 1.87124573e-09,
     "pflotran.dfn_explicit.global_water_mass_kg": 0.385323139,
-    "pflotran.dfn_explicit.inflow_tracer_mol": 1.86784484e-09,
-    "pflotran.dfn_explicit.inflow_tracer_mol_s": -3.5970211e-14,
-    "pflotran.dfn_explicit.inflow_water_mass_kg": 4.5181465e-05,
-    "pflotran.dfn_explicit.inflow_water_mass_kg_s": 2.40578391e-05,
-    "pflotran.dfn_explicit.outflow_tracer_mol": -5.45263687e-27,
-    "pflotran.dfn_explicit.outflow_tracer_mol_s": -6.27040357e-27,
-    "pflotran.dfn_explicit.outflow_water_mass_kg": -5.43938696e-07,
-    "pflotran.dfn_explicit.outflow_water_mass_kg_s": -6.25516656e-07
+    "pflotran.dfn_explicit.inflow_tracer_mol": 1.87124517e-09,
+    "pflotran.dfn_explicit.inflow_tracer_mol_s": -4.61797997e-14,
+    "pflotran.dfn_explicit.inflow_water_mass_kg": 4.51815773e-05,
+    "pflotran.dfn_explicit.inflow_water_mass_kg_s": 2.40586481e-05,
+    "pflotran.dfn_explicit.outflow_tracer_mol": -5.45247947e-27,
+    "pflotran.dfn_explicit.outflow_tracer_mol_s": -6.27001158e-27,
+    "pflotran.dfn_explicit.outflow_water_mass_kg": -5.43922986e-07,
+    "pflotran.dfn_explicit.outflow_water_mass_kg_s": -6.25477528e-07
   },
   "pydfnworks": "2.12.1",
-  "time_s": 30.87
+  "time_s": 13.17
 }

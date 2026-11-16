@@ -1,8 +1,8 @@
 {
   "case": "faults",
-  "created": "2026-10-22T09:18:58",
-  "git": "fe199315",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:01:13",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 2,
     "gen.intersection_length": 125.317,
@@ -19,5 +19,5 @@
     "mesh.nodes": 11
   },
   "pydfnworks": "2.12.1",
-  "time_s": 1.81
+  "time_s": 1.38
 }

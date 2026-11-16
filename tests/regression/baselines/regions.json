@@ -1,8 +1,8 @@
 {
   "case": "regions",
-  "created": "2026-10-22T09:20:49",
-  "git": "fe199315",
-  "host": "Jeffreys-MacBook-Pro.local",
+  "created": "2026-11-16T15:01:20",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
   "metrics": {
     "gen.final_fractures": 107,
     "gen.intersection_length": 599.484,
@@ -19,5 +19,5 @@
     "mesh.nodes": 439
   },
   "pydfnworks": "2.12.1",
-  "time_s": 9.84
+  "time_s": 7.12
 }
