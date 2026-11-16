@@ -47,6 +47,12 @@ def valid(self, name, path, path_type):
                 sys.stderr.write(error)
                 sys.exit(1)
 
+    if path_type == "file":
+        if not os.path.isfile(path):
+            error = f"Error checking {name}\n{path} is not a valid path to a file name.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
+            self.print_log(error,  'critical')
+            sys.exit(1)
+
     if path_type == "directory":
         if not os.path.isdir(path):
             error = f"Error checking {name}\n{path} is not a directory.\nPlease check the path in either pydfnworks/general/paths.py or .dfnworksrc.\nExiting\n"
@@ -108,7 +114,9 @@ def print_paths(self):
     self.print_log(f"* PETSC_DIR: {os.environ['PETSC_DIR']}")
     self.print_log(f"* PETSC_ARCH: {os.environ['PETSC_ARCH']}")
     self.print_log(f"* PFLOTRAN_EXE: {os.environ['PFLOTRAN_EXE']}")
-    self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}\n")
+    self.print_log(f"* FEHM_EXE: {os.environ['FEHM_EXE']}")
+    self.print_log(f"* MOOSE_EXE: {os.environ.get('MOOSE_EXE', '')}")
+    self.print_log(f"* MOOSE_ENV_SH: {os.environ.get('MOOSE_ENV_SH', '')}\n")
 
 
 def define_paths(self):
@@ -147,7 +155,9 @@ def define_paths(self):
             'PETSC_ARCH': None,
             'PFLOTRAN_EXE': None,
             'LAGRIT_EXE': None,
-            'FEHM_EXE': None
+            'FEHM_EXE': None,
+            'MOOSE_EXE': None,
+            'MOOSE_ENV_SH': None
         }
 
     # Or, read the variables from the environment
@@ -185,6 +195,19 @@ def define_paths(self):
         self.valid('FEHM_EXE', os.environ['FEHM_EXE'], "executable")
     else:
         self.print_log("--> Warning. No FEHM path provided.",  'warning')
+
+    # MOOSE / Falcon executable and optional shell script that sets up its
+    # runtime environment (modules, compilers, MPI). Older ~/.dfnworksrc
+    # files may not include these keys.
+    if env_paths.get('MOOSE_EXE'):
+        os.environ['MOOSE_EXE'] = os.path.expanduser(env_paths['MOOSE_EXE'])
+        self.valid('MOOSE_EXE', os.environ['MOOSE_EXE'], "executable")
+    else:
+        self.print_log("--> Warning. No MOOSE path provided.",  'warning')
+
+    if env_paths.get('MOOSE_ENV_SH'):
+        os.environ['MOOSE_ENV_SH'] = os.path.expanduser(env_paths['MOOSE_ENV_SH'])
+        self.valid('MOOSE_ENV_SH', os.environ['MOOSE_ENV_SH'], "file")
 
     # LaGriT executable
     if env_paths['LAGRIT_EXE']:

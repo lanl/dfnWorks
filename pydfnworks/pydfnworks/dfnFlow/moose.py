@@ -1,73 +1,101 @@
-"""Launch a MOOSE application using an existing input deck."""
+"""
+MOOSE flow solver interface for dfnWorks
+========================================
+
+Setup
+-----
+Add the MOOSE paths to ~/.dfnworksrc (JSON) alongside the other dfnWorks
+dependencies:
+
+    {
+        ...
+        "MOOSE_EXE": "/path/to/falcon/falcon-opt",
+        "MOOSE_ENV_SH": "/path/to/moose-env.sh"
+    }
+
+MOOSE_EXE    : (required) MOOSE application executable, e.g., Falcon.
+MOOSE_ENV_SH : (optional) shell script sourced before the run to load the
+               compiler / MPI modules MOOSE was built with. Leave it out if
+               MOOSE runs in your current environment (e.g., a conda install).
+
+Both paths may use ~ and are checked by define_paths() when the DFN object is
+created. They can also be set as environment variables instead of in
+~/.dfnworksrc.
+
+Usage
+-----
+    src_path = os.getcwd()
+    DFN = DFNWORKS(jobname, ncpu=4, flow_solver="MOOSE",
+                   dfnFlow_file=f"{src_path}/input.i")
+    ...
+
+dfnFlow_file must be an absolute path: dfnWorks changes into jobname before
+the flow solver runs, so a relative path will not be found.
+    DFN.mesh_network()   # writes full_mesh.exo for MOOSE
+    DFN.dfn_flow()       # calls moose()
+
+The input deck is copied into jobname and run there as
+
+    mpiexec -n ncpu -bind-to core $MOOSE_EXE -i input.i --n-threads=1
+
+in a login bash shell, with one OpenMP/OpenBLAS thread per MPI rank.
+"""
 
 import os
-from pathlib import Path
-import shlex
+import sys
 import shutil
 import subprocess
 from time import time
 
 
-def moose(self, executable=None, env_sh=None):
-    """Run Falcon/MOOSE with ``self.ncpu`` MPI ranks in ``self.jobname``.
+def moose(self):
+    """Run MOOSE
 
-    The input deck at ``self.dfnFlow_file`` is copied into the job directory.
-    Meshes, included files and other relative dependencies must already be
-    available there. No mesh conversion or output parsing is performed.
+    Parameters
+    ----------
+        self : object
+            DFN Class
 
-    Optional arguments override MOOSE_EXE and MOOSE_ENV_SH. Defaults are
-    ~/projects/falcon-native/falcon-opt and ~/projects/moose-native-env.sh.
-    The setup script must load the matching native compiler/MPI modules.
-    Environment preparation
-    takes place only in a child Bash shell. Solver output streams to the caller;
-    setup or solver failures raise subprocess.CalledProcessError.
+    Returns
+    -------
+        None
+
+    Notes
+    -----
+    Runs the executable set by MOOSE_EXE in ~/.dfnworksrc. If MOOSE_ENV_SH is
+    set, that script is sourced first to load modules / MPI.
+    See https://mooseframework.inl.gov/ for details about MOOSE
+
     """
+    self.print_log("--> Running MOOSE")
     if self.flow_solver != "MOOSE":
-        raise ValueError("moose() requires flow_solver='MOOSE'")
-    if not self.dfnFlow_file:
-        raise ValueError("MOOSE requires dfnFlow_file pointing to an input deck")
-    if isinstance(self.ncpu, bool) or int(self.ncpu) != self.ncpu or self.ncpu < 1:
-        raise ValueError("MOOSE requires ncpu to be a positive integer")
+        error = "Error. Incorrect flow solver requested\n"
+        self.print_log(error, 'error')
+        sys.exit(1)
 
-    source = Path(self.dfnFlow_file).expanduser().resolve(strict=True)
-    job = Path(self.jobname).expanduser().resolve(strict=True)
-    executable = Path(executable or os.environ.get(
-        "MOOSE_EXE", "~/projects/falcon-native/falcon-opt")).expanduser().resolve(strict=True)
-    env_sh = Path(env_sh or os.environ.get(
-        "MOOSE_ENV_SH", "~/projects/moose-native-env.sh"
-    )).expanduser().resolve(strict=True)
-    if not source.is_file() or not env_sh.is_file():
-        raise ValueError("MOOSE input deck and native environment setup must be files")
-    if not executable.is_file() or not os.access(executable, os.X_OK):
-        raise ValueError(f"MOOSE executable is not executable: {executable}")
-    if not job.is_dir():
-        raise ValueError(f"MOOSE job directory does not exist: {job}")
-
-    destination = job / source.name
-    if not destination.exists() or not os.path.samefile(source, destination):
-        shutil.copy2(source, destination)
-    self.local_dfnFlow_file = destination.name
-
-    # Positional arguments keep paths out of shell code. Login initialization
-    # makes the cluster's module command available to the user's setup script.
-    script = r"""
-set -e
-source "$1"
-export OPENBLAS_NUM_THREADS=1
-export OMP_NUM_THREADS=1
-exec mpiexec -n "$2" -bind-to core "$3" -i "$4" --n-threads=1
-"""
-    command = ["bash", "-lc", script, "dfnworks-moose", str(env_sh),
-               str(int(self.ncpu)), str(executable), destination.name]
-    self.print_log(f"--> Native MOOSE environment: {env_sh}")
-    mpi_command = shlex.join(
-        ["mpiexec", "-n", str(int(self.ncpu)), "-bind-to", "core",
-         str(executable), "-i", destination.name, "--n-threads=1"])
-    self.print_log(f"--> Running MOOSE: {mpi_command}")
-    started = time()
     try:
-        subprocess.run(command, cwd=str(job), check=True)
-    except (OSError, subprocess.CalledProcessError) as error:
-        self.print_log(f"MOOSE launch failed: {error}", "warning")
-        raise
-    self.print_log(f"MOOSE Complete. Time Required {time() - started} Seconds")
+        shutil.copy(self.dfnFlow_file, self.jobname)
+    except:
+        error = f"--> Error copying MOOSE input file: {self.dfnFlow_file}"
+        self.print_log(error, 'error')
+        sys.exit(1)
+
+    tic = time()
+    # One thread per MPI rank, each rank bound to its own core
+    cmd = "export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 && " \
+          f"mpiexec -n {self.ncpu} -bind-to core {os.environ['MOOSE_EXE']} " \
+          f"-i {self.local_dfnFlow_file} --n-threads=1"
+    if os.environ.get('MOOSE_ENV_SH'):
+        cmd = f"source {os.environ['MOOSE_ENV_SH']} && {cmd}"
+    self.print_log(f"--> Running: {cmd}")
+    # Login shell (-l) so the cluster's module command is available
+    status = subprocess.call(['bash', '-lc', cmd])
+    if status != 0:
+        error = f"Error. MOOSE failed with exit code {status}\n"
+        self.print_log(error, 'error')
+        sys.exit(1)
+    self.print_log('=' * 80)
+    self.print_log("MOOSE Complete")
+    elapsed = time() - tic
+    self.print_log(f"Time Required {elapsed} Seconds")
+    self.print_log('=' * 80)
