@@ -8,16 +8,17 @@ import subprocess
 from time import time
 
 
-def moose(self, executable=None, conda_env=None, conda_sh=None):
+def moose(self, executable=None, env_sh=None):
     """Run Falcon/MOOSE with ``self.ncpu`` MPI ranks in ``self.jobname``.
 
     The input deck at ``self.dfnFlow_file`` is copied into the job directory.
     Meshes, included files and other relative dependencies must already be
     available there. No mesh conversion or output parsing is performed.
 
-    Optional arguments override MOOSE_EXE, MOOSE_CONDA_ENV and MOOSE_CONDA_SH.
-    Defaults are ~/projects/falcon/falcon-opt, falcon-moose and
-    ~/miniforge/etc/profile.d/conda.sh, respectively. Environment preparation
+    Optional arguments override MOOSE_EXE and MOOSE_ENV_SH. Defaults are
+    ~/projects/falcon-native/falcon-opt and ~/projects/moose-native-env.sh.
+    The setup script must load the matching native compiler/MPI modules.
+    Environment preparation
     takes place only in a child Bash shell. Solver output streams to the caller;
     setup or solver failures raise subprocess.CalledProcessError.
     """
@@ -31,13 +32,12 @@ def moose(self, executable=None, conda_env=None, conda_sh=None):
     source = Path(self.dfnFlow_file).expanduser().resolve(strict=True)
     job = Path(self.jobname).expanduser().resolve(strict=True)
     executable = Path(executable or os.environ.get(
-        "MOOSE_EXE", "~/projects/falcon/falcon-opt")).expanduser().resolve(strict=True)
-    conda_sh = Path(conda_sh or os.environ.get(
-        "MOOSE_CONDA_SH", "~/miniforge/etc/profile.d/conda.sh"
+        "MOOSE_EXE", "~/projects/falcon-native/falcon-opt")).expanduser().resolve(strict=True)
+    env_sh = Path(env_sh or os.environ.get(
+        "MOOSE_ENV_SH", "~/projects/moose-native-env.sh"
     )).expanduser().resolve(strict=True)
-    conda_env = conda_env or os.environ.get("MOOSE_CONDA_ENV", "falcon-moose")
-    if not source.is_file() or not conda_sh.is_file():
-        raise ValueError("MOOSE input deck and Conda setup must be files")
+    if not source.is_file() or not env_sh.is_file():
+        raise ValueError("MOOSE input deck and native environment setup must be files")
     if not executable.is_file() or not os.access(executable, os.X_OK):
         raise ValueError(f"MOOSE executable is not executable: {executable}")
     if not job.is_dir():
@@ -48,25 +48,21 @@ def moose(self, executable=None, conda_env=None, conda_sh=None):
         shutil.copy2(source, destination)
     self.local_dfnFlow_file = destination.name
 
-    # Positional arguments keep paths and environment names out of shell code.
-    # Login initialization makes the cluster's module command available.
+    # Positional arguments keep paths out of shell code. Login initialization
+    # makes the cluster's module command available to the user's setup script.
     script = r"""
 set -e
-if type module >/dev/null 2>&1; then
-    module purge
-fi
-unset -f mpirun 2>/dev/null || true
-unset LD_LIBRARY_PATH
 source "$1"
 export OPENBLAS_NUM_THREADS=1
 export OMP_NUM_THREADS=1
-conda activate "$2"
-exec mpiexec -n "$3" "$4" -i "$5"
+exec mpiexec -n "$2" -bind-to core "$3" -i "$4" --n-threads=1
 """
-    command = ["bash", "-lc", script, "dfnworks-moose", str(conda_sh),
-               conda_env, str(int(self.ncpu)), str(executable), destination.name]
+    command = ["bash", "-lc", script, "dfnworks-moose", str(env_sh),
+               str(int(self.ncpu)), str(executable), destination.name]
+    self.print_log("--> Native MOOSE environment: " + str(env_sh))
     self.print_log("--> Running MOOSE: " + shlex.join(
-        ["mpiexec", "-n", str(int(self.ncpu)), str(executable), "-i", destination.name]))
+        ["mpiexec", "-n", str(int(self.ncpu)), "-bind-to", "core",
+         str(executable), "-i", destination.name, "--n-threads=1"]))
     started = time()
     try:
         subprocess.run(command, cwd=str(job), check=True)

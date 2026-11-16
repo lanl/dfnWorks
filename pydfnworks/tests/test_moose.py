@@ -1,4 +1,4 @@
-"""Launcher tests use fake Conda and MPI executables; no solver is started."""
+"""Launcher tests use a fake native environment and MPI executable; no solver is started."""
 import importlib.util
 import os
 from pathlib import Path
@@ -27,24 +27,19 @@ class MooseTests(unittest.TestCase):
         self.exe = self.root / 'falcon-opt'
         self.exe.write_text('#!/bin/bash\nexit 0\n')
         self.exe.chmod(0o755)
-        self.setup = self.root / 'conda.sh'
-        self.setup.write_text('''conda() {
-    [[ "$1" == activate && "$2" == falcon-moose ]] || return 12
-    [[ -z "${LD_LIBRARY_PATH+x}" ]] || return 13
-    [[ "$OPENBLAS_NUM_THREADS" == 1 && "$OMP_NUM_THREADS" == 1 ]] || return 14
-    export PATH="$(dirname "${BASH_SOURCE[0]}"):$PATH"
-}
+        self.setup = self.root / 'native-env.sh'
+        self.setup.write_text('''export LD_LIBRARY_PATH=/native/lib
+export PATH="$(dirname "${BASH_SOURCE[0]}"):$PATH"
 ''')
         self.mpi = self.root / 'mpiexec'
-        self.mpi.write_text('#!/bin/bash\nprintf "%s\\n" "$@" > mpi_args\npwd > launch_cwd\n')
+        self.mpi.write_text('#!/bin/bash\n[[ \"$LD_LIBRARY_PATH\" == /native/lib && \"$OMP_NUM_THREADS\" == 1 && \"$OPENBLAS_NUM_THREADS\" == 1 ]] || exit 14\nprintf "%s\\n" "$@" > mpi_args\npwd > launch_cwd\n')
         self.mpi.chmod(0o755)
         self.dfn = SimpleNamespace(flow_solver='MOOSE', ncpu=96,
                                    dfnFlow_file=str(self.deck), jobname=str(self.job),
                                    print_log=lambda *args: None)
 
     def run_moose(self):
-        launcher.moose(self.dfn, executable=self.exe, conda_sh=self.setup,
-                       conda_env='falcon-moose')
+        launcher.moose(self.dfn, executable=self.exe, env_sh=self.setup)
 
     def test_launch_and_environment_isolation(self):
         with patch.dict(os.environ, {'LD_LIBRARY_PATH': '/fake', 'OMP_NUM_THREADS': '8'}):
@@ -52,7 +47,8 @@ class MooseTests(unittest.TestCase):
             self.assertEqual(os.environ['LD_LIBRARY_PATH'], '/fake')
             self.assertEqual(os.environ['OMP_NUM_THREADS'], '8')
         self.assertEqual((self.job / 'mpi_args').read_text().splitlines(),
-                         ['-n', '96', str(self.exe), '-i', self.deck.name])
+                         ['-n', '96', '-bind-to', 'core', str(self.exe), '-i', self.deck.name,
+                          '--n-threads=1'])
         self.assertEqual((self.job / 'launch_cwd').read_text().strip(), str(self.job))
         self.assertEqual((self.job / self.deck.name).read_text(), self.deck.read_text())
         self.dfn.dfnFlow_file = str(self.job / self.deck.name)
@@ -64,8 +60,8 @@ class MooseTests(unittest.TestCase):
             self.run_moose()
         self.assertEqual(caught.exception.returncode, 7)
 
-    def test_activation_failure_stops_launch(self):
-        self.setup.write_text('conda() { return 9; }\n')
+    def test_setup_failure_stops_launch(self):
+        self.setup.write_text('return 9\n')
         with self.assertRaises(subprocess.CalledProcessError):
             self.run_moose()
         self.assertFalse((self.job / 'mpi_args').exists())

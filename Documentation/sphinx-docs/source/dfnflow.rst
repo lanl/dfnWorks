@@ -179,20 +179,20 @@ For an existing DFN object, use ``dfn.set_flow_solver("MOOSE")`` and assign
 ``dfn.dfn_flow()`` or ``dfn.moose()``.
 
 The launcher copies the input deck into the job directory and runs
-``mpiexec -n <ncpu> <executable> -i <input basename>`` there. It prepares a
-child Bash login shell by purging modules when the module command is available,
-unsetting the ``mpirun`` function and ``LD_LIBRARY_PATH``, sourcing Conda,
-setting ``OPENBLAS_NUM_THREADS`` and ``OMP_NUM_THREADS`` to 1, and activating
-``falcon-moose``. The calling Python process keeps its environment.
+``mpiexec -n <ncpu> -bind-to core <executable> -i <input basename> --n-threads=1``
+there. It sources a native environment setup script in a child Bash login
+shell, then sets ``OPENBLAS_NUM_THREADS`` and ``OMP_NUM_THREADS`` to 1.
+The setup script must load the compiler and MPICH modules matching the
+executable. The calling Python process keeps its environment.
 
 Defaults and environment overrides are:
 
-* ``MOOSE_EXE``: ``~/projects/falcon/falcon-opt``
-* ``MOOSE_CONDA_SH``: ``~/miniforge/etc/profile.d/conda.sh``
-* ``MOOSE_CONDA_ENV``: ``falcon-moose``
+* ``MOOSE_EXE``: ``~/projects/falcon-native/falcon-opt``
+* ``MOOSE_ENV_SH``: ``~/projects/moose-native-env.sh``
 
 Direct calls can also override these with
-``dfn.moose(executable=..., conda_sh=..., conda_env=...)``.
+``dfn.moose(executable=..., env_sh=...)``. The former ``conda_sh`` and
+``conda_env`` arguments are no longer supported.
 Solver output streams to the terminal or batch-job log. A failed launch or
 solver run raises an exception instead of reporting successful completion.
 Run within a scheduler allocation with enough resources for ``ncpu`` ranks.
