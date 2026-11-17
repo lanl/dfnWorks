@@ -26,6 +26,17 @@ using std::string;
 /*! DFN generation stop condition. 0 - nPoly option, 1 - P32 option.*/
 short stopCondition;
 
+/*! Fracture intensity (P32) convention.
+        0 - Double-sided (wetted surface area), P32 = 2*A/V (default).
+        1 - Single-sided, P32 = A/V.
+    Applies to the family P32 targets and to every P32 and surface area
+    value reported by DFNGen. */
+short p32Convention = 0;
+
+/*! Multiplier applied to fracture area when computing P32 and surface area.
+    Set from p32Convention: 2.0 for double-sided, 1.0 for single-sided. */
+double p32AreaFactor = 2.0;
+
 /*! Number of polygons to place in the DFN when uisng nPoly stopCondition option.*/
 unsigned int nPoly;
 
@@ -289,7 +300,7 @@ float *ealpha;
 
 /*! Elliptical families target fracture intensities per family
     when using stopCondition = 1, P32 option.*/
-float *e_p32Targets;
+double *e_p32Targets;
 
 /*! Mandatory parameter if using statistically generated rectangles.
 
@@ -375,7 +386,7 @@ float *ralpha;
 
 /*! Rectangular families target fracture intensities per family
     when using stopCondition = 1, P32 option.*/
-float *r_p32Targets;
+double *r_p32Targets;
 
 /*! Exponential rectangle parameter. Maximum radius.*/
 float *rExpMean;
@@ -564,7 +575,7 @@ float *layers;
 
 /*! Array of volumes for each defined layer, in the same order
     which layers were listed.*/
-float *layerVol;
+double *layerVol;
 
 /*! Controls whether fractures assigned to a layer are truncated to conform
     to that layer's Z boundaries.
@@ -595,7 +606,7 @@ float *regions;
 
 /*! Array of volumes for each defined layer, in the same order
     which regions were listed.*/
-float *regionVol;
+double *regionVol;
 
 /*  Defines which domain, or regions, the family belongs to.
     Regions 0 is the entire domain ('domainSize').
@@ -650,6 +661,26 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     checkIfOpen(inputFile, tempstring.c_str());
     searchVar(inputFile, "stopCondition:");
     inputFile >> stopCondition;
+
+    // Optional, input files written before this option existed default to double-sided
+    if (searchVarOptional(inputFile, "p32_convention:")) {
+        inputFile >> p32Convention;
+    } else {
+        p32Convention = 0;
+    }
+
+    if (p32Convention == 0) {
+        p32AreaFactor = 2.0;
+    } else if (p32Convention == 1) {
+        p32AreaFactor = 1.0;
+    } else {
+        logString = "ERROR: p32_convention must be 0 (double-sided) or 1 (single-sided). Value provided: " + to_string(p32Convention) + "\n";
+        logger.writeLogFile(ERROR,  logString);
+        exit(1);
+    }
+
+    logString = "P32 Convention: " + p32ConventionName() + "\n\n";
+    logger.writeLogFile(INFO,  logString);
     searchVar(inputFile, "printRejectReasons:");
     inputFile >> printRejectReasons;
     searchVar(inputFile, "domainSize:");
@@ -659,7 +690,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
 
     if (numOfLayers > 0 ) {
         layers = new float[numOfLayers * 2]; // Multiply by 2 for +z and -z for each layer
-        layerVol = new float[numOfLayers];
+        layerVol = new double[numOfLayers];
         searchVar(inputFile, "layers:");
         logString = "Number of Layers: " + to_string(numOfLayers);
         logger.writeLogFile(INFO,  logString);
@@ -669,7 +700,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             inputFile >> ch >> layers[idx] >> ch >> layers[idx + 1] >> ch;
             logString = "    Layer " + to_string(i + 1) + "{-z,+z}: {" + to_string(layers[idx]) + "," + to_string(layers[idx + 1]) + "}, Volume: ";
             logger.writeLogFile(INFO,  logString);
-            layerVol[i] = domainSize[0] * domainSize[1] * (std::abs(layers[idx + 1] - layers[idx]));
+            layerVol[i] = domainSize[0] * domainSize[1] * (std::abs((double) layers[idx + 1] - (double) layers[idx]));
             logString = to_string(layerVol[i]) + "m^3\n";
             logger.writeLogFile(INFO,  logString);
         }
@@ -698,7 +729,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     
     if (numOfRegions > 0 ) {
         regions = new float[numOfRegions * 6]; // Multiply by 6 xmin, xmax, ymin, ymax, zmin, zmax
-        regionVol = new float[numOfRegions];
+        regionVol = new double[numOfRegions];
         searchVar(inputFile, "regions:");
         logString = "Number of Regions: " + to_string(numOfRegions) + "\n";
         logger.writeLogFile(INFO,  logString);
@@ -708,7 +739,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             inputFile >> ch >> regions[idx] >> ch >> regions[idx + 1] >> ch >> regions[idx + 2] >> ch >> regions[idx + 3] >> ch >> regions[idx + 4] >> ch >> regions[idx + 5] >> ch;
             logString = " Region " + to_string(i + 1) + ": {-x,+x,-y,+y,-z,+z}: {" + to_string(regions[idx]) + "," + to_string(regions[idx + 1]) + "," + to_string(regions[idx + 2]) + "," + to_string(regions[idx + 3]) + "," + to_string(regions[idx + 4]) + "," + to_string(regions[idx + 5]) + "}\n";
             logger.writeLogFile(INFO,  logString);
-            regionVol[i] = (std::abs(regions[idx + 1] - regions[idx])) * (std::abs(regions[idx + 3] - regions[idx + 2])) * (std::abs(regions[idx + 5] - regions[idx + 4])) ;
+            regionVol[i] = (std::abs((double) regions[idx + 1] - (double) regions[idx])) * (std::abs((double) regions[idx + 3] - (double) regions[idx + 2])) * (std::abs((double) regions[idx + 5] - (double) regions[idx + 4]));
             logString = " Volume: " + to_string(regionVol[i]) + "m^3\n";
             logger.writeLogFile(INFO,  logString);
         }
@@ -941,7 +972,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             // Get temp array for ellipse p32 targets
             // Used to simplify initialization of shape family structures below
             searchVar(inputFile, "e_p32Targets:");
-            e_p32Targets = new float[nFamEll];
+            e_p32Targets = new double[nFamEll];
             getInputAry(inputFile, e_p32Targets, nFamEll);
         }
     }
@@ -1156,7 +1187,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
             // Get temp array for rectangle p32 targets,
             // Used to simplify initialization of shape family structures below
             searchVar(inputFile, "r_p32Targets:");
-            r_p32Targets = new float[nFamRect];
+            r_p32Targets = new double[nFamRect];
             getInputAry(inputFile, r_p32Targets, nFamRect);
         }
     }

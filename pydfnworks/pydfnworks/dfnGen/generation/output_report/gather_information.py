@@ -66,7 +66,9 @@ def parse_dfn_output(params, families):
         "    Surface Area", "    Volume", "    Fracture Intensity (P32)"
     ]
 
-    string_params = ["Time Stamp"]
+    string_params = ["Time Stamp", "P32 Convention"]
+    # DFN_output.txt from older versions of dfnGen does not list the convention
+    params["P32 Convention"] = "double-sided (wetted surface area)"
 
     pre_iso_flag = False
     post_iso_flag = False
@@ -122,6 +124,10 @@ def parse_dfn_output(params, families):
                             fam["Post-Iso " + variable.lstrip()] = float(value)
                         if variable.lstrip() == "Fracture Intensity (P32)":
                             family_block_flag = False
+
+    # shown next to the P32 values on each family page
+    for family in families:
+        family["P32 Convention"] = params["P32 Convention"]
 
     return params, families
 

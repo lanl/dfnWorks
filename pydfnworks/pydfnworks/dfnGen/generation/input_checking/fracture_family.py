@@ -292,7 +292,7 @@ def add_fracture_family(self,
         
         probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 
         
-        p32 : fracture intensity for the family. default = None. use if stopCondition = 
+        p32 : fracture intensity for the family. default = None. use if stopCondition = 1. The value is interpreted using DFN.params['p32_convention'] (0: double-sided / wetted surface area, P32 = 2A/V, default. 1: single-sided, P32 = A/V)
 
         layer : assigns fracture family to a layer in the domain. default = 0
         
