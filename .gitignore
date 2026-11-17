@@ -35,6 +35,7 @@
 
 # dfnWorks build outputs
 DFNGen/DFNGen
+DFNGen/*.d
 DFNTrans/DFNTrans
 DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
@@ -71,3 +72,8 @@ examples/TPL/output_rfram/*
 # Misc
 *FracMan_interface*
 DFNGen/.dfngen_version
+
+# Regression suite scratch and reports
+tests/regression/_runs/
+tests/regression/latest_report.html
+examples/*/output*/

@@ -17,9 +17,9 @@ OBJS = DFNmain.o debugFunctions.o distributions.o expDist.o hotkey.o \
        domain.o layers.o mathFunctions.o polygonBoundary.o vectorFunctions.o \
        removeFractures.o clusterGroups.o
 
-# Pull in auto-generated dependency files (silently ignore if not yet built)
--include $(OBJS:.o=.d)
-
+# DFNGen must be the first target so a plain `make` builds it. The
+# dependency files are included at the end of this makefile: including them
+# here would make the first rule in DFNmain.d (DFNmain.o) the default goal.
 DFNGen: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o DFNGen $(OBJS)
 	@echo "$(DFNGEN_VERSION)" > .dfngen_version
@@ -29,5 +29,9 @@ DFNGen: $(OBJS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 
+.PHONY: clean
 clean:
 	rm -f DFNGen $(OBJS) $(OBJS:.o=.d) .dfngen_version
+
+# Pull in auto-generated dependency files (silently ignore if not yet built)
+-include $(OBJS:.o=.d)
