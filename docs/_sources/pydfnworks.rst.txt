@@ -1,7 +1,8 @@
-.. _dfnWorks-python-chapter:
 
 pydfnworks: the dfnWorks python package
 ========================================
+
+.. _dfnWorks-python-chapter:
 
 The pydfnworks package allows the user to run dfnWorks from the command line and  call dfnWorks within other python scripts. Because pydfnworks is a package, users can call individual methods from the package.
 
@@ -98,8 +99,11 @@ Default Arguments:
                    stor_file = None,
                    vtk_file = None,
                    num_nodes = None,
-                   mesh_type = 'dfn',
-                   cell_based_aperture = False)
+                   cell_based_aperture = False,
+                   store_polygon_data = True,
+                   pickle_file = None,
+                   log_filename = None,
+                   log_time = True)
 
 
 jobname
@@ -197,10 +201,49 @@ Example:
 
    cell_based_aperture = True
 
+store_polygon_data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Description: If True, the fracture vertices in ``polygons.dat`` are read into the dictionary ``DFN.polygons`` after generation. Set to False for very large networks to save memory.
+
+Type: Boolean
+
+Default: True
+
+pickle_file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Description: Path to a DFN object saved with ``DFN.to_pickle()``. Use with ``DFN.from_pickle()`` to restart a workflow without regenerating the network.
+
+Type: string
+
+Default: None
+
+log_filename
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Description: Name of the log file, written in the current working directory. If None, the log is ``<jobname>.log``.
+
+Type: string
+
+Default: None
+
+log_time
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Description: If True, each line of the log file starts with a time stamp.
+
+Type: Boolean
+
+Default: True
+
 additional arguments
 ^^^^^^^^^^^^^^^^^^^^^
 Descriptions: additional arguments that have not been described here will likely not be changed by the user. 
 
+
+Random Seeds
+------------------------
+The seed in ``DFN.params['seed']`` (see :ref:`seed`) controls both the dfnGen executable and the random number generators used on the Python side (NumPy and the ``random`` module), which are used for hydraulic property distributions, meshing, plotting, and graph-based particle transport. ``set_seed`` is called automatically when the network is generated; call it directly to reseed later in a workflow.
+
+.. automodule:: pydfnworks.general.general_functions
+    :members: set_seed
 
 pydfnWorks : Modules
 ------------------------

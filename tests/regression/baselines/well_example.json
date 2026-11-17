@@ -1,0 +1,28 @@
+{
+  "case": "well_example",
+  "created": "2026-11-16T15:03:16",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
+  "metrics": {
+    "gen.final_fractures": 39,
+    "gen.intersection_length": 362.621,
+    "gen.intersections_shortened": 47,
+    "gen.isolated_removed": 361,
+    "gen.n_intersections": 211,
+    "gen.p30": 0.0115556,
+    "gen.p32": 0.256162,
+    "gen.rejected": 24,
+    "gen.retranslated": 1076,
+    "gen.surface_area": 864.545,
+    "gen.triple_points": 0,
+    "mesh.elements": 67996,
+    "mesh.nodes": 34074,
+    "pflotran.dfn_flow_rate.global_water_mass_kg": 107761.403,
+    "pflotran.dfn_flow_rate.inflow_water_mass_kg": 861547.048,
+    "pflotran.dfn_flow_rate.inflow_water_mass_kg_d": 861.547416,
+    "pflotran.dfn_flow_rate.outflow_water_mass_kg": -861546.947,
+    "pflotran.dfn_flow_rate.outflow_water_mass_kg_d": -861.547315
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 19.29
+}

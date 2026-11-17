@@ -1,0 +1,29 @@
+{
+  "case": "graph_transport",
+  "created": "2026-11-16T15:01:52",
+  "git": "16b16b8a",
+  "host": "pn2408477.lanl.gov",
+  "metrics": {
+    "gen.final_fractures": 935,
+    "gen.intersection_length": 43516.2,
+    "gen.intersections_shortened": 0,
+    "gen.isolated_removed": 7,
+    "gen.n_intersections": 4385,
+    "gen.p30": 0.000935,
+    "gen.p32": 0.750279,
+    "gen.rejected": 0,
+    "gen.retranslated": 0,
+    "gen.surface_area": 750279.0,
+    "gen.triple_points": 0,
+    "graph_flow.n_edges": 50192,
+    "graph_flow.sum_vol_flow_rate": 6.171177226985673e-06,
+    "graph_flow.sum_volume": 1.4988172524884164e-05,
+    "graph_transport.graph_partime.mean": 289048446.81955975,
+    "graph_transport.graph_partime.n": 10000,
+    "graph_transport.graph_partime.p10": 208131563.11467043,
+    "graph_transport.graph_partime.p50": 272360316.2547565,
+    "graph_transport.graph_partime.p90": 379534302.8140831
+  },
+  "pydfnworks": "2.12.1",
+  "time_s": 3.93
+}

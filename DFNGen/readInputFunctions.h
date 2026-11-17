@@ -13,6 +13,9 @@
 // Function forward declarations/prototypes
 // See readInputFunctions.cpp for descriptions and code
 void searchVar(std::ifstream &stream, std::string search);
+bool searchVarOptional(std::ifstream &stream, std::string search);
+std::string p32ConventionName();
+double familyVolume(const struct Shape &shapeFam, double domVol);
 void checkIfOpen(std::ifstream &stream, std::string fileName);
 void checkIfOpen(std::ofstream &stream, std::string fileName);
 void getCords(std::ifstream & stream, double *outAry, int nPoly, int nVertices);

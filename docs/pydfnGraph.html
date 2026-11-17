@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnGraph &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>pydfnworks: dfnGraph &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,9 +35,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -49,28 +46,41 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pydfnworks: dfnGraph</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.dfn2graph">General Graph Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.add_fracture_source"><code class="docutils literal notranslate"><span class="pre">add_fracture_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.add_fracture_target"><code class="docutils literal notranslate"><span class="pre">add_fracture_target()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.dump_fractures"><code class="docutils literal notranslate"><span class="pre">dump_fractures()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.dump_json_graph"><code class="docutils literal notranslate"><span class="pre">dump_json_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.load_json_graph"><code class="docutils literal notranslate"><span class="pre">load_json_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.dfn2graph.plot_graph"><code class="docutils literal notranslate"><span class="pre">plot_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.pruning.greedy_edge_disjoint"><code class="docutils literal notranslate"><span class="pre">greedy_edge_disjoint()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.pruning.k_shortest_paths_backbone"><code class="docutils literal notranslate"><span class="pre">k_shortest_paths_backbone()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.construction.create_graph">General Graph Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.construction.create_graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.construction.source_target.add_fracture_source"><code class="docutils literal notranslate"><span class="pre">add_fracture_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.construction.source_target.add_fracture_target"><code class="docutils literal notranslate"><span class="pre">add_fracture_target()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.io.serialization.dump_fractures"><code class="docutils literal notranslate"><span class="pre">dump_fractures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.io.serialization.plot_graph"><code class="docutils literal notranslate"><span class="pre">plot_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.io.serialization.dump_json_graph"><code class="docutils literal notranslate"><span class="pre">dump_json_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.io.serialization.load_json_graph"><code class="docutils literal notranslate"><span class="pre">load_json_graph()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.graph_flow">Graph-Based Flow and Transport</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.graph_flow.run_graph_flow"><code class="docutils literal notranslate"><span class="pre">run_graph_flow()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.graph_transport.run_graph_transport"><code class="docutils literal notranslate"><span class="pre">run_graph_transport()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.algorithms.pruning">Graph Pruning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.algorithms.pruning.current_flow_threshold"><code class="docutils literal notranslate"><span class="pre">current_flow_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.algorithms.pruning.k_shortest_paths_backbone"><code class="docutils literal notranslate"><span class="pre">k_shortest_paths_backbone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.algorithms.pruning.greedy_edge_disjoint"><code class="docutils literal notranslate"><span class="pre">greedy_edge_disjoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.flow.graph_flow">Graph-Based Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.flow.graph_flow.run_graph_flow"><code class="docutils literal notranslate"><span class="pre">run_graph_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.flow.metrics.compute_dQ"><code class="docutils literal notranslate"><span class="pre">compute_dQ()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edge-conductance-models">Edge Conductance Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGraph.attributes.conductance.add_weight"><code class="docutils literal notranslate"><span class="pre">add_weight()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGraph.transport.graph_transport">Graph-Based Transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGraph.transport.graph_transport.run_graph_transport"><code class="docutils literal notranslate"><span class="pre">run_graph_transport()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix-diffusion-tdrw">Matrix Diffusion (TDRW)</a></li>
 </ul>
 </li>
 </ul>
@@ -79,9 +89,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -110,55 +123,22 @@
              
   <section id="pydfnworks-dfngraph">
 <span id="dfnworks-python-chapter-dfngraph"></span><h1>pydfnworks: dfnGraph<a class="headerlink" href="#pydfnworks-dfngraph" title="Link to this heading"></a></h1>
-<p>DFN Class functions used in graph analysis and pipe-network simulations</p>
-<section id="module-pydfnworks.dfnGraph.dfn2graph">
-<span id="general-graph-functions"></span><h2>General Graph Functions<a class="headerlink" href="#module-pydfnworks.dfnGraph.dfn2graph" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.add_fracture_source">
-<span class="sig-name descname"><span class="pre">add_fracture_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_fracture_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_fracture_source" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
-<li><p><strong>source_list</strong> (<em>list</em>) – list of integers corresponding to fracture numbers</p></li>
-<li><p><strong>remove_old_source</strong> (<em>bool</em>) – remove old source from the graph</p></li>
+<p>DFN Class functions used in graph analysis and pipe-network simulations.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pydfnworks.dfnGraph</span></code> package is organized into subpackages:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">construction</span></code> – build intersection, fracture, and bipartite graphs from a DFN and attach source/target nodes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code> – edge permeability, area, and conductance (weight) models.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flow</span></code> – steady-state pressure-driven flow on the graph and post-processing metrics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transport</span></code> – particle tracking on the graph, including time domain random walk (TDRW) matrix diffusion models.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">algorithms</span></code> – pruning and graph deconstruction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span></code> – reading, writing, and plotting graphs.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>G</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NetworkX Graph</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>bipartite graph not supported</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.add_fracture_target">
-<span class="sig-name descname"><span class="pre">add_fracture_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#add_fracture_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.add_fracture_target" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
-<li><p><strong>target</strong> (<em>list</em>) – list of integers corresponding to fracture numbers</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>G</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NetworkX Graph</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>bipartite graph not supported</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.create_graph">
-<span class="sig-name descname"><span class="pre">create_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#create_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.create_graph" title="Link to this definition"></a></dt>
+<p>All public functions are re-exported from <code class="docutils literal notranslate"><span class="pre">pydfnworks.dfnGraph</span></code> so <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">pydfnworks.dfnGraph</span> <span class="pre">import</span> <span class="pre">&lt;name&gt;</span></code> keeps working. The functions below are also methods of the DFN object, e.g., <code class="docutils literal notranslate"><span class="pre">G</span> <span class="pre">=</span> <span class="pre">DFN.create_graph('intersection',</span> <span class="pre">'left',</span> <span class="pre">'right')</span></code>.</p>
+<section id="module-pydfnworks.dfnGraph.construction.create_graph">
+<span id="general-graph-functions"></span><h2>General Graph Functions<a class="headerlink" href="#module-pydfnworks.dfnGraph.construction.create_graph" title="Link to this heading"></a></h2>
+<dl class="py function" id="module-create_graph.py">
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.construction.create_graph.create_graph">
+<span class="sig-name descname"><span class="pre">create_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/construction/create_graph.html#create_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.construction.create_graph.create_graph" title="Link to this definition"></a></dt>
 <dd><p>Header function to create a graph based on a DFN. Particular algorithms are in files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -179,9 +159,54 @@
 <p class="rubric">Notes</p>
 </dd></dl>
 
+<dl class="py function" id="module-source_target.py">
+<span id="module-pydfnworks.dfnGraph.construction.source_target"></span><dt class="sig sig-object py" id="pydfnworks.dfnGraph.construction.source_target.add_fracture_source">
+<span class="sig-name descname"><span class="pre">add_fracture_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/construction/source_target.html#add_fracture_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.construction.source_target.add_fracture_source" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
+<li><p><strong>source_list</strong> (<em>list</em>) – list of integers corresponding to fracture numbers</p></li>
+<li><p><strong>remove_old_source</strong> (<em>bool</em>) – remove old source from the graph</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>G</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NetworkX Graph</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>bipartite graph not supported</p>
+</dd></dl>
+
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.dump_fractures">
-<span class="sig-name descname"><span class="pre">dump_fractures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#dump_fractures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.dump_fractures" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.construction.source_target.add_fracture_target">
+<span class="sig-name descname"><span class="pre">add_fracture_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/construction/source_target.html#add_fracture_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.construction.source_target.add_fracture_target" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
+<li><p><strong>target</strong> (<em>list</em>) – list of integers corresponding to fracture numbers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>G</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NetworkX Graph</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>bipartite graph not supported</p>
+</dd></dl>
+
+<dl class="py function" id="module-serialization.py">
+<span id="module-pydfnworks.dfnGraph.io.serialization"></span><dt class="sig sig-object py" id="pydfnworks.dfnGraph.io.serialization.dump_fractures">
+<span class="sig-name descname"><span class="pre">dump_fractures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/io/serialization.html#dump_fractures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.io.serialization.dump_fractures" title="Link to this definition"></a></dt>
 <dd><p>Write fracture numbers assocaited with the graph G out into an ASCII file inputs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -196,8 +221,27 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.dump_json_graph">
-<span class="sig-name descname"><span class="pre">dump_json_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#dump_json_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.dump_json_graph" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.io.serialization.plot_graph">
+<span class="sig-name descname"><span class="pre">plot_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfn_graph'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/io/serialization.html#plot_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.io.serialization.plot_graph" title="Link to this definition"></a></dt>
+<dd><p>Create a png of a graph with source nodes colored blue, target red, and all over nodes black</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>NetworkX graph</em>) – NetworkX Graph based on the DFN</p></li>
+<li><p><strong>source</strong> (<em>node</em>) – Starting node</p></li>
+<li><p><strong>target</strong> (<em>node</em>) – Ending node</p></li>
+<li><p><strong>output_name</strong> (<em>string</em>) – Name of output file (no .png)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Image is written to output_name.png</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.io.serialization.dump_json_graph">
+<span class="sig-name descname"><span class="pre">dump_json_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/io/serialization.html#dump_json_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.io.serialization.dump_json_graph" title="Link to this definition"></a></dt>
 <dd><p>Write graph out in json format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -212,8 +256,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.load_json_graph">
-<span class="sig-name descname"><span class="pre">load_json_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#load_json_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.load_json_graph" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.io.serialization.load_json_graph">
+<span class="sig-name descname"><span class="pre">load_json_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/io/serialization.html#load_json_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.io.serialization.load_json_graph" title="Link to this definition"></a></dt>
 <dd><p>Read in graph from json format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -231,27 +275,64 @@
 </dl>
 </dd></dl>
 
+</section>
+<section id="module-pydfnworks.dfnGraph.algorithms.pruning">
+<span id="graph-pruning"></span><h2>Graph Pruning<a class="headerlink" href="#module-pydfnworks.dfnGraph.algorithms.pruning" title="Link to this heading"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.dfn2graph.plot_graph">
-<span class="sig-name descname"><span class="pre">plot_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dfn_graph'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/dfn2graph.html#plot_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.dfn2graph.plot_graph" title="Link to this definition"></a></dt>
-<dd><p>Create a png of a graph with source nodes colored blue, target red, and all over nodes black</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.algorithms.pruning.current_flow_threshold">
+<span class="sig-name descname"><span class="pre">current_flow_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/algorithms/pruning.html#current_flow_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.algorithms.pruning.current_flow_threshold" title="Link to this definition"></a></dt>
+<dd><p>Runs current flow (Potential drop between source and target) on the Graph G, and returns a subgraph such that the current on the edges is greater than the threshold value (thrs).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>G</strong> (<em>NetworkX graph</em>) – NetworkX Graph based on the DFN</p></li>
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
 <li><p><strong>source</strong> (<em>node</em>) – Starting node</p></li>
 <li><p><strong>target</strong> (<em>node</em>) – Ending node</p></li>
-<li><p><strong>output_name</strong> (<em>string</em>) – Name of output file (no .png)</p></li>
+<li><p><strong>weight</strong> (<em>string</em>) – Resistance term used in the solution of Laplace’s Equation</p></li>
+<li><p><strong>thrs</strong> (<em>float</em>) – Threshold value for pruning the graph</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>H</strong> – Subgraph such that the current on the edges is greater than the threshold value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NetworkX graph</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Image is written to output_name.png</p>
+<p>Graph attributes (node and edge) are not retained on the subgraph H.</p>
 </dd></dl>
 
-<dl class="py function" id="module-pydfnworks.dfnGraph.pruning">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.pruning.greedy_edge_disjoint">
-<span class="sig-name descname"><span class="pre">greedy_edge_disjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/pruning.html#greedy_edge_disjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.pruning.greedy_edge_disjoint" title="Link to this definition"></a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.algorithms.pruning.k_shortest_paths_backbone">
+<span class="sig-name descname"><span class="pre">k_shortest_paths_backbone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/algorithms/pruning.html#k_shortest_paths_backbone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.algorithms.pruning.k_shortest_paths_backbone" title="Link to this definition"></a></dt>
+<dd><p>Returns the subgraph made up of the k shortest paths in a graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of requested paths</p></li>
+<li><p><strong>source</strong> (<em>node</em>) – Starting node</p></li>
+<li><p><strong>target</strong> (<em>node</em>) – Ending node</p></li>
+<li><p><strong>weight</strong> (<em>string</em>) – Edge weight used for finding the shortest path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>H</strong> – Subgraph of G made up of the k shortest paths</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NetworkX Graph</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>See Hyman et al. 2017 “Predictions of first passage times in sparse discrete fracture networks using graph-based reductions” Physical Review E for more details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.algorithms.pruning.greedy_edge_disjoint">
+<span class="sig-name descname"><span class="pre">greedy_edge_disjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/algorithms/pruning.html#greedy_edge_disjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.algorithms.pruning.greedy_edge_disjoint" title="Link to this definition"></a></dt>
 <dd><p>Greedy Algorithm to find edge disjoint subgraph from s to t.
 See Hyman et al. 2018 SIAM MMS</p>
 <dl class="field-list simple">
@@ -279,37 +360,12 @@ See Hyman et al. 2018 SIAM MMS</p>
 </ol>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.pruning.k_shortest_paths_backbone">
-<span class="sig-name descname"><span class="pre">k_shortest_paths_backbone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/pruning.html#k_shortest_paths_backbone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.pruning.k_shortest_paths_backbone" title="Link to this definition"></a></dt>
-<dd><p>Returns the subgraph made up of the k shortest paths in a graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – NetworkX Graph based on a DFN</p></li>
-<li><p><strong>k</strong> (<em>int</em>) – Number of requested paths</p></li>
-<li><p><strong>source</strong> (<em>node</em>) – Starting node</p></li>
-<li><p><strong>target</strong> (<em>node</em>) – Ending node</p></li>
-<li><p><strong>weight</strong> (<em>string</em>) – Edge weight used for finding the shortest path</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>H</strong> – Subgraph of G made up of the k shortest paths</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NetworkX Graph</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>See Hyman et al. 2017 “Predictions of first passage times in sparse discrete fracture networks using graph-based reductions” Physical Review E for more details</p>
-</dd></dl>
-
 </section>
-<section id="module-pydfnworks.dfnGraph.graph_flow">
-<span id="graph-based-flow-and-transport"></span><h2>Graph-Based Flow and Transport<a class="headerlink" href="#module-pydfnworks.dfnGraph.graph_flow" title="Link to this heading"></a></h2>
+<section id="module-pydfnworks.dfnGraph.flow.graph_flow">
+<span id="graph-based-flow"></span><h2>Graph-Based Flow<a class="headerlink" href="#module-pydfnworks.dfnGraph.flow.graph_flow" title="Link to this heading"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGraph.graph_flow.run_graph_flow">
-<span class="sig-name descname"><span class="pre">run_graph_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluid_viscosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00089</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_flow.html#run_graph_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_flow.run_graph_flow" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.flow.graph_flow.run_graph_flow">
+<span class="sig-name descname"><span class="pre">run_graph_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluid_viscosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00089</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_flow_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'graph_flow.hdf5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'doolaeghe'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'area'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conductance_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/flow/graph_flow.html#run_graph_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.flow.graph_flow.run_graph_flow" title="Link to this definition"></a></dt>
 <dd><p>Solve for pressure driven steady state flow on a graph representation of the DFN.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -321,7 +377,15 @@ See Hyman et al. 2018 SIAM MMS</p>
 <li><p><strong>pressure_out</strong> (<em>double</em>) – Value of pressure at outlet [Pa]</p></li>
 <li><p><strong>fluid_viscosity</strong> (<em>double</em>) – optional,  default is for water. [Pa*s]</p></li>
 <li><p><strong>phi</strong> (<em>double</em>) – Fracture porosity, default is 1 [-]</p></li>
-<li><p><strong>G</strong> (<em>Input Graph</em>) – </p></li>
+<li><p><strong>G</strong> (<em>Input Graph</em>)</p></li>
+<li><p><strong>conductance_model</strong> (<em>string</em>) – edge conductance model, ‘doolaeghe’ (default) or ‘karra’. See
+pydfnworks.dfnGraph.attributes.conductance.</p></li>
+<li><p><strong>diameter_from</strong> (<em>string</em>) – fracture-diameter source for the ‘doolaeghe’ model: ‘area’ (default,
+area-equivalent 2*sqrt(surface_area/pi)) or ‘max_radius’
+(2*self.radii[:, 2]).</p></li>
+<li><p><strong>simplify</strong> (<em>bool</em>) – if True, remove crossing (redundant) edges per fracture via the
+Doolaeghe et al. (2021) deconstructed-graph method.</p></li>
+<li><p><strong>**conductance_kwargs</strong> – forwarded to the conductance model (e.g. B, mp_correction=’additive’).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -333,9 +397,85 @@ See Hyman et al. 2018 SIAM MMS</p>
 </dl>
 </dd></dl>
 
+<dl class="py function" id="module-metrics.py">
+<span id="module-pydfnworks.dfnGraph.flow.metrics"></span><dt class="sig sig-object py" id="pydfnworks.dfnGraph.flow.metrics.compute_dQ">
+<span class="sig-name descname"><span class="pre">compute_dQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/flow/metrics.html#compute_dQ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.flow.metrics.compute_dQ" title="Link to this definition"></a></dt>
+<dd><p>Computes the DFN fracture intensity (p32) and flow channeling density indicator from the graph flow solution on G</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>G</strong> (<em>networkX graph</em>) – Output of run_graph_flow</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>p32</strong> (<em>float</em>) – Fracture intensity, reported in the convention set by DFN.params[‘p32_convention’] (0: double-sided / wetted surface area, default. 1: single-sided)</p></li>
+<li><p><strong>dQ</strong> (<em>float flow channeling density indicator</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>dQ is always computed with the double-sided (wetted) surface area, as defined in the reference below, and does not depend on p32_convention.</p>
+<p>For definitions of p32 and dQ along with a discussion see “ Hyman, Jeffrey D. “Flow channeling in fracture networks: characterizing the effect of density on preferential flow path formation.” Water Resources Research 56.9 (2020): e2020WR027986. “</p>
+</dd></dl>
+
+<section id="edge-conductance-models">
+<h3>Edge Conductance Models<a class="headerlink" href="#edge-conductance-models" title="Link to this heading"></a></h3>
+<p>The edge <code class="docutils literal notranslate"><span class="pre">weight</span></code> used in the graph Laplacian is the hydraulic conductance of the fracture surface represented by that edge. <code class="docutils literal notranslate"><span class="pre">run_graph_flow</span></code> selects the model with <code class="docutils literal notranslate"><span class="pre">conductance_model</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'doolaeghe'</span></code> (default since v2.12) – the size-aware trapezoid conductance of Doolaeghe et al. (2020) with a correction for the redundant paths formed by fractures with many intersections. The fracture diameter comes from <code class="docutils literal notranslate"><span class="pre">diameter_from='area'</span></code> (area-equivalent, default) or <code class="docutils literal notranslate"><span class="pre">'max_radius'</span></code>. Extra keyword arguments are forwarded to the model:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">B</span></code> – close-intersection coefficient, default 1.5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mp_correction</span></code> – multiple-paths correction: <code class="docutils literal notranslate"><span class="pre">'divide'</span></code> (default, Doolaeghe et al. 2020), <code class="docutils literal notranslate"><span class="pre">'additive'</span></code> (adapted from Doolaeghe et al. 2021), or <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'karra'</span></code> – the model of Karra et al. (2018), <img class="math" src="_images/math/3f7b09e7dde47ec8a67584fb5f6e2a4318e09681.png" alt="w = K A / L"/>. This was the default before v2.12; pass <code class="docutils literal notranslate"><span class="pre">conductance_model='karra'</span></code> to reproduce earlier results.</p></li>
+</ul>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">simplify=True</span></code> removes redundant crossing edges on each fracture with the deconstructed-graph method of Doolaeghe et al. (2021) before the flow solve.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">DFN</span><span class="o">.</span><span class="n">create_graph</span><span class="p">(</span><span class="s2">&quot;intersection&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">DFN</span><span class="o">.</span><span class="n">run_graph_flow</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="mf">2e6</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span>
+                       <span class="n">conductance_model</span><span class="o">=</span><span class="s2">&quot;doolaeghe&quot;</span><span class="p">,</span> <span class="n">mp_correction</span><span class="o">=</span><span class="s2">&quot;divide&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p id="module-conductance.py"><span id="module-pydfnworks.dfnGraph.attributes.conductance"></span>The edge <code class="docutils literal notranslate"><span class="pre">weight</span></code> used by the graph-flow Laplacian is the hydraulic
+conductance of the fracture flowing surface represented by that edge.
+<code class="docutils literal notranslate"><span class="pre">add_weight</span></code> dispatches to a selectable model:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;doolaeghe&quot;</span></code> – Doolaeghe et al. (2020) size-aware trapezoid conductance
+with the multiple-paths correction. This is the default used by
+<code class="docutils literal notranslate"><span class="pre">DFN.run_graph_flow</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;karra&quot;</span></code> – Karra et al. (2018), <code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">=</span> <span class="pre">K*A/L</span></code>. This is the default of
+<code class="docutils literal notranslate"><span class="pre">add_weight</span></code> when it is called directly, and was the <code class="docutils literal notranslate"><span class="pre">run_graph_flow</span></code>
+default before v2.12.</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.attributes.conductance.add_weight">
+<span class="sig-name descname"><span class="pre">add_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'karra'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">model_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/attributes/conductance.html#add_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.attributes.conductance.add_weight" title="Link to this definition"></a></dt>
+<dd><p>Assign edge conductance (‘weight’) to every edge using the chosen model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>G</strong> (<em>NetworkX Graph</em>) – networkX graph</p></li>
+<li><p><strong>model</strong> (<em>str</em>) – Conductance model name. Default ‘karra’ (Karra et al. 2018,
+<code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">=</span> <span class="pre">K*A/L</span></code>). See <code class="docutils literal notranslate"><span class="pre">CONDUCTANCE_MODELS</span></code> for the registry.</p></li>
+<li><p><strong>**model_kwargs</strong> – forwarded to the model (e.g. B, mp_correction for ‘doolaeghe’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="module-pydfnworks.dfnGraph.transport.graph_transport">
+<span id="graph-based-transport"></span><h2>Graph-Based Transport<a class="headerlink" href="#module-pydfnworks.dfnGraph.transport.graph_transport" title="Link to this heading"></a></h2>
 <dl class="py function" id="module-graph_transport.py">
-<span id="module-pydfnworks.dfnGraph.graph_transport"></span><dt class="sig sig-object py" id="pydfnworks.dfnGraph.graph_transport.run_graph_transport">
-<span class="sig-name descname"><span class="pre">run_graph_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nparticles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partime_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_id_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hdf5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_positions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdrw_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_porosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fracture_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_planes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'control_planes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/graph_transport.html#run_graph_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.graph_transport.run_graph_transport" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pydfnworks.dfnGraph.transport.graph_transport.run_graph_transport">
+<span class="sig-name descname"><span class="pre">run_graph_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nparticles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partime_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_id_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hdf5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_positions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdrw_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdrw_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'infinite'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_porosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_diffusivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fracture_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdrw_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_planes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'control_planes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGraph/transport/graph_transport.html#run_graph_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGraph.transport.graph_transport.run_graph_transport" title="Link to this definition"></a></dt>
 <dd><p>Run  particle tracking on the given NetworkX graph</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -348,9 +488,16 @@ See Hyman et al. 2018 SIAM MMS</p>
 <li><p><strong>frac_id_file</strong> (<em>string</em>) – name of file to which detailed information of each particle’s travel will be written</p></li>
 <li><p><strong>dump_flag</strong> (<em>bool</em>) – on/off to write full trajectory information to file</p></li>
 <li><p><strong>tdrw_flag</strong> (<em>Bool</em>) – if False, matrix_porosity and matrix_diffusivity are ignored</p></li>
+<li><p><strong>tdrw_model</strong> (<em>string</em>) – Matrix diffusion model. Options: ‘infinite’ (default, unlimited
+block size), ‘roubinet’, ‘dentz’, ‘annulus’ (finite block size),
+or ‘from_file’ (return-time CDF read from tdrw_filename).</p></li>
 <li><p><strong>matrix_porosity</strong> (<em>float</em>) – Matrix Porosity used in TDRW</p></li>
 <li><p><strong>matrix_diffusivity</strong> (<em>float</em>) – Matrix Diffusivity used in TDRW (SI units m^2/s)</p></li>
-<li><p><strong>fracture_spaceing</strong> (<em>float</em>) – finite block size for limited matrix diffusion</p></li>
+<li><p><strong>fracture_spacing</strong> (<em>float</em>) – distance between adjacent parallel fractures [m]; the matrix
+block half-width is fracture_spacing/2. Required for all finite
+tdrw models</p></li>
+<li><p><strong>tdrw_filename</strong> (<em>string</em>) – path to a two-column ASCII file (return times, CDF). Required
+when tdrw_model is ‘from_file’</p></li>
 <li><p><strong>control_planes</strong> (<em>list</em><em> of </em><em>floats</em>) – list of control plane locations to dump travel times. Only in primary direction of flow.</p></li>
 <li><p><strong>direction</strong> (<em>primary</em>) – string indicating primary direction of flow</p></li>
 </ul>
@@ -366,6 +513,56 @@ See Hyman et al. 2018 SIAM MMS</p>
 <p>Information on individual functions is found therein</p>
 </dd></dl>
 
+<p>Particle trajectories are seeded from <code class="docutils literal notranslate"><span class="pre">DFN.params['seed']</span></code>, so repeated runs with the same seed give the same particle paths. See <a class="reference internal" href="dfngen.html#seed"><span class="std std-ref">seed</span></a>.</p>
+<section id="matrix-diffusion-tdrw">
+<h3>Matrix Diffusion (TDRW)<a class="headerlink" href="#matrix-diffusion-tdrw" title="Link to this heading"></a></h3>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">tdrw_flag=True</span></code> adds matrix diffusion to graph transport with a time domain random walk. Each particle’s time on a fracture is increased by a random trapping time in the surrounding rock matrix. <code class="docutils literal notranslate"><span class="pre">matrix_porosity</span></code> and <code class="docutils literal notranslate"><span class="pre">matrix_diffusivity</span></code> [m<sup>2</sup>/s] are required. <code class="docutils literal notranslate"><span class="pre">tdrw_model</span></code> selects the matrix geometry:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">tdrw_model</span></code></p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'infinite'</span></code></p></td>
+<td><p>Default. Diffusion into a semi-infinite matrix (unlimited block size).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'dentz'</span></code></p></td>
+<td><p>Finite slab between parallel fractures. Return times are sampled from the first-passage time distribution of diffusion in a slab, inverted from the Laplace domain with the Stehfest algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'annulus'</span></code></p></td>
+<td><p>Finite annular (cylindrical) matrix block, also inverted from the Laplace domain with Stehfest.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'roubinet'</span></code></p></td>
+<td><p>The limited-block model used before v2.12 (Roubinet et al.).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'from_file'</span></code></p></td>
+<td><p>User-supplied return-time CDF. <code class="docutils literal notranslate"><span class="pre">tdrw_filename</span></code> points to a two-column ASCII file of return times and CDF values.</p></td>
+</tr>
+</tbody>
+</table>
+<p>All finite models (<code class="docutils literal notranslate"><span class="pre">dentz</span></code>, <code class="docutils literal notranslate"><span class="pre">annulus</span></code>, <code class="docutils literal notranslate"><span class="pre">roubinet</span></code>, <code class="docutils literal notranslate"><span class="pre">from_file</span></code>) require <code class="docutils literal notranslate"><span class="pre">fracture_spacing</span></code> [m], the distance between adjacent parallel fractures. The matrix block half-width is <code class="docutils literal notranslate"><span class="pre">fracture_spacing/2</span></code>. If <code class="docutils literal notranslate"><span class="pre">fracture_spacing</span></code> is given and <code class="docutils literal notranslate"><span class="pre">tdrw_model</span></code> is left at <code class="docutils literal notranslate"><span class="pre">'infinite'</span></code>, the <code class="docutils literal notranslate"><span class="pre">'dentz'</span></code> model is used and a message is written to the log.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">particles</span> <span class="o">=</span> <span class="n">DFN</span><span class="o">.</span><span class="n">run_graph_transport</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">nparticles</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">5</span><span class="p">,</span>
+                                    <span class="n">partime_file</span><span class="o">=</span><span class="s2">&quot;partime.dat&quot;</span><span class="p">,</span>
+                                    <span class="n">tdrw_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">matrix_porosity</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
+                                    <span class="n">matrix_diffusivity</span><span class="o">=</span><span class="mf">1e-13</span><span class="p">,</span>
+                                    <span class="n">tdrw_model</span><span class="o">=</span><span class="s2">&quot;dentz&quot;</span><span class="p">,</span>
+                                    <span class="n">fracture_spacing</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Three timescales describe the effect of a finite matrix block with half-aperture <img class="math" src="_images/math/a3d177e18196306132f4c9f231d26f06818fc53a.png" alt="b_f"/>, matrix porosity <img class="math" src="_images/math/d7c1795aadf7e98e723e221ea7b1e219651e77bb.png" alt="\phi_m"/>, and diffusivity <img class="math" src="_images/math/c2388d67fda5a5a77a3693dba6fa6b4d2eb80153.png" alt="D_m"/>:</p>
+<ul class="simple">
+<li><p>departure from advective transport: <img class="math" src="_images/math/65bf4679cb483666d0fefdf102ad5fae24bb6499.png" alt="t^* \sim (b_f/\phi_m)^2 / D_m"/></p></li>
+<li><p>finite-block cutoff: <img class="math" src="_images/math/9e46d85bbb757783811fd6dcc4924f88bdbe3739.png" alt="\tau_D = (s/2)^2 / D_m"/>, where <img class="math" src="_images/math/106b04b320e75010b1d8029e59244f234f75e6f9.png" alt="s"/> is the fracture spacing</p></li>
+<li><p>equilibrium retardation: <img class="math" src="_images/math/37c22245f5054d7f344f7e03a5dea2bbc4c94cb2.png" alt="R = 1 + \phi_m (s/2) / b_f"/></p></li>
+</ul>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/tdrw</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/finite_matrix_diffusion</span></code> for complete workflows.</p>
+</section>
 </section>
 </section>
 
@@ -380,7 +577,7 @@ See Hyman et al. 2018 SIAM MMS</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

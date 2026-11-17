@@ -58,8 +58,8 @@ various tools in the dfnWorks suite with the aim to provide a seamless workflow.
 There are 3 main modules in dfnWorks:
 
 
-dfnGen 
-~~~~~~~~~~~~~~~~~
+dfnGen: Network Generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for meshing) and LaGriT, the meshing tool box used to create a conforming Delaunay triangulation of the network.
 
@@ -69,8 +69,8 @@ dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for m
 See Module at :ref:`dfnGen <dfngen-chapter>` and python docs at :ref:`pydfnWorks: dfnGen <dfnWorks-python-chapter-dfnGen>`
 
 
-dfnFlow 
-~~~~~~~~~~~~~~~~~~~~
+dfnFlow: Flow Simulation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow using the mesh files from LaGriT.
 
@@ -81,8 +81,8 @@ Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow u
 See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
-dfnTrans 
-~~~~~~~~~~~~~~~~~~~~~
+dfnTrans: Particle Tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 dfnTrans is a method for resolving solute transport using control volume flow solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen. We adopt a Lagrangian approach and represent a non-reactive conservative solute as a collection of indivisible passive tracer particles.
@@ -406,9 +406,10 @@ View the screen report or  `output.log` to verify the dfnFlow module has written
     2025-03-06 17:15:04,156 INFO --> Running PFLOTRAN
     2025-03-06 17:15:04,924 INFO --> Processing file: dfn_explicit-000.vtk
     2025-03-06 17:15:04,933 INFO --> Processing file: dfn_explicit-001.vtk
+    2025-03-06 17:15:04,940 INFO --> Wrote 2 snapshots to pflotran_vtu_outputs/; open pflotran_vtu_outputs/dfn_explicit.pvd in ParaView
 
 
-Read the PFLOTRAN result file `output/parsed_vtk/dfn_explicit-001.vtk` into Paraview and select the property pressure to view.
+Open the PFLOTRAN results `output/pflotran_vtu_outputs/dfn_explicit.pvd` in Paraview, step to the final time, and select the property pressure to view.
 High pressure (red) is shown on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
 
 

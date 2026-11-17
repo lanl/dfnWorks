@@ -67,6 +67,17 @@ If this produces an error, then try
 
 **Note that the python version needs to be consistent with the current release**
 
+## Testing
+
+An end-to-end regression suite runs the shipped examples (generation, meshing,
+PFLOTRAN, FEHM, DFNTrans, graph flow) and compares scalar results against
+committed baselines:
+
+    $ cd tests/regression
+    $ python3 run_regression.py            # baseline tier; --tier all for everything
+
+See `tests/regression/README.md` for tiers, baselines and the HTML report.
+
 ## Installation Requirements for Native Build
 Tools that you will need to run the dfnWorks work flow are described in 
 this section. VisIt and ParaView, which enable visualization of desired 
@@ -80,11 +91,11 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 
 ### Python 
 
-pydfnworks uses Python 3. We recommend using 
-the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
+pydfnworks requires Python 3.10 or newer. We recommend using a conda or
+virtual environment.
 pydfnworks requires the following python modules: ``numpy``, ``networkx``,
 ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``,
-``pyvtk``, and ``mpmath``. They are listed in ``pydfnworks/requirements.txt`` and
+``mpmath``, and ``pandas``. They are listed in ``pydfnworks/requirements.txt`` and
 are installed automatically with pydfnworks, or can be installed directly with
 
 ```bash

@@ -8,6 +8,8 @@
 // Variable prototypes for user input variables
 
 extern short stopCondition;
+extern short p32Convention;
+extern double p32AreaFactor;
 extern unsigned int nPoly;
 extern double domainSize[3];
 extern double h;
@@ -122,24 +124,25 @@ extern double constantPermeability;
 extern float *econst;
 extern float *rconst;
 extern float *layers;
-extern float *layerVol;
+extern double *layerVol;
 extern int layerConformingFractures;
 extern int *rLayer;
 extern int *eLayer;
 extern float *regions;
-extern float *regionVol;
+extern double *regionVol;
 extern int *rRegion;
 extern int *eRegion;
 extern bool *p32Status;
 extern bool ignoreBoundaryFaces;
 extern int numOfLayers;
 extern int rejectsPerFracture;
-extern float *e_p32Targets;
-extern float *r_p32Targets;
+extern double *e_p32Targets;
+extern double *r_p32Targets;
 extern float removeFracturesLessThan;
 extern std::string polygonFile;
 extern int orientation_distribution;
 extern int *eorientation_distribution;
+extern int *rorientation_distribution;
 extern std::vector<Point> vertices;
 extern Logger logger;
 

@@ -11,7 +11,7 @@ The following parameters define the domain. All units are in SI (meters for leng
 domainSize
 =================================
 
-Description: (Mandatory) Defines the domain size, which is centered at the origin (0,0,0). The first entry is span in x (east/west), the second entry is span in y (North/South), and the third entry is span in z (Top/Bottom). 
+Description: (Mandatory) Defines the domain size, which is centered at :ref:`domainCenter` (the origin by default). The first entry is span in x (east/west), the second entry is span in y (North/South), and the third entry is span in z (Top/Bottom). 
 
 Type: List of three floats
 
@@ -57,6 +57,63 @@ Example:
 ----
 
 
+domainCenter
+=================================
+
+Description: Coordinates of the center of the domain. The domain extends :ref:`domainSize`/2 in each direction from this point. The network is generated around the origin and then translated, so meshes, upscaled grids, and output files are in the shifted coordinates.
+
+Type: List of three floats
+
+Default: [0,0,0]
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['domainCenter']['value'] = [500.0, 250.0, -300.0]
+
+----
+
+polygonBoundaryFlag
+=================================
+
+Description: If True, fractures are only kept inside a polygon in the x-y plane, read from :ref:`polygonBoundaryFile`. This is used to model irregular site boundaries. The domain is still bounded in z by :ref:`domainSize`, and :ref:`domainSize` must be large enough to contain the polygon.
+
+Type: boolean
+
+Default: False
+
+----
+
+polygonBoundaryFile
+=================================
+
+Description: Path to the file that defines the polygon boundary used when :ref:`polygonBoundaryFlag` is True. The first line is the number of vertices. Each following line has the x and y coordinates of one vertex, listed in order around the polygon.
+
+Type: string
+
+Default: None
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['polygonBoundaryFlag']['value'] = True
+    DFN.params['polygonBoundaryFile']['value'] = os.getcwd() + '/vertices.dat'
+
+.. code-block:: none
+
+    6
+    -50 -100
+    0 -100
+    50 50
+    50 100
+    ...
+
+See ``examples/polygon_domain_boundary``.
+
+----
+
 numOfLayers
 =================================
 
@@ -94,6 +151,31 @@ Example:
 .. note:: 
     | First entry (zMin) must be less than second entry (zMax)
     | Layers can overlap
+
+----
+
+layerConformingFractures
+=================================
+
+Description: Controls how fractures assigned to a layer are truncated at the layer boundaries. Fracture centers are always sampled inside the assigned layer. This parameter decides what happens to the parts of a fracture that extend past the top or bottom of the layer.
+
+Type: Integer (0/1/2)
+
+Default: 1
+
+| 0: Disabled. Fractures extend freely beyond the layer boundaries (the behavior in earlier versions).
+| 1: Perfect conforming. Fracture polygons are clipped exactly at the layer z boundaries.
+| 2: Soft conforming. Fracture polygons are clipped at the layer boundary :math:`\pm 2h`, so fractures in adjacent layers still overlap.
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['layerConformingFractures']['value'] = 2
+
+.. note:: Only used when :ref:`numOfLayers` > 0. Families assigned to layer 0 (the whole domain) are not clipped.
+
+.. tip:: Mode 2 is recommended for most applications. With perfect conforming (mode 1), fractures from adjacent layers are each clipped to their own boundary and share no overlap at the interface, which can disconnect the network across layers. Fractures clipped to fewer than three vertices are rejected, so modes 1 and 2 increase the number of "Outside of Domain" rejections. See ``examples/layers``.
 
 ----
 
@@ -220,7 +302,36 @@ Example:
 
     DFN.params['stopCondition']['value'] = 1 
 
-.. note:: p32 values are defined for each family during the creation of the fracture family. If stopCondition = 0 the :ref:`famProb` of a fracture belonging to a family is set during the creation of the fracture family (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`). 
+.. note:: p32 values are defined for each family during the creation of the fracture family. They are interpreted using the convention set by :ref:`p32_convention`. If stopCondition = 0 the :ref:`famProb` of a fracture belonging to a family is set during the creation of the fracture family (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`). 
+
+----
+
+
+p32_convention
+=================================
+
+Description: Convention used for fracture intensity (P32). There are two conventions in common use. The double-sided convention counts both faces of every fracture (the wetted surface area), so :math:`P_{32} = 2A/V`. The single-sided convention counts each fracture once, so :math:`P_{32} = A/V`. Here :math:`A` is the total fracture area inside the domain (after truncation at the domain boundary) and :math:`V` is the volume of the domain, layer, or region that the fracture family is assigned to.
+
+The selected convention applies to the p32 target of every fracture family (:ref:`e_p32Targets` and :ref:`r_p32Targets`) and to all P32 and surface area values reported by dfnGen (screen, log file, DFN_output.txt, and the output report pdf).
+
+Type: Integer (0/1) or string
+
+Default: 0
+
+| 0, 'double', or 'wetted': double-sided (wetted surface area), :math:`P_{32} = 2A/V`
+| 1 or 'single': single-sided, :math:`P_{32} = A/V`
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['p32_convention']['value'] = 1
+    # or equivalently
+    DFN.params['p32_convention']['value'] = 'single'
+
+.. note:: Strings are not case sensitive and are converted to 0 or 1 by the input checker. For the same target value, a single-sided target produces twice the fracture area of a double-sided target. A network generated with a double-sided target of 1.0 is equivalent to one generated with a single-sided target of 0.5.
+
+.. note:: The flow channeling density indicator computed by ``compute_dQ`` always uses the double-sided (wetted) surface area. The P32 value it returns follows *p32_convention*.
 
 ----
 
@@ -275,7 +386,7 @@ Type: Value of 0,1,2
 This value is set automatically with the definition of fracture families (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`).
 
 .. note:: 
-    | For spherical coordinates, values are defined using the function parameters :ref:`theta`/:ref:`phi`. 
+    | For spherical coordinates, values are defined using the function parameters :ref:`theta`/:ref:`phi`.
     | For Trend/Plunge,  values are defined using :ref:`trend`/:ref:`plunge`.
     | For Dip/Strike, values are defined using :ref:`dip`/:ref:`strike`.
 
@@ -356,6 +467,42 @@ Example:
 
 .. note:: disableFram: True and :ref:`visualizationMode` :1 are recommended if the intention is to use an upscaled octree mesh using the :ref:`UDFM <dfnWorks-python-chapter-dfnGen>` module in pydfnWorks.
  
+
+----
+
+rFram
+=================================
+
+Description: Turn relaxed FRAM on/off. With relaxed FRAM, the generator skips the rejection of fractures that are too close to another fracture's edge and of fractures that create triple intersections. More fractures are accepted, which makes dense networks easier to generate, but the mesh may not be fully conforming.
+
+Type: boolean
+
+Default: False
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['rFram']['value'] = True
+
+.. warning:: Meshes generated with rFram can contain a small number of degenerate cells. Before running PFLOTRAN, pydfnworks checks the mesh. Invalid cell volumes and connection areas are corrected only if rFram was on *and* fewer than 1% of the cells and of the connections are invalid. Otherwise the run stops with an error. See :ref:`dfnWorks-python-chapter-dfnFlow`.
+
+----
+
+disableShorteningIntersections
+=================================
+
+Description: If True, fractures whose intersection with an existing fracture would have to be shortened to satisfy the meshing constraints are rejected instead. This avoids non-conforming cells along shortened intersections at the cost of more rejections.
+
+Type: boolean
+
+Default: False
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['disableShorteningIntersections']['value'] = True
 
 ----
 
@@ -452,7 +599,9 @@ Example:
 seed
 =================================
 
-Description: Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility. 
+Description: Seed for random generator. Setting the seed equal to 0 will seed off the clock and a unique network will be produced. Setting the seed equal to a value > 0 will create the same network every time, which is useful for reproducibility.
+
+The same seed initializes the NumPy and Python ``random`` generators used by pydfnworks (hydraulic property distributions, meshing, plotting, and graph-based particle transport) through ``DFN.set_seed()``, so the whole workflow is reproducible from one value. If the seed is 0, a seed is drawn from system entropy and written to the log so the run can be repeated.
 
 Type: Non-negative integer
 
