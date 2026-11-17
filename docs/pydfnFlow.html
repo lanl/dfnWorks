@@ -380,6 +380,35 @@ else is written as <cite>float</cite>.</p></li>
 <code class="docutils literal notranslate"><span class="pre">.uge</span></code> mesh file live in this module. The shared validity rule is: a value is
 replaced by its absolute value if negative, by a fill value if it is <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or
 <code class="docutils literal notranslate"><span class="pre">+/-inf</span></code>, and otherwise left unchanged.</p>
+<p>“Negative” is judged against a round-off tolerance, not against exactly zero.
+LaGriT computes the Voronoi coefficients in double precision, and a connection
+whose true area (or a cell whose true volume) is zero comes back as a value of
+either sign at the level of <code class="docutils literal notranslate"><span class="pre">eps</span> <span class="pre">*</span> <span class="pre">L</span> <span class="pre">*</span> <span class="pre">h</span></code> (<code class="docutils literal notranslate"><span class="pre">L</span></code> the domain size, <code class="docutils literal notranslate"><span class="pre">h</span></code> the
+mesh resolution), typically 1e-16 to 1e-13. Such a value is zero to working
+precision and is treated as valid: it is neither flagged, corrected, nor used as
+a fill candidate, exactly like an entry of <code class="docutils literal notranslate"><span class="pre">0.0</span></code>. The tolerance is
+<code class="xref py py-data docutils literal notranslate"><span class="pre">ROUNDOFF_REL</span></code> times <code class="docutils literal notranslate"><span class="pre">h</span></code> for connection areas (a length in the raw file)
+and times <code class="docutils literal notranslate"><span class="pre">h**2</span></code> for cell volumes (an area in the raw file); when <code class="docutils literal notranslate"><span class="pre">h</span></code> is not
+known the absolute <code class="xref py py-data docutils literal notranslate"><span class="pre">ROUNDOFF_ABS</span></code> is used for both. See
+<code class="xref py py-func docutils literal notranslate"><span class="pre">roundoff_tolerances()</span></code>. A value below <code class="docutils literal notranslate"><span class="pre">-tolerance</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">-1e-3</span></code>) is a
+genuine negative and is handled exactly as before.</p>
+<p>A second, larger tolerance applies to connection areas only. A connection area
+in the raw file is the length of the Voronoi edge dual to a triangle edge, which
+is <code class="docutils literal notranslate"><span class="pre">L/2</span> <span class="pre">*</span> <span class="pre">(cot</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">cot</span> <span class="pre">b)</span></code> for the two angles <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> opposite that
+edge. When the four nodes around the edge are cocircular (<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">180</span></code>) the
+edge has zero length and both diagonals of the quad are Delaunay; LaGriT’s
+<code class="docutils literal notranslate"><span class="pre">connect</span></code>/<code class="docutils literal notranslate"><span class="pre">recon</span></code> in-circle test has its own tolerance, so a quad that is
+cocircular to within that tolerance may keep either diagonal and the computed
+length comes out as a tiny value of either sign, typically <code class="docutils literal notranslate"><span class="pre">1e-7</span></code> to <code class="docutils literal notranslate"><span class="pre">1e-5</span></code>
+times <code class="docutils literal notranslate"><span class="pre">h</span></code> (far above floating-point round-off, far below the shortest real
+Voronoi edge). This happens in perfectly conforming meshes, in the smoothed
+interior of a fracture, with rFram off. Such a value is classified as a
+degenerate edge rather than an invalid coefficient: it is accepted as zero and
+left unchanged, but unlike round-off it is listed in the log, one line per
+connection. The tolerance is <code class="xref py py-data docutils literal notranslate"><span class="pre">DEGENERATE_REL</span></code> times <code class="docutils literal notranslate"><span class="pre">h</span></code>
+(<code class="xref py py-data docutils literal notranslate"><span class="pre">DEGENERATE_ABS</span></code> when <code class="docutils literal notranslate"><span class="pre">h</span></code> is unknown); see
+<code class="xref py py-func docutils literal notranslate"><span class="pre">degenerate_tolerance()</span></code>. Cell volumes get no such tier: a Voronoi cell of
+a conforming mesh has no near-zero-area configuration of this kind.</p>
 <p>Correcting a bad value is only defensible when the mesh is <em>almost</em> conforming.
 Degenerate cells are an artifact of the relaxed meshing constraints used by rFram
 (see <code class="xref py py-mod docutils literal notranslate"><span class="pre">pydfnworks.dfnGen.meshing.mesh_dfn</span></code>), and they show up mostly in dense
@@ -403,8 +432,9 @@ independently against their own totals.</p></li>
 <h3>Contents<a class="headerlink" href="#contents" title="Link to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
-<dt>classify_fix, scan_uge, scan_fills</dt><dd><p>Low-level helpers implementing the validity rule, the mesh-wide scan,
-and the fill estimate.</p>
+<dt>roundoff_tolerances, degenerate_tolerance, classify_fix, scan_uge, scan_fills</dt><dd><p>Low-level helpers implementing the round-off and degenerate-edge
+tolerances, the validity rule, the mesh-wide scan, and the fill
+estimate.</p>
 </dd>
 <dt>fix_uge_volumes, fix_stream</dt><dd><p>Byte-faithful fixer: a clean file round-trips unchanged, and only the
 corrected lines are rewritten.</p>
@@ -435,7 +465,11 @@ connection is written to the screen and the log. A correction (negative
 -&gt; abs, NaN/inf -&gt; smallest positive fill, applied <em>before</em> any aperture
 scaling) is only made when <code class="docutils literal notranslate"><span class="pre">self.r_fram</span></code> is True and fewer than
 <code class="xref py py-data docutils literal notranslate"><span class="pre">BAD_FRACTION_LIMIT</span></code> of the cells <em>and</em> of the connections are
-invalid. Otherwise the run exits with an error.</p></li>
+invalid. Otherwise the run exits with an error. Values within the
+round-off tolerance (<code class="xref py py-func docutils literal notranslate"><span class="pre">roundoff_tolerances()</span></code> of <code class="docutils literal notranslate"><span class="pre">self.h</span></code>) and
+connection areas within the degenerate-edge tolerance
+(<code class="xref py py-func docutils literal notranslate"><span class="pre">degenerate_tolerance()</span></code>) count as zero, not as invalid, in every
+branch, and are written out unchanged.</p></li>
 </ul>
 </div></blockquote>
 <p>In all cases <code class="docutils literal notranslate"><span class="pre">self.uge_file</span></code> is set to the file PFLOTRAN should read.</p>
@@ -456,6 +490,8 @@ invalid. Otherwise the run exits with an error.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.flow_solver</span></code> (str): must be <code class="docutils literal notranslate"><span class="pre">&quot;PFLOTRAN&quot;</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.inp_file</span></code> (str): used to derive the <code class="docutils literal notranslate"><span class="pre">.uge</span></code> file name.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.r_fram</span></code> (bool): whether the feature-rejection mesher was used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.h</span></code> (float): mesh resolution, for the round-off tolerance
+(falls back to <code class="xref py py-data docutils literal notranslate"><span class="pre">ROUNDOFF_ABS</span></code> when not a number).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.material_ids</span></code> (list[int]): material id per cell.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.aperture</span></code> (list[float]): aperture per cell or material.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.cell_based_aperture</span></code> (bool): aperture indexing mode.</p></li>
