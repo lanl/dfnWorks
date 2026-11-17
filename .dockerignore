@@ -1,0 +1,50 @@
+# Build context for docker/build-dfnworks.dockerfile (context = repo root).
+# The Dockerfile does `COPY . .`, so anything not excluded here lands in an
+# image layer -- a later `rm -rf` does not shrink it.
+
+# VCS / editor / OS cruft
+.git
+.gitignore
+.github
+**/.DS_Store
+**/__pycache__
+**/*.pyc
+**/*.egg-info
+**/.ipynb_checkpoints
+
+# Not needed in the image (the Dockerfile deletes these anyway)
+docker/
+docs/
+Documentation/
+internal/
+scripts/
+*.pdf
+tests/
+
+# Example run outputs -- ship only the example inputs
+examples/**/output*
+examples/**/tmp
+examples/**/*.vtu
+examples/**/OUTPUT*
+examples/**/SAVE
+examples/**/MESH
+examples/**/Plot_Data_*
+examples/**/*.log
+examples/**/*.out
+examples/**/*.h5
+examples/**/*.hdf5
+examples/**/*.vtk
+examples/**/*.inp
+examples/**/*.uge
+examples/**/*.stor
+examples/**/*.lg
+examples/**/*.csv
+examples/**/*.png
+examples/**/particle_*.dat
+
+# Local compile artifacts (rebuilt inside the image)
+**/*.o
+**/*.d
+DFNGen/DFNGen
+DFNTrans/DFNTrans
+DFN_Mesh_Connectivity_Test/ConnectivityTest
