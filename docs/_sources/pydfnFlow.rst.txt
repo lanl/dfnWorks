@@ -21,7 +21,14 @@ PFLOTRAN output can be written as VTK or HDF5. ``dfn_flow(dump_vtk=True, dump_h5
 Mesh Geometry Checks (UGE)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before PFLOTRAN runs, the explicit unstructured grid file (``full_mesh.uge``) is scanned for invalid cell volumes and connection areas (negative, ``NaN``, or infinite). Such values can appear when the mesh is built with relaxed constraints (:ref:`rFram`), mostly in dense networks and near triple intersections. The following policy is applied:
+Before PFLOTRAN runs, the explicit unstructured grid file (``full_mesh.uge``) is scanned for invalid cell volumes and connection areas (negative, ``NaN``, or infinite). Such values can appear when the mesh is built with relaxed constraints (:ref:`rFram`), mostly in dense networks and near triple intersections.
+
+Two kinds of small values are not counted as invalid:
+
+* **Round-off.** Values within :math:`10^{-8} h` of zero for connection areas (:math:`10^{-8} h^2` for cell volumes) are zero to working precision and are left unchanged without a message.
+* **Degenerate Voronoi edges.** When the four nodes around a triangle edge are cocircular, the dual Voronoi edge has zero length and LaGriT can return a tiny area of either sign. Connection areas within :math:`10^{-5} h` of zero are accepted as zero, left unchanged, and listed in the log as warnings, one line per connection. This can happen in fully conforming meshes, with rFram off.
+
+Values more negative than these tolerances, and ``NaN`` or infinite values, are invalid. The following policy is applied to them:
 
 * :ref:`rFram` off and any invalid value: the run stops with an error. A conforming mesh should not produce invalid coefficients.
 * rFram unknown (no parameter file was parsed, e.g., a flow-only restart) and any invalid value: the run stops and asks for ``DFN.r_fram`` to be set.
