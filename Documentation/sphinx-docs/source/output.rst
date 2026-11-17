@@ -270,11 +270,11 @@ Full DFN in uge format. Volumes and areas have been corrected.
 
 Material ID (Fracture Number) for every node in the mesh. 
 
-**parsed_vtk:**
+**pflotran_vtk_outputs:**
 
-.. _parsed_vtk:
+.. _pflotran_vtk_outputs:
 
-Directory of pflotran results. 
+Directory of PFLOTRAN results converted to VTK, one file per time step (written by ``parse_pflotran_vtk_python`` or ``parse_pflotran_h5``). Named ``parsed_vtk`` in earlier versions.
 
 **perm.dat:**
 

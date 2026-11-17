@@ -26,14 +26,14 @@ The following items are covered in this Tutorial:
 
 
 
-Tutorial Prerequisites
+TPL Tutorial Prerequisites
 --------------------------
 
 - For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.
-- For install and setup instuctions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
-- This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](https://lanl.github.io/dfnWorks/tutorial_intro.html) 
-- TeX Live is needed to write the PDF report summary. Local servers use ``module load texlive``
-- Paraview is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
+- For install and setup instructions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
+- This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the :doc:`tutorial_intro`.
+- TeX Live is needed to write the PDF report summary. On systems that use environment modules, try ``module load texlive``.
+- Paraview is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview can be found at https://www.paraview.org/download/
 
 
 
@@ -67,6 +67,7 @@ For this example there are 2 ways to run driver.py, this run will create and run
 This example will run both the flow model and particle tracks using the input files named here.
 
 .. code-block:: python
+
     jobname = os.getcwd() + "/output"
     #jobname = os.getcwd() + "/output2"
 
@@ -86,6 +87,7 @@ The parameter ``boundaryFaces`` selects domain boundaries for flow. The generati
 
 
 .. code-block:: python
+
     DFN.params['domainSize']['value'] = [15, 15, 15]
     DFN.params['h']['value'] = 0.1
 
@@ -143,14 +145,14 @@ p32
 This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 is the fracture surface area per unit volume, interpreted using the convention set by :ref:`p32_convention` (double-sided by default).
 
 
-shape and radius 
-~~~~~~~~~~~~~
+shape and radius
+~~~~~~~~~~~~~~~~~~
 
 The shape parameter defines the fracture family to **rect** rectangle or **ell** ellipse. Their sizes are set with **min_radius** and **max_radius**
 
 
 kappa, theta, phi
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike. 
 
@@ -374,7 +376,7 @@ View the mesh attributes to check parameters. The following images from Paraview
    :align: center
 
 
-You can adjust color maps and opacity for views that help display the meshed network for evaluations. Paraview is used for these views.  See more Paraview images in `tpl_paraview_examples.rst <tpl_paraview_examples.rst>`_ 
+You can adjust color maps and opacity for views that help display the meshed network for evaluations. Paraview is used for these views.  See more Paraview images in :doc:`tpl_paraview_examples`.
 
 
 Run Flow Model
@@ -385,9 +387,9 @@ The pydfnworks command ``dfn_flow()`` is used to run the simulation. This can pr
 See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
-See PFLOTRAN user manaul at https://www.pflotran.org/documentation/user_guide/user_guide.html
+See PFLOTRAN user manual at https://www.pflotran.org/documentation/user_guide/user_guide.html
 
-View the PFLOTRAN input deck defined by dfnFlow_file `dfn_explicit.in`. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the *.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
+View the PFLOTRAN input deck defined by dfnFlow_file `dfn_explicit.in`. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the ``*.ex`` boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
 
 As the driver runs PFLOTRAN you will see information about the command line calling PFLOTRAN and information about the output files.  
 
@@ -400,7 +402,7 @@ As the driver runs PFLOTRAN you will see information about the command line call
     2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
 
 
-The simulation results can be viewed with vtk files written in the directory output/parsed_vtk. The following images were created with Paraview:
+The simulation results can be viewed with vtk files written in the directory output/pflotran_vtk_outputs. The following images were created with Paraview:
 
 -  Read dfn_explicit-000.vtk select  Permeability at time 0
 -  Read dfn_explicit-000.vtk select  Liquid Pressure at time 0
@@ -496,8 +498,8 @@ Now you are familar with the main driver.py script to create a network and run s
 
 
 
-Additional Resources 
-------------------------
+TPL Tutorial Additional Resources
+-----------------------------------
 
 There are more demo runs in the `dfnWorks/examples` directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 

@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnFlow &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>pydfnworks: dfnFlow &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,9 +35,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -49,24 +46,31 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pydfnworks: dfnFlow</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnFlow.flow">Running Flow : General</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.flow.create_dfn_flow_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_flow_links()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.flow.dfn_flow"><code class="docutils literal notranslate"><span class="pre">dfn_flow()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.flow.set_flow_solver"><code class="docutils literal notranslate"><span class="pre">set_flow_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.flow.dfn_flow"><code class="docutils literal notranslate"><span class="pre">dfn_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.flow.create_dfn_flow_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_flow_links()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnFlow.pflotran">Running Flow: PFLOTRAN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.lagrit2pflotran"><code class="docutils literal notranslate"><span class="pre">lagrit2pflotran()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.zone2ex"><code class="docutils literal notranslate"><span class="pre">zone2ex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas"><code class="docutils literal notranslate"><span class="pre">write_perms_and_correct_volumes_areas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.dump_h5_files"><code class="docutils literal notranslate"><span class="pre">dump_h5_files()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.pflotran"><code class="docutils literal notranslate"><span class="pre">pflotran()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup"><code class="docutils literal notranslate"><span class="pre">pflotran_cleanup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas"><code class="docutils literal notranslate"><span class="pre">write_perms_and_correct_volumes_areas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.zone2ex"><code class="docutils literal notranslate"><span class="pre">zone2ex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mesh-geometry-checks-uge">Mesh Geometry Checks (UGE)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#contents">Contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.uge_tools.correct_uge_file"><code class="docutils literal notranslate"><span class="pre">correct_uge_file()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnFlow.fehm">Running Flow: FEHM</a><ul>
@@ -86,9 +90,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -121,6 +128,46 @@
 <section id="module-pydfnworks.dfnFlow.flow">
 <span id="running-flow-general"></span><h2>Running Flow : General<a class="headerlink" href="#module-pydfnworks.dfnFlow.flow" title="Link to this heading"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.set_flow_solver">
+<span class="sig-name descname"><span class="pre">set_flow_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_solver</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#set_flow_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.set_flow_solver" title="Link to this definition"></a></dt>
+<dd><p>Sets flow solver to be used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>flow_solver</strong> (<em>string</em>) – Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Default is PFLOTRAN</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.dfn_flow">
+<span class="sig-name descname"><span class="pre">dfn_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_vtk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_h5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#dfn_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.dfn_flow" title="Link to this definition"></a></dt>
+<dd><p>Run the dfnFlow portion of the workflow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>dump_vtk</strong> (<em>bool</em>) – If True (default), parse PFLOTRAN VTK output into
+pflotran_vtk_outputs/ with parse_pflotran_vtk_python.
+If False, skip VTK parsing.</p></li>
+<li><p><strong>dump_h5</strong> (<em>bool</em>) – If True, parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/
+with parse_pflotran_h5. The mesh comes from the .inp file via
+inp2vtk_python and the data come from &lt;base&gt;.h5.
+If False (default), skip HDF5 parsing.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Information on individual functions is found therein.
+dump_vtk and dump_h5 are independent; both can be True to produce
+parsed output from each source.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.create_dfn_flow_links">
 <span class="sig-name descname"><span class="pre">create_dfn_flow_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#create_dfn_flow_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.create_dfn_flow_links" title="Link to this definition"></a></dt>
 <dd><p>Create symlinks to files required to run dfnFlow that are in another directory.</p>
@@ -142,48 +189,61 @@
 </ol>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.dfn_flow">
-<span class="sig-name descname"><span class="pre">dfn_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_vtk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#dfn_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.dfn_flow" title="Link to this definition"></a></dt>
-<dd><p>Run the dfnFlow portion of the workflow</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>dump_vtk</strong> (<em>bool</em>) – True - Write out vtk files for flow solutions
-False  - Does not write out vtk files for flow solutions</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Information on individual functions is found therein</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.set_flow_solver">
-<span class="sig-name descname"><span class="pre">set_flow_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_solver</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#set_flow_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.set_flow_solver" title="Link to this definition"></a></dt>
-<dd><p>Sets flow solver to be used</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>flow_solver</strong> (<em>string</em>) – Name of flow solver. Currently supported flow sovlers are FEHM and PFLOTRAN</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Default is PFLOTRAN</p>
-</dd></dl>
-
 </section>
 <section id="module-pydfnworks.dfnFlow.pflotran">
 <span id="running-flow-pflotran"></span><h2>Running Flow: PFLOTRAN<a class="headerlink" href="#module-pydfnworks.dfnFlow.pflotran" title="Link to this heading"></a></h2>
 <p>functions for using pflotran in dfnworks</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.lagrit2pflotran">
-<span class="sig-name descname"><span class="pre">lagrit2pflotran</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_cell_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#lagrit2pflotran"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.lagrit2pflotran" title="Link to this definition"></a></dt>
-<dd><p>Takes output from LaGriT and processes it for use in PFLOTRAN.
-Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
+<span class="sig-name descname"><span class="pre">lagrit2pflotran</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_cell_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#lagrit2pflotran"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.lagrit2pflotran" title="Link to this definition"></a></dt>
+<dd><p>Take output from LaGriT and process it for use in PFLOTRAN.</p>
+<p>Calls <a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.zone2ex" title="pydfnworks.dfnFlow.pflotran.zone2ex"><code class="xref py py-func docutils literal notranslate"><span class="pre">zone2ex()</span></code></a>, <a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.dump_h5_files" title="pydfnworks.dfnFlow.pflotran.dump_h5_files"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_h5_files()</span></code></a>, and <code class="xref py py-func docutils literal notranslate"><span class="pre">correct_uge_file()</span></code>,
+forwarding <code class="docutils literal notranslate"><span class="pre">dim</span></code> to the latter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Problem dimension, <code class="docutils literal notranslate"><span class="pre">3</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">2</span></code>, forwarded to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">correct_uge_file()</span></code>.</p></li>
+<li><p><strong>boundary_cell_area</strong> (<em>double</em>) – Boundary cell area. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">self.h</span></code>
+is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p><code class="docutils literal notranslate"><span class="pre">correct_uge_file</span></code> sets <code class="docutils literal notranslate"><span class="pre">self.uge_file</span></code> to the active mesh, so it does
+not need to be assigned manually after this call.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.zone2ex">
+<span class="sig-name descname"><span class="pre">zone2ex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">face</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_cell_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#zone2ex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.zone2ex" title="Link to this definition"></a></dt>
+<dd><p>Convert zone files from LaGriT into ex format for LaGriT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>zone_file</strong> (<em>string</em>) – Name of zone file</p></li>
+<li><p><strong>Face</strong> (<em>Face</em><em> of </em><em>the plane corresponding to the zone file</em>)</p></li>
+<li><p><strong>zone_file</strong> – Name of zone file to work on. Can be ‘all’ processes all directions, top, bottom, left, right, front, back</p></li>
+<li><p><strong>boundary_cell_area</strong> (<em>double</em>) – should be a large value relative to the mesh size to force pressure boundary conditions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>the boundary_cell_area should be a function of h, the mesh resolution</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas">
+<span class="sig-name descname"><span class="pre">write_perms_and_correct_volumes_areas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#write_perms_and_correct_volumes_areas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas" title="Link to this definition"></a></dt>
+<dd><p>Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
@@ -193,24 +253,23 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>None</p>
+<p>Calls executable correct_uge</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">
-<span class="sig-name descname"><span class="pre">parse_pflotran_vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python" title="Link to this definition"></a></dt>
-<dd><p>Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
-:param self: DFN Class
-:type self: object
-:param grid_vtk_file: Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
-:type grid_vtk_file: string</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.dump_h5_files">
+<span class="sig-name descname"><span class="pre">dump_h5_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#dump_h5_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.dump_h5_files" title="Link to this definition"></a></dt>
+<dd><p>Write permeability values to cell ids and permeability values to dfn_properties.h5 file for pflotran.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>If DFN class does not have a vtk file, inp2vtk_python is called</p>
+<p>Hydraulic properties need to attached to the class prior to running this function. Use DFN.assign_hydraulic_properties() to do so.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -236,13 +295,14 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.pflotran_cleanup">
-<span class="sig-name descname"><span class="pre">pflotran_cleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran_cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pflotran_cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#pflotran_cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup" title="Link to this definition"></a></dt>
 <dd><p>Concatenate PFLOTRAN output files and then delete them</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
 <li><p><strong>index</strong> (<em>int</em>) – If PFLOTRAN has multiple dumps use this to pick which dump is put into cellinfo.dat and darcyvel.dat</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – name of file to be concatenated</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -254,33 +314,39 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas">
-<span class="sig-name descname"><span class="pre">write_perms_and_correct_volumes_areas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#write_perms_and_correct_volumes_areas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas" title="Link to this definition"></a></dt>
-<dd><p>Write permeability values to perm_file, write aperture values to aper_file, and correct volume areas in uge_file</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">
+<span class="sig-name descname"><span class="pre">parse_pflotran_vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python" title="Link to this definition"></a></dt>
+<dd><p>Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
+:param self: DFN Class
+:type self: object
+:param grid_vtk_file: Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
+:type grid_vtk_file: string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Calls executable correct_uge</p>
+<p>If DFN class does not have a vtk file, inp2vtk_python is called</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.zone2ex">
-<span class="sig-name descname"><span class="pre">zone2ex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">face</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_cell_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#zone2ex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.zone2ex" title="Link to this definition"></a></dt>
-<dd><p>Convert zone files from LaGriT into ex format for LaGriT</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_h5">
+<span class="sig-name descname"><span class="pre">parse_pflotran_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5" title="Link to this definition"></a></dt>
+<dd><p>Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.</p>
+<p>The mesh is taken from a VTK file derived from the .inp mesh
+(via inp2vtk_python if not already produced). Solution data is read
+from PFLOTRAN’s main HDF5 output, which contains one group per time
+step. Every dataset present in a time group is written to the
+corresponding pflotran_vtk_outputs/&lt;base&gt;-NNN.vtk file as POINT_DATA scalars.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>zone_file</strong> (<em>string</em>) – Name of zone file</p></li>
-<li><p><strong>Face</strong> (<em>Face</em><em> of </em><em>the plane corresponding to the zone file</em>) – </p></li>
-<li><p><strong>zone_file</strong> – Name of zone file to work on. Can be ‘all’ processes all directions, top, bottom, left, right, front, back</p></li>
-<li><p><strong>boundary_cell_area</strong> (<em>double</em>) – should be a large value relative to the mesh size to force pressure boundary conditions.</p></li>
+<li><p><strong>h5_file</strong> (<em>string</em>) – Path to the PFLOTRAN HDF5 output file. If empty, defaults to
+‘&lt;local_dfnFlow_file stem&gt;.h5’ in the current directory.</p></li>
+<li><p><strong>grid_vtk_file</strong> (<em>string</em>) – Path to a VTK file containing the mesh. If empty, inp2vtk_python
+is invoked to produce one from self.inp_file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -288,7 +354,115 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>the boundary_cell_area should be a function of h, the mesh resolution</p>
+<ul class="simple">
+<li><p>Dataset names are sanitized for legacy VTK compatibility
+(spaces and brackets become underscores).</p></li>
+<li><p>Integer datasets are written with <cite>int</cite> scalar type; everything
+else is written as <cite>float</cite>.</p></li>
+<li><p>Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.</p></li>
+</ul>
+</dd></dl>
+
+<p>PFLOTRAN output can be written as VTK or HDF5. <code class="docutils literal notranslate"><span class="pre">dfn_flow(dump_vtk=True,</span> <span class="pre">dump_h5=False)</span></code> controls which is parsed after the run. Both <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code> write per-time-step VTK files into <code class="docutils literal notranslate"><span class="pre">pflotran_vtk_outputs/</span></code>.</p>
+</section>
+<section id="mesh-geometry-checks-uge">
+<h2>Mesh Geometry Checks (UGE)<a class="headerlink" href="#mesh-geometry-checks-uge" title="Link to this heading"></a></h2>
+<p>Before PFLOTRAN runs, the explicit unstructured grid file (<code class="docutils literal notranslate"><span class="pre">full_mesh.uge</span></code>) is scanned for invalid cell volumes and connection areas (negative, <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, or infinite). Such values can appear when the mesh is built with relaxed constraints (<a class="reference internal" href="dfngen.html#rfram"><span class="std std-ref">rFram</span></a>), mostly in dense networks and near triple intersections. The following policy is applied:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="dfngen.html#rfram"><span class="std std-ref">rFram</span></a> off and any invalid value: the run stops with an error. A conforming mesh should not produce invalid coefficients.</p></li>
+<li><p>rFram unknown (no parameter file was parsed, e.g., a flow-only restart) and any invalid value: the run stops and asks for <code class="docutils literal notranslate"><span class="pre">DFN.r_fram</span></code> to be set.</p></li>
+<li><p>More than 1% of the cells or more than 1% of the connections invalid: the run stops, regardless of rFram.</p></li>
+<li><p>Otherwise: negative values are replaced by their absolute value, non-finite values by the smallest positive value, and every corrected cell and connection is written to the log.</p></li>
+</ul>
+<p>For <code class="docutils literal notranslate"><span class="pre">dim=3</span></code> (default) the corrected volumes and areas are multiplied by the fracture aperture and written to <code class="docutils literal notranslate"><span class="pre">full_mesh_vol_area.uge</span></code>. For <code class="docutils literal notranslate"><span class="pre">dim=2</span></code> the aperture conversion is skipped.</p>
+<p id="module-pydfnworks.dfnFlow.uge_tools">UGE-correction utilities for dfnWorks / PFLOTRAN.</p>
+<p>All functions that read, validate, and correct an explicit-unstructured-grid
+<code class="docutils literal notranslate"><span class="pre">.uge</span></code> mesh file live in this module. The shared validity rule is: a value is
+replaced by its absolute value if negative, by a fill value if it is <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or
+<code class="docutils literal notranslate"><span class="pre">+/-inf</span></code>, and otherwise left unchanged.</p>
+<p>Correcting a bad value is only defensible when the mesh is <em>almost</em> conforming.
+Degenerate cells are an artifact of the relaxed meshing constraints used by rFram
+(see <code class="xref py py-mod docutils literal notranslate"><span class="pre">pydfnworks.dfnGen.meshing.mesh_dfn</span></code>), and they show up mostly in dense
+networks and around triple intersections. So the module enforces a policy before
+it corrects anything:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>rFram off and any invalid value  -&gt; hard error. A conforming mesh has no
+business producing negative or non-finite coefficients; that is a meshing
+failure, not an artifact to paper over.</p></li>
+<li><p>rFram unknown (<code class="docutils literal notranslate"><span class="pre">DFN.r_fram</span> <span class="pre">is</span> <span class="pre">None</span></code>, i.e. no parameter file was parsed,
+as on a flow-only restart) and any invalid value -&gt; hard error asking for
+it to be set. “Unknown” must not quietly become “off” or “on”.</p></li>
+<li><p>more than <code class="docutils literal notranslate"><span class="pre">BAD_FRACTION_LIMIT</span></code> of the cells <em>or</em> of the connections
+invalid -&gt; hard error, regardless of rFram. The two fractions are tested
+independently against their own totals.</p></li>
+<li><p>otherwise -&gt; correct, and log every offending cell and connection.</p></li>
+</ul>
+</div></blockquote>
+<section id="contents">
+<h3>Contents<a class="headerlink" href="#contents" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>classify_fix, scan_uge, scan_fills</dt><dd><p>Low-level helpers implementing the validity rule, the mesh-wide scan,
+and the fill estimate.</p>
+</dd>
+<dt>fix_uge_volumes, fix_stream</dt><dd><p>Byte-faithful fixer: a clean file round-trips unchanged, and only the
+corrected lines are rewritten.</p>
+</dd>
+<dt>correct_uge_file</dt><dd><p>dfnWorks method. <code class="docutils literal notranslate"><span class="pre">dim=3</span></code> aperture-converts <code class="docutils literal notranslate"><span class="pre">full_mesh.uge</span></code> into
+<code class="docutils literal notranslate"><span class="pre">full_mesh_vol_area.uge</span></code>; <code class="docutils literal notranslate"><span class="pre">dim=2</span></code> keeps <code class="docutils literal notranslate"><span class="pre">full_mesh.uge</span></code>. The mesh
+is always scanned and the policy above is always enforced.</p>
+</dd>
+<dt>lagrit2pflotran</dt><dd><p>dfnWorks method. Forwards <code class="docutils literal notranslate"><span class="pre">dim</span></code> to <a class="reference internal" href="#pydfnworks.dfnFlow.uge_tools.correct_uge_file" title="pydfnworks.dfnFlow.uge_tools.correct_uge_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">correct_uge_file()</span></code></a>.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.uge_tools.correct_uge_file">
+<span class="sig-name descname"><span class="pre">correct_uge_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/uge_tools.html#correct_uge_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.uge_tools.correct_uge_file" title="Link to this definition"></a></dt>
+<dd><p>Correct the LaGriT <code class="docutils literal notranslate"><span class="pre">.uge</span></code> file for the PFLOTRAN flow solver.</p>
+<p>Always runs. The behaviour splits on two independent axes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dim</span></code> controls the aperture conversion and the output target. <code class="docutils literal notranslate"><span class="pre">dim=3</span></code>
+multiplies cell volumes by aperture and connection areas by the mean
+aperture, writing <code class="docutils literal notranslate"><span class="pre">&lt;inp&gt;_vol_area.uge</span></code>. <code class="docutils literal notranslate"><span class="pre">dim=2</span></code> keeps the raw
+<code class="docutils literal notranslate"><span class="pre">&lt;inp&gt;.uge</span></code> as the active mesh (no aperture conversion).</p></li>
+<li><p>the mesh is <em>always</em> scanned for invalid coefficients first, and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">_report_scan()</span></code> decides what happens. Every offending cell and
+connection is written to the screen and the log. A correction (negative
+-&gt; abs, NaN/inf -&gt; smallest positive fill, applied <em>before</em> any aperture
+scaling) is only made when <code class="docutils literal notranslate"><span class="pre">self.r_fram</span></code> is True and fewer than
+<code class="xref py py-data docutils literal notranslate"><span class="pre">BAD_FRACTION_LIMIT</span></code> of the cells <em>and</em> of the connections are
+invalid. Otherwise the run exits with an error.</p></li>
+</ul>
+</div></blockquote>
+<p>In all cases <code class="docutils literal notranslate"><span class="pre">self.uge_file</span></code> is set to the file PFLOTRAN should read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Problem dimension, <code class="docutils literal notranslate"><span class="pre">3</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Assumes the following instance variables exist:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.flow_solver</span></code> (str): must be <code class="docutils literal notranslate"><span class="pre">&quot;PFLOTRAN&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.inp_file</span></code> (str): used to derive the <code class="docutils literal notranslate"><span class="pre">.uge</span></code> file name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.r_fram</span></code> (bool): whether the feature-rejection mesher was used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.material_ids</span></code> (list[int]): material id per cell.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.aperture</span></code> (list[float]): aperture per cell or material.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.cell_based_aperture</span></code> (bool): aperture indexing mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.print_log</span></code> (callable): logging method.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -297,17 +471,27 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.fehm.correct_stor_file">
 <span class="sig-name descname"><span class="pre">correct_stor_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/fehm.html#correct_stor_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.fehm.correct_stor_file" title="Link to this definition"></a></dt>
-<dd><p>Corrects volumes in stor file to account for apertures</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dd><p>Corrects the Voronoi volumes and area coefficients in a STOR file
+by applying aperture adjustments.</p>
+<p>This method reads an ASCII-formatted STOR file used in FEHMN simulations,
+adjusts the volume and area values based on the aperture data, and writes
+a new corrected version of the file.</p>
+<dl class="simple">
+<dt>Assumptions:</dt><dd><ul class="simple">
+<li><p>Only ASCII STOR format is supported.</p></li>
+<li><p>Area coefficients are in scalar format (NUM_AREA_COEF = 1).</p></li>
+<li><dl class="simple">
+<dt>Instance attributes include:</dt><dd><p>self.stor_file: Path to the input STOR file.
+self.material_ids: List of material IDs for each cell.
+self.aperture: List of aperture values (by cell or material).
+self.cell_based_aperture: Boolean flag.
+self.print_log: Logging function.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>Currently does not work with cell based aperture</p>
+</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -331,7 +515,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <span id="processing-flow"></span><h2>Processing Flow<a class="headerlink" href="#module-pydfnworks.dfnFlow.mass_balance" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.mass_balance.effective_perm">
-<span class="sig-name descname"><span class="pre">effective_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/mass_balance.html#effective_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.mass_balance.effective_perm" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">effective_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">darcy_vel_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'darcyvel.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/mass_balance.html#effective_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.mass_balance.effective_perm" title="Link to this definition"></a></dt>
 <dd><p>Computes the effective permeability of a DFN in the primary direction of flow using a steady-state PFLOTRAN solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -341,6 +525,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
 <li><p><strong>outflow_pressure</strong> (<em>float</em>) – Pressure at the outflow boundary face. Units are Pascal</p></li>
 <li><p><strong>boundary_file</strong> (<em>string</em>) – Name of inflow boundary file, e.g., pboundary_left.ex</p></li>
 <li><p><strong>direction</strong> (<em>string</em>) – Primary direction of flow, x, y, or z</p></li>
+<li><p><strong>darcy_vel_file</strong> (<em>string</em>) – Name of concatenated Darcy velocity file</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -369,7 +554,7 @@ Calls the function write_perms_and_correct_volumes_areas() and zone2ex</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

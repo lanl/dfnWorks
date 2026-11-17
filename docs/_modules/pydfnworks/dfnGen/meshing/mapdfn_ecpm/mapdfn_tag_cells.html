@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+              <img src="../../../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">   mapdfn.py</span>
+
+<span class="sd">   Take output of dfnWorks-Version2.0:</span>
+<span class="sd">   normal_vectors.dat, translations.dat, radii_Final.dat,</span>
+<span class="sd">   perm.dat, aperture.dat</span>
+<span class="sd">   and map dfn into a regular grid for continuous porous medium representation</span>
+
+<span class="sd">   Usage: Call the methods in this script with map.py</span>
+
+<span class="sd">   Dependencies: transformations.py copyright Christoph Gohlke and UC Regents</span>
+<span class="sd">                 numpy</span>
+<span class="sd">                 h5py</span>
+<span class="sd">                 time</span>
+
+<span class="sd">   Authors: Emily Stein (ergiamb@sandia.gov)</span>
+<span class="sd">            Kris Kuhlman (klkuhl@sandia.gov)</span>
+<span class="sd">            Applied Systems Analysis and Research, 8844</span>
+<span class="sd">            Sandia National Laboratories</span>
+
+<span class="sd">   Date: 07/13/18</span>
+<span class="sd">   SAND Number: SAND2018-7604 O</span>
+
+<span class="sd">   Modified by Teresa Portone (tporton@sandia.gov) Dec 1, 2021 to have porosity() take</span>
+<span class="sd">   list of apertures instead of aperture filename. readApertures() method added.</span>
+
+<span class="sd">   Modified by Rosie Leone (rleone@sandia.gov) Dec 16, 2021 to have permAniso() apply a stair step correction factor to the ECPM when conditional set to True</span>
+
+<span class="sd">    Modified by Jeffrey Hyman </span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydfnworks.dfnGen.meshing.mapdfn_ecpm.transformations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span><span class="p">,</span> <span class="n">print_log</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_corner</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns the x,y,z corners of a hex cell</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------------</span>
+<span class="sd">        origin : list</span>
+<span class="sd">            min x,y,z corner of domain</span>
+<span class="sd">        </span>
+<span class="sd">        i : int</span>
+<span class="sd">            x index</span>
+<span class="sd">        </span>
+<span class="sd">        j : int</span>
+<span class="sd">            y index</span>
+<span class="sd">        </span>
+<span class="sd">        k : int</span>
+<span class="sd">            z index</span>
+<span class="sd">        </span>
+<span class="sd">        cell_size : float</span>
+<span class="sd">            hex cell size </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------------</span>
+<span class="sd">        corner : list</span>
+<span class="sd">            list of 8 corners of the hex cell</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    ---------------</span>
+<span class="sd">        None</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">corner</span> <span class="o">=</span> <span class="p">[[</span>
+        <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cell_size</span>
+    <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">],</span>
+              <span class="p">[</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                  <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell_size</span>
+              <span class="p">]]</span>
+    <span class="k">return</span> <span class="n">corner</span>
+
+
+<div class="viewcode-block" id="mapdfn_tag_cells">
+<a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mapdfn_tag_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">num_cells</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Identify intersecting fractures for each cell of the ECPM domain.</span>
+<span class="sd">    Extent of ECPM domain is determined by nx,ny,nz, and d (see below).</span>
+<span class="sd">    ECPM domain can be smaller than the DFN domain.</span>
+<span class="sd">    Return numpy array (fracture) that contains for each cell:</span>
+<span class="sd">    number of intersecting fractures followed by each intersecting fracture id.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------------</span>
+<span class="sd">        self : dfnWorks object</span>
+
+<span class="sd">        origin : list </span>
+<span class="sd">            [x,y,z] float coordinates of lower left front corner of DFN domain</span>
+<span class="sd">        </span>
+<span class="sd">        num_cells : int</span>
+<span class="sd">            Number of cells in the domain </span>
+<span class="sd">        </span>
+<span class="sd">        nx : int</span>
+<span class="sd">            number of cells in x in ECPM domain</span>
+<span class="sd">        </span>
+<span class="sd">        ny : int </span>
+<span class="sd">            number of cells in y in ECPM domain</span>
+<span class="sd">        </span>
+<span class="sd">        nz : int </span>
+<span class="sd">            number of cells in z in ECPM domain</span>
+<span class="sd">        </span>
+<span class="sd">        cell_size : float </span>
+<span class="sd">            discretization length in ECPM domain</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    --------------</span>
+<span class="sd">        cell_fracture_id : dict</span>
+<span class="sd">            Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;** Tagging cells in hex mesh that intersect fractures **&quot;</span><span class="p">)</span>
+
+    <span class="c1"># creat dictionary</span>
+    <span class="n">index_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_cells</span><span class="p">)</span>
+    <span class="n">cell_fracture_id</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">index_list</span><span class="p">}</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">mod</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">ifrac</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ifrac</span> <span class="o">%</span> <span class="n">mod</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;--&gt; Tagging cells for fracture</span><span class="se">\t</span><span class="si">{</span><span class="n">ifrac</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="si">}</span><span class="se">\t</span><span class="s1">(</span><span class="si">{</span><span class="n">percent</span><span class="si">}</span><span class="s1">%)&#39;</span>
+            <span class="p">)</span>
+            <span class="n">percent</span> <span class="o">+=</span> <span class="mi">10</span>
+        <span class="n">normal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">ifrac</span><span class="p">]</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">[</span><span class="n">ifrac</span><span class="p">]</span>
+        <span class="n">xrad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">ifrac</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">yrad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">ifrac</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1">#calculate rotation matrix for use later in rotating coordinates of nearby cells</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">normal</span><span class="p">)</span>
+        <span class="c1">#cosa = np.dot([0,0,1],normal)/(np.linalg.norm([0,0,1])*np.linalg.norm(normal)) #frobenius norm = length</span>
+        <span class="c1">#above evaluates to normal[2], so:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">normal</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># everything is in radians</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+        <span class="c1">#find fracture in domain coordinates so can look for nearby cells</span>
+        <span class="c1"># This can be rebuilt using the polygon boundary</span>
+
+        <span class="n">max_rad</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">xrad</span><span class="p">,</span> <span class="n">yrad</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_rad</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_rad</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_rad</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_rad</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_rad</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_rad</span>
+
+        <span class="c1">#find indices of nearby cells so don&#39;t have to check all of them!</span>
+        <span class="n">i1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">))</span>  <span class="c1">#round down</span>
+        <span class="n">i2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">x2</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1">#round up</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">y1</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">))</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ny</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">y2</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">k1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">z1</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">))</span>
+        <span class="n">k2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">z2</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># use itertools generator</span>
+        <span class="n">index_set</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">),</span>
+                                      <span class="nb">range</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index_set</span><span class="p">:</span>
+            <span class="c1"># Bounding box check</span>
+            <span class="c1"># check if cell center is inside radius of fracture</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span>
+                <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cell_size</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cell_size</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x2</span> <span class="ow">and</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">y2</span> <span class="ow">and</span> <span class="n">z1</span> <span class="o">&lt;</span> <span class="n">center</span><span class="p">[</span>
+                    <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">z2</span><span class="p">:</span>
+                <span class="n">local_center</span> <span class="o">=</span> <span class="n">center</span> <span class="o">-</span> <span class="n">translation</span>
+                <span class="c1">#rotate cell center coordinates to xyz of fracture</span>
+                <span class="n">rotate_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">local_center</span><span class="p">,</span> <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+                <span class="c1">#calculate r^2 of cell center in xy of fracture (fracture lies in z=0 plane)</span>
+                <span class="n">rsq_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">rotate_center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+                    <span class="n">rotate_center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">rsq_cell</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">xrad</span><span class="p">):</span>
+                    <span class="c1">#center is in radius, so check if fracture intersects cell</span>
+                    <span class="c1">#find z of cell corners in xyz of fracture</span>
+                    <span class="n">corners</span> <span class="o">=</span> <span class="n">get_corner</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">)</span>
+                    <span class="n">max_z</span> <span class="o">=</span> <span class="mf">0.</span>
+                    <span class="n">min_z</span> <span class="o">=</span> <span class="mf">0.</span>
+                    <span class="k">for</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">corners</span><span class="p">:</span>
+                        <span class="n">rotate_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">corner</span> <span class="o">-</span> <span class="n">translation</span><span class="p">,</span> <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">rotate_corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_z</span><span class="p">:</span>
+                            <span class="n">max_z</span> <span class="o">=</span> <span class="n">rotate_corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="k">elif</span> <span class="n">rotate_corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_z</span><span class="p">:</span>
+                            <span class="n">min_z</span> <span class="o">=</span> <span class="n">rotate_corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="c1">#and store min and max values of z at corners</span>
+                        <span class="k">if</span> <span class="n">min_z</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">max_z</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1">#fracture lies in z=0 plane</span>
+                            <span class="c1">#  fracture intersects that cell</span>
+                            <span class="n">index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">k</span>
+                            <span class="c1">#   store number of fractures that intersect cell</span>
+                            <span class="n">cell_fracture_id</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ifrac</span><span class="p">)</span>
+                            <span class="c1"># break the corner for loop, we done here.</span>
+                            <span class="k">break</span>
+
+    <span class="n">tnow</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;** Tagging Cells Complete. Time required : </span><span class="si">{</span><span class="n">tnow</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1"> seconds **&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_fracture_id</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
