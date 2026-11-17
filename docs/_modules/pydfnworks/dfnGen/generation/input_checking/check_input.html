@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.generation.input_checking.check_input &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks.dfnGen.generation.input_checking.check_input &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -124,7 +126,12 @@
         <span class="k">if</span> <span class="n">print_all</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">34s</span><span class="si">}{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;p32_convention&#39;</span><span class="p">:</span>
+                <span class="c1"># always shown, 0 (double-sided) is a meaningful choice</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">34s</span><span class="si">}</span><span class="s2">Value: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">34s</span><span class="si">}</span><span class="s2">Value: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span></div>
 
@@ -197,7 +204,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

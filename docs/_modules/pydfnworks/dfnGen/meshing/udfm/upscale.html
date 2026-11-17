@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.meshing.udfm.upscale &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks.dfnGen.meshing.udfm.upscale &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -220,10 +222,15 @@
                 <span class="n">perm_tensor</span> <span class="o">+=</span> <span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Omega</span><span class="p">)</span>
             <span class="n">perm_tensor</span> <span class="o">*=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mi">12</span>
 
-            <span class="c1"># Calculate eigenvalues</span>
-            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">perm_tensor</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="c1"># Axis components of the permeability tensor. The diagonal equals</span>
+            <span class="c1"># the principal components projected onto the coordinate axes</span>
+            <span class="c1"># (sum_j lambda_j (v_j . e_i)^2): exact for fractures orthogonal to</span>
+            <span class="c1"># a coordinate axis (Sweeney et al. 2020, Fig. 1) and the natural</span>
+            <span class="c1"># projection otherwise. Note np.linalg.eigvals returns eigenvalues</span>
+            <span class="c1"># in arbitrary order, so it must not be used for X/Y/Z mapping.</span>
+            <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm_tensor</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm_tensor</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm_tensor</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
 
             <span class="c1"># Arithmetic average of matrix perm</span>
             <span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi_sum</span><span class="p">)</span> <span class="o">*</span> <span class="n">mat_perm</span>
@@ -239,21 +246,23 @@
 
             <span class="c1"># See Sweeney et al. 2019 Computational Geoscience</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="c1"># track the angle closest to 45 degrees (largest staircase</span>
+                <span class="c1"># error). Store the distance-to-45, not the angle itself.</span>
                 <span class="n">n1_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">theta1_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n1_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="n">theta1_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">n1_temp</span><span class="p">))))</span> <span class="o">%</span> <span class="mi">90</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta1_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n1</span><span class="p">:</span>
                     <span class="n">theta1</span> <span class="o">=</span> <span class="n">theta1_t</span>
-                    <span class="n">min_n1</span> <span class="o">=</span> <span class="n">theta1_t</span>
+                    <span class="n">min_n1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta1_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span>
                 <span class="n">n2_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">theta2_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n2_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="n">theta2_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">n2_temp</span><span class="p">))))</span> <span class="o">%</span> <span class="mi">90</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta2_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n2</span><span class="p">:</span>
                     <span class="n">theta2</span> <span class="o">=</span> <span class="n">theta2_t</span>
-                    <span class="n">min_n2</span> <span class="o">=</span> <span class="n">theta2_t</span>
+                    <span class="n">min_n2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta2_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span>
                 <span class="n">n3_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">[</span><span class="n">f_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-                <span class="n">theta3_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">n3_temp</span><span class="p">))</span> <span class="o">%</span> <span class="mi">90</span>
+                <span class="n">theta3_t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">n3_temp</span><span class="p">))))</span> <span class="o">%</span> <span class="mi">90</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta3_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_n3</span><span class="p">:</span>
                     <span class="n">theta3</span> <span class="o">=</span> <span class="n">theta3_t</span>
-                    <span class="n">min_n3</span> <span class="o">=</span> <span class="n">theta3_t</span>
+                    <span class="n">min_n3</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta3_t</span> <span class="o">-</span> <span class="mi">45</span><span class="p">)</span>
 
             <span class="n">sl</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mf">45.0</span>
             <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
@@ -279,10 +288,12 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;perm_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="c1"># kx ky kz from the tensor diagonal (was 3 copies of the</span>
+                <span class="c1"># isotropic maximum, which conducts across the fracture plane)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">perm_var</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">permX</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">permY</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">permZ</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rock_fehm.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
                 <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;2165.&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
@@ -306,14 +317,15 @@
         <span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;Permeability&#39;</span>
         <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">perm_var</span><span class="p">)</span>
 
-        <span class="c1">#dataset_name = &#39;Perm_X&#39;</span>
-        <span class="c1">#h5dset = h5file.create_dataset(dataset_name, data = permX)</span>
-
-        <span class="c1">#dataset_name = &#39;Perm_Y&#39;</span>
-        <span class="c1">#h5set = h5file.create_dataset(dataset_name, data = permY)</span>
-
-        <span class="c1">#dataset_name = &#39;Perm_Z&#39;</span>
-        <span class="c1">#h5set = h5file.create_dataset(dataset_name, data = permZ)</span>
+        <span class="c1"># Anisotropic components (Sweeney et al. 2020, Eq. 3 / Fig. 1). For</span>
+        <span class="c1"># networks where fractures are orthogonal to the coordinate axes these</span>
+        <span class="c1"># should be preferred over the isotropic maximum, which spuriously</span>
+        <span class="c1"># assigns the in-plane permeability to the fracture-normal direction.</span>
+        <span class="c1"># Use in PFLOTRAN with PERMEABILITY / ANISOTROPIC / DATASET perm and</span>
+        <span class="c1"># datasets permX/permY/permZ pointing at these names.</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;PermeabilityX&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">permX</span><span class="p">)</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;PermeabilityY&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">permY</span><span class="p">)</span>
+        <span class="n">h5dset</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;PermeabilityZ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">permZ</span><span class="p">)</span>
         <span class="n">h5file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">h5file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">poros_filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -374,7 +386,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

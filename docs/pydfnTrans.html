@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnTrans &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks: dfnTrans &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,11 +53,11 @@
 <li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pydfnworks: dfnTrans</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnTrans.transport">Running Transport Simulations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files"><code class="docutils literal notranslate"><span class="pre">check_dfn_trans_run_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.copy_dfn_trans_files"><code class="docutils literal notranslate"><span class="pre">copy_dfn_trans_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.create_dfn_trans_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_trans_links()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.dfn_trans"><code class="docutils literal notranslate"><span class="pre">dfn_trans()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.copy_dfn_trans_files"><code class="docutils literal notranslate"><span class="pre">copy_dfn_trans_files()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.run_dfn_trans"><code class="docutils literal notranslate"><span class="pre">run_dfn_trans()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.create_dfn_trans_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_trans_links()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files"><code class="docutils literal notranslate"><span class="pre">check_dfn_trans_run_files()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -71,6 +71,8 @@
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -103,9 +105,26 @@
 <section id="module-pydfnworks.dfnTrans.transport">
 <span id="running-transport-simulations"></span><h2>Running Transport Simulations<a class="headerlink" href="#module-pydfnworks.dfnTrans.transport" title="Link to this heading"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.check_dfn_trans_run_files">
-<span class="sig-name descname"><span class="pre">check_dfn_trans_run_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#check_dfn_trans_run_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files" title="Link to this definition"></a></dt>
-<dd><p>Ensures that all files required for dfnTrans run are in the current directory</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.dfn_trans">
+<span class="sig-name descname"><span class="pre">dfn_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combine_avs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#dfn_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.dfn_trans" title="Link to this definition"></a></dt>
+<dd><p>Primary driver for dfnTrans.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>combine_avs</strong> (<em>bool</em>) – If True, then all avs files for particle trajectories are combined into a single avs file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.copy_dfn_trans_files">
+<span class="sig-name descname"><span class="pre">copy_dfn_trans_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#copy_dfn_trans_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.copy_dfn_trans_files" title="Link to this definition"></a></dt>
+<dd><p>Creates symlink to dfnTrans Execuateble and copies input files for dfnTrans into working directory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
@@ -114,14 +133,12 @@
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>None</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.copy_dfn_trans_files">
-<span class="sig-name descname"><span class="pre">copy_dfn_trans_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#copy_dfn_trans_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.copy_dfn_trans_files" title="Link to this definition"></a></dt>
-<dd><p>Creates symlink to dfnTrans Execuateble and copies input files for dfnTrans into working directory</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.run_dfn_trans">
+<span class="sig-name descname"><span class="pre">run_dfn_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#run_dfn_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.run_dfn_trans" title="Link to this definition"></a></dt>
+<dd><p>Execute dfnTrans</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
@@ -152,26 +169,9 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.dfn_trans">
-<span class="sig-name descname"><span class="pre">dfn_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combine_avs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#dfn_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.dfn_trans" title="Link to this definition"></a></dt>
-<dd><p>Primary driver for dfnTrans.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>combine_avs</strong> (<em>bool</em>) – If True, then all avs files for particle trajectories are combined into a single avs file</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.run_dfn_trans">
-<span class="sig-name descname"><span class="pre">run_dfn_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#run_dfn_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.run_dfn_trans" title="Link to this definition"></a></dt>
-<dd><p>Execute dfnTrans</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnTrans.transport.check_dfn_trans_run_files">
+<span class="sig-name descname"><span class="pre">check_dfn_trans_run_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnTrans/transport.html#check_dfn_trans_run_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files" title="Link to this definition"></a></dt>
+<dd><p>Ensures that all files required for dfnTrans run are in the current directory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
@@ -180,9 +180,11 @@
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>None</p>
 </dd></dl>
 
-</section>
+<span class="target" id="module-pydfnworks.dfnTrans.combine_avs_trajectories"></span></section>
 </section>
 
 
@@ -196,7 +198,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

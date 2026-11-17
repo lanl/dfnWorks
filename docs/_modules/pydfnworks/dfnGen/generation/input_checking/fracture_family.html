@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.generation.input_checking.fracture_family &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks.dfnGen.generation.input_checking.fracture_family &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=53c63d07"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -85,7 +87,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pydfnworks.dfnGen.generation.input_checking.fracture_family</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: fracture_family_utils</span>
+<span class="sd">   :synopsis: Create and manage fracture family dictionaries for DFN generation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fracture_family_dictionary</span><span class="p">():</span>
@@ -97,7 +103,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
-<span class="sd">        family : dictionary</span>
+<span class="sd">        family : dict</span>
 <span class="sd">            fracture family dictionary for specified family</span>
 <span class="sd">            </span>
 <span class="sd">    Notes</span>
@@ -118,7 +124,7 @@
             <span class="s1">&#39;value&#39;</span><span class="p">:</span>
             <span class="kc">None</span><span class="p">,</span>
             <span class="s1">&#39;description&#39;</span><span class="p">:</span>
-            <span class="s1">&#39;Probabiliy of occurence for the family of of stochastically generated fractures&#39;</span>
+            <span class="s1">&#39;Probability of occurrence for the family of stochastically generated fractures&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span>
@@ -164,7 +170,9 @@
             <span class="s1">&#39;value&#39;</span><span class="p">:</span>
             <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;description&#39;</span><span class="p">:</span>
-            <span class="s1">&#39;Prescribe a rotation around each fractures normal vector, with the fracture centered on the x-y plane at the origin</span><span class="se">\n</span><span class="s1">False:Uniform distribution on [0,2pi)</span><span class="se">\n</span><span class="s1">True:Constant rotation specified by beta&#39;</span>
+            <span class="s1">&#39;Prescribe a rotation around each fracture</span><span class="se">\&#39;</span><span class="s1">s normal vector, with the fracture centered on the x-y plane at the origin</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s1">&#39;False: Uniform distribution on [0,2π)</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s1">&#39;True: Constant rotation specified by beta&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span>
@@ -173,6 +181,11 @@
             <span class="kc">None</span><span class="p">,</span>
             <span class="s1">&#39;description&#39;</span><span class="p">:</span>
             <span class="s1">&#39;Value for constant angle of rotation around the normal vector&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;orientation_distribution&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Type of orientation distribution (&quot;fisher&quot; or &quot;bingham&quot;)&#39;</span>
         <span class="p">},</span>
         <span class="c1">#fisher distribution</span>
         <span class="s1">&#39;fisher&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -188,7 +201,24 @@
                 <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="kc">None</span>
             <span class="p">},</span>
             <span class="s1">&#39;description&#39;</span><span class="p">:</span>
-            <span class="s1">&#39;3 parameters theta, phi, and kappa for fisher distribution&#39;</span>
+            <span class="s1">&#39;Parameters theta, phi, and kappa for Fisher distribution&#39;</span>
+        <span class="p">},</span>
+        <span class="c1">#bingham distribution</span>
+        <span class="s1">&#39;bingham&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>
+            <span class="nb">float</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;phi&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;strike&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;dip&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;trend&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;plunge&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;kappa1&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;kappa2&#39;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;Parameters theta, phi, kappa1, and kappa2 for Bingham distribution&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;distribution&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -199,14 +229,14 @@
                 <span class="s1">&#39;constant&#39;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
             <span class="s1">&#39;description&#39;</span><span class="p">:</span>
-            <span class="s1">&#39;Type of distibution fracture radii are sampled from&#39;</span>
+            <span class="s1">&#39;Type of distribution fracture radii are sampled from&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;tpl&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
             <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="kc">None</span>
             <span class="p">},</span>
-            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Parameter for truncated power-law distibution&#39;</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Parameter for truncated power-law distribution&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;log_normal&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -214,7 +244,7 @@
                 <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="kc">None</span>
             <span class="p">},</span>
-            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Parameters for log normal distribution&#39;</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Parameters for log-normal distribution&#39;</span>
         <span class="p">},</span>
         <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -261,7 +291,10 @@
                 <span class="s1">&#39;value&#39;</span><span class="p">:</span>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="s1">&#39;description&#39;</span><span class="p">:</span>
-                <span class="s1">&#39;if correlated {&quot;alpha&quot;:float, &quot;beta&quot;:float},</span><span class="se">\n</span><span class="s1">if semi-correlated {&quot;alpha&quot;:float, &quot;beta&quot;:float, &quot;sigma&quot;:float},</span><span class="se">\n</span><span class="s1">if constant {&quot;mu&quot;:float},</span><span class="se">\n</span><span class="s1">if log-normal {&quot;mu&quot;:float,&quot;sigma&quot;:float}&#39;</span>
+                <span class="s1">&#39;if correlated {&quot;alpha&quot;:float, &quot;beta&quot;:float},</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;if semi-correlated {&quot;alpha&quot;:float, &quot;beta&quot;:float, &quot;sigma&quot;:float},</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;if constant {&quot;mu&quot;:float},</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;if log-normal {&quot;mu&quot;:float,&quot;sigma&quot;:float}&#39;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -271,21 +304,20 @@
 <div class="viewcode-block" id="print_family_information">
 <a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.generation.input_checking.print_family_information">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_family_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family_number</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a fracture family dictionary</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print fracture family parameters to the terminal screen.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        --------------</span>
-<span class="sd">            self : DFN object</span>
-
-<span class="sd">            family_number : the id of the fracture family information to be returned</span>
+<span class="sd">        ----------</span>
+<span class="sd">            self : DFN</span>
+<span class="sd">            The DFN object.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>
-<span class="sd">            Prints fracture family parameters to terminal screen</span>
+<span class="sd">            None</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        ---------</span>
-<span class="sd">        None</span>
+<span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fracture_families</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -309,7 +341,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">add_fracture_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">shape</span><span class="p">,</span>
                         <span class="n">distribution</span><span class="p">,</span>
-                        <span class="n">kappa</span><span class="p">,</span>
+                        <span class="n">orientation_distribution</span><span class="o">=</span><span class="s2">&quot;fisher&quot;</span><span class="p">,</span>
+                        <span class="n">kappa</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">kappa1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">kappa2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">family_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">probability</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">p32</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -345,13 +380,19 @@
 <span class="sd">        </span>
 <span class="sd">        distribution : &#39;tpl&#39;, &#39;log_normal&#39;, &#39;exp&#39;, or &#39;constant&#39; defines the sample distribution for the fracture radius</span>
 <span class="sd">        </span>
-<span class="sd">        kappa : concentration param of the von Mises-Fisher distribution</span>
+<span class="sd">        orientation_distribution : &#39;fisher&#39; (default) or &#39;bingham&#39;. Distribution used to sample fracture normals around the mean orientation</span>
+
+<span class="sd">        kappa : concentration param of the von Mises-Fisher distribution. use if orientation_distribution = &#39;fisher&#39;</span>
+
+<span class="sd">        kappa1 : first concentration param of the Bingham distribution. use if orientation_distribution = &#39;bingham&#39;. default = None</span>
+
+<span class="sd">        kappa2 : second concentration param of the Bingham distribution. use if orientation_distribution = &#39;bingham&#39;. default = None</span>
 <span class="sd">        </span>
 <span class="sd">        family_number : fracutre family id. default = None</span>
 <span class="sd">        </span>
 <span class="sd">        probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 </span>
 <span class="sd">        </span>
-<span class="sd">        p32 : fracture intensity for the family. default = None. use if stopCondition = </span>
+<span class="sd">        p32 : fracture intensity for the family. default = None. use if stopCondition = 1. The value is interpreted using DFN.params[&#39;p32_convention&#39;] (0: double-sided / wetted surface area, P32 = 2A/V, default. 1: single-sided, P32 = A/V)</span>
 
 <span class="sd">        layer : assigns fracture family to a layer in the domain. default = 0</span>
 <span class="sd">        </span>
@@ -393,13 +434,14 @@
 <span class="sd">        </span>
 <span class="sd">        hy_variable : hydraulic variable to assign values to. options are &#39;aperture&#39;, &#39;permeability&#39;, &#39;transmissivity&#39;, </span>
 <span class="sd">        </span>
-<span class="sd">        hy_function : relationship between hydraulic variable and fracture radius. options are &#39;correlated&#39;, &#39;semi-correlated&#39;, &#39;constant&#39;, &#39;log-normal&#39;</span>
+<span class="sd">        hy_function : relationship between hydraulic variable and fracture radius. options are &#39;correlated&#39;, &#39;semi-correlated&#39;, &#39;constant&#39;, &#39;log-normal&#39;, &#39;exponential&#39;</span>
 <span class="sd">        </span>
 <span class="sd">        hy_params : parameters for the hydraulic function. see next lines for syntax and options</span>
-<span class="sd">            if &#39;correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta:value}</span>
+<span class="sd">            if &#39;correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value}</span>
 <span class="sd">            if &#39;semi-correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value, &quot;sigma&quot;:value}</span>
 <span class="sd">            if &#39;constant&#39; --&gt; {&quot;mu&quot;:value}</span>
 <span class="sd">            if &#39;log-normal&#39; --&gt; {&quot;mu&quot;:value, &quot;sigma&quot;:value}</span>
+<span class="sd">            if &#39;exponential&#39; --&gt; {&quot;lam&quot;:value}</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>
@@ -441,13 +483,37 @@
     <span class="c1">## Orienation</span>
     <span class="n">family</span><span class="p">[</span><span class="s1">&#39;beta_distribution&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beta_distribution</span>
     <span class="n">family</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beta</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strike</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;dip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dip</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;trend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trend</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;plunge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plunge</span>
-    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kappa</span>
+    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;orientation_distribution&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">orientation_distribution</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">orientation_distribution</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;bingham&#39;</span><span class="p">:</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strike</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;dip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dip</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;trend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trend</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;plunge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plunge</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kappa1</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;bingham&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kappa2</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Orientation_distribution of </span><span class="si">{</span><span class="n">family</span><span class="p">[</span><span class="s1">&#39;orientation_distribution&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">info</span><span class="p">,</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">orientation_distribution</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;fisher&#39;</span><span class="p">:</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;strike&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strike</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;dip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dip</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;trend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trend</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;plunge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plunge</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kappa</span>
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="n">family</span><span class="p">[</span><span class="s1">&#39;fisher&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">][</span><span class="s1">&#39;kappa2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Orientation_distribution of </span><span class="si">{</span><span class="n">family</span><span class="p">[</span><span class="s1">&#39;orientation_distribution&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">info</span><span class="p">,</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unknown orientation distribution &#39;</span><span class="si">{</span><span class="n">orientation_distribution</span><span class="si">}</span><span class="s2">&#39;. Must be &#39;fisher&#39; or &#39;bingham&#39;. Exiting.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
     <span class="c1">## Set and check orientation option</span>
     <span class="c1"># note orientationOption = 0 --&gt; theta/phi</span>
@@ -549,7 +615,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

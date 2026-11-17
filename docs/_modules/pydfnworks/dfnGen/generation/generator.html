@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnGen.generation.generator &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks.dfnGen.generation.generator &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=53c63d07"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -231,19 +233,19 @@
 <span class="sd">    After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt. </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Running DFNGEN&#39;</span><span class="p">)</span>
+    <span class="c1"># seed the pydfnworks generators (NumPy / random) before any Python-side</span>
+    <span class="c1"># randomness is drawn, e.g. in assign_hydraulic_properties() below</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_seed</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span>
         <span class="s1">&#39;DFNGEN_EXE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;dfnGen_output/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfnGen_file</span><span class="p">[:</span>
                                                      <span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_clean.dat&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span>
-
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running: &gt;&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt;Opening dfnGen LogFile...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dfngen_logfile.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-
 
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt;Opening dfnGen LogFile...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dfngen_logfile.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -260,383 +262,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_params_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Reads params.txt file from DFNGen and parses information</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ---------</span>
-<span class="sd">        self :</span>
-<span class="sd">            DFN object</span>
-
-<span class="sd">        quiet : bool</span>
-<span class="sd">            If True details are not printed to screen, if False they area </span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        None</span>
-<span class="sd">    </span>
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">        None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Parsing params.txt file&quot;</span><span class="p">)</span>
-
-    <span class="n">fparams</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;params.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="c1"># Line 1 is the number of polygons</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
-    <span class="c1">#Line 2 is the h scale</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
-    <span class="c1"># Line 3 is the visualization mode: &#39;1&#39; is True, &#39;0&#39; is False.</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
-    <span class="c1"># line 4 dudded points</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dudded_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
-
-    <span class="c1"># Dict domain contains the length of the domain in x,y, and z</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
-    <span class="c1">#Line 5 is the x domain length</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
-
-    <span class="c1">#Line 5 is the x domain length</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
-
-    <span class="c1">#Line 5 is the x domain length</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fparams</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">r_fram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rFram&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-    
-    <span class="n">fparams</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Number of Fractures: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; h: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s2">0.2e</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Visual mode is on&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">visual_mode</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Visual mode is off&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Expected Number of dudded points: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dudded_points</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; X Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Y Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Z Domain Size </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">x_max</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_max</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">z_max</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">z_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Parsing params.txt complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">gather_dfn_gen_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated </span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
-<span class="sd">        None</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    --------</span>
-<span class="sd">        fractures : list</span>
-<span class="sd">            List of fracture dictionaries with information.</span>
-<span class="sd">    Notes</span>
-<span class="sd">    ------</span>
-<span class="sd">        Both fractures in the final network and those removed due to being isolated are included in the list. </span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Parsing dfnWorks output and adding to object&quot;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parse_params_file</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="c1">## load radii</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/radii_Final.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="c1">## populate radius array</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="c1"># First Column is x, second is y, 3rd is max</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
-    
-    <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># gather fracture families</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">families</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-    <span class="c1">## load surface area</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">surface_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/surface_area_Final.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1">## load normal vectors</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/normal_vectors.dat&#39;</span><span class="p">)</span>
-    <span class="c1"># Get fracture centers</span>
-    <span class="n">centers</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/translations.dat&#39;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>  <span class="c1"># header</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="s2">&quot;R&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                <span class="n">centers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                     <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-                     <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>
-
-    <span class="c1"># Grab Polygon information</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">poly_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;poly_info.dat&#39;</span><span class="p">)</span>
-
-    <span class="c1"># write polygon information to class</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_polygon_data</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grab_polygon_data</span><span class="p">()</span>
-
-    <span class="c1">## create holder arrays for b, k, and T</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transmissivity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span><span class="p">)</span>
-
-    <span class="c1"># gather indexes for fracture families</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">family</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1">## get number of families</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">num_families</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">families</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_families</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">families</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">family</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-
-    <span class="c1"># get fracture_info</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">fracture_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/fracture_info.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-    
-    <span class="c1"># get intersection_list</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">intersection_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/intersection_list.dat&#39;</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-    
-    <span class="c1"># get boundary_files</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">back</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/back.dat&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">front</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/front.dat&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/left.dat&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/right.dat&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/top.dat&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="o">=</span> <span class="n">read_boundaries</span><span class="p">(</span><span class="s1">&#39;dfnGen/bottom.dat&#39;</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">read_boundaries</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Reads in boundary files, and corrects format is file is empty of length 1</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
-<span class="sd">        file_path : the path to boundary file</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    --------</span>
-<span class="sd">        data : array of values (or empty array if file is empty</span>
-<span class="sd">    </span>
-<span class="sd">    Notes</span>
-<span class="sd">    ------</span>
-<span class="sd">    None</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">array_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">data</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">assign_hydraulic_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Assigns hydraulic properties for each familiy and user defined fractures    </span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
-<span class="sd">        self : DFN object</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    --------</span>
-<span class="sd">        None</span>
-<span class="sd">    </span>
-<span class="sd">    Notes</span>
-<span class="sd">    ------</span>
-<span class="sd">        None</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Assign hydraulic properties: Starting &quot;</span><span class="p">)</span>
-    <span class="c1">### Assign variables for fracture families</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Assign hydraulic properties to fracture families : Starting &quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;nFracFam&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]):</span>
-        <span class="n">hy_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fracture_families</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hydraulic_properties&#39;</span><span class="p">][</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">hy_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fracture_families</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hydraulic_properties&#39;</span><span class="p">][</span>
-            <span class="s1">&#39;function&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">hy_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fracture_families</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hydraulic_properties&#39;</span><span class="p">][</span>
-            <span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">hy_variable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">generate_hydraulic_values</span><span class="p">(</span><span class="n">hy_variable</span><span class="p">,</span>
-                                           <span class="n">hy_function</span><span class="p">,</span>
-                                           <span class="n">hy_params</span><span class="p">,</span>
-                                           <span class="n">family_id</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Assign hydraulic properties to fracture families : Complete &quot;</span><span class="p">)</span>
-
-    <span class="c1">### Assign variables for user defined fractures and skip rejected fractures</span>
-    <span class="c1">##Logic here, loop through user defined fractures</span>
-    <span class="c1">## first check flag to insert</span>
-    <span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;dfnGen_output/userFractureRejections.dat&#39;</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">reject_fracs</span><span class="p">,</span> <span class="n">frac_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">reject_fracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">reject_fracs</span><span class="p">])</span> <span class="c1">#needed for case with one rejected fracture, genfromtxt reads in float otherwise</span>
-            <span class="n">frac_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">frac_type</span><span class="p">])</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; No Rejected User Fractures, Ignore Following Warning.&#39;</span><span class="p">)</span>
-            <span class="n">reject_fracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-            <span class="n">frac_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c1">#if no fractures are rejected</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; No Rejected User Fractures, Ignore Following Warning.&#39;</span><span class="p">)</span>
-        <span class="n">reject_fracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-        <span class="n">frac_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-
-    <span class="n">rect_reject</span> <span class="o">=</span> <span class="n">reject_fracs</span><span class="p">[(</span><span class="n">frac_type</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">)]</span> <span class="c1">#integer corresponds to fracture type</span>
-    <span class="n">ell_reject</span> <span class="o">=</span> <span class="n">reject_fracs</span><span class="p">[(</span><span class="n">frac_type</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
-    <span class="n">poly_reject</span> <span class="o">=</span> <span class="n">reject_fracs</span><span class="p">[(</span><span class="n">frac_type</span> <span class="o">==</span> <span class="o">-</span><span class="mi">3</span><span class="p">)]</span>
-
-    <span class="n">fracture_num</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#keep track of overall fracture number, and numbers for different types of fractures</span>
-    <span class="n">frac_ell_num</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">frac_rect_num</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">frac_poly_num</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;insertUserRectanglesFirst&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Inserting User Ellipse Hydraulic Params First&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">frac_ell_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ell_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Ell Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                <span class="n">frac_ell_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">frac_rect_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rect_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Rect Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                <span class="n">frac_rect_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">frac_poly_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">poly_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Poly Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                <span class="n">frac_poly_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Inserting User Rectangle Hydraulic Params First&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">frac_rect_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rect_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Rect Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_rect_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-                
-                <span class="n">frac_rect_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span> 
-                <span class="k">if</span> <span class="n">frac_ell_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ell_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Ell Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_ell_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-                
-                <span class="n">frac_ell_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nPolygons&#39;</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">frac_poly_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">poly_reject</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Inserting User Poly Hydraulic Params </span><span class="si">{</span><span class="n">fracture_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">hy_prop_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;hy_prop_type&#39;</span><span class="p">]</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_poly_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">hy_prop_type</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hy_prop_type</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">set_fracture_hydraulic_values</span><span class="p">(</span><span class="n">hy_prop_type</span><span class="p">,</span> <span class="p">[</span><span class="n">fracture_num</span><span class="p">],</span>
-                                               <span class="p">[</span><span class="n">value</span><span class="p">])</span>
-                    <span class="n">fracture_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                <span class="n">frac_poly_num</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="c1"># self.dump_hydraulic_values()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Assign hydraulic properties: Complete &quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="grab_polygon_data">
-<a class="viewcode-back" href="../../../../pydfnGen.html#pydfnworks.dfnGen.generation.generator.grab_polygon_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">grab_polygon_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;If flag self.store_polygon_data is set to True, the information stored in polygon.dat is written to a dictionary self.polygons. </span>
-<span class="sd">    To access the points that define an individual polygon, call self.polygons[f&#39;poly{i}&#39;] where i is a number between 1 and the number of defined polygons. This returns an array of coordinates in the format np.array([x1,y1,z1],[x2,y2,z2],...[xn,yn,zn])</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
-<span class="sd">        self : DFN object</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    --------</span>
-<span class="sd">        None</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    ------</span>
-<span class="sd">        None</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Loading Polygon information onto DFN object&quot;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="n">polygon_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;dfnGen_output/polygons.dat&#39;</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="n">skip_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#weird format, so read data in as strings</span>
-    
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frac</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">polygon_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">polygon_data</span><span class="p">])</span>
-
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">polygon_data</span><span class="p">)):</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">polygon_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c1">#read in data for one polygon</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">poly_dat</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="c1">#get rid of weird characters</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">poly_dat</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">poly_dat</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">poly_dat</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="c1">#convert string to list, and then array</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">poly_dat</span><span class="p">)</span>
-        <span class="n">poly_dat</span> <span class="o">=</span> <span class="n">poly_dat</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">poly</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">poly_dat</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span> <span class="c1">#loop through and reformat individual coordinates</span>
-            <span class="n">poly</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">poly_dat</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="o">*</span><span class="n">j</span><span class="o">+</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;fracture-</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">poly</span> <span class="c1">#store in dictionary</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Data from polygons.dat stored on class in self.polygons</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
 </pre></div>
 
            </div>
@@ -646,7 +271,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

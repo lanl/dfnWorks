@@ -20,7 +20,7 @@ Docker
 
 .. _docker_section:
 
-The easiset way to get started with dfnWorks is by Using Docker. You will not need to install any software or manage your enviornment. All the tools and the dfnWorks repository are contained in the Docker image. 
+The easiest way to get started with dfnWorks is by using Docker. You will not need to install any software or manage your environment. All the tools and the dfnWorks repository are contained in the Docker image. 
 
 Setup the Docker dfnWorks image 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -82,13 +82,9 @@ Use a volume where permissions will not be an issue to ensure smooth operation.
 
 
 
-**On LANL Linux Servers**
+**On Linux**
 
-Docker is available on the local server `es11`. It is important to work from your home directory to avoid permission issues.
-
-
-Assuming you want to mount a local version of the dfnWorks repository, use the following command to clone it: ```git clone git@github.com:lanl/dfnWorks.git```.
-You may want to set more open permissions to ensure there are no issues with file access. You can set these permissions using: ```chmod 777 -R dfnWorks```.
+Work from a directory you own (for example, your home directory) to avoid permission issues. Assuming you want to mount a local version of the dfnWorks repository, clone it with ``git clone https://github.com/lanl/dfnWorks.git``.
 
 
 After preparing your local volume, pull the latest dfnWorks Docker image:
@@ -144,84 +140,78 @@ These instructions describe how to setup dfnWorks natively on your machine.
 For more information about installing dfnWorks, refer to the `dfnWorks README on github <https://github.com/lanl/dfnWorks/blob/master/README.md>`_.
 
 
-Clone the dnfWorks repository
+Clone the dfnWorks repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
     $ git clone https://github.com/lanl/dfnWorks.git
 
 
-Fix paths in test directory 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script ``fix_paths.py``:
-
-.. code-block:: bash
-
-    $ cd dfnWorks/pydfnworks/bin/
-    $ python fix_paths.py 
-
-Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths 
+Set the LaGriT, PETSc, PFLOTRAN, and FEHM paths
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Before executing dfnWorks,** the following paths must be set:
+**Before executing dfnWorks,** pydfnworks needs to know where dfnWorks and the external tools are installed:
 
-- dfnWorks_PATH: the dfnWorks repository folder
-- PETSC_DIR and PETSC_ARCH: PETSC environmental variables
-- PFLOTRAN_EXE:  Path to PFLOTRAN executable 
-- PYTHON_EXE:  Path to python executable 
-- LAGRIT_EXE:  Path to LaGriT executable 
+- ``dfnworks_PATH``: the dfnWorks repository folder (with a trailing ``/``). **Required.**
+- ``PETSC_DIR`` and ``PETSC_ARCH``: PETSc environment variables (needed for PFLOTRAN)
+- ``PFLOTRAN_EXE``: path to the PFLOTRAN executable
+- ``LAGRIT_EXE``: path to the LaGriT executable
+- ``FEHM_EXE``: path to the FEHM executable
 
-.. code-block:: bash
-    
-    $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
+Only ``dfnworks_PATH`` is required. The others are needed only to run the tools that use them (e.g., ``LAGRIT_EXE`` for meshing, ``PFLOTRAN_EXE`` for flow with PFLOTRAN).
 
-For example:
+The recommended way to set them is a ``.dfnworksrc`` file in your home directory, in JSON format:
 
-.. code-block:: python
-    
-    os.environ['dfnWorks_PATH'] = '/home/username/dfnWorks/'    
-
-Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
-
-.. code-block:: bash
+.. code-block:: json
 
     {
-        "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
+        "dfnworks_PATH": "<your-home-directory>/src/dfnWorks/",
         "PETSC_DIR": "<your-home-directory>/src/petsc",
-        "PETSC_ARCH": "arch-darwin-c-debug",
+        "PETSC_ARCH": "arch-darwin-c-opt",
         "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
-        "PYTHON_EXE": "<your-home-directory>/anaconda3/bin/python",
         "LAGRIT_EXE": "<your-home-directory>/bin/lagrit",
-        "FEHM_EXE": "<your-home-directory>//src/xfehm_v3.3.1"
+        "FEHM_EXE": "<your-home-directory>/src/xfehm_v3.3.1"
     }
+
+If ``~/.dfnworksrc`` is not found, pydfnworks reads the same names from environment variables, for example:
+
+.. code-block:: bash
+
+    $ export dfnworks_PATH=$HOME/src/dfnWorks/
+
+The paths are read in ``pydfnworks/pydfnworks/general/paths.py``.
+
+.. note:: The dfnWorks C++ executables (``DFNGen``, ``DFNTrans``, and helper tools) are compiled automatically with ``make`` the first time a DFN object is created if they are not found. A C++ compiler and ``make`` are therefore required.
 
 
 Installing pydfnworks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Go up into the pydfnworks sub-directory:
+Go into the pydfnworks sub-directory:
 
 .. code-block:: bash
-    
+
     $ cd dfnWorks/pydfnworks/
 
-Compile The pydfnWorks Package & Install on Your Local Machine:
+Install the dependencies and the package:
 
 .. code-block:: bash
-    
+
     $ pip install -r requirements.txt
+    $ pip install .
 
-
-or
+If you don't have admin privileges (e.g., on a shared system), add ``--user``:
 
 .. code-block:: bash
-    
+
     $ pip install -r requirements.txt --user
+    $ pip install . --user
 
-if you don't have admin privileges
+Check the installation:
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+.. code-block:: bash
+
+    $ python -c "import pydfnworks; print(pydfnworks.__version__)"
 
 Installation Requirements for Native Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -239,9 +229,13 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 Python 
 *****************************
 
-pydfnworks uses Python 3. We recommend using 
-the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``networkx``, ``fpdf``, and ``re``.
+pydfnworks requires Python 3.10 or newer. We recommend using a conda or virtual environment.
+pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They can be installed directly with
+
+.. code-block:: bash
+
+    pip install -r pydfnworks/requirements.txt
+    pip install pandas
 
 
 LaGriT
@@ -253,6 +247,8 @@ coincident with triangle edges in the mesh and Voronoi control volumes are
 suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
 .. _LaGriT: https://lagrit.lanl.gov
+
+dfnWorks v2.8 and newer requires LaGriT v3.3. DFM meshing (``mesh_dfm``) requires LaGriT built with Exodus support.
 
 PFLOTRAN
 ********

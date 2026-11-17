@@ -6,19 +6,20 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dfnWorks Introduction and Beginner Tutorial &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>dfnWorks Introduction and Beginner Tutorial &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dfnWorks Tutorial for Truncated Power-Law (TPL)" href="tutorial_TPL.html" />
     <link rel="prev" title="dfnWorks Gallery" href="gallery.html" /> 
 </head>
 
@@ -62,9 +63,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">dfnWorks Introduction and Beginner Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#tutorial-prerequisites">Tutorial Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dfnworks-package-overview">dfnWorks Package Overview</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dfngen">dfnGen</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dfnflow">dfnFlow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dfntrans">dfnTrans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dfngen-network-generation">dfnGen: Network Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dfnflow-flow-simulation">dfnFlow: Flow Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dfntrans-particle-tracking">dfnTrans: Particle Tracking</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#beginner-tutorial-with-4-user-rects">Beginner Tutorial with 4_user_rects</a><ul>
@@ -86,6 +87,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -121,9 +124,9 @@
 <li><p><a class="reference internal" href="#tutorial-prerequisites" id="id9">Tutorial Prerequisites</a></p></li>
 <li><p><a class="reference internal" href="#dfnworks-package-overview" id="id10">dfnWorks Package Overview</a></p>
 <ul>
-<li><p><a class="reference internal" href="#dfngen" id="id11">dfnGen</a></p></li>
-<li><p><a class="reference internal" href="#dfnflow" id="id12">dfnFlow</a></p></li>
-<li><p><a class="reference internal" href="#dfntrans" id="id13">dfnTrans</a></p></li>
+<li><p><a class="reference internal" href="#dfngen-network-generation" id="id11">dfnGen: Network Generation</a></p></li>
+<li><p><a class="reference internal" href="#dfnflow-flow-simulation" id="id12">dfnFlow: Flow Simulation</a></p></li>
+<li><p><a class="reference internal" href="#dfntrans-particle-tracking" id="id13">dfnTrans: Particle Tracking</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#beginner-tutorial-with-4-user-rects" id="id14">Beginner Tutorial with 4_user_rects</a></p>
@@ -154,7 +157,7 @@ Instructions for downloading and installing <a class="reference external" href="
 <section id="dfnworks-package-overview">
 <h2><a class="toc-backref" href="#id10" role="doc-backlink">dfnWorks Package Overview</a><a class="headerlink" href="#dfnworks-package-overview" title="Link to this heading"></a></h2>
 <figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="_images/dfnworks_pdf_modules_copy.png"><img alt="alternate text" src="_images/dfnworks_pdf_modules_copy.png" style="width: 773.5px; height: 434.5px;" />
+<a class="reference internal image-reference" href="_images/dfnworks_pdf_modules_copy.png"><img alt="alternate text" height="434" src="_images/dfnworks_pdf_modules_copy.png" width="774" />
 </a>
 <figcaption>
 <p><span class="caption-text"><em>dfnWorks modules include dfnGen for meshing with dfnFlow and dfnTrans for simulations.</em></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
@@ -163,8 +166,8 @@ Instructions for downloading and installing <a class="reference external" href="
 <p>dfnWorks is a parallelized computational suite to generate three-dimensional discrete fracture networks (DFN) and simulate flow and transport. To run a workflow using the dfnWorks suite, the python pydfnworks package is used. The package pydfnworks calls
 various tools in the dfnWorks suite with the aim to provide a seamless workflow.</p>
 <p>There are 3 main modules in dfnWorks:</p>
-<section id="dfngen">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">dfnGen</a><a class="headerlink" href="#dfngen" title="Link to this heading"></a></h3>
+<section id="dfngen-network-generation">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">dfnGen: Network Generation</a><a class="headerlink" href="#dfngen-network-generation" title="Link to this heading"></a></h3>
 <p>dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for meshing) and LaGriT, the meshing tool box used to create a conforming Delaunay triangulation of the network.</p>
 <ul class="simple">
 <li><p>FRAM (feature rejection algorithm for meshing) is executed using the dfnGen C++ source code, contained in the dfnGen folder of the dfnWorks repository.</p></li>
@@ -172,8 +175,8 @@ various tools in the dfnWorks suite with the aim to provide a seamless workflow.
 </ul>
 <p>See Module at <a class="reference internal" href="dfngen.html#dfngen-chapter"><span class="std std-ref">dfnGen</span></a> and python docs at <a class="reference internal" href="pydfnGen.html#dfnworks-python-chapter-dfngen"><span class="std std-ref">pydfnWorks: dfnGen</span></a></p>
 </section>
-<section id="dfnflow">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">dfnFlow</a><a class="headerlink" href="#dfnflow" title="Link to this heading"></a></h3>
+<section id="dfnflow-flow-simulation">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">dfnFlow: Flow Simulation</a><a class="headerlink" href="#dfnflow-flow-simulation" title="Link to this heading"></a></h3>
 <p>Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow using the mesh files from LaGriT.</p>
 <ul class="simple">
 <li><p>PFLOTRAN is a massively parallel subsurface flow and reactive transport code. PFLOTRAN solves a system of partial differential equations for multiphase, multicomponent and multiscale reactive flow and transport in porous media.</p></li>
@@ -181,8 +184,8 @@ various tools in the dfnWorks suite with the aim to provide a seamless workflow.
 </ul>
 <p>See Module at <a class="reference internal" href="dfnflow.html#dfnflow-chapter"><span class="std std-ref">dfnFlow</span></a> and python docs at <a class="reference internal" href="pydfnFlow.html#dfnworks-python-chapter-dfnflow"><span class="std std-ref">pydfnWorks: dfnFlow</span></a></p>
 </section>
-<section id="dfntrans">
-<h3><a class="toc-backref" href="#id13" role="doc-backlink">dfnTrans</a><a class="headerlink" href="#dfntrans" title="Link to this heading"></a></h3>
+<section id="dfntrans-particle-tracking">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">dfnTrans: Particle Tracking</a><a class="headerlink" href="#dfntrans-particle-tracking" title="Link to this heading"></a></h3>
 <p>dfnTrans is a method for resolving solute transport using control volume flow solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen. We adopt a Lagrangian approach and represent a non-reactive conservative solute as a collection of indivisible passive tracer particles.</p>
 <p>See Module at <a class="reference internal" href="dfntrans.html#dfntrans-chapter"><span class="std std-ref">dfnTrans</span></a> and python docs at <a class="reference internal" href="pydfnTrans.html#dfnworks-python-chapter-dfntrans"><span class="std std-ref">pydfnTrans: dfnGen</span></a></p>
 </section>
@@ -408,7 +411,7 @@ Checking the output log file to screen and file <cite>output.log</cite>, the mes
 <span class="m">2025</span>-03-06<span class="w"> </span><span class="m">17</span>:15:04,933<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Processing<span class="w"> </span>file:<span class="w"> </span>dfn_explicit-001.vtk
 </pre></div>
 </div>
-<p>Read the PFLOTRAN result file <cite>output/parsed_vtk/dfn_explicit-001.vtk</cite> into Paraview and select the property pressure to view.
+<p>Read the PFLOTRAN result file <cite>output/pflotran_vtk_outputs/dfn_explicit-001.vtk</cite> into Paraview and select the property pressure to view.
 High pressure (red) is shown on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.</p>
 <figure class="align-center" id="id7">
 <a class="reference internal image-reference" href="_images/tut1_liq_pressure_002.png"><img alt="fracture pressure" src="_images/tut1_liq_pressure_002.png" style="width: 600px;" />
@@ -457,12 +460,13 @@ The Publications are a good source of applications and discussions. Consider joi
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="gallery.html" class="btn btn-neutral float-left" title="dfnWorks Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial_TPL.html" class="btn btn-neutral float-right" title="dfnWorks Tutorial for Truncated Power-Law (TPL)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

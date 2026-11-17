@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: the dfnWorks python package &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks: the dfnWorks python package &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -58,7 +58,15 @@
 <li class="toctree-l3"><a class="reference internal" href="#prune-file">prune_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#flow-solver">flow_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cell-based-aperture">cell_based_aperture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#store-polygon-data">store_polygon_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pickle-file">pickle_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log-filename">log_filename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log-time">log_time</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#additional-arguments">additional arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#random-seeds">Random Seeds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.general.general_functions.set_seed"><code class="docutils literal notranslate"><span class="pre">set_seed()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#pydfnworks-modules">pydfnWorks : Modules</a></li>
@@ -77,6 +85,8 @@
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -187,8 +197,11 @@
                <span class="n">stor_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">vtk_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">num_nodes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-               <span class="n">mesh_type</span> <span class="o">=</span> <span class="s1">&#39;dfn&#39;</span><span class="p">,</span>
-               <span class="n">cell_based_aperture</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+               <span class="n">cell_based_aperture</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="n">store_polygon_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="n">pickle_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">log_time</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="jobname">
@@ -265,10 +278,72 @@
 </pre></div>
 </div>
 </section>
+<section id="store-polygon-data">
+<h3>store_polygon_data<a class="headerlink" href="#store-polygon-data" title="Link to this heading"></a></h3>
+<p>Description: If True, the fracture vertices in <code class="docutils literal notranslate"><span class="pre">polygons.dat</span></code> are read into the dictionary <code class="docutils literal notranslate"><span class="pre">DFN.polygons</span></code> after generation. Set to False for very large networks to save memory.</p>
+<p>Type: Boolean</p>
+<p>Default: True</p>
+</section>
+<section id="pickle-file">
+<h3>pickle_file<a class="headerlink" href="#pickle-file" title="Link to this heading"></a></h3>
+<p>Description: Path to a DFN object saved with <code class="docutils literal notranslate"><span class="pre">DFN.to_pickle()</span></code>. Use with <code class="docutils literal notranslate"><span class="pre">DFN.from_pickle()</span></code> to restart a workflow without regenerating the network.</p>
+<p>Type: string</p>
+<p>Default: None</p>
+</section>
+<section id="log-filename">
+<h3>log_filename<a class="headerlink" href="#log-filename" title="Link to this heading"></a></h3>
+<p>Description: Name of the log file, written in the current working directory. If None, the log is <code class="docutils literal notranslate"><span class="pre">&lt;jobname&gt;.log</span></code>.</p>
+<p>Type: string</p>
+<p>Default: None</p>
+</section>
+<section id="log-time">
+<h3>log_time<a class="headerlink" href="#log-time" title="Link to this heading"></a></h3>
+<p>Description: If True, each line of the log file starts with a time stamp.</p>
+<p>Type: Boolean</p>
+<p>Default: True</p>
+</section>
 <section id="additional-arguments">
 <h3>additional arguments<a class="headerlink" href="#additional-arguments" title="Link to this heading"></a></h3>
 <p>Descriptions: additional arguments that have not been described here will likely not be changed by the user.</p>
 </section>
+</section>
+<section id="random-seeds">
+<h2>Random Seeds<a class="headerlink" href="#random-seeds" title="Link to this heading"></a></h2>
+<p>The seed in <code class="docutils literal notranslate"><span class="pre">DFN.params['seed']</span></code> (see <a class="reference internal" href="dfngen.html#seed"><span class="std std-ref">seed</span></a>) controls both the dfnGen executable and the random number generators used on the Python side (NumPy and the <code class="docutils literal notranslate"><span class="pre">random</span></code> module), which are used for hydraulic property distributions, meshing, plotting, and graph-based particle transport. <code class="docutils literal notranslate"><span class="pre">set_seed</span></code> is called automatically when the network is generated; call it directly to reseed later in a workflow.</p>
+<dl class="py function" id="module-pydfnworks.general.general_functions">
+<dt class="sig sig-object py" id="pydfnworks.general.general_functions.set_seed">
+<span class="sig-name descname"><span class="pre">set_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/general/general_functions.html#set_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.general.general_functions.set_seed" title="Link to this definition"></a></dt>
+<dd><p>Initialize the pydfnworks pseudorandom number generators (NumPy and the
+Python random module) from the DFN seed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed to initialize the generators with. If None (default), the value
+of self.params[‘seed’][‘value’] is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>seed</strong> – The seed the generators were initialized with.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>1. Randomness on the Python side of dfnWorks (hydraulic property
+distributions, Poisson-disc meshing, plot sub-sampling) is drawn from
+these two global generators, so seeding them makes those values
+reproducible from run to run.</p>
+<p>2. Following the dfnGen convention, a seed of 0 means “seed off the
+clock”, i.e. produce a unique realization. In that case a seed is drawn
+from system entropy and reported, so the pydfnworks-side values can be
+reproduced later by setting DFN.params[‘seed’][‘value’] to the reported
+number.</p>
+<p>3. This does not change the seed used by the dfnGen executable. That
+seed is read from the input file written by check_input().</p>
+</dd></dl>
+
 </section>
 <section id="pydfnworks-modules">
 <h2>pydfnWorks : Modules<a class="headerlink" href="#pydfnworks-modules" title="Link to this heading"></a></h2>
@@ -300,7 +375,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

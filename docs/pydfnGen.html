@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks: dfnGen &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -62,17 +62,37 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#processing-generator-input">Processing Generator Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.generation.generator">Running the Generator</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.generator.create_network"><code class="docutils literal notranslate"><span class="pre">create_network()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.generator.dfn_gen"><code class="docutils literal notranslate"><span class="pre">dfn_gen()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.generator.grab_polygon_data"><code class="docutils literal notranslate"><span class="pre">grab_polygon_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.generator.make_working_directory"><code class="docutils literal notranslate"><span class="pre">make_working_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.generator.create_network"><code class="docutils literal notranslate"><span class="pre">create_network()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-generator-output">Processing Generator Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.process_generator_output.parse_params_file"><code class="docutils literal notranslate"><span class="pre">parse_params_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.process_generator_output.gather_dfn_gen_output"><code class="docutils literal notranslate"><span class="pre">gather_dfn_gen_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.process_generator_output.assign_hydraulic_properties"><code class="docutils literal notranslate"><span class="pre">assign_hydraulic_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.process_generator_output.grab_polygon_data"><code class="docutils literal notranslate"><span class="pre">grab_polygon_data()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.generation.output_report.gen_output">Analysis of Generated DFN</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.output_report.gen_output.output_report"><code class="docutils literal notranslate"><span class="pre">output_report()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#additional-information-on-the-modification-of-hydraulic-properties-of-the-dfn">Additional Information on the Modification of Hydraulic Properties of the DFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fracture-orientations">Fracture Orientations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.orientations.get_fracture_orientations"><code class="docutils literal notranslate"><span class="pre">get_fracture_orientations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fracture-intensity-p21">Fracture Intensity (P21)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-information-on-the-modification-of-hydraulic-properties-of-the-dfn">Additional Information on the Modification of Hydraulic Properties of the DFN</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.set_fracture_hydraulic_values"><code class="docutils literal notranslate"><span class="pre">set_fracture_hydraulic_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.generate_hydraulic_values"><code class="docutils literal notranslate"><span class="pre">generate_hydraulic_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_aperture"><code class="docutils literal notranslate"><span class="pre">dump_aperture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_perm"><code class="docutils literal notranslate"><span class="pre">dump_perm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_transmissivity"><code class="docutils literal notranslate"><span class="pre">dump_transmissivity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_fracture_info"><code class="docutils literal notranslate"><span class="pre">dump_fracture_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_hydraulic_values"><code class="docutils literal notranslate"><span class="pre">dump_hydraulic_values()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.generation.stress">Modification of hydraulic properties of the DFN based on background stress field</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.generation.stress.stress_based_apertures"><code class="docutils literal notranslate"><span class="pre">stress_based_apertures()</span></code></a></li>
 </ul>
@@ -105,6 +125,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">Map-DFN upscaling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm"><code class="docutils literal notranslate"><span class="pre">mapdfn_ecpm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells"><code class="docutils literal notranslate"><span class="pre">mapdfn_tag_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale.mapdfn_upscale"><code class="docutils literal notranslate"><span class="pre">mapdfn_upscale()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm.mapdfn_effective_perm"><code class="docutils literal notranslate"><span class="pre">mapdfn_effective_perm()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dfm">DFM</a><ul>
@@ -127,6 +150,8 @@
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -162,7 +187,7 @@
 <h3>Adding Fracture Families<a class="headerlink" href="#adding-fracture-families" title="Link to this heading"></a></h3>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_fracture_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p32</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strike</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plunge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/fracture_family.html#add_fracture_family"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">add_fracture_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fisher'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p32</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strike</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plunge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hy_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/fracture_family.html#add_fracture_family"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generates a fracture family</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -170,10 +195,13 @@
 <li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
 <li><p><strong>shape</strong> (<em>'rect'</em><em> or </em><em>'ell' deines the fracture family shape</em>)</p></li>
 <li><p><strong>distribution</strong> (<em>'tpl'</em><em>, </em><em>'log_normal'</em><em>, </em><em>'exp'</em><em>, or </em><em>'constant' defines the sample distribution for the fracture radius</em>)</p></li>
-<li><p><strong>kappa</strong> (<em>concentration param</em><em> of </em><em>the von Mises-Fisher distribution</em>)</p></li>
+<li><p><strong>orientation_distribution</strong> (<em>'fisher'</em><em> (</em><em>default</em><em>) or </em><em>'bingham'. Distribution used to sample fracture normals around the mean orientation</em>)</p></li>
+<li><p><strong>kappa</strong> (<em>concentration param</em><em> of </em><em>the von Mises-Fisher distribution. use if orientation_distribution = 'fisher'</em>)</p></li>
+<li><p><strong>kappa1</strong> (<em>first concentration param</em><em> of </em><em>the Bingham distribution. use if orientation_distribution = 'bingham'. default = None</em>)</p></li>
+<li><p><strong>kappa2</strong> (<em>second concentration param</em><em> of </em><em>the Bingham distribution. use if orientation_distribution = 'bingham'. default = None</em>)</p></li>
 <li><p><strong>family_number</strong> (<em>fracutre family id. default = None</em>)</p></li>
 <li><p><strong>probability</strong> (<em>probabily</em><em> of </em><em>a fracture belonging to this family. default = None. use if stopCondition = 0</em>)</p></li>
-<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition =</em>)</p></li>
+<li><p><strong>p32</strong> (<em>fracture intensity for the family. default = None. use if stopCondition = 1. The value is interpreted using DFN.params</em><em>[</em><em>'p32_convention'</em><em>] </em><em>(</em><em>0: double-sided / wetted surface area</em><em>, </em><em>P32 = 2A/V</em><em>, </em><em>default. 1: single-sided</em><em>, </em><em>P32 = A/V</em><em>)</em>)</p></li>
 <li><p><strong>layer</strong> (<em>assigns fracture family to a layer in the domain. default = 0</em>)</p></li>
 <li><p><strong>region</strong> (<em>assigns fracture family to a region in the domain. default = 0</em>)</p></li>
 <li><p><strong>number_of_points</strong> (<em>specifies the number</em><em> of </em><em>vertices defining th eboundary</em><em> of </em><em>each fracture. default = 8</em>)</p></li>
@@ -194,11 +222,12 @@
 <li><p><strong>min_radius</strong> (<em>minimum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>)</p></li>
 <li><p><strong>max_radius</strong> (<em>maximum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>)</p></li>
 <li><p><strong>hy_variable</strong> (<em>hydraulic variable to assign values to. options are 'aperture'</em><em>, </em><em>'permeability'</em><em>, </em><em>'transmissivity'</em><em>,</em>)</p></li>
-<li><p><strong>hy_function</strong> (<em>relationship between hydraulic variable and fracture radius. options are 'correlated'</em><em>, </em><em>'semi-correlated'</em><em>, </em><em>'constant'</em><em>, </em><em>'log-normal'</em>)</p></li>
-<li><p><strong>hy_params</strong> (<em>parameters for the hydraulic function. see next lines for syntax and options</em>) – if ‘correlated’ –&gt; {“alpha”:value, “beta:value}
+<li><p><strong>hy_function</strong> (<em>relationship between hydraulic variable and fracture radius. options are 'correlated'</em><em>, </em><em>'semi-correlated'</em><em>, </em><em>'constant'</em><em>, </em><em>'log-normal'</em><em>, </em><em>'exponential'</em>)</p></li>
+<li><p><strong>hy_params</strong> (<em>parameters for the hydraulic function. see next lines for syntax and options</em>) – if ‘correlated’ –&gt; {“alpha”:value, “beta”:value}
 if ‘semi-correlated’ –&gt; {“alpha”:value, “beta”:value, “sigma”:value}
 if ‘constant’ –&gt; {“mu”:value}
-if ‘log-normal’ –&gt; {“mu”:value, “sigma”:value}</p></li>
+if ‘log-normal’ –&gt; {“mu”:value, “sigma”:value}
+if ‘exponential’ –&gt; {“lam”:value}</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -358,16 +387,16 @@ ellipses and rectangles not specified by coordinate.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.input_checking.print_family_information">
 <span class="sig-name descname"><span class="pre">print_family_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/input_checking/fracture_family.html#print_family_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.input_checking.print_family_information" title="Link to this definition"></a></dt>
-<dd><p>Creates a fracture family dictionary</p>
+<dd><p>Print fracture family parameters to the terminal screen.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
-<li><p><strong>family_number</strong> (<em>the id</em><em> of </em><em>the fracture family information to be returned</em>)</p></li>
+<li><p><strong>self</strong> (<em>DFN</em>)</p></li>
+<li><p><strong>object.</strong> (<em>The DFN</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Prints fracture family parameters to terminal screen</p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -412,22 +441,6 @@ ellipses and rectangles not specified by coordinate.</p>
 <section id="module-pydfnworks.dfnGen.generation.generator">
 <span id="running-the-generator"></span><h3>Running the Generator<a class="headerlink" href="#module-pydfnworks.dfnGen.generation.generator" title="Link to this heading"></a></h3>
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.generator.create_network">
-<span class="sig-name descname"><span class="pre">create_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/generator.html#create_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.generator.create_network" title="Link to this definition"></a></dt>
-<dd><p>Execute dfnGen</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> – DFN object</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.generator.dfn_gen">
 <span class="sig-name descname"><span class="pre">dfn_gen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/generator.html#dfn_gen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.generator.dfn_gen" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
@@ -456,23 +469,6 @@ ellipses and rectangles not specified by coordinate.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.generator.grab_polygon_data">
-<span class="sig-name descname"><span class="pre">grab_polygon_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/generator.html#grab_polygon_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.generator.grab_polygon_data" title="Link to this definition"></a></dt>
-<dd><p>If flag self.store_polygon_data is set to True, the information stored in polygon.dat is written to a dictionary self.polygons.
-To access the points that define an individual polygon, call self.polygons[f’poly{i}’] where i is a number between 1 and the number of defined polygons. This returns an array of coordinates in the format np.array([x1,y1,z1],[x2,y2,z2],…[xn,yn,zn])</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>DFN object</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>None</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.generator.make_working_directory">
 <span class="sig-name descname"><span class="pre">make_working_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/generator.html#make_working_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.generator.make_working_directory" title="Link to this definition"></a></dt>
 <dd><p>Make working directory for dfnWorks Simulation</p>
@@ -489,6 +485,97 @@ To access the points that define an individual polygon, call self.polygons[f’p
 </dl>
 <p class="rubric">Notes</p>
 <p>If directory already exists, user is prompted if they want to overwrite and proceed. If not, program exits.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.generator.create_network">
+<span class="sig-name descname"><span class="pre">create_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/generator.html#create_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.generator.create_network" title="Link to this definition"></a></dt>
+<dd><p>Execute dfnGen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> – DFN object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>After generation is complete, this script checks whether the generation of the fracture network failed or succeeded based on the existence of the file params.txt.</p>
+</dd></dl>
+
+</section>
+<section id="processing-generator-output">
+<h3>Processing Generator Output<a class="headerlink" href="#processing-generator-output" title="Link to this heading"></a></h3>
+<p>After the generator runs, <code class="docutils literal notranslate"><span class="pre">dfn_gen</span></code> reads its output into the DFN object (fracture centers, radii, normals, polygons, families, and hydraulic properties). These functions are called automatically but can also be used to reload a network.</p>
+<dl class="py function" id="module-pydfnworks.dfnGen.generation.process_generator_output">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.process_generator_output.parse_params_file">
+<span class="sig-name descname"><span class="pre">parse_params_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/process_generator_output.html#parse_params_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.process_generator_output.parse_params_file" title="Link to this definition"></a></dt>
+<dd><p>Reads params.txt file from DFNGen and parses information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – DFN object</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – If True details are not printed to screen, if False they area</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.process_generator_output.gather_dfn_gen_output">
+<span class="sig-name descname"><span class="pre">gather_dfn_gen_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/process_generator_output.html#gather_dfn_gen_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.process_generator_output.gather_dfn_gen_output" title="Link to this definition"></a></dt>
+<dd><p>Reads in information about fractures and add them to the DFN object. Information is taken from radii.dat, translations.dat, normal_vectors.dat, and surface_area_Final.dat files. Information for each fracture is stored in a dictionary created by create_fracture_dictionary() that includes the fracture id, radius, normal vector, center, family number, surface area, and if the fracture was removed due to being isolated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fractures</strong> – List of fracture dictionaries with information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Both fractures in the final network and those removed due to being isolated are included in the list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.process_generator_output.assign_hydraulic_properties">
+<span class="sig-name descname"><span class="pre">assign_hydraulic_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/process_generator_output.html#assign_hydraulic_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.process_generator_output.assign_hydraulic_properties" title="Link to this definition"></a></dt>
+<dd><p>Assigns hydraulic properties for each familiy and user defined fractures</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>DFN object</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.process_generator_output.grab_polygon_data">
+<span class="sig-name descname"><span class="pre">grab_polygon_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/process_generator_output.html#grab_polygon_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.process_generator_output.grab_polygon_data" title="Link to this definition"></a></dt>
+<dd><p>If flag self.store_polygon_data is set to True, the information stored in polygon.dat is written to a dictionary self.polygons.
+To access the points that define an individual polygon, call self.polygons[f’poly{i}’] where i is a number between 1 and the number of defined polygons. This returns an array of coordinates in the format np.array([x1,y1,z1],[x2,y2,z2],…[xn,yn,zn])</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>DFN object</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>None</p>
 </dd></dl>
 
 </section>
@@ -532,10 +619,61 @@ To access the points that define an individual polygon, call self.polygons[f’p
 User defined fractures (ellipses, rectangles, and polygons) are not supported at this time.</p>
 </dd></dl>
 
+<p>The report includes, for each family, stereonets of the fracture normals and equal-area rose diagrams of strike and dip.</p>
+</section>
+<section id="fracture-orientations">
+<h3>Fracture Orientations<a class="headerlink" href="#fracture-orientations" title="Link to this heading"></a></h3>
+<p>The strike, dip, dip direction, trend, and plunge of every fracture normal are computed from <code class="docutils literal notranslate"><span class="pre">DFN.normal_vectors</span></code> when the network is loaded and stored as <code class="docutils literal notranslate"><span class="pre">DFN.strike</span></code>, <code class="docutils literal notranslate"><span class="pre">DFN.dip</span></code>, <code class="docutils literal notranslate"><span class="pre">DFN.dip_direction</span></code>, <code class="docutils literal notranslate"><span class="pre">DFN.trend</span></code>, and <code class="docutils literal notranslate"><span class="pre">DFN.plunge</span></code> (in degrees).</p>
+<p id="module-orientations.py"><span id="module-pydfnworks.dfnGen.generation.orientations"></span>All functions use a right-handed ENU coordinate system (x = East, y = North,
+z = Up), and report the lower-hemisphere representation, which is the standard
+convention for stereonet plotting.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.orientations.get_fracture_orientations">
+<span class="sig-name descname"><span class="pre">get_fracture_orientations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/orientations.html#get_fracture_orientations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.orientations.get_fracture_orientations" title="Link to this definition"></a></dt>
+<dd><p>Compute the orientation of every fracture in the network and attach the
+results to the DFN object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Sets the following attributes, each a numpy array with one entry per
+fracture, ordered to match self.normal_vectors:</p>
+<ul class="simple">
+<li><p>self.strike : strike azimuth of the fracture plane [degrees, 0 - 360]</p></li>
+<li><p>self.dip : dip of the fracture plane below horizontal [degrees, 0 - 90]</p></li>
+<li><p>self.dip_direction : azimuth of the down-dip line [degrees, 0 - 360]</p></li>
+<li><p>self.trend : trend of the pole (normal) [degrees, 0 - 360]</p></li>
+<li><p>self.plunge : plunge of the pole (normal) [degrees, 0 - 90]</p></li>
+</ul>
+<p>Uses the lower-hemisphere convention, so plunge = 90 - dip. The
+fracture normals are not modified.</p>
+</dd></dl>
+
+</section>
+<section id="fracture-intensity-p21">
+<h3>Fracture Intensity (P21)<a class="headerlink" href="#fracture-intensity-p21" title="Link to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_fracture_p21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/process_generator_output.html#compute_fracture_p21"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute P21 per fracture:
+P21[i] = (sum of intersection lengths involving fracture i+1) / surface_area[i]
+Assumes fracture IDs are 1..self.num_frac.</p>
+</dd></dl>
+
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DFN</span><span class="o">.</span><span class="n">compute_fracture_p21</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">DFN</span><span class="o">.</span><span class="n">p21_table</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="additional-information-on-the-modification-of-hydraulic-properties-of-the-dfn">
 <h3>Additional Information on the Modification of Hydraulic Properties of the DFN<a class="headerlink" href="#additional-information-on-the-modification-of-hydraulic-properties-of-the-dfn" title="Link to this heading"></a></h3>
-<p>Hydraulic properties can be assigned to fractures based on four different models. One can assign hydraulic aperture <img class="math" src="_images/math/68c7c8c65602677ab56cf7fd88002023f0edc575.png" alt="b"/>, permeability, <img class="math" src="_images/math/9630132210b904754c9ab272b61cb527d12263ca.png" alt="k"/>, or transmissivity <img class="math" src="_images/math/e8dea8254118f111b5fb20895b03528c17566f06.png" alt="T"/>. Below we present the functions for hydraulic aperture, but the equations for other values are the same.</p>
+<p>Hydraulic properties can be assigned to fractures based on five different models. One can assign hydraulic aperture <img class="math" src="_images/math/68c7c8c65602677ab56cf7fd88002023f0edc575.png" alt="b"/>, permeability, <img class="math" src="_images/math/9630132210b904754c9ab272b61cb527d12263ca.png" alt="k"/>, or transmissivity <img class="math" src="_images/math/e8dea8254118f111b5fb20895b03528c17566f06.png" alt="T"/>. Below we present the functions for hydraulic aperture, but the equations for other values are the same.</p>
 <p>The first is a perfectly correlated model where the hydraulic property is a function of the fracture radius</p>
 <div class="math">
 <p><img src="_images/math/5b514159f8b6bf75e6317d628c7caf2df737075c.png" alt="b = \alpha r^\beta"/></p>
@@ -554,9 +692,155 @@ to account for uncertainty and variability between fractures of the same size. T
 <div class="math">
 <p><img src="_images/math/5f01a802667a3ba5b8994a25f3fdf78bf8593563.png" alt="b = \mu"/></p>
 </div><p>The keyword for this model is constant.</p>
+<p>The fifth model draws values that are independent of fracture size from an exponential distribution with rate parameter <img class="math" src="_images/math/cefc603e5658facb747581f9567192993f21c7ab.png" alt="\lambda"/>,</p>
+<div class="math">
+<p><img src="_images/math/b8be7c281d04c2a676d69a84818bee75fe0c29c0.png" alt="f(b) = \lambda e^{-\lambda b}, \quad b \geq 0"/></p>
+</div><p>so the mean value is <img class="math" src="_images/math/345f606ec4423cb6fa147f63a5da5a98ee48c1bb.png" alt="1/\lambda"/>. The keyword for this model is exponential and the parameter dictionary is <code class="docutils literal notranslate"><span class="pre">{&quot;lam&quot;:</span> <span class="pre">value}</span></code>.</p>
 <p>Notes:</p>
 <p>See Hyman et al. 2016 “Fracture size and transmissivity correlations: Implications for transport simulations in sparse three-dimensional discrete fracture networks following a truncated power law distribution of fracture size” Water Resources Research for more details</p>
 <p>Changes in hydraulic properties are assigned when defining a fracture family or user defined fracture. User defined fractures currently only support constant hydraulic properties.</p>
+<p>Hydraulic properties can also be regenerated or overwritten after the network is created. <code class="docutils literal notranslate"><span class="pre">generate_hydraulic_values</span></code> draws new values for the whole network or for one family, <code class="docutils literal notranslate"><span class="pre">set_fracture_hydraulic_values</span></code> sets values on a list of fractures, and the <code class="docutils literal notranslate"><span class="pre">dump_*</span></code> functions write the current values to file.</p>
+<p id="module-pydfnworks.dfnGen.generation.hydraulic.dfn_methods">DFN class methods for hydraulic property generation and assignment.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.dfn_methods.set_fracture_hydraulic_values">
+<span class="sig-name descname"><span class="pre">set_fracture_hydraulic_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fracture_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/dfn_methods.html#set_fracture_hydraulic_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.set_fracture_hydraulic_values" title="Link to this definition"></a></dt>
+<dd><p>Assigns hydraulic properties to a list of provided fractures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>variable</strong> (<em>string</em>) – base variable in relationship. Options are: aperture, permeability, transmissivity</p></li>
+<li><p><strong>fracture_list</strong> (<em>list</em>) – List of fracture indices whose variables are being assigned.
+<em>Note</em> Fractures are indexed starting at 1.</p></li>
+<li><p><strong>value_list</strong> (<em>list</em>) – values to be assigned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.dfn_methods.generate_hydraulic_values">
+<span class="sig-name descname"><span class="pre">generate_hydraulic_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/dfn_methods.html#generate_hydraulic_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.generate_hydraulic_values" title="Link to this definition"></a></dt>
+<dd><p>Generates hydraulic property values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>variable</strong> (<em>string</em>) – base variable in relationship. Options are: aperture, permeability, transmissivity</p></li>
+<li><p><strong>relationship</strong> (<em>string</em>) – name of functional relationship for apertures.
+options are log-normal, correlated, semi-correlated, constant, and exponential</p></li>
+<li><p><strong>params</strong> (<em>dictionary</em>) – <dl class="simple">
+<dt>dictionary of parameters for functional relationship</dt><dd><p>if correlated –&gt; {“alpha”:value, “beta”:value}
+if semi-correlated –&gt; {“alpha”:value, “beta”:value, “sigma”:value}
+if constant –&gt; {“mu”:value}
+if log-normal –&gt; {“mu”:value, “sigma”:value}
+if exponential –&gt; {“lam”:value}</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>family_id</strong> (<em>int</em>) – family id of fractures</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>See Hyman et al. 2016 “Fracture size and transmissivity correlations: Implications
+for transport simulations in sparse three-dimensional discrete fracture networks
+following a truncated power law distribution of fracture size” Water Resources Research
+for more details.</p>
+<p>Changes in hydraulic properties are added to DFN object.</p>
+</dd></dl>
+
+<p id="module-pydfnworks.dfnGen.generation.hydraulic.io">File I/O functions for hydraulic property data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.io.dump_aperture">
+<span class="sig-name descname"><span class="pre">dump_aperture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/io.html#dump_aperture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_aperture" title="Link to this definition"></a></dt>
+<dd><p>Write aperture values to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – name of file</p></li>
+<li><p><strong>format</strong> (<em>string</em>) – format type with options None, fehm, FEHM. Default is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.io.dump_perm">
+<span class="sig-name descname"><span class="pre">dump_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/io.html#dump_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_perm" title="Link to this definition"></a></dt>
+<dd><p>Write permeability values to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – name of file</p></li>
+<li><p><strong>format</strong> (<em>string</em>) – format type with options None, fehm, FEHM. Default is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.io.dump_transmissivity">
+<span class="sig-name descname"><span class="pre">dump_transmissivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/io.html#dump_transmissivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_transmissivity" title="Link to this definition"></a></dt>
+<dd><p>Write transmissivity values to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – name of file</p></li>
+<li><p><strong>format</strong> (<em>string</em>) – format type with options None, fehm, FEHM. Default is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.io.dump_fracture_info">
+<span class="sig-name descname"><span class="pre">dump_fracture_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/io.html#dump_fracture_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_fracture_info" title="Link to this definition"></a></dt>
+<dd><p>Write fracture info (connections, perm, aperture) to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – name of file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.generation.hydraulic.io.dump_hydraulic_values">
+<span class="sig-name descname"><span class="pre">dump_hydraulic_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/generation/hydraulic/io.html#dump_hydraulic_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.generation.hydraulic.io.dump_hydraulic_values" title="Link to this definition"></a></dt>
+<dd><p>Writes all hydraulic property values to files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>DFN object</em>)</p></li>
+<li><p><strong>prefix</strong> (<em>string</em>) – prefix of aperture.dat and perm.dat file names
+prefix_aperture.dat and prefix_perm.dat</p></li>
+<li><p><strong>format</strong> (<em>string</em>) – format type. Default is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># draw new log-normal apertures for family 1, then write all values to file</span>
+<span class="n">DFN</span><span class="o">.</span><span class="n">generate_hydraulic_values</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s2">&quot;aperture&quot;</span><span class="p">,</span>
+                              <span class="n">relationship</span><span class="o">=</span><span class="s2">&quot;log-normal&quot;</span><span class="p">,</span>
+                              <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+                              <span class="n">family_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">DFN</span><span class="o">.</span><span class="n">dump_hydraulic_values</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="module-pydfnworks.dfnGen.generation.stress">
 <span id="modification-of-hydraulic-properties-of-the-dfn-based-on-background-stress-field"></span><h3>Modification of hydraulic properties of the DFN based on background stress field<a class="headerlink" href="#module-pydfnworks.dfnGen.generation.stress" title="Link to this heading"></a></h3>
@@ -609,7 +893,7 @@ to account for uncertainty and variability between fractures of the same size. T
 <li><p><strong>uniform_mesh</strong> (<em>bool</em>) – toggle for uniform or variable mesh. Default : False</p></li>
 <li><p><strong>min_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution h/2. This value is the factor of h, distance = min_dist * h</p></li>
 <li><p><strong>max_dist</strong> (<em>float</em>) – Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h</p></li>
-<li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolultion (max_resolution <a href="#id1"><span class="problematic" id="id2">*</span></a>h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
+<li><p><strong>max_resolution_factor</strong> (<em>float</em>) – Maximum factor of the mesh resolution (max_resolution_factor * h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh.</p></li>
 <li><p><strong>well</strong> (<em>bool</em>) – Toggle well points. Default : False</p></li>
 <li><p><strong>cleanup</strong> (<em>bool</em>) – toggle to clean up directory (remove meshing files after a run). Default : True</p></li>
 <li><p><strong>strict</strong> (<em>bool</em>) – Toggle if a few mesh errors are acceptable. default is true</p></li>
@@ -791,6 +1075,7 @@ turn visualization mode on in the DFN input card.</p>
 <p>None</p>
 </dd></dl>
 
+<p><code class="docutils literal notranslate"><span class="pre">upscale</span></code> writes an anisotropic permeability field. <code class="docutils literal notranslate"><span class="pre">mesh_permeability.h5</span></code> contains <code class="docutils literal notranslate"><span class="pre">PermeabilityX</span></code>, <code class="docutils literal notranslate"><span class="pre">PermeabilityY</span></code>, and <code class="docutils literal notranslate"><span class="pre">PermeabilityZ</span></code> datasets (for PFLOTRAN, use <code class="docutils literal notranslate"><span class="pre">PERMEABILITY</span> <span class="pre">ANISOTROPIC</span></code> in the material property card), and <code class="docutils literal notranslate"><span class="pre">perm_fehm.dat</span></code> contains directional <img class="math" src="_images/math/c9c2ae751a3597b3cb6ecdc84cdc2ae1c5e44fc2.png" alt="k_x, k_y, k_z"/> values for FEHM.</p>
 <dl class="py function" id="module-false_connections.py">
 <span id="module-pydfnworks.dfnGen.meshing.udfm.false_connections"></span><dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.udfm.false_connections.check_false_connections">
 <span class="sig-name descname"><span class="pre">check_false_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/udfm/false_connections.html#check_false_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.udfm.false_connections.check_false_connections" title="Link to this definition"></a></dt>
@@ -871,6 +1156,120 @@ Sandia National Laboratories</p>
 </section>
 </dd></dl>
 
+<p><code class="docutils literal notranslate"><span class="pre">mapdfn_ecpm</span></code> calls the following steps, which can also be run individually.</p>
+<p id="module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells">mapdfn.py</p>
+<p>Take output of dfnWorks-Version2.0:
+normal_vectors.dat, translations.dat, radii_Final.dat,
+perm.dat, aperture.dat
+and map dfn into a regular grid for continuous porous medium representation</p>
+<p>Usage: Call the methods in this script with map.py</p>
+<dl class="simple">
+<dt>Dependencies: transformations.py copyright Christoph Gohlke and UC Regents</dt><dd><p>numpy
+h5py
+time</p>
+</dd>
+<dt>Authors: Emily Stein (<a class="reference external" href="mailto:ergiamb&#37;&#52;&#48;sandia&#46;gov">ergiamb<span>&#64;</span>sandia<span>&#46;</span>gov</a>)</dt><dd><p>Kris Kuhlman (<a class="reference external" href="mailto:klkuhl&#37;&#52;&#48;sandia&#46;gov">klkuhl<span>&#64;</span>sandia<span>&#46;</span>gov</a>)
+Applied Systems Analysis and Research, 8844
+Sandia National Laboratories</p>
+</dd>
+</dl>
+<p>Date: 07/13/18
+SAND Number: SAND2018-7604 O</p>
+<p>Modified by Teresa Portone (<a class="reference external" href="mailto:tporton&#37;&#52;&#48;sandia&#46;gov">tporton<span>&#64;</span>sandia<span>&#46;</span>gov</a>) Dec 1, 2021 to have porosity() take
+list of apertures instead of aperture filename. readApertures() method added.</p>
+<p>Modified by Rosie Leone (<a class="reference external" href="mailto:rleone&#37;&#52;&#48;sandia&#46;gov">rleone<span>&#64;</span>sandia<span>&#46;</span>gov</a>) Dec 16, 2021 to have permAniso() apply a stair step correction factor to the ECPM when conditional set to True</p>
+<blockquote>
+<div><p>Modified by Jeffrey Hyman</p>
+</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells">
+<span class="sig-name descname"><span class="pre">mapdfn_tag_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_tag_cells.html#mapdfn_tag_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells" title="Link to this definition"></a></dt>
+<dd><p>Identify intersecting fractures for each cell of the ECPM domain.
+Extent of ECPM domain is determined by nx,ny,nz, and d (see below).
+ECPM domain can be smaller than the DFN domain.
+Return numpy array (fracture) that contains for each cell:
+number of intersecting fractures followed by each intersecting fracture id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>dfnWorks object</em>)</p></li>
+<li><p><strong>origin</strong> (<em>list</em>) – [x,y,z] float coordinates of lower left front corner of DFN domain</p></li>
+<li><p><strong>num_cells</strong> (<em>int</em>) – Number of cells in the domain</p></li>
+<li><p><strong>nx</strong> (<em>int</em>) – number of cells in x in ECPM domain</p></li>
+<li><p><strong>ny</strong> (<em>int</em>) – number of cells in y in ECPM domain</p></li>
+<li><p><strong>nz</strong> (<em>int</em>) – number of cells in z in ECPM domain</p></li>
+<li><p><strong>cell_size</strong> (<em>float</em>) – discretization length in ECPM domain</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>cell_fracture_id</strong> – Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="py function" id="module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale.mapdfn_upscale">
+<span class="sig-name descname"><span class="pre">mapdfn_upscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_fracture_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_porosity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix_perm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lump_diag_terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_upscale.html#mapdfn_upscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale.mapdfn_upscale" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>dfnWorks object</em>)</p></li>
+<li><p><strong>num_cells</strong> (<em>int</em>) – Total number of cells in the domain</p></li>
+<li><p><strong>cell_fracture_id</strong> (<em>dict</em>) – Dictionary num_cells long. Keys: cell number, Entries: List of the fractures that intersect that cell</p></li>
+<li><p><strong>cell_size</strong> (<em>float</em>) – discretization length in ECPM domain</p></li>
+<li><p><strong>matrix_porosity</strong> (<em>float</em>) – perosity of the matrix</p></li>
+<li><p><strong>matrix_perm</strong> (<em>float</em>) – permeability of the matrix cells without fratures</p></li>
+<li><p><strong>lump_diag_terms</strong> (<em>bool</em>) – Default is False</p></li>
+<li><p><strong>correction_factor</strong> (<em>bool</em>) – Default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>porosity</strong> (<em>numpy array</em>) – porosity values in the domain cells</p></li>
+<li><p><strong>k_iso</strong> (<em>numpy array</em>) – numpy array of isotropic permeability for each cell in the ECPM.</p></li>
+<li><p><strong>k_aniso</strong> (<em>numpy array</em>) – Return numpy array of anisotropic permeability (3 components) for each cell in the ECPM.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+</dd></dl>
+
+<dl class="py function" id="module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm.mapdfn_effective_perm">
+<span class="sig-name descname"><span class="pre">mapdfn_effective_perm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outflow_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mas_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_effective_perm.html#mapdfn_effective_perm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm.mapdfn_effective_perm" title="Link to this definition"></a></dt>
+<dd><p>Reads &lt;pflotran-file&gt;-mas.dat file to get outflow mass flow rate from a pflotran run. Converts the values to volumetric flow rates in m^3/s, then inverts Darcy’s Law to get the effective permeability of the block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>inflow_pressure</strong> (<em>float</em>) – Pressure at the inflow boundary face. Units are Pascal</p></li>
+<li><p><strong>outflow_pressure</strong> (<em>float</em>) – Pressure at the outflow boundary face. Units are Pascal</p></li>
+<li><p><strong>mas_filename</strong> (<em>string</em>) – name of -mas.dat filename.</p></li>
+<li><p><strong>direction</strong> (<em>string</em>) – Primary direction of flow, x, y, or z</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>keff</strong> – effective permeability of the block</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ol class="arabic simple">
+<li><p>Information is written to screen and to the file self.local_jobname_effective_perm.txt</p></li>
+<li><p>Currently, only PFLOTRAN solutions are supported</p></li>
+<li><p>Assumes density of water at 20c</p></li>
+<li><p>MASS_BALANCE output option in PFLOTRAN must be turned on.</p></li>
+</ol>
+</dd></dl>
+
 </section>
 <section id="dfm">
 <h2>DFM<a class="headerlink" href="#dfm" title="Link to this heading"></a></h2>
@@ -913,7 +1312,7 @@ Sandia National Laboratories</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

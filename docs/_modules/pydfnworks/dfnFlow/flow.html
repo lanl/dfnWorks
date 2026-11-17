@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks.dfnFlow.flow &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks.dfnFlow.flow &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=53c63d07"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -126,24 +128,33 @@
 
 <div class="viewcode-block" id="dfn_flow">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.flow.dfn_flow">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">dfn_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dump_vtk</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfn_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dump_vtk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dump_h5</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Run the dfnFlow portion of the workflow</span>
-<span class="sd">       </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            DFN Class</span>
-<span class="sd">        </span>
+
 <span class="sd">        dump_vtk : bool</span>
-<span class="sd">            True - Write out vtk files for flow solutions </span>
-<span class="sd">            False  - Does not write out vtk files for flow solutions </span>
-<span class="sd"> </span>
+<span class="sd">            If True (default), parse PFLOTRAN VTK output into</span>
+<span class="sd">            pflotran_vtk_outputs/ with parse_pflotran_vtk_python.</span>
+<span class="sd">            If False, skip VTK parsing.</span>
+
+<span class="sd">        dump_h5 : bool</span>
+<span class="sd">            If True, parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/</span>
+<span class="sd">            with parse_pflotran_h5. The mesh comes from the .inp file via</span>
+<span class="sd">            inp2vtk_python and the data come from &lt;base&gt;.h5.</span>
+<span class="sd">            If False (default), skip HDF5 parsing.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    ---------</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    Information on individual functions is found therein </span>
+<span class="sd">    Information on individual functions is found therein.</span>
+<span class="sd">    dump_vtk and dump_h5 are independent; both can be True to produce</span>
+<span class="sd">    parsed output from each source.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
@@ -160,6 +171,8 @@
 
         <span class="k">if</span> <span class="n">dump_vtk</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_vtk_python</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dump_h5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_h5</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pflotran_cleanup</span><span class="p">()</span>
 
     <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">==</span> <span class="s2">&quot;FEHM&quot;</span><span class="p">:</span>
@@ -225,7 +238,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

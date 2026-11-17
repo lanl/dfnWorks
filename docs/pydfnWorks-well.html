@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydfnworks: Well Package &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>pydfnworks: Well Package &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -55,10 +55,10 @@
 <li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pydfnworks: Well Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-pydfnworks.dfnGen.well_package.wells">dfnWorks - Well Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh"><code class="docutils literal notranslate"><span class="pre">tag_well_in_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points"><code class="docutils literal notranslate"><span class="pre">find_well_intersection_points()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.cleanup_wells"><code class="docutils literal notranslate"><span class="pre">cleanup_wells()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.combine_well_boundary_zones"><code class="docutils literal notranslate"><span class="pre">combine_well_boundary_zones()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points"><code class="docutils literal notranslate"><span class="pre">find_well_intersection_points()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh"><code class="docutils literal notranslate"><span class="pre">tag_well_in_mesh()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -70,6 +70,8 @@
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -101,6 +103,80 @@
 <p>DFN Class functions used for well package</p>
 <section id="module-pydfnworks.dfnGen.well_package.wells">
 <span id="dfnworks-well-package"></span><h2>dfnWorks - Well Package<a class="headerlink" href="#module-pydfnworks.dfnGen.well_package.wells" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh">
+<span class="sig-name descname"><span class="pre">tag_well_in_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/well_package/wells.html#tag_well_in_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh" title="Link to this definition"></a></dt>
+<dd><p>Identifies nodes in a DFN for nodes the intersect a well with radius r [m]</p>
+<ol class="arabic simple">
+<li><p>Well coordinates in well[“filename”] are converted to a polyline that are written into “well_{well[‘name’]}_line.inp”</p></li>
+<li><p>Well is expanded to a volume with radius well[“r”] and written into the avs file well_{well[“name”]}_volume.inp</p></li>
+<li><p>Nodes in the DFN that intersect with the well are written into the zone file well_{well[“name”]}.zone</p></li>
+<li><p>If using PFLOTRAN, then an ex file is created from the well zone file</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>well</strong> – <p>Dictionary of information about the well that contains the following attributes</p>
+<dl>
+<dt>well[“name”]<span class="classifier">string</span></dt><dd><p>name of the well</p>
+</dd>
+<dt>well[“filename”]<span class="classifier">string</span></dt><dd><p>filename of the well coordinates with the following format
+x0 y0 z0</p>
+<p>x1 y1 z1</p>
+<p>…</p>
+<p>xn yn zn</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Wells can be a list of well dictionaries</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.well_package.wells.find_well_intersection_points">
+<span class="sig-name descname"><span class="pre">find_well_intersection_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/well_package/wells.html#find_well_intersection_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points" title="Link to this definition"></a></dt>
+<dd><p>Identifies points on a DFN where the well intersects the network.
+These points are used in meshing the network to have higher resolution  in the mesh in these points.
+Calls a sub-routine run_find_well_intersection_points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>well</strong> – <p>dictionary of information about the well. Contains the following:</p>
+<dl class="simple">
+<dt>well[“name”]<span class="classifier">string</span></dt><dd><p>name of the well</p>
+</dd>
+<dt>well[“filename”]<span class="classifier">string</span></dt><dd><dl class="simple">
+<dt>filename of the well coordinates. “well_coords.dat” for example.</dt><dd><p>Format is :
+x0 y0 z0
+x1 y1 z1
+…
+xn yn zn</p>
+</dd>
+</dl>
+</dd>
+<dt>well[“r”]<span class="classifier">float</span></dt><dd><p>radius of the well</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Wells can be a list of well dictionaries.
+Calls the subroutine run_find_well_intersection_points to remove redundant code.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnGen.well_package.wells.cleanup_wells">
 <span class="sig-name descname"><span class="pre">cleanup_wells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/well_package/wells.html#cleanup_wells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.well_package.wells.cleanup_wells" title="Link to this definition"></a></dt>
@@ -152,80 +228,6 @@ xn yn zn</p>
 <p>None</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.well_package.wells.find_well_intersection_points">
-<span class="sig-name descname"><span class="pre">find_well_intersection_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/well_package/wells.html#find_well_intersection_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points" title="Link to this definition"></a></dt>
-<dd><p>Identifies points on a DFN where the well intersects the network.
-These points are used in meshing the network to have higher resolution  in the mesh in these points.
-Calls a sub-routine run_find_well_intersection_points.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>well</strong> – <p>dictionary of information about the well. Contains the following:</p>
-<dl class="simple">
-<dt>well[“name”]<span class="classifier">string</span></dt><dd><p>name of the well</p>
-</dd>
-<dt>well[“filename”]<span class="classifier">string</span></dt><dd><dl class="simple">
-<dt>filename of the well coordinates. “well_coords.dat” for example.</dt><dd><p>Format is :
-x0 y0 z0
-x1 y1 z1
-…
-xn yn zn</p>
-</dd>
-</dl>
-</dd>
-<dt>well[“r”]<span class="classifier">float</span></dt><dd><p>radius of the well</p>
-</dd>
-</dl>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Wells can be a list of well dictionaries.
-Calls the subroutine run_find_well_intersection_points to remove redundant code.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh">
-<span class="sig-name descname"><span class="pre">tag_well_in_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/well_package/wells.html#tag_well_in_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh" title="Link to this definition"></a></dt>
-<dd><p>Identifies nodes in a DFN for nodes the intersect a well with radius r [m]</p>
-<ol class="arabic simple">
-<li><p>Well coordinates in well[“filename”] are converted to a polyline that are written into “well_{well[‘name’]}_line.inp”</p></li>
-<li><p>Well is expanded to a volume with radius well[“r”] and written into the avs file well_{well[“name”]}_volume.inp</p></li>
-<li><p>Nodes in the DFN that intersect with the well are written into the zone file well_{well[“name”]}.zone</p></li>
-<li><p>If using PFLOTRAN, then an ex file is created from the well zone file</p></li>
-</ol>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>well</strong> – <p>Dictionary of information about the well that contains the following attributes</p>
-<dl>
-<dt>well[“name”]<span class="classifier">string</span></dt><dd><p>name of the well</p>
-</dd>
-<dt>well[“filename”]<span class="classifier">string</span></dt><dd><p>filename of the well coordinates with the following format
-x0 y0 z0</p>
-<p>x1 y1 z1</p>
-<p>…</p>
-<p>xn yn zn</p>
-</dd>
-</dl>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Wells can be a list of well dictionaries</p>
-</dd></dl>
-
 </section>
 </section>
 
@@ -240,7 +242,7 @@ x0 y0 z0</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

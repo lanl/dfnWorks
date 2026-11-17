@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; dfnWorks 2.9.3 (Released 2025-07-16) documentation</title>
+  <title>Index &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53c63d07"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -58,6 +58,8 @@
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -110,13 +112,17 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.add_fracture_source">add_fracture_source() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.construction.source_target.add_fracture_source">add_fracture_source() (in module pydfnworks.dfnGraph.construction.source_target)</a>
+</li>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.construction.source_target.add_fracture_target">add_fracture_target() (in module pydfnworks.dfnGraph.construction.source_target)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.add_fracture_target">add_fracture_target() (in module pydfnworks.dfnGraph.dfn2graph)</a>
-</li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.add_attribute_to_mesh.add_variable_to_mesh">add_variable_to_mesh() (in module pydfnworks.dfnGen.meshing.add_attribute_to_mesh)</a>
+</li>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.attributes.conductance.add_weight">add_weight() (in module pydfnworks.dfnGraph.attributes.conductance)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.process_generator_output.assign_hydraulic_properties">assign_hydraulic_properties() (in module pydfnworks.dfnGen.generation.process_generator_output)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -132,21 +138,41 @@
 </li>
       <li><a href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.combine_well_boundary_zones">combine_well_boundary_zones() (in module pydfnworks.dfnGen.well_package.wells)</a>
 </li>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.flow.metrics.compute_dQ">compute_dQ() (in module pydfnworks.dfnGraph.flow.metrics)</a>
+</li>
+      <li>
+    conductance.py
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-conductance.py">module</a>
+</li>
+      </ul></li>
       <li><a href="pydfnTrans.html#pydfnworks.dfnTrans.transport.copy_dfn_trans_files">copy_dfn_trans_files() (in module pydfnworks.dfnTrans.transport)</a>
+</li>
+      <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.fehm.correct_stor_file">correct_stor_file() (in module pydfnworks.dfnFlow.fehm)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.fehm.correct_stor_file">correct_stor_file() (in module pydfnworks.dfnFlow.fehm)</a>
+      <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.uge_tools.correct_uge_file">correct_uge_file() (in module pydfnworks.dfnFlow.uge_tools)</a>
 </li>
       <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.flow.create_dfn_flow_links">create_dfn_flow_links() (in module pydfnworks.dfnFlow.flow)</a>
 </li>
       <li><a href="pydfnTrans.html#pydfnworks.dfnTrans.transport.create_dfn_trans_links">create_dfn_trans_links() (in module pydfnworks.dfnTrans.transport)</a>
 </li>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.create_graph">create_graph() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.construction.create_graph.create_graph">create_graph() (in module pydfnworks.dfnGraph.construction.create_graph)</a>
 </li>
+      <li>
+    create_graph.py
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-create_graph.py">module</a>
+</li>
+      </ul></li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.create_mesh_links">create_mesh_links() (in module pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper)</a>
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.generator.create_network">create_network() (in module pydfnworks.dfnGen.generation.generator)</a>
+</li>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.current_flow_threshold">current_flow_threshold() (in module pydfnworks.dfnGraph.algorithms.pruning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -158,13 +184,25 @@
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.generator.dfn_gen">dfn_gen() (in module pydfnworks.dfnGen.generation.generator)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pydfnTrans.html#pydfnworks.dfnTrans.transport.dfn_trans">dfn_trans() (in module pydfnworks.dfnTrans.transport)</a>
 </li>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.dump_fractures">dump_fractures() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.io.dump_aperture">dump_aperture() (in module pydfnworks.dfnGen.generation.hydraulic.io)</a>
 </li>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.dump_json_graph">dump_json_graph() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.io.dump_fracture_info">dump_fracture_info() (in module pydfnworks.dfnGen.generation.hydraulic.io)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.dump_fractures">dump_fractures() (in module pydfnworks.dfnGraph.io.serialization)</a>
+</li>
+      <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.dump_h5_files">dump_h5_files() (in module pydfnworks.dfnFlow.pflotran)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.io.dump_hydraulic_values">dump_hydraulic_values() (in module pydfnworks.dfnGen.generation.hydraulic.io)</a>
+</li>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.dump_json_graph">dump_json_graph() (in module pydfnworks.dfnGraph.io.serialization)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.io.dump_perm">dump_perm() (in module pydfnworks.dfnGen.generation.hydraulic.io)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.io.dump_transmissivity">dump_transmissivity() (in module pydfnworks.dfnGen.generation.hydraulic.io)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -199,7 +237,15 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.generator.grab_polygon_data">grab_polygon_data() (in module pydfnworks.dfnGen.generation.generator)</a>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.process_generator_output.gather_dfn_gen_output">gather_dfn_gen_output() (in module pydfnworks.dfnGen.generation.process_generator_output)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.generate_hydraulic_values">generate_hydraulic_values() (in module pydfnworks.dfnGen.generation.hydraulic.dfn_methods)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.orientations.get_fracture_orientations">get_fracture_orientations() (in module pydfnworks.dfnGen.generation.orientations)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.process_generator_output.grab_polygon_data">grab_polygon_data() (in module pydfnworks.dfnGen.generation.process_generator_output)</a>
 </li>
       <li>
     graph_transport.py
@@ -208,9 +254,7 @@
         <li><a href="pydfnGraph.html#module-graph_transport.py">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.pruning.greedy_edge_disjoint">greedy_edge_disjoint() (in module pydfnworks.dfnGraph.pruning)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.greedy_edge_disjoint">greedy_edge_disjoint() (in module pydfnworks.dfnGraph.algorithms.pruning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -230,7 +274,7 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.pruning.k_shortest_paths_backbone">k_shortest_paths_backbone() (in module pydfnworks.dfnGraph.pruning)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.k_shortest_paths_backbone">k_shortest_paths_backbone() (in module pydfnworks.dfnGraph.algorithms.pruning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -242,7 +286,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.load_json_graph">load_json_graph() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.load_json_graph">load_json_graph() (in module pydfnworks.dfnGraph.io.serialization)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -262,6 +306,12 @@
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.udfm.map2continuum.map_to_continuum">map_to_continuum() (in module pydfnworks.dfnGen.meshing.udfm.map2continuum)</a>
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm">mapdfn_ecpm() (in module pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm.mapdfn_effective_perm">mapdfn_effective_perm() (in module pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells">mapdfn_tag_cells() (in module pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale.mapdfn_upscale">mapdfn_upscale() (in module pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale)</a>
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.dfm.mesh_dfm.mesh_dfm">mesh_dfm() (in module pydfnworks.dfnGen.meshing.dfm.mesh_dfm)</a>
 </li>
@@ -289,9 +339,20 @@
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn.mesh_network">mesh_network() (in module pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn)</a>
 </li>
       <li>
+    metrics.py
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-metrics.py">module</a>
+</li>
+      </ul></li>
+      <li>
     module
 
       <ul>
+        <li><a href="pydfnGraph.html#module-conductance.py">conductance.py</a>
+</li>
+        <li><a href="pydfnGraph.html#module-create_graph.py">create_graph.py</a>
+</li>
         <li><a href="pydfnGen.html#module-false_connections.py">false_connections.py</a>
 </li>
         <li><a href="pydfnGraph.html#module-graph_transport.py">graph_transport.py</a>
@@ -304,6 +365,10 @@
 </li>
         <li><a href="pydfnGen.html#module-mesh_dfn_helper.py">mesh_dfn_helper.py</a>
 </li>
+        <li><a href="pydfnGraph.html#module-metrics.py">metrics.py</a>
+</li>
+        <li><a href="pydfnGen.html#module-orientations.py">orientations.py</a>
+</li>
         <li><a href="pydfnFlow.html#module-pydfnworks.dfnFlow.fehm">pydfnworks.dfnFlow.fehm</a>
 </li>
         <li><a href="pydfnFlow.html#module-pydfnworks.dfnFlow.flow">pydfnworks.dfnFlow.flow</a>
@@ -312,13 +377,23 @@
 </li>
         <li><a href="pydfnFlow.html#module-pydfnworks.dfnFlow.pflotran">pydfnworks.dfnFlow.pflotran</a>
 </li>
+        <li><a href="pydfnFlow.html#module-pydfnworks.dfnFlow.uge_tools">pydfnworks.dfnFlow.uge_tools</a>
+</li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.generator">pydfnworks.dfnGen.generation.generator</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.dfn_methods">pydfnworks.dfnGen.generation.hydraulic.dfn_methods</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.io">pydfnworks.dfnGen.generation.hydraulic.io</a>
 </li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.input_checking">pydfnworks.dfnGen.generation.input_checking</a>
 </li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions">pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions</a>
 </li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.orientations">pydfnworks.dfnGen.generation.orientations</a>
+</li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.output_report.gen_output">pydfnworks.dfnGen.generation.output_report.gen_output</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.process_generator_output">pydfnworks.dfnGen.generation.process_generator_output</a>
 </li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.stress">pydfnworks.dfnGen.generation.stress</a>
 </li>
@@ -327,6 +402,12 @@
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">pydfnworks.dfnGen.meshing.dfm.mesh_dfm</a>
 </li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells</a>
+</li>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale</a>
 </li>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn</a>
 </li>
@@ -340,15 +421,31 @@
 </li>
         <li><a href="pydfnWorks-well.html#module-pydfnworks.dfnGen.well_package.wells">pydfnworks.dfnGen.well_package.wells</a>
 </li>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.dfn2graph">pydfnworks.dfnGraph.dfn2graph</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.algorithms.pruning">pydfnworks.dfnGraph.algorithms.pruning</a>
 </li>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_flow">pydfnworks.dfnGraph.graph_flow</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.attributes.conductance">pydfnworks.dfnGraph.attributes.conductance</a>
 </li>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_transport">pydfnworks.dfnGraph.graph_transport</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.create_graph">pydfnworks.dfnGraph.construction.create_graph</a>
 </li>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.pruning">pydfnworks.dfnGraph.pruning</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.source_target">pydfnworks.dfnGraph.construction.source_target</a>
+</li>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.graph_flow">pydfnworks.dfnGraph.flow.graph_flow</a>
+</li>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.metrics">pydfnworks.dfnGraph.flow.metrics</a>
+</li>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.io.serialization">pydfnworks.dfnGraph.io.serialization</a>
+</li>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.transport.graph_transport">pydfnworks.dfnGraph.transport.graph_transport</a>
+</li>
+        <li><a href="pydfnTrans.html#module-pydfnworks.dfnTrans.combine_avs_trajectories">pydfnworks.dfnTrans.combine_avs_trajectories</a>
 </li>
         <li><a href="pydfnTrans.html#module-pydfnworks.dfnTrans.transport">pydfnworks.dfnTrans.transport</a>
+</li>
+        <li><a href="pydfnworks.html#module-pydfnworks.general.general_functions">pydfnworks.general.general_functions</a>
+</li>
+        <li><a href="pydfnGraph.html#module-serialization.py">serialization.py</a>
+</li>
+        <li><a href="pydfnGraph.html#module-source_target.py">source_target.py</a>
 </li>
         <li><a href="pydfnGen.html#module-upscale.py">upscale.py</a>
 </li>
@@ -359,6 +456,15 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    orientations.py
+
+      <ul>
+        <li><a href="pydfnGen.html#module-orientations.py">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.output_report.gen_output.output_report">output_report() (in module pydfnworks.dfnGen.generation.output_report.gen_output)</a>
 </li>
   </ul></td>
@@ -367,13 +473,17 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.process_generator_output.parse_params_file">parse_params_file() (in module pydfnworks.dfnGen.generation.process_generator_output)</a>
+</li>
+      <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5">parse_pflotran_h5() (in module pydfnworks.dfnFlow.pflotran)</a>
+</li>
       <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">parse_pflotran_vtk_python() (in module pydfnworks.dfnFlow.pflotran)</a>
 </li>
       <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran">pflotran() (in module pydfnworks.dfnFlow.pflotran)</a>
 </li>
       <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran_cleanup">pflotran_cleanup() (in module pydfnworks.dfnFlow.pflotran)</a>
 </li>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.plot_graph">plot_graph() (in module pydfnworks.dfnGraph.dfn2graph)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.plot_graph">plot_graph() (in module pydfnworks.dfnGraph.io.serialization)</a>
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.input_checking.print_domain_parameters">print_domain_parameters() (in module pydfnworks.dfnGen.generation.input_checking)</a>
 </li>
@@ -410,10 +520,31 @@
 </li>
       </ul></li>
       <li>
+    pydfnworks.dfnFlow.uge_tools
+
+      <ul>
+        <li><a href="pydfnFlow.html#module-pydfnworks.dfnFlow.uge_tools">module</a>
+</li>
+      </ul></li>
+      <li>
     pydfnworks.dfnGen.generation.generator
 
       <ul>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.generator">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.generation.hydraulic.dfn_methods
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.dfn_methods">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.generation.hydraulic.io
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.io">module</a>
 </li>
       </ul></li>
       <li>
@@ -431,10 +562,24 @@
 </li>
       </ul></li>
       <li>
+    pydfnworks.dfnGen.generation.orientations
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.orientations">module</a>
+</li>
+      </ul></li>
+      <li>
     pydfnworks.dfnGen.generation.output_report.gen_output
 
       <ul>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.output_report.gen_output">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.generation.process_generator_output
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.process_generator_output">module</a>
 </li>
       </ul></li>
       <li>
@@ -451,8 +596,6 @@
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.add_attribute_to_mesh">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydfnworks.dfnGen.meshing.dfm.mesh_dfm
 
@@ -460,11 +603,34 @@
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm
 
       <ul>
         <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale
+
+      <ul>
+        <li><a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale">module</a>
 </li>
       </ul></li>
       <li>
@@ -510,31 +676,66 @@
 </li>
       </ul></li>
       <li>
-    pydfnworks.dfnGraph.dfn2graph
+    pydfnworks.dfnGraph.algorithms.pruning
 
       <ul>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.dfn2graph">module</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.algorithms.pruning">module</a>
 </li>
       </ul></li>
       <li>
-    pydfnworks.dfnGraph.graph_flow
+    pydfnworks.dfnGraph.attributes.conductance
 
       <ul>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_flow">module</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.attributes.conductance">module</a>
 </li>
       </ul></li>
       <li>
-    pydfnworks.dfnGraph.graph_transport
+    pydfnworks.dfnGraph.construction.create_graph
 
       <ul>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_transport">module</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.create_graph">module</a>
 </li>
       </ul></li>
       <li>
-    pydfnworks.dfnGraph.pruning
+    pydfnworks.dfnGraph.construction.source_target
 
       <ul>
-        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.pruning">module</a>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.source_target">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGraph.flow.graph_flow
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.graph_flow">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGraph.flow.metrics
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.metrics">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGraph.io.serialization
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.io.serialization">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnGraph.transport.graph_transport
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-pydfnworks.dfnGraph.transport.graph_transport">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.dfnTrans.combine_avs_trajectories
+
+      <ul>
+        <li><a href="pydfnTrans.html#module-pydfnworks.dfnTrans.combine_avs_trajectories">module</a>
 </li>
       </ul></li>
       <li>
@@ -542,6 +743,13 @@
 
       <ul>
         <li><a href="pydfnTrans.html#module-pydfnworks.dfnTrans.transport">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydfnworks.general.general_functions
+
+      <ul>
+        <li><a href="pydfnworks.html#module-pydfnworks.general.general_functions">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -552,11 +760,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pydfnTrans.html#pydfnworks.dfnTrans.transport.run_dfn_trans">run_dfn_trans() (in module pydfnworks.dfnTrans.transport)</a>
 </li>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.graph_flow.run_graph_flow">run_graph_flow() (in module pydfnworks.dfnGraph.graph_flow)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.flow.graph_flow.run_graph_flow">run_graph_flow() (in module pydfnworks.dfnGraph.flow.graph_flow)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.graph_transport.run_graph_transport">run_graph_transport() (in module pydfnworks.dfnGraph.graph_transport)</a>
+      <li><a href="pydfnGraph.html#pydfnworks.dfnGraph.transport.graph_transport.run_graph_transport">run_graph_transport() (in module pydfnworks.dfnGraph.transport.graph_transport)</a>
 </li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.run_lagrit_script">run_lagrit_script() (in module pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper)</a>
 </li>
@@ -566,10 +774,28 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    serialization.py
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-serialization.py">module</a>
+</li>
+      </ul></li>
       <li><a href="pydfnFlow.html#pydfnworks.dfnFlow.flow.set_flow_solver">set_flow_solver() (in module pydfnworks.dfnFlow.flow)</a>
+</li>
+      <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.hydraulic.dfn_methods.set_fracture_hydraulic_values">set_fracture_hydraulic_values() (in module pydfnworks.dfnGen.generation.hydraulic.dfn_methods)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pydfnworks.html#pydfnworks.general.general_functions.set_seed">set_seed() (in module pydfnworks.general.general_functions)</a>
+</li>
+      <li>
+    source_target.py
+
+      <ul>
+        <li><a href="pydfnGraph.html#module-source_target.py">module</a>
+</li>
+      </ul></li>
       <li><a href="pydfnGen.html#pydfnworks.dfnGen.generation.stress.stress_based_apertures">stress_based_apertures() (in module pydfnworks.dfnGen.generation.stress)</a>
 </li>
   </ul></td>
@@ -625,7 +851,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

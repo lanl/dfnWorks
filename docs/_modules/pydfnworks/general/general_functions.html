@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.general.general_functions &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+              <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.general.general_functions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.general.general_functions</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">select</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_input_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;* Checking input paths: Starting&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> 
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Prune file path is not valid:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_file</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dfnFlow file path is not valid:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dfnTrans control file path  is not valid:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span> 
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pickle file path is not valid:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;* Checking input paths: Complete&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="set_seed">
+<a class="viewcode-back" href="../../../pydfnworks.html#pydfnworks.general.general_functions.set_seed">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Initialize the pydfnworks pseudorandom number generators (NumPy and the</span>
+<span class="sd">    Python random module) from the DFN seed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+
+<span class="sd">        seed : int</span>
+<span class="sd">            Seed to initialize the generators with. If None (default), the value</span>
+<span class="sd">            of self.params[&#39;seed&#39;][&#39;value&#39;] is used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            The seed the generators were initialized with.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -------------</span>
+<span class="sd">        1. Randomness on the Python side of dfnWorks (hydraulic property</span>
+<span class="sd">        distributions, Poisson-disc meshing, plot sub-sampling) is drawn from</span>
+<span class="sd">        these two global generators, so seeding them makes those values</span>
+<span class="sd">        reproducible from run to run.</span>
+
+<span class="sd">        2. Following the dfnGen convention, a seed of 0 means &quot;seed off the</span>
+<span class="sd">        clock&quot;, i.e. produce a unique realization. In that case a seed is drawn</span>
+<span class="sd">        from system entropy and reported, so the pydfnworks-side values can be</span>
+<span class="sd">        reproduced later by setting DFN.params[&#39;seed&#39;][&#39;value&#39;] to the reported</span>
+<span class="sd">        number.</span>
+
+<span class="sd">        3. This does not change the seed used by the dfnGen executable. That</span>
+<span class="sd">        seed is read from the input file written by check_input().</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">seed</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error. seed must be non-negative. Value provided: </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">seed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># dfnGen convention: 0 means seed off the clock (unique realization).</span>
+        <span class="c1"># Draw one explicitly so the values used can be reported and repeated.</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;--&gt; seed is 0, pydfnworks random number generators are seeded off the clock&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Set DFN.params[&#39;seed&#39;][&#39;value&#39;] = </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2"> to reproduce these values&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Initializing pydfnworks random number generators with seed </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+    <span class="k">return</span> <span class="n">seed</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">call_executable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Calls subprocess.run to call compiled executables like dfnGen, PFLOTRAN, LaGriT, etc.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------------</span>
+<span class="sd">        self : object</span>
+<span class="sd">                DFN Class</span>
+
+<span class="sd">        command : string</span>
+<span class="sd">            command to execute</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Executing </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Prints parameters</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------------</span>
+<span class="sd">        self : object</span>
+<span class="sd">                DFN Class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Jobname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Local Jobname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Number of Processors Requested: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ncpu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnGen_file</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; dfnGen filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnGen_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Local dfnGen filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnGen_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; dfnFlow filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnFlow_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Local dfnFlow filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; dfnTrans filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dfnTrans_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Local dfnTrans filename : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnTrans_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">go_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jobname</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Current directory is </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dump_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Write run time for a funcion to the jobname_run_time.txt file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+<span class="sd">        </span>
+<span class="sd">        function_name : string</span>
+<span class="sd">            Name of function that was timed</span>
+<span class="sd">        </span>
+<span class="sd">        time : float</span>
+<span class="sd">            Run time of function in seconds</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ---------</span>
+<span class="sd">    While this function is working, the current formulation is not robust through the entire workflow</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">run_time_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;_run_time.txt&quot;</span>
+    <span class="c1"># Check if time file exists, if not create it</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Runs times for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="c1"># Write Time</span>
+    <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="mf">60.0</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot; : </span><span class="si">%0.2f</span><span class="s2"> minutes</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_run_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Read in run times from file and and print to screen with percentages</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
+<span class="sd">    This will dump out all values in the run file, not just those from the most recent run</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">run_time_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jobname</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span> <span class="o">+</span> <span class="s2">&quot;_run_time.txt&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_time_file</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;minutes&#39;</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">*=</span> <span class="mf">60.0</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;Runs times for &#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)):</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;minutes&#39;</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">*=</span> <span class="mf">60.0</span>
+        <span class="n">percent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="n">total</span><span class="p">))</span>
+        <span class="n">name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">--&gt; Percent if total </span><span class="si">%0.2f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">percent</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1">#print(&quot;Primary Function Percentages&quot;)</span>
+    <span class="c1">#for i in range(1,len(f) - 1):</span>
+    <span class="c1">#    if name[i-1] == &#39; dfnGen &#39; or name[i-1] == &#39; dfnFlow &#39; or name[i-1] == &#39; dfnTrans &#39;:</span>
+    <span class="c1">#        tmp = int(percent[i-1])/10</span>
+    <span class="c1">#        print(name[i-1]+&quot;\t&quot;+&quot;*&quot;tmp)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves the DFN object into a pickle format</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    --------------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+
+<span class="sd">        filename : string</span>
+<span class="sd">            name of pickle DFN object, default is None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------------</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="n">pickle_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pickle_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_jobname</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Pickling DFN object to </span><span class="si">{</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Warning </span><span class="si">{</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s2"> exists. Are you sure you want to overwrite it?</span><span class="se">\n</span><span class="s2">Response [y/n]: &quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">or</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Overwritting file&#39;</span><span class="p">)</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Pickling DFN object to </span><span class="si">{</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s1"> : Complete&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span> <span class="ow">or</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Not writting file.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Unknown Response. </span><span class="si">{response}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Not writting file.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;--&gt; Pickling DFN object to </span><span class="si">{</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s1"> : Complete&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">from_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads the DFN object from a pickle format</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    --------------</span>
+<span class="sd">        self : DFN Object</span>
+<span class="sd">        </span>
+<span class="sd">        filename : string</span>
+<span class="sd">            name of pickle DFN object</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">        DFN object</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ------------</span>
+<span class="sd">        Best if used with DFNWORKS(pickle_file = &lt;filename&gt;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Loading DFN from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error. Cannot find pickle file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pickle_filename</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Exiting program.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;critical&#39;</span><span class="p">)</span>
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
