@@ -55,7 +55,7 @@ Description: Angle that the projection of the normal vector of a fracture onto t
 Trend & Plunge
 ----------------------------------
 
-dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
+dfnWorks uses trend clockwise from North and plunge positive downward. Trend and plunge describe the downward-pointing pole to the fracture plane, and dfnWorks uses the opposite, upward-pointing normal. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
 
 .. math::
     \vec{n}_x = -\sin(\text{trend}) \cos(\text{plunge}), \quad
