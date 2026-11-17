@@ -99,7 +99,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvtk</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="c1"># from pydfnworks.general import helper_functions as hf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_print_log</span> 
 
@@ -301,15 +300,22 @@
 
 
 
-<div class="viewcode-block" id="inp2vtk_python">
-<a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">inp2vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Using Python VTK library, convert inp file to VTK file.  </span>
+<div class="viewcode-block" id="inp2vtu">
+<a class="viewcode-back" href="../../../../../pydfnGen.html#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtu">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">inp2vtu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert an AVS/UCD (.inp) mesh to an XML VTK unstructured-grid (.vtu) file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        self : object </span>
+<span class="sd">        self : object</span>
 <span class="sd">            DFN Class</span>
+
+<span class="sd">        inp_file : string</span>
+<span class="sd">            Mesh to convert. Default is ``self.inp_file`` (``full_mesh.inp``).</span>
+
+<span class="sd">        binary : bool</span>
+<span class="sd">            If True (default), data arrays are base64-encoded binary.</span>
+<span class="sd">            If False, they are written as ASCII.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
@@ -317,61 +323,43 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">        For a mesh base.inp, this dumps a VTK file named base.vtk</span>
+<span class="sd">        For a mesh ``base.inp`` this writes ``base.vtu`` (or ``self.vtu_file``</span>
+<span class="sd">        if it is set) and sets ``self.vtu_file``. All AVS cell types (line,</span>
+<span class="sd">        tri, quad, tet, hex, prism, pyramid) are kept, and the material ID of</span>
+<span class="sd">        each cell is written as the cell array ``material_id``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.vtu_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_inp_mesh</span><span class="p">,</span> <span class="n">write_vtu</span>
 
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;inp2vtk requires PFLOTRAN flow solver be selected&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Using Python to convert inp files to VTK files&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">:</span>
-        <span class="n">inp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span>
-
+    <span class="n">inp_file</span> <span class="o">=</span> <span class="n">inp_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inp_file</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;inp filename not provided&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span><span class="p">:</span>
-        <span class="n">vtk_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">vtk_file</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span> <span class="o">=</span> <span class="n">vtk_file</span> <span class="o">+</span> <span class="s1">&#39;.vtk&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtu_file</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vtu_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">inp_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.vtu&#39;</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Reading inp data&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Converting </span><span class="si">{</span><span class="n">inp_file</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vtu_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">read_inp_mesh</span><span class="p">(</span><span class="n">inp_file</span><span class="p">)</span>
+    <span class="n">write_vtu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vtu_file</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="n">binary</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Wrote </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vtu_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> points, &quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;cell_types&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span><span class="p">)</span></div>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">inp_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-        <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">num_elems</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_nodes</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
-        <span class="n">elem_list_tri</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">elem_list_tetra</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">):</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="n">coord</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">coord</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">coord</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">inp2vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Deprecated. Use :func:`inp2vtu`, which writes an XML ``.vtu`` file.</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_elems</span><span class="p">):</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">line</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">line</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">elem_type</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="s1">&#39;tri&#39;</span><span class="p">:</span>
-                <span class="n">elem_list_tri</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="s1">&#39;tet&#39;</span><span class="p">:</span>
-                <span class="n">elem_list_tetra</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">])</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Writing inp data to vtk format&#39;</span><span class="p">)</span>
-    <span class="n">vtk</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span>
-        <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span>
-                            <span class="n">tetra</span><span class="o">=</span><span class="n">elem_list_tetra</span><span class="p">,</span>
-                            <span class="n">triangle</span><span class="o">=</span><span class="n">elem_list_tri</span><span class="p">),</span>
-        <span class="s1">&#39;Unstructured pflotran grid&#39;</span><span class="p">)</span>
-
-    <span class="n">vtk</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span></div>
-
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; inp2vtk_python is deprecated and now writes an XML .vtu file. &quot;</span>
+                   <span class="s2">&quot;Use DFN.inp2vtu() instead.&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inp2vtu</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="run_lagrit_script">

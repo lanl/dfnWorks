@@ -29,7 +29,7 @@ This test case consists of four user defined rectangular fractures within a a cu
    *The meshed network of four rectangular fractures.*
 
 High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
-This image is created by loading the file pflotran_vtk_outputs/dfn_explicit-001.vtk into Paraview.
+This image is created by loading the file ``pflotran_vtu_outputs/dfn_explicit.pvd`` into Paraview and stepping to the final time.
 
 
 Particles are inserted uniformly along the inlet fracture on the left side of the image. 

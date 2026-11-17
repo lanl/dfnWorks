@@ -48,6 +48,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#obtaining-dfnworks">Obtaining dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#citing-dfnworks">Citing dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#versions">Versions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#next-release-in-development">Next release (in development)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-12-current-v2-12-2">v2.12 - Current (v2.12.2)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-10">v2.10</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-9">v2.9</a></li>
@@ -170,6 +171,14 @@ and Viswanathan, Hari S},
 </section>
 <section id="versions">
 <h2>Versions<a class="headerlink" href="#versions" title="Link to this heading"></a></h2>
+<section id="next-release-in-development">
+<h3>Next release (in development)<a class="headerlink" href="#next-release-in-development" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>PFLOTRAN results are written as XML VTK (<code class="docutils literal notranslate"><span class="pre">.vtu</span></code>) files with a ParaView time series (<code class="docutils literal notranslate"><span class="pre">.pvd</span></code>) that carries the simulation times, in <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/</span></code> (replaces legacy <code class="docutils literal notranslate"><span class="pre">.vtk</span></code> output in <code class="docutils literal notranslate"><span class="pre">pflotran_vtk_outputs/</span></code>)</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">inp2vtu</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code>; <code class="docutils literal notranslate"><span class="pre">inp2vtk_python</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python</span></code> are deprecated aliases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyvtk</span></code> is no longer a dependency</p></li>
+</ul>
+</section>
 <section id="v2-12-current-v2-12-2">
 <h3>v2.12 - Current (v2.12.2)<a class="headerlink" href="#v2-12-current-v2-12-2" title="Link to this heading"></a></h3>
 <ul class="simple">

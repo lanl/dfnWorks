@@ -172,9 +172,9 @@
 <p><strong>cellinfo.dat:</strong></p>
 <p id="cellinfo-dat">Mesh information output by PFLOTRAN.</p>
 <p><strong>dfn_explicit-000.vtk:</strong></p>
-<p id="dfn-explicit-000-vtk">VTK file of initial conditions of PFLOTRAN. Mesh is not included in this file.</p>
+<p id="dfn-explicit-000-vtk">Legacy VTK file of the initial conditions written by PFLOTRAN (no mesh). It is converted to <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/dfn_explicit-000.vtu</span></code> by <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code> and then removed.</p>
 <p><strong>dfn_explicit-001.vtk:</strong></p>
-<p id="dfn-explicit-001-vtk">VTK file of steady-state solution of PFLOTRAN. Mesh is not included in this file.</p>
+<p id="dfn-explicit-001-vtk">Legacy VTK file of the steady-state solution written by PFLOTRAN (no mesh). It is converted to <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/dfn_explicit-001.vtu</span></code> by <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code> and then removed.</p>
 <p><strong>dfn_explicit-mas.dat:</strong></p>
 <p id="dfn-explicit-mas-dat">pflotran information file.</p>
 <p><strong>dfn_explicit.in:</strong></p>
@@ -188,8 +188,8 @@
 <p id="full-mesh-vol-area-uge">Full DFN in uge format. Volumes and areas have been corrected.</p>
 <p><strong>materialid.dat:</strong></p>
 <p id="materialid-dat">Material ID (Fracture Number) for every node in the mesh.</p>
-<p><strong>pflotran_vtk_outputs:</strong></p>
-<p id="pflotran-vtk-outputs">Directory of PFLOTRAN results converted to VTK, one file per time step (written by <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python</span></code> or <code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code>). Named <code class="docutils literal notranslate"><span class="pre">parsed_vtk</span></code> in earlier versions.</p>
+<p><strong>pflotran_vtu_outputs:</strong></p>
+<p id="pflotran-vtu-outputs">Directory of PFLOTRAN results in XML VTK format, written by <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code> or <code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code>. It contains one <code class="docutils literal notranslate"><span class="pre">&lt;base&gt;-NNN.vtu</span></code> file per output time (the DFN mesh with the PFLOTRAN fields as point data and the fracture <code class="docutils literal notranslate"><span class="pre">material_id</span></code> as cell data) and <code class="docutils literal notranslate"><span class="pre">&lt;base&gt;.pvd</span></code>, a ParaView collection that lists the files with their simulation times in seconds. Open the <code class="docutils literal notranslate"><span class="pre">.pvd</span></code> file in ParaView so the time slider shows simulation time. Earlier versions wrote legacy <code class="docutils literal notranslate"><span class="pre">.vtk</span></code> files to <code class="docutils literal notranslate"><span class="pre">pflotran_vtk_outputs</span></code> (and before that <code class="docutils literal notranslate"><span class="pre">parsed_vtk</span></code>).</p>
 <p><strong>perm.dat:</strong></p>
 <p id="perm-dat">Fracture permeabilities in FEHM format. Each fracture is listed as a zone, starting index at 7.</p>
 <p><strong>pboundary_back_n.ex:</strong></p>

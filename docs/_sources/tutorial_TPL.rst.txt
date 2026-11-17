@@ -399,14 +399,15 @@ As the driver runs PFLOTRAN you will see information about the command line call
     2025-05-22 13:27:17,481 INFO --> Running: /home/jhyman/src/petsc/arch-linux-c-opt/bin/mpirun -np 12 /home/jhyman/src/pflotran/src/pflotran/pflotran -pflotranin dfn_explicit.in
     2025-05-22 13:27:22,210 INFO --> Processing file: dfn_explicit-000.vtk
     2025-05-22 13:27:22,302 INFO --> Processing file: dfn_explicit-001.vtk
-    2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
+    2025-05-22 13:27:22,370 INFO --> Wrote 2 snapshots to pflotran_vtu_outputs/; open pflotran_vtu_outputs/dfn_explicit.pvd in ParaView
+    2025-05-22 13:27:22,377 INFO --> Converting PFLOTRAN VTK output complete
 
 
-The simulation results can be viewed with vtk files written in the directory output/pflotran_vtk_outputs. The following images were created with Paraview:
+The simulation results are written to the directory output/pflotran_vtu_outputs as one ``.vtu`` file per output time and the time series ``dfn_explicit.pvd``. Open ``dfn_explicit.pvd`` in Paraview; the time slider steps through the simulation times. The following images were created with Paraview:
 
--  Read dfn_explicit-000.vtk select  Permeability at time 0
--  Read dfn_explicit-000.vtk select  Liquid Pressure at time 0
--  Read dfn_explicit-001.vtk select  Liquid Pressure at time 1
+-  At the initial time, select Permeability
+-  At the initial time, select Liquid Pressure
+-  At the final time, select Liquid Pressure
 
 
 .. figure:: figures/tpl_flow_permeability.png

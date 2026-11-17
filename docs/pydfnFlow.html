@@ -64,7 +64,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.dump_h5_files"><code class="docutils literal notranslate"><span class="pre">dump_h5_files()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.pflotran"><code class="docutils literal notranslate"><span class="pre">pflotran()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.pflotran_cleanup"><code class="docutils literal notranslate"><span class="pre">pflotran_cleanup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5()</span></code></a></li>
 </ul>
 </li>
@@ -145,26 +145,27 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydfnworks.dfnFlow.flow.dfn_flow">
-<span class="sig-name descname"><span class="pre">dfn_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_vtk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_h5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#dfn_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.dfn_flow" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dfn_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_vtu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_h5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_vtk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/flow.html#dfn_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.flow.dfn_flow" title="Link to this definition"></a></dt>
 <dd><p>Run the dfnFlow portion of the workflow</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>dump_vtk</strong> (<em>bool</em>) – If True (default), parse PFLOTRAN VTK output into
-pflotran_vtk_outputs/ with parse_pflotran_vtk_python.
-If False, skip VTK parsing.</p></li>
-<li><p><strong>dump_h5</strong> (<em>bool</em>) – If True, parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/
-with parse_pflotran_h5. The mesh comes from the .inp file via
-inp2vtk_python and the data come from &lt;base&gt;.h5.
-If False (default), skip HDF5 parsing.</p></li>
+<li><p><strong>dump_vtu</strong> (<em>bool</em>) – If True (default), convert PFLOTRAN’s VTK output into XML .vtu
+files and a .pvd time series in pflotran_vtu_outputs/ with
+parse_pflotran_vtk. If False, skip the conversion.</p></li>
+<li><p><strong>dump_h5</strong> (<em>bool</em>) – If True, convert PFLOTRAN’s HDF5 output (&lt;base&gt;.h5) into .vtu/.pvd
+files in pflotran_vtu_outputs/ with parse_pflotran_h5. The deck
+must request HDF5 output. If False (default), skip it.</p></li>
+<li><p><strong>dump_vtk</strong> (<em>bool</em>) – Deprecated name of dump_vtu.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p>Information on individual functions is found therein.
-dump_vtk and dump_h5 are independent; both can be True to produce
-parsed output from each source.</p>
+Both converters write &lt;base&gt;-NNN.vtu and &lt;base&gt;.pvd, so if dump_vtu and
+dump_h5 are both True the HDF5 conversion overwrites the VTK one.
+Open pflotran_vtu_outputs/&lt;base&gt;.pvd in ParaView.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -314,39 +315,15 @@ not need to be assigned manually after this call.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">
-<span class="sig-name descname"><span class="pre">parse_pflotran_vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python" title="Link to this definition"></a></dt>
-<dd><p>Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
-:param self: DFN Class
-:type self: object
-:param grid_vtk_file: Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
-:type grid_vtk_file: string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>If DFN class does not have a vtk file, inp2vtk_python is called</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_h5">
-<span class="sig-name descname"><span class="pre">parse_pflotran_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5" title="Link to this definition"></a></dt>
-<dd><p>Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.</p>
-<p>The mesh is taken from a VTK file derived from the .inp mesh
-(via inp2vtk_python if not already produced). Solution data is read
-from PFLOTRAN’s main HDF5 output, which contains one group per time
-step. Every dataset present in a time group is written to the
-corresponding pflotran_vtk_outputs/&lt;base&gt;-NNN.vtk file as POINT_DATA scalars.</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk">
+<span class="sig-name descname"><span class="pre">parse_pflotran_vtk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_vtk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk" title="Link to this definition"></a></dt>
+<dd><p>Convert PFLOTRAN VTK output into XML VTK (.vtu) files and a ParaView time series (.pvd).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
-<li><p><strong>h5_file</strong> (<em>string</em>) – Path to the PFLOTRAN HDF5 output file. If empty, defaults to
-‘&lt;local_dfnFlow_file stem&gt;.h5’ in the current directory.</p></li>
-<li><p><strong>grid_vtk_file</strong> (<em>string</em>) – Path to a VTK file containing the mesh. If empty, inp2vtk_python
-is invoked to produce one from self.inp_file.</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – If True (default), data arrays are base64-encoded binary. If False,
+they are written as ASCII.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -355,15 +332,56 @@ is invoked to produce one from self.inp_file.</p></li>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Dataset names are sanitized for legacy VTK compatibility
-(spaces and brackets become underscores).</p></li>
-<li><p>Integer datasets are written with <cite>int</cite> scalar type; everything
-else is written as <cite>float</cite>.</p></li>
-<li><p>Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.</p></li>
+<li><p>PFLOTRAN writes <code class="docutils literal notranslate"><span class="pre">&lt;base&gt;-NNN.vtk</span></code> files that contain only cell data
+for its control volumes, which are the nodes of the DFN mesh. Each
+snapshot is written to <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/&lt;base&gt;-NNN.vtu</span></code> with
+the mesh from <code class="docutils literal notranslate"><span class="pre">self.inp_file</span></code> and the PFLOTRAN fields as point
+data (plus the fracture <code class="docutils literal notranslate"><span class="pre">material_id</span></code> as cell data). Velocity files
+(<code class="docutils literal notranslate"><span class="pre">&lt;base&gt;-vel-NNN.vtk</span></code>) are merged into the matching snapshot.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/&lt;base&gt;.pvd</span></code> lists the snapshots with their
+simulation times in seconds, read from the PFLOTRAN log
+<code class="docutils literal notranslate"><span class="pre">&lt;base&gt;.out</span></code>. If the log is missing, the snapshot number is used.
+Open the <code class="docutils literal notranslate"><span class="pre">.pvd</span></code> file in ParaView.</p></li>
+<li><p>The original PFLOTRAN <code class="docutils literal notranslate"><span class="pre">.vtk</span></code> files are removed.</p></li>
 </ul>
 </dd></dl>
 
-<p>PFLOTRAN output can be written as VTK or HDF5. <code class="docutils literal notranslate"><span class="pre">dfn_flow(dump_vtk=True,</span> <span class="pre">dump_h5=False)</span></code> controls which is parsed after the run. Both <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code> write per-time-step VTK files into <code class="docutils literal notranslate"><span class="pre">pflotran_vtk_outputs/</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydfnworks.dfnFlow.pflotran.parse_pflotran_h5">
+<span class="sig-name descname"><span class="pre">parse_pflotran_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_vtk_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnFlow/pflotran.html#parse_pflotran_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5" title="Link to this definition"></a></dt>
+<dd><p>Convert PFLOTRAN HDF5 output into XML VTK (.vtu) files and a ParaView time series (.pvd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>h5_file</strong> (<em>string</em>) – Path to the PFLOTRAN HDF5 output file. If empty, defaults to
+<code class="docutils literal notranslate"><span class="pre">&lt;local_dfnFlow_file</span> <span class="pre">stem&gt;.h5</span></code> in the current directory.</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – If True (default), data arrays are base64-encoded binary. If False,
+they are written as ASCII.</p></li>
+<li><p><strong>grid_vtk_file</strong> (<em>string</em>) – Deprecated and ignored. The mesh is read from <code class="docutils literal notranslate"><span class="pre">self.inp_file</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Each time group of the HDF5 file (e.g. <code class="docutils literal notranslate"><span class="pre">'</span>&#160;&#160; <span class="pre">1</span> <span class="pre">Time</span>&#160; <span class="pre">1.00000E+02</span> <span class="pre">d'</span></code>)
+becomes <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/&lt;base&gt;-NNN.vtu</span></code>. Every dataset with one
+value per mesh node is written as point data; datasets with three
+values per node are written as vectors. Others are skipped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/&lt;base&gt;.pvd</span></code> lists the snapshots with the
+times from the group names, converted to seconds.</p></li>
+</ul>
+</dd></dl>
+
+<p>PFLOTRAN output can be written as VTK or HDF5. <code class="docutils literal notranslate"><span class="pre">dfn_flow(dump_vtu=True,</span> <span class="pre">dump_h5=False)</span></code> controls which is converted after the run. Both <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code> write one XML <code class="docutils literal notranslate"><span class="pre">.vtu</span></code> file per output time and a <code class="docutils literal notranslate"><span class="pre">.pvd</span></code> time series into <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/</span></code>. Open <code class="docutils literal notranslate"><span class="pre">pflotran_vtu_outputs/&lt;base&gt;.pvd</span></code> in ParaView.</p>
+<p>The simulation times in the <code class="docutils literal notranslate"><span class="pre">.pvd</span></code> file are in seconds. For VTK output they are read from the PFLOTRAN log (<code class="docutils literal notranslate"><span class="pre">&lt;base&gt;.out</span></code>); for HDF5 output they come from the HDF5 time group names. Data arrays are base64-encoded binary by default; pass <code class="docutils literal notranslate"><span class="pre">binary=False</span></code> for ASCII.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python</span></code>, <code class="docutils literal notranslate"><span class="pre">inp2vtk_python</span></code>, <code class="docutils literal notranslate"><span class="pre">dfn_flow(dump_vtk=...)</span></code>, and the <code class="docutils literal notranslate"><span class="pre">vtk_file</span></code> constructor argument are deprecated aliases of <code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk</span></code>, <code class="docutils literal notranslate"><span class="pre">inp2vtu</span></code>, <code class="docutils literal notranslate"><span class="pre">dump_vtu</span></code>, and <code class="docutils literal notranslate"><span class="pre">vtu_file</span></code>. They now write XML <code class="docutils literal notranslate"><span class="pre">.vtu</span></code> files.</p>
+</div>
 </section>
 <section id="mesh-geometry-checks-uge">
 <h2>Mesh Geometry Checks (UGE)<a class="headerlink" href="#mesh-geometry-checks-uge" title="Link to this heading"></a></h2>

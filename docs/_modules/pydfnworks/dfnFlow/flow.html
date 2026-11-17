@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="dfn_flow">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.flow.dfn_flow">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">dfn_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dump_vtk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dump_h5</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfn_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dump_vtu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dump_h5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dump_vtk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Run the dfnFlow portion of the workflow</span>
 
 <span class="sd">    Parameters</span>
@@ -136,16 +136,18 @@
 <span class="sd">        self : object</span>
 <span class="sd">            DFN Class</span>
 
-<span class="sd">        dump_vtk : bool</span>
-<span class="sd">            If True (default), parse PFLOTRAN VTK output into</span>
-<span class="sd">            pflotran_vtk_outputs/ with parse_pflotran_vtk_python.</span>
-<span class="sd">            If False, skip VTK parsing.</span>
+<span class="sd">        dump_vtu : bool</span>
+<span class="sd">            If True (default), convert PFLOTRAN&#39;s VTK output into XML .vtu</span>
+<span class="sd">            files and a .pvd time series in pflotran_vtu_outputs/ with</span>
+<span class="sd">            parse_pflotran_vtk. If False, skip the conversion.</span>
 
 <span class="sd">        dump_h5 : bool</span>
-<span class="sd">            If True, parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/</span>
-<span class="sd">            with parse_pflotran_h5. The mesh comes from the .inp file via</span>
-<span class="sd">            inp2vtk_python and the data come from &lt;base&gt;.h5.</span>
-<span class="sd">            If False (default), skip HDF5 parsing.</span>
+<span class="sd">            If True, convert PFLOTRAN&#39;s HDF5 output (&lt;base&gt;.h5) into .vtu/.pvd</span>
+<span class="sd">            files in pflotran_vtu_outputs/ with parse_pflotran_h5. The deck</span>
+<span class="sd">            must request HDF5 output. If False (default), skip it.</span>
+
+<span class="sd">        dump_vtk : bool</span>
+<span class="sd">            Deprecated name of dump_vtu.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ---------</span>
@@ -153,9 +155,13 @@
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
 <span class="sd">    Information on individual functions is found therein.</span>
-<span class="sd">    dump_vtk and dump_h5 are independent; both can be True to produce</span>
-<span class="sd">    parsed output from each source.</span>
+<span class="sd">    Both converters write &lt;base&gt;-NNN.vtu and &lt;base&gt;.pvd, so if dump_vtu and</span>
+<span class="sd">    dump_h5 are both True the HDF5 conversion overwrites the VTK one.</span>
+<span class="sd">    Open pflotran_vtu_outputs/&lt;base&gt;.pvd in ParaView.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dump_vtk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; dfn_flow(dump_vtk=...) is deprecated; use dump_vtu&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+        <span class="n">dump_vtu</span> <span class="o">=</span> <span class="n">dump_vtk</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;dfnFlow Starting&quot;</span><span class="p">)</span>
@@ -169,8 +175,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pflotran</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">dump_vtk</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_vtk_python</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dump_vtu</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_vtk</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">dump_h5</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_h5</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pflotran_cleanup</span><span class="p">()</span>

@@ -96,6 +96,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ntpath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -530,16 +531,130 @@
 
 
 
-<div class="viewcode-block" id="parse_pflotran_vtk_python">
-<a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.</span>
+<span class="c1"># Directory that receives the converted PFLOTRAN output (.vtu files + .pvd)</span>
+<span class="n">PFLOTRAN_VTU_DIR</span> <span class="o">=</span> <span class="s1">&#39;pflotran_vtu_outputs&#39;</span>
+
+<span class="c1"># PFLOTRAN time units -&gt; seconds</span>
+<span class="n">_TIME_UNITS_TO_SECONDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;sec&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s1">&#39;minute&#39;</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s1">&#39;minutes&#39;</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">,</span>
+    <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">3600.0</span><span class="p">,</span> <span class="s1">&#39;hr&#39;</span><span class="p">:</span> <span class="mf">3600.0</span><span class="p">,</span> <span class="s1">&#39;hour&#39;</span><span class="p">:</span> <span class="mf">3600.0</span><span class="p">,</span> <span class="s1">&#39;hours&#39;</span><span class="p">:</span> <span class="mf">3600.0</span><span class="p">,</span>
+    <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mf">86400.0</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="mf">86400.0</span><span class="p">,</span> <span class="s1">&#39;days&#39;</span><span class="p">:</span> <span class="mf">86400.0</span><span class="p">,</span>
+    <span class="s1">&#39;w&#39;</span><span class="p">:</span> <span class="mf">604800.0</span><span class="p">,</span> <span class="s1">&#39;wk&#39;</span><span class="p">:</span> <span class="mf">604800.0</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">:</span> <span class="mf">604800.0</span><span class="p">,</span> <span class="s1">&#39;weeks&#39;</span><span class="p">:</span> <span class="mf">604800.0</span><span class="p">,</span>
+    <span class="s1">&#39;mo&#39;</span><span class="p">:</span> <span class="mf">2629800.0</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="mf">2629800.0</span><span class="p">,</span> <span class="s1">&#39;months&#39;</span><span class="p">:</span> <span class="mf">2629800.0</span><span class="p">,</span>
+    <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">31557600.0</span><span class="p">,</span> <span class="s1">&#39;yr&#39;</span><span class="p">:</span> <span class="mf">31557600.0</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mf">31557600.0</span><span class="p">,</span> <span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="mf">31557600.0</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_SNAPSHOT_NAME</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?P&lt;base&gt;.+?)(?P&lt;vel&gt;-vel)?-(?P&lt;idx&gt;\d+)\.vtk$&#39;</span><span class="p">)</span>
+<span class="n">_STEP_TIME</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*Step\s+\d+\s+Time=\s*(?P&lt;value&gt;\S+).*\[(?P&lt;unit&gt;[A-Za-z]+)\]&#39;</span><span class="p">)</span>
+<span class="n">_VTK_WRITE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;write vtk output file:\s*(?P&lt;name&gt;\S+)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_time_to_seconds</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert a PFLOTRAN time value and unit (e.g. 1.0e2, &#39;d&#39;) to seconds.</span>
+<span class="sd">    Unknown units are returned unconverted. &quot;&quot;&quot;</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">_TIME_UNITS_TO_SECONDS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">unit</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">if</span> <span class="n">factor</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pflotran_snapshot_times</span><span class="p">(</span><span class="n">out_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read the simulation time of every VTK snapshot from a PFLOTRAN log.</span>
+
+<span class="sd">    PFLOTRAN writes ``Step N Time= X ... [unit]`` after each time step and</span>
+<span class="sd">    ``--&gt; write vtk output file: &lt;name&gt;`` whenever it writes a snapshot. Each</span>
+<span class="sd">    snapshot gets the time of the most recent step before it, or 0 for</span>
+<span class="sd">    snapshots written before the first step (the initial condition).</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        self : object </span>
+<span class="sd">        out_file : string</span>
+<span class="sd">            PFLOTRAN screen/log output, normally ``&lt;base&gt;.out``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        times : dict</span>
+<span class="sd">            ``{vtk file name: time in seconds}``. Empty if the file is missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">out_file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">times</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">_STEP_TIME</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="n">_time_to_seconds</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">continue</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">_VTK_WRITE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="n">times</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">current</span>
+    <span class="k">return</span> <span class="n">times</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_pflotran_vtk_fields</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">num_values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read the SCALARS and VECTORS blocks of a PFLOTRAN legacy VTK file.</span>
+
+<span class="sd">    PFLOTRAN writes cell data for its control volumes, which are the nodes of</span>
+<span class="sd">    the DFN mesh, so each field has one value (or vector) per mesh node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        vtk_file : string</span>
+<span class="sd">            PFLOTRAN output file, e.g. ``dfn_explicit-001.vtk``.</span>
+<span class="sd">        num_values : int</span>
+<span class="sd">            Number of mesh nodes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        fields : dict</span>
+<span class="sd">            ``{name: array}``; scalars have shape (n,), vectors (n, 3).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;SCALARS&#39;</span><span class="p">,</span> <span class="s1">&#39;VECTORS&#39;</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span>
+            <span class="k">if</span> <span class="n">keyword</span> <span class="o">==</span> <span class="s1">&#39;SCALARS&#39;</span><span class="p">:</span>
+                <span class="c1"># optional number of components, then optional LOOKUP_TABLE</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LOOKUP_TABLE&#39;</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+                <span class="n">count</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">num_values</span><span class="p">,</span> <span class="p">(</span><span class="n">num_values</span><span class="p">,</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">count</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">num_values</span><span class="p">,</span> <span class="p">(</span><span class="n">num_values</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">count</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">count</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vtk_file</span><span class="si">}</span><span class="s2">: field </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2"> values, expected </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;long&#39;</span><span class="p">,</span> <span class="s1">&#39;short&#39;</span><span class="p">,</span> <span class="s1">&#39;char&#39;</span><span class="p">,</span> <span class="s1">&#39;unsigned_int&#39;</span><span class="p">):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">fields</span>
+
+
+<div class="viewcode-block" id="parse_pflotran_vtk">
+<a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_vtk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert PFLOTRAN VTK output into XML VTK (.vtu) files and a ParaView time series (.pvd).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
 <span class="sd">            DFN Class</span>
-<span class="sd">        grid_vtk_file : string</span>
-<span class="sd">            Name of vtk file with mesh. Typically local_dfnFlow_file.vtk</span>
+
+<span class="sd">        binary : bool</span>
+<span class="sd">            If True (default), data arrays are base64-encoded binary. If False,</span>
+<span class="sd">            they are written as ASCII.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
@@ -547,107 +662,112 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    If DFN class does not have a vtk file, inp2vtk_python is called</span>
+<span class="sd">        - PFLOTRAN writes ``&lt;base&gt;-NNN.vtk`` files that contain only cell data</span>
+<span class="sd">          for its control volumes, which are the nodes of the DFN mesh. Each</span>
+<span class="sd">          snapshot is written to ``pflotran_vtu_outputs/&lt;base&gt;-NNN.vtu`` with</span>
+<span class="sd">          the mesh from ``self.inp_file`` and the PFLOTRAN fields as point</span>
+<span class="sd">          data (plus the fracture ``material_id`` as cell data). Velocity files</span>
+<span class="sd">          (``&lt;base&gt;-vel-NNN.vtk``) are merged into the matching snapshot.</span>
+<span class="sd">        - ``pflotran_vtu_outputs/&lt;base&gt;.pvd`` lists the snapshots with their</span>
+<span class="sd">          simulation times in seconds, read from the PFLOTRAN log</span>
+<span class="sd">          ``&lt;base&gt;.out``. If the log is missing, the snapshot number is used.</span>
+<span class="sd">          Open the ``.pvd`` file in ParaView.</span>
+<span class="sd">        - The original PFLOTRAN ``.vtk`` files are removed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output with Python&#39;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.vtu_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_inp_mesh</span><span class="p">,</span> <span class="n">write_vtu</span><span class="p">,</span> <span class="n">write_pvd</span>
 
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting PFLOTRAN VTK output to VTU/PVD&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
+    <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">snapshots</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">*.vtk&quot;</span><span class="p">)):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_SNAPSHOT_NAME</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span> <span class="ow">or</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">base</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">snapshots</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span><span class="p">)),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">snapshots</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Warning. No PFLOTRAN VTK files matching </span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-NNN.vtk found&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">read_inp_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">)</span>
+    <span class="n">num_points</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">_pflotran_snapshot_times</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.out&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Warning. </span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.out not found; using snapshot numbers as times in the .pvd file&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">collection</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
+        <span class="n">point_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">vtk_file</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Processing file: </span><span class="si">{</span><span class="n">vtk_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">point_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_read_pflotran_vtk_fields</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">num_points</span><span class="p">))</span>
+        <span class="n">vtu_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.vtu&quot;</span>
+        <span class="n">write_vtu</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="n">vtu_name</span><span class="p">),</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">point_data</span><span class="o">=</span><span class="n">point_data</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="n">binary</span><span class="p">)</span>
+        <span class="n">main_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.vtk&quot;</span>
+        <span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">times</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">main_file</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">idx</span><span class="p">)),</span> <span class="n">vtu_name</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">vtk_file</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+
+    <span class="n">pvd_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.pvd&quot;</span><span class="p">)</span>
+    <span class="n">write_pvd</span><span class="p">(</span><span class="n">pvd_file</span><span class="p">,</span> <span class="n">collection</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="si">}</span><span class="s2"> snapshots to </span><span class="si">{</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="si">}</span><span class="s2">/; open </span><span class="si">{</span><span class="n">pvd_file</span><span class="si">}</span><span class="s2"> in ParaView&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting PFLOTRAN VTK output complete&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_vtk_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Deprecated. Use :func:`parse_pflotran_vtk`, which writes XML ``.vtu``</span>
+<span class="sd">    files and a ``.pvd`` time series to ``pflotran_vtu_outputs/``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class</span>
+<span class="sd">        grid_vtk_file : string</span>
+<span class="sd">            Ignored. The mesh is read from ``self.inp_file``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; parse_pflotran_vtk_python is deprecated and now writes .vtu/.pvd files to &quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="si">}</span><span class="s2">/. Use DFN.parse_pflotran_vtk() instead.&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">grid_vtk_file</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span> <span class="o">=</span> <span class="n">grid_vtk_file</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp2vtk_python</span><span class="p">()</span>
-
-    <span class="n">grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span>
-
-    <span class="c1"># Grab all vtk files</span>
-    <span class="n">base_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_filename</span><span class="si">}</span><span class="s2">*.vtk&quot;</span><span class="p">)</span>
-    <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">3</span><span class="p">:]</span>
-
-    <span class="n">out_dir</span> <span class="o">=</span> <span class="s1">&#39;pflotran_vtk_outputs&#39;</span>
-
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;POINTS&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="n">num_cells</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Processing file: </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">pflotran_out</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">4</span><span class="p">:]</span>
-        <span class="n">pflotran_out</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">w</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CELL_DATA&#39;</span><span class="p">,</span> <span class="s1">&#39;POINT_DATA &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">pflotran_out</span>
-        <span class="p">]</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;# vtk DataFile Version 2.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;PFLOTRAN output</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;ASCII</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="p">]</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">header</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;vel&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;POINT_DATA</span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="n">num_cells</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">pflotran_out</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN output complete&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; grid_vtk_file is ignored; the mesh is read from the .inp file&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parse_pflotran_vtk</span><span class="p">()</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_time_group</span><span class="p">(</span><span class="n">group_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Parse a PFLOTRAN HDF5 time group name.</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_sanitize_vtk_field_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sanitize an HDF5 dataset name so it is a valid legacy VTK SCALARS field name.</span>
+<span class="sd">    PFLOTRAN writes top-level groups like ``&#39;   1 Time  1.00000E+02 d&#39;``.</span>
 
-<span class="sd">    Replaces whitespace and bracket characters with underscores, collapses</span>
-<span class="sd">    repeated underscores, and trims leading/trailing underscores.</span>
-<span class="sd">    Example: &#39;Liquid Pressure [Pa]&#39; -&gt; &#39;Liquid_Pressure_Pa&#39;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        (index, time in seconds), or None if the name is not a time group.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">ch</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
-    <span class="n">sanitized</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-    <span class="c1"># collapse repeated underscores</span>
-    <span class="k">while</span> <span class="s1">&#39;__&#39;</span> <span class="ow">in</span> <span class="n">sanitized</span><span class="p">:</span>
-        <span class="n">sanitized</span> <span class="o">=</span> <span class="n">sanitized</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sanitized</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;field&#39;</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_time_group_index</span><span class="p">(</span><span class="n">group_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Extract the integer time index from a PFLOTRAN HDF5 time group name.</span>
-
-<span class="sd">    PFLOTRAN writes top-level groups like &#39;   0 Time  0.00000E+00 d&#39;,</span>
-<span class="sd">    &#39;   1 Time  1.00000E+02 d&#39;, etc. The first whitespace-delimited token</span>
-<span class="sd">    is the time index.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">group_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">group_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">seconds</span> <span class="o">=</span> <span class="n">_time_to_seconds</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">idx</span><span class="p">,</span> <span class="n">seconds</span>
 
 
 <div class="viewcode-block" id="parse_pflotran_h5">
 <a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.</span>
-
-<span class="sd">    The mesh is taken from a VTK file derived from the .inp mesh</span>
-<span class="sd">    (via inp2vtk_python if not already produced). Solution data is read</span>
-<span class="sd">    from PFLOTRAN&#39;s main HDF5 output, which contains one group per time</span>
-<span class="sd">    step. Every dataset present in a time group is written to the</span>
-<span class="sd">    corresponding pflotran_vtk_outputs/&lt;base&gt;-NNN.vtk file as POINT_DATA scalars.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_pflotran_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid_vtk_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert PFLOTRAN HDF5 output into XML VTK (.vtu) files and a ParaView time series (.pvd).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -655,10 +775,12 @@
 <span class="sd">            DFN Class</span>
 <span class="sd">        h5_file : string</span>
 <span class="sd">            Path to the PFLOTRAN HDF5 output file. If empty, defaults to</span>
-<span class="sd">            &#39;&lt;local_dfnFlow_file stem&gt;.h5&#39; in the current directory.</span>
+<span class="sd">            ``&lt;local_dfnFlow_file stem&gt;.h5`` in the current directory.</span>
+<span class="sd">        binary : bool</span>
+<span class="sd">            If True (default), data arrays are base64-encoded binary. If False,</span>
+<span class="sd">            they are written as ASCII.</span>
 <span class="sd">        grid_vtk_file : string</span>
-<span class="sd">            Path to a VTK file containing the mesh. If empty, inp2vtk_python</span>
-<span class="sd">            is invoked to produce one from self.inp_file.</span>
+<span class="sd">            Deprecated and ignored. The mesh is read from ``self.inp_file``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
@@ -666,107 +788,69 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">        - Dataset names are sanitized for legacy VTK compatibility</span>
-<span class="sd">          (spaces and brackets become underscores).</span>
-<span class="sd">        - Integer datasets are written with `int` scalar type; everything</span>
-<span class="sd">          else is written as `float`.</span>
-<span class="sd">        - Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.</span>
+<span class="sd">        - Each time group of the HDF5 file (e.g. ``&#39;   1 Time  1.00000E+02 d&#39;``)</span>
+<span class="sd">          becomes ``pflotran_vtu_outputs/&lt;base&gt;-NNN.vtu``. Every dataset with one</span>
+<span class="sd">          value per mesh node is written as point data; datasets with three</span>
+<span class="sd">          values per node are written as vectors. Others are skipped.</span>
+<span class="sd">        - ``pflotran_vtu_outputs/&lt;base&gt;.pvd`` lists the snapshots with the</span>
+<span class="sd">          times from the group names, converted to seconds.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN HDF5 output with Python&#39;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydfnworks.general.vtu_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_inp_mesh</span><span class="p">,</span> <span class="n">write_vtu</span><span class="p">,</span> <span class="n">write_pvd</span>
 
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting PFLOTRAN HDF5 output to VTU/PVD&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Resolve the mesh VTK</span>
     <span class="k">if</span> <span class="n">grid_vtk_file</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span> <span class="o">=</span> <span class="n">grid_vtk_file</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;vtk_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp2vtk_python</span><span class="p">()</span>
-    <span class="n">grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtk_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; grid_vtk_file is deprecated and ignored; the mesh is read from the .inp file&quot;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Resolve the HDF5 file</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">h5_file</span><span class="p">:</span>
         <span class="n">h5_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.h5&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">h5_file</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PFLOTRAN HDF5 file not found: </span><span class="si">{</span><span class="n">h5_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Reading HDF5 data from </span><span class="si">{</span><span class="n">h5_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Read mesh block from the existing VTK (skip the 3 header lines so we</span>
-    <span class="c1"># can swap in our own header; matches parse_pflotran_vtk_python).</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">3</span><span class="p">:]</span>
-
-    <span class="n">num_points</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;POINTS&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="n">num_points</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">break</span>
-    <span class="k">if</span> <span class="n">num_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find POINTS line in </span><span class="si">{</span><span class="n">grid_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
-
-    <span class="n">out_dir</span> <span class="o">=</span> <span class="s1">&#39;pflotran_vtk_outputs&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_dir</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
-
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">read_inp_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">)</span>
+    <span class="n">num_points</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_dfnFlow_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
-    <span class="n">header_lines</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;# vtk DataFile Version 2.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;PFLOTRAN output</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ASCII</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
-    <span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="n">collection</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
-        <span class="c1"># Keep only the time-step groups (skip anything that doesn&#39;t parse).</span>
         <span class="n">time_groups</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">h5</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
                 <span class="k">continue</span>
-            <span class="n">idx</span> <span class="o">=</span> <span class="n">_time_group_index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">time_groups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">_parse_time_group</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">time_groups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="p">))</span>
         <span class="n">time_groups</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="n">time_groups</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No PFLOTRAN time-step groups found in </span><span class="si">{</span><span class="n">h5_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No PFLOTRAN time-step groups found in </span><span class="si">{</span><span class="n">h5_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="n">time_groups</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="n">time_groups</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">h5</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span>
-            <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.vtk&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Writing </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">header_lines</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;POINT_DATA </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">point_data</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">dset_name</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">dset</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="n">dset_name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dset</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dset</span><span class="p">[()])</span>
+                <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">num_points</span><span class="p">:</span>
+                    <span class="n">point_data</span><span class="p">[</span><span class="n">dset_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">num_points</span><span class="p">:</span>
+                    <span class="n">point_data</span><span class="p">[</span><span class="n">dset_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping &#39;</span><span class="si">{</span><span class="n">dset_name</span><span class="si">}</span><span class="s2">&#39; in time group </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: &quot;</span>
+                                   <span class="sa">f</span><span class="s2">&quot;size </span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2"> does not match </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> mesh points&quot;</span><span class="p">)</span>
+            <span class="n">vtu_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.vtu&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Writing </span><span class="si">{</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">vtu_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">write_vtu</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="n">vtu_name</span><span class="p">),</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">point_data</span><span class="o">=</span><span class="n">point_data</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="n">binary</span><span class="p">)</span>
+            <span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seconds</span><span class="p">,</span> <span class="n">vtu_name</span><span class="p">))</span>
 
-                <span class="k">for</span> <span class="n">dset_name</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="n">dset</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="n">dset_name</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dset</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
-                        <span class="k">continue</span>
-                    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dset</span><span class="p">[()])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Skipping &#39;</span><span class="si">{</span><span class="n">dset_name</span><span class="si">}</span><span class="s2">&#39; in time group </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;size </span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> mesh points&quot;</span><span class="p">)</span>
-                        <span class="k">continue</span>
-                    <span class="n">field</span> <span class="o">=</span> <span class="n">_sanitize_vtk_field_name</span><span class="p">(</span><span class="n">dset_name</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-                        <span class="n">scalar_type</span> <span class="o">=</span> <span class="s1">&#39;int&#39;</span>
-                        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">scalar_type</span> <span class="o">=</span> <span class="s1">&#39;float&#39;</span>
-                        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%.8e</span><span class="s1">&#39;</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SCALARS </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scalar_type</span><span class="si">}</span><span class="s2"> 1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LOOKUP_TABLE default</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
-                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fmt</span> <span class="o">%</span> <span class="n">v</span><span class="p">)</span>
-                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Parsing PFLOTRAN HDF5 output complete&#39;</span><span class="p">)</span></div>
+    <span class="n">pvd_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.pvd&quot;</span><span class="p">)</span>
+    <span class="n">write_pvd</span><span class="p">(</span><span class="n">pvd_file</span><span class="p">,</span> <span class="n">collection</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="si">}</span><span class="s2"> snapshots to </span><span class="si">{</span><span class="n">PFLOTRAN_VTU_DIR</span><span class="si">}</span><span class="s2">/; open </span><span class="si">{</span><span class="n">pvd_file</span><span class="si">}</span><span class="s2"> in ParaView&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s1">&#39;--&gt; Converting PFLOTRAN HDF5 output complete&#39;</span><span class="p">)</span></div>
 
 
 </pre></div>

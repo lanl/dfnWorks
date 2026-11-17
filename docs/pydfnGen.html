@@ -107,7 +107,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper">Meshing helper methods</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.create_mesh_links"><code class="docutils literal notranslate"><span class="pre">create_mesh_links()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2gmv"><code class="docutils literal notranslate"><span class="pre">inp2gmv()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python"><code class="docutils literal notranslate"><span class="pre">inp2vtk_python()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtu"><code class="docutils literal notranslate"><span class="pre">inp2vtu()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.run_lagrit_script"><code class="docutils literal notranslate"><span class="pre">run_lagrit_script()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pydfnworks.dfnGen.meshing.add_attribute_to_mesh.add_variable_to_mesh"><code class="docutils literal notranslate"><span class="pre">add_variable_to_mesh()</span></code></a></li>
 </ul>
@@ -951,19 +951,27 @@ prefix_aperture.dat and prefix_perm.dat</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python">
-<span class="sig-name descname"><span class="pre">inp2vtk_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#inp2vtk_python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtk_python" title="Link to this definition"></a></dt>
-<dd><p>Using Python VTK library, convert inp file to VTK file.</p>
+<dt class="sig sig-object py" id="pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtu">
+<span class="sig-name descname"><span class="pre">inp2vtu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html#inp2vtu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper.inp2vtu" title="Link to this definition"></a></dt>
+<dd><p>Convert an AVS/UCD (.inp) mesh to an XML VTK unstructured-grid (.vtu) file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong> (<em>object</em>) – DFN Class</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – DFN Class</p></li>
+<li><p><strong>inp_file</strong> (<em>string</em>) – Mesh to convert. Default is <code class="docutils literal notranslate"><span class="pre">self.inp_file</span></code> (<code class="docutils literal notranslate"><span class="pre">full_mesh.inp</span></code>).</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – If True (default), data arrays are base64-encoded binary.
+If False, they are written as ASCII.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>For a mesh base.inp, this dumps a VTK file named base.vtk</p>
+<p>For a mesh <code class="docutils literal notranslate"><span class="pre">base.inp</span></code> this writes <code class="docutils literal notranslate"><span class="pre">base.vtu</span></code> (or <code class="docutils literal notranslate"><span class="pre">self.vtu_file</span></code>
+if it is set) and sets <code class="docutils literal notranslate"><span class="pre">self.vtu_file</span></code>. All AVS cell types (line,
+tri, quad, tet, hex, prism, pyramid) are kept, and the material ID of
+each cell is written as the cell array <code class="docutils literal notranslate"><span class="pre">material_id</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">

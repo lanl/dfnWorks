@@ -427,14 +427,15 @@ See full_mesh.inp (or reduced_mesh.inp)</p>
 <span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:17,481<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Running:<span class="w"> </span>/home/jhyman/src/petsc/arch-linux-c-opt/bin/mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">12</span><span class="w"> </span>/home/jhyman/src/pflotran/src/pflotran/pflotran<span class="w"> </span>-pflotranin<span class="w"> </span>dfn_explicit.in
 <span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,210<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Processing<span class="w"> </span>file:<span class="w"> </span>dfn_explicit-000.vtk
 <span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,302<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Processing<span class="w"> </span>file:<span class="w"> </span>dfn_explicit-001.vtk
-<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,377<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Parsing<span class="w"> </span>PFLOTRAN<span class="w"> </span>output<span class="w"> </span><span class="nb">complete</span>
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,370<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Wrote<span class="w"> </span><span class="m">2</span><span class="w"> </span>snapshots<span class="w"> </span>to<span class="w"> </span>pflotran_vtu_outputs/<span class="p">;</span><span class="w"> </span>open<span class="w"> </span>pflotran_vtu_outputs/dfn_explicit.pvd<span class="w"> </span><span class="k">in</span><span class="w"> </span>ParaView
+<span class="m">2025</span>-05-22<span class="w"> </span><span class="m">13</span>:27:22,377<span class="w"> </span>INFO<span class="w"> </span>--&gt;<span class="w"> </span>Converting<span class="w"> </span>PFLOTRAN<span class="w"> </span>VTK<span class="w"> </span>output<span class="w"> </span><span class="nb">complete</span>
 </pre></div>
 </div>
-<p>The simulation results can be viewed with vtk files written in the directory output/pflotran_vtk_outputs. The following images were created with Paraview:</p>
+<p>The simulation results are written to the directory output/pflotran_vtu_outputs as one <code class="docutils literal notranslate"><span class="pre">.vtu</span></code> file per output time and the time series <code class="docutils literal notranslate"><span class="pre">dfn_explicit.pvd</span></code>. Open <code class="docutils literal notranslate"><span class="pre">dfn_explicit.pvd</span></code> in Paraview; the time slider steps through the simulation times. The following images were created with Paraview:</p>
 <ul class="simple">
-<li><p>Read dfn_explicit-000.vtk select  Permeability at time 0</p></li>
-<li><p>Read dfn_explicit-000.vtk select  Liquid Pressure at time 0</p></li>
-<li><p>Read dfn_explicit-001.vtk select  Liquid Pressure at time 1</p></li>
+<li><p>At the initial time, select Permeability</p></li>
+<li><p>At the initial time, select Liquid Pressure</p></li>
+<li><p>At the final time, select Liquid Pressure</p></li>
 </ul>
 <figure class="align-center">
 <a class="reference internal image-reference" href="_images/tpl_flow_permeability.png"><img alt="Mesh Permability time 0" src="_images/tpl_flow_permeability.png" style="width: 500px;" />
