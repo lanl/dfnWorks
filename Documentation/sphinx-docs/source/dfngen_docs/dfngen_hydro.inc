@@ -3,7 +3,7 @@ Hydrological Properties
 **************************************************
 Hydraulic properties can be assigned when generating creating stochastic and user defined fractures. For information about adding into the network see 
 
-.. warning:: These parameters are not going to be supported in future versions. Use the pydfnWorks function dump_hydraulic_values to specific hydraulic properties of fractures (hydraulic aperture, permeability, and transmissivity) after generation is complete. Using that function, values can be assigned by fracture family, which can correlated with depth using layers or regions. 
+.. warning:: These parameters are not going to be supported in future versions. Use the pydfnWorks functions ``generate_hydraulic_values`` and ``set_fracture_hydraulic_values`` to set hydraulic properties of fractures (hydraulic aperture, permeability, and transmissivity) after generation is complete, and ``dump_hydraulic_values`` to write them to file. Values can be assigned by fracture family, which can be correlated with depth using layers or regions. 
 
 
 Hydraulic Aperture  

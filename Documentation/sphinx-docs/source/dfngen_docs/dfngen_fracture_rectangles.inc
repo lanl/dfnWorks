@@ -124,112 +124,41 @@ Example:
 Rectangle: Fracture Orientation
 =================================
 
-The fracture orientations are sampled from the three-dimensional von Mises-Fisher distribution,
+Orientation parameters for rectangle families are set with the orientation arguments of ``add_fracture_family``. Their definitions, the coordinate conventions, and the Fisher and Bingham distributions are described in `Fracture Orientation`_. Each is stored in ``DFN.params`` as a list of :ref:`nFamRect` values:
 
-.. math:: 
-    f({\bf x}; {\boldsymbol \mu}, \kappa ) = \frac{ \kappa \exp( \kappa {\boldsymbol \mu}^{T} {\bf x} )}{ 4 \pi \sinh(\kappa)}~.
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 35
 
-where :math:`{\boldsymbol \mu}` is the mean orientation vector and :math:`T` denotes transpose. 
-The distribution is sampled using the algorithm provided `Simulation of the von Mises Fisher distribution Communications in statistics-simulation and computation 23.1 (1994): 157-164. by Andrew Wood. <https://www.tandfonline.com/doi/abs/10.1080/03610919408813161?casa_token=Cc-XXhvQTLcAAAAA%3A9pwlcB4cnrLeMs6UZWGaA7W84VevBrWD_bMvulGrKyFwFDA4ZYunOvO-XIpmf17XKgHqFQH1gzwZkw&>`_. 
-
-dfnGen accepts spherical coordinates (:math:`\theta`/:math:`\phi`), Trend/Plunge, or Dip/Strike to define the mean orientation of a fracture family. 
-
-.. tip:: 
-    :ref:`orientationOption` indicates which of these options are used. This is automatically set based on which option is used during fracture family parameter generation.  The same option must be used for all families.
-
-    | 0 : Spherical Coordinate (Theta/Phi)
-    | 1 : Trend / Plunge
-    | 2 : Dip / Strike.
-
-----
-
-rkappa
-----------------------------------
-
-Description: The concentration parameter of the von Mises-Fisher  distribution, which determines the degree of clustering around the mean orientation. 
-
-Type: list of :ref:`nFamRect` floats 
-
-Example:
-
-.. code-block:: python
-
-    DFN.params['rkappa']['value'] = [0.1, 20, 17] 
-    # Fracture Family 1 has a theta value of 45 degrees
-    # Fracture Family 2 has a theta value of 78 degrees
-    # Fracture Family 3 has a theta value of 0 degrees
-    
-.. note:: Values of :math:`\kappa` approaching zero result in a uniform distribution of points on the sphere.  Larger values create points with a small deviation from mean direction. 
-
-.. warning:: The numerical method for sampling the von Mises-Fisher  distribution becomes unstable for values greater than 100. 
-
+   * - ``DFN.params`` key
+     - ``add_fracture_family`` argument
+     - Used when
+   * - ``rorientation_distribution``
+     - :ref:`orientation_distribution`
+     - always
+   * - ``rkappa``
+     - :ref:`kappa`
+     - Fisher
+   * - ``rkappa1``, ``rkappa2``
+     - :ref:`kappa1`, :ref:`kappa2`
+     - Bingham
+   * - ``rtheta``, ``rphi``
+     - :ref:`theta`, :ref:`phi`
+     - :ref:`orientationOption` = 0
+   * - ``rtrend``, ``rplunge``
+     - :ref:`trend`, :ref:`plunge`
+     - :ref:`orientationOption` = 1
+   * - ``rdip``, ``rstrike``
+     - :ref:`dip`, :ref:`strike`
+     - :ref:`orientationOption` = 2
 
 ----
 
-
-Rectangle: Spherical Coordinates
-----------------------------------
-
-The mean normal vector of the fracture family :math:`\vec{n}` is related to the spherical coordinates :math:`\theta` and :math:`\phi` by
-
-.. math::
-        \vec{n}_x & = \sin(\theta) \cos(\phi)
-.. math::
-	\vec{n}_y & = \sin(\theta) \sin(\phi)
-.. math::
-	\vec{n}_z & = \cos(\theta)
-
-rtheta
-^^^^^^^^^^^^^^
-
-Description: Angle the normal vector of the fracture makes with the z-axis 
-
-
-.. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', and the value provided must be less than :math:`2 \pi`.  
- 
-----
-
-
-rphi
-^^^^^^^^^^^^^^
-
-Description: Angle that the projection of the normal vector of a fracture onto the x-y plane makes with the x-axis. 
-
-.. note:: Both radians and degrees are supported. Use :ref:`angleOption` to select one. If :ref:`angleOption` is set to radians :ref:`angleOption` = 'radian', then the value provided must be less than :math:`2 \pi`.  
- 
-
-----
-
-Rectangle: Trend & Plunge
-----------------------------------
-For trend and plunge, dfnWorks uses trend clockwise from North and plunge positive downward. The mean normal vector of the fracture family :math:`\vec{n}` is related to trend and plunge by
-
-.. math::
-        \vec{n}_x & = -\sin(\text{trend}) \cos(\text{plunge})
-.. math::        
-	\vec{n}_y & = -\cos(\text{trend}) \cos(\text{plunge})
-.. math::
-	\vec{n}_z & = \sin(\text{trend})
-
-
-Rectangle: Dip & Strike
-----------------------------------
-
-For dip and strike, dfnWorks uses the Right Hand Rule (RHR) with strike clockwise from North. The mean normal vector of the fracture family :math:`\vec{n}` is related to dip and strike by
-
-.. math::
-        \vec{n}_x & = \sin(\text{dip}) \cos(\text{strike})
-.. math::
-	    \vec{n}_y & = -\sin(\text{dip}) \sin(\text{strike})
-.. math::
-	    \vec{n}_z & = \cos(\text{dip})
-
-
-Rectangle: In Plane Rotation 
-----------------------------------
+Rectangle: In Plane Rotation
+=================================
 
 rbetaDistribution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 Description: Prescribe a rotation around each fracture's normal vector, with the fracture centered on x-y plane at the origin 
 
@@ -249,7 +178,7 @@ Type: list of :ref:`nFamRect` boolean values
 ----
 
 rbeta
-^^^^^^^^^^^^^^^^
+----------------------------------
 
 Description: Values for constant angle of rotation around the normal vector 
 
