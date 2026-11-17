@@ -16,14 +16,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os, sys, subprocess, re
-import sys
-sys.path.insert(0, os.path.abspath('../../pydfnworks'))
-import pydfnworks
+import os, sys
 
-#sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/pydfnworks/'))
-sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/'))
+# Import pydfnworks from this repository (not a site-packages install) so the
+# API pages always match the checked-out source.
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.insert(0, os.path.join(REPO_ROOT, 'pydfnworks'))
 
 import pydfnworks
 latex_additional_files = ['figures/dfnworks_logo.png']
@@ -43,6 +41,10 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.imgmath']
 
+# Keep autodoc working on machines without every optional runtime dependency.
+autodoc_mock_imports = ['pyvtk', 'vtk', 'pyvista', 'mplstereonet', 'fpdf', 'mpltern']
+autodoc_member_order = 'bysource'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -61,7 +63,7 @@ master_doc = 'index_docs'
 
 # General information about the project.
 project = u'dfnWorks'
-copyright = '2020, LANL, LA-UR-17-22216'
+copyright = '2015-2026, LANL, LA-UR-17-22216'
  
 author = u'EES-16, Subsurface Flow and Transport'
 
@@ -71,8 +73,6 @@ author = u'EES-16, Subsurface Flow and Transport'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-
-release_globals = {}
 
 version = pydfnworks.__version__
 release = f"{pydfnworks.__version__} (Released {pydfnworks.__release_date__})"
@@ -296,7 +296,7 @@ latex_documents = [
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #
-latex_logo = 'dfnworks_logo.png' 
+latex_logo = 'figures/dfnworks_logo.png' 
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
