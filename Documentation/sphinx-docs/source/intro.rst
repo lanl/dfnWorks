@@ -62,6 +62,13 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 Versions
 -------------------
 
+Next release (in development)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- PFLOTRAN results are written as XML VTK (``.vtu``) files with a ParaView time series (``.pvd``) that carries the simulation times, in ``pflotran_vtu_outputs/`` (replaces legacy ``.vtk`` output in ``pflotran_vtk_outputs/``)
+- New ``inp2vtu`` and ``parse_pflotran_vtk``; ``inp2vtk_python`` and ``parse_pflotran_vtk_python`` are deprecated aliases
+- ``pyvtk`` is no longer a dependency
+
 v2.12 - Current (v2.12.2)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

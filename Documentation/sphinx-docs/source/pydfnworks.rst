@@ -97,7 +97,7 @@ Default Arguments:
                    uge_file = 'full_mesh.uge',
                    mat_file = 'materialid.dat',
                    stor_file = None,
-                   vtk_file = None,
+                   vtu_file = None,
                    num_nodes = None,
                    cell_based_aperture = False,
                    store_polygon_data = True,

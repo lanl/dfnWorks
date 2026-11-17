@@ -31,7 +31,9 @@ class DFNWORKS():
         
         local prefix: indicates that the name contains only the most local directory
         
-        vtk_file: the name of the VTK file
+        vtu_file: the name of the XML VTK (.vtu) mesh file written by inp2vtu
+        
+        vtk_file: deprecated name of vtu_file
         
         inp_file: the name of the INP file
         
@@ -86,7 +88,7 @@ class DFNWORKS():
 
     ## Functions from mesh_dfn dir
     from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn import mesh_network
-    from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, gather_mesh_information
+    from pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper import inp2gmv, create_mesh_links, inp2vtk_python, inp2vtu, gather_mesh_information
     from pydfnworks.dfnGen.meshing.mesh_dfn.poisson_driver import create_lagrit_parameters_file
     from pydfnworks.dfnGen.meshing.mesh_dfn.lagrit_merge_mesh import create_merge_poly_scripts, create_final_merge_script
     from pydfnworks.dfnGen.meshing.mesh_dfn.run_meshing import mesh_fractures_header,merge_network, check_for_missing_edges
@@ -119,7 +121,7 @@ class DFNWORKS():
     # dfnFlow
     import pydfnworks.dfnFlow
     from pydfnworks.dfnFlow.flow import dfn_flow, create_dfn_flow_links, set_flow_solver
-    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
+    from pydfnworks.dfnFlow.pflotran import lagrit2pflotran, pflotran, parse_pflotran_vtk, parse_pflotran_vtk_python, parse_pflotran_h5, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex, dump_h5_files
     from pydfnworks.dfnFlow.uge_tools import correct_uge_file 
     from pydfnworks.dfnFlow.fehm import correct_stor_file, fehm
     from pydfnworks.dfnFlow.mass_balance import effective_perm
@@ -153,6 +155,7 @@ class DFNWORKS():
                  mat_file='materialid.dat',
                  stor_file=None,
                  vtk_file=None,
+                 vtu_file=None,
                  num_nodes=None,
                  cell_based_aperture=False,
                  store_polygon_data=True,
@@ -187,6 +190,11 @@ class DFNWORKS():
         self.material_ids = float
 
         self.num_nodes = num_nodes
+        # vtk_file is the deprecated name of vtu_file (legacy .vtk output was
+        # replaced by XML .vtu); a .vtk name is converted to .vtu.
+        if vtu_file is None and vtk_file is not None:
+            vtu_file = os.path.splitext(vtk_file)[0] + '.vtu'
+        self.vtu_file = vtu_file
         self.vtk_file = vtk_file
         self.inp_file = inp_file
         self.uge_file = uge_file

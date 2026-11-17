@@ -40,7 +40,6 @@ setup(
         "fpdf",
         "mplstereonet",
         "seaborn",
-        "pyvtk",
         "mpmath",
         "pandas",
     ],

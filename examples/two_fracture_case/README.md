@@ -68,7 +68,7 @@ The fractures intersect and form a connected network.
 -   Liquid pressure
 -   Permeability
 -   Mass balance
--   VTK files for visualization
+-   VTU files and a `.pvd` time series for visualization (`output/pflotran_vtu_outputs/`)
 
 ------------------------------------------------------------------------
 
@@ -108,7 +108,7 @@ The driver performs:
 8.  Convert mesh to PFLOTRAN format
 9.  Run PFLOTRAN
 10. Clean PFLOTRAN output
-11. Parse VTK results
+11. Convert PFLOTRAN output to VTU/PVD
 12. Compute effective permeability
 13. Run DFNTrans particle tracking
 
@@ -158,5 +158,5 @@ After completion:
 -   Particle trajectories from left to right
 -   Control plane crossing data
 
-Results can be visualized in ParaView using generated VTK files.
+Results can be visualized in ParaView by opening `output/pflotran_vtu_outputs/pflotran.pvd`.
 

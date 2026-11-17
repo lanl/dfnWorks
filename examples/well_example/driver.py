@@ -86,5 +86,5 @@ DFN.combine_well_boundary_zones(wells)
 
 ####dfnFlow()
 DFN.pflotran()
-DFN.parse_pflotran_vtk_python()
+DFN.parse_pflotran_vtk()
 DFN.pflotran_cleanup()

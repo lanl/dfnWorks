@@ -111,7 +111,7 @@ DFN.dump_hydraulic_values()
 # dfnFlow()
 DFN.lagrit2pflotran()
 DFN.pflotran()
-DFN.parse_pflotran_vtk_python()
+DFN.parse_pflotran_vtk()
 DFN.pflotran_cleanup()
 
 # dfnTrans
