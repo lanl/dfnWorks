@@ -6,9 +6,12 @@ The edge ``weight`` used by the graph-flow Laplacian is the hydraulic
 conductance of the fracture flowing surface represented by that edge.
 ``add_weight`` dispatches to a selectable model:
 
-* ``"karra"`` (default) -- Karra et al. (2018), ``w = K*A/L``.
 * ``"doolaeghe"`` -- Doolaeghe et al. (2020) size-aware trapezoid conductance
-  with the multiple-paths correction (added in a later phase).
+  with the multiple-paths correction. This is the default used by
+  ``DFN.run_graph_flow``.
+* ``"karra"`` -- Karra et al. (2018), ``w = K*A/L``. This is the default of
+  ``add_weight`` when it is called directly, and was the ``run_graph_flow``
+  default before v2.12.
 """
 
 import math

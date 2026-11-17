@@ -43,14 +43,15 @@ def dfn_flow(self, dump_vtk=True, dump_h5=False):
             DFN Class
 
         dump_vtk : bool
-            True - Parse PFLOTRAN VTK output into pflotran_vtk_outputs/ via
-                   parse_pflotran_vtk_python (default).
-            False - Skip VTK parsing.
+            If True (default), parse PFLOTRAN VTK output into
+            pflotran_vtk_outputs/ with parse_pflotran_vtk_python.
+            If False, skip VTK parsing.
+
         dump_h5 : bool
-            True - Parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/ via
-                   parse_pflotran_h5. Mesh comes from the .inp via
-                   inp2vtk_python; data come from <base>.h5.
-            False - Skip HDF5 parsing (default).
+            If True, parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/
+            with parse_pflotran_h5. The mesh comes from the .inp file via
+            inp2vtk_python and the data come from <base>.h5.
+            If False (default), skip HDF5 parsing.
 
     Returns
     ---------

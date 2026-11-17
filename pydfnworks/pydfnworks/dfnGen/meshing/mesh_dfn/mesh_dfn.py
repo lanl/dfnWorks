@@ -46,7 +46,7 @@ def mesh_network(self,
             Defines the minimum distance from the intersections with resolution max_resolution * h. This value is the factor of h, distance = max_dist * h
         
         max_resolution_factor : float
-            Maximum factor of the mesh resolultion (max_resolution *h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
+            Maximum factor of the mesh resolution (max_resolution_factor * h). Depending on the slope of the linear function and size of the fracture, this may not be realized in the mesh. 
         
         well : bool
             Toggle well points. Default : False

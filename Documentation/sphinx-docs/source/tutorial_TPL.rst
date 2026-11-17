@@ -400,7 +400,7 @@ As the driver runs PFLOTRAN you will see information about the command line call
     2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
 
 
-The simulation results can be viewed with vtk files written in the directory output/parsed_vtk. The following images were created with Paraview:
+The simulation results can be viewed with vtk files written in the directory output/pflotran_vtk_outputs. The following images were created with Paraview:
 
 -  Read dfn_explicit-000.vtk select  Permeability at time 0
 -  Read dfn_explicit-000.vtk select  Liquid Pressure at time 0
