@@ -1,3 +1,4 @@
+import numbers
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from shutil import copy
 from numpy import zeros
@@ -22,6 +23,53 @@ def check_stop_condition(params):
         check_n_poly(params['nPoly']['value'])
     else:
         check_p32_targets(params)
+
+
+P32_CONVENTION_NAMES = {
+    0: "double-sided (wetted surface area), P32 = 2A/V",
+    1: "single-sided, P32 = A/V"
+}
+
+
+def check_p32_convention(params):
+    """ Checks the P32 convention and converts it to the integer flag used by dfnGen.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Accepted values (strings are not case sensitive)
+        0, 'double', 'wetted' : double-sided (wetted surface area), P32 = 2A/V. Default.
+        1, 'single' : single-sided, P32 = A/V.
+
+        The value in params is replaced with 0 or 1. Exits program if the value is not recognized.
+    """
+    key = 'p32_convention'
+    value = params[key]['value']
+    aliases = {'double': 0, 'wetted': 0, '0': 0, 'single': 1, '1': 1}
+
+    if value is None:
+        convention = 0
+    elif isinstance(value, str):
+        convention = aliases.get(value.strip().lower())
+    elif isinstance(value, (bool, numbers.Integral)) and int(value) in (0, 1):
+        convention = int(value)
+    else:
+        convention = None
+
+    if convention is None:
+        hf.print_error(
+            f"\"{key}\" must be 0, 'double', or 'wetted' (double-sided / wetted surface area) or 1 or 'single' (single-sided). Value provided: {value}"
+        )
+
+    params[key]['value'] = convention
+    local_print_log(f"--> P32 convention: {P32_CONVENTION_NAMES[convention]}")
 
 
 def check_n_poly(n_poly):
@@ -692,6 +740,7 @@ def check_general(params):
     """
     local_print_log(f"--> Checking General Parameters: Starting")
     check_stop_condition(params)
+    check_p32_convention(params)
     check_domain(params)
     check_family_count(params)
     check_family_prob(params)

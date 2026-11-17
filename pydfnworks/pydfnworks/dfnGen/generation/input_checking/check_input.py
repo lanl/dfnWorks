@@ -35,7 +35,12 @@ def print_domain_parameters(self, print_all=False):
         if print_all:
             self.print_log(f"{key:34s}{value}")
         else:
-            if value:
+            if key == 'p32_convention':
+                # always shown, 0 (double-sided) is a meaningful choice
+                if value is None:
+                    value = 0
+                self.print_log(f"Name: {key:34s}Value: {value}")
+            elif value:
                 self.print_log(f"Name: {key:34s}Value: {value}")
     self.print_log('=' * 80)
 

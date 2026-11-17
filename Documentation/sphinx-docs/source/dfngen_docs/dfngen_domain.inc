@@ -220,7 +220,36 @@ Example:
 
     DFN.params['stopCondition']['value'] = 1 
 
-.. note:: p32 values are defined for each family during the creation of the fracture family. If stopCondition = 0 the :ref:`famProb` of a fracture belonging to a family is set during the creation of the fracture family (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`). 
+.. note:: p32 values are defined for each family during the creation of the fracture family. They are interpreted using the convention set by :ref:`p32_convention`. If stopCondition = 0 the :ref:`famProb` of a fracture belonging to a family is set during the creation of the fracture family (See :ref:`pydfnGen <dfnWorks-python-chapter-dfnGen>`). 
+
+----
+
+
+p32_convention
+=================================
+
+Description: Convention used for fracture intensity (P32). There are two conventions in common use. The double-sided convention counts both faces of every fracture (the wetted surface area), so :math:`P_{32} = 2A/V`. The single-sided convention counts each fracture once, so :math:`P_{32} = A/V`. Here :math:`A` is the total fracture area inside the domain (after truncation at the domain boundary) and :math:`V` is the volume of the domain, layer, or region that the fracture family is assigned to.
+
+The selected convention applies to the p32 target of every fracture family (:ref:`e_p32Targets` and :ref:`r_p32Targets`) and to all P32 and surface area values reported by dfnGen (screen, log file, DFN_output.txt, and the output report pdf).
+
+Type: Integer (0/1) or string
+
+Default: 0
+
+| 0, 'double', or 'wetted': double-sided (wetted surface area), :math:`P_{32} = 2A/V`
+| 1 or 'single': single-sided, :math:`P_{32} = A/V`
+
+Example:
+
+.. code-block:: python
+
+    DFN.params['p32_convention']['value'] = 1
+    # or equivalently
+    DFN.params['p32_convention']['value'] = 'single'
+
+.. note:: Strings are not case sensitive and are converted to 0 or 1 by the input checker. For the same target value, a single-sided target produces twice the fracture area of a double-sided target. A network generated with a double-sided target of 1.0 is equivalent to one generated with a single-sided target of 0.5.
+
+.. note:: The flow channeling density indicator computed by ``compute_dQ`` always uses the double-sided (wetted) surface area. The P32 value it returns follows *p32_convention*.
 
 ----
 

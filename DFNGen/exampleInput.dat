@@ -8,6 +8,13 @@ stopCondition: 0
        families target p32 values (defined in stochastic family sections)
 */             
 
+p32_convention: 0
+/*  Convention used for fracture intensity (P32). Applies to the family
+    p32 targets and to all P32 and surface area values reported.
+    0: Double-sided (wetted surface area), P32 = 2*A/V (default)
+    1: Single-sided, P32 = A/V
+*/
+
 nPoly: 400
 /*  Used when stopCondition = 0 (nPoly option).
 

@@ -140,7 +140,7 @@ Use this parameter to define the specific scaling behavior of the fracture sizes
 p32
 ~~~~~~~~~~~~~
 
-This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 relates to the number of fractures per unit volume or area.
+This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 is the fracture surface area per unit volume, interpreted using the convention set by :ref:`p32_convention` (double-sided by default).
 
 
 shape and radius 
@@ -262,7 +262,7 @@ The log will write a summary that includes default and user defined parameters. 
 
 When fractures are generated, they are checked to ensure intersections and that parameters are satisfied. Fractures are rejected if they are isolated, have edges too short or too close, or outside boundary. When the network is created, summary information helps to describe the result. 
 
-P32 is used in discrete fracture network (DFN) modeling and is a measure of fracture abundance in a rock mass, representing the total area of fractures per unit volume. P32 is calculated by summing the areas of all fractures within a given volume and dividing by that volume.
+P32 is used in discrete fracture network (DFN) modeling and is a measure of fracture abundance in a rock mass, representing the total area of fractures per unit volume. P32 is calculated by summing the areas of all fractures within a given volume and dividing by that volume. By default dfnGen uses the double-sided convention, where both faces of each fracture are counted (the wetted surface area). The single-sided convention, where each fracture is counted once, can be selected with ``DFN.params['p32_convention']['value'] = 'single'`` (see :ref:`p32_convention`).
 
 The final P32 of 1.000912, while slightly exceeding the target of 1.000000, indicates that the simulation results are generally satisfactory, showing good agreement with the intended fracture density. Further adjustments can be made if absolute conformity is necessary, but the results suggest successful modeling of the fracture network within acceptable bounds.
 
