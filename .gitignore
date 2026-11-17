@@ -35,6 +35,7 @@
 
 # dfnWorks build outputs
 DFNGen/DFNGen
+DFNGen/*.d
 DFNTrans/DFNTrans
 DFNTrans/DFNTrans_TDRW
 ParticleTracking_TDRW/DFNTrans_TDRW
