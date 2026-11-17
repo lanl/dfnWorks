@@ -44,7 +44,7 @@ DFN.mesh_network()
 DFN.lagrit2pflotran()
 DFN.pflotran()
 DFN.pflotran_cleanup()
-DFN.parse_pflotran_vtk_python()  
+DFN.parse_pflotran_vtk()  
 DFN.effective_perm(inflow_pressure=2e6, 
                     outflow_pressure=1e6, 
                     boundary_file='boundary_left_w.ex', 

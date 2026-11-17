@@ -10,7 +10,6 @@ import glob
 import shutil
 import numpy as np
 import subprocess
-import pyvtk as pv
 # from pydfnworks.general import helper_functions as hf
 from pydfnworks.general.logging import local_print_log 
 
@@ -206,13 +205,20 @@ def inp2gmv(self, inp_file=None):
     local_print_log("--> Finished writing gmv format from avs format")
 
 
-def inp2vtk_python(self):
-    """ Using Python VTK library, convert inp file to VTK file.  
+def inp2vtu(self, inp_file='', binary=True):
+    """ Convert an AVS/UCD (.inp) mesh to an XML VTK unstructured-grid (.vtu) file.
 
     Parameters
     ----------
-        self : object 
+        self : object
             DFN Class
+
+        inp_file : string
+            Mesh to convert. Default is ``self.inp_file`` (``full_mesh.inp``).
+
+        binary : bool
+            If True (default), data arrays are base64-encoded binary.
+            If False, they are written as ASCII.
 
     Returns
     --------
@@ -220,60 +226,42 @@ def inp2vtk_python(self):
 
     Notes
     --------
-        For a mesh base.inp, this dumps a VTK file named base.vtk
+        For a mesh ``base.inp`` this writes ``base.vtu`` (or ``self.vtu_file``
+        if it is set) and sets ``self.vtu_file``. All AVS cell types (line,
+        tri, quad, tet, hex, prism, pyramid) are kept, and the material ID of
+        each cell is written as the cell array ``material_id``.
     """
+    from pydfnworks.general.vtu_io import read_inp_mesh, write_vtu
 
-    if self.flow_solver != "PFLOTRAN":
-        self.print_log("inp2vtk requires PFLOTRAN flow solver be selected", 'error')
-
-    self.print_log("--> Using Python to convert inp files to VTK files")
-    if self.inp_file:
-        inp_file = self.inp_file
-
+    inp_file = inp_file or self.inp_file
     if not inp_file:
         self.print_log("inp filename not provided", 'error')
 
-    if self.vtk_file:
-        vtk_file = self.vtk_file
-    else:
-        vtk_file = inp_file[:-4]
-        self.vtk_file = vtk_file + '.vtk'
+    if not self.vtu_file:
+        self.vtu_file = os.path.splitext(inp_file)[0] + '.vtu'
 
-    self.print_log("--> Reading inp data")
+    self.print_log(f"--> Converting {inp_file} to {self.vtu_file}")
+    mesh = read_inp_mesh(inp_file)
+    write_vtu(self.vtu_file, mesh, binary=binary)
+    self.print_log(f"--> Wrote {self.vtu_file}: {mesh['points'].shape[0]} points, "
+                   f"{mesh['cell_types'].shape[0]} cells")
 
-    with open(inp_file, 'r') as f:
-        line = f.readline()
-        num_nodes = int(line.strip(' ').split()[0])
-        num_elems = int(line.strip(' ').split()[1])
 
-        coord = np.zeros((num_nodes, 3), 'float')
-        elem_list_tri = []
-        elem_list_tetra = []
+def inp2vtk_python(self):
+    """ Deprecated. Use :func:`inp2vtu`, which writes an XML ``.vtu`` file.
 
-        for i in range(num_nodes):
-            line = f.readline()
-            coord[i, 0] = float(line.strip(' ').split()[1])
-            coord[i, 1] = float(line.strip(' ').split()[2])
-            coord[i, 2] = float(line.strip(' ').split()[3])
+    Parameters
+    ----------
+        self : object
+            DFN Class
 
-        for i in range(num_elems):
-            line = f.readline().strip(' ').split()
-            line.pop(0)
-            line.pop(0)
-            elem_type = line.pop(0)
-            if elem_type == 'tri':
-                elem_list_tri.append([int(i) - 1 for i in line])
-            if elem_type == 'tet':
-                elem_list_tetra.append([int(i) - 1 for i in line])
-
-    self.print_log('--> Writing inp data to vtk format')
-    vtk = pv.VtkData(
-        pv.UnstructuredGrid(coord,
-                            tetra=elem_list_tetra,
-                            triangle=elem_list_tri),
-        'Unstructured pflotran grid')
-
-    vtk.tofile(vtk_file)
+    Returns
+    --------
+        None
+    """
+    self.print_log("--> inp2vtk_python is deprecated and now writes an XML .vtu file. "
+                   "Use DFN.inp2vtu() instead.", 'warning')
+    self.inp2vtu()
 
 
 def run_lagrit_script(lagrit_file, output_file=None, quiet=False):
