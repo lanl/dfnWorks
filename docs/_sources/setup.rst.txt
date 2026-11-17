@@ -213,6 +213,34 @@ Check the installation:
 
     $ python -c "import pydfnworks; print(pydfnworks.__version__)"
 
+
+Testing your installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dfnWorks includes an end-to-end regression suite in ``tests/regression``. It runs the shipped examples (generation, meshing, PFLOTRAN, FEHM, DFNTrans, and graph-based flow and transport), compares scalar results such as fracture counts, mesh sizes, mass balance, and particle travel times against committed baselines, and writes an HTML report.
+
+.. code-block:: bash
+
+    $ cd dfnWorks/tests/regression
+    $ python3 run_regression.py                  # baseline tier (~3 minutes)
+    $ python3 run_regression.py --tier modest    # adds TDRW, stress, wells, FEHM, UDFM, ...
+    $ python3 run_regression.py --tier advanced  # everything, including the long cases
+    $ python3 run_regression.py --only TPL exp   # selected cases
+    $ python3 run_regression.py --list           # list cases and tiers
+
+The report is written to ``tests/regression/latest_report.html``. Each case is reported as:
+
+- PASS: ran cleanly and matched its baseline.
+- DIFF: ran cleanly, but a metric is outside its tolerance.
+- FAIL: the run errored or an expected output is missing.
+- SKIP: a required executable (e.g., PFLOTRAN, FEHM, LaGriT) was not found, so the case was not run.
+
+The command exits with code 0 only if every case is PASS or SKIP. See ``tests/regression/README.md`` for details.
+
+.. note:: The test drivers use the ``pydfnworks`` that the Python running ``run_regression.py`` imports. To test a source checkout rather than an installed copy, install it in editable mode (``pip install -e .`` in ``pydfnworks/``) or set ``PYTHONPATH=<path-to-dfnWorks>/pydfnworks``.
+
+.. tip:: After updating dfnWorks, rebuild the C++ executables (``make`` in ``DFNGen/`` and ``DFNTrans/``) before running the tests, so they use the current code.
+
 Installation Requirements for Native Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Tools that you will need to run the dfnWorks work flow are described in 
@@ -230,12 +258,11 @@ Python
 *****************************
 
 pydfnworks requires Python 3.10 or newer. We recommend using a conda or virtual environment.
-pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They can be installed directly with
+pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They are listed in ``pydfnworks/requirements.txt`` and are installed automatically with pydfnworks, or can be installed directly with
 
 .. code-block:: bash
 
     pip install -r pydfnworks/requirements.txt
-    pip install pandas
 
 
 LaGriT

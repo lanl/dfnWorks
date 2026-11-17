@@ -57,6 +57,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#clone-the-dfnworks-repository">Clone the dfnWorks repository</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#set-the-lagrit-petsc-pflotran-and-fehm-paths">Set the LaGriT, PETSc, PFLOTRAN, and FEHM paths</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#installing-pydfnworks">Installing pydfnworks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-your-installation">Testing your installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#installation-requirements-for-native-build">Installation Requirements for Native Build</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#operating-systems">Operating Systems</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#python">Python</a></li>
@@ -250,6 +251,34 @@ $<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </sp
 </pre></div>
 </div>
 </section>
+<section id="testing-your-installation">
+<h3>Testing your installation<a class="headerlink" href="#testing-your-installation" title="Link to this heading"></a></h3>
+<p>dfnWorks includes an end-to-end regression suite in <code class="docutils literal notranslate"><span class="pre">tests/regression</span></code>. It runs the shipped examples (generation, meshing, PFLOTRAN, FEHM, DFNTrans, and graph-based flow and transport), compares scalar results such as fracture counts, mesh sizes, mass balance, and particle travel times against committed baselines, and writes an HTML report.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>dfnWorks/tests/regression
+$<span class="w"> </span>python3<span class="w"> </span>run_regression.py<span class="w">                  </span><span class="c1"># baseline tier (~3 minutes)</span>
+$<span class="w"> </span>python3<span class="w"> </span>run_regression.py<span class="w"> </span>--tier<span class="w"> </span>modest<span class="w">    </span><span class="c1"># adds TDRW, stress, wells, FEHM, UDFM, ...</span>
+$<span class="w"> </span>python3<span class="w"> </span>run_regression.py<span class="w"> </span>--tier<span class="w"> </span>advanced<span class="w">  </span><span class="c1"># everything, including the long cases</span>
+$<span class="w"> </span>python3<span class="w"> </span>run_regression.py<span class="w"> </span>--only<span class="w"> </span>TPL<span class="w"> </span>exp<span class="w">   </span><span class="c1"># selected cases</span>
+$<span class="w"> </span>python3<span class="w"> </span>run_regression.py<span class="w"> </span>--list<span class="w">           </span><span class="c1"># list cases and tiers</span>
+</pre></div>
+</div>
+<p>The report is written to <code class="docutils literal notranslate"><span class="pre">tests/regression/latest_report.html</span></code>. Each case is reported as:</p>
+<ul class="simple">
+<li><p>PASS: ran cleanly and matched its baseline.</p></li>
+<li><p>DIFF: ran cleanly, but a metric is outside its tolerance.</p></li>
+<li><p>FAIL: the run errored or an expected output is missing.</p></li>
+<li><p>SKIP: a required executable (e.g., PFLOTRAN, FEHM, LaGriT) was not found, so the case was not run.</p></li>
+</ul>
+<p>The command exits with code 0 only if every case is PASS or SKIP. See <code class="docutils literal notranslate"><span class="pre">tests/regression/README.md</span></code> for details.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The test drivers use the <code class="docutils literal notranslate"><span class="pre">pydfnworks</span></code> that the Python running <code class="docutils literal notranslate"><span class="pre">run_regression.py</span></code> imports. To test a source checkout rather than an installed copy, install it in editable mode (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> in <code class="docutils literal notranslate"><span class="pre">pydfnworks/</span></code>) or set <code class="docutils literal notranslate"><span class="pre">PYTHONPATH=&lt;path-to-dfnWorks&gt;/pydfnworks</span></code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>After updating dfnWorks, rebuild the C++ executables (<code class="docutils literal notranslate"><span class="pre">make</span></code> in <code class="docutils literal notranslate"><span class="pre">DFNGen/</span></code> and <code class="docutils literal notranslate"><span class="pre">DFNTrans/</span></code>) before running the tests, so they use the current code.</p>
+</div>
+</section>
 <section id="installation-requirements-for-native-build">
 <h3>Installation Requirements for Native Build<a class="headerlink" href="#installation-requirements-for-native-build" title="Link to this heading"></a></h3>
 <p>Tools that you will need to run the dfnWorks work flow are described in
@@ -264,9 +293,8 @@ processing using C++.</p>
 <section id="python">
 <h4>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h4>
 <p>pydfnworks requires Python 3.10 or newer. We recommend using a conda or virtual environment.
-pydfnworks requires the following python modules: <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">h5py</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">mplstereonet</span></code>, <code class="docutils literal notranslate"><span class="pre">fpdf</span></code>, <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>, <code class="docutils literal notranslate"><span class="pre">pyvtk</span></code>, <code class="docutils literal notranslate"><span class="pre">mpmath</span></code>, and <code class="docutils literal notranslate"><span class="pre">pandas</span></code>. They can be installed directly with</p>
+pydfnworks requires the following python modules: <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, <code class="docutils literal notranslate"><span class="pre">h5py</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">mplstereonet</span></code>, <code class="docutils literal notranslate"><span class="pre">fpdf</span></code>, <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>, <code class="docutils literal notranslate"><span class="pre">pyvtk</span></code>, <code class="docutils literal notranslate"><span class="pre">mpmath</span></code>, and <code class="docutils literal notranslate"><span class="pre">pandas</span></code>. They are listed in <code class="docutils literal notranslate"><span class="pre">pydfnworks/requirements.txt</span></code> and are installed automatically with pydfnworks, or can be installed directly with</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>pydfnworks/requirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>pandas
 </pre></div>
 </div>
 </section>
