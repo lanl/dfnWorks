@@ -133,6 +133,56 @@ def test_bad_field_length():
             raise AssertionError("expected ValueError for wrong field length")
 
 
+LOG_TEXT = """ --> write vtk output file: dfn_explicit-000.vtk
+ Step      1 Time=  1.00000E-01 Dt=  1.00000E-01 [d] conv_reason: 3
+ --> write rate output file: dfn_explicit-darcyvel-001
+ Step      2 Time=  1.00000E+02 Dt=  9.99000E+01 [d] conv_reason: 3
+ --> write vtk output file: dfn_explicit-001.vtk
+ Step      3 Time=  3.60000E+03 Dt=  1.00000E+00 [s] conv_reason: 3
+ --> write vtk output file: dfn_explicit-002.vtk
+"""
+
+
+def test_pflotran_snapshot_times():
+    from pydfnworks.dfnFlow.pflotran import _pflotran_snapshot_times, _parse_time_group
+    with tempfile.TemporaryDirectory() as d:
+        log = Path(d) / "dfn_explicit.out"
+        log.write_text(LOG_TEXT)
+        times = _pflotran_snapshot_times(str(log))
+        assert _pflotran_snapshot_times(str(Path(d) / "missing.out")) == {}
+    assert times == {"dfn_explicit-000.vtk": 0.0,
+                     "dfn_explicit-001.vtk": 100 * 86400.0,
+                     "dfn_explicit-002.vtk": 3600.0}
+    assert _parse_time_group("   1 Time  1.00000E+02 d") == (1, 8.64e6)
+    assert _parse_time_group("Provenance") is None
+
+
+def test_read_pflotran_vtk_fields():
+    from pydfnworks.dfnFlow.pflotran import _read_pflotran_vtk_fields
+    text = """# vtk DataFile Version 2.0
+PFLOTRAN output
+ASCII
+DATASET UNSTRUCTURED_GRID
+CELL_DATA    3
+SCALARS Liquid_Pressure      float 1
+LOOKUP_TABLE default
+ 1.0E+06  2.0E+06
+ 3.0E+06
+SCALARS Material_ID          int 1
+LOOKUP_TABLE default
+ 1 1 2
+VECTORS Liquid_Velocity float
+ 1 0 0 0 1 0 0 0 1
+"""
+    with tempfile.TemporaryDirectory() as d:
+        f = Path(d) / "a-001.vtk"
+        f.write_text(text)
+        fields = _read_pflotran_vtk_fields(str(f), 3)
+    assert fields["Liquid_Pressure"].tolist() == [1e6, 2e6, 3e6]
+    assert fields["Material_ID"].dtype.kind == "i" and fields["Material_ID"].tolist() == [1, 1, 2]
+    assert fields["Liquid_Velocity"].shape == (3, 3)
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):
