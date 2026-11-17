@@ -1,24 +1,12 @@
 import os
 import re
 import numpy as np
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from xml.sax.saxutils import escape
 
+from pydfnworks.general.vtu_io import read_inp_mesh, write_vtu, write_pvd
 
-# ---------------------------------------------------------------------------
-# INP mesh cell types (AVS/UCD → VTK type codes)
-# ---------------------------------------------------------------------------
-
-_VTK_CELL_TYPES = {
-    "line":    3,
-    "tri":     5,
-    "quad":    9,
-    "tet":    10,
-    "hex":    12,
-    "prism":  13,
-    "pyramid":14,
-}
+# Output directory for the .vtu/.pvd time series (mirrors pflotran_vtu_outputs).
+TOUGH_VTU_DIR = 'tough_vtu_outputs'
 
 # Maps Tecplot ZONETYPE to nodes-per-element (for skipping connectivity blocks).
 _ZONETYPE_NODES = {
@@ -111,166 +99,6 @@ def _extract_zone_time(zone_title: str) -> float:
     """
     match = re.search(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?', zone_title)
     return float(match.group()) if match else 0.0
-
-
-def _sanitize_vtk_name(name: str) -> str:
-    """Return a VTK-safe scalar field name (alphanumeric + underscores only)."""
-    cleaned = re.sub(r'[^0-9A-Za-z_]+', '_', name.strip()).strip('_') or 'field'
-    return f'_{cleaned}' if cleaned[0].isdigit() else cleaned
-
-
-# ---------------------------------------------------------------------------
-# INP mesh reader (AVS/UCD format produced by DFNWorks/LaGriT)
-# ---------------------------------------------------------------------------
-
-def _parse_inp_mesh(inp_file: Path) -> dict:
-    """Read mesh topology and material IDs from an AVS/UCD INP file.
-
-    Parameters
-    ----------
-    inp_file:
-        Path to ``full_mesh.inp`` produced by LaGriT.
-
-    Returns
-    -------
-    dict with keys:
-        ``points``      – list of (x, y, z) tuples
-        ``cells``       – list of 0-based node-index lists, one per cell
-        ``cell_types``  – list of VTK type codes, one per cell
-        ``material_ids``– list of integer material IDs, one per cell
-    """
-    with inp_file.open('r', encoding='utf-8') as f:
-        header = f.readline().split()
-        if len(header) < 2:
-            raise ValueError(f"{inp_file} does not start with a valid AVS/UCD header")
-        num_nodes = int(header[0])
-        num_cells = int(header[1])
-
-        points = []
-        for i in range(num_nodes):
-            fields = f.readline().split()
-            if len(fields) < 4:
-                raise ValueError(f"Node line {i + 2} has fewer than 4 fields")
-            points.append((float(fields[1]), float(fields[2]), float(fields[3])))
-
-        cells, cell_types, material_ids = [], [], []
-        for i in range(num_cells):
-            fields = f.readline().split()
-            if len(fields) < 4:
-                raise ValueError(f"Cell line {num_nodes + 2 + i} has fewer than 4 fields")
-            material_ids.append(int(fields[1]))
-            cell_type = fields[2].lower()
-            if cell_type not in _VTK_CELL_TYPES:
-                raise ValueError(f"Unsupported INP cell type '{fields[2]}'")
-            cells.append([int(n) - 1 for n in fields[3:]])  # INP is 1-based
-            cell_types.append(_VTK_CELL_TYPES[cell_type])
-
-    return dict(points=points, cells=cells, cell_types=cell_types, material_ids=material_ids)
-
-
-# ---------------------------------------------------------------------------
-# VTU / PVD writers
-# ---------------------------------------------------------------------------
-
-def _write_vtu(
-    vtu_file: Path,
-    mesh: dict,
-    variables: list[str],
-    data: np.ndarray,
-    coord_indices: set[int],
-) -> None:
-    """Write one XML VTK unstructured-grid (.vtu) file.
-
-    Parameters
-    ----------
-    vtu_file:
-        Destination path.
-    mesh:
-        Dict returned by ``_parse_inp_mesh``.
-    variables:
-        Full variable list from the Tecplot header.
-    data:
-        Array of shape ``(n_points, n_vars)`` for this zone.
-    coord_indices:
-        Column indices of X/Y/Z variables to skip.
-    """
-    connectivity = ' '.join(str(n) for cell in mesh['cells'] for n in cell)
-    offsets, offset = [], 0
-    for cell in mesh['cells']:
-        offset += len(cell)
-        offsets.append(offset)
-
-    with vtu_file.open('w', encoding='utf-8', newline='\n') as f:
-        f.write('<?xml version="1.0"?>\n')
-        f.write('<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian">\n')
-        f.write('  <UnstructuredGrid>\n')
-        f.write(f'    <Piece NumberOfPoints="{len(mesh["points"])}" '
-                f'NumberOfCells="{len(mesh["cells"])}">\n')
-
-        # ---- solution variables as POINT_DATA --------------------------- #
-        f.write('      <PointData Scalars="Scalars">\n')
-        for var_idx, var_name in enumerate(variables):
-            if var_idx in coord_indices:
-                continue
-            field_name = escape(_sanitize_vtk_name(var_name))
-            values = data[:, var_idx]
-            f.write(f'        <DataArray type="Float64" Name="{field_name}" format="ascii">\n')
-            f.write('          ' + ' '.join(f'{v:.8e}' for v in values) + '\n')
-            f.write('        </DataArray>\n')
-        f.write('      </PointData>\n')
-
-        # ---- material IDs as CELL_DATA ---------------------------------- #
-        f.write('      <CellData Scalars="material_id">\n')
-        f.write('        <DataArray type="Int32" Name="material_id" format="ascii">\n')
-        f.write('          ' + ' '.join(str(m) for m in mesh['material_ids']) + '\n')
-        f.write('        </DataArray>\n')
-        f.write('      </CellData>\n')
-
-        # ---- node coordinates ------------------------------------------- #
-        f.write('      <Points>\n')
-        f.write('        <DataArray type="Float64" NumberOfComponents="3" format="ascii">\n')
-        f.write('          ' + ' '.join(f'{c:.12e}' for pt in mesh['points'] for c in pt) + '\n')
-        f.write('        </DataArray>\n')
-        f.write('      </Points>\n')
-
-        # ---- cell topology ---------------------------------------------- #
-        f.write('      <Cells>\n')
-        f.write('        <DataArray type="Int32" Name="connectivity" format="ascii">\n')
-        f.write(f'          {connectivity}\n')
-        f.write('        </DataArray>\n')
-        f.write('        <DataArray type="Int32" Name="offsets" format="ascii">\n')
-        f.write('          ' + ' '.join(str(o) for o in offsets) + '\n')
-        f.write('        </DataArray>\n')
-        f.write('        <DataArray type="UInt8" Name="types" format="ascii">\n')
-        f.write('          ' + ' '.join(str(ct) for ct in mesh['cell_types']) + '\n')
-        f.write('        </DataArray>\n')
-        f.write('      </Cells>\n')
-
-        f.write('    </Piece>\n')
-        f.write('  </UnstructuredGrid>\n')
-        f.write('</VTKFile>\n')
-
-
-def _write_pvd(pvd_file: Path, datasets: list[tuple[float, str]]) -> None:
-    """Write a ParaView collection (.pvd) file for a VTU time series.
-
-    Parameters
-    ----------
-    pvd_file:
-        Destination path (e.g. ``tough_vtk_outputs/tough.pvd``).
-    datasets:
-        List of ``(time, vtu_filename)`` pairs in chronological order.
-        ``vtu_filename`` should be relative to ``pvd_file``'s directory.
-    """
-    vtkfile = ET.Element(
-        'VTKFile', type='Collection', version='0.1', byte_order='LittleEndian'
-    )
-    collection = ET.SubElement(vtkfile, 'Collection')
-    for time, vtu_path in datasets:
-        ET.SubElement(collection, 'DataSet',
-                      timestep=f'{time:.8e}', group='', part='0', file=vtu_path)
-    ET.indent(vtkfile, space='  ')
-    ET.ElementTree(vtkfile).write(pvd_file, encoding='utf-8', xml_declaration=True)
 
 
 # ---------------------------------------------------------------------------
@@ -398,15 +226,17 @@ def _parse_tough_csv(csv_file) -> tuple[list[str], list[tuple[float, np.ndarray]
 # Main class method
 # ---------------------------------------------------------------------------
 
-def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None:
+def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '', binary: bool = True) -> None:
     """Parse TOUGH3 Tecplot or CSV output into a per-timestep VTU/PVD time series.
 
     Reads all ``ZONE`` blocks from a TOUGH3 (or TOUGH+) Tecplot output file,
     or all ``"TIME [sec] ..."`` blocks from a TOUGH3 CSV file
     (``OUTPUT_ELEME.csv``) — one block per output time — and writes:
 
-    - ``tough_vtk_outputs/<base>-NNNN.vtu`` for each timestep
-    - ``tough_vtk_outputs/tough.pvd`` ParaView collection with correct time values
+    - ``tough_vtu_outputs/<base>-NNNN.vtu`` for each timestep
+    - ``tough_vtu_outputs/<base>.pvd`` ParaView collection with correct time values
+
+    where ``<base>`` is the stem of the TOUGH output file (e.g. ``OUTPUT_ELEME``).
 
     Mesh geometry and topology are read from ``full_mesh.inp`` (AVS/UCD
     format produced by LaGriT).  Only solution fields (all variables except
@@ -424,6 +254,9 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     inp_file:
         Path to the AVS/UCD mesh file.  Defaults to ``self.inp_file``
         (``full_mesh.inp``).
+    binary:
+        If True (default), data arrays are base64-encoded binary. If False,
+        they are written as ASCII text (larger, but human-readable).
 
     Returns
     -------
@@ -440,6 +273,8 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
       token count rather than line count.
     - The PVD file encodes actual simulation times so ParaView's time
       slider maps to physical time rather than sequential file indices.
+    - Files are written with ``pydfnworks.general.vtu_io``, the same writer
+      used by ``parse_pflotran_vtk`` and ``parse_pflotran_h5``.
     """
     self.print_log('--> Parsing TOUGH output with Python')
 
@@ -452,7 +287,7 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     if not inp_path.is_file():
         self.print_log(f"INP mesh file not found: {inp_path}", 'error')
     self.print_log(f"--> Reading mesh from {inp_path}")
-    mesh = _parse_inp_mesh(inp_path)
+    mesh = read_inp_mesh(inp_path)
 
     # ------------------------------------------------------------------ #
     # Resolve the Tecplot file
@@ -466,7 +301,7 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     # ------------------------------------------------------------------ #
     # Output directory
     # ------------------------------------------------------------------ #
-    out_dir = Path('tough_vtk_outputs')
+    out_dir = Path(TOUGH_VTU_DIR)
     out_dir.mkdir(parents=True, exist_ok=True)
     base = Path(tecplot_file).stem
 
@@ -488,8 +323,8 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     # Check that output rows follow the INP node ordering.
     xyz_idx = sorted(coord_indices)
     first = zones[0][1]
-    if len(xyz_idx) == 3 and first.shape[0] == len(mesh['points']):
-        pts = np.asarray(mesh['points'])
+    if len(xyz_idx) == 3 and first.shape[0] == mesh['points'].shape[0]:
+        pts = mesh['points']
         # TOUGH MESH coordinates are written at reduced precision.
         tol = 1e-3 * max(np.ptp(pts, axis=0).max(), 1.0)
         if not np.allclose(first[:, xyz_idx], pts, atol=tol):
@@ -501,21 +336,24 @@ def parse_tough_output(self, tecplot_file: str = '', inp_file: str = '') -> None
     # Write one VTU per zone and collect PVD entries
     # ------------------------------------------------------------------ #
     pvd_datasets: list[tuple[float, str]] = []
+    n_points = mesh['points'].shape[0]
+    fields = [(j, v) for j, v in enumerate(variables) if j not in coord_indices]
 
     for zone_idx, (zone_time, data) in enumerate(zones, start=1):
-        if data.shape[0] != len(mesh['points']):
+        if data.shape[0] != n_points:
             self.print_log(
                 f"Zone {zone_idx} at time {zone_time:g} has {data.shape[0]} rows "
-                f"but mesh has {len(mesh['points'])} nodes — skipping", 'warning')
+                f"but mesh has {n_points} nodes — skipping", 'warning')
             continue
 
         vtu_name = f"{base}-{zone_idx:04d}.vtu"
         vtu_path = out_dir / vtu_name
         self.print_log(f"--> Writing {vtu_path}")
-        _write_vtu(vtu_path, mesh, variables, data, coord_indices)
+        point_data = {name: data[:, j] for j, name in fields}
+        write_vtu(vtu_path, mesh, point_data=point_data, binary=binary)
         pvd_datasets.append((zone_time, vtu_name))
 
-    pvd_path = out_dir / 'tough.pvd'
-    _write_pvd(pvd_path, pvd_datasets)
-    self.print_log(f"--> Wrote {len(pvd_datasets)} VTU files and {pvd_path}")
+    pvd_path = out_dir / f'{base}.pvd'
+    write_pvd(pvd_path, pvd_datasets)
+    self.print_log(f"--> Wrote {len(pvd_datasets)} snapshots to {out_dir}/; open {pvd_path} in ParaView")
     self.print_log('--> Parsing TOUGH output complete')

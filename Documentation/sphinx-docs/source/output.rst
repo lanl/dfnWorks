@@ -318,6 +318,12 @@ Boundary file for right of the domain used by PFLOTRAN.
 
 Boundary file for top of the domain used by PFLOTRAN. 
 
+**tough_vtu_outputs:**
+
+.. _tough_vtu_outputs:
+
+Directory of TOUGH results in XML VTK format, written by ``parse_tough_output`` from TOUGH3 CSV (``OUTPUT_ELEME.csv``) or Tecplot output. It contains one ``<base>-NNNN.vtu`` file per output time (the DFN mesh with the TOUGH element fields as point data and the fracture ``material_id`` as cell data) and ``<base>.pvd``, a ParaView collection that lists the files with their simulation times in seconds. ``<base>`` is the name of the TOUGH output file without its extension. The files use the same writer as :ref:`pflotran_vtu_outputs <pflotran_vtu_outputs>`. Earlier versions wrote to ``tough_vtk_outputs`` with the collection named ``tough.pvd``.
+
 .. dfnTrans  
 .. -------------
 
