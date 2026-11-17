@@ -1,0 +1,923 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydfnworks.dfnFlow.uge_tools &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index_docs.html" class="icon icon-home">
+            dfnWorks
+              <img src="../../../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Welcome To dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setup and Running dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnGen.html">pydfnworks: dfnGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnFlow.html">pydfnworks: dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnTrans.html">pydfnworks: dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnGraph.html">pydfnworks: dfnGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pydfnWorks-well.html">pydfnworks: Well Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfngen.html">dfnGen - C++ Generation Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dfntrans.html">dfnTrans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">File Descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../publications.html">dfnWorks Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index_docs.html">dfnWorks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index_docs.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydfnworks.dfnFlow.uge_tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydfnworks.dfnFlow.uge_tools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;UGE-correction utilities for dfnWorks / PFLOTRAN.</span>
+
+<span class="sd">All functions that read, validate, and correct an explicit-unstructured-grid</span>
+<span class="sd">``.uge`` mesh file live in this module. The shared validity rule is: a value is</span>
+<span class="sd">replaced by its absolute value if negative, by a fill value if it is ``NaN`` or</span>
+<span class="sd">``+/-inf``, and otherwise left unchanged.</span>
+
+<span class="sd">&quot;Negative&quot; is judged against a round-off tolerance, not against exactly zero.</span>
+<span class="sd">LaGriT computes the Voronoi coefficients in double precision, and a connection</span>
+<span class="sd">whose true area (or a cell whose true volume) is zero comes back as a value of</span>
+<span class="sd">either sign at the level of ``eps * L * h`` (``L`` the domain size, ``h`` the</span>
+<span class="sd">mesh resolution), typically 1e-16 to 1e-13. Such a value is zero to working</span>
+<span class="sd">precision and is treated as valid: it is neither flagged, corrected, nor used as</span>
+<span class="sd">a fill candidate, exactly like an entry of ``0.0``. The tolerance is</span>
+<span class="sd">:data:`ROUNDOFF_REL` times ``h`` for connection areas (a length in the raw file)</span>
+<span class="sd">and times ``h**2`` for cell volumes (an area in the raw file); when ``h`` is not</span>
+<span class="sd">known the absolute :data:`ROUNDOFF_ABS` is used for both. See</span>
+<span class="sd">:func:`roundoff_tolerances`. A value below ``-tolerance`` (e.g. ``-1e-3``) is a</span>
+<span class="sd">genuine negative and is handled exactly as before.</span>
+
+<span class="sd">A second, larger tolerance applies to connection areas only. A connection area</span>
+<span class="sd">in the raw file is the length of the Voronoi edge dual to a triangle edge, which</span>
+<span class="sd">is ``L/2 * (cot a + cot b)`` for the two angles ``a`` and ``b`` opposite that</span>
+<span class="sd">edge. When the four nodes around the edge are cocircular (``a + b = 180``) the</span>
+<span class="sd">edge has zero length and both diagonals of the quad are Delaunay; LaGriT&#39;s</span>
+<span class="sd">``connect``/``recon`` in-circle test has its own tolerance, so a quad that is</span>
+<span class="sd">cocircular to within that tolerance may keep either diagonal and the computed</span>
+<span class="sd">length comes out as a tiny value of either sign, typically ``1e-7`` to ``1e-5``</span>
+<span class="sd">times ``h`` (far above floating-point round-off, far below the shortest real</span>
+<span class="sd">Voronoi edge). This happens in perfectly conforming meshes, in the smoothed</span>
+<span class="sd">interior of a fracture, with rFram off. Such a value is classified as a</span>
+<span class="sd">degenerate edge rather than an invalid coefficient: it is accepted as zero and</span>
+<span class="sd">left unchanged, but unlike round-off it is listed in the log, one line per</span>
+<span class="sd">connection. The tolerance is :data:`DEGENERATE_REL` times ``h``</span>
+<span class="sd">(:data:`DEGENERATE_ABS` when ``h`` is unknown); see</span>
+<span class="sd">:func:`degenerate_tolerance`. Cell volumes get no such tier: a Voronoi cell of</span>
+<span class="sd">a conforming mesh has no near-zero-area configuration of this kind.</span>
+
+<span class="sd">Correcting a bad value is only defensible when the mesh is *almost* conforming.</span>
+<span class="sd">Degenerate cells are an artifact of the relaxed meshing constraints used by rFram</span>
+<span class="sd">(see :mod:`pydfnworks.dfnGen.meshing.mesh_dfn`), and they show up mostly in dense</span>
+<span class="sd">networks and around triple intersections. So the module enforces a policy before</span>
+<span class="sd">it corrects anything:</span>
+
+<span class="sd">    * rFram off and any invalid value  -&gt; hard error. A conforming mesh has no</span>
+<span class="sd">      business producing negative or non-finite coefficients; that is a meshing</span>
+<span class="sd">      failure, not an artifact to paper over.</span>
+<span class="sd">    * rFram unknown (``DFN.r_fram is None``, i.e. no parameter file was parsed,</span>
+<span class="sd">      as on a flow-only restart) and any invalid value -&gt; hard error asking for</span>
+<span class="sd">      it to be set. &quot;Unknown&quot; must not quietly become &quot;off&quot; or &quot;on&quot;.</span>
+<span class="sd">    * more than ``BAD_FRACTION_LIMIT`` of the cells *or* of the connections</span>
+<span class="sd">      invalid -&gt; hard error, regardless of rFram. The two fractions are tested</span>
+<span class="sd">      independently against their own totals.</span>
+<span class="sd">    * otherwise -&gt; correct, and log every offending cell and connection.</span>
+
+<span class="sd">Contents</span>
+<span class="sd">--------</span>
+<span class="sd">    roundoff_tolerances, degenerate_tolerance, classify_fix, scan_uge, scan_fills</span>
+<span class="sd">        Low-level helpers implementing the round-off and degenerate-edge</span>
+<span class="sd">        tolerances, the validity rule, the mesh-wide scan, and the fill</span>
+<span class="sd">        estimate.</span>
+<span class="sd">    fix_uge_volumes, fix_stream</span>
+<span class="sd">        Byte-faithful fixer: a clean file round-trips unchanged, and only the</span>
+<span class="sd">        corrected lines are rewritten.</span>
+<span class="sd">    correct_uge_file</span>
+<span class="sd">        dfnWorks method. ``dim=3`` aperture-converts ``full_mesh.uge`` into</span>
+<span class="sd">        ``full_mesh_vol_area.uge``; ``dim=2`` keeps ``full_mesh.uge``. The mesh</span>
+<span class="sd">        is always scanned and the policy above is always enforced.</span>
+<span class="sd">    lagrit2pflotran</span>
+<span class="sd">        dfnWorks method. Forwards ``dim`` to :func:`correct_uge_file`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="n">CELL_FMT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%10d</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">&quot;</span>          <span class="c1"># id  x y z  volume</span>
+<span class="n">CONN_FMT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%10d</span><span class="s2"> </span><span class="si">%10d</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">  </span><span class="si">% .12E</span><span class="s2">&quot;</span>     <span class="c1"># id1 id2  fx fy fz  area</span>
+
+<span class="c1">#: Largest fraction of invalid cells (or of invalid connections) that may be</span>
+<span class="c1">#: corrected. Above this the mesh is rejected instead of repaired.</span>
+<span class="n">BAD_FRACTION_LIMIT</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="c1">#: Round-off tolerance relative to the mesh resolution ``h``. A connection area</span>
+<span class="c1">#: with ``|area| &lt;= ROUNDOFF_REL * h`` or a cell volume with</span>
+<span class="c1">#: ``|volume| &lt;= ROUNDOFF_REL * h**2`` is treated as zero (valid) rather than</span>
+<span class="c1">#: negative. 1e-8 sits midway, in log terms, between the largest round-off seen</span>
+<span class="c1">#: on a zero-area entry (about ``eps * L * h``, under 1e-11 h even for a 10 km</span>
+<span class="c1">#: domain) and the smallest geometric coefficient a non-degenerate mesh produces</span>
+<span class="c1">#: (of order 1e-4 h for a short Voronoi edge, 1e-6 h**2 for a sliver cell).</span>
+<span class="n">ROUNDOFF_REL</span> <span class="o">=</span> <span class="mf">1e-8</span>
+
+<span class="c1">#: Absolute round-off tolerance used for both columns when ``h`` is unknown</span>
+<span class="c1">#: (standalone use of :func:`scan_uge` / :func:`fix_uge_volumes`, or a flow-only</span>
+<span class="c1">#: restart where ``DFN.h`` was never set). Covers the observed round-off</span>
+<span class="c1">#: (1e-16 to 1e-14) for metre-scale meshes with a margin of 100x.</span>
+<span class="n">ROUNDOFF_ABS</span> <span class="o">=</span> <span class="mf">1e-12</span>
+
+<span class="c1">#: Degenerate-edge tolerance relative to the mesh resolution ``h``, for</span>
+<span class="c1">#: connection areas only. A negative connection area with</span>
+<span class="c1">#: ``|area| &lt;= DEGENERATE_REL * h`` is a zero-length Voronoi edge whose sign was</span>
+<span class="c1">#: decided by LaGriT&#39;s in-circle tolerance (the four surrounding nodes are</span>
+<span class="c1">#: cocircular to within that tolerance; see the module docstring). It is</span>
+<span class="c1">#: accepted as zero and listed, not rejected and not corrected. 1e-5 is three</span>
+<span class="c1">#: decades above :data:`ROUNDOFF_REL` and one decade below the shortest real</span>
+<span class="c1">#: Voronoi edge seen in a conforming mesh (about 1e-4 h); the degenerate edges</span>
+<span class="c1">#: observed so far are 1e-6 h to 1e-5 h in magnitude, of either sign.</span>
+<span class="n">DEGENERATE_REL</span> <span class="o">=</span> <span class="mf">1e-5</span>
+
+<span class="c1">#: Absolute degenerate-edge tolerance used when ``h`` is unknown. Keeps the</span>
+<span class="c1">#: 1000x ratio to :data:`ROUNDOFF_ABS`; it is deliberately conservative, since</span>
+<span class="c1">#: without ``h`` there is no scale to judge a tiny negative against. Set</span>
+<span class="c1">#: ``DFN.h`` on a flow-only restart to get the ``h``-scaled classification.</span>
+<span class="n">DEGENERATE_ABS</span> <span class="o">=</span> <span class="mf">1e-9</span>
+
+<span class="n">Result</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;Result&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cell_negative&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_nonfinite&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;conn_negative&quot;</span><span class="p">,</span> <span class="s2">&quot;conn_nonfinite&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;vol_fill&quot;</span><span class="p">,</span> <span class="s2">&quot;area_fill&quot;</span><span class="p">])</span>
+
+<span class="c1">#: Outcome of :func:`scan_uge`. ``bad_cells`` holds ``(id, x, y, z, volume,</span>
+<span class="c1">#: kind)`` tuples and ``bad_conns`` holds ``(id1, id2, area, kind)`` tuples, with</span>
+<span class="c1">#: ``kind`` as returned by :func:`classify_fix`. ``vol_tol`` and ``area_tol``</span>
+<span class="c1">#: are the round-off tolerances the scan was made with, and ``roundoff_cells``</span>
+<span class="c1">#: / ``roundoff_conns`` count the negative entries that fell inside them (and</span>
+<span class="c1">#: were therefore accepted as zero). ``degen_tol`` is the degenerate-edge</span>
+<span class="c1">#: tolerance and ``degenerate_conns`` holds ``(id1, id2, area)`` tuples for the</span>
+<span class="c1">#: negative connection areas with ``area_tol &lt; |area| &lt;= degen_tol`` (accepted</span>
+<span class="c1">#: as zero-length Voronoi edges; see :func:`degenerate_tolerance`).</span>
+<span class="n">ScanResult</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;ScanResult&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;vol_fill&quot;</span><span class="p">,</span> <span class="s2">&quot;area_fill&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;n_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;n_conns&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;bad_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;bad_conns&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;vol_tol&quot;</span><span class="p">,</span> <span class="s2">&quot;area_tol&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;roundoff_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;roundoff_conns&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;degen_tol&quot;</span><span class="p">,</span> <span class="s2">&quot;degenerate_conns&quot;</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">roundoff_tolerances</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Round-off tolerances for cell volumes and connection areas.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        h : float or None</span>
+<span class="sd">            Mesh resolution. ``None`` (or anything that is not a positive</span>
+<span class="sd">            finite number) selects the absolute fallback.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        tuple (float, float)</span>
+<span class="sd">            ``(vol_tol, area_tol)``: ``(ROUNDOFF_REL * h**2, ROUNDOFF_REL * h)``</span>
+<span class="sd">            when ``h`` is known, else ``(ROUNDOFF_ABS, ROUNDOFF_ABS)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> \
+            <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="ow">and</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ROUNDOFF_REL</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span> <span class="n">ROUNDOFF_REL</span> <span class="o">*</span> <span class="n">h</span>
+    <span class="k">return</span> <span class="n">ROUNDOFF_ABS</span><span class="p">,</span> <span class="n">ROUNDOFF_ABS</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">degenerate_tolerance</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Degenerate-edge tolerance for connection areas.</span>
+
+<span class="sd">    A negative connection area no larger than this in magnitude is a</span>
+<span class="sd">    zero-length Voronoi edge (the surrounding quad is cocircular to within</span>
+<span class="sd">    LaGriT&#39;s in-circle tolerance, so either diagonal is Delaunay) and not an</span>
+<span class="sd">    invalid coefficient. See the module docstring.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        h : float or None</span>
+<span class="sd">            Mesh resolution. ``None`` (or anything that is not a positive</span>
+<span class="sd">            finite number) selects the absolute fallback.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        float</span>
+<span class="sd">            ``DEGENERATE_REL * h`` when ``h`` is known, else</span>
+<span class="sd">            :data:`DEGENERATE_ABS`. Always at least the round-off tolerance</span>
+<span class="sd">            for areas from :func:`roundoff_tolerances`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> \
+            <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="ow">and</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">DEGENERATE_REL</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span> <span class="n">ROUNDOFF_REL</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">DEGENERATE_ABS</span><span class="p">,</span> <span class="n">ROUNDOFF_ABS</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_fix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fill</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the validity rule to a single value and report what was done.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        x : float</span>
+<span class="sd">            The raw value (cell volume or connection area).</span>
+<span class="sd">        fill : float</span>
+<span class="sd">            Replacement value used when ``x`` is NaN or infinite.</span>
+<span class="sd">        tol : float</span>
+<span class="sd">            Round-off tolerance. A value with ``-tol &lt;= x &lt; 0`` is zero to</span>
+<span class="sd">            working precision and is returned unchanged as valid. Default</span>
+<span class="sd">            ``0.0`` (exact test); see :func:`roundoff_tolerances`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        tuple (float, str or None)</span>
+<span class="sd">            The corrected value and a tag describing the action: ``None`` if the</span>
+<span class="sd">            value was already valid, ``&#39;negative&#39;`` if it was negated, or</span>
+<span class="sd">            ``&#39;nonfinite&#39;`` if it was replaced by ``fill``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        ``x &lt; -tol`` -&gt; ``abs(x)``; NaN/inf -&gt; ``fill``; otherwise unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fill</span><span class="p">,</span> <span class="s2">&quot;nonfinite&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">tol</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;negative&quot;</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scan_uge</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan a ``.uge`` file for invalid values and estimate per-column fills.</span>
+
+<span class="sd">    Makes a single sequential pass, tracking the running minimum, sum, and count</span>
+<span class="sd">    of the valid volumes (CELLS) and areas (CONNECTIONS), and recording every</span>
+<span class="sd">    entry that :func:`classify_fix` flags. Memory is O(number of invalid</span>
+<span class="sd">    entries), not O(mesh).</span>
+
+<span class="sd">    Every offending entry is recorded rather than only the first few: the caller</span>
+<span class="sd">    reports them all, and the policy decisions downstream (see</span>
+<span class="sd">    :func:`correct_uge_file`) only ever let a small fraction through.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        input_path : str</span>
+<span class="sd">            Path to the ``.uge`` file.</span>
+<span class="sd">        strategy : str</span>
+<span class="sd">            ``&#39;min&#39;`` (default) uses the smallest finite positive value in each</span>
+<span class="sd">            column; ``&#39;mean&#39;`` uses the mean of the finite positive values.</span>
+<span class="sd">        h : float, optional</span>
+<span class="sd">            Mesh resolution, used to set the round-off tolerances via</span>
+<span class="sd">            :func:`roundoff_tolerances` and the degenerate-edge tolerance via</span>
+<span class="sd">            :func:`degenerate_tolerance`. ``None`` selects the absolute</span>
+<span class="sd">            fallbacks :data:`ROUNDOFF_ABS` and :data:`DEGENERATE_ABS`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        ScanResult</span>
+<span class="sd">            ``(path, vol_fill, area_fill, n_cells, n_conns, bad_cells,</span>
+<span class="sd">            bad_conns, vol_tol, area_tol, roundoff_cells, roundoff_conns,</span>
+<span class="sd">            degen_tol, degenerate_conns)``.</span>
+<span class="sd">            A fill is ``None`` when its column</span>
+<span class="sd">            holds no finite positive value to derive one from (an empty or</span>
+<span class="sd">            wholly invalid column); it is the caller&#39;s job to reject such a</span>
+<span class="sd">            mesh.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``strategy`` is not recognised.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        A volume or area whose magnitude is within the round-off tolerance</span>
+<span class="sd">        (including exactly ``0.0``) is neither flagged nor used as a fill</span>
+<span class="sd">        candidate, matching :func:`classify_fix`, which passes it through</span>
+<span class="sd">        unchanged. A negative area beyond the round-off tolerance but within</span>
+<span class="sd">        the degenerate-edge tolerance is recorded in ``degenerate_conns`` and</span>
+<span class="sd">        otherwise treated the same way: accepted, not a fill candidate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vol_tol</span><span class="p">,</span> <span class="n">area_tol</span> <span class="o">=</span> <span class="n">roundoff_tolerances</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">degen_tol</span> <span class="o">=</span> <span class="n">degenerate_tolerance</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">v_min</span> <span class="o">=</span> <span class="n">a_min</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">v_tot</span> <span class="o">=</span> <span class="n">a_tot</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">v_cnt</span> <span class="o">=</span> <span class="n">a_cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">v_ro</span> <span class="o">=</span> <span class="n">a_ro</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n_conns</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bad_cells</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bad_conns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">degenerate_conns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cells</span><span class="p">):</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vol_tol</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bad_cells</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                  <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">v</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">vol_tol</span><span class="p">:</span>
+                <span class="n">v_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v_min</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span> <span class="n">v_tot</span> <span class="o">+=</span> <span class="n">v</span><span class="p">;</span> <span class="n">v_cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">v_ro</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">conn</span> <span class="ow">and</span> <span class="n">conn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;CONNECTIONS&quot;</span><span class="p">:</span>
+            <span class="n">n_conns</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_conns</span><span class="p">):</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">area_tol</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">degen_tol</span><span class="p">:</span>
+                    <span class="n">degenerate_conns</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">a</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">kind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">bad_conns</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">a</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">area_tol</span><span class="p">:</span>
+                    <span class="n">a_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a_min</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span> <span class="n">a_tot</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span> <span class="n">a_cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">a_ro</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick</span><span class="p">(</span><span class="n">mn</span><span class="p">,</span> <span class="n">tot</span><span class="p">,</span> <span class="n">cnt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mn</span>
+        <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tot</span> <span class="o">/</span> <span class="n">cnt</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown strategy </span><span class="si">{</span><span class="n">strategy</span><span class="si">!r}</span><span class="s2"> (use &#39;min&#39;, &#39;mean&#39;, or a number)&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ScanResult</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">pick</span><span class="p">(</span><span class="n">v_min</span><span class="p">,</span> <span class="n">v_tot</span><span class="p">,</span> <span class="n">v_cnt</span><span class="p">),</span>
+                      <span class="n">pick</span><span class="p">(</span><span class="n">a_min</span><span class="p">,</span> <span class="n">a_tot</span><span class="p">,</span> <span class="n">a_cnt</span><span class="p">),</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">n_conns</span><span class="p">,</span>
+                      <span class="n">bad_cells</span><span class="p">,</span> <span class="n">bad_conns</span><span class="p">,</span> <span class="n">vol_tol</span><span class="p">,</span> <span class="n">area_tol</span><span class="p">,</span> <span class="n">v_ro</span><span class="p">,</span> <span class="n">a_ro</span><span class="p">,</span>
+                      <span class="n">degen_tol</span><span class="p">,</span> <span class="n">degenerate_conns</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scan_fills</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate per-column fill values from the finite, positive entries.</span>
+
+<span class="sd">    Thin wrapper on :func:`scan_uge` for callers that only need the fills.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        input_path : str</span>
+<span class="sd">            Path to the ``.uge`` file.</span>
+<span class="sd">        strategy : str</span>
+<span class="sd">            ``&#39;min&#39;`` (default) or ``&#39;mean&#39;``.</span>
+<span class="sd">        h : float, optional</span>
+<span class="sd">            Mesh resolution for the round-off tolerance; see :func:`scan_uge`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        tuple (float, float or None)</span>
+<span class="sd">            ``(vol_fill, area_fill)``. ``area_fill`` is ``None`` when the file</span>
+<span class="sd">            has no CONNECTIONS section.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If no finite positive volume exists to derive a fill from, or if</span>
+<span class="sd">            ``strategy`` is not recognised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">scan_uge</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">vol_fill</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no finite positive volumes to derive a fill value from&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">vol_fill</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">area_fill</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fix_stream</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span><span class="p">,</span> <span class="n">vol_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">area_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stream-copy a ``.uge`` file from ``fin`` to ``fout``, correcting bad values.</span>
+
+<span class="sd">    Cell volumes (column 5) and connection areas (column 6) are passed through</span>
+<span class="sd">    :func:`classify_fix`. Lines that need no change are written verbatim; only</span>
+<span class="sd">    corrected lines are reformatted (byte-faithfully, in LaGriT&#39;s format).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        fin : file object</span>
+<span class="sd">            Open, readable handle on the source ``.uge`` file.</span>
+<span class="sd">        fout : file object</span>
+<span class="sd">            Open, writable handle for the corrected output.</span>
+<span class="sd">        vol_fill : float</span>
+<span class="sd">            Fill value for NaN/inf cell volumes.</span>
+<span class="sd">        area_fill : float or None</span>
+<span class="sd">            Fill value for NaN/inf connection areas.</span>
+<span class="sd">        vol_tol, area_tol : float</span>
+<span class="sd">            Tolerances passed to :func:`classify_fix`; entries within them are</span>
+<span class="sd">            written verbatim and not counted. Default ``0.0``. Callers that</span>
+<span class="sd">            want degenerate edges left alone pass</span>
+<span class="sd">            :func:`degenerate_tolerance` as ``area_tol``, as</span>
+<span class="sd">            :func:`fix_uge_volumes` does.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        tuple (int, int, int, int)</span>
+<span class="sd">            ``(cell_negative, cell_nonfinite, conn_negative, conn_nonfinite)``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If a section header is malformed, the file is truncated, or a NaN/inf</span>
+<span class="sd">            area is encountered while ``area_fill`` is ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">parts</span> <span class="ow">or</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;CELLS&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected &#39;CELLS &lt;n&gt;&#39; header, got: </span><span class="si">{</span><span class="n">header</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+    <span class="n">c_neg</span> <span class="o">=</span> <span class="n">c_bad</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;file ended before all CELLS lines were read&quot;</span><span class="p">)</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">fixed</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span> <span class="n">vol_fill</span><span class="p">,</span> <span class="n">vol_tol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">CELL_FMT</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                   <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">fixed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">c_neg</span> <span class="o">+=</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">;</span> <span class="n">c_bad</span> <span class="o">+=</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;nonfinite&quot;</span>
+
+    <span class="n">k_neg</span> <span class="o">=</span> <span class="n">k_bad</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">conn_header</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">conn_header</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">conn_header</span><span class="p">)</span>
+        <span class="n">cparts</span> <span class="o">=</span> <span class="n">conn_header</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cparts</span> <span class="ow">and</span> <span class="n">cparts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;CONNECTIONS&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cparts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;file ended before all CONNECTIONS lines were read&quot;</span><span class="p">)</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">area_fill</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">5</span><span class="p">])):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NaN/inf area but no positive area to fill from; pass a number&quot;</span><span class="p">)</span>
+                <span class="n">fixed</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span> <span class="n">area_fill</span><span class="p">,</span> <span class="n">area_tol</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">CONN_FMT</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                           <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span> <span class="n">fixed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">k_neg</span> <span class="o">+=</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">;</span> <span class="n">k_bad</span> <span class="o">+=</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;nonfinite&quot;</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">c_neg</span><span class="p">,</span> <span class="n">c_bad</span><span class="p">,</span> <span class="n">k_neg</span><span class="p">,</span> <span class="n">k_bad</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fix_uge_volumes</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nan_fill</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make every CELLS volume and CONNECTIONS area in a ``.uge`` file valid and positive.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        input_path : str</span>
+<span class="sd">            Path to the ``.uge`` file to correct.</span>
+<span class="sd">        output_path : str, optional</span>
+<span class="sd">            Destination path. If ``None`` (default) the file is corrected in</span>
+<span class="sd">            place via an atomic temp-file-then-replace.</span>
+<span class="sd">        nan_fill : str, float, or tuple</span>
+<span class="sd">            Fill strategy for NaN/inf entries: ``&#39;min&#39;`` (default), ``&#39;mean&#39;``,</span>
+<span class="sd">            an explicit number applied to both columns, or an explicit</span>
+<span class="sd">            ``(vol_fill, area_fill)`` pair. Passing a pair skips the scan, for</span>
+<span class="sd">            callers that have already run :func:`scan_uge`.</span>
+<span class="sd">        h : float, optional</span>
+<span class="sd">            Mesh resolution for the tolerances: volumes use the round-off</span>
+<span class="sd">            tolerance from :func:`roundoff_tolerances`, areas the</span>
+<span class="sd">            degenerate-edge tolerance from :func:`degenerate_tolerance`</span>
+<span class="sd">            (which contains the round-off one). ``None`` uses the absolute</span>
+<span class="sd">            fallbacks.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Result</span>
+<span class="sd">            Namedtuple with the per-section correction counts and the fill</span>
+<span class="sd">            values used: ``(cell_negative, cell_nonfinite, conn_negative,</span>
+<span class="sd">            conn_nonfinite, vol_fill, area_fill)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        A clean file is returned byte-for-byte identical; only corrected lines</span>
+<span class="sd">        are rewritten. Round-off values and degenerate edges count as clean.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nan_fill</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span> <span class="o">=</span> <span class="n">nan_fill</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vol_fill</span> <span class="o">=</span> <span class="n">area_fill</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">nan_fill</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span> <span class="o">=</span> <span class="n">scan_fills</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">nan_fill</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">vol_tol</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">roundoff_tolerances</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">area_tol</span> <span class="o">=</span> <span class="n">degenerate_tolerance</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">input_path</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> \
+             <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">ftmp</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">ftmp</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">fix_stream</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">ftmp</span><span class="p">,</span> <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span><span class="p">,</span> <span class="n">vol_tol</span><span class="p">,</span> <span class="n">area_tol</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">input_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">fix_stream</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span><span class="p">,</span> <span class="n">vol_tol</span><span class="p">,</span> <span class="n">area_tol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="o">*</span><span class="n">counts</span><span class="p">,</span> <span class="n">vol_fill</span><span class="p">,</span> <span class="n">area_fill</span><span class="p">)</span>
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1"># dfnWorks methods</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fracture (material) id for a cell, or ``None`` when unavailable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class.</span>
+<span class="sd">        cell_id : int</span>
+<span class="sd">            One-based cell id from the ``.uge`` file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        int or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">material_ids</span><span class="p">[</span><span class="n">cell_id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_mesh_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh resolution ``h`` of the DFN, or ``None`` when it is not known.</span>
+
+<span class="sd">    ``DFN.h`` is initialised to the type ``float`` and only becomes a number</span>
+<span class="sd">    once the dfnGen parameter file has been parsed, so it is unusable on a</span>
+<span class="sd">    flow-only restart; anything that is not a positive finite number is</span>
+<span class="sd">    reported as unknown.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        float or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> \
+            <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="ow">and</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_report_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log every invalid coefficient and enforce the correction policy.</span>
+
+<span class="sd">    Writes the round-off tolerance the scan used, one line per degenerate</span>
+<span class="sd">    edge (accepted, see :func:`degenerate_tolerance`), then one line per</span>
+<span class="sd">    offending cell and per offending connection, to both the screen and the</span>
+<span class="sd">    log (``print_log`` at ``info`` level does both), then decides whether the</span>
+<span class="sd">    mesh may be corrected:</span>
+
+<span class="sd">      * rFram off and anything invalid -&gt; hard error.</span>
+<span class="sd">      * invalid cells or invalid connections above :data:`BAD_FRACTION_LIMIT` of</span>
+<span class="sd">        their own total -&gt; hard error, regardless of rFram.</span>
+<span class="sd">      * otherwise -&gt; return, and let the caller apply the correction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class. Uses ``self.r_fram``, ``self.print_log``, and (when</span>
+<span class="sd">            available) ``self.material_ids`` to name the fracture a cell is on.</span>
+<span class="sd">            ``self.r_fram`` of ``None`` means &quot;not known&quot; -- it is only set when</span>
+<span class="sd">            a dfnGen parameter file has been parsed -- and is an error rather</span>
+<span class="sd">            than a silent &quot;off&quot;.</span>
+<span class="sd">        res : ScanResult</span>
+<span class="sd">            Output of :func:`scan_uge`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if a correction must be applied, False if the mesh is clean.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        Exits the run via ``print_log(..., &#39;error&#39;)`` when the mesh is rejected.</span>
+<span class="sd">        The offending entries are dumped *before* that decision, so the listing</span>
+<span class="sd">        is available in both the pass and the fail case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">roundoff_cells</span> <span class="ow">or</span> <span class="n">res</span><span class="o">.</span><span class="n">roundoff_conns</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Round-off: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">roundoff_cells</span><span class="si">}</span><span class="s2"> negative cell volumes with &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;|volume| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">vol_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">roundoff_conns</span><span class="si">}</span><span class="s2"> negative &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;connection areas with |area| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">area_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;are zero to working precision and were accepted as valid.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">degenerate_conns</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Degenerate Voronoi edges: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">degenerate_conns</span><span class="p">)</span><span class="si">}</span><span class="s2"> negative &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;connection areas with </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">area_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> &lt; |area| &lt;= &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">degen_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">. The four nodes around each &quot;</span>
+            <span class="s2">&quot;of these triangle edges are cocircular to within LaGriT&#39;s &quot;</span>
+            <span class="s2">&quot;in-circle tolerance, so the dual Voronoi edge has zero length and &quot;</span>
+            <span class="s2">&quot;its sign is set by which diagonal the reconnection kept. They are &quot;</span>
+            <span class="s2">&quot;accepted as zero (left unchanged) and are not counted as invalid:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;warning&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">id1</span><span class="p">,</span> <span class="n">id2</span><span class="p">,</span> <span class="n">area</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">degenerate_conns</span><span class="p">:</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id1</span><span class="p">)</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;      cells </span><span class="si">{</span><span class="n">id1</span><span class="si">:</span><span class="s2">&gt;10d</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">id2</span><span class="si">:</span><span class="s2">&gt;10d</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  fractures </span><span class="si">{</span><span class="n">f1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">f2</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">f2</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  area </span><span class="si">{</span><span class="n">area</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">  [degenerate edge]&quot;</span><span class="p">)</span>
+
+    <span class="n">n_bad_cells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bad_cells</span><span class="p">)</span>
+    <span class="n">n_bad_conns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bad_conns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">n_bad_cells</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">n_bad_conns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">cell_frac</span> <span class="o">=</span> <span class="n">n_bad_cells</span> <span class="o">/</span> <span class="n">res</span><span class="o">.</span><span class="n">n_cells</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">n_cells</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="n">conn_frac</span> <span class="o">=</span> <span class="n">n_bad_conns</span> <span class="o">/</span> <span class="n">res</span><span class="o">.</span><span class="n">n_conns</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">n_conns</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--&gt; Invalid geometric coefficients in </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_bad_cells</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">n_cells</span><span class="si">}</span><span class="s2"> cells (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cell_frac</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">%), &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_bad_conns</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">n_conns</span><span class="si">}</span><span class="s2"> connections (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">conn_frac</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;warning&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--&gt; Round-off tolerance: |volume| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">vol_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> and &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;|area| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">area_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> are treated as zero (valid), not &quot;</span>
+        <span class="s2">&quot;negative; only values beyond that are listed below.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_bad_cells</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Invalid cells (volume &lt; -</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">vol_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">, NaN, or inf):&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cid</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">bad_cells</span><span class="p">:</span>
+            <span class="n">frac</span> <span class="o">=</span> <span class="n">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;      cell </span><span class="si">{</span><span class="n">cid</span><span class="si">:</span><span class="s2">&gt;10d</span><span class="si">}</span><span class="s2">  fracture </span><span class="si">{</span><span class="n">frac</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">frac</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  x </span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">  y </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">  z </span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  volume </span><span class="si">{</span><span class="n">vol</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">  [</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_bad_conns</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;--&gt; Invalid connections (area &lt; -</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">area_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">, NaN, or inf):&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">id1</span><span class="p">,</span> <span class="n">id2</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">bad_conns</span><span class="p">:</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id1</span><span class="p">)</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">_fracture_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;      cells </span><span class="si">{</span><span class="n">id1</span><span class="si">:</span><span class="s2">&gt;10d</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">id2</span><span class="si">:</span><span class="s2">&gt;10d</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  fractures </span><span class="si">{</span><span class="n">f1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">f2</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">f2</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;  area </span><span class="si">{</span><span class="n">area</span><span class="si">:</span><span class="s2"> .12e</span><span class="si">}</span><span class="s2">  [</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+    <span class="n">r_fram</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;r_fram&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">r_fram</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;Error. Invalid geometric coefficients in the UGE file, but it is &quot;</span>
+            <span class="s2">&quot;not known whether rFram was used to build this mesh.</span><span class="se">\n</span><span class="s2">DFN.r_fram &quot;</span>
+            <span class="s2">&quot;is set from the dfnGen parameter file during dfn_gen; on a &quot;</span>
+            <span class="s2">&quot;flow-only restart from an existing mesh it is never set, so the &quot;</span>
+            <span class="s2">&quot;correction cannot be authorised automatically. Set DFN.r_fram &quot;</span>
+            <span class="s2">&quot;explicitly (True or False) before calling lagrit2pflotran.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">r_fram</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;Error. Invalid geometric coefficients in the UGE file with rFram &quot;</span>
+            <span class="s2">&quot;turned off.</span><span class="se">\n</span><span class="s2">With rFram off the mesh is expected to conform, so &quot;</span>
+            <span class="s2">&quot;negative or non-finite volumes and areas indicate a meshing &quot;</span>
+            <span class="s2">&quot;failure rather than a relaxed-constraint artifact, and are not &quot;</span>
+            <span class="s2">&quot;corrected. Values within the round-off tolerance &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(|volume| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">vol_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">, |area| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">area_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;and degenerate Voronoi edges (|area| &lt;= </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">degen_tol</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="s2">&quot;were already excluded. See the listing above for the offending &quot;</span>
+            <span class="s2">&quot;cells and connections.</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="n">over</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">cell_frac</span> <span class="o">&gt;</span> <span class="n">BAD_FRACTION_LIMIT</span><span class="p">:</span>
+        <span class="n">over</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cells </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cell_frac</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">conn_frac</span> <span class="o">&gt;</span> <span class="n">BAD_FRACTION_LIMIT</span><span class="p">:</span>
+        <span class="n">over</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connections </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">conn_frac</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">over</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error. Invalid geometric coefficients exceed the &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">BAD_FRACTION_LIMIT</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">% limit (</span><span class="si">{</span><span class="s1">&#39;; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">over</span><span class="p">)</span><span class="si">}</span><span class="s2">).</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;The correction is only defensible for a handful of degenerate &quot;</span>
+            <span class="s2">&quot;cells; at this level the flow solution would not be trustworthy. &quot;</span>
+            <span class="s2">&quot;Remesh (smaller h, or a less dense network) rather than &quot;</span>
+            <span class="s2">&quot;correcting. This is common in dense networks and around triple &quot;</span>
+            <span class="s2">&quot;intersections.</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--&gt; rFram is on and both fractions are below &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">BAD_FRACTION_LIMIT</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">%; correcting &quot;</span>
+        <span class="s2">&quot;(negative -&gt; absolute value, NaN/inf -&gt; smallest positive value).&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="correct_uge_file">
+<a class="viewcode-back" href="../../../pydfnFlow.html#pydfnworks.dfnFlow.uge_tools.correct_uge_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">correct_uge_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Correct the LaGriT ``.uge`` file for the PFLOTRAN flow solver.</span>
+
+<span class="sd">    Always runs. The behaviour splits on two independent axes:</span>
+
+<span class="sd">      * ``dim`` controls the aperture conversion and the output target. ``dim=3``</span>
+<span class="sd">        multiplies cell volumes by aperture and connection areas by the mean</span>
+<span class="sd">        aperture, writing ``&lt;inp&gt;_vol_area.uge``. ``dim=2`` keeps the raw</span>
+<span class="sd">        ``&lt;inp&gt;.uge`` as the active mesh (no aperture conversion).</span>
+<span class="sd">      * the mesh is *always* scanned for invalid coefficients first, and</span>
+<span class="sd">        :func:`_report_scan` decides what happens. Every offending cell and</span>
+<span class="sd">        connection is written to the screen and the log. A correction (negative</span>
+<span class="sd">        -&gt; abs, NaN/inf -&gt; smallest positive fill, applied *before* any aperture</span>
+<span class="sd">        scaling) is only made when ``self.r_fram`` is True and fewer than</span>
+<span class="sd">        :data:`BAD_FRACTION_LIMIT` of the cells *and* of the connections are</span>
+<span class="sd">        invalid. Otherwise the run exits with an error. Values within the</span>
+<span class="sd">        round-off tolerance (:func:`roundoff_tolerances` of ``self.h``) and</span>
+<span class="sd">        connection areas within the degenerate-edge tolerance</span>
+<span class="sd">        (:func:`degenerate_tolerance`) count as zero, not as invalid, in every</span>
+<span class="sd">        branch, and are written out unchanged.</span>
+
+<span class="sd">    In all cases ``self.uge_file`` is set to the file PFLOTRAN should read.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            DFN Class.</span>
+<span class="sd">        dim : int</span>
+<span class="sd">            Problem dimension, ``3`` (default) or ``2``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        Assumes the following instance variables exist:</span>
+<span class="sd">          - ``self.flow_solver`` (str): must be ``&quot;PFLOTRAN&quot;``.</span>
+<span class="sd">          - ``self.inp_file`` (str): used to derive the ``.uge`` file name.</span>
+<span class="sd">          - ``self.r_fram`` (bool): whether the feature-rejection mesher was used.</span>
+<span class="sd">          - ``self.h`` (float): mesh resolution, for the round-off tolerance</span>
+<span class="sd">            (falls back to :data:`ROUNDOFF_ABS` when not a number).</span>
+<span class="sd">          - ``self.material_ids`` (list[int]): material id per cell.</span>
+<span class="sd">          - ``self.aperture`` (list[float]): aperture per cell or material.</span>
+<span class="sd">          - ``self.cell_based_aperture`` (bool): aperture indexing mode.</span>
+<span class="sd">          - ``self.print_log`` (callable): logging method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;--&gt; Starting: Correcting UGE file&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_solver</span> <span class="o">!=</span> <span class="s2">&quot;PFLOTRAN&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Error. Wrong flow solver requested</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="n">raw_uge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.uge&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">raw_uge</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="s2">&quot;Error. Cannot find uge file</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># Scan before writing anything: the policy below can reject the mesh, and</span>
+    <span class="c1"># the dim=3 branch streams its output as it reads, so the counts have to be</span>
+    <span class="c1"># in hand first.</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">_mesh_h</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="n">scan</span> <span class="o">=</span> <span class="n">scan_uge</span><span class="p">(</span><span class="n">raw_uge</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">fix</span> <span class="o">=</span> <span class="n">_report_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">)</span>      <span class="c1"># exits the run if the mesh is rejected</span>
+
+    <span class="k">if</span> <span class="n">fix</span> <span class="ow">and</span> <span class="n">scan</span><span class="o">.</span><span class="n">vol_fill</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;nonfinite&quot;</span>
+                                             <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">scan</span><span class="o">.</span><span class="n">bad_cells</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;Error. NaN or inf cell volumes but no finite positive volume to &quot;</span>
+            <span class="s2">&quot;derive a fill value from.</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fix</span> <span class="ow">and</span> <span class="n">scan</span><span class="o">.</span><span class="n">area_fill</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;nonfinite&quot;</span>
+                                              <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">scan</span><span class="o">.</span><span class="n">bad_conns</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span>
+            <span class="s2">&quot;Error. NaN or inf connection areas but no finite positive area to &quot;</span>
+            <span class="s2">&quot;derive a fill value from.</span><span class="se">\n</span><span class="s2">Exiting</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">out_uge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_vol_area.uge&quot;</span>
+        <span class="n">aperture</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span>
+        <span class="n">material_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_ids</span>
+        <span class="n">cell_based</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_based_aperture</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">raw_uge</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_uge</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">cell_header</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cell_header</span><span class="p">)</span>
+            <span class="n">cell_lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cell_header</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="n">cid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="n">vol</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+                    <span class="n">vol</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="n">scan</span><span class="o">.</span><span class="n">vol_fill</span><span class="p">,</span> <span class="n">scan</span><span class="o">.</span><span class="n">vol_tol</span><span class="p">)</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">cid</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">cell_based</span> <span class="k">else</span> <span class="n">material_ids</span><span class="p">[</span><span class="n">cid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">vol</span> <span class="o">*=</span> <span class="n">aperture</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">cell_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cid</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">vol</span><span class="si">:</span><span class="s2">0.12e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">cell_lines</span><span class="p">)</span>
+
+            <span class="n">conn_header</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">conn_header</span><span class="p">)</span>
+            <span class="n">conn_lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">conn_header</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+                <span class="n">id1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="n">id2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="n">area</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+                    <span class="n">area</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">classify_fix</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">scan</span><span class="o">.</span><span class="n">area_fill</span><span class="p">,</span> <span class="n">scan</span><span class="o">.</span><span class="n">degen_tol</span><span class="p">)</span>
+                <span class="n">avg_ap</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aperture</span><span class="p">[</span><span class="n">material_ids</span><span class="p">[</span><span class="n">id1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                                <span class="n">aperture</span><span class="p">[</span><span class="n">material_ids</span><span class="p">[</span><span class="n">id2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">area</span> <span class="o">*=</span> <span class="n">avg_ap</span>
+                <span class="n">conn_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">id1</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">id2</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">area</span><span class="si">:</span><span class="s2">0.12e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">conn_lines</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="n">out_uge</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+            <span class="c1"># atomic in-place; reuse the fills already found by the scan</span>
+            <span class="n">fix_uge_volumes</span><span class="p">(</span><span class="n">raw_uge</span><span class="p">,</span>
+                            <span class="n">nan_fill</span><span class="o">=</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">vol_fill</span><span class="p">,</span> <span class="n">scan</span><span class="o">.</span><span class="n">area_fill</span><span class="p">),</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span> <span class="o">=</span> <span class="n">raw_uge</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; Complete: UGE file -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uge_file</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2"> s)&quot;</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

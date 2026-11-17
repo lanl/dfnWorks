@@ -443,10 +443,10 @@ struct Shape {
     float aspectRatio;
     
     /*! Target p32 (fracture intensity) for the family when using p32 program-stopping option. */
-    float p32Target;
+    double p32Target;
     
     /*! Current P32 value for this family.  */
-    float currentP32;
+    double currentP32;
     
     /*! True = degrees, False = radians. This variable is set while readin the user's input file.
         After reading in the users input file, any input in degrees

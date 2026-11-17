@@ -84,9 +84,9 @@ def plot_fram_information(params):
     for bar in horizBar:
         width = bar.get_width()
         if total_number_of_rejections > 0:
-            label = f"  {int(width):d}\n  {100*width/total_number_of_rejections:0.2f}\%"
+            label = f"  {int(width):d}\n  {100*width/total_number_of_rejections:0.2f}\\%"
         else:
-            label = f"  {int(width):d}\n  0\%" 
+            label = f"  {int(width):d}\n  0\\%" 
         axs.text(bar.get_width() + 2,
                  bar.get_y() + 0.5 * h,
                  label,

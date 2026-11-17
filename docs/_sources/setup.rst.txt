@@ -1,24 +1,57 @@
 .. _pydfnworks-setup:
 
-Setting and Running up dfnWorks
+Setup and Running dfnWorks
 ================================
+
+These options are available for running dfnWorks:
+
+
+* Use Docker dfnWorks to run and view files. The Docker dfnWorks contains all the tools and examples needed. Files created within Docker can be examined but will not persist past the exit. (You will not be able to load files into a viewer like Paraview). Except for Docker, no installation is needed.
+
+* Use Docker and mount a volume. Files will be read and written in your local directory. Files will persist past the exit and Paraview will work.
+
+* Clone and build dfnWorks on your machine. This will give full access and control of all the tools and files for your project. Installation will include Python, dfnWorks, LaGriT, PFLOTRAN, and FEHM.
+
+* Linux dfnWorks module. Some servers use the module system and may have dfnWorks available. You will still need to clone dfnWorks for the files, but you can skip the build process.
+
 
 Docker
 ------------------------------
-The easiest way to get started with dfnWorks is using our docker container (https://hub.docker.com/r/ees16/dfnworks).
 
-If you do not already have Docker installed on your machine,
-visit `Getting Started with Docker <https://www.docker.com/get-started>`_.
+.. _docker_section:
 
-The dfnWorks Docker image can be pulled from DockerHub using:
+The easiest way to get started with dfnWorks is by using Docker. You will not need to install any software or manage your environment. All the tools and the dfnWorks repository are contained in the Docker image. 
+
+Setup the Docker dfnWorks image 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Check Docker is installed and running correctly. 
+If you do not already have Docker installed on your machine, visit `Getting Started with Docker <https://www.docker.com/get-started>`_.
+
+
+.. code-block:: bash
+
+    $ docker run hello-world
+    Hello from Docker!
+    This message shows that your installation appears to be working correctly.
+
+Once Docker is installed, pull the dfnWorks Docker image:
 
 .. code-block:: bash
 
     $ docker pull ees16/dfnworks:latest
 
 
-Running the dfnWorks container
+After pulling, the dfnWorks Docker image is stored on your machine and can be listed using the command ```docker images```. This contains the dfnWorks repository files, libraries, and dependencies needed to run the dfnWorks application. 
+
+
+Run the dfnWorks container 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+This method of running the dfnWorks container is useful for exploring the example files or running tests, but it's not ideal for saving your own work or results.
+When you run a Docker container without specifying a volume, any files created inside the container during its execution will only exist until you exit the container. Once you type exit, the container stops, and you lose any changes or files generated inside it.
+
 
 The base command for running the dfnWorks container is:
 
@@ -26,103 +59,187 @@ The base command for running the dfnWorks container is:
 
     docker run -ti ees16/dfnworks:latest
 
-However, to exchange files between the host and container, we will need to mount
-a volume.
+When you run the command above, you will be inside the container, and your current directory will be set to `/dfnWorks`.
+Here’s how to run one of the included examples in the dfnWorks container: 
 
-The option ``-v LOCAL_FOLDER:/dfnWorks/work`` will allow all files present in the
-container folder ``dfnWorks/work`` to be exposed to ``LOCAL_FOLDER``, where
-``LOCAL_FOLDER`` is the absolute path to a folder on your machine.
+.. code-block:: bash
 
-With this is place, the final command for running the Docker container is:
+    cd examples/4_user_rects
+    python driver.py
+    
+
+The unix command ```ls``` will display the files written, including `output.log` and result files in `/output`.
+After exiting, all the files you created or modified during that session will be lost because they weren't saved outside the container.
+ 
+
+Run the dfnWorks container with mounted volume
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to exchange files between the host computer and a Docker container, you can mount a volume. Mounting a volume allows the container to access files stored on your local machine. Keep in mind that the mount command may vary depending on your operating system. 
+
+**General Note:**
+Use a volume where permissions will not be an issue to ensure smooth operation.
+
+
+
+**On Linux**
+
+Work from a directory you own (for example, your home directory) to avoid permission issues. Assuming you want to mount a local version of the dfnWorks repository, clone it with ``git clone https://github.com/lanl/dfnWorks.git``.
+
+
+After preparing your local volume, pull the latest dfnWorks Docker image:
+
+.. code-block:: bash
+
+    docker pull ees16/dfnworks:latest
+
+
+Run the container with a mounted volume.  
+Move into the directory where you want to run dfnWorks (e.g., `dfnWorks/examples/4_user_rects`) and use the following command. This example assumes you want to run a script named `driver.py` (you can substitute this with your desired script name):
+
+
+.. code-block:: bash
+
+    docker run -v "$(pwd):/app" -w /app ees16/dfnworks:latest python driver.py 
+
+
+In this example, the inner-docker folder /app will share its content with your local current folder. All files will persist after you exit Docker. 
+
 
 **On macOS:**
+
+On macOS, you can mount a directory on your local machine to the container. Use the following command, replacing `<LOCAL_FOLDER>` with the absolute path to your local directory:
 
 .. code-block:: bash
 
     docker run -ti -v <LOCAL_FOLDER>:/dfnWorks/work ees16/dfnworks:latest
 
-Native build from github repository
+
+**In General**
+
+To link the current folder between the host and the container for development, you can use the following command:
+
+
+.. code-block:: bash
+
+    docker run <image-name> -v $(pwd):<folder-path-in-container> ees16/dfnworks:latest
+
+
+Replace `<image-name>` with `ees16/dfnworks:latest` and `<folder-path-in-container>` with the desired folder path inside the container.
+
+
+
+Native Build 
 ------------------------------------------
 
-This document contains instructions for setting up dfnWorks natively on your
-machine. To setup dfnWorks using Docker instead, see the next section.
+.. _build_section:
 
-Clone the dnfWorks repository
+
+These instructions describe how to setup dfnWorks natively on your machine.
+
+For more information about installing dfnWorks, refer to the `dfnWorks README on github <https://github.com/lanl/dfnWorks/blob/master/README.md>`_.
+
+
+Clone the dfnWorks repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
     $ git clone https://github.com/lanl/dfnWorks.git
 
 
-Fix paths in test directory 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Fix the pathnames in files throughout pydfnworks. This can be done automatically by running the script ``fix_paths.py``:
-
-.. code-block:: bash
-
-    $ cd dfnWorks/pydfnworks/bin/
-    $ python fix_paths.py 
-
-Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths 
+Set the LaGriT, PETSc, PFLOTRAN, and FEHM paths
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Before executing dfnWorks,** the following paths must be set:
+**Before executing dfnWorks,** pydfnworks needs to know where dfnWorks and the external tools are installed:
 
-- dfnWorks_PATH: the dfnWorks repository folder
-- PETSC_DIR and PETSC_ARCH: PETSC environmental variables
-- PFLOTRAN_EXE:  Path to PFLOTRAN executable 
-- PYTHON_EXE:  Path to python executable 
-- LAGRIT_EXE:  Path to LaGriT executable 
+- ``dfnworks_PATH``: the dfnWorks repository folder (with a trailing ``/``). **Required.**
+- ``PETSC_DIR`` and ``PETSC_ARCH``: PETSc environment variables (needed for PFLOTRAN)
+- ``PFLOTRAN_EXE``: path to the PFLOTRAN executable
+- ``LAGRIT_EXE``: path to the LaGriT executable
+- ``FEHM_EXE``: path to the FEHM executable
 
-.. code-block:: bash
-    
-    $ vi dfnWorks/pydfnworks/pydfnworks/paths.py
+Only ``dfnworks_PATH`` is required. The others are needed only to run the tools that use them (e.g., ``LAGRIT_EXE`` for meshing, ``PFLOTRAN_EXE`` for flow with PFLOTRAN).
 
-For example:
+The recommended way to set them is a ``.dfnworksrc`` file in your home directory, in JSON format:
 
-.. code-block:: python
-    
-    os.environ['dfnWorks_PATH'] = '/home/username/dfnWorks/'    
-
-Alternatively, you can create a ``.dfnworksrc`` file in your home directory with the following format
-
-.. code-block:: bash
+.. code-block:: json
 
     {
-        "dfnworks_PATH": "<your-home-directory>/src/dfnworks-main/",
+        "dfnworks_PATH": "<your-home-directory>/src/dfnWorks/",
         "PETSC_DIR": "<your-home-directory>/src/petsc",
-        "PETSC_ARCH": "arch-darwin-c-debug",
+        "PETSC_ARCH": "arch-darwin-c-opt",
         "PFLOTRAN_EXE": "<your-home-directory>/src/pflotran/src/pflotran/pflotran",
-        "PYTHON_EXE": "<your-home-directory>/anaconda3/bin/python",
         "LAGRIT_EXE": "<your-home-directory>/bin/lagrit",
-        "FEHM_EXE": "<your-home-directory>//src/xfehm_v3.3.1"
+        "FEHM_EXE": "<your-home-directory>/src/xfehm_v3.3.1"
     }
+
+If ``~/.dfnworksrc`` is not found, pydfnworks reads the same names from environment variables, for example:
+
+.. code-block:: bash
+
+    $ export dfnworks_PATH=$HOME/src/dfnWorks/
+
+The paths are read in ``pydfnworks/pydfnworks/general/paths.py``.
+
+.. note:: The dfnWorks C++ executables (``DFNGen``, ``DFNTrans``, and helper tools) are compiled automatically with ``make`` the first time a DFN object is created if they are not found. A C++ compiler and ``make`` are therefore required.
 
 
 Installing pydfnworks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Go up into the pydfnworks sub-directory:
+Go into the pydfnworks sub-directory:
 
 .. code-block:: bash
-    
+
     $ cd dfnWorks/pydfnworks/
 
-Complie The pydfnWorks Package:
+Install the dependencies and the package:
 
 .. code-block:: bash
-    
-    $ python setup.py bdist_wheel
 
+    $ pip install -r requirements.txt
+    $ pip install .
 
-Install on Your Local Machine:
+If you don't have admin privileges (e.g., on a shared system), add ``--user``:
 
 .. code-block:: bash
-    
-    $ python -m pip install dist/pydfnworks-2.6-py3-none-any.whl
 
-**Note that the python version in dist/ needs to be consistent with the current release**
+    $ pip install -r requirements.txt --user
+    $ pip install . --user
+
+Check the installation:
+
+.. code-block:: bash
+
+    $ python -c "import pydfnworks; print(pydfnworks.__version__)"
+
+
+Testing your installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dfnWorks includes an end-to-end regression suite in ``tests/regression``. It runs the shipped examples (generation, meshing, PFLOTRAN, FEHM, DFNTrans, and graph-based flow and transport), compares scalar results such as fracture counts, mesh sizes, mass balance, and particle travel times against committed baselines, and writes an HTML report.
+
+.. code-block:: bash
+
+    $ cd dfnWorks/tests/regression
+    $ python3 run_regression.py                  # baseline tier (~3 minutes)
+    $ python3 run_regression.py --tier modest    # adds TDRW, stress, wells, FEHM, UDFM, ...
+    $ python3 run_regression.py --tier advanced  # everything, including the long cases
+    $ python3 run_regression.py --only TPL exp   # selected cases
+    $ python3 run_regression.py --list           # list cases and tiers
+
+The report is written to ``tests/regression/latest_report.html``. Each case is reported as:
+
+- PASS: ran cleanly and matched its baseline.
+- DIFF: ran cleanly, but a metric is outside its tolerance.
+- FAIL: the run errored or an expected output is missing.
+- SKIP: a required executable (e.g., PFLOTRAN, FEHM, LaGriT) was not found, so the case was not run.
+
+The command exits with code 0 only if every case is PASS or SKIP. See ``tests/regression/README.md`` for details.
+
+.. note:: The test drivers use the ``pydfnworks`` that the Python running ``run_regression.py`` imports. To test a source checkout rather than an installed copy, install it in editable mode (``pip install -e .`` in ``pydfnworks/``) or set ``PYTHONPATH=<path-to-dfnWorks>/pydfnworks``.
+
+.. tip:: After updating dfnWorks, rebuild the C++ executables (``make`` in ``DFNGen/`` and ``DFNTrans/``) before running the tests, so they use the current code.
 
 Installation Requirements for Native Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -140,9 +257,12 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 Python 
 *****************************
 
-pydfnworks uses Python 3. We recommend using 
-the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``networkx``, ``fpdf``, and ``re``.
+pydfnworks requires Python 3.10 or newer. We recommend using a conda or virtual environment.
+pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They are listed in ``pydfnworks/requirements.txt`` and are installed automatically with pydfnworks, or can be installed directly with
+
+.. code-block:: bash
+
+    pip install -r pydfnworks/requirements.txt
 
 
 LaGriT
@@ -154,6 +274,8 @@ coincident with triangle edges in the mesh and Voronoi control volumes are
 suitable for finite volume flow solvers such as FEHM and PFLOTRAN.
 
 .. _LaGriT: https://lagrit.lanl.gov
+
+dfnWorks v2.8 and newer requires LaGriT v3.3. DFM meshing (``mesh_dfm``) requires LaGriT built with Exodus support.
 
 PFLOTRAN
 ********

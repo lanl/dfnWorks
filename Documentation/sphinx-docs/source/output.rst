@@ -223,13 +223,13 @@ Mesh information output by PFLOTRAN.
 
 .. _dfn_explicit-000.vtk:
 
-VTK file of initial conditions of PFLOTRAN. Mesh is not included in this file. 
+Legacy VTK file of the initial conditions written by PFLOTRAN (no mesh). It is converted to ``pflotran_vtu_outputs/dfn_explicit-000.vtu`` by ``parse_pflotran_vtk`` and then removed.
 
 **dfn_explicit-001.vtk:**
 
 .. _dfn_explicit-001.vtk:
 
-VTK file of steady-state solution of PFLOTRAN. Mesh is not included in this file. 
+Legacy VTK file of the steady-state solution written by PFLOTRAN (no mesh). It is converted to ``pflotran_vtu_outputs/dfn_explicit-001.vtu`` by ``parse_pflotran_vtk`` and then removed.
 
 **dfn_explicit-mas.dat:**
 
@@ -270,11 +270,11 @@ Full DFN in uge format. Volumes and areas have been corrected.
 
 Material ID (Fracture Number) for every node in the mesh. 
 
-**parsed_vtk:**
+**pflotran_vtu_outputs:**
 
-.. _parsed_vtk:
+.. _pflotran_vtu_outputs:
 
-Directory of pflotran results. 
+Directory of PFLOTRAN results in XML VTK format, written by ``parse_pflotran_vtk`` or ``parse_pflotran_h5``. It contains one ``<base>-NNN.vtu`` file per output time (the DFN mesh with the PFLOTRAN fields as point data and the fracture ``material_id`` as cell data) and ``<base>.pvd``, a ParaView collection that lists the files with their simulation times in seconds. Open the ``.pvd`` file in ParaView so the time slider shows simulation time. Earlier versions wrote legacy ``.vtk`` files to ``pflotran_vtk_outputs`` (and before that ``parsed_vtk``).
 
 **perm.dat:**
 

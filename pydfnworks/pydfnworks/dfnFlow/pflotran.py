@@ -7,6 +7,7 @@ import h5py
 import glob
 import shutil
 import ntpath
+import re
 from time import time
 import numpy as np
 from pathlib import Path
@@ -419,14 +420,128 @@ def pflotran_cleanup(self, index_start=0, index_finish=1, filename=''):
         self.print_log("--> Warning. Unable to create symlink for cellinfo.dat")
 
 
-def parse_pflotran_vtk_python(self, grid_vtk_file=''):
-    """ Adds CELL_DATA to POINT_DATA in the VTK output from PFLOTRAN.
+# Directory that receives the converted PFLOTRAN output (.vtu files + .pvd)
+PFLOTRAN_VTU_DIR = 'pflotran_vtu_outputs'
+
+# PFLOTRAN time units -> seconds
+_TIME_UNITS_TO_SECONDS = {
+    's': 1.0, 'sec': 1.0, 'second': 1.0, 'seconds': 1.0,
+    'min': 60.0, 'minute': 60.0, 'minutes': 60.0,
+    'h': 3600.0, 'hr': 3600.0, 'hour': 3600.0, 'hours': 3600.0,
+    'd': 86400.0, 'day': 86400.0, 'days': 86400.0,
+    'w': 604800.0, 'wk': 604800.0, 'week': 604800.0, 'weeks': 604800.0,
+    'mo': 2629800.0, 'month': 2629800.0, 'months': 2629800.0,
+    'y': 31557600.0, 'yr': 31557600.0, 'year': 31557600.0, 'years': 31557600.0,
+}
+
+_SNAPSHOT_NAME = re.compile(r'^(?P<base>.+?)(?P<vel>-vel)?-(?P<idx>\d+)\.vtk$')
+_STEP_TIME = re.compile(r'^\s*Step\s+\d+\s+Time=\s*(?P<value>\S+).*\[(?P<unit>[A-Za-z]+)\]')
+_VTK_WRITE = re.compile(r'write vtk output file:\s*(?P<name>\S+)')
+
+
+def _time_to_seconds(value, unit):
+    """ Convert a PFLOTRAN time value and unit (e.g. 1.0e2, 'd') to seconds.
+    Unknown units are returned unconverted. """
+    factor = _TIME_UNITS_TO_SECONDS.get(unit.strip().lower())
+    return float(value) * factor if factor else float(value)
+
+
+def _pflotran_snapshot_times(out_file):
+    """ Read the simulation time of every VTK snapshot from a PFLOTRAN log.
+
+    PFLOTRAN writes ``Step N Time= X ... [unit]`` after each time step and
+    ``--> write vtk output file: <name>`` whenever it writes a snapshot. Each
+    snapshot gets the time of the most recent step before it, or 0 for
+    snapshots written before the first step (the initial condition).
+
     Parameters
     ----------
-        self : object 
+        out_file : string
+            PFLOTRAN screen/log output, normally ``<base>.out``.
+
+    Returns
+    -------
+        times : dict
+            ``{vtk file name: time in seconds}``. Empty if the file is missing.
+    """
+    times = {}
+    if not os.path.isfile(out_file):
+        return times
+    current = 0.0
+    with open(out_file, 'r', errors='replace') as f:
+        for line in f:
+            m = _STEP_TIME.match(line)
+            if m:
+                try:
+                    current = _time_to_seconds(m.group('value'), m.group('unit'))
+                except ValueError:
+                    pass
+                continue
+            m = _VTK_WRITE.search(line)
+            if m:
+                times[m.group('name')] = current
+    return times
+
+
+def _read_pflotran_vtk_fields(vtk_file, num_values):
+    """ Read the SCALARS and VECTORS blocks of a PFLOTRAN legacy VTK file.
+
+    PFLOTRAN writes cell data for its control volumes, which are the nodes of
+    the DFN mesh, so each field has one value (or vector) per mesh node.
+
+    Parameters
+    ----------
+        vtk_file : string
+            PFLOTRAN output file, e.g. ``dfn_explicit-001.vtk``.
+        num_values : int
+            Number of mesh nodes.
+
+    Returns
+    -------
+        fields : dict
+            ``{name: array}``; scalars have shape (n,), vectors (n, 3).
+    """
+    with open(vtk_file, 'r') as f:
+        tokens = f.read().split()
+    fields = {}
+    i = 0
+    while i < len(tokens):
+        keyword = tokens[i]
+        if keyword in ('SCALARS', 'VECTORS'):
+            name, dtype = tokens[i + 1], tokens[i + 2]
+            i += 3
+            if keyword == 'SCALARS':
+                # optional number of components, then optional LOOKUP_TABLE
+                if i < len(tokens) and tokens[i].isdigit():
+                    i += 1
+                if i < len(tokens) and tokens[i] == 'LOOKUP_TABLE':
+                    i += 2
+                count, shape = num_values, (num_values, )
+            else:
+                count, shape = 3 * num_values, (num_values, 3)
+            values = np.asarray(tokens[i:i + count], dtype=np.float64)
+            if values.size != count:
+                raise ValueError(f"{vtk_file}: field {name} has {values.size} values, expected {count}")
+            if dtype.lower() in ('int', 'long', 'short', 'char', 'unsigned_int'):
+                values = values.astype(np.int64)
+            fields[name] = values.reshape(shape)
+            i += count
+        else:
+            i += 1
+    return fields
+
+
+def parse_pflotran_vtk(self, binary=True):
+    """ Convert PFLOTRAN VTK output into XML VTK (.vtu) files and a ParaView time series (.pvd).
+
+    Parameters
+    ----------
+        self : object
             DFN Class
-        grid_vtk_file : string
-            Name of vtk file with mesh. Typically local_dfnFlow_file.vtk
+
+        binary : bool
+            If True (default), data arrays are base64-encoded binary. If False,
+            they are written as ASCII.
 
     Returns
     --------
@@ -434,104 +549,109 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     Notes
     --------
-    If DFN class does not have a vtk file, inp2vtk_python is called
+        - PFLOTRAN writes ``<base>-NNN.vtk`` files that contain only cell data
+          for its control volumes, which are the nodes of the DFN mesh. Each
+          snapshot is written to ``pflotran_vtu_outputs/<base>-NNN.vtu`` with
+          the mesh from ``self.inp_file`` and the PFLOTRAN fields as point
+          data (plus the fracture ``material_id`` as cell data). Velocity files
+          (``<base>-vel-NNN.vtk``) are merged into the matching snapshot.
+        - ``pflotran_vtu_outputs/<base>.pvd`` lists the snapshots with their
+          simulation times in seconds, read from the PFLOTRAN log
+          ``<base>.out``. If the log is missing, the snapshot number is used.
+          Open the ``.pvd`` file in ParaView.
+        - The original PFLOTRAN ``.vtk`` files are removed.
     """
-    self.print_log('--> Parsing PFLOTRAN output with Python')
+    from pydfnworks.general.vtu_io import read_inp_mesh, write_vtu, write_pvd
 
+    self.print_log('--> Converting PFLOTRAN VTK output to VTU/PVD')
     if self.flow_solver != "PFLOTRAN":
-        error = "Error. Wrong flow solver requested\n"
-        self.print_log(error, 'error')
+        self.print_log("Error. Wrong flow solver requested\n", 'error')
 
+    base = Path(self.local_dfnFlow_file).stem
+    snapshots = {}
+    for name in sorted(glob.glob(f"{base}*.vtk")):
+        m = _SNAPSHOT_NAME.match(name)
+        if not m or m.group('base') != base:
+            continue
+        snapshots.setdefault(int(m.group('idx')), []).append(name)
+    if not snapshots:
+        self.print_log(f"--> Warning. No PFLOTRAN VTK files matching {base}-NNN.vtk found", 'warning')
+        return
+
+    mesh = read_inp_mesh(self.inp_file)
+    num_points = mesh['points'].shape[0]
+
+    times = _pflotran_snapshot_times(f"{base}.out")
+    if not times:
+        self.print_log(f"--> Warning. {base}.out not found; using snapshot numbers as times in the .pvd file", 'warning')
+
+    os.makedirs(PFLOTRAN_VTU_DIR, exist_ok=True)
+    collection = []
+    for idx in sorted(snapshots):
+        point_data = {}
+        for vtk_file in snapshots[idx]:
+            self.print_log(f"--> Processing file: {vtk_file}")
+            point_data.update(_read_pflotran_vtk_fields(vtk_file, num_points))
+        vtu_name = f"{base}-{idx:03d}.vtu"
+        write_vtu(os.path.join(PFLOTRAN_VTU_DIR, vtu_name), mesh, point_data=point_data, binary=binary)
+        main_file = f"{base}-{idx:03d}.vtk"
+        collection.append((times.get(main_file, float(idx)), vtu_name))
+        for vtk_file in snapshots[idx]:
+            os.remove(vtk_file)
+
+    pvd_file = os.path.join(PFLOTRAN_VTU_DIR, f"{base}.pvd")
+    write_pvd(pvd_file, collection)
+    self.print_log(f"--> Wrote {len(collection)} snapshots to {PFLOTRAN_VTU_DIR}/; open {pvd_file} in ParaView")
+    self.print_log('--> Converting PFLOTRAN VTK output complete')
+
+
+def parse_pflotran_vtk_python(self, grid_vtk_file=''):
+    """ Deprecated. Use :func:`parse_pflotran_vtk`, which writes XML ``.vtu``
+    files and a ``.pvd`` time series to ``pflotran_vtu_outputs/``.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+        grid_vtk_file : string
+            Ignored. The mesh is read from ``self.inp_file``.
+
+    Returns
+    --------
+        None
+    """
+    self.print_log("--> parse_pflotran_vtk_python is deprecated and now writes .vtu/.pvd files to "
+                   f"{PFLOTRAN_VTU_DIR}/. Use DFN.parse_pflotran_vtk() instead.", 'warning')
     if grid_vtk_file:
-        self.vtk_file = grid_vtk_file
-    else:
-        self.inp2vtk_python()
-
-    grid_file = self.vtk_file
-
-    # Grab all vtk files
-    base_filename = Path(self.local_dfnFlow_file).stem
-    files = glob.glob(f"{base_filename}*.vtk")
-    files.sort()
-
-    with open(grid_file, 'r') as f:
-        grid = f.readlines()[3:]
-
-    out_dir = 'pflotran_vtk_outputs'
-
-    for line in grid:
-        if 'POINTS' in line:
-            num_cells = line.strip(' ').split()[1]
-
-    for file in files:
-        self.print_log(f"--> Processing file: {file}")
-        with open(file, 'r') as f:
-            pflotran_out = f.readlines()[4:]
-        pflotran_out = [
-            w.replace('CELL_DATA', 'POINT_DATA ') for w in pflotran_out
-        ]
-        header = [
-            '# vtk DataFile Version 2.0\n', 'PFLOTRAN output\n', 'ASCII\n'
-        ]
-        filename = out_dir + '/' + file
-        if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
-        with open(filename, 'w') as f:
-            for line in header:
-                f.write(line)
-            for line in grid:
-                f.write(line)
-            f.write('\n')
-            f.write('\n')
-            if 'vel' in file:
-                f.write('POINT_DATA\t ' + num_cells + '\n')
-            for line in pflotran_out:
-                f.write(line)
-        os.remove(file)
-    self.print_log('--> Parsing PFLOTRAN output complete')
+        self.print_log("--> grid_vtk_file is ignored; the mesh is read from the .inp file", 'warning')
+    self.parse_pflotran_vtk()
 
 
-def _sanitize_vtk_field_name(name):
-    """ Sanitize an HDF5 dataset name so it is a valid legacy VTK SCALARS field name.
+def _parse_time_group(group_name):
+    """ Parse a PFLOTRAN HDF5 time group name.
 
-    Replaces whitespace and bracket characters with underscores, collapses
-    repeated underscores, and trims leading/trailing underscores.
-    Example: 'Liquid Pressure [Pa]' -> 'Liquid_Pressure_Pa'
+    PFLOTRAN writes top-level groups like ``'   1 Time  1.00000E+02 d'``.
+
+    Returns
+    -------
+        (index, time in seconds), or None if the name is not a time group.
     """
-    out = []
-    for ch in name:
-        if ch.isalnum() or ch == '_':
-            out.append(ch)
-        else:
-            out.append('_')
-    sanitized = ''.join(out)
-    # collapse repeated underscores
-    while '__' in sanitized:
-        sanitized = sanitized.replace('__', '_')
-    return sanitized.strip('_') or 'field'
-
-
-def _time_group_index(group_name):
-    """ Extract the integer time index from a PFLOTRAN HDF5 time group name.
-
-    PFLOTRAN writes top-level groups like '   0 Time  0.00000E+00 d',
-    '   1 Time  1.00000E+02 d', etc. The first whitespace-delimited token
-    is the time index.
-    """
+    tokens = group_name.strip().split()
     try:
-        return int(group_name.strip().split()[0])
+        idx = int(tokens[0])
     except (ValueError, IndexError):
         return None
+    seconds = float(idx)
+    if len(tokens) >= 3 and tokens[1].lower() == 'time':
+        try:
+            seconds = _time_to_seconds(tokens[2], tokens[3] if len(tokens) > 3 else 's')
+        except ValueError:
+            pass
+    return idx, seconds
 
 
-def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
-    """ Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.
-
-    The mesh is taken from a VTK file derived from the .inp mesh
-    (via inp2vtk_python if not already produced). Solution data is read
-    from PFLOTRAN's main HDF5 output, which contains one group per time
-    step. Every dataset present in a time group is written to the
-    corresponding pflotran_vtk_outputs/<base>-NNN.vtk file as POINT_DATA scalars.
+def parse_pflotran_h5(self, h5_file='', binary=True, grid_vtk_file=''):
+    """ Convert PFLOTRAN HDF5 output into XML VTK (.vtu) files and a ParaView time series (.pvd).
 
     Parameters
     ----------
@@ -539,10 +659,12 @@ def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
             DFN Class
         h5_file : string
             Path to the PFLOTRAN HDF5 output file. If empty, defaults to
-            '<local_dfnFlow_file stem>.h5' in the current directory.
+            ``<local_dfnFlow_file stem>.h5`` in the current directory.
+        binary : bool
+            If True (default), data arrays are base64-encoded binary. If False,
+            they are written as ASCII.
         grid_vtk_file : string
-            Path to a VTK file containing the mesh. If empty, inp2vtk_python
-            is invoked to produce one from self.inp_file.
+            Deprecated and ignored. The mesh is read from ``self.inp_file``.
 
     Returns
     --------
@@ -550,105 +672,67 @@ def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
 
     Notes
     --------
-        - Dataset names are sanitized for legacy VTK compatibility
-          (spaces and brackets become underscores).
-        - Integer datasets are written with `int` scalar type; everything
-          else is written as `float`.
-        - Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.
+        - Each time group of the HDF5 file (e.g. ``'   1 Time  1.00000E+02 d'``)
+          becomes ``pflotran_vtu_outputs/<base>-NNN.vtu``. Every dataset with one
+          value per mesh node is written as point data; datasets with three
+          values per node are written as vectors. Others are skipped.
+        - ``pflotran_vtu_outputs/<base>.pvd`` lists the snapshots with the
+          times from the group names, converted to seconds.
     """
-    self.print_log('--> Parsing PFLOTRAN HDF5 output with Python')
+    from pydfnworks.general.vtu_io import read_inp_mesh, write_vtu, write_pvd
 
+    self.print_log('--> Converting PFLOTRAN HDF5 output to VTU/PVD')
     if self.flow_solver != "PFLOTRAN":
         self.print_log("Error. Wrong flow solver requested\n", 'error')
-
-    # Resolve the mesh VTK
     if grid_vtk_file:
-        self.vtk_file = grid_vtk_file
-    elif not getattr(self, 'vtk_file', None) or not os.path.exists(self.vtk_file):
-        self.inp2vtk_python()
-    grid_file = self.vtk_file
+        self.print_log("--> grid_vtk_file is deprecated and ignored; the mesh is read from the .inp file", 'warning')
 
-    # Resolve the HDF5 file
     if not h5_file:
         h5_file = f"{Path(self.local_dfnFlow_file).stem}.h5"
     if not os.path.exists(h5_file):
         self.print_log(f"PFLOTRAN HDF5 file not found: {h5_file}", 'error')
     self.print_log(f"--> Reading HDF5 data from {h5_file}")
 
-    # Read mesh block from the existing VTK (skip the 3 header lines so we
-    # can swap in our own header; matches parse_pflotran_vtk_python).
-    with open(grid_file, 'r') as f:
-        grid = f.readlines()[3:]
-
-    num_points = None
-    for line in grid:
-        if 'POINTS' in line:
-            num_points = line.strip().split()[1]
-            break
-    if num_points is None:
-        self.print_log(f"Could not find POINTS line in {grid_file}", 'error')
-
-    out_dir = 'pflotran_vtk_outputs'
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-
+    mesh = read_inp_mesh(self.inp_file)
+    num_points = mesh['points'].shape[0]
     base = Path(self.local_dfnFlow_file).stem
-    header_lines = [
-        '# vtk DataFile Version 2.0\n',
-        'PFLOTRAN output\n',
-        'ASCII\n',
-    ]
+    os.makedirs(PFLOTRAN_VTU_DIR, exist_ok=True)
 
+    collection = []
     with h5py.File(h5_file, 'r') as h5:
-        # Keep only the time-step groups (skip anything that doesn't parse).
         time_groups = []
         for name in h5.keys():
             if not isinstance(h5[name], h5py.Group):
                 continue
-            idx = _time_group_index(name)
-            if idx is None:
-                continue
-            time_groups.append((idx, name))
+            parsed = _parse_time_group(name)
+            if parsed is not None:
+                time_groups.append((parsed[0], parsed[1], name))
         time_groups.sort(key=lambda x: x[0])
-
         if not time_groups:
-            self.print_log(
-                f"No PFLOTRAN time-step groups found in {h5_file}", 'error')
+            self.print_log(f"No PFLOTRAN time-step groups found in {h5_file}", 'error')
 
-        for idx, group_name in time_groups:
+        for idx, seconds, group_name in time_groups:
             group = h5[group_name]
-            out_path = os.path.join(out_dir, f"{base}-{idx:03d}.vtk")
-            self.print_log(f"--> Writing {out_path}")
-            with open(out_path, 'w') as f:
-                for line in header_lines:
-                    f.write(line)
-                for line in grid:
-                    f.write(line)
-                f.write('\n')
-                f.write(f"POINT_DATA {num_points}\n")
+            point_data = {}
+            for dset_name in group.keys():
+                dset = group[dset_name]
+                if not isinstance(dset, h5py.Dataset):
+                    continue
+                values = np.asarray(dset[()])
+                if values.size == num_points:
+                    point_data[dset_name] = values.ravel()
+                elif values.size == 3 * num_points:
+                    point_data[dset_name] = values.reshape(num_points, 3)
+                else:
+                    self.print_log(f"Skipping '{dset_name}' in time group {idx}: "
+                                   f"size {values.size} does not match {num_points} mesh points")
+            vtu_name = f"{base}-{idx:03d}.vtu"
+            self.print_log(f"--> Writing {PFLOTRAN_VTU_DIR}/{vtu_name}")
+            write_vtu(os.path.join(PFLOTRAN_VTU_DIR, vtu_name), mesh, point_data=point_data, binary=binary)
+            collection.append((seconds, vtu_name))
 
-                for dset_name in group.keys():
-                    dset = group[dset_name]
-                    if not isinstance(dset, h5py.Dataset):
-                        continue
-                    values = np.asarray(dset[()]).ravel()
-                    if values.size != int(num_points):
-                        self.print_log(
-                            f"Skipping '{dset_name}' in time group {idx}: "
-                            f"size {values.size} != {num_points} mesh points")
-                        continue
-                    field = _sanitize_vtk_field_name(dset_name)
-                    if np.issubdtype(values.dtype, np.integer):
-                        scalar_type = 'int'
-                        fmt = '%d'
-                    else:
-                        scalar_type = 'float'
-                        fmt = '%.8e'
-                    f.write(f"SCALARS {field} {scalar_type} 1\n")
-                    f.write("LOOKUP_TABLE default\n")
-                    for v in values:
-                        f.write(fmt % v)
-                        f.write('\n')
-
-    self.print_log('--> Parsing PFLOTRAN HDF5 output complete')
+    pvd_file = os.path.join(PFLOTRAN_VTU_DIR, f"{base}.pvd")
+    write_pvd(pvd_file, collection)
+    self.print_log(f"--> Wrote {len(collection)} snapshots to {PFLOTRAN_VTU_DIR}/; open {pvd_file} in ParaView")
+    self.print_log('--> Converting PFLOTRAN HDF5 output complete')
 

@@ -286,13 +286,19 @@ def add_fracture_family(self,
         
         distribution : 'tpl', 'log_normal', 'exp', or 'constant' defines the sample distribution for the fracture radius
         
-        kappa : concentration param of the von Mises-Fisher distribution
+        orientation_distribution : 'fisher' (default) or 'bingham'. Distribution used to sample fracture normals around the mean orientation
+
+        kappa : concentration param of the von Mises-Fisher distribution. use if orientation_distribution = 'fisher'
+
+        kappa1 : first concentration param of the Bingham distribution. use if orientation_distribution = 'bingham'. default = None
+
+        kappa2 : second concentration param of the Bingham distribution. use if orientation_distribution = 'bingham'. default = None
         
         family_number : fracutre family id. default = None
         
         probability : probabily of a fracture belonging to this family. default = None. use if stopCondition = 0 
         
-        p32 : fracture intensity for the family. default = None. use if stopCondition = 
+        p32 : fracture intensity for the family. default = None. use if stopCondition = 1. The value is interpreted using DFN.params['p32_convention'] (0: double-sided / wetted surface area, P32 = 2A/V, default. 1: single-sided, P32 = A/V)
 
         layer : assigns fracture family to a layer in the domain. default = 0
         
@@ -334,13 +340,14 @@ def add_fracture_family(self,
         
         hy_variable : hydraulic variable to assign values to. options are 'aperture', 'permeability', 'transmissivity', 
         
-        hy_function : relationship between hydraulic variable and fracture radius. options are 'correlated', 'semi-correlated', 'constant', 'log-normal'
+        hy_function : relationship between hydraulic variable and fracture radius. options are 'correlated', 'semi-correlated', 'constant', 'log-normal', 'exponential'
         
         hy_params : parameters for the hydraulic function. see next lines for syntax and options
-            if 'correlated' --> {"alpha":value, "beta:value}
+            if 'correlated' --> {"alpha":value, "beta":value}
             if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value}
             if 'constant' --> {"mu":value}
             if 'log-normal' --> {"mu":value, "sigma":value}
+            if 'exponential' --> {"lam":value}
         
         Returns
         --------

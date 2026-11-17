@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Module Index &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Python Module Index &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,9 +35,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -49,7 +46,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -60,9 +57,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -92,24 +92,53 @@
    <h1>Python Module Index</h1>
 
    <div class="modindex-jumpbox">
+   <a href="#cap-c"><strong>c</strong></a> | 
    <a href="#cap-f"><strong>f</strong></a> | 
    <a href="#cap-g"><strong>g</strong></a> | 
    <a href="#cap-m"><strong>m</strong></a> | 
+   <a href="#cap-o"><strong>o</strong></a> | 
    <a href="#cap-p"><strong>p</strong></a> | 
+   <a href="#cap-s"><strong>s</strong></a> | 
    <a href="#cap-u"><strong>u</strong></a>
    </div>
 
    <table class="indextable modindextable">
      <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-f"><td></td><td>
-       <strong>f</strong></td><td></td></tr>
+     <tr class="cap" id="cap-c"><td></td><td>
+       <strong>c</strong></td><td></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
               id="toggle-1" style="display: none" alt="-" /></td>
        <td>
-       <code class="xref">false_connections</code></td><td>
+       <code class="xref">conductance</code></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-conductance.py"><code class="xref">conductance.py</code></a></td><td>
+       <em>Edge conductance (weight) models for graph flow.</em></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-2" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">create_graph</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-2">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-create_graph.py"><code class="xref">create_graph.py</code></a></td><td>
+       <em>Header dispatcher that builds a DFN graph of the requested type
+(fracture, intersection, or bipartite).</em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-f"><td></td><td>
+       <strong>f</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-3" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">false_connections</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-3">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-false_connections.py"><code class="xref">false_connections.py</code></a></td><td>
@@ -119,11 +148,11 @@
        <strong>g</strong></td><td></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-2" style="display: none" alt="-" /></td>
+              id="toggle-4" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">graph_transport</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-2">
+     <tr class="cg-4">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGraph.html#module-graph_transport.py"><code class="xref">graph_transport.py</code></a></td><td>
@@ -133,182 +162,305 @@
        <strong>m</strong></td><td></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-3" style="display: none" alt="-" /></td>
+              id="toggle-5" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">map2continuum</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-3">
+     <tr class="cg-5">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-map2continuum.py"><code class="xref">map2continuum.py</code></a></td><td>
        <em>Produce octree-refined continuum mesh replacing dfn</em></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-4" style="display: none" alt="-" /></td>
+              id="toggle-6" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">mesh_dfm</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-4">
+     <tr class="cg-6">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-mesh_dfm.py"><code class="xref">mesh_dfm.py</code></a></td><td>
        <em>meshing driver for conforming DFM</em></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-5" style="display: none" alt="-" /></td>
+              id="toggle-7" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">mesh_dfn</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-5">
+     <tr class="cg-7">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-mesh_dfn.py"><code class="xref">mesh_dfn.py</code></a></td><td>
        <em>meshing driver for DFN</em></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-6" style="display: none" alt="-" /></td>
+              id="toggle-8" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">mesh_dfn_helper</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-6">
+     <tr class="cg-8">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-mesh_dfn_helper.py"><code class="xref">mesh_dfn_helper.py</code></a></td><td>
        <em>helper functions for meshing DFN using LaGriT</em></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-9" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">metrics</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-9">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-metrics.py"><code class="xref">metrics.py</code></a></td><td>
+       <em>Post-processing metrics and IO for the graph flow solution
+(flow channeling density dQ, and HDF5 dump of flow variables).</em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-o"><td></td><td>
+       <strong>o</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-10" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">orientations</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-10">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-orientations.py"><code class="xref">orientations.py</code></a></td><td>
+       <em>Convert fracture normal vectors into the orientation conventions
+used in structural geology -- strike / dip / dip direction of the
+fracture plane, and trend / plunge of the pole (normal).</em></td></tr>
      <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-p"><td></td><td>
        <strong>p</strong></td><td></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-7" style="display: none" alt="-" /></td>
+              id="toggle-11" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">pydfnworks</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnFlow.html#module-pydfnworks.dfnFlow.fehm"><code class="xref">pydfnworks.dfnFlow.fehm</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnFlow.html#module-pydfnworks.dfnFlow.flow"><code class="xref">pydfnworks.dfnFlow.flow</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnFlow.html#module-pydfnworks.dfnFlow.mass_balance"><code class="xref">pydfnworks.dfnFlow.mass_balance</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnFlow.html#module-pydfnworks.dfnFlow.pflotran"><code class="xref">pydfnworks.dfnFlow.pflotran</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnFlow.html#module-pydfnworks.dfnFlow.uge_tools"><code class="xref">pydfnworks.dfnFlow.uge_tools</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.generator"><code class="xref">pydfnworks.dfnGen.generation.generator</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.dfn_methods"><code class="xref">pydfnworks.dfnGen.generation.hydraulic.dfn_methods</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.hydraulic.io"><code class="xref">pydfnworks.dfnGen.generation.hydraulic.io</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.input_checking"><code class="xref">pydfnworks.dfnGen.generation.input_checking</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions"><code class="xref">pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.orientations"><code class="xref">pydfnworks.dfnGen.generation.orientations</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.output_report.gen_output"><code class="xref">pydfnworks.dfnGen.generation.output_report.gen_output</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.process_generator_output"><code class="xref">pydfnworks.dfnGen.generation.process_generator_output</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.generation.stress"><code class="xref">pydfnworks.dfnGen.generation.stress</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.add_attribute_to_mesh"><code class="xref">pydfnworks.dfnGen.meshing.add_attribute_to_mesh</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.dfm.mesh_dfm"><code class="xref">pydfnworks.dfnGen.meshing.dfm.mesh_dfm</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm"><code class="xref">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm"><code class="xref">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells"><code class="xref">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale"><code class="xref">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn"><code class="xref">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper"><code class="xref">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.udfm.false_connections"><code class="xref">pydfnworks.dfnGen.meshing.udfm.false_connections</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.udfm.map2continuum"><code class="xref">pydfnworks.dfnGen.meshing.udfm.map2continuum</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.udfm.upscale"><code class="xref">pydfnworks.dfnGen.meshing.udfm.upscale</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnWorks-well.html#module-pydfnworks.dfnGen.well_package.wells"><code class="xref">pydfnworks.dfnGen.well_package.wells</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.dfn2graph"><code class="xref">pydfnworks.dfnGraph.dfn2graph</code></a></td><td>
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.algorithms.pruning"><code class="xref">pydfnworks.dfnGraph.algorithms.pruning</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_flow"><code class="xref">pydfnworks.dfnGraph.graph_flow</code></a></td><td>
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.attributes.conductance"><code class="xref">pydfnworks.dfnGraph.attributes.conductance</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_transport"><code class="xref">pydfnworks.dfnGraph.graph_transport</code></a></td><td>
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.create_graph"><code class="xref">pydfnworks.dfnGraph.construction.create_graph</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.pruning"><code class="xref">pydfnworks.dfnGraph.pruning</code></a></td><td>
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.source_target"><code class="xref">pydfnworks.dfnGraph.construction.source_target</code></a></td><td>
        <em></em></td></tr>
-     <tr class="cg-7">
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.graph_flow"><code class="xref">pydfnworks.dfnGraph.flow.graph_flow</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.metrics"><code class="xref">pydfnworks.dfnGraph.flow.metrics</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.io.serialization"><code class="xref">pydfnworks.dfnGraph.io.serialization</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-pydfnworks.dfnGraph.transport.graph_transport"><code class="xref">pydfnworks.dfnGraph.transport.graph_transport</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnTrans.html#module-pydfnworks.dfnTrans.combine_avs_trajectories"><code class="xref">pydfnworks.dfnTrans.combine_avs_trajectories</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-11">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnTrans.html#module-pydfnworks.dfnTrans.transport"><code class="xref">pydfnworks.dfnTrans.transport</code></a></td><td>
        <em></em></td></tr>
+     <tr class="cg-11">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnworks.html#module-pydfnworks.general.general_functions"><code class="xref">pydfnworks.general.general_functions</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-s"><td></td><td>
+       <strong>s</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-12" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">serialization</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-12">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-serialization.py"><code class="xref">serialization.py</code></a></td><td>
+       <em>Graph IO and plotting -- JSON dump/load, PNG plot, fracture-id dump.</em></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-13" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">source_target</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-13">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="pydfnGraph.html#module-source_target.py"><code class="xref">source_target.py</code></a></td><td>
+       <em>Add/replace source (&#39;s&#39;) and target (&#39;t&#39;) connections on a DFN graph.</em></td></tr>
      <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-u"><td></td><td>
        <strong>u</strong></td><td></td></tr>
      <tr>
        <td><img src="_static/minus.png" class="toggler"
-              id="toggle-8" style="display: none" alt="-" /></td>
+              id="toggle-14" style="display: none" alt="-" /></td>
        <td>
        <code class="xref">upscale</code></td><td>
        <em></em></td></tr>
-     <tr class="cg-8">
+     <tr class="cg-14">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="pydfnGen.html#module-upscale.py"><code class="xref">upscale.py</code></a></td><td>
@@ -323,7 +475,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

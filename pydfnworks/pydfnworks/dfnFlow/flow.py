@@ -83,7 +83,7 @@ def set_perm_cell(self, cell_based=None):
     return self.perm_cell
 
 
-def dfn_flow(self, dump_vtk=True, dump_h5=False):
+def dfn_flow(self, dump_vtu=True, dump_h5=False, dump_vtk=None):
     """ Run the dfnFlow portion of the workflow
 
     Parameters
@@ -91,15 +91,18 @@ def dfn_flow(self, dump_vtk=True, dump_h5=False):
         self : object
             DFN Class
 
-        dump_vtk : bool
-            True - Parse PFLOTRAN VTK output into pflotran_vtk_outputs/ via
-                   parse_pflotran_vtk_python (default).
-            False - Skip VTK parsing.
+        dump_vtu : bool
+            If True (default), convert PFLOTRAN's VTK output into XML .vtu
+            files and a .pvd time series in pflotran_vtu_outputs/ with
+            parse_pflotran_vtk. If False, skip the conversion.
+
         dump_h5 : bool
-            True - Parse PFLOTRAN HDF5 output into pflotran_vtk_outputs/ via
-                   parse_pflotran_h5. Mesh comes from the .inp via
-                   inp2vtk_python; data come from <base>.h5.
-            False - Skip HDF5 parsing (default).
+            If True, convert PFLOTRAN's HDF5 output (<base>.h5) into .vtu/.pvd
+            files in pflotran_vtu_outputs/ with parse_pflotran_h5. The deck
+            must request HDF5 output. If False (default), skip it.
+
+        dump_vtk : bool
+            Deprecated name of dump_vtu.
 
     Returns
     ---------
@@ -107,9 +110,13 @@ def dfn_flow(self, dump_vtk=True, dump_h5=False):
     Notes
     --------
     Information on individual functions is found therein.
-    dump_vtk and dump_h5 are independent; both can be True to produce
-    parsed output from each source.
+    Both converters write <base>-NNN.vtu and <base>.pvd, so if dump_vtu and
+    dump_h5 are both True the HDF5 conversion overwrites the VTK one.
+    Open pflotran_vtu_outputs/<base>.pvd in ParaView.
     """
+    if dump_vtk is not None:
+        self.print_log("--> dfn_flow(dump_vtk=...) is deprecated; use dump_vtu", 'warning')
+        dump_vtu = dump_vtk
 
     self.print_log('=' * 80)
     self.print_log("dfnFlow Starting")
@@ -123,8 +130,8 @@ def dfn_flow(self, dump_vtk=True, dump_h5=False):
 
         self.pflotran()
 
-        if dump_vtk:
-            self.parse_pflotran_vtk_python()
+        if dump_vtu:
+            self.parse_pflotran_vtk()
         if dump_h5:
             self.parse_pflotran_h5()
         self.pflotran_cleanup()

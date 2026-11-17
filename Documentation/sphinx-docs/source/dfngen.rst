@@ -10,6 +10,8 @@ The detailed description of FRAM and the implemented methodology is in `\J. D. H
 
 .. include:: dfngen_docs/dfngen_domain.inc 
 
+.. include:: dfngen_docs/dfngen_orientation.inc
+
 .. include:: dfngen_docs/dfngen_fracture_ellipses.inc
 
 .. include:: dfngen_docs/dfngen_fracture_rectangles.inc 
