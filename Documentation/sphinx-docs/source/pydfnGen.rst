@@ -221,7 +221,7 @@ Primary DFN meshing driver
 Meshing helper methods
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper
-    :members: inp2gmv, inp2vtk_python, create_mesh_links, run_lagrit_script
+    :members: inp2gmv, inp2vtu, create_mesh_links, run_lagrit_script
 
 .. automodule:: pydfnworks.dfnGen.meshing.add_attribute_to_mesh
     :members: add_variable_to_mesh

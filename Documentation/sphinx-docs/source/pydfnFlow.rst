@@ -14,9 +14,13 @@ Running Flow : General
 Running Flow: PFLOTRAN
 ^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnFlow.pflotran
-    :members: lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, dump_h5_files, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
+    :members: lagrit2pflotran, pflotran, parse_pflotran_vtk, parse_pflotran_h5, dump_h5_files, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
 
-PFLOTRAN output can be written as VTK or HDF5. ``dfn_flow(dump_vtk=True, dump_h5=False)`` controls which is parsed after the run. Both ``parse_pflotran_vtk_python`` and ``parse_pflotran_h5`` write per-time-step VTK files into ``pflotran_vtk_outputs/``.
+PFLOTRAN output can be written as VTK or HDF5. ``dfn_flow(dump_vtu=True, dump_h5=False)`` controls which is converted after the run. Both ``parse_pflotran_vtk`` and ``parse_pflotran_h5`` write one XML ``.vtu`` file per output time and a ``.pvd`` time series into ``pflotran_vtu_outputs/``. Open ``pflotran_vtu_outputs/<base>.pvd`` in ParaView.
+
+The simulation times in the ``.pvd`` file are in seconds. For VTK output they are read from the PFLOTRAN log (``<base>.out``); for HDF5 output they come from the HDF5 time group names. Data arrays are base64-encoded binary by default; pass ``binary=False`` for ASCII.
+
+.. note:: ``parse_pflotran_vtk_python``, ``inp2vtk_python``, ``dfn_flow(dump_vtk=...)``, and the ``vtk_file`` constructor argument are deprecated aliases of ``parse_pflotran_vtk``, ``inp2vtu``, ``dump_vtu``, and ``vtu_file``. They now write XML ``.vtu`` files.
 
 Mesh Geometry Checks (UGE)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

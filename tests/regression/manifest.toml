@@ -27,18 +27,21 @@ timeout = 600
 tier = "baseline"
 source = "4_user_rects"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 300
 
 [cases.4_user_ell_uniform]
 tier = "baseline"
 source = "4_user_ell_uniform"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 300
 
 [cases.two_fracture_case]
 tier = "baseline"
 source = "two_fracture_case"
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 300
 
 [cases.dfm_4_frac]
@@ -51,30 +54,35 @@ timeout = 600
 tier = "baseline"
 source = "TPL"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.exp]
 tier = "baseline"
 source = "exp"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.lognormal]
 tier = "baseline"
 source = "lognormal"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.constant]
 tier = "baseline"
 source = "constant"
 stages = ["gen", "report", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.user_polygons]
 tier = "baseline"
 source = "user_polygons"
 stages = ["gen", "mesh", "pflotran"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 600
 
 [cases.faults]
@@ -93,6 +101,7 @@ timeout = 600
 tier = "baseline"
 source = "layers"
 stages = ["gen", "mesh", "report", "pflotran"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.polygon_domain_boundary]
@@ -119,6 +128,7 @@ source = "tdrw"
 # h = 0.1, cocircular quad); uge_tools accepts it as zero with a WARNING line
 # in output.log. See "Known gaps" in README.md.
 stages = ["gen", "mesh", "pflotran", "dfntrans"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.stress]
@@ -128,13 +138,14 @@ source = "stress"
 # varies run to run (47 vs 50 on the same machine), so transport is checked
 # for presence only; flow and the stress-adjusted fields are compared.
 stages = ["gen", "mesh", "stress", "pflotran"]
-expect_files = ["output/**/partime*"]
+expect_files = ["output/**/partime*", "**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.well_example]
 tier = "modest"
 source = "well_example"
 stages = ["gen", "mesh", "pflotran"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.fehm_example]
@@ -147,6 +158,7 @@ timeout = 900
 tier = "modest"
 source = "ade_example"
 stages = ["gen", "mesh", "pflotran"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.hy_test]
@@ -160,6 +172,7 @@ timeout = 900
 tier = "modest"
 source = "udfm"
 stages = ["gen", "mesh_visual", "udfm", "pflotran:output/octree"]
+expect_files = ["**/pflotran_vtu_outputs/*.pvd"]
 timeout = 900
 
 [cases.pruning]

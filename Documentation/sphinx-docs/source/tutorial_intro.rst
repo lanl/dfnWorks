@@ -406,9 +406,10 @@ View the screen report or  `output.log` to verify the dfnFlow module has written
     2025-03-06 17:15:04,156 INFO --> Running PFLOTRAN
     2025-03-06 17:15:04,924 INFO --> Processing file: dfn_explicit-000.vtk
     2025-03-06 17:15:04,933 INFO --> Processing file: dfn_explicit-001.vtk
+    2025-03-06 17:15:04,940 INFO --> Wrote 2 snapshots to pflotran_vtu_outputs/; open pflotran_vtu_outputs/dfn_explicit.pvd in ParaView
 
 
-Read the PFLOTRAN result file `output/pflotran_vtk_outputs/dfn_explicit-001.vtk` into Paraview and select the property pressure to view.
+Open the PFLOTRAN results `output/pflotran_vtu_outputs/dfn_explicit.pvd` in Paraview, step to the final time, and select the property pressure to view.
 High pressure (red) is shown on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
 
 
