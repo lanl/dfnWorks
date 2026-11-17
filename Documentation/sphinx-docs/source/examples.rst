@@ -10,7 +10,7 @@ All examples are in the examples/ directory. Within each subdirectory are the fi
 
     $ python driver.py
 
-Output is written to the ``output/`` sub-directory of the example. ``examples/run_examples.py`` runs a set of examples in sequence.
+Output is written to the ``output/`` sub-directory of the example. The regression suite in ``tests/regression`` runs the examples and compares their results against stored baselines (``python3 run_regression.py`` from that directory; see ``tests/regression/README.md``).
 
 
 4_user_rects

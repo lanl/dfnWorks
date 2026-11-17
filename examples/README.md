@@ -1,3 +1,12 @@
+# Regression testing
+
+Every example here doubles as a regression case; the suite lives in
+`tests/regression/` (see its README for tiers, baselines and the HTML report):
+
+```bash
+cd tests/regression && python3 run_regression.py
+```
+
 
 # Example Descriptions
  
