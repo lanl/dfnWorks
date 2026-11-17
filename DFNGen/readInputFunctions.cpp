@@ -41,6 +41,57 @@ void searchVar(std::ifstream &stream, std::string search) {
 
 /*******************************************************************/
 /*******************************************************************/
+/*! Searches for variable in files, moves file pointer to position
+    after word. Unlike searchVar(), a missing variable is not an error.
+    Arg 1: ifstream file object
+    Arg 2: Word to search for
+    Return: True if the variable was found, false otherwise. */
+bool searchVarOptional(std::ifstream &stream, std::string search) {
+    std::string word;
+    stream.clear(); // Reset file pointer in case of eof encountered
+    stream.seekg(0);
+    
+    while (stream >> word) {
+        if (word == search) {
+            return true;
+        }
+    }
+    
+    stream.clear();
+    return false;
+}
+
+/*******************************************************************/
+/*******************************************************************/
+/*! Name of the P32 convention in use (see p32Convention).
+    Return: Description used in logs and DFN_output.txt */
+std::string p32ConventionName() {
+    if (p32Convention == 1) {
+        return "single-sided";
+    }
+    
+    return "double-sided (wetted surface area)";
+}
+
+/*******************************************************************/
+/*******************************************************************/
+/*! Volume used to compute P32 for a stochastic family.
+    Arg 1: Shape family
+    Arg 2: Volume of the whole domain
+    Return: Volume of the family's layer or region, or the whole
+            domain volume if the family is not in a layer or region. */
+double familyVolume(const struct Shape &shapeFam, double domVol) {
+    if (shapeFam.layer > 0 && shapeFam.region == 0) {
+        return layerVol[shapeFam.layer - 1];
+    } else if (shapeFam.layer == 0 && shapeFam.region > 0) {
+        return regionVol[shapeFam.region - 1];
+    }
+    
+    return domVol;
+}
+
+/*******************************************************************/
+/*******************************************************************/
 /*! Checks file for being opened correectly with error msg
     Arg 1: ifstream file object
     Arg 2: Filename. Used for error print if there is an error*/

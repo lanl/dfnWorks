@@ -7,6 +7,7 @@
 #include "mathFunctions.h"
 #include "domain.h"
 #include "logFile.h"
+#include "readInputFunctions.h"
 
 /**********************************************************************/
 /****************  Sort Families Radii Lists  *************************/
@@ -183,7 +184,7 @@ void addRadii(int amountToAdd, int famIdx, Shape &shapeFam, std::mt19937_64 &gen
 void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64 &generator, Distributions &distributions) {
     std::string logString = "Estimating number of fractures per family for defined fracture intensities (P32)...\n";
     logger.writeLogFile(INFO,  logString);
-    float domVol = domainSize[0] * domainSize[1] * domainSize[2];
+    double domVol = domainSize[0] * domainSize[1] * domainSize[2];
     int totalFamilies = shapeFamilies.size();
     int cdfSize = totalFamilies; // This variable shrinks along with CDF when used with fracture intensity (P32) option
     // Create a copy of the family probablity
@@ -249,13 +250,8 @@ void dryRun(std::vector<Shape> &shapeFamilies, float *shapeProb, std::mt19937_64
         newPoly.area = getArea(newPoly);
         
         // Update P32
-        if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region == 0) { // Whole domain
-            shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / domVol;
-        } else if (shapeFamilies[familyIndex].layer > 0 && shapeFamilies[familyIndex].region == 0) { // Layer
-            shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / layerVol[shapeFamilies[familyIndex].layer - 1];
-        } else if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region > 0) { // Region
-            shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / regionVol[shapeFamilies[familyIndex].region - 1];
-        }
+        // Area factor follows p32Convention, volume is the family's layer, region, or the whole domain
+        shapeFamilies[familyIndex].currentP32 += newPoly.area * p32AreaFactor / familyVolume(shapeFamilies[familyIndex], domVol);
 
         // Save radius for real DFN generation
         shapeFamilies[familyIndex].radiiList.push_back(newPoly.xradius);

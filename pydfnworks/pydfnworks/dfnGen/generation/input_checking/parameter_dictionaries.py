@@ -30,6 +30,16 @@ def load_parameters(self):
             'description':
             "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
+        'p32_convention': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            "Type <int> or <str>\nConvention used for fracture intensity (P32). Applies to the family p32 targets and to all P32 and surface area values reported by dfnGen.\nPossible Values\n0, 'double', or 'wetted': Double-sided (wetted surface area), P32 = 2*A/V. Default.\n1 or 'single': Single-sided, P32 = A/V."
+        },
         'nPoly': {
             'type':
             int,
