@@ -118,6 +118,8 @@ double getArea(struct Poly &poly) {
         double *xProd = crossProduct(v1, v2);
         double area = .5 * magnitude(xProd[0], xProd[1], xProd[2]);
         delete[] xProd;
+        //std::string logString = "Area: " + to_string(area);
+        //logger.writeLogFile(ERROR,  logString);
         return area;
     } else { // More than 3 vertices
         double polyArea = 0; // For summing area over trianlges of polygon
@@ -146,6 +148,8 @@ double getArea(struct Poly &poly) {
         double area = .5 * magnitude(xProd[0], xProd[1], xProd[2]);
         delete[] xProd;
         polyArea += area; // Accumulate area
+        //std::string logString = "Polyarea: " + to_string(polyArea);
+        //logger.writeLogFile(ERROR,  logString);
         return polyArea;
     }
 }

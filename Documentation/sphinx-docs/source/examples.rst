@@ -72,10 +72,15 @@ TPL: Truncated Power-Law
 
 Location: examples/TPL/
 
-This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m. 
+This test case consists of a family whose sizes have a truncated power law (TPL) distribution with a minimum size of 1m and a maximum size of 10m an exponent 1.8. The domain size is cubic with an edge length of 15m. 
 
-.. figure:: figures/power_mesh.png
-   :scale: 20 %
+High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5.
+
+dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.
+
+
+.. figure:: figures/tpl_3images.png 
+   :scale: 50 %
    :alt: alternate text
    :align: center
 

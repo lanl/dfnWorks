@@ -78,7 +78,7 @@ Example:
 r_p32Targets
 ----------------------------------
 
-Description: Target fracture intensity per family. Fracture intensity :math:`P_{32} [\text{m}^{-1}]` is defined as total surface area of each fracture family divided by the total domain volume. Fractures from each family are inserted into the domain until provided target values are obtained. Generation stops once all desired fracture intensity are obtained.
+Description: Target fracture intensity per family. Fracture intensity :math:`P_{32} [\text{m}^{-1}]` is defined as total surface area of each fracture family divided by the volume of the domain (or of the layer or region the family is assigned to). Whether the surface area counts both faces of a fracture (wetted surface area, default) or one face is set by :ref:`p32_convention`. Fractures from each family are inserted into the domain until provided target values are obtained. Generation stops once all desired fracture intensity are obtained.
 
 Type: list of :ref:`nFamRect`  floats 
 

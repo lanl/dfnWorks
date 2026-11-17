@@ -9,51 +9,231 @@ import numpy as np
 Functions for using FEHM in dfnWorks
 """
 
-from pydfnworks.general.logging import local_print_log
+import os
+from time import time
 
+def parse_stor_file(filepath):
+    """
+    Parse a LaGriT-formatted ASCII STOR file into its structured data blocks.
 
-def correct_stor_file(self):
-    """Corrects volumes in stor file to account for apertures
+    This function reads a `.stor` file, extracts header metadata and all subsequent
+    numerical data blocks (volumes, connectivity, pointers, and coefficients), and
+    returns them as a list of NumPy arrays.
+
+    The expected structure of the file is:
+        - 3 header lines (text)
+        - Line 3 contains: [nedges, nnodes, ptr_size, num_area_coef, ...]
+        - 7 numerical blocks follow:
+            1. Voronoi volumes (nnodes)
+            2. Row counts (nnodes + 1)
+            3. Connectivity list (nedges)
+            4. Pointers into coefficient list (nedges * num_area_coef)
+            5. Diagonal pointer padding (nnodes + 1)
+            6. Diagonal matrix indices (nnodes)
+            7. Area coefficients (nedges * num_area_coef)
 
     Parameters
     ----------
-        self : object
-            DFN Class
+    filepath : str
+        Path to the STOR file (ASCII format) to parse.
 
     Returns
-    --------
-        None
+    -------
+    List[np.ndarray]
+        A list of 7 NumPy arrays corresponding to:
+            [volumes, row_counts, conn_list, pointer_block,
+             diag_pointers, row_diagonals, area_coefficients]
+
+    Raises
+    ------
+    ValueError
+        If the number of parsed float entries is insufficient based on header metadata.
 
     Notes
+    -----
+    This function assumes:
+        - The file uses whitespace-separated float values for all numerical blocks.
+        - Area coefficients are stored as scalars (`num_area_coef = 1`) or higher.
+        - The function does not preserve file pointer for later parsing.
+
+    Examples
     --------
-    Currently does not work with cell based aperture
+    >>> blocks = parse_stor_file("mesh.stor")
+    >>> volumes = blocks[0]
+    >>> conn_list = blocks[2]
     """
-    self.print_log('--> Correcing STOR file')
-    # Make input file for C Stor converter
-    if self.flow_solver != "FEHM":
-        error = "Error. Incorrect flow solver requested\n"
-        self.print_log(error, 'error')
-        sys.exit(1)
 
-    self.dump_hydraulic_values(format = "FEHM")
+    with open(filepath, 'r') as file:
+        lines = file.readlines()
 
-    self.stor_file = self.inp_file[:-4] + '.stor'
-    self.mat_file = self.inp_file[:-4] + '_material.zone'
-    with open("convert_stor_params.txt", "w") as f:
-        f.write("%s\n" % self.mat_file)
-        f.write("%s\n" % self.stor_file)
-        f.write("%s" % (self.stor_file[:-5] + '_vol_area.stor\n'))
-        f.write("%s\n" % self.aper_file)
+    # Extract dimension info from line 3
+    header_vals = list(map(int, lines[2].split()))
+    nedges = header_vals[0]
+    nnodes = header_vals[1]
+    num_area_coef = header_vals[3]  # assumed position
 
-    t = time()
-    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_stor_params.txt'
-    failure = subprocess.call(cmd, shell=True)
-    if failure > 0:
-        error = 'Erro: stor conversion failed\nExiting Program\n'
-        self.print_log(error, 'error')
-        sys.exit(1)
-    elapsed = time() - t
-    self.print_log(f'--> Time elapsed for STOR file conversion: {elapsed:0.3f} seconds')
+    # Calculate block lengths
+    block_sizes = [
+        nnodes,
+        nnodes + 1,
+        nedges,
+        nedges * num_area_coef,
+        nnodes + 1,
+        nnodes,
+        nedges * num_area_coef
+    ]
+
+    # Read all remaining float values
+    data = []
+    for line in lines[3:]:  # Skip header
+        data.extend(map(float, line.strip().split()))
+
+    # Sanity check
+    expected_total = sum(block_sizes)
+    if len(data) < expected_total:
+        raise ValueError(f"Not enough data: expected {expected_total}, got {len(data)}")
+
+    # Slice data into blocks
+    blocks = []
+    start = 0
+    for size in block_sizes:
+        blocks.append(np.array(data[start:start + size]))
+        start += size
+
+    return blocks  # list of 7 arrays
+
+
+def write_stor_file(filepath_out, header_lines, blocks):
+    """
+     Write numerical data blocks to a LaGriT-formatted ASCII STOR file.
+
+    This function outputs a `.stor` file that conforms to the LaGriT STOR format,
+    using fixed-width formatting and 5 values per line, matching Fortran-style
+    output conventions.
+
+    The function assumes that `blocks` is a list of 7 NumPy arrays corresponding to
+    parsed data from a STOR file. Each block is written in the correct order and format:
+        1. Voronoi volumes (floats)
+        2. Row counts (integers)
+        3. Connectivity list (integers)
+        4. Pointer indices into coefficient list (integers)
+        5. Diagonal pointer padding (integers)
+        6. Diagonal indices (integers)
+        7. Area coefficients (floats)
+
+    Parameters
+    ----------
+    filepath_out : str
+        The path to the output `.stor` file to be written.
+
+    header_lines : List[str]
+        The first three lines of the original STOR file header, including:
+            - Line 1: Title line
+            - Line 2: Date or model info line
+            - Line 3: Matrix dimension parameters
+
+    blocks : List[np.ndarray]
+        A list of 7 NumPy arrays, each containing one of the STOR file's
+        numerical blocks, in the following order:
+            [volumes, row_counts, conn_list, pointer_block,
+             diag_pointers, row_diagonals, area_coefficients]
+
+    Notes
+    -----
+    - Floats are written with 12-digit precision and scientific notation (width 20).
+    - Integers are written right-aligned with 10-character width.
+    - All values are formatted 5 per line for strict format compliance.
+    - The function overwrites `filepath_out` if it already exists.
+
+    Examples
+    --------
+    >>> header_lines = ["Title\n", "Date Line\n", "3603 537 4141 1 13\n"]
+    >>> write_stor_file("corrected.stor", header_lines, blocks)
+    """    
+    def format_floats(arr):
+        lines = []
+        for i, val in enumerate(arr):
+            lines.append(f"{val:20.12E}")
+            if (i + 1) % 5 == 0 or i == len(arr) - 1:
+                lines.append('\n')
+            else:
+                lines.append(' ')
+        return lines
+
+    def format_integers(arr):
+        lines = []
+        for i, val in enumerate(arr):
+            lines.append(f"{int(val):10d}")
+            if (i + 1) % 5 == 0 or i == len(arr) - 1:
+                lines.append('\n')
+            else:
+                lines.append(' ')
+        return lines
+
+    with open(filepath_out, 'w') as fout:
+        # Header (first 3 lines)
+        for line in header_lines:
+            fout.write(line)
+
+        # Write each block in the correct format
+        fout.writelines(format_floats(blocks[0]))  # volumes
+        fout.writelines(format_integers(blocks[1]))  # row_counts
+        fout.writelines(format_integers(blocks[2]))  # conn_list
+        fout.writelines(format_integers(blocks[3]))  # pointer block
+        fout.writelines(format_integers(blocks[4]))  # diag pointers
+        fout.writelines(format_integers(blocks[5]))  # row diags
+        fout.writelines(format_floats(blocks[6]))    # area coefficients
+
+
+def correct_stor_file(self):
+    """
+    Corrects the Voronoi volumes and area coefficients in a STOR file
+    by applying aperture adjustments.
+
+    This method reads an ASCII-formatted STOR file used in FEHMN simulations,
+    adjusts the volume and area values based on the aperture data, and writes
+    a new corrected version of the file.
+
+    Assumptions:
+        - Only ASCII STOR format is supported.
+        - Area coefficients are in scalar format (NUM_AREA_COEF = 1).
+        - Instance attributes include:
+            self.stor_file: Path to the input STOR file.
+            self.material_ids: List of material IDs for each cell.
+            self.aperture: List of aperture values (by cell or material).
+            self.cell_based_aperture: Boolean flag.
+            self.print_log: Logging function.
+    """
+
+    self.stor_file = "full_mesh.stor"
+    if not os.path.isfile(self.stor_file):
+        self.print_log("Error. Cannot find STOR file.\nExiting\n", 'error')
+
+    blocks = parse_stor_file(self.stor_file)
+
+    volumes = blocks[0]
+    for i in range(self.num_nodes):
+        volumes[i] *= self.aperture[self.material_ids[i] - 1]
+    blocks[0] = volumes
+
+    conn_list = blocks[2].astype(int)
+    # print(conn_list)
+    # print(len(conn_list), len(set(conn_list)))
+    areas = blocks[6]
+    #for i in conn_list:
+    #    areas[i] *= self.aperture[self.material_ids[i-1] - 1]
+    for i in range(len(areas)):
+        index = conn_list[i]
+        areas[i] *= self.aperture[self.material_ids[index-1] - 1] 
+    blocks[6] = areas 
+
+    # Also grab the first 3 header lines
+    with open(self.stor_file, 'r') as f:
+        header_lines = [next(f) for _ in range(3)]
+    stor_out_file = self.stor_file.replace('.stor', '_vol_area.stor')
+    write_stor_file(stor_out_file, header_lines, blocks)
+
+    self.print_log("correcting stor file complete")
 
 
 def correct_perm_for_fehm():
@@ -79,7 +259,7 @@ def correct_perm_for_fehm():
     # Check if the last line of file is just a new line
     # If it is not, then add a new line at the end of the file
     if len(lines[-1].split()) != 0:
-        local_print_log("--> Adding line to perm.dat")
+        print("--> Adding line to perm.dat")
         fp = open("perm.dat", "a")
         fp.write("\n")
         fp.close()
@@ -126,6 +306,9 @@ def fehm(self):
         self.print_log(error, 'error')
         sys.exit(1)
 
+
+    self.correct_stor_file() 
+    self.dump_hydraulic_values(format = "FEHM")
     correct_perm_for_fehm()
     tic = time()
     cmd = os.environ["FEHM_EXE"] + " " + self.local_dfnFlow_file

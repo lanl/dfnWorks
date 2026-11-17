@@ -30,6 +30,16 @@ def load_parameters(self):
             'description':
             "Type <boolean>\nPossible Values\n0: Stop once nPoly fractures are accepted \n1: Stop once all family's p32 values are equal or greater than the families target p32 values"
         },
+        'p32_convention': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            0,
+            'description':
+            "Type <int> or <str>\nConvention used for fracture intensity (P32). Applies to the family p32 targets and to all P32 and surface area values reported by dfnGen.\nPossible Values\n0, 'double', or 'wetted': Double-sided (wetted surface area), P32 = 2*A/V. Default.\n1 or 'single': Single-sided, P32 = A/V."
+        },
         'nPoly': {
             'type':
             int,
@@ -163,6 +173,16 @@ def load_parameters(self):
             'description':
             "Type: Set of numOfLayers arrays with two elements. {zMin, zMax}\nDefines the lower and upper limits for each layer. The first layer listed is layer 1, the second is layer 2, etc. Every stochastic families *must* be assigned to a layer. If the family is assigned to layer 0, then the family in generated through the entire domain.\n"
         },
+        'layerConformingFractures': {
+            'type':
+            int,
+            'list':
+            False,
+            'value':
+            1,
+            'description':
+            "Type <int>\nControls how fracture polygons assigned to a layer are clipped at layer Z boundaries.\n  0: Disabled. Fracture centers are sampled within the layer but vertices may extend freely beyond layer boundaries.\n  1: Perfect conforming. Vertices are clipped exactly at the layer Z boundaries.\n  2: Soft conforming. Vertices are clipped at the layer boundary +/- 2h, preserving a small overhang that maintains geometric intersections with fractures in the adjacent layer for flow connectivity.\nDefault is 1. Only has effect when numOfLayers > 0."
+        },
         'numOfRegions': {
             'type':
             int,
@@ -233,6 +253,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'orientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'disableFram': {
             'type':
             bool,
@@ -254,6 +284,12 @@ def load_parameters(self):
             'list': False,
             'value': False,
             'description': 'Toggle for rFRAM on/off. '
+        },
+        'disableShorteningIntersections': {
+            'type': bool,
+            'list': False,
+            'value': False,
+            'description': 'If True, reject fractures whose intersection would be shortened by shrinkIntersection(). Avoids non-conformal cells at the cost of more rejections.'
         },
         'radiiListIncrease': {
             'type':
@@ -440,6 +476,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'eorientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'ebeta': {
             'type':
             float,
@@ -565,6 +611,34 @@ def load_parameters(self):
             float,
             'list':
             True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'ekappa1': {
+            'type':
+            float,
+            'list':
+            True,
+            'required':
+            False,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'ekappa2': {
+            'type':
+            float,
+            'list':
+            True,
+            'required':
+            False,
             'list_length':
             None,
             'value':
@@ -762,6 +836,16 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'rorientation_distribution': {
+            'type':
+            int,
+            'list':
+            True,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        }, 
         'rbeta': {
             'type':
             float,
@@ -870,7 +954,46 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
+        'rOrienationDistribution':
+        {
+            'type':
+            str,
+            'list':
+            True,
+            'required':
+            False,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
         'rkappa': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa1': {
+            'type':
+            float,
+            'list':
+            True,
+            'list_length':
+            None,
+            'value':
+            None,
+            'description':
+            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
+        },
+        'rkappa2': {
             'type':
             float,
             'list':

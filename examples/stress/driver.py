@@ -106,6 +106,7 @@ DFN.add_variable_to_mesh("stress_aper", "aperture.dat", "stress.inp")
 # assign new names of aperture files
 DFN.aper_file = "stress_aperture.dat"
 DFN.perm_file = "stress_perm.dat"
+DFN.dump_hydraulic_values()
 
 # dfnFlow()
 DFN.lagrit2pflotran()

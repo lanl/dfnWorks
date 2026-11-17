@@ -50,13 +50,20 @@ Go up into the pydfnworks sub-directory:
 
 Compile The pydfnWorks Package & Install on Your Local Machine:
    
-    $ pip install -r requirements.txt . 
+    $ pip install -r requirements.txt 
+    $ pip install . 
 
-or  
+If you are on a shared system, please use  
 
     $ pip install -r requirements.txt --user .
-
+    $ pip install . --user 
+    
 if you don't have admin privileges.
+
+If this produces an error, then try 
+
+    $ python setup.py install -r requirements.txt
+    $ python setup.py install --user
 
 **Note that the python version needs to be consistent with the current release**
 
@@ -75,7 +82,14 @@ dfnWorks currently runs on Macs and Unix machine running Ubuntu.
 
 pydfnworks uses Python 3. We recommend using 
 the Anaconda 3 distribution of Python, available at https://www.continuum.io/. 
-pydfnworks requires the following python modules: ``numpy``, ``h5py``, ``scipy``, ``matplotlib``,  ``multiprocessing``, ``argparse``, ``shutil``, ``os``, ``sys``, ``networkx``, ``subprocess``, ``glob``, ``mplstereonet``, ``fpdf``, and ``re``.
+pydfnworks requires the following python modules: ``numpy``, ``networkx``,
+``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``,
+``pyvtk``, and ``mpmath``. They are listed in ``pydfnworks/requirements.txt`` and
+are installed automatically with pydfnworks, or can be installed directly with
+
+```bash
+pip install -r pydfnworks/requirements.txt
+```
 
 
 ### LaGriT
@@ -115,4 +129,5 @@ very helpful for visualizing dfnWorks simulations.
 
 Instructions for downloading and installing Paraview_ can be found at 
 http://www.paraview.org/download/ 
+
 

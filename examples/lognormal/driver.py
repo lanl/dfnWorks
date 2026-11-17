@@ -72,7 +72,7 @@ DFN.add_fracture_family(shape="rect",
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.create_network()
+DFN.output_report()
 DFN.mesh_network(max_resolution_factor=10)
-
 DFN.dfn_flow()
 DFN.dfn_trans()

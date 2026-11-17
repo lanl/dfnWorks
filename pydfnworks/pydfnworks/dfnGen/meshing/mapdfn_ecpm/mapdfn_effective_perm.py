@@ -48,7 +48,6 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure,
     for index, name in enumerate(header):
         # print(name)
         if "outflow Water Mass [kg/" in name:
-            self.print_log(index, name)
             break
 
     mass_flowrate_name = header[index]
@@ -61,6 +60,8 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure,
             if irate > 0:
                 self.print_log("Will convert to kg/s")
             break
+
+    irate = 2 
 
     if irate == 1:
         # convert days to seconds
@@ -87,5 +88,5 @@ def mapdfn_effective_perm(self, inflow_pressure, outflow_pressure,
     #darcy flux over entire face m3/m2/s
     q = volume_flowrate_value / surface
     keff = q * mu / pgrad
-    self.print_log(f"Effective Perm : {keff}")
+    self.print_log(f"Effective Perm : {keff} m^2")
     return keff

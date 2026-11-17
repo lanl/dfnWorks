@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 """
 pydfnWorks
@@ -28,10 +27,8 @@ License
 
 Released under the GPL License
 
-    Copyright (C) 20015-2019 dfnWorks Developers
+    Copyright (C) 2015-2026 dfnWorks Developers
     Jeffrey Hyman <jhyman@lanl.gov>
-    Daniel Livingston <livingston@lanl.gov>
-    Satish Karra < satkarra@lanl.gov>
     
 """
 
@@ -49,17 +46,12 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
-__version__ = "2.9.3"
+__version__ = "2.12.2"
 
-__release_date__ = "2025-07-16"
+__release_date__ = "16-11-2026"
 
 from ._install_info import get_install_date
 __install_date__ = get_install_date()
 
 import pydfnworks.general
 from pydfnworks.general import *
-
-
-# __all__ = ["dfnGen", "dfnGen", "dfnFlow", "dfnTrans"]
-
-

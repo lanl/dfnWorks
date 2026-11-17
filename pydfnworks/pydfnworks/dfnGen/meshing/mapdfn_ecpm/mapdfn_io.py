@@ -2,7 +2,7 @@ import numpy as np
 from h5py import File
 import itertools
 import time
-from pydfnworks.general.logging import local_print_log, print_log
+from pydfnworks.general.logging import local_print_log 
 
 
 def create_h5_arrays(nx, ny, nz, cell_size, k_iso, k_aniso, matrix_perm,
@@ -216,7 +216,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Permeability')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -224,7 +224,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=khdf5)  #does this matter that it is also called data?
 
@@ -236,7 +236,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Porosity')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -244,7 +244,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset('Data', data=phdf5)
 
     # Write tortuosity as a gridded dataset for use with PFLOTRAN.
@@ -255,7 +255,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file2.create_group('Tortuosity')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -263,7 +263,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset('Data', data=tortuosity_factor / phdf5)
 
     # Write anisotropic permeability as a gridded dataset for use with PFLOTRAN.
@@ -274,7 +274,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityX')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -282,14 +282,14 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=kx)  #does this matter that it is also called data?
 
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityY')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -297,14 +297,14 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=ky)  #does this matter that it is also called data?
 
         # 3d uniform grid
         h5grp = h5file3.create_group('PermeabilityZ')
         # 3D will always be XYZ where as 2D can be XY, XZ, etc. and 1D can be X, Y or Z
-        h5grp.attrs['Dimension'] = np.string_('XYZ')
+        h5grp.attrs['Dimension'] = np.bytes_('XYZ')
         # based on Dimension, specify the uniform grid spacing
         h5grp.attrs['Discretization'] = [cell_size, cell_size, cell_size]
         # again, depends on Dimension
@@ -312,7 +312,7 @@ def write_h5_files(filenames, nx, ny, nz, cell_size, cell_fracture_id, k_iso,
         # leave this line out if not cell centered.  If set to False, it will still
         # be true (issue with HDF5 and Fortran)
         h5grp.attrs['Cell Centered'] = [True]
-        h5grp.attrs['Space Interpolation Method'] = np.string_('Step')
+        h5grp.attrs['Space Interpolation Method'] = np.bytes_('Step')
         h5grp.create_dataset(
             'Data', data=kz)  #does this matter that it is also called data?
 

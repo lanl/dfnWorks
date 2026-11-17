@@ -1,3 +1,4 @@
+import numbers
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from shutil import copy
 from numpy import zeros
@@ -22,6 +23,53 @@ def check_stop_condition(params):
         check_n_poly(params['nPoly']['value'])
     else:
         check_p32_targets(params)
+
+
+P32_CONVENTION_NAMES = {
+    0: "double-sided (wetted surface area), P32 = 2A/V",
+    1: "single-sided, P32 = A/V"
+}
+
+
+def check_p32_convention(params):
+    """ Checks the P32 convention and converts it to the integer flag used by dfnGen.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Accepted values (strings are not case sensitive)
+        0, 'double', 'wetted' : double-sided (wetted surface area), P32 = 2A/V. Default.
+        1, 'single' : single-sided, P32 = A/V.
+
+        The value in params is replaced with 0 or 1. Exits program if the value is not recognized.
+    """
+    key = 'p32_convention'
+    value = params[key]['value']
+    aliases = {'double': 0, 'wetted': 0, '0': 0, 'single': 1, '1': 1}
+
+    if value is None:
+        convention = 0
+    elif isinstance(value, str):
+        convention = aliases.get(value.strip().lower())
+    elif isinstance(value, (bool, numbers.Integral)) and int(value) in (0, 1):
+        convention = int(value)
+    else:
+        convention = None
+
+    if convention is None:
+        hf.print_error(
+            f"\"{key}\" must be 0, 'double', or 'wetted' (double-sided / wetted surface area) or 1 or 'single' (single-sided). Value provided: {value}"
+        )
+
+    params[key]['value'] = convention
+    local_print_log(f"--> P32 convention: {P32_CONVENTION_NAMES[convention]}")
 
 
 def check_n_poly(n_poly):
@@ -259,10 +307,10 @@ def check_family_prob(params):
         total = sum(values)
         if total != 1:
             hf.print_warning(
-                "'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
+                "* 'famProb' probabilities did not sum to 1. They have been re-scaled accordingly"
             )
             params['famProb']['value'] = [x / total for x in values]
-            local_print_log(f"--> New Values: {params['famProb']['value']}")
+            local_print_log(f"--> New Values: {params['famProb']['value']}\n")
 
 
 def check_no_dep_flags(params):
@@ -325,20 +373,20 @@ def check_fram(params):
 
     if params['disableFram']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['framOn']['value'] = False
 
     if not params['framOn']['value']:
         hf.print_warning(
-            "Running with FRAM off. Mesh will not work for DFN flow and transport."
+            "* Running with FRAM off. Mesh will not work for DFN flow and transport."
         )
         params['disableFram']['value'] = True
 
     if params['framOn']['value']:
         if params['rFram']['value']:
             hf.print_warning(
-                "Running with rFRAM. Mesh will not be perfectly conforming."
+                "* Running with rFRAM. Mesh will not be perfectly conforming."
             ) 
 
 
@@ -420,6 +468,34 @@ def check_fram(params):
 #                       params['constantPermeability']['value'])
 #         hf.check_values('constantPermeability',
 #                         params['constantPermeability']['value'], 0)
+
+
+def check_layer_conforming(params):
+    """Check that layerConformingFractures is 0, 1, or 2.
+
+    Parameters
+    -------------
+        params : dict
+            parameter dictionary
+    Returns
+    ---------
+        None
+
+    Notes
+    ---------
+        Only called when numOfLayers > 0.
+        0 = disabled
+        1 = perfect conforming (clip exactly at layer boundary)
+        2 = soft conforming (clip at layer boundary +/- 2h)
+    """
+    key = 'layerConformingFractures'
+    hf.check_none(key, params[key]['value'])
+    if params[key]['value'] not in [0, 1, 2]:
+        hf.print_error(
+            f'"{key}" must be 0 (disabled), 1 (perfect conforming), or 2 (soft conforming, 2h overhang). Value provided: {params[key]["value"]}'
+        )
+    modes = {0: "disabled", 1: "perfect conforming", 2: "soft conforming (2h overhang)"}
+    local_print_log(f"--> Layer conforming fractures: {modes[params[key]['value']]}")
 
 
 def check_layers_general(params):
@@ -664,6 +740,7 @@ def check_general(params):
     """
     local_print_log(f"--> Checking General Parameters: Starting")
     check_stop_condition(params)
+    check_p32_convention(params)
     check_domain(params)
     check_family_count(params)
     check_family_prob(params)
@@ -676,6 +753,7 @@ def check_general(params):
 
     if params['numOfLayers']['value'] > 0:
         check_layers_general(params)
+        check_layer_conforming(params)
     if params['numOfRegions']['value'] > 0:
         check_regions_general(params)
     if params['polygonBoundaryFlag']['value']:

@@ -27,3 +27,4 @@ Contents:
    publications
    gallery
    tutorial_intro
+   tutorial_TPL

@@ -1,5 +1,6 @@
 import logging
 import sys
+import os 
 
 from pydfnworks.general.images import failure, success
 
@@ -22,7 +23,6 @@ def initialize_log_file(self, time = False):
 
     '''
 
-
     logging.getLogger(__name__)
     if not self.log_filename.endswith('.log'):
         self.log_filename += '.log'
@@ -33,9 +33,12 @@ def initialize_log_file(self, time = False):
     else:
         logging.basicConfig(level = logging.INFO, filename=self.log_filename, filemode="w"
                             , format="%(levelname)s %(message)s" )
+        
     statement = f"Initializing logfile: {self.log_filename}"
     self.print_log(statement)
-
+    # if not os.path.isfile(self.log_filename):
+    #     self.print_log("Unable to create log file", 'error')
+        
 
 def print_log(self, statement, level = 'info'):
     '''print and log statments to a file

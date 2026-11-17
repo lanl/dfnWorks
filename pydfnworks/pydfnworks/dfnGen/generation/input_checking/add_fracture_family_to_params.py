@@ -1,3 +1,7 @@
+"""
+.. module:: fracture_family_utils
+   :synopsis: Utilities to reorder fracture families and populate the DFN parameter dictionary.
+"""
 import pydfnworks.dfnGen.generation.input_checking.helper_functions as hf
 from pydfnworks.general.logging import initialize_log_file, print_log
 
@@ -13,7 +17,8 @@ def write_fracture_families(self):
     
     Returns
     --------
-        DFN object with populated fracture family fields
+        dict
+            DFN parameter dictionary with populated fracture family fields
 
     Notes
     ------
@@ -39,18 +44,21 @@ def add_fracture_family_to_params(params, fracture_family):
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        params : dict
+            The DFN parameter dictionary.
         
         fracture_family: fracture family dictionary for a family
         
     Returns 
     ---------
-        params: The populated dfn parameter dictionary
+        params: dict
+            The populated DFN parameter dictionary.
         
     Notes
     -------
         None at the moment
     """
+
 
     fracture_type_prefix = determine_type(fracture_family)
 
@@ -66,8 +74,7 @@ def add_fracture_family_to_params(params, fracture_family):
         else:
             params['nFamRect']['value'] += 1
 
-    params, distribution_type = add_distribution_params(
-        fracture_family, params, fracture_type_prefix)
+    params, distribution_type, orientation_dist = add_distribution_params(fracture_family, params, fracture_type_prefix)
 
     if distribution_type == 'tpl':
         write_value_to_params(params, 'distr', fracture_family, 'distribution',
@@ -126,6 +133,13 @@ def add_fracture_family_to_params(params, fracture_family):
     write_value_to_params(params, 'famProb', fracture_family, 'probability',
                           '')
 
+    if orientation_dist == 'bingham':
+        write_value_to_params(params, 'orientation_distribution', fracture_family, 'orientation_distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'orientation_distribution']['value'][-1] = 1
+    if orientation_dist == 'fisher':
+        write_value_to_params(params, 'orientation_distribution', fracture_family, 'orientation_distribution', fracture_type_prefix)
+        params[fracture_type_prefix + 'orientation_distribution']['value'][-1] = 0
+    
     return params
 
 
@@ -134,15 +148,17 @@ def determine_type(fracture_family):
     
     Parameters
     -------------        
-        fracture_family: fracture family dictionary for a family
+        fracture_family : dict
+            Fracture family dictionary for a family.
         
     Returns 
     ---------
-        fracture_type_prefix: the prefix 'r' for rectangular or 'e' for elliptical
+        fracture_type_prefix: str
+            The prefix 'r' for rectangular or 'e' for elliptical
         
     Notes
     -------
-        None
+        Raises an error if neither or both types are specified.
     """
 
     if fracture_family['type']['value']['ellipse'] == True and fracture_family[
@@ -154,9 +170,9 @@ def determine_type(fracture_family):
                 'rect'] == True:
         fracture_type_prefix = 'r'
 
-    else:
+    # else:
 
-        self.print_log('Fracture family type is not specified', 'error')
+    #     self.print_log('Fracture family type is not specified', 'error')
 
     return fracture_type_prefix
 
@@ -167,11 +183,14 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        fracture_family : dict
+            Fracture family dictionary for a family.
         
-        fracture_family: fracture family dictionary for a family
+        fracture_family: dict
+            The DFN parameter dictionary.
         
-        fracture_type_prefix: specifies the type of fractures 'r' for rectangular or 'e' for elliptical
+        fracture_type_prefix : str
+            'r' for rectangular or 'e' for elliptical.
         
     Returns 
     ---------
@@ -179,7 +198,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
         
     Notes
     -------
-        None
+        Raises an error if distribution selection is ambiguous or missing.
     """
 
     #Figure out what distribution represents the fracture family
@@ -198,7 +217,7 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                 'Exactly one distribution value must be True for a fracture family'
             )
     if distribution_type == None:
-        self.print_log(
+        print_log(
             'Exactly one distribution value must be True for a fracture family', 'error'
         )
 
@@ -238,46 +257,55 @@ def add_distribution_params(fracture_family, params, fracture_type_prefix):
                               'mean',
                               fracture_type_prefix,
                               value_flag=True)
+    
+    orientation_dist = fracture_family['orientation_distribution']['value']
+    orient_opt = params['orientationOption']['value']  # 0: theta/phi, 1: trend/plunge, 2: strike/dip
 
-    fisher_params = fracture_family['fisher']['value']
+    if orientation_dist == 'fisher':
+        fisher_params = fracture_family['fisher']['value']
+        for key in fisher_params:
+            if key in {'theta', 'phi'} and orient_opt == 0:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'trend', 'plunge'} and orient_opt == 1:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'strike', 'dip'} and orient_opt == 2:
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
+            elif key == 'kappa':  # Fisher concentration
+                write_value_to_params(params, key, fisher_params, key, fracture_type_prefix, value_flag=True)
 
-    for key in fisher_params.keys():
-        if key == 'theta' or key == 'phi':
-            if params['orientationOption']['value'] == 0:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
+    elif orientation_dist == 'bingham':
+        bingham_params = fracture_family['bingham']['value']
+        for key in bingham_params:
+            if key in {'theta', 'phi'} and orient_opt == 0:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'trend', 'plunge'} and orient_opt == 1:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'strike', 'dip'} and orient_opt == 2:
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+            elif key in {'kappa1', 'kappa2'}:  # Bingham concentrations
+                write_value_to_params(params, key, bingham_params, key, fracture_type_prefix, value_flag=True)
+    # --- Ensure per-family list alignment with placeholders ---
+    if fracture_type_prefix == 'e':  # same idea applies to 'r' if you add rectangles
+        if orientation_dist == 'fisher':
+            # pad ekappa1/ekappa2 so lists stay in sync
+            write_value_to_params(params, 'kappa1', {'kappa1': 0.0}, 'kappa1', fracture_type_prefix, value_flag=True)
+            write_value_to_params(params, 'kappa2', {'kappa2': 0.0}, 'kappa2', fracture_type_prefix, value_flag=True)
+        elif orientation_dist == 'bingham':
+            # pad ekappa so lists stay in sync
+            write_value_to_params(params, 'kappa',  {'kappa':  0.0}, 'kappa',  fracture_type_prefix, value_flag=True)
+            
+    elif fracture_type_prefix == 'r':  # same idea applies to 'r' if you add rectangles
+        if orientation_dist == 'fisher':
+            # pad ekappa1/ekappa2 so lists stay in sync
+            write_value_to_params(params, 'kappa1', {'kappa1': 0.0}, 'kappa1', fracture_type_prefix, value_flag=True)
+            write_value_to_params(params, 'kappa2', {'kappa2': 0.0}, 'kappa2', fracture_type_prefix, value_flag=True)
+        elif orientation_dist == 'bingham':
+            # pad ekappa so lists stay in sync
+            write_value_to_params(params, 'kappa',  {'kappa':  0.0}, 'kappa',  fracture_type_prefix, value_flag=True)
+    else:
+        hf.print_error(f"Unknown orientation_distribution: {orientation_dist}")
 
-        if key == 'trend' or key == 'plunge':
-            if params['orientationOption']['value'] == 1:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
-
-        if key == 'strike' or key == 'dip':
-            if params['orientationOption']['value'] == 2:
-                write_value_to_params(params,
-                                      key,
-                                      fisher_params,
-                                      key,
-                                      fracture_type_prefix,
-                                      value_flag=True)
-
-        if key == 'kappa':
-            write_value_to_params(params,
-                                  key,
-                                  fisher_params,
-                                  key,
-                                  fracture_type_prefix,
-                                  value_flag=True)
-
-    return params, distribution_type
+    return params, distribution_type, orientation_dist
 
 
 def write_value_to_params(params,
@@ -291,42 +319,51 @@ def write_value_to_params(params,
     
     Parameters
     -------------
-        params: The dfn parameter dictionary
+        params : dict
+            The DFN parameter dictionary.
         
-        param_key: the key for the parameter value to be written
+        param_key : str
+            The key for the parameter value to be written.
         
-        value_dict : fracture family dictionary for a family
+        value_dict : dict
+            Fracture family dictionary or sub-dictionary.
         
-        value_dict_key: the key for the parameter that will be transferred 
-        from the fracture family dictionary
-
-        fracture_type_prefix: specifies the type of fractures 'r' for rectangular or 'e' for elliptical
+        value_dict_key : str
+            The key for the parameter in value_dict.
         
-        value_flag: defaults to False, determines whether dictionary is in order [param][value] (False) or [value][param] (True)        
+        fracture_type_prefix : str
+            'r' for rectangular or 'e' for elliptical.
+        
+        value_flag : bool, optional
+            If False, value is taken from value_dict[value_dict_key]['value'],
+            if True, from value_dict[value_dict_key].       
     Returns 
     ---------
-        params: Populated parameter dictionary
+        None
         
     Notes
     -------
         None 
     """
-    if value_flag == False:
+    
+    if value_flag is False:
         value = value_dict[value_dict_key]['value']
     else:
         value = value_dict[value_dict_key]
 
-    ### if value is not present an exception can be raised
-    if value == None:
-        pass
-        # hf.print_error(value_dict_key + ' not specified')
+    if value is None:
+        return  # nothing to write
 
+    param_name = f"{fracture_type_prefix}{param_key}"
+
+    if param_name not in params or not isinstance(params[param_name], dict) or 'value' not in params[param_name]:
+        params[param_name] = {'value': None}
+    # ----------------------------------------------------------------
+
+    if params[param_name]['value'] is None:
+        params[param_name]['value'] = [value]
     else:
-        if params[fracture_type_prefix + param_key]['value'] == None:
-            params[fracture_type_prefix + param_key]['value'] = [value]
-
-        else:
-            params[fracture_type_prefix + param_key]['value'].append(value)
+        params[param_name]['value'].append(value)
 
 
 def reorder_fracture_families(self):

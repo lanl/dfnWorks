@@ -1,0 +1,461 @@
+"""
+.. module:: graph_transport.py
+   :synopsis: simulate transport on a pipe network representaiton of a DFN 
+.. moduleauthor:: Shriram Srinivasan <shrirams@lanl.gov>, Jeffrey Hyman <jhyman@lanl.gov>
+
+"""
+
+import timeit
+import sys
+import networkx as nx
+import numpy as np
+import multiprocessing as mp
+
+# pydfnworks graph modules modules
+import pydfnworks.dfnGraph.transport.io as io
+from pydfnworks.dfnGraph.transport.tdrw import check_tdrw_params, set_up_limited_matrix_diffusion, FINITE_MODELS
+from pydfnworks.dfnGraph.transport.particle import Particle
+from pydfnworks.general.logging import local_print_log
+
+
+def track_particle(data, verbose=False):
+    """ Tracks a single particle through the graph
+
+        all input parameters are in the dictionary named data 
+
+        Parameters
+        ----------
+            data : dict
+                Dictionary of parameters the includes particle_number, initial_position, 
+                tdrw_flag, matrix_porosity, matrix_diffusivity, cp_flag, control_planes,
+                 direction, G, and nbrs_dict. 
+
+            verbose : bool
+                Toggles verbosity 
+
+        Returns
+        -------
+            particle : object
+                Particle will full trajectory
+
+    """
+    if verbose:
+        p = mp.current_process()
+        _, cpu_id = p.name.split("-")
+        cpu_id = int(cpu_id)
+        local_print_log(
+            f"--> Particle {data['particle_number']} is starting on worker {cpu_id}"
+        )
+
+    particle = Particle(data["particle_number"], data["initial_position"],
+                        data["tdrw_flag"], data["tdrw_model"],
+                        data["matrix_porosity"], data["matrix_diffusivity"],
+                        data["fracture_spacing"], data["trans_prob"],
+                        data["transfer_time"], data["release_eps"],
+                        data["cp_flag"],
+                        data["control_planes"], data["direction"],
+                        data["seed"])
+
+    # # get current process information
+    global nbrs_dict
+    global G_global
+    particle.track(G_global, nbrs_dict)
+    if verbose:
+        local_print_log(
+            f"--> Particle {data['particle_number']} is complete on worker {cpu_id}"
+        )
+    return particle
+
+
+def get_initial_posititions(G, initial_positions, nparticles):
+    """ Distributes initial particle positions 
+
+        Parameters
+        ----------
+                
+            G : NetworkX graph 
+                obtained from graph_flow
+
+            initial_positions : str
+                distribution of initial conditions. options are uniform and flux (flux-weighted)
+
+            nparticles : int
+                requested number of particles
+
+        Returns
+        -------
+            ip : numpy array
+                array nparticles long. Each element is the initial position for each particle
+
+        """
+
+    inlet_nodes = [v for v in nx.nodes(G) if G.nodes[v]['inletflag']]
+    cnt = len(inlet_nodes)
+    local_print_log(f"--> There are {cnt} inlet nodes")
+    if cnt == 0:
+        error = "Error. There are no nodes in the inlet.\nExiting"
+        local_print_log(error, 'error')
+
+    # Uniform Distribution for particles
+    if initial_positions == "uniform":
+        local_print_log("--> Using uniform initial positions.")
+        ip = np.zeros(nparticles).astype(int)
+        n = int(np.ceil(nparticles / cnt))
+        local_print_log(f"--> {n} particles will be placed at every inflow node.\n")
+        ## this could be cleaned up using clever indexing
+        inflow_idx = 0
+        inflow_cnt = 0
+        for i in range(nparticles):
+            ip[i] = inlet_nodes[inflow_idx]
+            inflow_cnt += 1
+            if inflow_cnt >= n:
+                inflow_idx += 1
+                inflow_cnt = 0
+
+    ## flux weighted initial positions for particles
+    elif initial_positions == "flux":
+        local_print_log("--> Using flux-weighted initial positions.\n")
+        flux = np.zeros(cnt)
+        for i, u in enumerate(inlet_nodes):
+            for v in G.successors(u):
+                flux[i] += G.edges[u, v]['flux']
+        flux /= flux.sum()
+        flux_cnts = [np.ceil(nparticles * i) for i in flux]
+        nparticles = int(sum(flux_cnts))
+        ip = np.zeros(nparticles).astype(int)
+        ## Populate ip with Flux Cnts
+        ## this could be cleaned up using clever indexing
+        inflow_idx = 0
+        inflow_cnt = 0
+        for i in range(nparticles):
+            ip[i] = inlet_nodes[inflow_idx]
+            inflow_cnt += 1
+            if inflow_cnt >= flux_cnts[inflow_idx]:
+                inflow_idx += 1
+                inflow_cnt = 0
+
+    # Throw error if unknown initial position is provided
+    else:
+        error = f"Error. Unknown initial_positions input {initial_positions}. Options are uniform or flux \n"
+        local_print_log(error, 'error')
+
+    return ip, nparticles
+
+
+def create_neighbor_list(G):
+    """ Create a list of downstream neighbor vertices for every vertex on NetworkX graph obtained after running graph_flow
+
+    Parameters
+    ----------
+        G: NetworkX graph 
+            Directed Graph obtained from output of graph_flow
+
+    Returns
+    -------
+        dict : nested dictionary.
+
+    Notes
+    -----
+        dict[n]['child'] is a list of vertices downstream to vertex n
+        dict[n]['prob'] is a list of probabilities for choosing a downstream node for vertex n
+    """
+
+    nbrs_dict = {}
+
+    for u in nx.nodes(G):
+
+        if G.nodes[u]['outletflag']:
+            continue
+
+        node_list = []
+        prob_list = []
+        nbrs_dict[u] = {}
+
+        for v in G.successors(u):
+            node_list.append(v)
+            prob_list.append(G.edges[u, v]['vol_flow_rate'])
+
+        if node_list:
+            nbrs_dict[u]['child'] = node_list
+            nbrs_dict[u]['prob'] = np.asarray(prob_list) / sum(prob_list)
+        else:
+            nbrs_dict[u]['child'] = None
+            nbrs_dict[u]['prob'] = None
+
+    return nbrs_dict
+
+
+def check_control_planes(control_planes, direction):
+    control_plane_flag = False
+    if not type(control_planes) is list:
+        error = f"Error. provided controls planes are not a list\n"
+        local_print_log(error, 'error')
+    else:
+        # add None to indicate the end of the control plane list
+        control_plane_flag = True
+
+    if direction is None:
+        error = f"Error. Primary direction not provided. Required for control planes\n"
+        local_print_log(error, 'error')
+    elif direction not in ['x', 'y', 'z']:
+        error = f"Error. Primary direction is not known. Acceptable values are x,y, and z\n"
+        local_print_log(error, 'error')
+
+    local_print_log(f"--> Control Planes: {control_planes}")
+    local_print_log(f"--> Direction: {direction}")
+    return control_plane_flag
+
+
+def run_graph_transport(self,
+                        G,
+                        nparticles,
+                        partime_file,
+                        frac_id_file=None,
+                        format='hdf5',
+                        initial_positions="uniform",
+                        dump_traj=False,
+                        tdrw_flag=False,
+                        tdrw_model='infinite',
+                        matrix_porosity=None,
+                        matrix_diffusivity=None,
+                        fracture_spacing=None,
+                        tdrw_filename=None,
+                        control_planes=None,
+                        direction=None,
+                        cp_filename='control_planes'):
+    """ Run  particle tracking on the given NetworkX graph
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+            
+        G : NetworkX graph 
+            obtained from graph_flow
+
+        nparticles: int 
+            number of particles
+
+        initial_positions : str
+            distribution of initial conditions. options are uniform and flux (flux-weighted)
+
+        partime_file : string
+            name of file to  which the total travel times and lengths will be written for each particle
+
+        frac_id_file : string
+            name of file to which detailed information of each particle's travel will be written
+        
+        dump_flag: bool
+            on/off to write full trajectory information to file
+
+        tdrw_flag : Bool
+            if False, matrix_porosity and matrix_diffusivity are ignored
+
+        tdrw_model : string
+            Matrix diffusion model. Options: 'infinite' (default, unlimited
+            block size), 'roubinet', 'dentz', 'annulus' (finite block size),
+            or 'from_file' (return-time CDF read from tdrw_filename).
+
+        matrix_porosity: float
+            Matrix Porosity used in TDRW
+
+        matrix_diffusivity: float
+            Matrix Diffusivity used in TDRW (SI units m^2/s)
+
+        fracture_spacing : float
+            distance between adjacent parallel fractures [m]; the matrix
+            block half-width is fracture_spacing/2. Required for all finite
+            tdrw models
+
+        tdrw_filename : string
+            path to a two-column ASCII file (return times, CDF). Required
+            when tdrw_model is 'from_file'
+
+        control_planes : list of floats
+            list of control plane locations to dump travel times. Only in primary direction of flow. 
+
+        primary direction : string (x,y,z)
+            string indicating primary direction of flow 
+
+    Returns
+    -------
+        particles : list
+            list of particles objects
+
+    Notes
+    -----
+    Information on individual functions is found therein
+    """
+    ## the flow graph needs to be a global variable so all processors can access it
+    ## without making a copy of it.
+    global G_global
+    G_global = nx.Graph()
+    G_global = G.copy()
+
+    if not format in ['ascii', 'hdf5']:
+        error = (
+            f"--> Error. Unknown file format provided in run_graph_transport.\n\n--> Provided value is {format}.\n--> Options: 'ascii' or 'hdf5'.\n\nExitting\n\n"
+        )
+        self.print_log(error, 'error')
+
+    self.print_log("--> Running Graph Particle Tracking")
+    
+    # Check parameters for TDRW
+    if tdrw_flag:
+        # Backward compatibility: older callers requested the limited block
+        # size model by providing fracture_spacing without naming a model.
+        if tdrw_model == 'infinite' and fracture_spacing is not None:
+            self.print_log(
+                "--> fracture_spacing provided without a finite tdrw_model. Using 'dentz' (default finite matrix diffusion model; pass tdrw_model='roubinet' for the pre-2.12 limited model).",
+                'warning')
+            tdrw_model = 'dentz'
+        check_tdrw_params(matrix_porosity, matrix_diffusivity,
+                          fracture_spacing, tdrw_model, tdrw_filename)
+
+    if control_planes is None:
+        control_plane_flag = False
+    else:
+        control_plane_flag = check_control_planes(
+            control_planes=control_planes, direction=direction)
+    self.print_log(f"--> Control Plane Flag {control_plane_flag}")
+
+    self.print_log("--> Creating downstream neighbor list")
+    global nbrs_dict
+    nbrs_dict = create_neighbor_list(G)
+
+    self.print_log("--> Getting initial Conditions")
+    ip, nparticles = get_initial_posititions(G, initial_positions, nparticles)
+
+    # DFN seed: each particle derives its own independent stream from this, so
+    # the ensemble is reproducible and controlled by DFN.params['seed'].
+    seed = getattr(self, "seed", None)
+    if seed is None:
+        seed = self.params['seed']['value'] if hasattr(self, "params") else 0
+    self.print_log(f"--> Particle random seeds derived from seed {seed}")
+
+    self.print_log(f"--> Starting particle tracking for {nparticles} particles")
+
+    if dump_traj:
+        self.print_log(f"--> Writing trajectory information to file")
+
+    if tdrw_flag and tdrw_model in FINITE_MODELS:
+        self.print_log(f"--> Using limited matrix block size for TDRW")
+        self.print_log(f"--> Fracture spacing {fracture_spacing:0.2e} [m]")
+        transfer_time, trans_prob, release_eps = set_up_limited_matrix_diffusion(
+            G,
+            tdrw_model,
+            fracture_spacing,
+            matrix_porosity,
+            matrix_diffusivity,
+            tdrw_filename=tdrw_filename)
+    else:
+        trans_prob = None
+        transfer_time = None
+        release_eps = None
+    ## main loop
+    if self.ncpu == 1:
+        tic = timeit.default_timer()
+        particles = []
+        for i in range(nparticles):
+            if i % 1000 == 0:
+                self.print_log(f"--> Starting particle {i} out of {nparticles}")
+            particle = Particle(i, ip[i], tdrw_flag, tdrw_model,
+                                matrix_porosity, matrix_diffusivity,
+                                fracture_spacing, trans_prob, transfer_time,
+                                release_eps,
+                                control_plane_flag, control_planes, direction,
+                                seed)
+            particle.track(G, nbrs_dict)
+            particles.append(particle)
+
+        elapsed = timeit.default_timer() - tic
+        self.print_log(
+            f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
+        )
+        stuck_particles = io.dump_particle_info(particles, partime_file,
+                                                frac_id_file, format)
+        if control_plane_flag:
+            io.dump_control_planes(particles, control_planes, cp_filename,
+                                   format)
+
+        if dump_traj:
+            io.dump_trajectories(particles, 1)
+
+    if self.ncpu > 1:
+        self.print_log(f"--> Using {self.ncpu} processors")
+        ## Prepare input data
+        inputs = []
+
+        tic = timeit.default_timer()
+        # Particle tracking is Python-compute-bound, so real processes are
+        # needed. Use an explicit fork context: the previous global
+        # mp.set_start_method('fork') (in run_meshing) was removed, and the
+        # default 'spawn' on macOS would re-import unguarded driver scripts.
+        pool = mp.get_context("fork").Pool(min(self.ncpu, nparticles))
+
+        particles = []
+        # log progress every 2.5% of completed particles
+        log_interval = max(1, int(nparticles * 0.025))
+        progress = {"completed": 0, "next_log": log_interval}
+
+        def gather_output(output):
+            particles.append(output)
+            progress["completed"] += 1
+            if progress["completed"] >= progress["next_log"]:
+                percentage = 100 * progress["completed"] / nparticles
+                self.print_log(
+                    f"--> Completed {progress['completed']} out of {nparticles} particles\t({percentage:0.2f}%)"
+                )
+                progress["next_log"] += log_interval
+
+        for i in range(nparticles):
+            data = {}
+            data["particle_number"] = i
+            data["initial_position"] = ip[i]
+            data["tdrw_flag"] = tdrw_flag
+            data["tdrw_model"] = tdrw_model
+            data["matrix_porosity"] = matrix_porosity
+            data["matrix_diffusivity"] = matrix_diffusivity
+            data["fracture_spacing"] = fracture_spacing
+            data["transfer_time"] = transfer_time
+            data["trans_prob"] = trans_prob
+            data["release_eps"] = release_eps
+            data["cp_flag"] = control_plane_flag
+            data["control_planes"] = control_planes
+            data["direction"] = direction
+            data["seed"] = seed
+            pool.apply_async(track_particle,
+                             args=(data, ),
+                             callback=gather_output)
+
+        pool.close()
+        pool.join()
+        pool.terminate()
+
+        elapsed = timeit.default_timer() - tic
+        self.print_log(
+            f"--> Main Tracking Loop Complete. Time Required {elapsed:0.2e} seconds"
+        )
+
+        stuck_particles = io.dump_particle_info(particles, partime_file,
+                                                frac_id_file, format)
+        if control_plane_flag:
+            io.dump_control_planes(particles, control_planes, cp_filename,
+                                   format)
+
+        if dump_traj:
+            io.dump_trajectories(particles, min(self.ncpu, nparticles))
+
+    if stuck_particles == 0:
+        self.print_log("--> All particles exited the network")
+        self.print_log("--> Graph Particle Tracking Completed Successfully.")
+    else:
+        self.print_log(
+            f"--> Out of {nparticles} particles, {stuck_particles} particles did not exit",
+            'warning')
+
+    # Clean up and delete the global versions
+    del G_global
+    del nbrs_dict
+
+    return particles

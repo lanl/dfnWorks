@@ -1,4 +1,3 @@
-import os
 import numpy as np
 
 
@@ -57,7 +56,7 @@ cmo / delete / mo_{1}
     lagrit_input_2 = '# Writing out merged fractures\n'
     if not self.visual_mode:
         lagrit_input_2 += """
-mo / addatt/ cmo_tmp / volume / evol_all
+cmo / addatt / cmo_tmp / volume / evol_all
 math / sum / cmo_tmp / evol_sum / 1 0 0 / cmo_tmp / evol_all """
     lagrit_input_2 += """ 
 cmo select cmo_tmp
@@ -67,28 +66,26 @@ finish
 
     # get leading digits
     digits = len(str(self.num_frac))
-    part_size = int(
-        max(np.floor(self.num_frac / self.ncpu) + 1, 1)
-    )  # number of fractures in each part / have to add 1 due to indexing starting from 1 not 0.
+    # split the fractures into n_jobs non-empty parts whose sizes differ by at most one
+    n_jobs = max(1, min(self.ncpu, len(self.fracture_list)))
+    parts = np.array_split(np.asarray(self.fracture_list), n_jobs)
+    self.n_merge_jobs = n_jobs
 
-    self.print_log(f"--> There are {part_size} fractures in each part")
+    self.print_log(
+        f"--> {n_jobs} merge parts with {len(parts[-1])} to {len(parts[0])} fractures in each part"
+    )
 
-    frac_index = 0
-    for cpu in range(self.ncpu):
-        # grab the fractures for this cpu
-        current_fractures = list(self.fracture_list[frac_index:frac_index +
-                                                    part_size])
-        # self.print_log(f"cpu: {cpu}")
-        # self.print_log(current_fractures)
-        frac_index += part_size
+    for job, current_fractures in enumerate(parts, start=1):
         # write script to merge them in batch
-        with open(f'lagrit_scripts/merge_part_{cpu+1}.lgi', 'w') as fout:
+        with open(f'lagrit_scripts/merge_part_{job}.lgi', 'w') as fout:
             for frac_id in current_fractures:
+                frac_id = int(frac_id)
                 filename = f'mesh_{frac_id:0{digits}d}.lg'
                 fout.write(lagrit_input.format(filename, frac_id))
-            fout.write(lagrit_input_2.format(cpu + 1))
+            fout.write(lagrit_input_2.format(job))
 
     self.print_log("--> Writting merge scripts: Complete ")
+    return n_jobs
 
 
 def create_final_merge_script(self):
@@ -116,7 +113,7 @@ addmesh / merge / mo_all / mo_all / cmo_tmp
 cmo / delete / cmo_tmp 
     """
     with open('lagrit_scripts/merge_network.lgi', 'w') as f:
-        for j in range(1, self.ncpu + 1):
+        for j in range(1, self.n_merge_jobs + 1):
             f.write(lagrit_input.format(j))
 
         # Append meshes complete
@@ -248,6 +245,31 @@ dump / lagrit / full_mesh.lg / mo_all
     cmo / modatt / mo_all / isn1 / ioflag / l
     cmo / modatt / mo_all / itp1 / ioflag / l
     ## shift mesh
+
+    # Dump out Material ID Dat file
+    cmo / modatt / mo_all / isn / ioflag / l
+    cmo / modatt / mo_all / x_four / ioflag / l
+    cmo / modatt / mo_all / fac_n / ioflag / l
+    cmo / modatt / mo_all / dfield / ioflag / l
+    cmo / modatt / mo_all / rf_field / ioflag / l
+    cmo / modatt / mo_all / a_b / ioflag / l
+    cmo / modatt / mo_all / b_a / ioflag / l
+    cmo / modatt / mo_all / xnorm / ioflag / l
+    cmo / modatt / mo_all / ynorm / ioflag / l
+    cmo / modatt / mo_all / znorm / ioflag / l
+    cmo / modatt / mo_all / evol_one / ioflag / l
+    cmo / modatt / mo_all / evol_all / ioflag / l
+    cmo / modatt / mo_all / numbnd / ioflag / l
+    cmo / modatt / mo_all / id_numb / ioflag / l
+    cmo / modatt / mo_all / evol_all / ioflag / l
+    cmo / modatt / mo_all / itp / ioflag / l
+    cmo / modatt / mo_all / icr / ioflag / l
+    cmo / modatt / mo_all / meshid / ioflag / l
+    cmo / modatt / mo_all / id_n_1 / ioflag / l
+    cmo / modatt / mo_all / id_n_2 / ioflag / l
+    cmo / modatt / mo_all / pt_gtg / ioflag / l
+    # Dump out Material ID Dat file
+    dump / avs2 / materialid.dat / mo_all / 0 0 2 0
 
     trans / 1 0 0 / 0. 0. 0. / {self.params['domainCenter']['value'][0]}, {self.params['domainCenter']['value'][1]}, {self.params['domainCenter']['value'][2]} 
     

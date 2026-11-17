@@ -335,8 +335,10 @@ def check_dfn_trans_run_files(self):
 
         else:
             if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
-                error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
-                self.print_log(error, 'error')
+                self.dump_hydraulic_values(format = "FEHM")
+                if not os.path.isfile(params["aperture_file:"]) or os.stat(params["aperture_file:"]).st_size == 0:
+                    error = f"aperture_file: {params['aperture_file:']} not found or empty\n" 
+                    self.print_log(error, 'error')
 
     else:
         if params["thickness:"] == None:

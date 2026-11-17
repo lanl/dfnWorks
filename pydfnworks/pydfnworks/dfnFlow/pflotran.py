@@ -9,54 +9,59 @@ import shutil
 import ntpath
 from time import time
 import numpy as np
+from pathlib import Path
 
 
-def lagrit2pflotran(self, boundary_cell_area = None):
-    """  Takes output from LaGriT and processes it for use in PFLOTRAN.
-    Calls the function write_perms_and_correct_volumes_areas() and zone2ex
-   
-    Parameters    
-    --------------
+
+def lagrit2pflotran(self, dim=3, boundary_cell_area=None):
+    """Take output from LaGriT and process it for use in PFLOTRAN.
+
+    Calls :func:`zone2ex`, :func:`dump_h5_files`, and :func:`correct_uge_file`,
+    forwarding ``dim`` to the latter.
+
+    Parameters
+    ----------
         self : object
-            DFN Class
-        boundary_cell_area : double 
-            Boundary cell area. Defaults to None.
+            DFN Class.
+        dim : int
+            Problem dimension, ``3`` (default) or ``2``, forwarded to
+            :func:`correct_uge_file`.
+        boundary_cell_area : double
+            Boundary cell area. Defaults to ``None``, in which case ``1 / self.h``
+            is used.
 
     Returns
-    --------
+    -------
         None
 
     Notes
-    --------
-        None
-    
+    -----
+        ``correct_uge_file`` sets ``self.uge_file`` to the active mesh, so it does
+        not need to be assigned manually after this call.
     """
     if self.flow_solver != "PFLOTRAN":
-        error = "Error. Wrong flow solver requested\n"
-        self.print_log(error, 'error')
+        self.print_log("Error. Wrong flow solver requested\n", "error")
 
-    self.print_log('=' * 80)
+    self.print_log("=" * 80)
     self.print_log("Starting conversion of files for PFLOTRAN ")
 
-    if self.inp_file == '':
-        error = 'Error: inp filename not attached to object\n'
-        self.print_log(error, 'error')
+    if self.inp_file == "":
+        self.print_log("Error: inp filename not attached to object\n", "error")
 
-    # Check if UGE file was created by LaGriT, if it does not exists, exit
-    self.uge_file = self.inp_file[:-4] + '.uge'
+    self.uge_file = self.inp_file[:-4] + ".uge"
     if not os.path.isfile(self.uge_file):
-        error = 'Error. Cannot file uge file\nExiting\n'
-        self.print_log(error, 'error')
+        self.print_log("Error. Cannot find uge file\nExiting\n", "error")
 
-    self.write_perms_and_correct_volumes_areas()
-    
     if not boundary_cell_area:
-        boundary_cell_area = 1/self.h 
+        boundary_cell_area = 1 / self.h
 
-    self.zone2ex(zone_file='all', boundary_cell_area = boundary_cell_area)
+    self.zone2ex(zone_file="all", boundary_cell_area=boundary_cell_area)
     self.dump_h5_files()
+    self.correct_uge_file(dim=dim)
+
     self.print_log("Conversion of files for PFLOTRAN complete")
-    self.print_log('=' * 80)
+    self.print_log("=" * 80)
+
 
 def zone2ex(self, zone_file='', face='', boundary_cell_area=1.e-1):
     """
@@ -231,48 +236,21 @@ def write_perms_and_correct_volumes_areas(self):
         error = 'Error. aperture file must be specified.'
         self.print_log(error,'error')
 
-    t = time()
-    # Make input file for C UGE converter
-    with open("convert_uge_params.txt", "w") as fp:
-        fp.write(f"{self.inp_file}\n")
-        fp.write(f"{self.mat_file}\n")
-        fp.write(f"{self.uge_file}\n")
-        fp.write(f"{self.uge_file[:-4]}_vol_area.uge\n")
-        if self.cell_based_aperture:
-            fp.write(f"{self.aper_cell_file}\n")
-            fp.write("1\n")
-        else:
-            fp.write(f"{self.aper_file}\n")
-            fp.write("-1\n")
 
-    ## dump aperture file
-    self.dump_aperture(self.aper_file, format='fehm')
-    ## execute convert uge C code
-    cmd = os.environ['CORRECT_VOLUME_EXE'] + ' convert_uge_params.txt'
-    self.print_log(f">> {cmd}")
-    failure = subprocess.call(cmd, shell=True)
-    if failure > 0:
-        error = 'Error: UGE conversion failed\nExiting Program\n'
-        self.print_log(error, 'error')
-    
-    elapsed = time() - t
-    self.print_log(
-        f'--> Time elapsed for UGE file conversion: {elapsed:0.3f} seconds\n')
-
-    self.print_log("--> Correcting UGE file: Complete")
-    self.print_log('*' * 80)
-    correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
-    if os.path.exists(correct_volume_file):
-        self.print_log(f"--> Printing correct volumes output file:")
-        self.print_log(f"filename: {correct_volume_file}")
-        try:
-            with open(correct_volume_file, 'r') as file:
-                for line in file:
-                    self.print_log(line.strip())
-        except FileNotFoundError:
-            self.print_log(f"File not found: {correct_volume_file}")
-        except Exception as e:
-            self.print_log(f"An error occurred: {e}")
+    # self.print_log("--> Correcting UGE file: Complete")
+    # self.print_log('*' * 80)
+    # correct_volume_file = os.path.join(self.jobname, "correct_volumes_logfile.log")
+    # if os.path.exists(correct_volume_file):
+    #     self.print_log(f"--> Printing correct volumes output file:")
+    #     self.print_log(f"filename: {correct_volume_file}")
+    #     try:
+    #         with open(correct_volume_file, 'r') as file:
+    #             for line in file:
+    #                 self.print_log(line.strip())
+    #     except FileNotFoundError:
+    #         self.print_log(f"File not found: {correct_volume_file}")
+    #     except Exception as e:
+    #         self.print_log(f"An error occurred: {e}")
 
 def dump_h5_files(self):
     """ Write permeability values to cell ids and permeability values to dfn_properties.h5 file for pflotran. 
@@ -475,13 +453,15 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
 
     grid_file = self.vtk_file
 
-    files = glob.glob('*-[0-9][0-9][0-9].vtk')
+    # Grab all vtk files
+    base_filename = Path(self.local_dfnFlow_file).stem
+    files = glob.glob(f"{base_filename}*.vtk")
     files.sort()
 
     with open(grid_file, 'r') as f:
         grid = f.readlines()[3:]
 
-    out_dir = 'parsed_vtk'
+    out_dir = 'pflotran_vtk_outputs'
 
     for line in grid:
         if 'POINTS' in line:
@@ -513,3 +493,166 @@ def parse_pflotran_vtk_python(self, grid_vtk_file=''):
                 f.write(line)
         os.remove(file)
     self.print_log('--> Parsing PFLOTRAN output complete')
+
+
+def _sanitize_vtk_field_name(name):
+    """ Sanitize an HDF5 dataset name so it is a valid legacy VTK SCALARS field name.
+
+    Replaces whitespace and bracket characters with underscores, collapses
+    repeated underscores, and trims leading/trailing underscores.
+    Example: 'Liquid Pressure [Pa]' -> 'Liquid_Pressure_Pa'
+    """
+    out = []
+    for ch in name:
+        if ch.isalnum() or ch == '_':
+            out.append(ch)
+        else:
+            out.append('_')
+    sanitized = ''.join(out)
+    # collapse repeated underscores
+    while '__' in sanitized:
+        sanitized = sanitized.replace('__', '_')
+    return sanitized.strip('_') or 'field'
+
+
+def _time_group_index(group_name):
+    """ Extract the integer time index from a PFLOTRAN HDF5 time group name.
+
+    PFLOTRAN writes top-level groups like '   0 Time  0.00000E+00 d',
+    '   1 Time  1.00000E+02 d', etc. The first whitespace-delimited token
+    is the time index.
+    """
+    try:
+        return int(group_name.strip().split()[0])
+    except (ValueError, IndexError):
+        return None
+
+
+def parse_pflotran_h5(self, h5_file='', grid_vtk_file=''):
+    """ Parse PFLOTRAN HDF5 output into per-time-step legacy VTK files.
+
+    The mesh is taken from a VTK file derived from the .inp mesh
+    (via inp2vtk_python if not already produced). Solution data is read
+    from PFLOTRAN's main HDF5 output, which contains one group per time
+    step. Every dataset present in a time group is written to the
+    corresponding pflotran_vtk_outputs/<base>-NNN.vtk file as POINT_DATA scalars.
+
+    Parameters
+    ----------
+        self : object
+            DFN Class
+        h5_file : string
+            Path to the PFLOTRAN HDF5 output file. If empty, defaults to
+            '<local_dfnFlow_file stem>.h5' in the current directory.
+        grid_vtk_file : string
+            Path to a VTK file containing the mesh. If empty, inp2vtk_python
+            is invoked to produce one from self.inp_file.
+
+    Returns
+    --------
+        None
+
+    Notes
+    --------
+        - Dataset names are sanitized for legacy VTK compatibility
+          (spaces and brackets become underscores).
+        - Integer datasets are written with `int` scalar type; everything
+          else is written as `float`.
+        - Output files land in ./pflotran_vtk_outputs/ to mirror parse_pflotran_vtk_python.
+    """
+    self.print_log('--> Parsing PFLOTRAN HDF5 output with Python')
+
+    if self.flow_solver != "PFLOTRAN":
+        self.print_log("Error. Wrong flow solver requested\n", 'error')
+
+    # Resolve the mesh VTK
+    if grid_vtk_file:
+        self.vtk_file = grid_vtk_file
+    elif not getattr(self, 'vtk_file', None) or not os.path.exists(self.vtk_file):
+        self.inp2vtk_python()
+    grid_file = self.vtk_file
+
+    # Resolve the HDF5 file
+    if not h5_file:
+        h5_file = f"{Path(self.local_dfnFlow_file).stem}.h5"
+    if not os.path.exists(h5_file):
+        self.print_log(f"PFLOTRAN HDF5 file not found: {h5_file}", 'error')
+    self.print_log(f"--> Reading HDF5 data from {h5_file}")
+
+    # Read mesh block from the existing VTK (skip the 3 header lines so we
+    # can swap in our own header; matches parse_pflotran_vtk_python).
+    with open(grid_file, 'r') as f:
+        grid = f.readlines()[3:]
+
+    num_points = None
+    for line in grid:
+        if 'POINTS' in line:
+            num_points = line.strip().split()[1]
+            break
+    if num_points is None:
+        self.print_log(f"Could not find POINTS line in {grid_file}", 'error')
+
+    out_dir = 'pflotran_vtk_outputs'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
+    base = Path(self.local_dfnFlow_file).stem
+    header_lines = [
+        '# vtk DataFile Version 2.0\n',
+        'PFLOTRAN output\n',
+        'ASCII\n',
+    ]
+
+    with h5py.File(h5_file, 'r') as h5:
+        # Keep only the time-step groups (skip anything that doesn't parse).
+        time_groups = []
+        for name in h5.keys():
+            if not isinstance(h5[name], h5py.Group):
+                continue
+            idx = _time_group_index(name)
+            if idx is None:
+                continue
+            time_groups.append((idx, name))
+        time_groups.sort(key=lambda x: x[0])
+
+        if not time_groups:
+            self.print_log(
+                f"No PFLOTRAN time-step groups found in {h5_file}", 'error')
+
+        for idx, group_name in time_groups:
+            group = h5[group_name]
+            out_path = os.path.join(out_dir, f"{base}-{idx:03d}.vtk")
+            self.print_log(f"--> Writing {out_path}")
+            with open(out_path, 'w') as f:
+                for line in header_lines:
+                    f.write(line)
+                for line in grid:
+                    f.write(line)
+                f.write('\n')
+                f.write(f"POINT_DATA {num_points}\n")
+
+                for dset_name in group.keys():
+                    dset = group[dset_name]
+                    if not isinstance(dset, h5py.Dataset):
+                        continue
+                    values = np.asarray(dset[()]).ravel()
+                    if values.size != int(num_points):
+                        self.print_log(
+                            f"Skipping '{dset_name}' in time group {idx}: "
+                            f"size {values.size} != {num_points} mesh points")
+                        continue
+                    field = _sanitize_vtk_field_name(dset_name)
+                    if np.issubdtype(values.dtype, np.integer):
+                        scalar_type = 'int'
+                        fmt = '%d'
+                    else:
+                        scalar_type = 'float'
+                        fmt = '%.8e'
+                    f.write(f"SCALARS {field} {scalar_type} 1\n")
+                    f.write("LOOKUP_TABLE default\n")
+                    for v in values:
+                        f.write(fmt % v)
+                        f.write('\n')
+
+    self.print_log('--> Parsing PFLOTRAN HDF5 output complete')
+
