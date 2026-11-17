@@ -48,7 +48,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#obtaining-dfnworks">Obtaining dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#citing-dfnworks">Citing dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#versions">Versions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#v2-8-current">v2.8 - Current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#v2-12-current-v2-12-2">v2.12 - Current (v2.12.2)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#v2-10">v2.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#v2-9">v2.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#v2-8">v2.8</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-7">v2.7</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-6">v2.6</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#v2-5">v2.5</a></li>
@@ -126,9 +129,13 @@ computational mesh representation. The representation produces a conforming
 Delaunay triangulation suitable for high-performance computing finite volume
 solvers in an intrinsically parallel fashion. Flow through the network is
 simulated with dfnFlow, which utilizes the massively parallel subsurface flow
-and reactive transport finite volume code PFLOTRAN. A Lagrangian approach to
+and reactive transport finite volume code PFLOTRAN, or FEHM. A Lagrangian approach to
 simulating transport through the DFN is adopted within dfnTrans to determine
-pathlines and solute transport through the DFN. Applications of the dfnWorks
+pathlines and solute transport through the DFN. dfnGraph provides graph
+(pipe-network) representations of the DFN for fast flow and transport
+simulations, including matrix diffusion, and for network analysis such as
+pruning. Networks can also be upscaled to continuum meshes (UDFM and ECPM) or
+meshed together with the surrounding rock matrix (DFM). Applications of the dfnWorks
 suite include nuclear waste repository science, hydraulic fracturing and
 CO<sub>2</sub> sequestration.</p>
 <p>To run a workflow using the dfnWorks suite, the pydfnworks package is
@@ -163,8 +170,48 @@ and Viswanathan, Hari S},
 </section>
 <section id="versions">
 <h2>Versions<a class="headerlink" href="#versions" title="Link to this heading"></a></h2>
-<section id="v2-8-current">
-<h3>v2.8 - Current<a class="headerlink" href="#v2-8-current" title="Link to this heading"></a></h3>
+<section id="v2-12-current-v2-12-2">
+<h3>v2.12 - Current (v2.12.2)<a class="headerlink" href="#v2-12-current-v2-12-2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>dfnGraph reorganized into subpackages (construction, attributes, flow, transport, algorithms, io)</p></li>
+<li><p>Doolaeghe et al. size-aware edge conductance models for graph flow (new default), with multiple-paths corrections</p></li>
+<li><p>Finite matrix-block TDRW models for graph transport: Dentz slab, annulus, Roubinet, and user-supplied return-time CDF</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p32_convention</span></code> option for single- or double-sided (wetted) fracture intensity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">disableShorteningIntersections</span></code> option to reject fractures instead of shortening intersections</p></li>
+<li><p>Strike/dip and trend/plunge of every fracture normal stored on the DFN object</p></li>
+<li><p>NumPy and Python random generators seeded from <code class="docutils literal notranslate"><span class="pre">DFN.params['seed']</span></code> for reproducible workflows</p></li>
+<li><p>UDFM anisotropic permeability output (PermeabilityX/Y/Z)</p></li>
+<li><p>Thread-pool parallel meshing; no global <code class="docutils literal notranslate"><span class="pre">fork()</span></code> start method</p></li>
+<li><p>Mesh validity policy for invalid UGE cell volumes and connection areas</p></li>
+<li><p>Bug fixes in ECPM permeability upscaling, mesh merging, and intersection loading</p></li>
+</ul>
+</section>
+<section id="v2-10">
+<h3>v2.10<a class="headerlink" href="#v2-10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Layer-conforming fracture truncation (<code class="docutils literal notranslate"><span class="pre">layerConformingFractures</span></code>)</p></li>
+<li><p>Exponential distribution for hydraulic properties; refactored hydraulic properties module</p></li>
+<li><p>HDF5 parser for PFLOTRAN output (<code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5</span></code>)</p></li>
+<li><p>Two-fracture example with flow and transport</p></li>
+<li><p>Bug fixes in LaGriT mesh merging and VTK file matching</p></li>
+</ul>
+</section>
+<section id="v2-9">
+<h3>v2.9<a class="headerlink" href="#v2-9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Bingham distribution for fracture orientations</p></li>
+<li><p>Fracture intensity P21 (<code class="docutils literal notranslate"><span class="pre">compute_fracture_p21</span></code>)</p></li>
+<li><p>Updated orientation plots in the output report: dip/strike support, equal-area rose diagrams, stereonets</p></li>
+<li><p>UGE and STOR file conversion rewritten in C++ as a single executable; refactored aperture correction</p></li>
+<li><p>Combine particle trajectory AVS files (<code class="docutils literal notranslate"><span class="pre">combine_avs_trajectories</span></code>)</p></li>
+<li><p>Balanced MAP DFN (ECPM) upscaling</p></li>
+<li><p>Source and target nodes on intersection graphs; pruning fixes</p></li>
+<li><p>Modernized packaging (setuptools, <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>) and log files</p></li>
+<li><p>Truncated power-law (TPL) tutorial</p></li>
+</ul>
+</section>
+<section id="v2-8">
+<h3>v2.8<a class="headerlink" href="#v2-8" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>New Meshing Using Poisson Disc Sampling (Requires LaGriT v3.3)</p></li>
 <li><p>Conforming Discrete Fracture Matrix Meshing</p></li>
@@ -248,11 +295,11 @@ and Viswanathan, Hari S},
 </section>
 <section id="about-this-manual">
 <h2>About this  manual<a class="headerlink" href="#about-this-manual" title="Link to this heading"></a></h2>
-<p>This manual comprises of information on setting up inputs to dfnGen, dfnTrans
-and PFLOTRAN, as well as details on the pydfnworks module: <a class="reference internal" href="pydfnworks.html#dfnworks-python-chapter"><span class="std std-ref">pydfnworks</span></a>. Finally, the manual contains a short tutorial
-with prepared examples that  can be found in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory of the
-dfnWorks repository, and a description of some applications of the dfnWorks
-suite.</p>
+<p>This manual covers installing dfnWorks, the inputs to dfnGen, dfnFlow, and
+dfnTrans, and the pydfnworks package (<a class="reference internal" href="pydfnworks.html#dfnworks-python-chapter"><span class="std std-ref">pydfnworks</span></a>), including graph-based analysis and simulations
+with dfnGraph. It also contains tutorials and descriptions of the prepared
+examples in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory of the dfnWorks repository, and a
+description of some applications of the dfnWorks suite.</p>
 </section>
 <section id="contact">
 <h2>Contact<a class="headerlink" href="#contact" title="Link to this heading"></a></h2>
