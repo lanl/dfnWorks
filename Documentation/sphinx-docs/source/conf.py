@@ -42,7 +42,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.imgmath']
 
 # Keep autodoc working on machines without every optional runtime dependency.
-autodoc_mock_imports = ['pyvtk', 'vtk', 'pyvista', 'mplstereonet', 'fpdf', 'mpltern']
+autodoc_mock_imports = ['vtk', 'pyvista', 'mplstereonet', 'fpdf', 'mpltern']
 autodoc_member_order = 'bysource'
 
 # Add any paths that contain templates here, relative to this directory.

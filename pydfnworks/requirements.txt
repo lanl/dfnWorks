@@ -6,6 +6,5 @@ matplotlib
 mplstereonet
 fpdf
 seaborn
-pyvtk
 mpmath
 pandas
