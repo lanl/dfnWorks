@@ -10,3 +10,6 @@ Running Transport Simulations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnTrans.transport
     :members:
+
+.. automodule:: pydfnworks.dfnTrans.combine_avs_trajectories
+    :members: combine_avs_trajectories

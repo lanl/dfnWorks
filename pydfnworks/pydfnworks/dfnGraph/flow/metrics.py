@@ -24,12 +24,14 @@ def compute_dQ(self, G):
     Returns
     ---------------
         p32 : float
-            Fracture intensity
+            Fracture intensity, reported in the convention set by DFN.params['p32_convention'] (0: double-sided / wetted surface area, default. 1: single-sided)
 
         dQ : float flow channeling density indicator
 
     Notes
     ------------
+        dQ is always computed with the double-sided (wetted) surface area, as defined in the reference below, and does not depend on p32_convention.
+
         For definitions of p32 and dQ along with a discussion see " Hyman, Jeffrey D. "Flow channeling in fracture networks: characterizing the effect of density on preferential flow path formation." Water Resources Research 56.9 (2020): e2020WR027986. "
 
     """
@@ -66,14 +68,26 @@ def compute_dQ(self, G):
                             Qf[f - 1] += abs(H[u][v]['vol_flow_rate'])
     # Divide by 1/2 to remove up double counting
     Qf *= 0.5
-    p32 = fracture_surface_area.sum() / domain_volume
+    # dQ and the active surface percentage use the double-sided (wetted) area.
+    # The reported p32 follows the convention selected for dfnGen.
+    p32_wetted = fracture_surface_area.sum() / domain_volume
+    try:
+        single_sided = self.params['p32_convention']['value'] in (1, 'single')
+    except (AttributeError, KeyError, TypeError):
+        single_sided = False
+    if single_sided:
+        p32 = 0.5 * p32_wetted
+        convention = "single-sided"
+    else:
+        p32 = p32_wetted
+        convention = "double-sided (wetted surface area)"
     top = sum(fracture_surface_area * Qf)**2
     bottom = sum(fracture_surface_area * Qf**2)
     dQ = (1.0 / domain_volume) * (top / bottom)
-    self.print_log(f"--> P32: {p32:0.2e} [1/m]")
+    self.print_log(f"--> P32: {p32:0.2e} [1/m] ({convention})")
     self.print_log(f"--> dQ: {dQ:0.2e} [1/m]")
-    self.print_log(f"--> Active surface percentage {100*dQ/p32:0.2f}")
-    self.print_log(f"--> Geometric equivalent fracture spacing {1/p32:0.2e} m")
+    self.print_log(f"--> Active surface percentage {100*dQ/p32_wetted:0.2f}")
+    self.print_log(f"--> Geometric equivalent fracture spacing {1/p32_wetted:0.2e} m")
     self.print_log(f"--> Hydrological equivalent fracture spacing {1/dQ:0.2e} m")
     self.print_log("--> Complete \n")
     return p32, dQ, Qf

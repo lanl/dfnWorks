@@ -14,7 +14,24 @@ Running Flow : General
 Running Flow: PFLOTRAN
 ^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: pydfnworks.dfnFlow.pflotran
-    :members: lagrit2pflotran, pflotran, parse_pflotran_vtk_python, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
+    :members: lagrit2pflotran, pflotran, parse_pflotran_vtk_python, parse_pflotran_h5, dump_h5_files, pflotran_cleanup, write_perms_and_correct_volumes_areas, zone2ex
+
+PFLOTRAN output can be written as VTK or HDF5. ``dfn_flow(dump_vtk=True, dump_h5=False)`` controls which is parsed after the run. Both ``parse_pflotran_vtk_python`` and ``parse_pflotran_h5`` write per-time-step VTK files into ``pflotran_vtk_outputs/``.
+
+Mesh Geometry Checks (UGE)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before PFLOTRAN runs, the explicit unstructured grid file (``full_mesh.uge``) is scanned for invalid cell volumes and connection areas (negative, ``NaN``, or infinite). Such values can appear when the mesh is built with relaxed constraints (:ref:`rFram`), mostly in dense networks and near triple intersections. The following policy is applied:
+
+* :ref:`rFram` off and any invalid value: the run stops with an error. A conforming mesh should not produce invalid coefficients.
+* rFram unknown (no parameter file was parsed, e.g., a flow-only restart) and any invalid value: the run stops and asks for ``DFN.r_fram`` to be set.
+* More than 1% of the cells or more than 1% of the connections invalid: the run stops, regardless of rFram.
+* Otherwise: negative values are replaced by their absolute value, non-finite values by the smallest positive value, and every corrected cell and connection is written to the log.
+
+For ``dim=3`` (default) the corrected volumes and areas are multiplied by the fracture aperture and written to ``full_mesh_vol_area.uge``. For ``dim=2`` the aperture conversion is skipped.
+
+.. automodule:: pydfnworks.dfnFlow.uge_tools
+    :members: correct_uge_file
 
 Running Flow: FEHM 
 ^^^^^^^^^^^^^^^^^^^^^^^^

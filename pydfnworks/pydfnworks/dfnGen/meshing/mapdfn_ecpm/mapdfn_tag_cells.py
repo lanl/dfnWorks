@@ -106,9 +106,9 @@ def get_corner(origin, i, j, k, cell_size):
 def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
     """ Identify intersecting fractures for each cell of the ECPM domain.
     Extent of ECPM domain is determined by nx,ny,nz, and d (see below).
-     ECPM domain can be smaller than the DFN domain.
-     Return numpy array (fracture) that contains for each cell:
-     number of intersecting fractures followed by each intersecting fracture id.
+    ECPM domain can be smaller than the DFN domain.
+    Return numpy array (fracture) that contains for each cell:
+    number of intersecting fractures followed by each intersecting fracture id.
 
     Parameters
     -----------------

@@ -8,3 +8,4 @@ fpdf
 seaborn
 pyvtk
 mpmath
+pandas

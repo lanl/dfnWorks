@@ -127,6 +127,7 @@ Domain (m)\n\
   y : {-0.5 * params["domain"]["y"]} x {0.5 * params["domain"]["y"]} \
   z : {-0.5 * params["domain"]["z"]} x {0.5 * params["domain"]["z"]}\n'
 
+    text += f'P32 convention: {params.get("P32 Convention", "double-sided (wetted surface area)")}\n'
     text += f'Entire Network:\n'
     text += f'    P30: {params["Pre-Iso Total Fracture Density   (P30)"]:0.2e}  /  '
     text += f'P32 : {params["Pre-Iso Total Fracture Intensity (P32)"]:0.2e}  /  '
@@ -237,7 +238,10 @@ def create_family_text(family):
     if "P32 (Fracture Intensity) Target" in keys:
         text += f'Target P32: {family["P32 (Fracture Intensity) Target"]}, Final P32: {family["Post-Iso Fracture Intensity (P32)"]}'
     else:
-        text += f'Final P32: {family["Post-Iso Fracture Intensity (P32)"]}\n'
+        text += f'Final P32: {family["Post-Iso Fracture Intensity (P32)"]}'
+    if "P32 Convention" in keys:
+        text += f' ({family["P32 Convention"]})'
+    text += '\n'
     return text
 
 

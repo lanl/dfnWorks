@@ -16,14 +16,15 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os, sys, subprocess, re
+import os, sys
 
-#sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/pydfnworks/'))
-sys.path.insert(0, os.path.abspath('/home/username/dfnWorks/pydfnworks/'))
+# Import pydfnworks from this repository (not a site-packages install) so the
+# API pages always match the checked-out source.
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.insert(0, os.path.join(REPO_ROOT, 'pydfnworks'))
 
 import pydfnworks
-latex_additional_files = ['dfnworks_logo.png']
+latex_additional_files = ['figures/dfnworks_logo.png']
 
 # -- General configuration ------------------------------------------------
 
@@ -39,6 +40,10 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.imgmath']
+
+# Keep autodoc working on machines without every optional runtime dependency.
+autodoc_mock_imports = ['pyvtk', 'vtk', 'pyvista', 'mplstereonet', 'fpdf', 'mpltern']
+autodoc_member_order = 'bysource'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -58,7 +63,7 @@ master_doc = 'index_docs'
 
 # General information about the project.
 project = u'dfnWorks'
-copyright = '2020, LANL, LA-UR-17-22216'
+copyright = '2015-2026, LANL, LA-UR-17-22216'
  
 author = u'EES-16, Subsurface Flow and Transport'
 
@@ -69,15 +74,9 @@ author = u'EES-16, Subsurface Flow and Transport'
 # built documents.
 #
 
-release_path = "../../../pydfnworks/pydfnworks/release.py"
-release_globals = {}
+version = pydfnworks.__version__
+release = f"{pydfnworks.__version__} (Released {pydfnworks.__release_date__})"
 
-with open(release_path, "r") as f:
-    exec(f.read(), release_globals)
-
-release = release_globals.get("version", "unknown")
-
-version = release + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 #decode = lambda x : x.decode(sys.stdout.encoding) if isinstance(x,bytes) else x
 
 #dfnWorks_branch=decode(subprocess.check_output('git symbolic-ref --short HEAD',shell=True).rstrip())
@@ -87,9 +86,7 @@ version = release + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 #dfnWorks_latest_tag=decode(subprocess.check_output('git tag -l \'v*\'', shell=True)).split()[-1].rstrip()
 #dfnWorks_latest_tag_ver=dfnWorks_latest_tag.replace('v',' ')
 
-#version = version + ' LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027'
 
-#release = dfnWorks_latest_tag
 
 
 
@@ -175,7 +172,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-html_logo = 'dfnworks_logo.png' 
+html_logo = 'figures/dfnworks_logo.png' 
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -192,7 +189,7 @@ html_logo = 'dfnworks_logo.png'
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
 #
-# html_extra_path = []
+html_extra_path = ['_extra']
 
 # If not None, a 'Last updated on:' timestamp is inserted at every page
 # bottom, using the given strftime format.
@@ -299,7 +296,7 @@ latex_documents = [
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #
-latex_logo = 'dfnworks_logo.png' 
+latex_logo = 'figures/dfnworks_logo.png' 
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -369,3 +366,8 @@ texinfo_domain_indices = False
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+
+# Optional: install date for HTML templates
+html_context = {
+    'install_date': pydfnworks.__install_date__,
+}

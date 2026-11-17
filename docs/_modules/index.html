@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Overview: module code &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=ab527d87"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=430d9000"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -32,9 +32,6 @@
             dfnWorks
               <img src="../_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -46,7 +43,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -57,9 +54,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -90,26 +90,39 @@
 <li><a href="pydfnworks/dfnFlow/flow.html">pydfnworks.dfnFlow.flow</a></li>
 <li><a href="pydfnworks/dfnFlow/mass_balance.html">pydfnworks.dfnFlow.mass_balance</a></li>
 <li><a href="pydfnworks/dfnFlow/pflotran.html">pydfnworks.dfnFlow.pflotran</a></li>
+<li><a href="pydfnworks/dfnFlow/uge_tools.html">pydfnworks.dfnFlow.uge_tools</a></li>
 <li><a href="pydfnworks/dfnGen/generation/generator.html">pydfnworks.dfnGen.generation.generator</a></li>
+<li><a href="pydfnworks/dfnGen/generation/hydraulic/dfn_methods.html">pydfnworks.dfnGen.generation.hydraulic.dfn_methods</a></li>
+<li><a href="pydfnworks/dfnGen/generation/hydraulic/io.html">pydfnworks.dfnGen.generation.hydraulic.io</a></li>
 <li><a href="pydfnworks/dfnGen/generation/input_checking/check_input.html">pydfnworks.dfnGen.generation.input_checking.check_input</a></li>
 <li><a href="pydfnworks/dfnGen/generation/input_checking/fracture_family.html">pydfnworks.dfnGen.generation.input_checking.fracture_family</a></li>
 <li><a href="pydfnworks/dfnGen/generation/input_checking/user_defined_fracture_functions.html">pydfnworks.dfnGen.generation.input_checking.user_defined_fracture_functions</a></li>
+<li><a href="pydfnworks/dfnGen/generation/orientations.html">pydfnworks.dfnGen.generation.orientations</a></li>
 <li><a href="pydfnworks/dfnGen/generation/output_report/gen_output.html">pydfnworks.dfnGen.generation.output_report.gen_output</a></li>
+<li><a href="pydfnworks/dfnGen/generation/process_generator_output.html">pydfnworks.dfnGen.generation.process_generator_output</a></li>
 <li><a href="pydfnworks/dfnGen/generation/stress.html">pydfnworks.dfnGen.generation.stress</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/add_attribute_to_mesh.html">pydfnworks.dfnGen.meshing.add_attribute_to_mesh</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/dfm/mesh_dfm.html">pydfnworks.dfnGen.meshing.dfm.mesh_dfm</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_ecpm.html">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm</a></li>
+<li><a href="pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_effective_perm.html">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm</a></li>
+<li><a href="pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_tag_cells.html">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells</a></li>
+<li><a href="pydfnworks/dfnGen/meshing/mapdfn_ecpm/mapdfn_upscale.html">pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn.html">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/mesh_dfn/mesh_dfn_helper.html">pydfnworks.dfnGen.meshing.mesh_dfn.mesh_dfn_helper</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/udfm/false_connections.html">pydfnworks.dfnGen.meshing.udfm.false_connections</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/udfm/map2continuum.html">pydfnworks.dfnGen.meshing.udfm.map2continuum</a></li>
 <li><a href="pydfnworks/dfnGen/meshing/udfm/upscale.html">pydfnworks.dfnGen.meshing.udfm.upscale</a></li>
 <li><a href="pydfnworks/dfnGen/well_package/wells.html">pydfnworks.dfnGen.well_package.wells</a></li>
-<li><a href="pydfnworks/dfnGraph/dfn2graph.html">pydfnworks.dfnGraph.dfn2graph</a></li>
-<li><a href="pydfnworks/dfnGraph/graph_flow.html">pydfnworks.dfnGraph.graph_flow</a></li>
-<li><a href="pydfnworks/dfnGraph/graph_transport.html">pydfnworks.dfnGraph.graph_transport</a></li>
-<li><a href="pydfnworks/dfnGraph/pruning.html">pydfnworks.dfnGraph.pruning</a></li>
+<li><a href="pydfnworks/dfnGraph/algorithms/pruning.html">pydfnworks.dfnGraph.algorithms.pruning</a></li>
+<li><a href="pydfnworks/dfnGraph/attributes/conductance.html">pydfnworks.dfnGraph.attributes.conductance</a></li>
+<li><a href="pydfnworks/dfnGraph/construction/create_graph.html">pydfnworks.dfnGraph.construction.create_graph</a></li>
+<li><a href="pydfnworks/dfnGraph/construction/source_target.html">pydfnworks.dfnGraph.construction.source_target</a></li>
+<li><a href="pydfnworks/dfnGraph/flow/graph_flow.html">pydfnworks.dfnGraph.flow.graph_flow</a></li>
+<li><a href="pydfnworks/dfnGraph/flow/metrics.html">pydfnworks.dfnGraph.flow.metrics</a></li>
+<li><a href="pydfnworks/dfnGraph/io/serialization.html">pydfnworks.dfnGraph.io.serialization</a></li>
+<li><a href="pydfnworks/dfnGraph/transport/graph_transport.html">pydfnworks.dfnGraph.transport.graph_transport</a></li>
 <li><a href="pydfnworks/dfnTrans/transport.html">pydfnworks.dfnTrans.transport</a></li>
+<li><a href="pydfnworks/general/general_functions.html">pydfnworks.general.general_functions</a></li>
 </ul>
 
            </div>
@@ -119,7 +132,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -11,10 +11,14 @@ three-dimensional DFNs with the LaGriT meshing toolbox to create a high-quality
 computational mesh representation. The representation produces a conforming 
 Delaunay triangulation suitable for high-performance computing finite volume 
 solvers in an intrinsically parallel fashion. Flow through the network is 
-simulated with dfnFlow, which utilizes the massively parallel subsurface flow 
-and reactive transport finite volume code PFLOTRAN. A Lagrangian approach to 
-simulating transport through the DFN is adopted within dfnTrans to determine 
-pathlines and solute transport through the DFN. Applications of the dfnWorks 
+simulated with dfnFlow, which utilizes the massively parallel subsurface flow
+and reactive transport finite volume code PFLOTRAN, or FEHM. A Lagrangian approach to
+simulating transport through the DFN is adopted within dfnTrans to determine
+pathlines and solute transport through the DFN. dfnGraph provides graph
+(pipe-network) representations of the DFN for fast flow and transport
+simulations, including matrix diffusion, and for network analysis such as
+pruning. Networks can also be upscaled to continuum meshes (UDFM and ECPM) or
+meshed together with the surrounding rock matrix (DFM). Applications of the dfnWorks
 suite include nuclear waste repository science, hydraulic fracturing and 
 |CO2| sequestration.
 
@@ -58,7 +62,44 @@ for modeling subsurface flow and transport. Computers & Geosciences, 84,
 Versions
 -------------------
 
-v2.8 - Current 
+v2.12 - Current (v2.12.2)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- dfnGraph reorganized into subpackages (construction, attributes, flow, transport, algorithms, io)
+- Doolaeghe et al. size-aware edge conductance models for graph flow (new default), with multiple-paths corrections
+- Finite matrix-block TDRW models for graph transport: Dentz slab, annulus, Roubinet, and user-supplied return-time CDF
+- ``p32_convention`` option for single- or double-sided (wetted) fracture intensity
+- ``disableShorteningIntersections`` option to reject fractures instead of shortening intersections
+- Strike/dip and trend/plunge of every fracture normal stored on the DFN object
+- NumPy and Python random generators seeded from ``DFN.params['seed']`` for reproducible workflows
+- UDFM anisotropic permeability output (PermeabilityX/Y/Z)
+- Thread-pool parallel meshing; no global ``fork()`` start method
+- Mesh validity policy for invalid UGE cell volumes and connection areas
+- Bug fixes in ECPM permeability upscaling, mesh merging, and intersection loading
+
+v2.10
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Layer-conforming fracture truncation (``layerConformingFractures``)
+- Exponential distribution for hydraulic properties; refactored hydraulic properties module
+- HDF5 parser for PFLOTRAN output (``parse_pflotran_h5``)
+- Two-fracture example with flow and transport
+- Bug fixes in LaGriT mesh merging and VTK file matching
+
+v2.9
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Bingham distribution for fracture orientations
+- Fracture intensity P21 (``compute_fracture_p21``)
+- Updated orientation plots in the output report: dip/strike support, equal-area rose diagrams, stereonets
+- UGE and STOR file conversion rewritten in C++ as a single executable; refactored aperture correction
+- Combine particle trajectory AVS files (``combine_avs_trajectories``)
+- Balanced MAP DFN (ECPM) upscaling
+- Source and target nodes on intersection graphs; pruning fixes
+- Modernized packaging (setuptools, ``pyproject.toml``) and log files
+- Truncated power-law (TPL) tutorial
+
+v2.8
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 - New Meshing Using Poisson Disc Sampling (Requires LaGriT v3.3)
@@ -139,12 +180,12 @@ v2.0
 About this  manual
 ------------------
 
-This manual comprises of information on setting up inputs to dfnGen, dfnTrans 
-and PFLOTRAN, as well as details on the pydfnworks module: :ref:`pydfnworks 
-<dfnWorks-python-chapter>`. Finally, the manual contains a short tutorial 
-with prepared examples that  can be found in the ``examples`` directory of the 
-dfnWorks repository, and a description of some applications of the dfnWorks 
-suite.
+This manual covers installing dfnWorks, the inputs to dfnGen, dfnFlow, and
+dfnTrans, and the pydfnworks package (:ref:`pydfnworks
+<dfnWorks-python-chapter>`), including graph-based analysis and simulations
+with dfnGraph. It also contains tutorials and descriptions of the prepared
+examples in the ``examples`` directory of the dfnWorks repository, and a
+description of some applications of the dfnWorks suite.
 
 Contact
 --------
@@ -252,9 +293,3 @@ option) any later version. Accordingly, this program is distributed in the
 hope that it will be useful, but WITHOUT ANY WARRANTY; without even the 
 implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 See the GNU General Public License for more details.
-
-
-.. dfnWorks documentation master file, created by Satish Karra Oct 6, 2016
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
