@@ -230,12 +230,11 @@ Python
 *****************************
 
 pydfnworks requires Python 3.10 or newer. We recommend using a conda or virtual environment.
-pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They can be installed directly with
+pydfnworks requires the following python modules: ``numpy``, ``networkx``, ``h5py``, ``scipy``, ``matplotlib``, ``mplstereonet``, ``fpdf``, ``seaborn``, ``pyvtk``, ``mpmath``, and ``pandas``. They are listed in ``pydfnworks/requirements.txt`` and are installed automatically with pydfnworks, or can be installed directly with
 
 .. code-block:: bash
 
     pip install -r pydfnworks/requirements.txt
-    pip install pandas
 
 
 LaGriT

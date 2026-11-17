@@ -35,7 +35,7 @@ def tpl_cdf(xmin, alpha, x):
 def tpl_pdf(norm_const, xmin, alpha, x):
     """ Returns the analytical power laws PDF values.
 
-    p(r) \propto x ^ -{alpha+1}
+    p(r) \\propto x ^ -{alpha+1}
 
     Parameters
     --------------

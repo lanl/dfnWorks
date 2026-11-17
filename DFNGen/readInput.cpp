@@ -138,6 +138,8 @@ bool *ebetaDistribution;
 bool *rbetaDistribution;
 
 int *eorientation_distribution;
+/*! Orientation distribution of each rectangle family: 0 = Fisher, 1 = Bingham */
+int *rorientation_distribution;
 /*! False - User ellipses will be inserted first
     True  - User rectangles will be inserted first*/
 bool insertUserRectanglesFirst;
@@ -1097,6 +1099,17 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         searchVar(inputFile, "rbetaDistribution:");
         rbetaDistribution = new bool[nFamRect];
         getInputAry(inputFile, rbetaDistribution, nFamRect);
+        // Orientation distribution per family (0 = Fisher, 1 = Bingham).
+        // Older input files may not have it; default to Fisher.
+        rorientation_distribution = new int[nFamRect];
+        if (searchVarOptional(inputFile, "rorientation_distribution:")) {
+            getInputAry(inputFile, rorientation_distribution, nFamRect);
+        } else {
+            for (int i = 0; i < nFamRect; i++) {
+                rorientation_distribution[i] = 0;
+            }
+        }
+        
         searchVar(inputFile, "rdistr:");
         rdistr = new unsigned int[nFamRect];
         getInputAry(inputFile, rdistr, nFamRect);
@@ -1228,6 +1241,19 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
         newShapeFam.kappa1 = rkappa1[i];
         newShapeFam.kappa2 = rkappa2[i];
         newShapeFam.angleOption = rAngleOption;
+        
+        if (rorientation_distribution[i] == 1) {
+            newShapeFam.orientation_distribution = "bingham";
+            newShapeFam.kappa = 0;
+            logString = "The orientation_distribution is: Bingham\n";
+            logger.writeLogFile(INFO,  logString);
+        } else {
+            newShapeFam.orientation_distribution = "fisher";
+            newShapeFam.kappa2 = 0;
+            newShapeFam.kappa1 = 0;
+            logString = "The orientation_distribution is: Fisher\n";
+            logger.writeLogFile(INFO,  logString);
+        }
         newShapeFam.layer = rLayer[i];
         newShapeFam.region = rRegion[i];
         
@@ -1281,6 +1307,7 @@ void getInput(char* input, std::vector<Shape> &shapeFamily) {
     if (nFamRect > 0 ) {
         // Can now delete/free the memory for these arrays
         delete[] rbetaDistribution;
+        delete[] rorientation_distribution;
         delete[] rdistr;
         delete[] raspect;
         delete[] rAngleOne;
