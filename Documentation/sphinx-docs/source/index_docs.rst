@@ -2,8 +2,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to dfnWorks 2.8 documentation!
+Welcome to dfnWorks documentation!
 =======================================
+
+This documentation is for dfnWorks version |release|.
 
 Contents:
 
@@ -28,3 +30,4 @@ Contents:
    gallery
    tutorial_intro
    tutorial_TPL
+   tpl_paraview_examples

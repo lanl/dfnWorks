@@ -58,8 +58,8 @@ various tools in the dfnWorks suite with the aim to provide a seamless workflow.
 There are 3 main modules in dfnWorks:
 
 
-dfnGen 
-~~~~~~~~~~~~~~~~~
+dfnGen: Network Generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for meshing) and LaGriT, the meshing tool box used to create a conforming Delaunay triangulation of the network.
 
@@ -69,8 +69,8 @@ dfnGen primarily involves two steps: FRAM (the feature rejection algorithm for m
 See Module at :ref:`dfnGen <dfngen-chapter>` and python docs at :ref:`pydfnWorks: dfnGen <dfnWorks-python-chapter-dfnGen>`
 
 
-dfnFlow 
-~~~~~~~~~~~~~~~~~~~~
+dfnFlow: Flow Simulation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow using the mesh files from LaGriT.
 
@@ -81,8 +81,8 @@ Setup files and workflow include the use of PFLOTRAN or FEHM to solve for flow u
 See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
-dfnTrans 
-~~~~~~~~~~~~~~~~~~~~~
+dfnTrans: Particle Tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 dfnTrans is a method for resolving solute transport using control volume flow solutions obtained from dfnFlow on the unstructured mesh generated using dfnGen. We adopt a Lagrangian approach and represent a non-reactive conservative solute as a collection of indivisible passive tracer particles.

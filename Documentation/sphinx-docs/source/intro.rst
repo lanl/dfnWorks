@@ -252,9 +252,3 @@ option) any later version. Accordingly, this program is distributed in the
 hope that it will be useful, but WITHOUT ANY WARRANTY; without even the 
 implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 See the GNU General Public License for more details.
-
-
-.. dfnWorks documentation master file, created by Satish Karra Oct 6, 2016
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
