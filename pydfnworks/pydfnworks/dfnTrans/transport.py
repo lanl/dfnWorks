@@ -70,14 +70,20 @@ def run_dfn_trans(self):
     Parameters
     ---------
         self : object
-            DFN Class  
- 
+            DFN Class
+
     Returns
     --------
     None
+
+    Notes
+    -----
+    OMP_NUM_THREADS is set to self.ncpu for the dfnTrans process only, so
+    the OpenMP particle loop uses the same CPU count as the rest of the
+    workflow without changing the environment of later executables.
     """
     tic = time()
-    cmd = os.environ['DFNTRANS_EXE'] + ' ' + self.local_dfnTrans_file
+    cmd = f"OMP_NUM_THREADS={self.ncpu} " + os.environ['DFNTRANS_EXE'] + ' ' + self.local_dfnTrans_file
     self.call_executable(cmd)
     self.dump_time("Function: DFNTrans ", time() - tic)
 
