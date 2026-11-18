@@ -1,26 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Examples &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pydfnworks: the dfnWorks python package" href="pydfnworks.html" />
-    <link rel="prev" title="Setting and Running up dfnWorks" href="setup.html" /> 
+    <link rel="prev" title="Setup and Running dfnWorks" href="setup.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,9 +35,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -49,13 +46,27 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#user-defined-rects">4_user_defined_rects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-defined-ell-uniform">4_user_defined_ell_uniform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-rects">4_user_rects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-ell-uniform">4_user_ell_uniform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exp-exponentially-distributed-fracture-lengths">exp: Exponentially Distributed fracture lengths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tpl-truncated-power-law">TPL: Truncated Power-Law</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#graph-based-pruning">Graph-based pruning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-two-fracture-case">Example: two_fracture_case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-regions">Example: regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-layers">Example: layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-polygon-domain-boundary">Example: polygon_domain_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-bingham-distribution">Example: bingham_distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-calibrate-p32-from-p10">Example: calibrate_p32_from_p10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-graph-transport">Example: graph_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-tdrw">Example: tdrw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-finite-matrix-diffusion">Example: finite_matrix_diffusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-udfm">Example: udfm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-mapdfn">Example: mapdfn</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
@@ -67,9 +78,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -98,33 +112,39 @@
              
   <section id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
-<p>This section contains a few examples of DFN generated using dfnWorks. All required input files for these examples are contained in the folder dfnWorks/examples/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at http : //www.paraview.org/. The first two examples are simplest so it is recommended that the user proceed in the order presented here.</p>
-<p>All examples are in the examples/ directory. Within each subdirectory are the files required to run the example. The command line input is found in notes.txt. Be sure that you have created ~/test_output_files prior to running the examples.</p>
-<section id="user-defined-rects">
-<h2>4_user_defined_rects<a class="headerlink" href="#user-defined-rects" title="Link to this heading"></a></h2>
-<p>Location: examples/4_user_defined_rects/</p>
+<p>This section contains a few examples of DFN generated using dfnWorks. All required input files for these examples are contained in the folder dfnWorks/examples/. The focus of this document is to provide visual confirmation that new users of dfnWorks have the code set up correctly, can carry out the following runs and reproduce the following images. All images are rendered using Paraview, which can be obtained for free at <a class="reference external" href="https://www.paraview.org/">https://www.paraview.org/</a>. The first two examples are simplest so it is recommended that the user proceed in the order presented here.</p>
+<p>All examples are in the examples/ directory. Within each subdirectory are the files required to run the example. Each example is run from its own directory with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>driver.py
+</pre></div>
+</div>
+<p>Output is written to the <code class="docutils literal notranslate"><span class="pre">output/</span></code> sub-directory of the example. The regression suite in <code class="docutils literal notranslate"><span class="pre">tests/regression</span></code> runs the examples and compares their results against stored baselines (<code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_regression.py</span></code> from that directory; see <code class="docutils literal notranslate"><span class="pre">tests/regression/README.md</span></code>).</p>
+<section id="user-rects">
+<h2>4_user_rects<a class="headerlink" href="#user-rects" title="Link to this heading"></a></h2>
+<p>Location: examples/4_user_rects/</p>
 <p>This test case consists of four user defined rectangular fractures within a a cubic domain with sides of length one meter. The network of four fractures, each colored by material ID. The computational mesh is overlaid on the fractures. This image is created by loading the file full_mesh.inp. located in the job folder into Paraview.</p>
 <figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="_images/4_user_rectangles.png"><img alt="alternate text" src="_images/4_user_rectangles.png" style="width: 1795.0px; height: 645.1px;" /></a>
+<a class="reference internal image-reference" href="_images/4_user_rectangles.png"><img alt="alternate text" height="645" src="_images/4_user_rectangles.png" width="1795" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>The meshed network of four rectangular fractures.</em></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>High pressure (red) Dirichlet boundary conditions are applied on the edge of the single fracture along the boundary x = -0.5, and low pressure (blue) boundary conditions are applied on the edges of the two fractures at the boundary x = 0.5.
-This image is created by loading the file parsed_vtk/dfn_explicit-001.vtk into Paraview.</p>
+This image is created by loading the file pflotran_vtk_outputs/dfn_explicit-001.vtk into Paraview.</p>
 <p>Particles are inserted uniformly along the inlet fracture on the left side of the image.
 Particles exit the domain through the two horizontal fractures on the right side of the image.
 Due to the stochastic nature of the particle tracking algorithm, your pathlines might not be exactly the same as in this image.
 Trajectories are colored by the current velocity magnitude of the particle’s velocity.
-Trajectories can be visualized by loading the files part_*.inp, in the folder 4_user_rectangles/traj/trajectories/</p>
+Trajectories can be visualized by loading the files part_*.inp, in the folder output/traj/trajectories/</p>
 <p>We have used the extract surface and tube filters in paraview for visual clarity.</p>
 </section>
-<section id="user-defined-ell-uniform">
-<h2>4_user_defined_ell_uniform<a class="headerlink" href="#user-defined-ell-uniform" title="Link to this heading"></a></h2>
-<p>Location: examples/4_user_defined_ell_uniform/</p>
-<p>This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 8 vertices. We have set the meshing resolution to be uniform by including the argument slope=0 into the mesh_networks function in run_explicit.py.</p>
+<section id="user-ell-uniform">
+<h2>4_user_ell_uniform<a class="headerlink" href="#user-ell-uniform" title="Link to this heading"></a></h2>
+<p>Location: examples/4_user_ell_uniform/</p>
+<p>This test case consists of four user defined elliptical fractures within a a cubic domain with sides of length one meter. In this case the ellipses are approximated using 8 vertices. We have set the meshing resolution to be uniform by including the argument <code class="docutils literal notranslate"><span class="pre">uniform_mesh=True</span></code> in the <code class="docutils literal notranslate"><span class="pre">mesh_network</span></code> call in driver.py.</p>
 <figure class="align-center" id="id2">
-<a class="reference internal image-reference" href="_images/4_user_ellipses.png"><img alt="alternate text" src="_images/4_user_ellipses.png" style="width: 1850.1000000000001px; height: 656.8000000000001px;" /></a>
+<a class="reference internal image-reference" href="_images/4_user_ellipses.png"><img alt="alternate text" height="657" src="_images/4_user_ellipses.png" width="1850" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>The uniformly meshed network of four circular fractures.</em></span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
@@ -135,7 +155,8 @@ Trajectories can be visualized by loading the files part_*.inp, in the folder 4_
 <p>Location: examples/exp/</p>
 <p>This test case consists of a family of fractures whose size is exponentially distributed with a minimum size of 1m and a maximum size of 50m. The domain is cubic with an edge length of 10m. All input parameters for the generator can be found in tests/gen_exponential_dist.dat.  We have changed the flow direction to be aligned with the y-axis by modifying the PFLOTRAN input card dfn_explicit.in</p>
 <figure class="align-center" id="id3">
-<a class="reference internal image-reference" href="_images/exp_pressure.png"><img alt="alternate text" src="_images/exp_pressure.png" style="width: 222.0px; height: 157.60000000000002px;" /></a>
+<a class="reference internal image-reference" href="_images/exp_pressure.png"><img alt="alternate text" height="158" src="_images/exp_pressure.png" width="222" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>Pressure solution on with rectangular fractures whose lengths following a exponential distribution. Gradient is aligned with the Y-Axis</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
@@ -144,9 +165,12 @@ Trajectories can be visualized by loading the files part_*.inp, in the folder 4_
 <section id="tpl-truncated-power-law">
 <h2>TPL: Truncated Power-Law<a class="headerlink" href="#tpl-truncated-power-law" title="Link to this heading"></a></h2>
 <p>Location: examples/TPL/</p>
-<p>This test case consists of two families whose sizes have a truncated power law distribution with a minimum size of 1m and a maximum size of 5m an exponent 2.6. The domain size is cubic with an edge length of 15m.</p>
+<p>This test case consists of a family whose sizes have a truncated power law (TPL) distribution with a minimum size of 1m and a maximum size of 10m an exponent 1.8. The domain size is cubic with an edge length of 15m.</p>
+<p>High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5.</p>
+<p>dfnTrans starts from reconstruction of local velocity field: Darcy fluxes obtained using dfnFlow are used to reconstruct the local velocity field, which is used for particle tracking on the DFN.</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/power_mesh.png"><img alt="alternate text" src="_images/power_mesh.png" style="width: 674.4000000000001px; height: 362.8px;" /></a>
+<a class="reference internal image-reference" href="_images/tpl_3images.png"><img alt="alternate text" height="202" src="_images/tpl_3images.png" width="360" />
+</a>
 </figure>
 </section>
 <section id="graph-based-pruning">
@@ -154,17 +178,78 @@ Trajectories can be visualized by loading the files part_*.inp, in the folder 4_
 <p>Location: examples/pruning/</p>
 <p>This example uses a graph representation of a DFN to isolate the 2-core. The pruned DFN has all dead end fractures of the network are removed. This example has two run_explicit.py scripts. The first creates the original DFN and identifies the 2-core using networkx (<a class="reference external" href="https://networkx.github.io/">https://networkx.github.io/</a>). The second meshes the DFN corresponding to the 2-core of the graph and then runs flow and transport. The 2 core network is in a sub-directory 2-core. The original network has 207 fractures and the 2-core has 79 fractures.</p>
 <figure class="align-center" id="id4">
-<a class="reference internal image-reference" href="_images/dfn_2_core.png"><img alt="alternate text" src="_images/dfn_2_core.png" style="width: 1119.8999999999999px; height: 433.5px;" /></a>
+<a class="reference internal image-reference" href="_images/dfn_2_core.png"><img alt="alternate text" height="434" src="_images/dfn_2_core.png" width="1120" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>(left) Graph based on DFN topology. Each vertex is a fracture in the network. The inflow boundary is colored blue and the outflow is colored red. (right) 2-Core of the graph to the left.</em></span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id5">
-<a class="reference internal image-reference" href="_images/pruned_network.png"><img alt="alternate text" src="_images/pruned_network.png" style="width: 777.35px; height: 328.8px;" /></a>
+<a class="reference internal image-reference" href="_images/pruned_network.png"><img alt="alternate text" height="329" src="_images/pruned_network.png" width="777" />
+</a>
 <figcaption>
 <p><span class="caption-text"><em>(left) Original DFN (right) DFN corresponding to the 2-core of the DFN to the left.</em></span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
 </figcaption>
 </figure>
+</section>
+<section id="additional-examples">
+<h2>Additional Examples<a class="headerlink" href="#additional-examples" title="Link to this heading"></a></h2>
+<p>The following examples show other features of dfnWorks. See the <code class="docutils literal notranslate"><span class="pre">driver.py</span></code> (and <code class="docutils literal notranslate"><span class="pre">README.md</span></code>, where present) in each directory for details.</p>
+<section id="example-two-fracture-case">
+<h3>Example: two_fracture_case<a class="headerlink" href="#example-two-fracture-case" title="Link to this heading"></a></h3>
+<p>Location: examples/two_fracture_case/</p>
+<p>Two intersecting user-defined rectangular fractures in a 2 m x 1 m x 1 m domain. The full workflow is shown step by step: generation, meshing, PFLOTRAN flow, effective permeability, and particle tracking with DFNTrans. This is a good first example for checking a new installation.</p>
+</section>
+<section id="example-regions">
+<h3>Example: regions<a class="headerlink" href="#example-regions" title="Link to this heading"></a></h3>
+<p>Location: examples/regions/</p>
+<p>Assigns a dense fracture family to a cubic sub-region of the domain (<a class="reference internal" href="dfngen.html#numofregions"><span class="std std-ref">numOfRegions</span></a>, <a class="reference internal" href="dfngen.html#regions"><span class="std std-ref">regions</span></a>) and two sparser families to the whole domain.</p>
+</section>
+<section id="example-layers">
+<h3>Example: layers<a class="headerlink" href="#example-layers" title="Link to this heading"></a></h3>
+<p>Location: examples/layers/</p>
+<p>Two layers with large fractures that cross the layer interface. Change <code class="docutils literal notranslate"><span class="pre">LAYER_CONFORMING</span></code> at the top of <code class="docutils literal notranslate"><span class="pre">driver.py</span></code> to compare the three <a class="reference internal" href="dfngen.html#layerconformingfractures"><span class="std std-ref">layerConformingFractures</span></a> modes.</p>
+</section>
+<section id="example-polygon-domain-boundary">
+<h3>Example: polygon_domain_boundary<a class="headerlink" href="#example-polygon-domain-boundary" title="Link to this heading"></a></h3>
+<p>Location: examples/polygon_domain_boundary/</p>
+<p>Generates and meshes a network inside an irregular boundary in the x-y plane read from <code class="docutils literal notranslate"><span class="pre">vertices.dat</span></code> (<a class="reference internal" href="dfngen.html#polygonboundaryflag"><span class="std std-ref">polygonBoundaryFlag</span></a>, <a class="reference internal" href="dfngen.html#polygonboundaryfile"><span class="std std-ref">polygonBoundaryFile</span></a>).</p>
+</section>
+<section id="example-bingham-distribution">
+<h3>Example: bingham_distribution<a class="headerlink" href="#example-bingham-distribution" title="Link to this heading"></a></h3>
+<p>Location: examples/bingham_distribution/</p>
+<p>Four fracture families with Bingham-distributed orientations: a round cap, an elliptical cap, an elliptical girdle, and asymmetric lobes. See <a class="reference internal" href="dfngen.html#bingham-distribution"><span class="std std-ref">Bingham Distribution</span></a>.</p>
+</section>
+<section id="example-calibrate-p32-from-p10">
+<h3>Example: calibrate_p32_from_p10<a class="headerlink" href="#example-calibrate-p32-from-p10" title="Link to this heading"></a></h3>
+<p>Location: examples/calibrate_p32_from_p10/</p>
+<p>Calibrates a family’s P32 to match an observed P10 along a borehole. A synthetic well is placed in the center of the domain, networks are generated for trial P32 values, and a root-finding method adjusts P32 until the number of fractures intersecting the well matches the target. This can take a while to run.</p>
+</section>
+<section id="example-graph-transport">
+<h3>Example: graph_transport<a class="headerlink" href="#example-graph-transport" title="Link to this heading"></a></h3>
+<p>Location: examples/graph_transport/</p>
+<p>Graph-based flow and particle transport on a 400 m x 50 m x 50 m network with <code class="docutils literal notranslate"><span class="pre">run_graph_flow</span></code> and <code class="docutils literal notranslate"><span class="pre">run_graph_transport</span></code> (see <a class="reference internal" href="pydfnGraph.html#dfnworks-python-chapter-dfngraph"><span class="std std-ref">pydfnworks: dfnGraph</span></a>). The network is not meshed. <code class="docutils literal notranslate"><span class="pre">make_btc.py</span></code> computes breakthrough curves from the particle travel times.</p>
+</section>
+<section id="example-tdrw">
+<h3>Example: tdrw<a class="headerlink" href="#example-tdrw" title="Link to this heading"></a></h3>
+<p>Location: examples/tdrw/</p>
+<p>Particle tracking with matrix diffusion using DFNTrans. The time domain random walk (TDRW) is turned on in <code class="docutils literal notranslate"><span class="pre">PTDFN_control_tdrw.dat</span></code> with <code class="docutils literal notranslate"><span class="pre">tdrw:</span> <span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">tdrw_porosity</span></code>, and <code class="docutils literal notranslate"><span class="pre">tdrw_diffcoeff</span></code>.</p>
+</section>
+<section id="example-finite-matrix-diffusion">
+<h3>Example: finite_matrix_diffusion<a class="headerlink" href="#example-finite-matrix-diffusion" title="Link to this heading"></a></h3>
+<p>Location: examples/finite_matrix_diffusion/</p>
+<p>Finite matrix diffusion in graph-based transport on a Forsmark-like network. <code class="docutils literal notranslate"><span class="pre">forsmark_percolation_comparison.py</span></code> sweeps fracture spacing and matrix diffusivity with the <code class="docutils literal notranslate"><span class="pre">'dentz'</span></code> TDRW model and compares the results to the infinite-matrix model. <code class="docutils literal notranslate"><span class="pre">plot_fmd_demo.py</span></code> makes the figures. See <a class="reference internal" href="pydfnGraph.html#matrix-diffusion-tdrw"><span class="std std-ref">Matrix Diffusion (TDRW)</span></a>.</p>
+</section>
+<section id="example-udfm">
+<h3>Example: udfm<a class="headerlink" href="#example-udfm" title="Link to this heading"></a></h3>
+<p>Location: examples/udfm/</p>
+<p>Upscales a four-fracture network onto an octree-refined continuum mesh with <code class="docutils literal notranslate"><span class="pre">map_to_continuum</span></code> and <code class="docutils literal notranslate"><span class="pre">upscale</span></code> (UDFM), writing anisotropic permeability and porosity for PFLOTRAN.</p>
+</section>
+<section id="example-mapdfn">
+<h3>Example: mapdfn<a class="headerlink" href="#example-mapdfn" title="Link to this heading"></a></h3>
+<p>Location: examples/mapdfn/</p>
+<p>Maps a 1 km DFN with three stochastic families and four deterministic fractures onto a uniform equivalent continuous porous medium (ECPM) grid with <code class="docutils literal notranslate"><span class="pre">mapdfn_ecpm</span></code>, then runs PFLOTRAN flow and transport on the continuum grid.</p>
+</section>
 </section>
 </section>
 
@@ -172,14 +257,14 @@ Trajectories can be visualized by loading the files part_*.inp, in the folder 4_
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="setup.html" class="btn btn-neutral float-left" title="Setting and Running up dfnWorks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setup and Running dfnWorks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="pydfnworks.html" class="btn btn-neutral float-right" title="pydfnworks: the dfnWorks python package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

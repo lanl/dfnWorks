@@ -157,3 +157,37 @@ Below is a sample input file. Refer to the PFLOTRAN user manual at http://www.pf
 	END
 
 	END_SUBSURFACE
+
+
+Upscaled (UDFM) meshes
+------------------------
+
+After ``map_to_continuum`` and ``upscale`` (see :ref:`dfnWorks-python-chapter-dfnGen`), the upscaled permeability is anisotropic. ``mesh_permeability.h5`` contains the datasets ``PermeabilityX``, ``PermeabilityY``, and ``PermeabilityZ``, and ``perm_fehm.dat`` contains the directional values for FEHM. In the PFLOTRAN input deck, define one dataset per direction and use ``ANISOTROPIC`` in the material property card. With ``DATASET perm``, PFLOTRAN reads the datasets named ``permX``, ``permY``, and ``permZ``:
+
+.. code-block:: none
+
+    DATASET permX
+      FILENAME mesh_permeability.h5
+      HDF5_DATASET_NAME PermeabilityX
+    END
+
+    DATASET permY
+      FILENAME mesh_permeability.h5
+      HDF5_DATASET_NAME PermeabilityY
+    END
+
+    DATASET permZ
+      FILENAME mesh_permeability.h5
+      HDF5_DATASET_NAME PermeabilityZ
+    END
+
+    MATERIAL_PROPERTY fracture
+      ID 1
+      POROSITY DATASET Porosity
+      PERMEABILITY
+        ANISOTROPIC
+        DATASET perm
+      /
+    END
+
+See ``examples/udfm/udfm_multi_material.in`` for a complete input deck.

@@ -10,13 +10,8 @@ import os
 
 src_path = os.getcwd()
 jobname = src_path + "/output"
-dfnFlow_file = src_path + '/dfn_explicit.in'
-dfnTrans_file = src_path + '/PTDFN_control.dat'
-
-DFN = DFNWORKS(jobname,
-               dfnFlow_file=dfnFlow_file,
-               dfnTrans_file=dfnTrans_file,
-               ncpu=4)
+# This example only generates and meshes; no flow or transport input files are needed.
+DFN = DFNWORKS(jobname, ncpu=4)
 
 DFN.params['domainSize']['value'] = [1.0, 1.0, 1.0]
 DFN.params['h']['value'] = 0.1

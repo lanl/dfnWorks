@@ -38,7 +38,7 @@ __author__ = "EES-16, Los Alamos National Laboratory"
 __bibtex__ = """@article{hyman2015dfnworks,
   title={dfnWorks: A discrete fracture network framework for modeling subsurface flow and transport},
   author={Hyman, Jeffrey D and Karra, Satish and Makedonska, Nataliia and Gable, Carl W and Painter, Scott L and Viswanathan, Hari S},
-  journal={Computers \& Geosciences},
+  journal={Computers \\& Geosciences},
   volume={84},
   pages={10--19},
   year={2015},
@@ -46,9 +46,9 @@ __bibtex__ = """@article{hyman2015dfnworks,
 }
 """
 
-__version__ = "2.12.1"
+__version__ = "2.12.2"
 
-__release_date__ = "07-10-2026"
+__release_date__ = "16-11-2026"
 
 from ._install_info import get_install_date
 __install_date__ = get_install_date()

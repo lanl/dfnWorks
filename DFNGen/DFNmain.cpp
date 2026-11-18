@@ -110,7 +110,7 @@ int main (int argc, char **argv) {
     // Init distributions class
     // Currenlty used only for exponential distribution
     Distributions distributions(generator, shapeFamilies);
-    float domVol = domainSize[0] * domainSize[1] * domainSize[2];
+    double domVol = domainSize[0] * domainSize[1] * domainSize[2];
     
     if (totalFamilies > 0 ) {
         if (stopCondition == 0) { // Npoly Option
@@ -346,13 +346,8 @@ int main (int argc, char **argv) {
                     newPoly.area = getArea(newPoly);
                     
                     // Update P32
-                    if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region == 0) { // Whole domain
-                        shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / domVol;
-                    } else if (shapeFamilies[familyIndex].layer > 0 && shapeFamilies[familyIndex].region == 0) { // Layer
-                        shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / layerVol[shapeFamilies[familyIndex].layer - 1];
-                    } else if (shapeFamilies[familyIndex].layer == 0 && shapeFamilies[familyIndex].region > 0) { // Region
-                        shapeFamilies[familyIndex].currentP32 += newPoly.area * 2 / regionVol[shapeFamilies[familyIndex].region - 1];
-                    }
+                    // Area factor follows p32Convention, volume is the family's layer, region, or the whole domain
+                    shapeFamilies[familyIndex].currentP32 += newPoly.area * p32AreaFactor / familyVolume(shapeFamilies[familyIndex], domVol);
                     
                     if (std::isnan(shapeFamilies[familyIndex].currentP32)){
                         logString =  "!!! Current P32 is Nan !!!\nshapeFamilies[familyIndex].layer = " + to_string(shapeFamilies[familyIndex].layer) + " shapeFamilies[familyIndex].region = " + to_string(shapeFamilies[familyIndex].region) + " newPoly.area and domVol = " + to_string(newPoly.area) + " " + to_string(domVol);
@@ -489,6 +484,7 @@ int main (int argc, char **argv) {
                           (layerConformingFractures == 1) ? "perfect conforming" :
                           "soft conforming (2h overhang)";
     file << "Layer Conforming Fractures: " << lcfMode << "\n";
+    file << "P32 Convention: " << p32ConventionName() << "\n";
     std::time_t result = std::time(nullptr);
     file << "Time Stamp: " << std::asctime(std::localtime(&result)) << "\n";
     logString =  "========================================================\n";
@@ -501,11 +497,13 @@ int main (int argc, char **argv) {
     logger.writeLogFile(INFO,  logString);
     logString =  "Layer Conforming Fractures: " + lcfMode + "\n";
     logger.writeLogFile(INFO,  logString);
+    logString =  "P32 Convention: " + p32ConventionName() + "\n";
+    logger.writeLogFile(INFO,  logString);
     logString =  "Time Stamp: " + std::string(std::asctime(std::localtime(&result))) + "\n";
     logger.writeLogFile(INFO,  logString);
     
     if (stopCondition == 1 ) {
-        logString =  "Final p32 values per family:\n";
+        logString =  "Final p32 values per family (" + p32ConventionName() + "):\n";
         logger.writeLogFile(INFO,  logString);
         
         for (int i = 0; i < totalFamilies; i++) {
@@ -555,16 +553,16 @@ int main (int argc, char **argv) {
         }
     }
     
-    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaBeforeRemoval * 2)) + " m^2\n";
+    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaBeforeRemoval * p32AreaFactor)) + " m^2\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Total Fracture Density   (P30): " + std::string(to_string(acceptedPoly.size() / domVol)) + "\n";
     logger.writeLogFile(INFO,  logString);
-    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaBeforeRemoval * 2) / domVol)) + "\n";
+    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaBeforeRemoval * p32AreaFactor) / domVol)) + "\n";
     logger.writeLogFile(INFO,  logString);
     // logString =  "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
-    file << "Total Surface Area:     " << pstats.areaBeforeRemoval * 2 << " m^2\n";
+    file << "Total Surface Area:     " << pstats.areaBeforeRemoval * p32AreaFactor << " m^2\n";
     file << "Total Fracture Density   (P30): " << acceptedPoly.size() / domVol << "\n";
-    file << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * 2) / domVol << "\n";
+    file << "Total Fracture Intensity (P32): " << (pstats.areaBeforeRemoval * p32AreaFactor) / domVol << "\n";
     // file << "Total Fracture Porosity  (P33): " << pstats.volBeforeRemoval / domVol << "\n\n";
     
     // Print family stats to user
@@ -607,24 +605,24 @@ int main (int argc, char **argv) {
             file << "    Region: Whole Domain \n";
         }
         
-        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * 2)) + " m^2\n";
+        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * p32AreaFactor)) + " m^2\n";
         logger.writeLogFile(INFO,  logString);
         logString =  "    Fracture Intensity (P32): " + std::string(to_string(shapeFamilies[i].currentP32)) + "\n\n";
         logger.writeLogFile(INFO,  logString);
-        file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
+        file << "    Surface Area: " << familyArea[i] * p32AreaFactor << " m^2\n";
         file << "    Fracture Intensity (P32): " << shapeFamilies[i].currentP32 << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
         logString =  "User Defined: \n";
         logger.writeLogFile(INFO,  logString);
-        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * 2)) + " m^2\n";
+        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * p32AreaFactor)) + " m^2\n";
         logger.writeLogFile(INFO,  logString);
-        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * 2 / domVol)) + "\n\n";
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * p32AreaFactor / domVol)) + "\n\n";
         logger.writeLogFile(INFO,  logString);
         file << "User Defined: \n";
-        file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
+        file << "    Surface Area: " << userDefinedShapesArea * p32AreaFactor << " m^2\n";
+        file << "    Fracture Intensity (P32): " << userDefinedShapesArea * p32AreaFactor / domVol << "\n\n";
     }
     
     if (removeFracturesLessThan > 0) {
@@ -742,15 +740,15 @@ int main (int argc, char **argv) {
         }
     }
     
-    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaAfterRemoval * 2)) + " m^2\n";
+    logString =  "Total Surface Area:     " + std::string(to_string(pstats.areaAfterRemoval * p32AreaFactor)) + " m^2\n";
     logger.writeLogFile(INFO,  logString);
     logString =  "Total Fracture Density   (P30): " + std::string(to_string(finalFractures.size() / domVol)) + "\n";
     logger.writeLogFile(INFO,  logString);
-    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaAfterRemoval * 2) / domVol)) + "\n";
+    logString =  "Total Fracture Intensity (P32): " + std::string(to_string((pstats.areaAfterRemoval * p32AreaFactor) / domVol)) + "\n";
     logger.writeLogFile(INFO,  logString);
-    file << "Total Surface Area:     " << pstats.areaAfterRemoval * 2 << " m^2\n";
+    file << "Total Surface Area:     " << pstats.areaAfterRemoval * p32AreaFactor << " m^2\n";
     file << "Total Fracture Density   (P30): " << finalFractures.size() / domVol << "\n";
-    file << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * 2) / domVol << "\n";
+    file << "Total Fracture Intensity (P32): " << (pstats.areaAfterRemoval * p32AreaFactor) / domVol << "\n";
     
     // Print family stats to user
     for (int i = 0; i < totalFamilies; i++) {
@@ -798,24 +796,24 @@ int main (int argc, char **argv) {
             file << "    Region: Whole Domain \n";
         }
         
-        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * 2)) + " m^2\n";
+        logString =  "    Surface Area: " + std::string(to_string(familyArea[i] * p32AreaFactor)) + " m^2\n";
         logger.writeLogFile(INFO,  logString);
-        logString =  "    Fracture Intensity (P32): " + std::string(to_string(familyArea[i] * 2 / domVol)) + "\n\n";
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(familyArea[i] * p32AreaFactor / familyVolume(shapeFamilies[i], domVol))) + "\n\n";
         logger.writeLogFile(INFO,  logString);
-        file << "    Surface Area: " << familyArea[i] * 2 << " m^2\n";
-        file << "    Fracture Intensity (P32): " << familyArea[i] * 2 / domVol << "\n\n";
+        file << "    Surface Area: " << familyArea[i] * p32AreaFactor << " m^2\n";
+        file << "    Fracture Intensity (P32): " << familyArea[i] * p32AreaFactor / familyVolume(shapeFamilies[i], domVol) << "\n\n";
     }
     
     if (userDefinedShapesArea > 0) {
         logString =  "User Defined Shapes: \n";
         logger.writeLogFile(INFO,  logString);
-        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * 2)) + " m^2\n";
+        logString =  "    Surface Area: " + std::string(to_string(userDefinedShapesArea * p32AreaFactor)) + " m^2\n";
         logger.writeLogFile(INFO,  logString);
-        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * 2 / domVol)) + "\n\n";
+        logString =  "    Fracture Intensity (P32): " + std::string(to_string(userDefinedShapesArea * p32AreaFactor / domVol)) + "\n\n";
         logger.writeLogFile(INFO,  logString);
         file << "User Defined Shapes: \n";
-        file << "    Surface Area: " << userDefinedShapesArea * 2 << " m^2\n";
-        file << "    Fracture Intensity (P32): " << userDefinedShapesArea * 2 / domVol << "\n\n";
+        file << "    Surface Area: " << userDefinedShapesArea * p32AreaFactor << " m^2\n";
+        file << "    Fracture Intensity (P32): " << userDefinedShapesArea * p32AreaFactor / domVol << "\n\n";
     }
     
     if (acceptedFromFamCounters != nullptr) {

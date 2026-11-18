@@ -255,7 +255,7 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
                         alpha=0.7,
                         edgecolor="k",
                         linewidth=0.5,
-                        label=f"Family \# {family_id}")
+                        label=f"Family \\# {family_id}")
 
             # Histogram of final values
             axs[1].hist(radii_accepted,
@@ -265,7 +265,7 @@ def plot_fracture_radii(params, families, fractures, num_bins=20):
                         alpha=0.7,
                         edgecolor="k",
                         linewidth=0.5,
-                        label=f"Family \# {family_id}")
+                        label=f"Family \\# {family_id}")
 
     axs[0].grid(True, alpha=0.5)
     axs[0].set_title("All Accepted Fractures", fontsize=24)

@@ -45,5 +45,5 @@ DFN.mesh_network()
 
 DFN.lagrit2pflotran()
 DFN.pflotran(restart=True, restart_file=restart_file)
-DFN.parse_pflotran_vtk_python()
+DFN.parse_pflotran_vtk()
 DFN.pflotran_cleanup()
