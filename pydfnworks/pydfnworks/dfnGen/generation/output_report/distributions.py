@@ -246,15 +246,16 @@ def lognormal_pdf(x, mu, sigma):
 
 
 def lognormal(mu, sigma, xmin, xmax):
-    """ Returns the PDF and CDF of a LogNormal distribution with parameters mu and sigma over the range [xmin,xmax]. 
-    
+    """ Returns the PDF and CDF of a LogNormal distribution with parameters mu and sigma,
+    truncated to the range [xmin,xmax] (dfnGen rejects radii outside this range).
+
     Parameters
     -----------
         mu  : double
-            Lognormal distribution parameter #1
-        
+            Mean of ln(x), i.e., the mean of the underlying normal distribution (log_mean)
+
         sigma : double
-            Lognormal distribution parameter #1 (sigma > 0)
+            Standard deviation of ln(x) (log_std), sigma > 0
         
         xmin : double
             Minimum x-value
@@ -277,22 +278,23 @@ def lognormal(mu, sigma, xmin, xmax):
     -------
         dfnGen uses the mean and standard deviation of the underlying normal distribution that creates the lognormal distribution. 
 
-        In order to produce a LogNormal distribution with a desired mean (m) and variance (s) one uses
+        In order to produce a (untruncated) LogNormal distribution with a desired mean (m)
+        and standard deviation (s) one uses
 
         mu = ln [ m^2 / sqrt(m^2 + s^2)]
 
-        and 
+        and
 
-        sigma = ln ( 1 + m^2 / s^2)
+        sigma = sqrt( ln ( 1 + s^2 / m^2) )
 
         For more details see https://en.wikipedia.org/wiki/Log-normal_distribution
 """
 
     x = np.linspace(xmin, xmax, 1000)
-    const = 1.0 / (lognormal_cdf(xmax, mu, sigma) -
-                   lognormal_cdf(xmin, mu, sigma))
-    pdf = lognormal_pdf(x, mu, sigma)
-    cdf = lognormal_cdf(x, mu, sigma)
+    cdf_min = lognormal_cdf(xmin, mu, sigma)
+    const = 1.0 / (lognormal_cdf(xmax, mu, sigma) - cdf_min)
+    pdf = const * lognormal_pdf(x, mu, sigma)
+    cdf = const * (lognormal_cdf(x, mu, sigma) - cdf_min)
     return x, pdf, cdf
 
 
