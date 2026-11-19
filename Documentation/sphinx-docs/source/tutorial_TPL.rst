@@ -139,6 +139,14 @@ This is a parameter used when the distribution is set to tpl. It indicates the p
 Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
 
 
+log_mean and log_std
+~~~~~~~~~~~~~~~~~~~~
+
+These parameters are used when the distribution is set to log_normal. The natural log of the fracture radius is normally distributed, :math:`\ln(r) \sim \mathcal{N}(\text{log\_mean}, \text{log\_std}^2)`: log_mean is the mean of :math:`\ln(r)` (not the mean radius) and log_std is its standard deviation (not a variance). Radii outside [min_radius, max_radius] are rejected and redrawn. Before truncation, the mean radius is :math:`e^{\text{log\_mean} + \text{log\_std}^2/2}`. To target a mean radius :math:`m` and standard deviation :math:`s`, use :math:`\text{log\_mean} = \ln\left(m^2/\sqrt{m^2+s^2}\right)` and :math:`\text{log\_std} = \sqrt{\ln(1 + s^2/m^2)}`.
+
+Note that log_std is a standard deviation, whereas the ``sigma`` in the log-normal hydraulic properties (``hy_params``) is a variance.
+
+
 p32
 ~~~~~~~~~~~~~
 
@@ -182,7 +190,7 @@ This parameter describes the relationship between the chosen hydraulic variable 
 - **correlated** : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
 - **semi-correlated** : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
 - **constant** : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
-- **log-normal** : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
+- **log-normal** : Implies that the hydraulic variable follows a log-normal distribution that is independent of fracture radius.
 
 
 hy_params
@@ -193,7 +201,9 @@ This parameter provides the necessary values that define the hydraulic function 
 
 If hy_function is **correlated** : Expected syntax: {"alpha": value, "beta": value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
 
-If hy_function is **semi-correlated** : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
+If hy_function is **semi-correlated** : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties. alpha*r^beta is the median value for a fracture of radius r, and sigma is the variance of the natural log of the hydraulic variable (its standard deviation is sqrt(sigma)).
+
+If hy_function is **log-normal** : Expected syntax: {"mu": value, "sigma": value} Here, mu is the median value in physical units (e.g., 1e-4 m for aperture), not a logarithm, and sigma is the variance of the natural log of the hydraulic variable (its standard deviation is sqrt(sigma)). The arithmetic mean is mu*exp(sigma/2) and the coefficient of variation is sqrt(exp(sigma) - 1).
 
 If hy_function is **constant** : Expected syntax: {"mu": value}
 
