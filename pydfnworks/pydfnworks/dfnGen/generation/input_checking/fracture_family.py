@@ -326,9 +326,9 @@ def add_fracture_family(self,
         
         alpha : parameter for 'tpl'. default = None
         
-        log_mean : parameter for 'log_normal'. default = None
-        
-        log_std : parameter for 'log_normal'. default = None
+        log_mean : parameter for 'log_normal'. Mean of ln(radius), i.e., of the underlying normal distribution (not the mean radius). default = None
+
+        log_std : parameter for 'log_normal'. Standard deviation of ln(radius) (not a variance). The mean radius before truncation is exp(log_mean + log_std^2/2). default = None
         
         exp_mean : parameter for 'exp'. default = None
         
@@ -344,9 +344,9 @@ def add_fracture_family(self,
         
         hy_params : parameters for the hydraulic function. see next lines for syntax and options
             if 'correlated' --> {"alpha":value, "beta":value}
-            if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value}
+            if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value} (alpha*r^beta = median, sigma = variance of ln(value))
             if 'constant' --> {"mu":value}
-            if 'log-normal' --> {"mu":value, "sigma":value}
+            if 'log-normal' --> {"mu":value, "sigma":value} (mu = median in physical units, sigma = variance of ln(value))
             if 'exponential' --> {"lam":value}
         
         Returns
