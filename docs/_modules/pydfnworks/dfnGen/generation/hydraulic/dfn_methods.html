@@ -173,9 +173,9 @@
 <span class="sd">        params : dictionary</span>
 <span class="sd">            dictionary of parameters for functional relationship</span>
 <span class="sd">                if correlated --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value}</span>
-<span class="sd">                if semi-correlated --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value, &quot;sigma&quot;:value}</span>
+<span class="sd">                if semi-correlated --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value, &quot;sigma&quot;:value} (alpha*r^beta = median, sigma = variance of ln(value))</span>
 <span class="sd">                if constant --&gt; {&quot;mu&quot;:value}</span>
-<span class="sd">                if log-normal --&gt; {&quot;mu&quot;:value, &quot;sigma&quot;:value}</span>
+<span class="sd">                if log-normal --&gt; {&quot;mu&quot;:value, &quot;sigma&quot;:value} (mu = median in physical units, sigma = variance of ln(value))</span>
 <span class="sd">                if exponential --&gt; {&quot;lam&quot;:value}</span>
 
 <span class="sd">        family_id : int</span>

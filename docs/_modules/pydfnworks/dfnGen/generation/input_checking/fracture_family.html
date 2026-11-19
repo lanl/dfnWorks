@@ -420,9 +420,9 @@
 <span class="sd">        </span>
 <span class="sd">        alpha : parameter for &#39;tpl&#39;. default = None</span>
 <span class="sd">        </span>
-<span class="sd">        log_mean : parameter for &#39;log_normal&#39;. default = None</span>
-<span class="sd">        </span>
-<span class="sd">        log_std : parameter for &#39;log_normal&#39;. default = None</span>
+<span class="sd">        log_mean : parameter for &#39;log_normal&#39;. Mean of ln(radius), i.e., of the underlying normal distribution (not the mean radius). default = None</span>
+
+<span class="sd">        log_std : parameter for &#39;log_normal&#39;. Standard deviation of ln(radius) (not a variance). The mean radius before truncation is exp(log_mean + log_std^2/2). default = None</span>
 <span class="sd">        </span>
 <span class="sd">        exp_mean : parameter for &#39;exp&#39;. default = None</span>
 <span class="sd">        </span>
@@ -438,9 +438,9 @@
 <span class="sd">        </span>
 <span class="sd">        hy_params : parameters for the hydraulic function. see next lines for syntax and options</span>
 <span class="sd">            if &#39;correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value}</span>
-<span class="sd">            if &#39;semi-correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value, &quot;sigma&quot;:value}</span>
+<span class="sd">            if &#39;semi-correlated&#39; --&gt; {&quot;alpha&quot;:value, &quot;beta&quot;:value, &quot;sigma&quot;:value} (alpha*r^beta = median, sigma = variance of ln(value))</span>
 <span class="sd">            if &#39;constant&#39; --&gt; {&quot;mu&quot;:value}</span>
-<span class="sd">            if &#39;log-normal&#39; --&gt; {&quot;mu&quot;:value, &quot;sigma&quot;:value}</span>
+<span class="sd">            if &#39;log-normal&#39; --&gt; {&quot;mu&quot;:value, &quot;sigma&quot;:value} (mu = median in physical units, sigma = variance of ln(value))</span>
 <span class="sd">            if &#39;exponential&#39; --&gt; {&quot;lam&quot;:value}</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>

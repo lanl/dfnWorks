@@ -215,8 +215,8 @@
 <li><p><strong>trend</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
 <li><p><strong>plunge</strong> (<em>use if orientationOption = 1. default = None</em>)</p></li>
 <li><p><strong>alpha</strong> (<em>parameter for 'tpl'. default = None</em>)</p></li>
-<li><p><strong>log_mean</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
-<li><p><strong>log_std</strong> (<em>parameter for 'log_normal'. default = None</em>)</p></li>
+<li><p><strong>log_mean</strong> (<em>parameter for 'log_normal'. Mean</em><em> of </em><em>ln</em><em>(</em><em>radius</em><em>)</em><em>, </em><em>i.e.</em><em>, of </em><em>the underlying normal distribution</em><em> (</em><em>not the mean radius</em><em>)</em><em>. default = None</em>)</p></li>
+<li><p><strong>log_std</strong> (<em>parameter for 'log_normal'. Standard deviation</em><em> of </em><em>ln</em><em>(</em><em>radius</em><em>) </em><em>(</em><em>not a variance</em><em>)</em><em>. The mean radius before truncation is exp</em><em>(</em><em>log_mean + log_std^2/2</em><em>)</em><em>. default = None</em>)</p></li>
 <li><p><strong>exp_mean</strong> (<em>parameter for 'exp'. default = None</em>)</p></li>
 <li><p><strong>constant</strong> (<em>parameter for 'constant'. default = None</em>)</p></li>
 <li><p><strong>min_radius</strong> (<em>minimum fracture radius for 'tpl' 'log_normal'</em><em> or </em><em>'exp'. default = None</em>)</p></li>
@@ -224,9 +224,9 @@
 <li><p><strong>hy_variable</strong> (<em>hydraulic variable to assign values to. options are 'aperture'</em><em>, </em><em>'permeability'</em><em>, </em><em>'transmissivity'</em><em>,</em>)</p></li>
 <li><p><strong>hy_function</strong> (<em>relationship between hydraulic variable and fracture radius. options are 'correlated'</em><em>, </em><em>'semi-correlated'</em><em>, </em><em>'constant'</em><em>, </em><em>'log-normal'</em><em>, </em><em>'exponential'</em>)</p></li>
 <li><p><strong>hy_params</strong> (<em>parameters for the hydraulic function. see next lines for syntax and options</em>) – if ‘correlated’ –&gt; {“alpha”:value, “beta”:value}
-if ‘semi-correlated’ –&gt; {“alpha”:value, “beta”:value, “sigma”:value}
+if ‘semi-correlated’ –&gt; {“alpha”:value, “beta”:value, “sigma”:value} (alpha*r^beta = median, sigma = variance of ln(value))
 if ‘constant’ –&gt; {“mu”:value}
-if ‘log-normal’ –&gt; {“mu”:value, “sigma”:value}
+if ‘log-normal’ –&gt; {“mu”:value, “sigma”:value} (mu = median in physical units, sigma = variance of ln(value))
 if ‘exponential’ –&gt; {“lam”:value}</p></li>
 </ul>
 </dd>
@@ -680,14 +680,18 @@ Assumes fracture IDs are 1..self.num_frac.</p>
 </div><p>The keyword for this model is correlated.</p>
 <p>The second is a semi-correlated correlated model where the hydraulic property is a function of the fracture radius</p>
 <div class="math">
-<p><img src="_images/math/ff4552ec4e1115499121b2cc24265a14c7aa7b1c.png" alt="\log_{10}(b) = \log_{10}(\alpha r^\beta) + \sigma \mathcal{N}(0,1)"/></p>
+<p><img src="_images/math/fe6dcb57a14be08562b6a8358683f0d0ae2b41ab.png" alt="\ln(b) = \ln(\alpha r^\beta) + \sqrt{\sigma}\, \mathcal{N}(0,1)"/></p>
 </div><p>where a stochastic term is included into the correlated model
-to account for uncertainty and variability between fractures of the same size. The strength of the stochastic term is determined by the variance of a log-normal distribution <img class="math" src="_images/math/b52df27bfb0b1e3af0c2c68a7b9da459178c2a7d.png" alt="\sigma"/> and the stochastic term is an independent identically distributed random variable sampled from a normal distribution with mean 0 and variance 1, <img class="math" src="_images/math/a963655a01fb22852c131f0d8e66066026c39fb8.png" alt="\mathcal{N}(0,1)"/>. This model results in a log-normal distribution of fracture transmissivities around a positively cor- related power law mean. We refer to this model as semicorrelated.</p>
-<p>The keyword for this model is semi-correlated.</p>
-<p>The third model assumes that there is no correlation between the fracture size and transmissivity and all values are independent identically distributed random variables from a log-normal distribution with speci- fied mean <img class="math" src="_images/math/4a3598141469c2555591e66606a1b86d4ec6dca9.png" alt="\mu"/> and variance <img class="math" src="_images/math/b52df27bfb0b1e3af0c2c68a7b9da459178c2a7d.png" alt="\sigma"/>,</p>
+to account for uncertainty and variability between fractures of the same size. The stochastic term is an independent identically distributed random variable sampled from a normal distribution with mean 0 and variance 1, <img class="math" src="_images/math/a963655a01fb22852c131f0d8e66066026c39fb8.png" alt="\mathcal{N}(0,1)"/>, and its strength is set by <img class="math" src="_images/math/b52df27bfb0b1e3af0c2c68a7b9da459178c2a7d.png" alt="\sigma"/>, the variance of <img class="math" src="_images/math/19722253f7439c968ef82e8cb304e2cfc758e4ee.png" alt="\ln(b)"/> (the log-variance). Note that the standard deviation of <img class="math" src="_images/math/19722253f7439c968ef82e8cb304e2cfc758e4ee.png" alt="\ln(b)"/> is <img class="math" src="_images/math/072fbcf9a6b15873f3b36d2baa593ce777fc0edf.png" alt="\sqrt{\sigma}"/>. This model results in a log-normal distribution of fracture apertures around the power law <img class="math" src="_images/math/4e515ca106fdb2b15cf7bdac998422473a54335e.png" alt="\alpha r^\beta"/>, which is the median, not the mean, for a fracture of radius <img class="math" src="_images/math/79a3d439d28652c547386f39b555d90d3aaf102d.png" alt="r"/>. We refer to this model as semicorrelated.</p>
+<p>The keyword for this model is semi-correlated and the parameter dictionary is <code class="docutils literal notranslate"><span class="pre">{&quot;alpha&quot;:</span> <span class="pre">value,</span> <span class="pre">&quot;beta&quot;:</span> <span class="pre">value,</span> <span class="pre">&quot;sigma&quot;:</span> <span class="pre">value}</span></code>.</p>
+<p>The third model assumes that there is no correlation between the fracture size and transmissivity and all values are independent identically distributed random variables from a log-normal distribution,</p>
 <div class="math">
-<p><img src="_images/math/5fd160b4cce0043bb255b69534567d66c7701e55.png" alt="\log_{10}(b) = \mu + \sigma \mathcal{N}(0,1)"/></p>
-</div><p>The keyword for this model is log-normal.</p>
+<p><img src="_images/math/65a0f73fec316ea3963bc4db0642518e8d7a771b.png" alt="\ln(b) = \ln(\mu) + \sqrt{\sigma}\, \mathcal{N}(0,1)"/></p>
+</div><p>where <img class="math" src="_images/math/4a3598141469c2555591e66606a1b86d4ec6dca9.png" alt="\mu"/> is the median value (given in physical units, e.g., meters for aperture, not as a logarithm) and <img class="math" src="_images/math/b52df27bfb0b1e3af0c2c68a7b9da459178c2a7d.png" alt="\sigma"/> is the variance of <img class="math" src="_images/math/19722253f7439c968ef82e8cb304e2cfc758e4ee.png" alt="\ln(b)"/>. That is, <img class="math" src="_images/math/dbf404eea51ebc156adab372195be4ad2851cf3e.png" alt="\ln(b) \sim \mathcal{N}(\ln\mu, \sigma)"/>. The arithmetic mean and coefficient of variation (standard deviation divided by mean) of <img class="math" src="_images/math/68c7c8c65602677ab56cf7fd88002023f0edc575.png" alt="b"/> are</p>
+<div class="math">
+<p><img src="_images/math/370de85466200d52c9c4668131384bb53a2b1ab3.png" alt="\langle b \rangle = \mu\, e^{\sigma/2}, \qquad \mathrm{CV} = \sqrt{e^{\sigma} - 1}."/></p>
+</div><p>To obtain a target mean <img class="math" src="_images/math/0cddfd757a347cb7b31e1ad5cb5d755895ef7942.png" alt="\langle b \rangle"/> and coefficient of variation CV, set <img class="math" src="_images/math/00a265d8cd56f19dab610bd51fa53dec16a03536.png" alt="\sigma = \ln(1 + \mathrm{CV}^2)"/> and <img class="math" src="_images/math/97ad82448268cc2e61a28a5bbbaca2850d7dc76f.png" alt="\mu = \langle b \rangle / \sqrt{1 + \mathrm{CV}^2}"/>.</p>
+<p>The keyword for this model is log-normal and the parameter dictionary is <code class="docutils literal notranslate"><span class="pre">{&quot;mu&quot;:</span> <span class="pre">value,</span> <span class="pre">&quot;sigma&quot;:</span> <span class="pre">value}</span></code>.</p>
 <p>The fourth model represents an assumption that in addition to no relationship between size and hydraulic properties, there is no variation between fractures</p>
 <div class="math">
 <p><img src="_images/math/5f01a802667a3ba5b8994a25f3fdf78bf8593563.png" alt="b = \mu"/></p>
@@ -734,9 +738,9 @@ to account for uncertainty and variability between fractures of the same size. T
 options are log-normal, correlated, semi-correlated, constant, and exponential</p></li>
 <li><p><strong>params</strong> (<em>dictionary</em>) – <dl class="simple">
 <dt>dictionary of parameters for functional relationship</dt><dd><p>if correlated –&gt; {“alpha”:value, “beta”:value}
-if semi-correlated –&gt; {“alpha”:value, “beta”:value, “sigma”:value}
+if semi-correlated –&gt; {“alpha”:value, “beta”:value, “sigma”:value} (alpha*r^beta = median, sigma = variance of ln(value))
 if constant –&gt; {“mu”:value}
-if log-normal –&gt; {“mu”:value, “sigma”:value}
+if log-normal –&gt; {“mu”:value, “sigma”:value} (mu = median in physical units, sigma = variance of ln(value))
 if exponential –&gt; {“lam”:value}</p>
 </dd>
 </dl>
