@@ -9,7 +9,10 @@ from .conversions import get_units, convert
 
 def log_normal(params, variable, number_of_fractures):
     """ Creates Fracture Based Log-Normal values that is number_of_fractures long.
-    The values has a mean mu and log-variance sigma. 
+    ln(value) ~ N(ln(mu), sigma): mu is the median (in physical units, not a log)
+    and sigma is the log-variance, i.e., the variance of ln(value); the standard
+    deviation of ln(value) is sqrt(sigma). The arithmetic mean is mu*exp(sigma/2)
+    and the coefficient of variation is sqrt(exp(sigma) - 1).
     
     Parameters
     -----------
@@ -39,7 +42,7 @@ def log_normal(params, variable, number_of_fractures):
     """
     local_print_log(f'--> Creating uncorrelated lognormal {variable} values.')
     units = get_units(variable)
-    local_print_log(f"--> Mean: {params['mu']} {units}")
+    local_print_log(f"--> Median: {params['mu']} {units}")
     local_print_log(f"--> Log Variance: {params['sigma']}")
 
     match variable:
@@ -192,7 +195,8 @@ def correlated(params, variable, radii):
 
 def semi_correlated(params, variable, radii, number_of_fractures):
     """ Creates hydraulic properties of fractures based on power-law relationship with 
-    fracture radius with a noise term. For example, log(T) = log(alpha*r^beta) + sigma * N(0,1)
+    fracture radius with a noise term. For example, ln(T) = ln(alpha*r^beta) + sqrt(sigma) * N(0,1),
+    so alpha*r^beta is the median and sigma is the log-variance (variance of ln(T)).
     
     Parameters
     -----------

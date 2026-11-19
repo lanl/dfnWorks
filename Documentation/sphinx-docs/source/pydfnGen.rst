@@ -148,20 +148,27 @@ The keyword for this model is correlated.
 
 The second is a semi-correlated correlated model where the hydraulic property is a function of the fracture radius
 
-.. math:: 
-    \log_{10}(b) = \log_{10}(\alpha r^\beta) + \sigma \mathcal{N}(0,1)
+.. math::
+    \ln(b) = \ln(\alpha r^\beta) + \sqrt{\sigma}\, \mathcal{N}(0,1)
 
-where a stochastic term is included into the correlated model 
-to account for uncertainty and variability between fractures of the same size. The strength of the stochastic term is determined by the variance of a log-normal distribution :math:`\sigma` and the stochastic term is an independent identically distributed random variable sampled from a normal distribution with mean 0 and variance 1, :math:`\mathcal{N}(0,1)`. This model results in a log-normal distribution of fracture transmissivities around a positively cor- related power law mean. We refer to this model as semicorrelated.
+where a stochastic term is included into the correlated model
+to account for uncertainty and variability between fractures of the same size. The stochastic term is an independent identically distributed random variable sampled from a normal distribution with mean 0 and variance 1, :math:`\mathcal{N}(0,1)`, and its strength is set by :math:`\sigma`, the variance of :math:`\ln(b)` (the log-variance). Note that the standard deviation of :math:`\ln(b)` is :math:`\sqrt{\sigma}`. This model results in a log-normal distribution of fracture apertures around the power law :math:`\alpha r^\beta`, which is the median, not the mean, for a fracture of radius :math:`r`. We refer to this model as semicorrelated.
 
-The keyword for this model is semi-correlated.
+The keyword for this model is semi-correlated and the parameter dictionary is ``{"alpha": value, "beta": value, "sigma": value}``.
 
-The third model assumes that there is no correlation between the fracture size and transmissivity and all values are independent identically distributed random variables from a log-normal distribution with speci- fied mean :math:`\mu` and variance :math:`\sigma`,
+The third model assumes that there is no correlation between the fracture size and transmissivity and all values are independent identically distributed random variables from a log-normal distribution,
 
-.. math:: 
-    \log_{10}(b) = \mu + \sigma \mathcal{N}(0,1)
+.. math::
+    \ln(b) = \ln(\mu) + \sqrt{\sigma}\, \mathcal{N}(0,1)
 
-The keyword for this model is log-normal.
+where :math:`\mu` is the median value (given in physical units, e.g., meters for aperture, not as a logarithm) and :math:`\sigma` is the variance of :math:`\ln(b)`. That is, :math:`\ln(b) \sim \mathcal{N}(\ln\mu, \sigma)`. The arithmetic mean and coefficient of variation (standard deviation divided by mean) of :math:`b` are
+
+.. math::
+    \langle b \rangle = \mu\, e^{\sigma/2}, \qquad \mathrm{CV} = \sqrt{e^{\sigma} - 1}.
+
+To obtain a target mean :math:`\langle b \rangle` and coefficient of variation CV, set :math:`\sigma = \ln(1 + \mathrm{CV}^2)` and :math:`\mu = \langle b \rangle / \sqrt{1 + \mathrm{CV}^2}`.
+
+The keyword for this model is log-normal and the parameter dictionary is ``{"mu": value, "sigma": value}``.
 
 The fourth model represents an assumption that in addition to no relationship between size and hydraulic properties, there is no variation between fractures
 

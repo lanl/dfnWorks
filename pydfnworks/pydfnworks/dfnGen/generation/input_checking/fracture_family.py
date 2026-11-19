@@ -344,9 +344,9 @@ def add_fracture_family(self,
         
         hy_params : parameters for the hydraulic function. see next lines for syntax and options
             if 'correlated' --> {"alpha":value, "beta":value}
-            if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value}
+            if 'semi-correlated' --> {"alpha":value, "beta":value, "sigma":value} (alpha*r^beta = median, sigma = variance of ln(value))
             if 'constant' --> {"mu":value}
-            if 'log-normal' --> {"mu":value, "sigma":value}
+            if 'log-normal' --> {"mu":value, "sigma":value} (mu = median in physical units, sigma = variance of ln(value))
             if 'exponential' --> {"lam":value}
         
         Returns

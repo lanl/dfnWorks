@@ -79,9 +79,9 @@ def generate_hydraulic_values(self, variable, relationship, params, family_id=No
         params : dictionary
             dictionary of parameters for functional relationship
                 if correlated --> {"alpha":value, "beta":value}
-                if semi-correlated --> {"alpha":value, "beta":value, "sigma":value}
+                if semi-correlated --> {"alpha":value, "beta":value, "sigma":value} (alpha*r^beta = median, sigma = variance of ln(value))
                 if constant --> {"mu":value}
-                if log-normal --> {"mu":value, "sigma":value}
+                if log-normal --> {"mu":value, "sigma":value} (mu = median in physical units, sigma = variance of ln(value))
                 if exponential --> {"lam":value}
 
         family_id : int
