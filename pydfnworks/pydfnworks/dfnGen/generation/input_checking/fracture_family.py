@@ -326,9 +326,9 @@ def add_fracture_family(self,
         
         alpha : parameter for 'tpl'. default = None
         
-        log_mean : parameter for 'log_normal'. default = None
-        
-        log_std : parameter for 'log_normal'. default = None
+        log_mean : parameter for 'log_normal'. Mean of ln(radius), i.e., of the underlying normal distribution (not the mean radius). default = None
+
+        log_std : parameter for 'log_normal'. Standard deviation of ln(radius) (not a variance). The mean radius before truncation is exp(log_mean + log_std^2/2). default = None
         
         exp_mean : parameter for 'exp'. default = None
         

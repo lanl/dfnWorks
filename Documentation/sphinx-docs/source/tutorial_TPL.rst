@@ -139,6 +139,14 @@ This is a parameter used when the distribution is set to tpl. It indicates the p
 Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
 
 
+log_mean and log_std
+~~~~~~~~~~~~~~~~~~~~
+
+These parameters are used when the distribution is set to log_normal. The natural log of the fracture radius is normally distributed, :math:`\ln(r) \sim \mathcal{N}(\text{log\_mean}, \text{log\_std}^2)`: log_mean is the mean of :math:`\ln(r)` (not the mean radius) and log_std is its standard deviation (not a variance). Radii outside [min_radius, max_radius] are rejected and redrawn. Before truncation, the mean radius is :math:`e^{\text{log\_mean} + \text{log\_std}^2/2}`. To target a mean radius :math:`m` and standard deviation :math:`s`, use :math:`\text{log\_mean} = \ln\left(m^2/\sqrt{m^2+s^2}\right)` and :math:`\text{log\_std} = \sqrt{\ln(1 + s^2/m^2)}`.
+
+Note that log_std is a standard deviation, whereas the ``sigma`` in the log-normal hydraulic properties (``hy_params``) is a variance.
+
+
 p32
 ~~~~~~~~~~~~~
 
